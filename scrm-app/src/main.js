@@ -6,6 +6,7 @@ import 'lib-flexible/flexible'
 // import './utils/rem'
 import Vant from 'vant'
 import 'vant/lib/index.css'
+import './styles/common.less'
 import Network from './utils/request'
 Vue.use(Vant)
 Vue.config.productionTip = false
