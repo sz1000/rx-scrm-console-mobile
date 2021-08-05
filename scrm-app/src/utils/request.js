@@ -7,45 +7,45 @@ let instance = axios.create({
 })
 
 // 请求
-// instance.interceptors.request.use(
-//         (config) => {
-//             // console.log('--------', config)
-//             // 如果有token 就携带tokon
-//             const token = window.localStorage.getItem('token')
-//             console.log('------token----', token)
-//             if (token) {
-//                 config.headers.common.token = token
-//             }
-//             // console.log('-----config----', config)
-//             return config
-//         },
-//         (error) => Promise.reject(error)
-//     )
-//     //响应
-// instance.interceptors.response.use(
-//     // 响应包含以下信息data,status,statusText,headers,config
-//     // (res) => (res.status === 200 ? Promise.resolve(res) : Promise.reject(res)),
-//     (res) => {
-//         // console.log('---resUse------', res)
-//         if (res.status === 200) {
-//             return Promise.resolve(res)
-//         } else {
-//             return Promise.reject(res)
-//         }
-//     },
+instance.interceptors.request.use(
+        (config) => {
+            // console.log('--------', config)
+            // 如果有token 就携带tokon
+            const token = window.localStorage.getItem('token')
+            console.log('------token----', token)
+            if (token) {
+                config.headers.common.token = token
+            }
+            // console.log('-----config----', config)
+            return config
+        },
+        (error) => Promise.reject(error)
+    )
+    //     //响应
+instance.interceptors.response.use(
+    // 响应包含以下信息data,status,statusText,headers,config
+    // (res) => (res.status === 200 ? Promise.resolve(res) : Promise.reject(res)),
+    (res) => {
+        // console.log('---resUse------', res)
+        if (res.status === 200) {
+            return Promise.resolve(res)
+        } else {
+            return Promise.reject(res)
+        }
+    },
 
-//     (err) => {
-//         // console.log(11111111)
-//         const { response } = err
-//         // console.log('--------', response)
-//         if (response) {
-//             errorHandle(response.status, response.data)
-//             return Promise.reject(response)
-//         } else {
-//             console.log('请求失败')
-//         }
-//     }
-// )
+    (err) => {
+        // console.log(11111111)
+        const { response } = err
+        // console.log('--------', response)
+        if (response) {
+            errorHandle(response.status, response.data)
+            return Promise.reject(response)
+        } else {
+            console.log('请求失败')
+        }
+    }
+)
 const errorHandle = (status, other) => {
     // console.log(other)
     switch (status) {
