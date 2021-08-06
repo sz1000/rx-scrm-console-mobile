@@ -27,9 +27,40 @@
       <div class="formEdit">
         <van-form v-model="formList">
           <van-field v-for="(item,index) in formList"
+                     label-align='center'
+                     placeholder="请输入"
+                     :ref="'barcode'+index"
                      :key="index"
                      v-model="item.value"
-                     :label="item.name" />
+                     :label="item.name"
+                     @blur='inputEdit(item,index)'
+                     @focus='fnFocus(item,index)'
+                     @keyup.enter.native="keyupClick(item,index)">
+            <template slot="right-icon">
+              <i class="el-icon-edit"
+                 v-show="fieldIndex == index"></i>
+            </template>
+          </van-field>
+
+        </van-form>
+      </div>
+    </div>
+    <div class="systemInformation ">
+      <span>
+        <img src="../../images/icon_label.png"
+             alt="" />
+      </span>
+      <span>系统信息</span>
+      <div class="formEdit">
+        <van-form v-model="systemList">
+          <van-field v-for="(item,index) in systemList"
+                     label-align='center'
+                     :ref="'barcode'+index"
+                     readonly
+                     :key="index"
+                     v-model="item.value"
+                     :label="item.name">
+          </van-field>
         </van-form>
       </div>
     </div>
@@ -42,28 +73,36 @@ export default {
       name: '小鱼儿',
       nameFrom: '@微信/企业',
       formList: [
-        {
-          name: '客户简称',
-          value: '1',
-          mapName: 'phone',
-        },
-        {
-          name: '联系人',
-          value: '1',
-          mapName: 'livename',
-        },
-        {
-          name: '企业规模',
-          value: '1',
-          mapName: 'source',
-        },
-        {
-          name: '客户来源',
-          value: '1',
-          mapName: 'instry',
-        },
+        { name: '客户简称', value: '1', mapName: 'phone' },
+        { name: '公司名称', value: '1', mapName: 'livename' },
+        { name: '所属行业', value: '1', mapName: 'source' },
+        { name: '客户来源', value: '1', mapName: 'instry' },
+        { name: '企业规模', value: '1', mapName: 'instry' },
+        { name: '联系人', value: '1', mapName: 'instry' },
+        { name: '性别', value: '1', mapName: 'instry' },
+        { name: '微信号', value: '1', mapName: 'instry' },
+        { name: '手机号', value: '1', mapName: 'instry' },
+        { name: '邮箱', value: '1', mapName: 'instry' },
+        { name: '职务', value: '1', mapName: 'instry' },
+        { name: '地址', value: '1', mapName: 'instry' },
+        { name: '客户类型', value: '1', mapName: 'instry' },
+        { name: '备注', value: '1', mapName: 'instry' },
+        { name: '描述', value: '1', mapName: 'instry' },
+      ],
+      systemList: [
+        { name: '添加人员', mapName: 'phone', value: '' },
+        { name: '添加时间', mapName: 'phone', value: '' },
+        { name: '所属人', mapName: 'phone', value: '' },
+        { name: '领取时间', mapName: 'phone', value: '' },
+        { name: '最近跟进记录', mapName: 'phone', value: '' },
+        { name: '最近跟进时间', mapName: 'phone', value: '' },
+        { name: '最近修改人', mapName: 'phone', value: '' },
+        { name: '最近修改时间', mapName: 'phone', value: '' },
+        { name: '前所属人', mapName: 'phone', value: '' },
+        { name: '转换时间', mapName: 'phone', value: '' },
       ],
       readonly: false,
+      fieldIndex: null,
     }
   },
   created() {
@@ -79,11 +118,23 @@ export default {
         value: obj[item.mapName],
       }
     })
-    console.log(this.formList)
+    // console.log(this.formList)
   },
   methods: {
     goBack() {
       this.$router.go(-1)
+    },
+    inputEdit(item, index) {
+      // console.log(item, index)
+      this.fieldIndex = null
+    },
+    keyupClick(item, index) {
+      let p = 'barcode' + index
+      this.$refs[p][0].blur()
+      // console.log(22222, this.$refs[p])
+    },
+    fnFocus(item, index) {
+      this.fieldIndex = index
     },
   },
 }
@@ -149,7 +200,8 @@ export default {
         }
       }
     }
-    .basicInformation {
+    .basicInformation,
+    .systemInformation {
       font-size: 28px;
       span {
         display: inline-block;
@@ -167,12 +219,17 @@ export default {
           border: 1px solid #f0f2f7;
           .van-cell {
             padding: 0;
+            font-size: 28px;
           }
           .van-field__label {
             width: 234px;
             height: 80px;
             background: #fafbff;
             border: 1px solid #f0f2f7;
+            line-height: 80px;
+          }
+          .van-field__body {
+            height: 80px;
           }
         }
       }

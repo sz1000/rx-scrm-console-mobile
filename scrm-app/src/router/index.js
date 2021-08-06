@@ -9,6 +9,8 @@ import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 // 客户管理
+import CustomerManage from '../views/customerManage/index.vue'
+import Clues from '../views/customerManage/Clues.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -23,6 +25,7 @@ const routes = [{
         },
         component: Home,
     },
+    // 客户画像
     {
         path: '/customerPortrait',
         name: 'CustomerPortrait',
@@ -39,6 +42,7 @@ const routes = [{
         },
         component: InformationDetail,
     },
+    // 拓客工具
     {
         path: '/talkTool',
         component: TalkTool,
@@ -58,6 +62,19 @@ const routes = [{
                 component: ChannelConfiguration,
             },
         ],
+    },
+    //客户管理
+    {
+        path: '/customerManage',
+        component: CustomerManage,
+        redirect: '/customerManage/clues',
+        children: [{
+            path: 'clues',
+            meta: {
+                bodyClass: 'Clues',
+            },
+            component: Clues,
+        }, ],
     },
 ]
 

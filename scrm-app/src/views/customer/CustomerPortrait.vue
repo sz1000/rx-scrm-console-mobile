@@ -413,6 +413,7 @@ export default {
       }
       .van-dialog__cancel {
         .van-button__content {
+          font-size: 28px;
           margin-left: 24px;
           background: #ffffff;
           color: #4168f6;
@@ -424,6 +425,7 @@ export default {
       }
       .van-dialog__confirm {
         .van-button__content {
+          font-size: 28px;
           background: #4168f6;
           color: #fff;
           border: 2px solid #fff;
