@@ -69,7 +69,7 @@ export default {
       } else if (v == 3) {
         this.$router.push('/customerManage')
       } else {
-        this.$router.push()
+        this.$router.push('/customerPortrait')
       }
     },
   },
