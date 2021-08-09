@@ -11,6 +11,7 @@ import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 import Clues from '../views/customerManage/Clues.vue'
+import AddCules from '../views/customerManage/AddCules.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -69,12 +70,20 @@ const routes = [{
         component: CustomerManage,
         redirect: '/customerManage/clues',
         children: [{
-            path: 'clues',
-            meta: {
-                bodyClass: 'Clues',
+                path: 'clues',
+                meta: {
+                    bodyClass: 'Clues',
+                },
+                component: Clues,
             },
-            component: Clues,
-        }, ],
+            {
+                path: 'addCules',
+                meta: {
+                    bodyClass: 'AddCules',
+                },
+                component: AddCules,
+            },
+        ],
     },
 ]
 
