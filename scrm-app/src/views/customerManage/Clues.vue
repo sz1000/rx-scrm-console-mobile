@@ -124,7 +124,9 @@ export default {
       // console.log(this.inputValue)
     }, 2000),
     deleteCard(item, index) {},
-    goDetail(item, index) {},
+    goDetail(item, index) {
+      this.$router.push('detailCules')
+    },
   },
 }
 </script>

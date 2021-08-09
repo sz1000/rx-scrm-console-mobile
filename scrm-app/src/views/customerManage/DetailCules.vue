@@ -1,63 +1,84 @@
 <template>
-  <div class="custom_warp">
-    <div class="topInfo">
-      <div class="customInfo">
-        <div class="iconName">
-          <div class="flag">鱼</div>
-          <div class="nameSex">
-            <span>{{name}}</span>
-            <span>{{nameFrom}}</span>
-            <img src="../../images/icon_female@2x.png"
-                 alt="" />
+  <div class="culeDeatil">
+    <div class="headerTitle">
+      <div class="backPage"
+           @click="goBack">
+        <van-icon name="arrow-left" />
+        返回
+      </div>
+      <span class="textTitle">线索详情</span>
+    </div>
+    <div class="iconName">
+      <div class="flag">鱼</div>
+      <div class="nameSex">
+        <span>{{name}}</span>
+        <!-- <span>{{nameFrom}}</span> -->
+        <img src="../../images/icon_female@2x.png"
+             alt="" />
 
-          </div>
-        </div>
-        <div class="detailBtn"
-             @click="goToDetail">
-          详情
-          <van-icon name="arrow"
-                    color="#4168F6" />
-        </div>
       </div>
-      <div class="detailInfo">
-        <div class="left">
-          <div class="rowStyle">
-            <span>邮箱:</span>
-            <span>{{email}}</span>
-          </div>
-          <div class="rowStyle">
-            <span>邮箱:</span>
-            <span>{{email}}</span>
-          </div>
-          <div class="rowStyle">
-            <span>邮箱:</span>
-            <span>{{email}}</span>
-          </div>
-        </div>
-        <div class="right">
-          <div class="rowStyle">
-            <span>手机号码:</span>
-            <span>{{email}}</span>
-          </div>
-          <div class="rowStyle">
-            <span>公司名称:</span>
-            <span>{{email}}</span>
-          </div>
-          <div class="rowStyle">
-            <span>所属行业:</span>
-            <span>{{email}}</span>
-          </div>
-        </div>
+    </div>
+    <div class="btnWarp">
+      <div class="btnBox">
+        <img src="../../images/icon_change@2x.png"
+             alt="" />
+        <span>转客户</span>
       </div>
-      <div class="tjry">
-        <div class="box">
-          <span class="label">添加人员:</span>
-          <span class="value">添加人员</span>
-        </div>
-        <div class="box1">
-          <span class="label">添加时间:</span>
-          <span class="value">添加人员</span>
-        </div>
+      <div class="btnBox">
+        <img src="../../images/icon_change2@2x.png"
+             alt="" />
+        <span>变更所属人</span>
+      </div>
+      <div class="btnBox">
+        <img src="../../images/icon_clear@2x.png"
+             alt="" />
+        <span>放弃</span>
+      </div>
+    </div>
+    <div class="basicInformation">
+      <span>
+        <img src="../../images/icon_label.png"
+             alt="" />
+      </span>
+      <span>基本信息</span>
+      <div class="formEdit">
+        <van-form v-model="formList">
+          <van-field v-for="(item,index) in formList"
+                     label-align='center'
+                     placeholder="请输入"
+                     :ref="'barcode'+index"
+                     :key="index"
+                     v-model="item.value"
+                     :label="item.name"
+                     @blur='inputEdit(item,index)'
+                     @focus='fnFocus(item,index)'
+                     @keyup.enter.native="keyupClick(item,index)">
+            <template slot="right-icon">
+              <i class="el-icon-edit"
+                 v-show="fieldIndex == index"></i>
+            </template>
+          </van-field>
+
+        </van-form>
+      </div>
+    </div>
+    <div class="systemInformation ">
+      <span>
+        <img src="../../images/icon_label.png"
+             alt="" />
+      </span>
+      <span>系统信息</span>
+      <div class="formEdit">
+        <van-form v-model="systemList">
+          <van-field v-for="(item,index) in systemList"
+                     label-align='center'
+                     :ref="'barcode'+index"
+                     readonly
+                     :key="index"
+                     v-model="item.value"
+                     :label="item.name">
+          </van-field>
+        </van-form>
       </div>
     </div>
     <div class="infoContent">
@@ -193,7 +214,6 @@
               </div>
             </div>
           </div>
-
           <div class="writerInput"
                v-if="isShowDialog=='3'">
             <van-field v-model="message"
@@ -209,22 +229,44 @@
         </div>
       </van-action-sheet>
     </div>
-    <BackTop></BackTop>
   </div>
 </template>
 <script>
-import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
 export default {
-  components: {
-    BackTop,
-  },
   data() {
     return {
-      title: '客户资料详情',
       name: '小鱼儿',
-      nameFrom: '@微信/企业',
-      email: '1234567890@qq.com',
+      formList: [
+        { name: '客户简称', value: '1', mapName: 'phone' },
+        { name: '公司名称', value: '1', mapName: 'livename' },
+        { name: '所属行业', value: '1', mapName: 'source' },
+        { name: '客户来源', value: '1', mapName: 'instry' },
+        { name: '企业规模', value: '1', mapName: 'instry' },
+        { name: '联系人', value: '1', mapName: 'instry' },
+        { name: '性别', value: '1', mapName: 'instry' },
+        { name: '微信号', value: '1', mapName: 'instry' },
+        { name: '手机号', value: '1', mapName: 'instry' },
+        { name: '邮箱', value: '1', mapName: 'instry' },
+        { name: '职务', value: '1', mapName: 'instry' },
+        { name: '地址', value: '1', mapName: 'instry' },
+        { name: '客户类型', value: '1', mapName: 'instry' },
+        { name: '备注', value: '1', mapName: 'instry' },
+        { name: '描述', value: '1', mapName: 'instry' },
+      ],
+      systemList: [
+        { name: '添加人员', mapName: 'phone', value: '' },
+        { name: '添加时间', mapName: 'phone', value: '' },
+        { name: '所属人', mapName: 'phone', value: '' },
+        { name: '领取时间', mapName: 'phone', value: '' },
+        { name: '最近跟进记录', mapName: 'phone', value: '' },
+        { name: '最近跟进时间', mapName: 'phone', value: '' },
+        { name: '最近修改人', mapName: 'phone', value: '' },
+        { name: '最近修改时间', mapName: 'phone', value: '' },
+        { name: '前所属人', mapName: 'phone', value: '' },
+        { name: '转换时间', mapName: 'phone', value: '' },
+      ],
+      fieldIndex: null,
       unfold: false,
       isShowPerson: false,
       tagList: [
@@ -263,11 +305,55 @@ export default {
               name: 'hahhah',
               id: 1,
             },
+            {
+              name: 'hahhah',
+              id: 1,
+            },
+            {
+              name: 'hahhah',
+              id: 1,
+            },
+            {
+              name: 'hahhah',
+              id: 1,
+            },
+            {
+              name: 'hahhah',
+              id: 1,
+            },
+            {
+              name: 'hahhah',
+              id: 1,
+            },
+            {
+              name: 'hahhah',
+              id: 1,
+            },
           ],
         },
         {
           name: '标签管理',
           children: [
+            {
+              name: 'hahhah',
+              id: 2,
+            },
+            {
+              name: 'hahhah',
+              id: 2,
+            },
+            {
+              name: 'hahhah',
+              id: 2,
+            },
+            {
+              name: 'hahhah',
+              id: 2,
+            },
+            {
+              name: 'hahhah',
+              id: 2,
+            },
             {
               name: 'hahhah',
               id: 2,
@@ -304,13 +390,37 @@ export default {
       tagName: '',
     }
   },
-
-  mounted() {},
-
+  created() {
+    let obj = {
+      livename: 'hahha',
+      source: 'jahkjh',
+      phone: '13213123',
+      instry: 'jajdkajk',
+    }
+    this.formList = this.formList.map((item) => {
+      return {
+        name: item.name,
+        value: obj[item.mapName],
+      }
+    })
+    // console.log(this.formList)
+  },
   methods: {
     formatDate,
-    goToDetail() {
-      this.$router.push('/informationDetail')
+    goBack() {
+      this.$router.go(-1)
+    },
+    inputEdit(item, index) {
+      // console.log(item, index)
+      this.fieldIndex = null
+    },
+    keyupClick(item, index) {
+      let p = 'barcode' + index
+      this.$refs[p][0].blur()
+      // console.log(22222, this.$refs[p])
+    },
+    fnFocus(item, index) {
+      this.fieldIndex = index
     },
     showCompany(v) {
       this.isShowDialog = v
@@ -383,124 +493,125 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.CustomerPortrait {
-  .custom_warp {
-    .topInfo {
-      height: 400px;
+.DetailCules {
+  .culeDeatil {
+    .headerTitle {
       background: #fff;
-      padding: 25px 24px 0 24px;
-      .customInfo {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .iconName {
-          display: flex;
-          .flag {
-            width: 88px;
-            height: 88px;
-            background: #4168f6;
-            border-radius: 12px;
-            text-align: center;
-            line-height: 88px;
-            color: #fff;
-            font-size: 35px;
-          }
-          .nameSex {
-            margin-left: 16px;
-            span:nth-child(1) {
-              font-size: 28px;
-              font-weight: 600;
-            }
-            span:nth-child(2) {
-              font-size: 24px;
-              color: #ffb020;
-            }
-            span {
-              display: inline-block;
-            }
-            img {
-              margin-top: 21px;
-              width: 28px;
-              height: 28px;
-            }
-          }
+      padding: 0 24px;
+      font-weight: 600;
+      display: flex;
+      height: 87px;
+      line-height: 87px;
+      font-size: 28px;
+      color: #3c4353;
+      border-top: 1px solid #f0f2f7;
+      border-bottom: 1px solid #f0f2f7;
+      .backPage {
+        width: 150px;
+        .van-icon {
+          vertical-align: -10%;
+          width: 28px;
+          height: 28px;
         }
-        .detailBtn {
+      }
+      .textTitle {
+        flex: 1;
+        display: inline-block;
+        padding-left: 120px;
+      }
+    }
+    .iconName {
+      display: flex;
+      padding: 24px;
+      background: #fff;
+      .flag {
+        width: 88px;
+        height: 88px;
+        background: #4168f6;
+        border-radius: 12px;
+        text-align: center;
+        line-height: 88px;
+        color: #fff;
+        font-size: 35px;
+      }
+      .nameSex {
+        margin-left: 16px;
+        span:nth-child(1) {
           font-size: 28px;
-          color: #4168f6;
-          .van-icon {
-            vertical-align: -11%;
-            width: 28px;
-            height: 28px;
-          }
+          font-weight: 600;
         }
-      }
-      .detailInfo {
-        display: flex;
-        margin-top: 21px;
-        .left,
-        .right {
-          width: 50%;
-          .rowStyle {
-            line-height: 40px;
-            font-size: 28px;
-            margin-bottom: 24px;
-            display: flex;
-            span {
-              display: inline-block;
-            }
-            span:nth-child(1) {
-              width: 84px;
-              color: #838a9d;
-              overflow: hidden;
-            }
-            span:nth-child(2) {
-              flex: 1;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-              color: #3c4353;
-              font-weight: 400;
-            }
-          }
+        span:nth-child(2) {
+          font-size: 24px;
+          color: #ffb020;
         }
-        .right {
-          margin-left: 19px;
-          .rowStyle {
-            span:nth-child(1) {
-              width: 140px;
-            }
-          }
-        }
-      }
-      .tjry {
-        height: 87px;
-        border-top: 1px solid #f0f2f7;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 28px;
         span {
           display: inline-block;
         }
-        .label {
-          width: 140px;
-          color: #838a9d;
-        }
-        .value {
-          width: 140px;
-          color: #3c4353;
-        }
-        .box {
-          width: 50%;
-        }
-        .box1 {
-          width: 50%;
-          margin-left: 29px;
+        img {
+          margin-top: 21px;
+          width: 28px;
+          height: 28px;
         }
       }
     }
-
+    .btnWarp {
+      display: flex;
+      background: #fff;
+      padding: 0 24px 24px;
+      .btnBox {
+        display: flex;
+        font-size: 28px;
+        // width: 152px;
+        padding: 0 16px;
+        height: 68px;
+        background: #ffffff;
+        border-radius: 9px;
+        border: 2px solid #d9dae4;
+        justify-content: center;
+        align-items: center;
+        margin-right: 24px;
+        img {
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+    .basicInformation,
+    .systemInformation {
+      background: #fff;
+      font-size: 28px;
+      padding: 0 24px;
+      span {
+        display: inline-block;
+        font-weight: 600;
+        line-height: 40px;
+      }
+      img {
+        width: 28px;
+        height: 28px;
+        margin-right: 12px;
+      }
+      .formEdit {
+        padding: 24px 0;
+        /deep/.van-form {
+          border: 1px solid #f0f2f7;
+          .van-cell {
+            padding: 0;
+            font-size: 28px;
+          }
+          .van-field__label {
+            width: 234px;
+            height: 80px;
+            background: #fafbff;
+            border: 1px solid #f0f2f7;
+            line-height: 80px;
+          }
+          .van-field__body {
+            height: 80px;
+          }
+        }
+      }
+    }
     .infoContent {
       margin-top: 24px;
       background: #fff;
@@ -625,9 +736,10 @@ export default {
             background: rgba(65, 104, 246, 0.06);
             border-radius: 8px;
             color: #3c4353;
-            padding: 16px;
+            padding: 16px 16px 0;
             font-size: 28px;
             .inLine {
+              margin-top: 10px;
               display: flex;
               justify-content: space-between;
               .time_right {
@@ -679,11 +791,11 @@ export default {
         .tagWarp {
           height: 740px;
           overflow-y: auto;
+          font-size: 28px;
           .tagRow {
             display: flex;
             min-height: 70px;
             margin-bottom: 24px;
-            font-size: 28px;
             span {
               display: inline-block;
               color: #838a9d;
@@ -703,7 +815,7 @@ export default {
               word-wrap: break-word;
               word-break: normal;
               font-weight: 600;
-              margin-right: 16px;
+              margin-right: 24px;
             }
             .tagStyle {
               flex: 1;

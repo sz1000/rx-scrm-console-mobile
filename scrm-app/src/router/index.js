@@ -12,6 +12,7 @@ import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import CustomerManage from '../views/customerManage/index.vue'
 import Clues from '../views/customerManage/Clues.vue'
 import AddCules from '../views/customerManage/AddCules.vue'
+import DetailCules from '../views/customerManage/DetailCules.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -82,6 +83,13 @@ const routes = [{
                     bodyClass: 'AddCules',
                 },
                 component: AddCules,
+            },
+            {
+                path: 'detailCules',
+                meta: {
+                    bodyClass: 'DetailCules',
+                },
+                component: DetailCules,
             },
         ],
     },

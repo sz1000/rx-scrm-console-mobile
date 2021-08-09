@@ -64,6 +64,7 @@
         </van-form>
       </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -101,7 +102,6 @@ export default {
         { name: '前所属人', mapName: 'phone', value: '' },
         { name: '转换时间', mapName: 'phone', value: '' },
       ],
-      readonly: false,
       fieldIndex: null,
     }
   },
