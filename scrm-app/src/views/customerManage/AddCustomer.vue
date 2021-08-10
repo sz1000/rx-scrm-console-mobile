@@ -6,28 +6,109 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">新增线索</span>
+      <span class="textTitle">新增客户</span>
     </div>
     <div class="addForm">
+      <div class="custonInfo">
+        <img src="../../images/icon_label.png"
+             alt="">
+        <span>客户信息</span>
+      </div>
       <el-form ref="form"
                :model="formObj"
                label-position='right'>
-        <el-form-item label="姓名:"
+        <el-form-item label="客户简称:"
                       prop="name"
-                      :rules="[ { required: true, message: '请输入姓名'}]">
+                      :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.name"
                     placeholder="请输入"
                     maxlength="12"></el-input>
         </el-form-item>
-        <el-form-item label="手机号:">
+        <el-form-item label="客户来源:"
+                      prop="source"
+                      :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
+          <el-select v-model="formObj.source"
+                     placeholder="请选择"
+                     @change="changeSource"
+                     clearable>
+            <el-option v-for="item in optionsSource"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.type">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="客户类型:">
+          <el-select v-model="formObj.customType"
+                     placeholder="请选择"
+                     @change="changeCustom"
+                     clearable>
+            <el-option v-for="item in customList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.type">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="电话:">
           <el-input v-model="formObj.phone"
-                    placeholder="手机号与微信号选填一个即可"
+                    placeholder="请输入"
                     maxlength="11"></el-input>
         </el-form-item>
-        <el-form-item label="微信号:">
+        <el-form-item label="公司名称:">
           <el-input v-model="formObj.wechat"
-                    placeholder="手机号与微信号选填一个即可"
-                    maxlength="20"></el-input>
+                    placeholder="请输入"
+                    maxlength="60"></el-input>
+        </el-form-item>
+        <el-form-item label="所属行业:">
+          <el-cascader size="large"
+                       :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
+                       :options="optionsCreat"
+                       v-model="formObj.industry"
+                       @change="handleChange">
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="企业规模:">
+          <el-select v-model="formObj.source"
+                     placeholder="请选择"
+                     @change="changeSource"
+                     clearable>
+            <el-option v-for="item in optionsSource"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.type">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="地址:">
+          <el-input v-model="formObj.remark"
+                    maxlength="100"
+                    placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="备注:"
+                      class="textareaInput">
+          <el-input type="textarea"
+                    v-model="formObj.remark"
+                    maxlength="200"
+                    placeholder="请输入文字(不得超过200个字符)"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <div class="custonInfo">
+          <img src="../../images/icon_label.png"
+               alt="">
+          <span>联系人信息</span>
+        </div>
+        <el-form-item label="姓名:"
+                      prop="name"
+                      :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
+          <el-input v-model="formObj.name"
+                    maxlength="15"
+                    placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号:">
+          <el-input v-model="formObj.phone"
+                    maxlength="11"
+                    placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="性别:">
           <el-select v-model="formObj.gender"
@@ -44,45 +125,15 @@
                     placeholder="请输入"
                     maxlength="20"></el-input>
         </el-form-item>
-        <el-form-item label="公司名称:">
+        <el-form-item label="微信号:">
           <el-input v-model="formObj.wechat"
                     placeholder="请输入"
-                    maxlength="30"></el-input>
-        </el-form-item>
-        <el-form-item label="所属行业:">
-          <el-cascader size="large"
-                       :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
-                       :options="optionsCreat"
-                       v-model="formObj.industry"
-                       @change="handleChange">
-          </el-cascader>
-        </el-form-item>
-        <el-form-item label="线索来源:">
-          <el-select v-model="formObj.source"
-                     placeholder="请选择线索来源"
-                     @change="changeSource"
-                     clearable>
-            <el-option v-for="item in optionsSource"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.type">
-            </el-option>
-          </el-select>
+                    maxlength="20"></el-input>
         </el-form-item>
         <el-form-item label="邮箱:">
-          <el-input v-model="formObj.remark"
+          <el-input v-model="formObj.wechat"
+                    placeholder="请输入"
                     maxlength="60"></el-input>
-        </el-form-item>
-        <el-form-item label="地址:">
-          <el-input v-model="formObj.remark"
-                    maxlength="100"></el-input>
-        </el-form-item>
-        <el-form-item label="备注:"
-                      class="textareaInput">
-          <el-input type="textarea"
-                    v-model="formObj.remark"
-                    maxlength="200"
-                    show-word-limit></el-input>
         </el-form-item>
         <el-form-item class="submitBtn">
           <el-button type="primary"
@@ -99,6 +150,7 @@ export default {
     return {
       formObj: {
         name: '',
+        customerType: '',
         phone: '',
         wechat: '',
         gender: '',
@@ -121,6 +173,7 @@ export default {
         },
       ],
       optionsSource: [],
+      changeCustom: [],
     }
   },
   methods: {
@@ -131,6 +184,9 @@ export default {
       console.log(val)
     },
     changeSource(val) {
+      console.log(val)
+    },
+    customList(val) {
       console.log(val)
     },
     onSubmit(formName) {
@@ -147,7 +203,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.AddCules {
+.AddCustomer {
   .addWarp {
     .headerTitle {
       background: #fff;
@@ -179,6 +235,18 @@ export default {
       padding: 24px;
       height: 100%;
       font-size: 28px;
+      .custonInfo {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        img {
+          width: 28px;
+          height: 28px;
+          vertical-align: -11%;
+          display: inline-block;
+          margin-right: 8px;
+        }
+      }
       /deep/.el-form {
         height: 100%;
         .el-form-item {
@@ -186,7 +254,7 @@ export default {
           margin-bottom: 26px;
         }
         .el-form-item__label {
-          width: 140px;
+          width: 155px;
           font-size: 28px;
           line-height: 80px;
         }
@@ -196,12 +264,13 @@ export default {
 
           .el-input__inner {
             height: 80px;
+            width: 100%;
             border-radius: 8px;
             font-size: 28px;
           }
           .el-select,
           .el-cascader {
-            width: 562px;
+            width: 100%;
             height: 80px;
           }
         }
@@ -209,8 +278,8 @@ export default {
           height: 400px;
           .el-textarea {
             .el-textarea__inner {
-              font-size: 28px;
               height: 400px;
+              font-size: 28px;
             }
           }
         }

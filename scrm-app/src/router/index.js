@@ -10,9 +10,17 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
+//线索
 import Clues from '../views/customerManage/Clues.vue'
 import AddCules from '../views/customerManage/AddCules.vue'
 import DetailCules from '../views/customerManage/DetailCules.vue'
+import TurnCustomer from '../views/customerManage/TurnCustomer.vue'
+import CluesSeas from '../views/customerManage/CluesSeas.vue'
+// 客户
+import MyCustomer from '../views/customerManage/MyCustomer.vue'
+import AddCustomer from '../views/customerManage/AddCustomer.vue'
+import CustomDetail from '../views/customerManage/CustomDetail.vue'
+import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -74,11 +82,13 @@ const routes = [{
                 path: 'clues',
                 meta: {
                     bodyClass: 'Clues',
+                    keepAlive: true,
                 },
                 component: Clues,
             },
             {
                 path: 'addCules',
+                name: 'addCules',
                 meta: {
                     bodyClass: 'AddCules',
                 },
@@ -90,6 +100,50 @@ const routes = [{
                     bodyClass: 'DetailCules',
                 },
                 component: DetailCules,
+            },
+            {
+                path: 'turnCustomer',
+                meta: {
+                    bodyClass: 'TurnCustomer',
+                },
+                component: TurnCustomer,
+            },
+            {
+                path: 'cluesSeas',
+                meta: {
+                    bodyClass: 'CluesSeas',
+                },
+                component: CluesSeas,
+            },
+            // 客户
+            {
+                path: 'myCustomer',
+                meta: {
+                    bodyClass: 'MyCustomer',
+                    keepAlive: true,
+                },
+                component: MyCustomer,
+            },
+            {
+                path: 'addCustomer',
+                meta: {
+                    bodyClass: 'AddCustomer',
+                },
+                component: AddCustomer,
+            },
+            {
+                path: 'customDetail',
+                meta: {
+                    bodyClass: 'CustomDetail',
+                },
+                component: CustomDetail,
+            },
+            {
+                path: 'customerSeas',
+                meta: {
+                    bodyClass: 'CustomerSeas',
+                },
+                component: CustomerSeas,
             },
         ],
     },

@@ -67,9 +67,9 @@ export default {
       } else if (v == 2) {
         this.$router.push('/talkTool/channelConfiguration')
       } else if (v == 3) {
-        this.$router.push('/customerManage')
+        this.$router.push('/customerManage/clues')
       } else {
-        this.$router.push('/customerPortrait')
+        this.$router.push('/customerManage/myCustomer')
       }
     },
   },

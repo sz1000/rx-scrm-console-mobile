@@ -20,22 +20,16 @@
     </div>
     <div class="btnWarp">
       <div class="btnBox"
-           @click="transCustom">
-        <img src="../../images/icon_change@2x.png"
+           @click="getReceive">
+        <img src="../../images/icon_like@2x.png"
              alt="" />
-        <span>转客户</span>
+        <span>领取</span>
       </div>
       <div class="btnBox"
            @click="changeUser">
-        <img src="../../images/icon_change2@2x.png"
+        <img src="../../images/icon_share@2x.png"
              alt="" />
-        <span>变更所属人</span>
-      </div>
-      <div class="btnBox"
-           @click="giveUp">
-        <img src="../../images/icon_clear@2x.png"
-             alt="" />
-        <span>放弃</span>
+        <span>分配</span>
       </div>
     </div>
     <div class="basicInformation">
@@ -88,11 +82,11 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <div class='editButton'
+          <!-- <div class='editButton'
                @click="showCompany(1)">
             <i class="el-icon-edit"></i>
             编辑
-          </div>
+          </div> -->
         </div>
         <div class="b_content">
           <div :class="{ 'over-hidden': !unfold }"
@@ -110,40 +104,9 @@
           </div>
         </div>
       </div>
-      <div class="personLabel">
-        <div class="t_text">
-          <span class="label_tag">个人标签</span>
-          <div class='editButton'
-               @click="showCompany(2)">
-            <i class="el-icon-edit"></i>
-            编辑
-          </div>
-        </div>
-        <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }"
-               ref="textBox">
-            <div ref="spanBox">
-              <span v-for="(list,index) in tagList"
-                    :key="index"
-                    class="tagBox">{{list.name}}</span>
-            </div>
-          </div>
-          <div class="btn"
-               @click="isShowPerson = !isShowPerson">
-            {{isShowPerson ? '收起' : '展开'}}
-            <van-icon name="arrow-down" />
-          </div>
-        </div>
-      </div>
       <div class="dynamic">
         <div class="t_text">
           <span class="label_tag">动态</span>
-          <div class='editButton'
-               @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png"
-                 alt="">
-            <span>写跟进</span>
-          </div>
         </div>
         <div class="allText">全部</div>
         <div class="timeLine">
@@ -171,66 +134,7 @@
       <van-action-sheet v-model="show"
                         :title="titleName">
         <div class="content">
-          <div class="tagWarp"
-               v-if="isShowDialog=='1'">
-            <div class="tagRow"
-                 v-for="(item,index) in groupList"
-                 :key="index">
-              <div class="groupName">{{item.name}}</div>
-              <div class="tagStyle">
-                <span class="creatTag"
-                      :class="{'changeTag':highLightArr.includes(list.id)}"
-                      v-for="(list,index) in item.children"
-                      :key="list.id"
-                      v-show="list.name"
-                      @click="selectTag(list,index)">{{list.name}}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="tagWarp personWarp"
-               v-if="isShowDialog=='2'">
-            <div class="tagRow">
-              <!-- <div class="groupName">{{item.name}}</div> -->
-              <div class="tagStyle">
-                <span class="addBtn pointer"
-                      @click="addTag">+添加</span>
-                <span class="perchInput"
-                      v-if="isShow ">
-                  <input v-model="tagName"
-                         class="addInput"
-                         placeholder="输入后按回车完成"
-                         maxlength="30"
-                         @keyup.enter="handleSearch()" />
-                </span>
-                <span class="creatTag"
-                      :class="{'changeTag':tempList.includes(list.id)}"
-                      v-for="(list,index) in personList"
-                      :key="list.id"
-                      v-show="list.name">
-                  <span @click="selectPersonTag(list,index)">{{list.name}}</span>
-                  <span class="deleteTag"
-                        @click="deleteTag(list,index)">
-                    <van-icon name="cross" />
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="writerInput"
-               v-if="isShowDialog=='3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="300"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
-          </div>
-          <div class="changeUser"
-               v-if="isShowDialog=='4'">
-            <div class="nowUser">
-              <span>现有所属人:</span>
-              <span>{{nowUser}}</span>
-            </div>
+          <div class="changeUser">
             <div class="selectUser">
               <span style="color:red;">*</span><span>指定所属人:</span>
               <el-select v-model="value"
@@ -262,19 +166,16 @@ export default {
     return {
       name: '小鱼儿',
       formList: [
-        { name: '客户简称', value: '1', mapName: 'phone' },
-        { name: '公司名称', value: '1', mapName: 'livename' },
-        { name: '所属行业', value: '1', mapName: 'source' },
-        { name: '客户来源', value: '1', mapName: 'instry' },
-        { name: '企业规模', value: '1', mapName: 'instry' },
-        { name: '联系人', value: '1', mapName: 'instry' },
+        { name: '姓名', value: '1', mapName: 'name' },
+        { name: '手机号', value: '1', mapName: 'livename' },
+        { name: '微信号', value: '1', mapName: 'source' },
         { name: '性别', value: '1', mapName: 'instry' },
-        { name: '微信号', value: '1', mapName: 'instry' },
-        { name: '手机号', value: '1', mapName: 'instry' },
-        { name: '邮箱', value: '1', mapName: 'instry' },
         { name: '职务', value: '1', mapName: 'instry' },
+        { name: '公司名称', value: '1', mapName: 'instry' },
+        { name: '所属行业', value: '1', mapName: 'instry' },
+        { name: '线索来源', value: '1', mapName: 'instry' },
+        { name: '邮箱', value: '1', mapName: 'instry' },
         { name: '地址', value: '1', mapName: 'instry' },
-        { name: '客户类型', value: '1', mapName: 'instry' },
         { name: '备注', value: '1', mapName: 'instry' },
         { name: '描述', value: '1', mapName: 'instry' },
       ],
@@ -452,87 +353,12 @@ export default {
     fnFocus(item, index) {
       this.fieldIndex = index
     },
-    showCompany(v) {
-      this.isShowDialog = v
-      this.show = true
-      if (v == 1) {
-        this.titleName = '企业标签'
-      } else if (v == 2) {
-        this.titleName = '个人标签'
-      } else if (v == 3) {
-        this.titleName = '写跟进'
-      }
-    },
-    addTag(item, index) {
-      this.tagName = ''
-      this.isShow = !this.isShow
-    },
-    handleSearch() {
-      console.log(this.tagName)
-      // if (this.tagName) {
-      //   this.$network
-      //     .post('/customer-service/tag/add', {
-      //       name: this.tagName,
-      //       parentId: item.id,
-      //       tagid: item.tagid,
-      //     })
-      //     .then((res) => {
-      this.personList.push({ name: this.tagName })
-      //     })
-      // }
-      this.showInput = null
-      this.isShow = false
-    },
-    selectTag(list, index) {
-      // console.log(list, index)
-      if (this.highLightArr.includes(list.id)) {
-        let p = this.highLightArr.indexOf(list.id)
-        this.highLightArr.splice(p, 1)
-      } else {
-        this.highLightArr.push(list.id)
-      }
-    },
-    selectPersonTag(list, index) {
-      if (this.tempList.includes(list.id)) {
-        let p = this.tempList.indexOf(list.id)
-        this.tempList.splice(p, 1)
-        console.log(p)
-      } else {
-        this.tempList.push(list.id)
-      }
-    },
-    deleteTag(v, i) {
-      // console.log(v)
+    getReceive() {
+      // this.$router.push('turnCustomer')
       this.$dialog
         .confirm({
-          title: '温馨提示',
-          message: '是否确认删除',
-          className: 'deleteBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })
-        .then(() => {
-          // on confirm
-        })
-        .catch(() => {
-          // on cancel
-        })
-    },
-    transCustom() {
-      this.$router.push('turnCustomer')
-    },
-    changeUser() {
-      this.isShowDialog = '4'
-      this.show = true
-      this.titleName = '变更所属人'
-    },
-    giveUp() {
-      this.$dialog
-        .confirm({
-          title: '放弃警告',
-          message:
-            '是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
+          title: '领取提示',
+          message: '是否确认领取所选择的线索？\n确认申领该条资源吗？',
           className: 'giveUpBtn',
           confirmButtonText: '是',
           cancelButtonText: '否',
@@ -544,6 +370,11 @@ export default {
         .catch(() => {
           // on cancel
         })
+    },
+    changeUser() {
+      // this.isShowDialog = '4'
+      this.show = true
+      this.titleName = '分配线索'
     },
     fnChangeUser(val) {
       console.log(val)
@@ -560,7 +391,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.DetailCules {
+.CluesSeas {
   .culeDeatil {
     .headerTitle {
       background: #fff;

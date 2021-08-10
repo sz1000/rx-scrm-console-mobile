@@ -6,16 +6,16 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">线索</span>
+      <span class="textTitle">客户</span>
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
         <span :class="{'active':tabClick==1}"
               class="mycule"
-              @click="tabClick=1">我的线索</span>
+              @click="tabClick=1">我的客户</span>
         <span :class="{'active':tabClick==2}"
               class="mycule"
-              @click="tabClick=2">线索公海</span>
+              @click="tabClick=2">客户公海</span>
       </div>
       <span class="addBtn"
             @click="addCules">
@@ -28,7 +28,7 @@
       <input type="text"
              class="input"
              v-model="inputValue"
-             placeholder="请输入姓名/公司/手机号">
+             placeholder="请输入客户简称/公司/手机号">
       <span class="searchBtn"
             @click="inquire">查询</span>
     </div>
@@ -38,14 +38,8 @@
            :key="index">
         <div class="customInfo">
           <div class="iconName">
-            <div class="flag">鱼</div>
-            <div class="nameSex">
-              <span>{{item.name}}</span>
-              <!-- <span>{{item.nameFrom}}</span> -->
-              <img src="../../images/icon_female@2x.png"
-                   alt="" />
-
-            </div>
+            <span>客户简称:</span>
+            <span>{{customName}}</span>
           </div>
           <div class="detailBtn"
                @click="deleteCard(item,index)">
@@ -111,6 +105,7 @@ export default {
         { name: '小鱼儿', email: '1234567890@qq.com' },
         { name: '小鱼儿', email: '1234567890@qq.com' },
       ],
+      customName: '大熊科技',
     }
   },
   methods: {
@@ -119,7 +114,7 @@ export default {
     },
     addCules() {
       // console.log(this.tabClick)
-      this.$router.push('addCules')
+      this.$router.push('addCustomer')
     },
     inquire: _throttle(function () {
       // console.log(this.inputValue)
@@ -128,7 +123,7 @@ export default {
       this.$dialog
         .confirm({
           title: '温馨提示',
-          message: '删除后将不可恢复，是否确认删除？',
+          message: '是否确认删除？',
           className: 'deleteBtn',
           confirmButtonText: '是',
           cancelButtonText: '否',
@@ -144,16 +139,16 @@ export default {
     goDetail(item, index) {
       console.log(this.tabClick)
       if (this.tabClick == 1) {
-        this.$router.push('detailCules')
+        this.$router.push('customDetail')
       } else {
-        this.$router.push('CluesSeas')
+        this.$router.push('customerSeas')
       }
     },
   },
 }
 </script>
 <style lang="less" scoped>
-.Clues {
+.MyCustomer {
   .clueWarp {
     height: 100%;
     .headerTitle {
@@ -263,36 +258,16 @@ export default {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          height: 88px;
+          border-bottom: 1px solid #f0f2f7;
           .iconName {
-            display: flex;
-            .flag {
-              width: 88px;
-              height: 88px;
-              background: #4168f6;
-              border-radius: 12px;
-              text-align: center;
-              line-height: 88px;
-              color: #fff;
-              font-size: 35px;
+            // display: flex;
+            font-size: 28px;
+            span:nth-child(1) {
+              color: #838a9d;
             }
-            .nameSex {
-              margin-left: 16px;
-              span:nth-child(1) {
-                font-size: 28px;
-                font-weight: 600;
-              }
-              span:nth-child(2) {
-                font-size: 24px;
-                color: #ffb020;
-              }
-              span {
-                display: inline-block;
-              }
-              img {
-                margin-top: 21px;
-                width: 28px;
-                height: 28px;
-              }
+            span:nth-child(2) {
+              color: #3c4353;
             }
           }
           .detailBtn {

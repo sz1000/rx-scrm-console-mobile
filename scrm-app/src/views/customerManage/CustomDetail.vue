@@ -6,25 +6,19 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">线索详情</span>
+      <span class="textTitle">客户详情</span>
     </div>
     <div class="iconName">
-      <div class="flag">鱼</div>
-      <div class="nameSex">
-        <span>{{name}}</span>
-        <!-- <span>{{nameFrom}}</span> -->
-        <img src="../../images/icon_female@2x.png"
-             alt="" />
-
-      </div>
+      <span>客户简称:</span>
+      <span>{{customName}}</span>
     </div>
     <div class="btnWarp">
-      <div class="btnBox"
+      <!-- <div class="btnBox"
            @click="transCustom">
         <img src="../../images/icon_change@2x.png"
              alt="" />
         <span>转客户</span>
-      </div>
+      </div> -->
       <div class="btnBox"
            @click="changeUser">
         <img src="../../images/icon_change2@2x.png"
@@ -261,6 +255,7 @@ export default {
   data() {
     return {
       name: '小鱼儿',
+      customName: '小鱼儿',
       formList: [
         { name: '客户简称', value: '1', mapName: 'phone' },
         { name: '公司名称', value: '1', mapName: 'livename' },
@@ -519,9 +514,6 @@ export default {
           // on cancel
         })
     },
-    transCustom() {
-      this.$router.push('turnCustomer')
-    },
     changeUser() {
       this.isShowDialog = '4'
       this.show = true
@@ -560,7 +552,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.DetailCules {
+.CustomDetail {
   .culeDeatil {
     .headerTitle {
       background: #fff;
@@ -591,34 +583,12 @@ export default {
       display: flex;
       padding: 24px;
       background: #fff;
-      .flag {
-        width: 88px;
-        height: 88px;
-        background: #4168f6;
-        border-radius: 12px;
-        text-align: center;
-        line-height: 88px;
-        color: #fff;
-        font-size: 35px;
+      font-size: 28px;
+      span:nth-child(1) {
+        color: #838a9d;
       }
-      .nameSex {
-        margin-left: 16px;
-        span:nth-child(1) {
-          font-size: 28px;
-          font-weight: 600;
-        }
-        span:nth-child(2) {
-          font-size: 24px;
-          color: #ffb020;
-        }
-        span {
-          display: inline-block;
-        }
-        img {
-          margin-top: 21px;
-          width: 28px;
-          height: 28px;
-        }
+      span:nth-child(2) {
+        color: #3c4353;
       }
     }
     .btnWarp {
