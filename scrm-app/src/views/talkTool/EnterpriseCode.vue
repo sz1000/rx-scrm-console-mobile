@@ -71,11 +71,10 @@
       </div>
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="show"
+      <van-action-sheet v-model="showAdd"
                         :title="titleName">
         <div class="content">
-          <div class="addForm"
-               v-if="isShowDialog=='1'">
+          <div class="addForm">
             <el-form ref="form"
                      :model="addForm"
                      label-position='right'>
@@ -134,8 +133,18 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="addForm"
-               v-if="isShowDialog=='2'">
+          <div class="buttonWarp">
+            <span class="cancel"
+                  @click="closeDialog()">取消</span>
+            <span class="save"
+                  @click="saveDialog()">保存</span>
+          </div>
+        </div>
+      </van-action-sheet>
+      <van-action-sheet v-model="showEdit"
+                        :title="titleName">
+        <div class="content">
+          <div class="addForm">
             <el-form ref="form"
                      :model="editForm"
                      label-position='right'>
@@ -200,8 +209,19 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="codeDetail"
-               v-if="isShowDialog=='3'">
+
+          <div class="buttonWarp">
+            <span class="cancel"
+                  @click="closeDialog()">取消</span>
+            <span class="save"
+                  @click="saveDialog()">保存</span>
+          </div>
+        </div>
+      </van-action-sheet>
+      <van-action-sheet v-model="showDetail"
+                        :title="titleName">
+        <div class="content">
+          <div class="codeDetail">
             <el-form label-position="right"
                      :model="detailForm">
               <el-form-item label="活码展示:"
@@ -227,13 +247,6 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-if="isShowDialog !==3">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
-          </div>
         </div>
       </van-action-sheet>
     </div>
@@ -251,9 +264,10 @@ export default {
         },
         {},
       ],
-      show: false,
+      showAdd: false,
+      showEdit: false,
+      showDetail: false,
       titleName: '',
-      isShowDialog: null,
       addForm: {},
       editForm: {
         creatBy: 'hahah',
@@ -270,8 +284,7 @@ export default {
       this.$router.go(-1)
     },
     addCode() {
-      this.isShowDialog = 1
-      this.show = true
+      this.showAdd = true
       this.titleName = '新增企微活码'
     },
     changeUsre(val) {
@@ -283,8 +296,7 @@ export default {
     editBtn(v) {
       console.log(v)
       this.titleName = '编辑企微活码'
-      this.isShowDialog = 2
-      this.show = true
+      this.showEdit = true
     },
     sendCode(item, index) {
       console.log(item, index)
@@ -309,8 +321,7 @@ export default {
     },
     checkDetail(item, index) {
       this.titleName = '企微活码详情'
-      this.isShowDialog = 3
-      this.show = true
+      this.showDetail = true
     },
     deleteBtn(v) {
       this.$dialog
@@ -607,12 +618,18 @@ export default {
           }
         }
         .codeDetail {
-          .el-form {
+          /deep/.el-form {
             .codeImg {
-              margin-bottom: 100px;
+              margin-bottom: 100px !important;
+            }
+            .el-form-item {
+              margin-bottom: 0;
+            }
+            .el-form-item__label {
+              font-size: 24px;
             }
             span {
-              font-size: 28px;
+              font-size: 24px;
               line-height: 80px;
             }
           }
