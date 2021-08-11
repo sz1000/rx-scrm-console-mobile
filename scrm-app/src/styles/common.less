@@ -6,11 +6,19 @@ html {
   -webkit-overflow-scrolling: touch;
   height: 100%;
   width: 100%;
+  overflow: scroll;
 }
 
 body {
   height: 100%;
   width: 100%;
+  overflow: scroll;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 
 /* 禁止缩放表单 */
@@ -62,25 +70,6 @@ menu,
 nav,
 section {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-/* 设置HTML5元素为块 */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-
-textarea {
-  outline: none;
 }
 
 /* 图片自适应 */
@@ -266,7 +255,7 @@ a:hover {
   opacity: 0
 }
 
-
+/*客户管理 放弃、删除弹窗*/
 .commonVant {
   .van-dialog__header {
     text-align: left;
