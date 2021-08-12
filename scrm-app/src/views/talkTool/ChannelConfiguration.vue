@@ -19,13 +19,19 @@
         新增
       </span>
     </div>
+    <van-list v-model="loading"
+              :finished="finished"
+              :immediate-check="false"
+              finished-text="没有更多了"
+              @load="onLoad"
+              :offset="10">
     <div class="cardCode"
          v-for="(item,index) in channelList"
          :key="index">
       <div class="operationTop">
         <div class="codeName">
           <span>渠道名称:</span>
-          <span>{{item.livename}}</span>
+          <span>{{item.name}}</span>
         </div>
         <div class="editBtn">
           <span @click="editBtn(item)">
@@ -42,19 +48,20 @@
            @click="channelDetail(item,index)">
         <div class="codeNum">
           <span>活码数:</span>
-          <span>{{item.num}}</span>
+          <span>{{item.livecodeSum}}</span>
         </div>
         <div class="codeNum">
           <span>添加客户数:</span>
-          <span>{{item.num}}</span>
+          <span>{{item.userSum}}</span>
         </div>
         <div class="welcomelable">
           <span>渠道欢迎语:</span>
-          <span>{{item.welcom}}</span>
+          <span>{{item.welText}}</span>
         </div>
 
       </div>
     </div>
+    </van-list>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
                         :title="titleName">
@@ -74,7 +81,7 @@
               <el-form-item label="欢迎语:"
                             class="textareaInput">
                 <el-input type="textarea"
-                          v-model="addForm.remark"
+                          v-model="addForm.welText"
                           placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
                           maxlength="300"
                           show-word-limit></el-input>
@@ -107,7 +114,7 @@
               <el-form-item label="欢迎语:"
                             class="textareaInput">
                 <el-input type="textarea"
-                          v-model="editForm.remark"
+                          v-model="editForm.welText"
                           placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
                           maxlength="300"
                           show-word-limit></el-input>
@@ -118,7 +125,7 @@
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
-                  @click="saveDialog()">保存</span>
+                  @click="saveEdit()">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -157,19 +164,11 @@
   </div>
 </template>
 <script>
-import { formatDate } from '../../utils/tool'
+import { formatDate, _throttle } from '../../utils/tool'
 export default {
   data() {
     return {
-      channelList: [
-        {
-          livename: 'hahah',
-          num: 'hdadjad',
-          welcom:
-            '骄傲和发掘授课骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划骄傲和发掘授课计划',
-        },
-        {},
-      ],
+      channelList: [],
       showAdd: false,
       showEdit: false,
       showDetail: false,
@@ -180,10 +179,81 @@ export default {
         creatTime: 1628660777971,
       },
       detailForm: {},
+      loading: false,
+      finished: false,
+      page: 1, //请求第几页
+      pageSize: 10, //每页请求的数量
+      total: 0, //总共的数据条数
     }
+  },
+  created(){
+    this.getData();
   },
   methods: {
     formatDate,
+    onLoad() {
+      this.page++
+      this.getData()
+    },
+    getData(){
+      this.$network.get('/user-service/channel/getChannelList',{page:this.page})
+      .then((res) => {
+        console.log(res)
+        // this.channelList = res.data;
+          let rows = res.data.channelEntityPage.records //请求返回当页的列表
+          this.loading = false
+          this.total = res.data.channelEntityPage.total
+
+          if (rows == null || rows.length === 0) {
+            // 加载结束
+            this.finished = true
+            return
+          }
+          // 将新数据与老数据进行合并
+          // this.channelList = this.channelList.concat(rows)
+          this.channelList = rows
+          //如果列表数据条数>=总条数，不再触发滚动加载
+          if (this.channelList.length >= this.total) {
+            this.finished = true
+          }
+          console.log(this.channelList)
+      })
+    },
+    //保存新增
+    saveDialog:_throttle(function(){
+      console.log(this.addForm)
+      if(this.addForm.name == null){
+        return
+      }
+      this.$network
+        .post('/user-service/channel/addChannel',this.addForm)
+        .then((res) => {
+          if(res.result){
+            this.getData()
+            this.closeDialog();
+          }
+        })
+
+    }),
+    //保存编辑
+    saveEdit(){
+      this.$network
+        .post('/user-service/channel/updChannel',this.editForm)
+        .then((res) => {
+          if(res.result){
+            this.getData()
+            this.closeDialog();
+          }
+        })
+    },
+
+    //关闭弹框
+    closeDialog(){
+      this.showAdd = false ;
+      this.showEdit = false ;
+      this.addForm = [],
+      this.editForm = []
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -194,6 +264,7 @@ export default {
     editBtn(item, index) {
       this.titleName = '编辑渠道'
       this.showEdit = true
+      this.editForm = item
     },
     channelDetail(item, index) {
       this.titleName = '渠道详情'
@@ -210,6 +281,11 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
+          this.$network
+          .post('/user-service/channel/delChannel', v)
+          .then((res) => {
+          this.getData()
+        })
           // on confirm
         })
         .catch(() => {
