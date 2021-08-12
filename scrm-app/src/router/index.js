@@ -152,8 +152,12 @@ const routes = [{
 const router = new VueRouter({
     routes,
 })
+
 router.beforeEach((to, from, next) => {
     document.getElementsByTagName('body')[0].className = to.meta.bodyClass
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+    window.pageYOffset = 0
     next()
 })
 export default router
