@@ -569,6 +569,7 @@ export default {
                 height: 80px;
                 border-radius: 8px;
                 font-size: 28px;
+                border: 2px solid #d9dae4;
               }
               .el-select,
               .el-cascader {
@@ -579,10 +580,11 @@ export default {
               .el-checkbox {
                 width: 100%;
                 line-height: 80px;
-
                 .el-checkbox__inner {
+                  border: 2px solid #d9dae4;
                   width: 28px;
                   height: 28px;
+
                   &::after {
                     width: 12px;
                     height: 12px;

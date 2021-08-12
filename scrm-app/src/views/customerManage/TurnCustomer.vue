@@ -267,6 +267,7 @@ export default {
             width: 100%;
             border-radius: 8px;
             font-size: 28px;
+            border: 2px solid #d9dae4;
           }
           .el-select,
           .el-cascader {

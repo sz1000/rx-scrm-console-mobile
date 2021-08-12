@@ -941,6 +941,7 @@ export default {
                 border-radius: 8px;
                 font-size: 28px;
                 font-weight: normal;
+                border: 2px solid #d9dae4;
               }
             }
           }

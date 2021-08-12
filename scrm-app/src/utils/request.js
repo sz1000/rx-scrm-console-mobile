@@ -9,14 +9,14 @@ let instance = axios.create({
 // 请求
 instance.interceptors.request.use(
         (config) => {
-            // console.log('--------', config)
             // 如果有token 就携带tokon
-            const token = window.localStorage.getItem('token')
-            console.log('------token----', token)
+            // const token = window.localStorage.getItem('token')
+            const token = '123213|C5ED8685881145908563671E6F54AFCF'
+                // console.log('------token----', token)
             if (token) {
                 config.headers.common.token = token
             }
-            // console.log('-----config----', config)
+            console.log('-----config----', config)
             return config
         },
         (error) => Promise.reject(error)

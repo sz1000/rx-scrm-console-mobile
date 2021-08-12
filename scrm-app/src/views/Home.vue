@@ -58,27 +58,33 @@
 export default {
   components: {},
   mounted() {
-    let wx = window.wx
-    console.log(wx)
+    this.$nextTick(() => {
+      //   let wx = window.wx
+      //   console.log(wx)
+      //   wx.config({
+      //     beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+      //     debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      //     appId: '', // 必填，企业微信的corpID
+      //     // timestamp: , // 必填，生成签名的时间戳
+      //     nonceStr: '', // 必填，生成签名的随机串
+      //     signature: '', // 必填，签名，见 附录-JS-SDK使用权限签名算法
+      //     jsApiList: [], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
+      //   }),
+      //     wx.ready(function () {
+      //       // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+      //       wx.invoke('getContext', {}, function (res) {
+      //         if (res.err_msg == 'getContext:ok') {
+      //           entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
+      //           shareTicket = res.shareTicket //可用于调用getShareInfo接口
+      //         } else {
+      //           //错误处理
+      //         }
+      //       })
+      //     })
+    })
   },
   created() {
-    // this.$network.get('/customer-service/group/list').then((res) => {})
-    // wx.agentConfig({
-    //   corpid: '', // 必填，企业微信的corpid，必须与当前登录的企业一致
-    //   agentid: '', // 必填，企业微信的应用id （e.g. 1000247）
-    //   // timestamp: , // 必填，生成签名的时间戳
-    //   nonceStr: '', // 必填，生成签名的随机串
-    //   signature: '', // 必填，签名，见附录-JS-SDK使用权限签名算法
-    //   jsApiList: ['selectExternalContact'], //必填，传入需要使用的接口名称
-    //   success: function (res) {
-    //     // 回调
-    //   },
-    //   fail: function (res) {
-    //     if (res.errMsg.indexOf('function not exist') > -1) {
-    //       alert('版本过低请升级')
-    //     }
-    //   },
-    // })
+    this.$network.get('/customer-service/group/list').then((res) => {})
   },
   methods: {
     fnToIndex(v) {
