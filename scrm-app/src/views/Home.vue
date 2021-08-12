@@ -84,7 +84,7 @@ export default {
     })
   },
   created() {
-    this.$network.get('/customer-service/group/list').then((res) => {})
+    // this.$network.get('/customer-service/group/list').then((res) => {})
   },
   methods: {
     fnToIndex(v) {

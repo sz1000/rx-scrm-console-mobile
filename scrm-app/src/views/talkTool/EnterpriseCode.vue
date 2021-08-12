@@ -19,57 +19,64 @@
         新增
       </span>
     </div>
-    <div class="cardCode"
-         v-for="(item,index) in liveList"
-         :key="index">
-      <div class="operationTop">
-        <div class="codeName">
-          <span>活码名称:</span>
-          <span>{{item.livename}}</span>
+    <van-list v-model="loading"
+              :finished="finished"
+              :immediate-check="false"
+              finished-text="没有更多了"
+              @load="onLoad"
+              :offset="10">
+      <div class="cardCode"
+           v-for="(item,index) in liveList"
+           :key="index">
+        <div class="operationTop">
+          <div class="codeName">
+            <span>活码名称:</span>
+            <span>{{item.name}}</span>
+          </div>
+          <div class="editBtn">
+            <span @click="editBtn(item)">
+              <van-icon name="edit" />
+              编辑
+            </span>
+            <span @click="deleteBtn(item)">
+              <van-icon name="delete-o" />
+              删除
+            </span>
+          </div>
         </div>
-        <div class="editBtn">
-          <span @click="editBtn(item)">
-            <van-icon name="edit" />
-            编辑
-          </span>
-          <span @click="deleteBtn(item)">
-            <van-icon name="delete-o" />
-            删除
-          </span>
+        <div class="contentBox">
+          <div class="leftCode">
+            <img :src="item.address"
+                 alt="">
+            <div class="shareCode"
+                 @click="sendCode(item,index)">
+              <span> <img src="../../images/send.png"
+                     alt=""></span>
+              发送二维码
+            </div>
+          </div>
+          <div class="rightInfo"
+               @click="checkDetail(item,index)">
+            <div class="rowText">
+              <span>渠道:</span>
+              <span>{{item.chName}}</span>
+            </div>
+            <div class="rowText">
+              <span>创建人员:</span>
+              <span>{{item.createBy}}</span>
+            </div>
+            <div class="rowText">
+              <span>创建时间:</span>
+              <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+            </div>
+            <div class="rowText">
+              <span>使用员工:</span>
+              <span>{{item.userNames}}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="contentBox">
-        <div class="leftCode">
-          <img :src="item.address"
-               alt="">
-          <div class="shareCode"
-               @click="sendCode(item,index)">
-            <span> <img src="../../images/send.png"
-                   alt=""></span>
-            发送二维码
-          </div>
-        </div>
-        <div class="rightInfo"
-             @click="checkDetail(item,index)">
-          <div class="rowText">
-            <span>渠道:</span>
-            <span>渠道</span>
-          </div>
-          <div class="rowText">
-            <span>创建人员:</span>
-            <span>渠道</span>
-          </div>
-          <div class="rowText">
-            <span>创建时间:</span>
-            <span>渠道</span>
-          </div>
-          <div class="rowText">
-            <span>使用员工:</span>
-            <span>使用员工使用员工使用员工使用员工使用员工使用员工使用员工使用员工</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    </van-list>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
                         :title="titleName">
@@ -90,7 +97,7 @@
               <el-form-item label="使用员工:"
                             prop="userNo"
                             :rules="[ { required: true, message: '请选择'}]">
-                <el-select v-model="addForm.usreNo"
+                <el-select v-model="addForm.userNo"
                            placeholder="请选择使用员工，可多选"
                            multiple
                            collapse-tags
@@ -99,27 +106,27 @@
                   <el-option v-for="item in usreList"
                              :key="item.value"
                              :label="item.name"
-                             :value="item.type">
+                             :value="item.userNo">
                   </el-option>
                 </el-select>
               </el-form-item>
 
               <el-form-item label="添加设置:">
-                <el-checkbox v-model="addForm.checked"
+                <el-checkbox v-model="addForm.status"
                              true-label='1'
                              false-label='0'
                              @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
               </el-form-item>
 
               <el-form-item label="渠道:">
-                <el-select v-model="addForm.source"
+                <el-select v-model="addForm.chId"
                            placeholder="请选择"
                            @change="changeChannel"
                            clearable>
                   <el-option v-for="item in channelList"
                              :key="item.value"
                              :label="item.name"
-                             :value="item.type">
+                             :value="item.chId">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -209,12 +216,11 @@
               </el-form-item>
             </el-form>
           </div>
-
           <div class="buttonWarp">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
-                  @click="saveDialog()">保存</span>
+                  @click="saveEdit()">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -253,17 +259,11 @@
   </div>
 </template>
 <script>
-import { formatDate } from '../../utils/tool'
+import { formatDate, _throttle } from '../../utils/tool'
 export default {
   data() {
     return {
-      liveList: [
-        {
-          livename:
-            '哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈',
-        },
-        {},
-      ],
+      liveList: [],
       showAdd: false,
       showEdit: false,
       showDetail: false,
@@ -276,16 +276,54 @@ export default {
       detailForm: {},
       usreList: [{}, {}, {}],
       channelList: [],
+      loading: false,
+      finished: false,
+      page: 1, //请求第几页
+      pageSize: 10, //每页请求的数量
+      total: 0, //总共的数据条数
     }
+  },
+  created() {
+    this.getData()
   },
   methods: {
     formatDate,
+    onLoad() {
+      this.page++
+      this.getData()
+    },
+    getData() {
+      this.$network
+        .get('/user-service/livecode/getLivecodeList', { page: this.page })
+        .then((res) => {
+          // this.liveList = res.data.iPage.records
+          let rows = res.data.iPage.records //请求返回当页的列表
+          this.loading = false
+          this.total = res.data.iPage.total
+
+          if (rows == null || rows.length === 0) {
+            // 加载结束
+            this.finished = true
+            return
+          }
+          // 将新数据与老数据进行合并
+          this.liveList = this.liveList.concat(rows)
+          //如果列表数据条数>=总条数，不再触发滚动加载
+          if (this.liveList.length >= this.total) {
+            this.finished = true
+          }
+        })
+    },
     goBack() {
       this.$router.go(-1)
     },
     addCode() {
       this.showAdd = true
       this.titleName = '新增企微活码'
+      this.$network.get('/user-service/livecode/toadd').then((res) => {
+        this.usreList = res.data.userlist
+        this.channelList = res.data.chlist
+      })
     },
     changeUsre(val) {
       console.log(val)
@@ -301,23 +339,6 @@ export default {
     sendCode(item, index) {
       console.log(item, index)
       console.log(window.wx)
-      // wx.ready(function () {
-      //   // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-      //   // 扫一扫功能例子
-      //   wx.invoke({
-      //     desc: 'scanQRCode desc',
-      //     needResult: 0, // 默认为0，扫描结果由企业微信处理，1则直接返回扫描结果，
-      //     scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是条形码（一维码），默认二者都有
-      //     success: function (res) {
-      //       // 回调
-      //     },
-      //     error: function (res) {
-      //       if (res.errMsg.indexOf('function_not_exist') > 0) {
-      //         alert('版本过低请升级')
-      //       }
-      //     },
-      //   })
-      // })
     },
     checkDetail(item, index) {
       this.titleName = '企微活码详情'
@@ -341,8 +362,24 @@ export default {
         })
     },
     changeChannel() {},
-    closeDialog() {},
-    saveDialog(v) {
+    closeDialog() {
+      this.showAdd = false
+      this.showEdit = false
+    },
+    saveDialog: _throttle(function () {
+      console.log(this.addForm)
+      let params = {
+        livecodeEntity: { ...this.addForm },
+        userArr: this.addForm.userNo,
+      }
+      this.$network
+        .post('/user-service/livecode/addLivecode', params)
+        .then((res) => {
+          this.getData()
+          this.showAdd = false
+        })
+    }, 2000),
+    saveEdit() {
       console.log(v)
     },
     fnChangeUser(val) {

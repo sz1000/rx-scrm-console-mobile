@@ -11,12 +11,12 @@ instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
             // const token = window.localStorage.getItem('token')
-            const token = '123213|C5ED8685881145908563671E6F54AFCF'
+            const token = 'bcf9ec|62319231BFC44258AB928608AF9C92E3'
                 // console.log('------token----', token)
             if (token) {
                 config.headers.common.token = token
             }
-            console.log('-----config----', config)
+            // console.log('-----config----', config)
             return config
         },
         (error) => Promise.reject(error)
