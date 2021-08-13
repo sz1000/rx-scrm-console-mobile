@@ -101,7 +101,7 @@ const routes = [{
         name: 'detailCules',
         meta: {
             bodyClass: 'DetailCules',
-            keepAlive: true
+            // keepAlive: true
         },
         component: DetailCules,
     },
