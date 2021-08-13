@@ -33,7 +33,7 @@
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <van-form v-model="formList">
+        <!-- <van-form v-model="basicInfo">
           <van-field v-for="(item,index) in formList"
                      label-align='center'
                      placeholder="请输入"
@@ -49,8 +49,8 @@
                  v-show="fieldIndex == index"></i>
             </template>
           </van-field>
+        </van-form> -->
 
-        </van-form>
       </div>
     </div>
     <div class="systemInformation ">
@@ -177,6 +177,20 @@ export default {
         { name: '备注', value: '', mapName: 'remark' },
         { name: '描述', value: '', mapName: 'describe' },
       ],
+      basicInfo: {
+        name: '',
+        phone: '',
+        weixin: '',
+        gender: '',
+        position: '',
+        cropFullName: '',
+        cropSubIndustry: '',
+        source: '',
+        email: '',
+        address: '',
+        remark: '',
+        describe: '',
+      },
       systemList: [
         { name: '添加人员', mapName: 'createBy', value: '' },
         { name: '添加时间', mapName: 'createTime', value: '' },
@@ -225,6 +239,7 @@ export default {
       return {
         name: item.name,
         value: tempObj[item.mapName],
+        mapName: item.mapName,
       }
     })
     tempList.forEach((item) => {
@@ -238,6 +253,7 @@ export default {
       return {
         name: item.name,
         value: tempObj[item.mapName],
+        mapName: item.mapName,
       }
     })
     tempSystem.forEach((item) => {
@@ -275,18 +291,32 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    inputEdit(item, index) {
-      // console.log(item, index)
-      this.fieldIndex = null
-    },
-    keyupClick(item, index) {
-      let p = 'barcode' + index
-      this.$refs[p][0].blur()
-      // console.log(22222, this.$refs[p])
-    },
-    fnFocus(item, index) {
-      this.fieldIndex = index
-    },
+    // inputEdit(item, index) {
+    //   console.log(item, index)
+    //   console.log(this.formList)
+    //   let params = {}
+    //   let transitList = JSON.parse(JSON.stringify(this.formList))
+    //   transitList.forEach((item) => {
+    //     params[item.mapName] = item.value
+    //   })
+    //   console.log(params)
+    //   this.fieldIndex = null
+    //   this.$network
+    //     .post('/customer-service/cluecustomer/update', {
+    //       type: this.$route.query.type,
+    //       clueCustomerNo: this.objItem.clueCustomerNo,
+    //       ...params,
+    //     })
+    //     .then((res) => {})
+    // },
+    // keyupClick(item, index) {
+    //   let p = 'barcode' + index
+    //   this.$refs[p][0].blur()
+    //   // console.log(22222, this.$refs[p])
+    // },
+    // fnFocus(item, index) {
+    //   this.fieldIndex = index
+    // },
     getReceive() {
       this.$dialog
         .confirm({
@@ -305,7 +335,6 @@ export default {
             })
             .then((res) => {
               this.$message({ type: 'success', message: '领取成功' })
-              this.$toast('领取成功!')
               this.$router.go(-1)
             })
         })
@@ -334,7 +363,20 @@ export default {
     },
     saveDialog(v) {
       this.show = false
-      console.log(v)
+      this.$network
+        .get('/customer-service/cluecustomer/turnBlon', {
+          cluecustomerno: this.objItem.clueCustomerNo,
+          user_no: this.userNo,
+        })
+        .then((res) => {
+          // console.log(res)
+          if (res.result) {
+            this.$message({ type: 'success', message: '分配成功' })
+            this.$router.go(-1)
+          } else {
+            this.$message({ type: 'success', message: res.data.msg })
+          }
+        })
     },
   },
 }
