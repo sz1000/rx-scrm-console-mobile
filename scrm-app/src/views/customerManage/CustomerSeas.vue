@@ -20,7 +20,7 @@
         <span>领取</span>
       </div>
       <div class="btnBox"
-           @click="changeUser">
+           @click="distribution">
         <img src="../../images/icon_share@2x.png"
              alt="" />
         <span>分配</span>
@@ -92,7 +92,8 @@
             </div>
           </div>
           <div class="btn"
-               @click="unfold = !unfold">
+               @click="unfold = !unfold"
+               v-show="tagList.length">
             {{unfold ? '收起' : '展开'}}
             <van-icon name="arrow-down" />
           </div>
@@ -103,7 +104,8 @@
           <span class="label_tag">动态</span>
         </div>
         <div class="allText">全部</div>
-        <div class="timeLine">
+        <div class="timeLine"
+             v-if="timeLineList.length">
           <el-timeline>
             <el-timeline-item v-for="(item,index) in timeLineList"
                               :key="index"
@@ -122,6 +124,8 @@
             </el-timeline-item>
           </el-timeline>
         </div>
+        <div class='noTimeLine'
+             v-else>此用户暂无动态</div>
       </div>
     </div>
     <div class="bottom_model">
@@ -131,12 +135,12 @@
           <div class="changeUser">
             <div class="selectUser">
               <span style="color:red;">*</span><span>指定所属人:</span>
-              <el-select v-model="value"
-                         placeholder="请选择">
+              <el-select v-model="userNo"
+                         placeholder="请选择员工">
                 <el-option v-for="item in options"
                            :key="item.value"
-                           :label="item.label"
-                           :value="item.value"
+                           :label="item.name"
+                           :value="item.userNo"
                            @change='fnChangeUser'>
                 </el-option>
               </el-select>
@@ -160,136 +164,37 @@ export default {
     return {
       customName: '小鱼儿',
       formList: [
-        { name: '姓名', value: '1', mapName: 'name' },
-        { name: '手机号', value: '1', mapName: 'livename' },
-        { name: '微信号', value: '1', mapName: 'source' },
-        { name: '性别', value: '1', mapName: 'instry' },
-        { name: '职务', value: '1', mapName: 'instry' },
-        { name: '公司名称', value: '1', mapName: 'instry' },
-        { name: '所属行业', value: '1', mapName: 'instry' },
-        { name: '线索来源', value: '1', mapName: 'instry' },
-        { name: '邮箱', value: '1', mapName: 'instry' },
-        { name: '地址', value: '1', mapName: 'instry' },
-        { name: '备注', value: '1', mapName: 'instry' },
-        { name: '描述', value: '1', mapName: 'instry' },
+        { name: '姓名', value: '', mapName: 'name' },
+        { name: '手机号', value: '', mapName: 'phone' },
+        { name: '微信号', value: '', mapName: 'weixin' },
+        { name: '性别', value: '', mapName: 'gender' },
+        { name: '职务', value: '', mapName: 'position' },
+        { name: '公司名称', value: '', mapName: 'cropFullName' },
+        { name: '所属行业', value: '', mapName: 'cropSubIndustry' },
+        { name: '线索来源', value: '', mapName: 'source' },
+        { name: '邮箱', value: '', mapName: 'email' },
+        { name: '地址', value: '', mapName: 'address' },
+        { name: '备注', value: '', mapName: 'remark' },
+        { name: '描述', value: '', mapName: 'describe' },
       ],
       systemList: [
-        { name: '添加人员', mapName: 'phone', value: '' },
-        { name: '添加时间', mapName: 'phone', value: '' },
-        { name: '所属人', mapName: 'phone', value: '' },
-        { name: '领取时间', mapName: 'phone', value: '' },
-        { name: '最近跟进记录', mapName: 'phone', value: '' },
-        { name: '最近跟进时间', mapName: 'phone', value: '' },
-        { name: '最近修改人', mapName: 'phone', value: '' },
-        { name: '最近修改时间', mapName: 'phone', value: '' },
-        { name: '前所属人', mapName: 'phone', value: '' },
-        { name: '转换时间', mapName: 'phone', value: '' },
+        { name: '添加人员', mapName: 'createBy', value: '' },
+        { name: '添加时间', mapName: 'createTime', value: '' },
+        { name: '所属人', mapName: 'uname', value: '' },
+        { name: '领取时间', mapName: 'getTime', value: '' },
+        { name: '最近跟进记录', mapName: 'followRecord', value: '' },
+        { name: '最近跟进时间', mapName: 'followTime', value: '' },
+        { name: '最近修改人', mapName: 'updateBy', value: '' },
+        { name: '最近修改时间', mapName: 'updateTime', value: '' },
+        { name: '前所属人', mapName: 'beBelongBy', value: '' },
+        { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       fieldIndex: null,
       unfold: false,
       isShowPerson: false,
-      tagList: [
-        { name: '很优秀' },
-        { name: '很优fafas秀' },
-        { name: '很优秀' },
-        { name: '很adsa优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-      ],
-      groupList: [
-        {
-          name: '标签管理',
-          children: [
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-          ],
-        },
-        {
-          name: '标签管理',
-          children: [
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-          ],
-        },
-      ],
-      personList: [
-        {
-          name: '标签管理',
-          id: 1,
-        },
-        {
-          name: '标签管理',
-          id: 2,
-        },
-      ],
+      tagList: [],
+      groupList: [],
+      personList: [],
       timeLineList: [
         {
           title: '步骤一',
@@ -307,31 +212,66 @@ export default {
       showInput: null,
       isShow: false,
       tagName: '',
-      nowUser: '马化腾',
-      value: '',
-      options: [
-        { label: 'hahha', value: '1' },
-        { label: '大撒大撒', value: '2' },
-      ],
+      nowUser: '',
+      userNo: '',
+      options: [],
+      objItem: JSON.parse(localStorage.getItem('customer')),
     }
   },
   created() {
-    let obj = {
-      livename: 'hahha',
-      source: 'jahkjh',
-      phone: '13213123',
-      instry: 'jajdkajk',
-    }
-    this.formList = this.formList.map((item) => {
+    let tempObj = JSON.parse(localStorage.getItem('customer'))
+    // console.log(tempObj)
+    let tempList = this.formList.map((item) => {
       return {
         name: item.name,
-        value: obj[item.mapName],
+        value: tempObj[item.mapName],
       }
     })
-    // console.log(this.formList)
+    tempList.forEach((item) => {
+      // console.log(item)
+      if (item.name === '性别')
+        item.value =
+          item.value == '1' ? '男' : item.value == '2' ? '女' : '未知'
+    })
+    this.formList = tempList
+    let tempSystem = this.systemList.map((item) => {
+      return {
+        name: item.name,
+        value: tempObj[item.mapName],
+      }
+    })
+    tempSystem.forEach((item) => {
+      if (item.name.includes('时间') && JSON.stringify(item.value) !== 'null') {
+        item.value = formatDate(item.value, 'yyyy-MM-dd')
+      }
+    })
+    this.systemList = tempSystem
+  },
+  mounted() {
+    this.getTimeline()
+    this.getTagList()
   },
   methods: {
     formatDate,
+    getTimeline() {
+      // console.log(this.objItem, '------')
+      this.$network
+        .get('/customer-service/cluecustomer/getMessage', {
+          cluecustomerno: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.timeLineList = res.data
+        })
+    },
+    getTagList() {
+      this.$network
+        .get('/customer-service/cluecustomer/gettag', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.tagList = res.data.corpTagList
+        })
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -348,7 +288,6 @@ export default {
       this.fieldIndex = index
     },
     getReceive() {
-      // this.$router.push('turnCustomer')
       this.$dialog
         .confirm({
           title: '领取提示',
@@ -359,16 +298,32 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          // on confirm
+          this.$network
+            .get('/customer-service/cluecustomer/getclue', {
+              clueCustomerNo: this.objItem.clueCustomerNo,
+              type: this.$route.query.type,
+            })
+            .then((res) => {
+              this.$message({ type: 'success', message: '领取成功' })
+              this.$toast('领取成功!')
+              this.$router.go(-1)
+            })
         })
         .catch(() => {
           // on cancel
         })
     },
-    changeUser() {
+    distribution() {
       // this.isShowDialog = '4'
       this.show = true
       this.titleName = '分配线索'
+      this.$network
+        .get('/customer-service/cluecustomer/getuserList', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.options = res.data.list
+        })
     },
     fnChangeUser(val) {
       console.log(val)
@@ -551,6 +506,7 @@ export default {
       }
       .dynamic {
         font-size: 28px;
+        min-height: 200px;
         .t_text {
           display: flex;
           justify-content: space-between;
@@ -642,6 +598,9 @@ export default {
               margin-bottom: 16px;
             }
           }
+        }
+        .noTimeLine {
+          text-align: center;
         }
       }
     }

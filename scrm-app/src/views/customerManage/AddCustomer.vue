@@ -31,7 +31,7 @@
                      placeholder="请选择"
                      @change="changeSource"
                      clearable>
-            <el-option v-for="item in optionsSource"
+            <el-option v-for="item in optionSource"
                        :key="item.value"
                        :label="item.name"
                        :value="item.type">
@@ -45,8 +45,8 @@
                      clearable>
             <el-option v-for="item in customList"
                        :key="item.value"
-                       :label="item.name"
-                       :value="item.type">
+                       :label="item.label"
+                       :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -69,11 +69,11 @@
           </el-cascader>
         </el-form-item>
         <el-form-item label="企业规模:">
-          <el-select v-model="formObj.source"
+          <el-select v-model="formObj.corpScale"
                      placeholder="请选择"
-                     @change="changeSource"
+                     @change="scaleChange"
                      clearable>
-            <el-option v-for="item in optionsSource"
+            <el-option v-for="item in optionsScale"
                        :key="item.value"
                        :label="item.name"
                        :value="item.type">
@@ -81,7 +81,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="地址:">
-          <el-input v-model="formObj.remark"
+          <el-input v-model="formObj.address"
                     maxlength="100"
                     placeholder="请输入"></el-input>
         </el-form-item>
@@ -121,17 +121,17 @@
         </el-form-item>
 
         <el-form-item label="职务:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.position"
                     placeholder="请输入"
                     maxlength="20"></el-input>
         </el-form-item>
         <el-form-item label="微信号:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.weixin"
                     placeholder="请输入"
                     maxlength="20"></el-input>
         </el-form-item>
         <el-form-item label="邮箱:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.email"
                     placeholder="请输入"
                     maxlength="60"></el-input>
         </el-form-item>
@@ -149,14 +149,23 @@ export default {
   data() {
     return {
       formObj: {
-        name: '',
-        customerType: '',
-        phone: '',
-        wechat: '',
-        gender: '',
-        industry: '',
+        customerName: '',
+        mobil: '',
         source: '',
+        customerType: '',
+        cropFullName: '',
+        corpScale: '',
+        industry: '',
+        address: '',
+        remark: '',
+        name: '',
+        phone: '',
+        gender: '',
+        position: '',
+        weixin: '',
+        email: '',
       },
+      optionSource: [],
       optionsCreat: [
         {
           id: 13,
@@ -172,30 +181,84 @@ export default {
           ],
         },
       ],
-      optionsSource: [],
-      changeCustom: [],
+      optionsScale: [],
+      customList: [
+        { label: '微信用户', value: '1' },
+        { label: '企微用户', value: '2' },
+      ],
     }
   },
+  created() {
+    this.getDataList()
+  },
+
   methods: {
+    getDataList() {
+      this.$network.get('/customer-service/cluecustomer/toadd').then((res) => {
+        this.processTree(res.data.comlist)
+        this.optionSource = res.data.list
+        this.optionsScale = res.data.corpScaleList
+      })
+    },
+    processTree(data) {
+      // for (let i = 0; i < data.length; i++) {
+      //   if (data[i].children.length < 1) {
+      //     /**children长度小于1, 将children置为null */
+      //     data[i].children = null
+      //   } else {
+      //     /**否则继续进入循环 */
+      //     this.processTree(data[i].children)
+      //   }
+      // }
+      // this.optionsCreat = JSON.parse(JSON.stringify(data))
+      data.forEach((item) => {
+        if (item.children.length) {
+          this.optionsCreat.push(item)
+          return this.processTree(item.children)
+        } else {
+          item.children = null
+        }
+      })
+      // console.log(this.optionsCreat)
+    },
     goBack() {
       this.$router.go(-1)
     },
     handleChange(val) {
       console.log(val)
     },
+    scaleChange(val) {
+      console.log(val)
+    },
     changeSource(val) {
       console.log(val)
     },
-    customList(val) {
+    changeCustom(val) {
       console.log(val)
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+          if (this.formObj.phone || this.formObj.weixin) {
+            let cropSubIndustry = this.formObj.industry.toString()
+            let params = {
+              ...this.formObj,
+              ...{
+                cropSubIndustry: cropSubIndustry,
+                type: this.$route.query.type,
+              },
+            }
+            this.$network
+              .post('/customer-service/cluecustomer/addCul', params)
+              .then((res) => {
+                this.$router.go(-1)
+              })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '手机号微信号请选填其一',
+            })
+          }
         }
       })
     },

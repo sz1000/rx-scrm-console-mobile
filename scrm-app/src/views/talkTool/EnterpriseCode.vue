@@ -20,65 +20,65 @@
       </span>
     </div>
     <div>
-      <van-list v-model="loading"
+      <!-- <van-list v-model="loading"
                 :finished="finished"
                 finished-text="没有更多了"
                 :immediate-check='false'
                 @load="onLoad"
                 ref="vanlist"
-                :offset="10">
-        <div class="cardCode"
-             v-for="(item,index) in liveList"
-             :key="index">
-          <div class="operationTop">
-            <div class="codeName">
-              <span>活码名称:</span>
-              <span>{{item.name}}</span>
-            </div>
-            <div class="editBtn">
-              <span @click="editBtn(item)">
-                <van-icon name="edit" />
-                编辑
-              </span>
-              <span @click="deleteBtn(item)">
-                <van-icon name="delete-o" />
-                删除
-              </span>
+                :offset="10"> -->
+      <div class="cardCode"
+           v-for="(item,index) in liveList"
+           :key="index">
+        <div class="operationTop">
+          <div class="codeName">
+            <span>活码名称:</span>
+            <span>{{item.name}}</span>
+          </div>
+          <div class="editBtn">
+            <span @click="editBtn(item)">
+              <van-icon name="edit" />
+              编辑
+            </span>
+            <span @click="deleteBtn(item)">
+              <van-icon name="delete-o" />
+              删除
+            </span>
+          </div>
+        </div>
+        <div class="contentBox">
+          <div class="leftCode">
+            <img :src="item.address"
+                 alt="">
+            <div class="shareCode"
+                 @click="sendCode(item,index)">
+              <span> <img src="../../images/send.png"
+                     alt=""></span>
+              发送二维码
             </div>
           </div>
-          <div class="contentBox">
-            <div class="leftCode">
-              <img :src="item.address"
-                   alt="">
-              <div class="shareCode"
-                   @click="sendCode(item,index)">
-                <span> <img src="../../images/send.png"
-                       alt=""></span>
-                发送二维码
-              </div>
+          <div class="rightInfo"
+               @click="checkDetail(item,index)">
+            <div class="rowText">
+              <span>渠道:</span>
+              <span>{{item.chName}}</span>
             </div>
-            <div class="rightInfo"
-                 @click="checkDetail(item,index)">
-              <div class="rowText">
-                <span>渠道:</span>
-                <span>{{item.chName}}</span>
-              </div>
-              <div class="rowText">
-                <span>创建人员:</span>
-                <span>{{item.createBy}}</span>
-              </div>
-              <div class="rowText">
-                <span>创建时间:</span>
-                <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
-              </div>
-              <div class="rowText">
-                <span>使用员工:</span>
-                <span>{{item.userNames}}</span>
-              </div>
+            <div class="rowText">
+              <span>创建人员:</span>
+              <span>{{item.createBy}}</span>
+            </div>
+            <div class="rowText">
+              <span>创建时间:</span>
+              <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+            </div>
+            <div class="rowText">
+              <span>使用员工:</span>
+              <span>{{item.userNames}}</span>
             </div>
           </div>
         </div>
-      </van-list>
+      </div>
+      <!-- </van-list> -->
     </div>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"

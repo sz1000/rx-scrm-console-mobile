@@ -20,49 +20,49 @@
       </span>
     </div>
     <!-- :immediate-check="false" -->
-    <van-list v-model="loading"
+    <!-- <van-list v-model="loading"
               :finished="finished"
               :immediate-check='false'
               finished-text="没有更多了"
               @load="onLoad"
-              :offset="10">
-      <div class="cardCode"
-           v-for="(item,index) in channelList"
-           :key="index">
-        <div class="operationTop">
-          <div class="codeName">
-            <span>渠道名称:</span>
-            <span>{{item.name}}</span>
-          </div>
-          <div class="editBtn">
-            <span @click="editBtn(item)">
-              <van-icon name="edit" />
-              编辑
-            </span>
-            <span @click="deleteBtn(item)">
-              <van-icon name="delete-o" />
-              删除
-            </span>
-          </div>
+              :offset="10"> -->
+    <div class="cardCode"
+         v-for="(item,index) in channelList"
+         :key="index">
+      <div class="operationTop">
+        <div class="codeName">
+          <span>渠道名称:</span>
+          <span>{{item.name}}</span>
         </div>
-        <div class="contentBox"
-             @click="channelDetail(item,index)">
-          <div class="codeNum">
-            <span>活码数:</span>
-            <span>{{item.livecodeSum}}</span>
-          </div>
-          <div class="codeNum">
-            <span>添加客户数:</span>
-            <span>{{item.userSum}}</span>
-          </div>
-          <div class="welcomelable">
-            <span>渠道欢迎语:</span>
-            <span>{{item.welText}}</span>
-          </div>
-
+        <div class="editBtn">
+          <span @click="editBtn(item)">
+            <van-icon name="edit" />
+            编辑
+          </span>
+          <span @click="deleteBtn(item)">
+            <van-icon name="delete-o" />
+            删除
+          </span>
         </div>
       </div>
-    </van-list>
+      <div class="contentBox"
+           @click="channelDetail(item,index)">
+        <div class="codeNum">
+          <span>活码数:</span>
+          <span>{{item.livecodeSum}}</span>
+        </div>
+        <div class="codeNum">
+          <span>添加客户数:</span>
+          <span>{{item.userSum}}</span>
+        </div>
+        <div class="welcomelable">
+          <span>渠道欢迎语:</span>
+          <span>{{item.welText}}</span>
+        </div>
+
+      </div>
+    </div>
+    <!-- </van-list> -->
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
                         :title="titleName">
@@ -202,24 +202,23 @@ export default {
         .get('/user-service/channel/getChannelList', { page: this.page })
         .then((res) => {
           // console.log(res)
-          // this.channelList = res.data;
           let rows = res.data.channelEntityPage.records //请求返回当页的列表
           this.loading = false
+          this.channelList = rows
           this.total = res.data.channelEntityPage.total
 
-          if (rows == null || rows.length === 0) {
-            // 加载结束
-            this.finished = true
-            return
-          }
-          // 将新数据与老数据进行合并
-          // this.channelList = this.channelList.concat(rows)
-          this.channelList = rows
-          //如果列表数据条数>=总条数，不再触发滚动加载
-          if (this.channelList.length >= this.total) {
-            this.finished = true
-          }
-          // console.log(this.channelList)
+          // if (rows == null || rows.length === 0) {
+          //   // 加载结束
+          //   this.finished = true
+          //   return
+          // }
+          // // 将新数据与老数据进行合并
+          // // this.channelList = this.channelList.concat(rows)
+          // this.channelList = rows
+          // //如果列表数据条数>=总条数，不再触发滚动加载
+          // if (this.channelList.length >= this.total) {
+          //   this.finished = true
+          // }
         })
     },
     //保存新增

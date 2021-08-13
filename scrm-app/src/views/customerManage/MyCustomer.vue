@@ -33,70 +33,70 @@
             @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <van-list v-model="loading"
+      <!-- <van-list v-model="loading"
                 :finished="finished"
                 :immediate-check='false'
                 finished-text="没有更多了"
                 @load="onLoad"
                 ref="vanlist"
-                :offset="10">
-        <div class="topInfo"
-             v-for="(item,index) in cardList"
-             :key="index">
-          <div class="customInfo">
-            <div class="iconName">
-              <span>客户简称:</span>
-              <span>{{item.customerName}}</span>
+                :offset="10"> -->
+      <div class="topInfo"
+           v-for="(item,index) in cardList"
+           :key="index">
+        <div class="customInfo">
+          <div class="iconName">
+            <span>客户简称:</span>
+            <span>{{item.customerName}}</span>
+          </div>
+          <!-- <div class="detailBtn"
+               @click="deleteCard(item,index)">
+            <van-icon name="delete-o" />
+            删除
+          </div> -->
+        </div>
+        <div class="detailInfo"
+             @click="goDetail(item,index)">
+          <div class="left">
+            <div class="rowStyle">
+              <span>公司名称:</span>
+              <span>{{item.cropFullName}}</span>
             </div>
-            <div class="detailBtn"
-                 @click="deleteCard(item,index)">
-              <van-icon name="delete-o" />
-              删除
+            <div class="rowStyle">
+              <span>所属行业:</span>
+              <span>{{item.cropSubIndustry}}</span>
+            </div>
+            <div class="rowStyle">
+              <span>联系人员:</span>
+              <span>{{item.name}}</span>
             </div>
           </div>
-          <div class="detailInfo"
-               @click="goDetail(item,index)">
-            <div class="left">
-              <div class="rowStyle">
-                <span>公司名称:</span>
-                <span>{{item.cropFullName}}</span>
-              </div>
-              <div class="rowStyle">
-                <span>所属行业:</span>
-                <span>{{item.cropSubIndustry}}</span>
-              </div>
-              <div class="rowStyle">
-                <span>联系人员:</span>
-                <span>{{item.name}}</span>
-              </div>
+          <div class="right">
+            <div class="rowStyle">
+              <span>职务:</span>
+              <span>{{item.position}}</span>
             </div>
-            <div class="right">
-              <div class="rowStyle">
-                <span>职务:</span>
-                <span>{{item.position}}</span>
-              </div>
-              <div class="rowStyle">
-                <span>性别:</span>
-                <span>{{item.gender == '1' ? '男':'女'}}</span>
-              </div>
-              <div class="rowStyle">
-                <span>邮箱:</span>
-                <span>{{item.email}}</span>
-              </div>
+            <div class="rowStyle">
+              <span>性别:</span>
+              <span>{{item.gender == '1' ? '男':'女'}}</span>
             </div>
-          </div>
-          <div class="tjry">
-            <div class="box">
-              <span class="label">添加人员:</span>
-              <span class="value">{{item.createBy}}</span>
-            </div>
-            <div class="box1">
-              <span class="label">添加时间:</span>
-              <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+            <div class="rowStyle">
+              <span>邮箱:</span>
+              <span>{{item.email}}</span>
             </div>
           </div>
         </div>
-      </van-list>
+        <div class="tjry">
+          <div class="box">
+            <span class="label">添加人员:</span>
+            <span class="value">{{item.createBy}}</span>
+          </div>
+          <div class="box1">
+            <span class="label">添加时间:</span>
+            <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+          </div>
+        </div>
+      </div>
+      <!-- </van-list> -->
     </div>
   </div>
 </template>
@@ -130,6 +130,7 @@ export default {
     formatDate,
     tabClick(v) {
       this.type = v
+      this.inputValue = ''
       this.getListData()
     },
     onLoad() {
@@ -148,11 +149,12 @@ export default {
         .then((res) => {
           this.cardList = []
           this.loading = false
-          if (res.data.iPage.records.length) {
-            this.cardList = res.data.iPage.records
-          } else {
-            this.finished = true
-          }
+          this.cardList = res.data.iPage.records
+          // if (res.data.iPage.records.length) {
+          //   this.cardList = res.data.iPage.records
+          // } else {
+          //   this.finished = true
+          // }
           // let rows = res.data.iPage.records //请求返回当页的列表
           // this.total = res.data.iPage.total
           // if (this.page > 1) {
@@ -193,19 +195,18 @@ export default {
           cancelButtonText: '否',
           messageAlign: 'left',
         })
-        .then(() => {
-          // on confirm
-        })
+        .then(() => {})
         .catch(() => {
           // on cancel
         })
     },
     goDetail(item, index) {
       console.log(this.type)
-      if (this.type == 1) {
-        this.$router.push('customDetail')
-      } else {
-        this.$router.push('customerSeas')
+      localStorage.setItem('customer', JSON.stringify(item))
+      if (this.type == 3) {
+        this.$router.push({ path: 'customDetail', query: { type: this.type } })
+      } else if (this.type == 4) {
+        this.$router.push({ path: 'customerSeas', query: { type: this.type } })
       }
     },
   },

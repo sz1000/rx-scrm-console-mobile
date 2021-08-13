@@ -98,7 +98,8 @@
             </div>
           </div>
           <div class="btn"
-               @click="unfold = !unfold">
+               @click="unfold = !unfold"
+               v-show="tagList.length">
             {{unfold ? '收起' : '展开'}}
             <van-icon name="arrow-down" />
           </div>
@@ -123,7 +124,8 @@
             </div>
           </div>
           <div class="btn"
-               @click="isShowPerson = !isShowPerson">
+               @click="isShowPerson = !isShowPerson"
+               v-show="tagList.length">
             {{isShowPerson ? '收起' : '展开'}}
             <van-icon name="arrow-down" />
           </div>
@@ -257,129 +259,36 @@ export default {
       name: '小鱼儿',
       customName: '小鱼儿',
       formList: [
-        { name: '客户简称', value: '1', mapName: 'phone' },
-        { name: '公司名称', value: '1', mapName: 'livename' },
-        { name: '所属行业', value: '1', mapName: 'source' },
-        { name: '客户来源', value: '1', mapName: 'instry' },
-        { name: '企业规模', value: '1', mapName: 'instry' },
-        { name: '联系人', value: '1', mapName: 'instry' },
-        { name: '性别', value: '1', mapName: 'instry' },
-        { name: '微信号', value: '1', mapName: 'instry' },
-        { name: '手机号', value: '1', mapName: 'instry' },
-        { name: '邮箱', value: '1', mapName: 'instry' },
-        { name: '职务', value: '1', mapName: 'instry' },
-        { name: '地址', value: '1', mapName: 'instry' },
-        { name: '客户类型', value: '1', mapName: 'instry' },
-        { name: '备注', value: '1', mapName: 'instry' },
-        { name: '描述', value: '1', mapName: 'instry' },
+        { name: '姓名', value: '', mapName: 'name' },
+        { name: '手机号', value: '', mapName: 'phone' },
+        { name: '微信号', value: '', mapName: 'weixin' },
+        { name: '性别', value: '', mapName: 'gender' },
+        { name: '职务', value: '', mapName: 'position' },
+        { name: '公司名称', value: '', mapName: 'cropFullName' },
+        { name: '所属行业', value: '', mapName: 'cropSubIndustry' },
+        { name: '线索来源', value: '', mapName: 'source' },
+        { name: '邮箱', value: '', mapName: 'email' },
+        { name: '地址', value: '', mapName: 'address' },
+        { name: '备注', value: '', mapName: 'remark' },
+        { name: '描述', value: '', mapName: 'describe' },
       ],
       systemList: [
-        { name: '添加人员', mapName: 'phone', value: '' },
-        { name: '添加时间', mapName: 'phone', value: '' },
-        { name: '所属人', mapName: 'phone', value: '' },
-        { name: '领取时间', mapName: 'phone', value: '' },
-        { name: '最近跟进记录', mapName: 'phone', value: '' },
-        { name: '最近跟进时间', mapName: 'phone', value: '' },
-        { name: '最近修改人', mapName: 'phone', value: '' },
-        { name: '最近修改时间', mapName: 'phone', value: '' },
-        { name: '前所属人', mapName: 'phone', value: '' },
-        { name: '转换时间', mapName: 'phone', value: '' },
+        { name: '添加人员', mapName: 'createBy', value: '' },
+        { name: '添加时间', mapName: 'createTime', value: '' },
+        { name: '所属人', mapName: 'uname', value: '' },
+        { name: '领取时间', mapName: 'getTime', value: '' },
+        { name: '最近跟进记录', mapName: 'followRecord', value: '' },
+        { name: '最近跟进时间', mapName: 'followTime', value: '' },
+        { name: '最近修改人', mapName: 'updateBy', value: '' },
+        { name: '最近修改时间', mapName: 'updateTime', value: '' },
+        { name: '前所属人', mapName: 'beBelongBy', value: '' },
+        { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       fieldIndex: null,
       unfold: false,
       isShowPerson: false,
-      tagList: [
-        { name: '很优秀' },
-        { name: '很优fafas秀' },
-        { name: '很优秀' },
-        { name: '很adsa优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-      ],
-      groupList: [
-        {
-          name: '标签管理',
-          children: [
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-          ],
-        },
-        {
-          name: '标签管理',
-          children: [
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-          ],
-        },
-      ],
+      tagList: [],
+      groupList: [],
       personList: [
         {
           name: '标签管理',
@@ -416,19 +325,33 @@ export default {
     }
   },
   created() {
-    let obj = {
-      livename: 'hahha',
-      source: 'jahkjh',
-      phone: '13213123',
-      instry: 'jajdkajk',
-    }
-    this.formList = this.formList.map((item) => {
+    let tempObj = JSON.parse(localStorage.getItem('customer'))
+    // console.log(tempObj)
+    let tempList = this.formList.map((item) => {
       return {
         name: item.name,
-        value: obj[item.mapName],
+        value: tempObj[item.mapName],
       }
     })
-    // console.log(this.formList)
+    tempList.forEach((item) => {
+      // console.log(item)
+      if (item.name === '性别')
+        item.value =
+          item.value == '1' ? '男' : item.value == '2' ? '女' : '未知'
+    })
+    this.formList = tempList
+    let tempSystem = this.systemList.map((item) => {
+      return {
+        name: item.name,
+        value: tempObj[item.mapName],
+      }
+    })
+    tempSystem.forEach((item) => {
+      if (item.name.includes('时间') && JSON.stringify(item.value) !== 'null') {
+        item.value = formatDate(item.value, 'yyyy-MM-dd')
+      }
+    })
+    this.systemList = tempSystem
   },
   methods: {
     formatDate,
