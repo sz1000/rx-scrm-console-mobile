@@ -215,12 +215,34 @@
 <script>
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
+import HomeVue from '../Home.vue'
 export default {
-  components: {
+    components: {
     BackTop,
+  },
+  created(){
+    this.getwx();
+    this.getMethod();
+  },
+  getwx(){
+    wx.invoke('getCurExternalContact', {}, function(res){
+        if(res.err_msg == "getCurExternalContact:ok"){
+            this.userId  = res.userId ; //返回当前外部联系人userId
+        }else {
+            //错误处理
+        }
+    });
+  },
+  //获取客户详情
+  getMethod(){
+        this.$network.get('/m/cluecustomer/getClueCustomerByid',id = this.userId).then((res) => {
+          console.log(res);
+          title = res.data;
+      })
   },
   data() {
     return {
+      userid :'',
       title: '客户资料详情',
       name: '小鱼儿',
       nameFrom: '@微信/企业',
