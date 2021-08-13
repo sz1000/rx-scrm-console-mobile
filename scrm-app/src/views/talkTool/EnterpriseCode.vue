@@ -19,64 +19,66 @@
         新增
       </span>
     </div>
-    <van-list v-model="loading"
-              :finished="finished"
-              :immediate-check="false"
-              finished-text="没有更多了"
-              @load="onLoad"
-              :offset="10">
-      <div class="cardCode"
-           v-for="(item,index) in liveList"
-           :key="index">
-        <div class="operationTop">
-          <div class="codeName">
-            <span>活码名称:</span>
-            <span>{{item.name}}</span>
+    <div>
+      <van-list v-model="loading"
+                :finished="finished"
+                finished-text="没有更多了"
+                @load="onLoad"
+                ref="vanlist"
+                :offset="10">
+        <div class="cardCode"
+             v-for="(item,index) in liveList"
+             :key="index">
+          <div class="operationTop">
+            <div class="codeName">
+              <span>活码名称:</span>
+              <span>{{item.name}}</span>
+            </div>
+            <div class="editBtn">
+              <span @click="editBtn(item)">
+                <van-icon name="edit" />
+                编辑
+              </span>
+              <span @click="deleteBtn(item)">
+                <van-icon name="delete-o" />
+                删除
+              </span>
+            </div>
           </div>
-          <div class="editBtn">
-            <span @click="editBtn(item)">
-              <van-icon name="edit" />
-              编辑
-            </span>
-            <span @click="deleteBtn(item)">
-              <van-icon name="delete-o" />
-              删除
-            </span>
+          <div class="contentBox">
+            <div class="leftCode">
+              <img :src="item.address"
+                   alt="">
+              <div class="shareCode"
+                   @click="sendCode(item,index)">
+                <span> <img src="../../images/send.png"
+                       alt=""></span>
+                发送二维码
+              </div>
+            </div>
+            <div class="rightInfo"
+                 @click="checkDetail(item,index)">
+              <div class="rowText">
+                <span>渠道:</span>
+                <span>{{item.chName}}</span>
+              </div>
+              <div class="rowText">
+                <span>创建人员:</span>
+                <span>{{item.createBy}}</span>
+              </div>
+              <div class="rowText">
+                <span>创建时间:</span>
+                <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+              </div>
+              <div class="rowText">
+                <span>使用员工:</span>
+                <span>{{item.userNames}}</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="contentBox">
-          <div class="leftCode">
-            <img :src="item.address"
-                 alt="">
-            <div class="shareCode"
-                 @click="sendCode(item,index)">
-              <span> <img src="../../images/send.png"
-                     alt=""></span>
-              发送二维码
-            </div>
-          </div>
-          <div class="rightInfo"
-               @click="checkDetail(item,index)">
-            <div class="rowText">
-              <span>渠道:</span>
-              <span>{{item.chName}}</span>
-            </div>
-            <div class="rowText">
-              <span>创建人员:</span>
-              <span>{{item.createBy}}</span>
-            </div>
-            <div class="rowText">
-              <span>创建时间:</span>
-              <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
-            </div>
-            <div class="rowText">
-              <span>使用员工:</span>
-              <span>{{item.userNames}}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </van-list>
+      </van-list>
+    </div>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
                         :title="titleName">
@@ -87,7 +89,7 @@
                      label-position='right'>
               <el-form-item label="活码名称:"
                             prop="name"
-                            :rules="[ { required: true, message: '请输入活码名称'}]">
+                            :rules="[ { required: true, message: '请输入活码名称',trigger:'blur'}]">
                 <el-input v-model="addForm.name"
                           placeholder="请输入"
                           maxlength="12"
@@ -95,9 +97,9 @@
               </el-form-item>
 
               <el-form-item label="使用员工:"
-                            prop="userNo"
-                            :rules="[ { required: true, message: '请选择'}]">
-                <el-select v-model="addForm.userNo"
+                            prop="userArr"
+                            :rules="[ { required: true, message: '请选择',trigger:'change'}]">
+                <el-select v-model="addForm.userArr"
                            placeholder="请选择使用员工，可多选"
                            multiple
                            collapse-tags
@@ -156,10 +158,10 @@
                      :model="editForm"
                      label-position='right'>
               <el-form-item label="创建人员:">
-                <span class="editText">{{editForm.creatBy}}</span>
+                <span class="editText">{{editForm.createBy}}</span>
               </el-form-item>
               <el-form-item label="创建时间:">
-                <span class="editText">{{formatDate(editForm.creatTime,'yyyy-MM-dd')}}</span>
+                <span class="editText">{{formatDate(editForm.createTime,'yyyy-MM-dd')}}</span>
               </el-form-item>
               <el-form-item label="活码名称:"
                             prop="name"
@@ -171,9 +173,9 @@
               </el-form-item>
 
               <el-form-item label="使用员工:"
-                            prop="userNo"
-                            :rules="[ { required: true, message: '请选择'}]">
-                <el-select v-model="editForm.usreNo"
+                            prop="userArr"
+                            :rules="[ { required: true, message: '请选择',trigger:'change'}]">
+                <el-select v-model="editForm.userArr"
                            placeholder="请选择使用员工，可多选"
                            multiple
                            collapse-tags
@@ -182,7 +184,7 @@
                   <el-option v-for="item in usreList"
                              :key="item.value"
                              :label="item.name"
-                             :value="item.type">
+                             :value="item.userNo">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -195,14 +197,14 @@
               </el-form-item>
 
               <el-form-item label="渠道:">
-                <el-select v-model="editForm.source"
+                <el-select v-model="editForm.chId"
                            placeholder="请选择"
                            @change="changeChannel"
                            clearable>
                   <el-option v-for="item in channelList"
                              :key="item.value"
                              :label="item.name"
-                             :value="item.type">
+                             :value="item.chId">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -233,8 +235,7 @@
               <el-form-item label="活码展示:"
                             class="codeImg">
                 <img :src="detailForm.address"
-                     alt=""
-                     style="width:120px;height:120px" />
+                     alt="" />
               </el-form-item>
               <el-form-item label="使用员工:">
                 <span>{{ detailForm.userNames }}</span>
@@ -268,13 +269,16 @@ export default {
       showEdit: false,
       showDetail: false,
       titleName: '',
-      addForm: {},
-      editForm: {
-        creatBy: 'hahah',
-        creatTime: 1628660777971,
+      addForm: {
+        name: '',
+        userArr: [],
+        status: '1',
+        chId: '',
+        remark: '',
       },
+      editForm: {},
       detailForm: {},
-      usreList: [{}, {}, {}],
+      usreList: [],
       channelList: [],
       loading: false,
       finished: false,
@@ -289,28 +293,50 @@ export default {
   methods: {
     formatDate,
     onLoad() {
+      console.log('----gundong------')
       this.page++
       this.getData()
     },
+    //    async getrecord() {
+    //     this.page += 1;
+    //     this.loading = true;
+    //     this.finished = false;
+    //     const res = await getStudyRecordList({ page: this.page, limit: 10 });
+    //     if (res.status == 1) {
+    //       this.record_list = this.record_list.concat(res.data)
+    //       }
+    //       this.loading = false;
+    //     } else {
+    //       this.finished = true;
+    //     }
+    //   }
+    // }
+
     getData() {
       this.$network
-        .get('/user-service/livecode/getLivecodeList', { page: this.page })
+        .get('/user-service/livecode/getLivecodeList', {
+          page: this.page,
+          limit: 10,
+        })
         .then((res) => {
-          // this.liveList = res.data.iPage.records
-          let rows = res.data.iPage.records //请求返回当页的列表
           this.loading = false
+          let rows = res.data.iPage.records //请求返回当页的列表
           this.total = res.data.iPage.total
-
-          if (rows == null || rows.length === 0) {
-            // 加载结束
-            this.finished = true
-            return
-          }
-          // 将新数据与老数据进行合并
-          this.liveList = this.liveList.concat(rows)
-          //如果列表数据条数>=总条数，不再触发滚动加载
-          if (this.liveList.length >= this.total) {
-            this.finished = true
+          console.log(this.page)
+          if (this.page > 1) {
+            if (rows == null || rows.length === 0) {
+              // 加载结束
+              this.finished = true
+              return
+            }
+            // 将新数据与老数据进行合并
+            this.liveList = this.liveList.concat(rows)
+            //如果列表数据条数>=总条数，不再触发滚动加载
+            if (this.liveList.length >= this.total) {
+              this.finished = true
+            }
+          } else {
+            this.liveList = rows
           }
         })
     },
@@ -318,8 +344,12 @@ export default {
       this.$router.go(-1)
     },
     addCode() {
+      this.addForm = {}
       this.showAdd = true
       this.titleName = '新增企微活码'
+      this.getSelect()
+    },
+    getSelect() {
       this.$network.get('/user-service/livecode/toadd').then((res) => {
         this.usreList = res.data.userlist
         this.channelList = res.data.chlist
@@ -327,6 +357,7 @@ export default {
     },
     changeUsre(val) {
       console.log(val)
+      this.addForm.userArr = val
     },
     checkChange(val) {
       console.log(val)
@@ -335,14 +366,28 @@ export default {
       console.log(v)
       this.titleName = '编辑企微活码'
       this.showEdit = true
+      this.editForm = v
+      this.$network.get('/user-service/livecode/toadd').then((res) => {
+        this.usreList = res.data.userlist
+        this.channelList = res.data.chlist
+        let tempArr = v.userNames.split(',')
+        let finalArr = this.usreList.filter(
+          (item) => tempArr.indexOf(item.name) > -1
+        )
+        this.editForm.userArr = finalArr.map((item) => {
+          return item.userNo
+        })
+        // console.log('----finalArr', this.editForm.userArr)
+      })
     },
     sendCode(item, index) {
       console.log(item, index)
-      console.log(window.wx)
     },
     checkDetail(item, index) {
+      console.log(item)
       this.titleName = '企微活码详情'
       this.showDetail = true
+      this.detailForm = item
     },
     deleteBtn(v) {
       this.$dialog
@@ -355,7 +400,11 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          // on confirm
+          this.$network
+            .post('/user-service/livecode/delLivecode', v)
+            .then((res) => {
+              this.getData()
+            })
         })
         .catch(() => {
           // on cancel
@@ -367,10 +416,10 @@ export default {
       this.showEdit = false
     },
     saveDialog: _throttle(function () {
-      console.log(this.addForm)
+      // console.log(this.addForm)
       let params = {
         livecodeEntity: { ...this.addForm },
-        userArr: this.addForm.userNo,
+        userArr: this.addForm.userArr,
       }
       this.$network
         .post('/user-service/livecode/addLivecode', params)
@@ -379,9 +428,19 @@ export default {
           this.showAdd = false
         })
     }, 2000),
-    saveEdit() {
-      console.log(v)
-    },
+    saveEdit: _throttle(function () {
+      console.log(this.editForm)
+      let params = {
+        livecodeEntity: { ...this.editForm },
+        userArr: this.editForm.userArr,
+      }
+      this.$network
+        .post('/user-service/livecode/updLivecode', params)
+        .then((res) => {
+          this.getData()
+          this.showEdit = false
+        })
+    }, 2000),
     fnChangeUser(val) {
       console.log(val)
     },
@@ -660,6 +719,10 @@ export default {
           /deep/.el-form {
             .codeImg {
               margin-bottom: 100px !important;
+              img {
+                width: 182px;
+                height: 182px;
+              }
             }
             .el-form-item {
               margin-bottom: 0;
