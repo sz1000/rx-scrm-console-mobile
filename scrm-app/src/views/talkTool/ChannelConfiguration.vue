@@ -22,6 +22,7 @@
     <!-- :immediate-check="false" -->
     <van-list v-model="loading"
               :finished="finished"
+              :immediate-check='false'
               finished-text="没有更多了"
               @load="onLoad"
               :offset="10">
@@ -192,7 +193,7 @@ export default {
   methods: {
     formatDate,
     onLoad() {
-      console.log(1111111111)
+      // console.log(1111111111)
       this.page++
       this.getData()
     },
@@ -200,7 +201,7 @@ export default {
       this.$network
         .get('/user-service/channel/getChannelList', { page: this.page })
         .then((res) => {
-          console.log(res)
+          // console.log(res)
           // this.channelList = res.data;
           let rows = res.data.channelEntityPage.records //请求返回当页的列表
           this.loading = false
@@ -218,12 +219,12 @@ export default {
           if (this.channelList.length >= this.total) {
             this.finished = true
           }
-          console.log(this.channelList)
+          // console.log(this.channelList)
         })
     },
     //保存新增
     saveDialog: _throttle(function () {
-      console.log(this.addForm)
+      // console.log(this.addForm)
       if (this.addForm.name == null) {
         return
       }

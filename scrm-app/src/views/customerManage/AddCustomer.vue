@@ -18,11 +18,11 @@
                :model="formObj"
                label-position='right'>
         <el-form-item label="客户简称:"
-                      prop="name"
+                      prop="customerName"
                       :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
-          <el-input v-model="formObj.name"
+          <el-input v-model="formObj.customerName"
                     placeholder="请输入"
-                    maxlength="12"></el-input>
+                    maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="客户来源:"
                       prop="source"
@@ -39,7 +39,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户类型:">
-          <el-select v-model="formObj.customType"
+          <el-select v-model="formObj.customerType"
                      placeholder="请选择"
                      @change="changeCustom"
                      clearable>
@@ -51,14 +51,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="电话:">
-          <el-input v-model="formObj.phone"
+          <el-input v-model="formObj.mobil"
                     placeholder="请输入"
-                    maxlength="11"></el-input>
+                    maxlength="13"></el-input>
         </el-form-item>
         <el-form-item label="公司名称:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.cropFullName"
                     placeholder="请输入"
-                    maxlength="60"></el-input>
+                    maxlength="100"></el-input>
         </el-form-item>
         <el-form-item label="所属行业:">
           <el-cascader size="large"

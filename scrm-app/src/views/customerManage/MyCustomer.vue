@@ -10,12 +10,12 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
-        <span :class="{'active':tabClick==1}"
+        <span :class="{'active':type==3}"
               class="mycule"
-              @click="tabClick=1">我的客户</span>
-        <span :class="{'active':tabClick==2}"
+              @click="tabClick(3)">我的客户</span>
+        <span :class="{'active':type==4}"
               class="mycule"
-              @click="tabClick=2">客户公海</span>
+              @click="tabClick(4)">客户公海</span>
       </div>
       <span class="addBtn"
             @click="addCules">
@@ -33,91 +33,155 @@
             @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <div class="topInfo"
-           v-for="(item,index) in cardList"
-           :key="index">
-        <div class="customInfo">
-          <div class="iconName">
-            <span>客户简称:</span>
-            <span>{{customName}}</span>
+      <van-list v-model="loading"
+                :finished="finished"
+                :immediate-check='false'
+                finished-text="没有更多了"
+                @load="onLoad"
+                ref="vanlist"
+                :offset="10">
+        <div class="topInfo"
+             v-for="(item,index) in cardList"
+             :key="index">
+          <div class="customInfo">
+            <div class="iconName">
+              <span>客户简称:</span>
+              <span>{{item.customerName}}</span>
+            </div>
+            <div class="detailBtn"
+                 @click="deleteCard(item,index)">
+              <van-icon name="delete-o" />
+              删除
+            </div>
           </div>
-          <div class="detailBtn"
-               @click="deleteCard(item,index)">
-            <van-icon name="delete-o" />
-            删除
+          <div class="detailInfo"
+               @click="goDetail(item,index)">
+            <div class="left">
+              <div class="rowStyle">
+                <span>公司名称:</span>
+                <span>{{item.cropFullName}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>所属行业:</span>
+                <span>{{item.cropSubIndustry}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>联系人员:</span>
+                <span>{{item.name}}</span>
+              </div>
+            </div>
+            <div class="right">
+              <div class="rowStyle">
+                <span>职务:</span>
+                <span>{{item.position}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>性别:</span>
+                <span>{{item.gender == '1' ? '男':'女'}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>邮箱:</span>
+                <span>{{item.email}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="tjry">
+            <div class="box">
+              <span class="label">添加人员:</span>
+              <span class="value">{{item.createBy}}</span>
+            </div>
+            <div class="box1">
+              <span class="label">添加时间:</span>
+              <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+            </div>
           </div>
         </div>
-        <div class="detailInfo"
-             @click="goDetail(item,index)">
-          <div class="left">
-            <div class="rowStyle">
-              <span>邮箱:</span>
-              <span>{{item.email}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>邮箱:</span>
-              <span>{{item.email}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>邮箱:</span>
-              <span>{{item.email}}</span>
-            </div>
-          </div>
-          <div class="right">
-            <div class="rowStyle">
-              <span>手机号码:</span>
-              <span>{{item.email}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>公司名称:</span>
-              <span>{{item.email}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>所属行业:</span>
-              <span>{{item.email}}</span>
-            </div>
-          </div>
-        </div>
-        <div class="tjry">
-          <div class="box">
-            <span class="label">添加人员:</span>
-            <span class="value">添加人员</span>
-          </div>
-          <div class="box1">
-            <span class="label">添加时间:</span>
-            <span class="value">添加人员</span>
-          </div>
-        </div>
-      </div>
+      </van-list>
     </div>
   </div>
 </template>
 <script>
-import { _throttle } from '../../utils/tool'
+import { _throttle, formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
-      tabClick: 1,
+      type: 3,
       inputValue: '',
-      cardList: [
-        { name: '小鱼儿', email: '1234567890@qq.com' },
-        { name: '小鱼儿', email: '1234567890@qq.com' },
-        { name: '小鱼儿', email: '1234567890@qq.com' },
-        { name: '小鱼儿', email: '1234567890@qq.com' },
-      ],
-      customName: '大熊科技',
+      cardList: [],
+      loading: false,
+      finished: false,
+      page: 1, //请求第几页
+      pageSize: 10, //每页请求的数量
+      total: 0, //总共的数据条数
     }
   },
+  watch: {
+    inputValue(val) {
+      // console.log(val)
+      if (val == '') {
+        this.getListData()
+      }
+    },
+  },
+  created() {
+    this.getListData()
+  },
   methods: {
+    formatDate,
+    tabClick(v) {
+      this.type = v
+      this.getListData()
+    },
+    onLoad() {
+      console.log('----gundong------')
+      this.page++
+      this.getListData()
+    },
+    getListData() {
+      // console.log(this.tabClick)
+      this.$network
+        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
+          type: this.type,
+          page: this.page,
+          allname: this.inputValue,
+        })
+        .then((res) => {
+          this.cardList = []
+          this.loading = false
+          if (res.data.iPage.records.length) {
+            this.cardList = res.data.iPage.records
+          } else {
+            this.finished = true
+          }
+          // let rows = res.data.iPage.records //请求返回当页的列表
+          // this.total = res.data.iPage.total
+          // if (this.page > 1) {
+          //   if (rows == null || rows.length === 0) {
+          //     // 加载结束
+          //     this.finished = true
+          //     return
+          //   }
+          //   // 将新数据与老数据进行合并
+          //   this.cardList = this.cardList.concat(rows)
+          //   //如果列表数据条数>=总条数，不再触发滚动加载
+          //   if (this.cardList.length >= this.total) {
+          //     this.finished = true
+          //   }
+          // } else {
+          //   this.cardList = rows
+          // }
+        })
+    },
     goBack() {
       this.$router.go(-1)
     },
     addCules() {
-      // console.log(this.tabClick)
-      this.$router.push('addCustomer')
+      console.log(this.type)
+      this.$router.push({ path: 'addCustomer', query: { type: this.type } })
     },
     inquire: _throttle(function () {
       // console.log(this.inputValue)
+      this.getListData()
     }, 2000),
     deleteCard(item, index) {
       this.$dialog
@@ -137,8 +201,8 @@ export default {
         })
     },
     goDetail(item, index) {
-      console.log(this.tabClick)
-      if (this.tabClick == 1) {
+      console.log(this.type)
+      if (this.type == 1) {
         this.$router.push('customDetail')
       } else {
         this.$router.push('customerSeas')
@@ -253,7 +317,7 @@ export default {
         margin-top: 24px;
         height: 400px;
         background: #fff;
-        padding: 24px 24px 0;
+        padding: 24px;
         .customInfo {
           display: flex;
           justify-content: space-between;
@@ -295,7 +359,7 @@ export default {
                 display: inline-block;
               }
               span:nth-child(1) {
-                width: 84px;
+                width: 140px;
                 color: #838a9d;
                 overflow: hidden;
               }
@@ -313,7 +377,7 @@ export default {
             margin-left: 19px;
             .rowStyle {
               span:nth-child(1) {
-                width: 140px;
+                width: 84px;
               }
             }
           }
@@ -333,7 +397,6 @@ export default {
             color: #838a9d;
           }
           .value {
-            width: 140px;
             color: #3c4353;
           }
           .box {

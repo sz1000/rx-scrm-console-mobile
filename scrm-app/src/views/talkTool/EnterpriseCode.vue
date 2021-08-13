@@ -23,6 +23,7 @@
       <van-list v-model="loading"
                 :finished="finished"
                 finished-text="没有更多了"
+                :immediate-check='false'
                 @load="onLoad"
                 ref="vanlist"
                 :offset="10">
@@ -297,21 +298,6 @@ export default {
       this.page++
       this.getData()
     },
-    //    async getrecord() {
-    //     this.page += 1;
-    //     this.loading = true;
-    //     this.finished = false;
-    //     const res = await getStudyRecordList({ page: this.page, limit: 10 });
-    //     if (res.status == 1) {
-    //       this.record_list = this.record_list.concat(res.data)
-    //       }
-    //       this.loading = false;
-    //     } else {
-    //       this.finished = true;
-    //     }
-    //   }
-    // }
-
     getData() {
       this.$network
         .get('/user-service/livecode/getLivecodeList', {
@@ -322,22 +308,23 @@ export default {
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表
           this.total = res.data.iPage.total
+          this.liveList = rows
           console.log(this.page)
-          if (this.page > 1) {
-            if (rows == null || rows.length === 0) {
-              // 加载结束
-              this.finished = true
-              return
-            }
-            // 将新数据与老数据进行合并
-            this.liveList = this.liveList.concat(rows)
-            //如果列表数据条数>=总条数，不再触发滚动加载
-            if (this.liveList.length >= this.total) {
-              this.finished = true
-            }
-          } else {
-            this.liveList = rows
-          }
+          // if (this.page > 1) {
+          //   if (rows == null || rows.length === 0) {
+          //     // 加载结束
+          //     this.finished = true
+          //     return
+          //   }
+          //   // 将新数据与老数据进行合并
+          //   this.liveList = this.liveList.concat(rows)
+          //   //如果列表数据条数>=总条数，不再触发滚动加载
+          //   if (this.liveList.length >= this.total) {
+          //     this.finished = true
+          //   }
+          // } else {
+          //   this.liveList = rows
+          // }
         })
     },
     goBack() {

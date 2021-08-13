@@ -164,6 +164,7 @@ export default {
       display: flex;
       padding-left: 67px;
       .commonBtn {
+        width: 112px;
         margin-right: 88px;
         font-size: 28px;
         font-weight: 600;

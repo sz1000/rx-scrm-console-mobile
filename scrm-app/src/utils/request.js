@@ -1,6 +1,11 @@
 import router from '../router/index'
 import axios from 'axios'
-let BASE_URL = 'http://172.10.7.114:8099'
+let BASE_URL = ''
+if (location.hostname == 'localhost') {
+    BASE_URL = 'http://172.10.7.114:8099' //袁
+} else {
+    BASE_URL = 'https://api-scrm.ruixin.tech'
+}
 let instance = axios.create({
     baseURL: BASE_URL,
     timeout: 30000,
