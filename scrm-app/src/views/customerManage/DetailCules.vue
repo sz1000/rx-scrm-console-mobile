@@ -8,7 +8,7 @@
       <span class="textTitle">线索详情</span>
     </div>
     <div class="iconName">
-      <div class="flag">鱼</div>
+      <div class="flag"><img :src="image" alt="" /></div>
       <div class="nameSex">
         <span>{{ name }}</span>
         <!-- <span>{{nameFrom}}</span> -->
@@ -251,23 +251,22 @@ import { formatDate } from "../../utils/tool";
 export default {
   data() {
     return {
-      name: "小鱼儿",
+      item: {},
+      name: "",
+      image: "",
       formList: [
-        { name: "名称", value: "1", mapName: "name" },
-        { name: "公司名称", value: "1", mapName: "cropFullName" },
-        { name: "所属行业", value: "1", mapName: "cropSubIndustry" },
-        { name: "线索来源", value: "1", mapName: "source" },
-        { name: "企业规模", value: "1", mapName: "cropscale" },
-        { name: "联系人", value: "1", mapName: "name" },
-        { name: "性别", value: "1", mapName: "gender" },
-        { name: "微信号", value: "1", mapName: "weixin" },
-        { name: "手机号", value: "1", mapName: "phone" },
-        { name: "邮箱", value: "1", mapName: "email" },
-        { name: "职务", value: "1", mapName: "position" },
-        { name: "地址", value: "1", mapName: "address" },
-        // { name: "客户类型", value: "1", mapName: "customerType" },
-        { name: "备注", value: "1", mapName: "remark" },
-        { name: "描述", value: "1", mapName: "describe" },
+        { name: "姓名", value: "", mapName: "name" },
+        { name: "手机号", value: "", mapName: "phone" },
+        { name: "微信号", value: "", mapName: "weixin" },
+        { name: "性别", value: "", mapName: "gender" },
+        { name: "职务", value: "", mapName: "position" },
+        { name: "公司名称", value: "", mapName: "cropFullName" },
+        { name: "所属行业", value: "", mapName: "cropSubIndustry" },
+        { name: "线索来源", value: "", mapName: "source" },
+        { name: "邮箱", value: "", mapName: "email" },
+        { name: "地址", value: "", mapName: "address" },
+        { name: "备注", value: "", mapName: "remark" },
+        { name: "描述", value: "", mapName: "describe" },
       ],
       systemList: [
         { name: "添加人员", mapName: "createBy", value: "" },
@@ -413,20 +412,43 @@ export default {
   },
   created() {
     console.log(this.$route.params.list);
-    let a = this.$route.params.list;
-    console.log(a);
+
+    let detail = JSON.parse(localStorage.getItem("detail"));
+    this.name = detail.name;
+    this.image = detail.avatar;
     let obj = {
-      customerName: a.customerName,
-      cropFullName: a.cropFullName,
-      cropSubIndustry: a.cropSubIndustry,
-      source: a.source,
-      cropscale: a.cropscale,
-      name: a.name,
-      source: a.source,
-      source: a.source,
-      source: a.source,
+      customerName: detail.customerName,
+      cropFullName: detail.cropFullName,
+      cropSubIndustry: detail.cropSubIndustry,
+      source: detail.source,
+      cropscale: detail.cropscale,
+      name: detail.name,
+      phone: detail.phone,
+      weixin: detail.weixin,
+      gender: detail.gender,
+      position: detail.position,
+      email: detail.email,
+      address: detail.address,
+      remark: detail.remark,
+      describe: detail.describe,
+      createBy: detail.createBy,
+      createTime: detail.createTime,
+      uname: detail.uname,
+      getTime: detail.getTime,
+      followRecord: detail.followRecord,
+      followTime: detail.followTime,
+      updateBy: detail.updateBy,
+      updateTime: detail.updateTime,
+      beBelongBy: detail.beBelongBy,
+      turnTime: detail.turnTime,
     };
     this.formList = this.formList.map((item) => {
+      return {
+        name: item.name,
+        value: obj[item.mapName],
+      };
+    });
+    this.systemList = this.systemList.map((item) => {
       return {
         name: item.name,
         value: obj[item.mapName],

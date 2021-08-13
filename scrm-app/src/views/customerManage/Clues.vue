@@ -48,10 +48,10 @@
               <img src="../../images/icon_female@2x.png" alt="" />
             </div>
           </div>
-          <div class="detailBtn" @click="deleteCard(item, index)">
+          <!-- <div class="detailBtn" @click="deleteCard(item, index)">
             <van-icon name="delete-o" />
             删除
-          </div>
+          </div> -->
         </div>
         <div class="detailInfo" @click="goDetail(item, index)">
           <div class="left">
@@ -152,11 +152,15 @@ export default {
     //新增
     addCules() {
       // console.log(this.tabClick)
+      localStorage.setItem("type", this.tabClick);
       this.$router.push("addCules");
     },
+
+    //列表页面
     myclue() {
       console.log(this.tabClick);
       this.cardList = [];
+      this.inputValue = "";
       this.getData();
     },
     inquire: _throttle(function () {
@@ -198,7 +202,8 @@ export default {
         });
     },
     goDetail(item, index) {
-      console.log(this.tabClick);
+      console.log(this.item);
+      localStorage.setItem("detail", JSON.stringify(item));
       if (this.tabClick == 1) {
         this.$router.push({ name: "detailCules", params: { list: item } });
         // this.$router.push("detailCules");

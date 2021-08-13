@@ -1,93 +1,113 @@
 <template>
   <div class="addWarp">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
       <span class="textTitle">新增线索</span>
     </div>
     <div class="addForm">
-      <el-form ref="form"
-               :model="formObj"
-               label-position='right'>
-        <el-form-item label="姓名:"
-                      prop="name"
-                      :rules="[ { required: true, message: '请输入姓名'}]">
-          <el-input v-model="formObj.name"
-                    placeholder="请输入"
-                    maxlength="12"></el-input>
+      <el-form ref="form" :model="formObj" label-position="right">
+        <el-form-item
+          label="姓名:"
+          prop="name"
+          :rules="[{ required: true, message: '请输入姓名' }]"
+        >
+          <el-input
+            v-model="formObj.name"
+            placeholder="请输入"
+            maxlength="12"
+          ></el-input>
         </el-form-item>
         <el-form-item label="手机号:">
-          <el-input v-model="formObj.phone"
-                    placeholder="手机号与微信号选填一个即可"
-                    maxlength="11"></el-input>
+          <el-input
+            v-model="formObj.phone"
+            placeholder="手机号与微信号选填一个即可"
+            maxlength="11"
+          ></el-input>
         </el-form-item>
         <el-form-item label="微信号:">
-          <el-input v-model="formObj.wechat"
-                    placeholder="手机号与微信号选填一个即可"
-                    maxlength="20"></el-input>
+          <el-input
+            v-model="formObj.weixin"
+            placeholder="手机号与微信号选填一个即可"
+            maxlength="20"
+          ></el-input>
         </el-form-item>
         <el-form-item label="性别:">
-          <el-select v-model="formObj.gender"
-                     placeholder="请选择">
-            <el-option label="男"
-                       value="1"></el-option>
-            <el-option label="女"
-                       value="2"></el-option>
+          <el-select v-model="formObj.gender" placeholder="请选择">
+            <el-option label="男" value="1"></el-option>
+            <el-option label="女" value="2"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="职务:">
-          <el-input v-model="formObj.wechat"
-                    placeholder="请输入"
-                    maxlength="20"></el-input>
+          <el-input
+            v-model="formObj.position"
+            placeholder="请输入"
+            maxlength="20"
+          ></el-input>
         </el-form-item>
         <el-form-item label="公司名称:">
-          <el-input v-model="formObj.wechat"
-                    placeholder="请输入"
-                    maxlength="30"></el-input>
+          <el-input
+            v-model="formObj.cropFullName"
+            placeholder="请输入"
+            maxlength="30"
+          ></el-input>
         </el-form-item>
         <el-form-item label="所属行业:">
-          <el-cascader size="large"
-                       :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
-                       :options="optionsCreat"
-                       v-model="formObj.industry"
-                       @change="handleChange">
+          <el-cascader
+            size="large"
+            :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
+            :options="optionsCreat"
+            v-model="formObj.cropSubIndustry"
+            @change="handleChange"
+          >
           </el-cascader>
         </el-form-item>
         <el-form-item label="线索来源:">
-          <el-select v-model="formObj.source"
-                     placeholder="请选择线索来源"
-                     @change="changeSource"
-                     clearable>
-            <el-option v-for="item in optionsSource"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.type">
+          <el-select
+            v-model="formObj.source"
+            placeholder="请选择线索来源"
+            @change="changeSource"
+            clearable
+          >
+            <el-option
+              v-for="item in optionsSource"
+              :key="item.value"
+              :label="item.name"
+              :value="item.type"
+            >
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="邮箱:">
-          <el-input v-model="formObj.remark"
-                    maxlength="60"></el-input>
+          <el-input
+            v-model="formObj.email"
+            maxlength="60"
+            placeholder="请输入"
+          ></el-input>
         </el-form-item>
         <el-form-item label="地址:">
-          <el-input v-model="formObj.remark"
-                    maxlength="100"></el-input>
+          <el-input
+            v-model="formObj.address"
+            maxlength="100"
+            placeholder="请输入"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="备注:"
-                      class="textareaInput">
-          <el-input type="textarea"
-                    v-model="formObj.remark"
-                    maxlength="200"
-                    show-word-limit></el-input>
+        <el-form-item label="备注:" class="textareaInput">
+          <el-input
+            type="textarea"
+            v-model="formObj.remark"
+            maxlength="200"
+            placeholder="请输入文字(不得超过200个字符)"
+            show-word-limit
+          ></el-input>
         </el-form-item>
         <el-form-item class="submitBtn">
-          <el-button type="primary"
-                     v-preventReClick
-                     @click="onSubmit('form')">提交</el-button>
+          <el-button type="primary" v-preventReClick @click="onSubmit('form')"
+            >提交</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -98,54 +118,67 @@ export default {
   data() {
     return {
       formObj: {
-        name: '',
-        phone: '',
-        wechat: '',
-        gender: '',
-        industry: '',
-        source: '',
+        name: "",
+        phone: "",
+        wechat: "",
+        gender: "",
+        industry: "",
+        source: "",
       },
-      optionsCreat: [
-        {
-          id: 13,
-          name: 'IT服务',
-          children: [
-            {
-              id: 14,
-              name: '计算机软件/硬件/信息服务',
-              type: null,
-              parentId: 13,
-              // children: [],
-            },
-          ],
-        },
-      ],
+      optionsCreat: [],
       optionsSource: [],
-    }
+      type: "",
+    };
   },
-  created() {},
+  created() {
+    this.type = localStorage.getItem("type");
+    console.log("type", this.type);
+    this.getselect();
+  },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     handleChange(val) {
-      console.log(val)
+      console.log(val);
     },
     changeSource(val) {
-      console.log(val)
+      console.log(val);
     },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          this.formObj.type = this.type;
+          console.log(this.formObj);
+
+          this.$network
+            .post("/customer-service/cluecustomer/addCul", this.formObj)
+            .then((res) => {
+              if (res.result) {
+                this.$router.push({
+                  name: "clues",
+                  params: { tabClick: this.type },
+                });
+              }
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
+    },
+    //下拉框信息
+    getselect() {
+      this.$network
+        .get("/customer-service/cluecustomer/toadd", {})
+        .then((res) => {
+          console.log(res.data);
+          this.optionsCreat = res.data.comlist;
+          this.optionsSource = res.data.list;
+        });
     },
   },
-}
+};
 </script>
 <style lang="less" scoped>
 .AddCules {
