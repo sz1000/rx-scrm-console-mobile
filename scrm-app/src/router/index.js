@@ -81,6 +81,7 @@ const routes = [{
     redirect: '/customerManage/clues',
     children: [{
         path: 'clues',
+        name: 'clues',
         meta: {
             bodyClass: 'Clues',
             keepAlive: true,
