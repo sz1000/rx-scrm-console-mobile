@@ -624,7 +624,7 @@ export default {
             .post('/customer-service/cluecustomer/deltag', v)
             .then((res) => {
               if (res.result) {
-                // this.personTagList =
+                this.personTagList = res.data
               }
             })
         })

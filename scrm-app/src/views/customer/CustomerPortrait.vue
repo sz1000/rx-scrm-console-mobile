@@ -226,7 +226,6 @@
 import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
-import HomeVue from '../Home.vue'
 export default {
   components: {
     BackTop,
@@ -267,8 +266,8 @@ export default {
     this.getWxAppid()
   },
   mounted() {
-    let appid = this.$route.params.appid
-    this.getWxConfig(appid)
+    // let appid = this.$route.params.appid
+    // this.getWxConfig(appid)
     this.getMethod()
     this.getTimeline()
     this.getTagList()
@@ -276,7 +275,6 @@ export default {
 
   methods: {
     formatDate,
-
     getWxAppid() {
       this.$network
         .get('/user-service/m/user/getappid', {
@@ -293,25 +291,25 @@ export default {
         })
     },
     getWxConfig(appid) {
-      wx.config({
-        beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-        appId: appid, // 必填，企业微信的corpID
-        // timestamp: , // 必填，生成签名的时间戳
-        nonceStr: '', // 必填，生成签名的随机串
-        signature: '', // 必填，签名，见 附录-JS-SDK使用权限签名算法
-        jsApiList: ['getCurExternalContact'], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
-      })
-      wx.ready(function () {
-        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-        wx.invoke('getCurExternalContact', {}, function (res) {
-          if (res.err_msg == 'getCurExternalContact:ok') {
-            this.userId = res.userId //返回当前外部联系人userId
-          } else {
-            //错误处理
-          }
-        })
-      })
+      // wx.config({
+      //   beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+      //   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      //   appId: appid, // 必填，企业微信的corpID
+      //   // timestamp: , // 必填，生成签名的时间戳
+      //   nonceStr: '', // 必填，生成签名的随机串
+      //   signature: '', // 必填，签名，见 附录-JS-SDK使用权限签名算法
+      //   jsApiList: ['getCurExternalContact'], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
+      // })
+      // wx.ready(function () {
+      //   // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+      //   wx.invoke('getCurExternalContact', {}, function (res) {
+      //     if (res.err_msg == 'getCurExternalContact:ok') {
+      //       this.userId = res.userId //返回当前外部联系人userId
+      //     } else {
+      //       //错误处理
+      //     }
+      //   })
+      // })
     },
 
     goToDetail() {
@@ -464,7 +462,13 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          // on confirm
+          this.$network
+            .post('/customer-service/cluecustomer/deltag', v)
+            .then((res) => {
+              if (res.result) {
+                this.personTagList = res.data
+              }
+            })
         })
         .catch(() => {
           // on cancel
