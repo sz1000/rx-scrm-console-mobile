@@ -33,24 +33,121 @@
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <!-- <van-form v-model="basicInfo">
-          <van-field v-for="(item,index) in formList"
-                     label-align='center'
-                     placeholder="请输入"
-                     :ref="'barcode'+index"
-                     :key="index"
-                     v-model="item.value"
-                     :label="item.name"
-                     @blur='inputEdit(item,index)'
-                     @focus='fnFocus(item,index)'
-                     @keyup.enter.native="keyupClick(item,index)">
-            <template slot="right-icon">
-              <i class="el-icon-edit"
-                 v-show="fieldIndex == index"></i>
-            </template>
-          </van-field>
-        </van-form> -->
+        <el-form ref="form"
+                 :model="basicInfo">
+          <el-form-item label="客户简称">
+            <el-input v-model="basicInfo.customerName"
+                      placeholder="请输入"
+                      maxlength="30"></el-input>
+          </el-form-item>
+          <el-form-item label="客户来源">
+            <el-select v-model="basicInfo.source"
+                       placeholder="请选择"
+                       @change="changeSource">
+              <el-option v-for="item in optionSource"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="客户类型">
+            <el-select v-model="basicInfo.customerType"
+                       placeholder="请选择"
+                       @change="changeCustom">
+              <el-option v-for="item in customList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="电话">
+            <el-input v-model="basicInfo.mobil"
+                      placeholder="请输入"
+                      maxlength="13"></el-input>
+          </el-form-item>
+          <el-form-item label="公司名称">
+            <el-input v-model="basicInfo.cropFullName"
+                      placeholder="请输入"
+                      maxlength="100"></el-input>
+          </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large"
+                         :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
+                         :options="optionsCreat"
+                         v-model="basicInfo.industry"
+                         @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="企业规模">
+            <el-select v-model="basicInfo.corpScale"
+                       placeholder="请选择"
+                       @change="scaleChange">
+              <el-option v-for="item in optionsScale"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input v-model="basicInfo.address"
+                      maxlength="100"
+                      placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="备注"
+                        class="textareaInput">
+            <el-input v-model="basicInfo.remark"
+                      maxlength="200"
+                      placeholder="请输入文字(不得超过200个字符)"></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input v-model="basicInfo.describe"
+                      maxlength="100"
+                      placeholder="请输入"></el-input>
+          </el-form-item>
+          <div class="custonInfo">
+            <img src="../../images/icon_label.png"
+                 alt="">
+            <span>联系人信息</span>
+          </div>
+          <el-form-item label="姓名">
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
+                      placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号:">
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择">
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
 
+          <el-form-item label="职务:">
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱:">
+            <el-input v-model="basicInfo.email"
+                      placeholder="请输入"
+                      maxlength="60"></el-input>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
     <div class="systemInformation ">
@@ -162,22 +259,25 @@ import { formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
-      customName: '小鱼儿',
-      formList: [
-        { name: '姓名', value: '', mapName: 'name' },
-        { name: '手机号', value: '', mapName: 'phone' },
-        { name: '微信号', value: '', mapName: 'weixin' },
-        { name: '性别', value: '', mapName: 'gender' },
-        { name: '职务', value: '', mapName: 'position' },
-        { name: '公司名称', value: '', mapName: 'cropFullName' },
-        { name: '所属行业', value: '', mapName: 'cropSubIndustry' },
-        { name: '线索来源', value: '', mapName: 'source' },
-        { name: '邮箱', value: '', mapName: 'email' },
-        { name: '地址', value: '', mapName: 'address' },
-        { name: '备注', value: '', mapName: 'remark' },
-        { name: '描述', value: '', mapName: 'describe' },
+      customName: '',
+      optionSource: [],
+      customList: [
+        { label: '微信用户', value: '1' },
+        { label: '企微用户', value: '2' },
       ],
+      industry: [],
+      optionsCreat: [],
+      optionsScale: [],
       basicInfo: {
+        customerName: '',
+        source: '',
+        customerType: '',
+        mobil: '',
+        cropFullName: '',
+        corpScale: '',
+        address: '',
+        remark: '',
+        describe: '',
         name: '',
         phone: '',
         weixin: '',
@@ -187,9 +287,6 @@ export default {
         cropSubIndustry: '',
         source: '',
         email: '',
-        address: '',
-        remark: '',
-        describe: '',
       },
       systemList: [
         { name: '添加人员', mapName: 'createBy', value: '' },
@@ -234,21 +331,9 @@ export default {
   },
   created() {
     let tempObj = JSON.parse(localStorage.getItem('customer'))
-    // console.log(tempObj)
-    let tempList = this.formList.map((item) => {
-      return {
-        name: item.name,
-        value: tempObj[item.mapName],
-        mapName: item.mapName,
-      }
-    })
-    tempList.forEach((item) => {
-      // console.log(item)
-      if (item.name === '性别')
-        item.value =
-          item.value == '1' ? '男' : item.value == '2' ? '女' : '未知'
-    })
-    this.formList = tempList
+    console.log(tempObj)
+    this.basicInfo = { ...tempObj }
+    this.customName = tempObj.customerName
     let tempSystem = this.systemList.map((item) => {
       return {
         name: item.name,
@@ -269,6 +354,10 @@ export default {
   },
   methods: {
     formatDate,
+    changeCustom() {},
+    changeSource() {},
+    handleChange() {},
+    scaleChange() {},
     getTimeline() {
       // console.log(this.objItem, '------')
       this.$network
@@ -475,6 +564,70 @@ export default {
           }
           .van-field__body {
             height: 80px;
+          }
+        }
+        .custonInfo {
+          font-size: 28px;
+          font-weight: 600;
+          margin: 24px 0;
+          img {
+            width: 28px;
+            height: 28px;
+            vertical-align: -11%;
+            display: inline-block;
+            margin-right: 8px;
+          }
+        }
+        /deep/.el-form {
+          height: 100%;
+          .el-form-item {
+            display: flex;
+            margin-bottom: 0;
+          }
+          .el-form-item__label {
+            font-size: 28px;
+            width: 234px;
+            height: 80px;
+            background: #fafbff;
+            border: 1px solid #f0f2f7;
+            line-height: 80px;
+            text-align: center;
+          }
+          .el-form-item__content {
+            width: 562px;
+            height: 80px;
+
+            .el-input__inner {
+              height: 80px;
+              width: 100%;
+              border-radius: 8px;
+              font-size: 28px;
+              border: 2px solid #d9dae4;
+              border-radius: 0;
+            }
+            .el-select,
+            .el-cascader {
+              width: 100%;
+              height: 80px;
+            }
+          }
+          .textareaInput {
+            // height: 400px;
+            .el-textarea {
+              .el-textarea__inner {
+                height: 400px;
+                font-size: 28px;
+              }
+            }
+          }
+          .submitBtn {
+            .el-button--primary {
+              font-size: 28px;
+              width: 702px;
+              height: 80px;
+              background: #4168f6;
+              border-radius: 8px;
+            }
           }
         }
       }
