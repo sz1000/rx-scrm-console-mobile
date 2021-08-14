@@ -27,8 +27,9 @@ export default {
           this.appid = res.data.corpId
           localStorage.setItem('token', res.data.accessToken)
           this.$router.push({
-            name: '/customerPortrait',
+            name: 'customerPortrait',
             params: {
+              // appid: '131313',
               appid: this.appid,
             },
           })

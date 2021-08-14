@@ -90,8 +90,10 @@ export default {
     })
   },
   created() {
-    console.log(wx)
     // this.$network.get('/customer-service/group/list').then((res) => {})
+  },
+  mounted() {
+    console.log(this.$route.params.appid)
   },
   methods: {
     fnToIndex(v) {
