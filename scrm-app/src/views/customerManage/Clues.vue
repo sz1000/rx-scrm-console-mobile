@@ -202,13 +202,18 @@ export default {
         });
     },
     goDetail(item, index) {
-      console.log(this.item);
+      console.log(item);
       localStorage.setItem("detail", JSON.stringify(item));
       if (this.tabClick == 1) {
-        this.$router.push({ name: "detailCules", params: { list: item } });
-        // this.$router.push("detailCules");
-      } else {
-        this.$router.push("CluesSeas");
+        this.$router.push({
+          path: "detailCules",
+          query: { type: this.tabClick },
+        });
+      } else if (this.tabClick == 2) {
+        this.$router.push({
+          path: "CluesSeas",
+          query: { type: this.tabClick },
+        });
       }
     },
   },

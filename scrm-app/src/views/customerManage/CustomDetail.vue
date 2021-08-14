@@ -10,7 +10,7 @@
     </div>
     <div class="iconName">
       <span>客户简称:</span>
-      <span>{{customName}}</span>
+      <span>{{ customName }}</span>
     </div>
     <div class="btnWarp">
       <!-- <div class="btnBox"
@@ -168,7 +168,7 @@
         </el-form>
       </div>
     </div>
-    <div class="systemInformation ">
+    <div class="systemInformation">
       <span>
         <img src="../../images/icon_label.png"
              alt="" />
@@ -176,9 +176,9 @@
       <span>系统信息</span>
       <div class="formEdit">
         <van-form v-model="systemList">
-          <van-field v-for="(item,index) in systemList"
-                     label-align='center'
-                     :ref="'barcode'+index"
+          <van-field v-for="(item, index) in systemList"
+                     label-align="center"
+                     :ref="'barcode' + index"
                      readonly
                      :key="index"
                      v-model="item.value"
@@ -191,7 +191,7 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <div class='editButton'
+          <div class="editButton"
                @click="showCompany(1)">
             <i class="el-icon-edit"></i>
             编辑
@@ -217,7 +217,7 @@
       <div class="personLabel">
         <div class="t_text">
           <span class="label_tag">个人标签</span>
-          <div class='editButton'
+          <div class="editButton"
                @click="showCompany(2)">
             <i class="el-icon-edit"></i>
             编辑
@@ -244,27 +244,27 @@
       <div class="dynamic">
         <div class="t_text">
           <span class="label_tag">动态</span>
-          <div class='editButton'
+          <div class="editButton"
                @click="showCompany(3)">
             <img src="../../images/icon_repair1@2x.png"
-                 alt="">
+                 alt="" />
             <span>写跟进</span>
           </div>
         </div>
         <div class="allText">全部</div>
         <div class="timeLine">
           <el-timeline>
-            <el-timeline-item v-for="(item,index) in timeLineList"
+            <el-timeline-item v-for="(item, index) in timeLineList"
                               :key="index"
-                              color='#4168F6'
-                              type='danger '>
+                              color="#4168F6"
+                              type="danger ">
               <div class="recordBox">
-                <div class="descTxt">{{item.title}}</div>
-                <div class="inLineTwo">{{item.context}}</div>
+                <div class="descTxt">{{ item.title }}</div>
+                <div class="inLineTwo">{{ item.context }}</div>
                 <div class="inLine">
-                  <div class="inLineEnd">操作人：{{item.userName}}</div>
+                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
                   <span class="time_right">
-                    {{formatDate(item.createTime,'yyyy-MM-dd')}}
+                    {{ formatDate(item.createTime, "yyyy-MM-dd") }}
                   </span>
                 </div>
               </div>
@@ -278,11 +278,11 @@
                         :title="titleName">
         <div class="content">
           <div class="tagWarp"
-               v-if="isShowDialog=='1'">
+               v-if="isShowDialog == '1'">
             <div class="tagRow"
-                 v-for="(item,index) in groupList"
+                 v-for="(item, index) in groupList"
                  :key="index">
-              <div class="groupName">{{item.name}}</div>
+              <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
                 <span class="creatTag"
                       :class="{'changeTag':highLightArr.includes(list)}"
@@ -295,14 +295,14 @@
           </div>
 
           <div class="tagWarp personWarp"
-               v-if="isShowDialog=='2'">
+               v-if="isShowDialog == '2'">
             <div class="tagRow">
               <!-- <div class="groupName">{{item.name}}</div> -->
               <div class="tagStyle">
                 <span class="addBtn pointer"
                       @click="addTag">+添加</span>
                 <span class="perchInput"
-                      v-if="isShow ">
+                      v-if="isShow">
                   <input v-model="tagName"
                          class="addInput"
                          placeholder="输入后按回车完成"
@@ -324,7 +324,7 @@
             </div>
           </div>
           <div class="writerInput"
-               v-if="isShowDialog=='3'">
+               v-if="isShowDialog == '3'">
             <van-field v-model="message"
                        type="textarea"
                        maxlength="300"
@@ -332,10 +332,10 @@
                        show-word-limit />
           </div>
           <div class="changeUser"
-               v-if="isShowDialog=='4'">
+               v-if="isShowDialog == '4'">
             <div class="nowUser">
               <span>现有所属人:</span>
-              <span>{{nowUser}}</span>
+              <span>{{ nowUser }}</span>
             </div>
             <div class="selectUser">
               <span style="color:red;">*</span><span>指定所属人:</span>
