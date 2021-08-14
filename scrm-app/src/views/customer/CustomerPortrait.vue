@@ -71,14 +71,18 @@
           <div :class="{ 'over-hidden': !unfold }" ref="textBox">
             <div ref="spanBox">
               <span
-                v-for="(list, index) in tagList"
+                v-for="(list, index) in companyTagList"
                 :key="index"
                 class="tagBox"
                 >{{ list.name }}</span
               >
             </div>
           </div>
-          <div class="btn" @click="unfold = !unfold">
+          <div
+            class="btn"
+            @click="unfold = !unfold"
+            v-show="companyTagList.length > 8"
+          >
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -96,14 +100,19 @@
           <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
             <div ref="spanBox">
               <span
-                v-for="(list, index) in tagpersonList"
+                v-for="(list, index) in personTagList"
                 :key="index"
                 class="tagBox"
+                v-show="list.isChecked"
                 >{{ list.name }}</span
               >
             </div>
           </div>
-          <div class="btn" @click="isShowPerson = !isShowPerson">
+          <div
+            class="btn"
+            @click="isShowPerson = !isShowPerson"
+            v-show="personTagList.length > 8"
+          >
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
