@@ -597,7 +597,13 @@ export default {
         })
     },
     transCustom() {
-      this.$router.push('turnCustomer')
+      this.$router.push({
+        path: 'turnCustomer',
+        query: {
+          customno: this.objItem.clueCustomerNo,
+          type: this.$route.query.type,
+        },
+      })
     },
     changeUser() {
       this.isShowDialog = '4'
