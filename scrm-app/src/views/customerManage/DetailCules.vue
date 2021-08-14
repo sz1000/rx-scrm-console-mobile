@@ -1,203 +1,182 @@
 <template>
   <div class="culeDeatil">
     <div class="headerTitle">
-      <div class="backPage" @click="goBack">
+      <div class="backPage"
+           @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
       <span class="textTitle">线索详情</span>
     </div>
     <div class="iconName">
-      <div class="flag"><img :src="image" alt="" /></div>
+      <div class="flag"><img :src="image"
+             alt="" /></div>
       <div class="nameSex">
         <span>{{ name }}</span>
         <!-- <span>{{nameFrom}}</span> -->
-        <img src="../../images/icon_female@2x.png" alt="" />
+        <img src="../../images/icon_female@2x.png"
+             alt="" />
       </div>
     </div>
     <div class="btnWarp">
-      <div class="btnBox" @click="transCustom">
-        <img src="../../images/icon_change@2x.png" alt="" />
+      <div class="btnBox"
+           @click="transCustom">
+        <img src="../../images/icon_change@2x.png"
+             alt="" />
         <span>转客户</span>
       </div>
-      <div class="btnBox" @click="changeUser">
-        <img src="../../images/icon_change2@2x.png" alt="" />
+      <div class="btnBox"
+           @click="changeUser">
+        <img src="../../images/icon_change2@2x.png"
+             alt="" />
         <span>变更所属人</span>
       </div>
-      <div class="btnBox" @click="giveUp()">
-        <img src="../../images/icon_clear@2x.png" alt="" />
+      <div class="btnBox"
+           @click="giveUp()">
+        <img src="../../images/icon_clear@2x.png"
+             alt="" />
         <span>放弃</span>
       </div>
     </div>
     <div class="basicInformation">
       <span>
-        <img src="../../images/icon_label.png" alt="" />
+        <img src="../../images/icon_label.png"
+             alt="" />
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <el-form ref="form" :model="basicInfo">
+        <el-form ref="form"
+                 :model="basicInfo">
           <el-form-item label="客户简称">
-            <el-input
-              v-model="basicInfo.customerName"
-              placeholder="请输入"
-              maxlength="30"
-            ></el-input>
+            <el-input v-model="basicInfo.customerName"
+                      placeholder="请输入"
+                      maxlength="30"></el-input>
           </el-form-item>
           <el-form-item label="客户来源">
-            <el-select
-              v-model="basicInfo.source"
-              placeholder="请选择"
-              @change="changeSource"
-            >
-              <el-option
-                v-for="item in optionSource"
-                :key="item.value"
-                :label="item.name"
-                :value="item.type"
-              >
+            <el-select v-model="basicInfo.source"
+                       placeholder="请选择"
+                       @change="changeSource">
+              <el-option v-for="item in optionSource"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="客户类型">
-            <el-select
-              v-model="basicInfo.customerType"
-              placeholder="请选择"
-              @change="changeCustom"
-            >
-              <el-option
-                v-for="item in customList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
+            <el-select v-model="basicInfo.customerType"
+                       placeholder="请选择"
+                       @change="changeCustom">
+              <el-option v-for="item in customList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input
-              v-model="basicInfo.mobil"
-              placeholder="请输入"
-              maxlength="13"
-            ></el-input>
+            <el-input v-model="basicInfo.mobil"
+                      placeholder="请输入"
+                      maxlength="13"></el-input>
           </el-form-item>
           <el-form-item label="公司名称">
-            <el-input
-              v-model="basicInfo.cropFullName"
-              placeholder="请输入"
-              maxlength="100"
-            ></el-input>
+            <el-input v-model="basicInfo.cropFullName"
+                      placeholder="请输入"
+                      maxlength="100"></el-input>
           </el-form-item>
           <el-form-item label="所属行业">
-            <el-cascader
-              size="large"
-              :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
-              :options="optionsCreat"
-              v-model="basicInfo.industry"
-              @change="handleChange"
-            >
+            <el-cascader size="large"
+                         :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
+                         :options="optionsCreat"
+                         v-model="basicInfo.industry"
+                         @change="handleChange">
             </el-cascader>
           </el-form-item>
           <el-form-item label="企业规模">
-            <el-select
-              v-model="basicInfo.corpScale"
-              placeholder="请选择"
-              @change="scaleChange"
-            >
-              <el-option
-                v-for="item in optionsScale"
-                :key="item.value"
-                :label="item.name"
-                :value="item.type"
-              >
+            <el-select v-model="basicInfo.corpScale"
+                       placeholder="请选择"
+                       @change="scaleChange">
+              <el-option v-for="item in optionsScale"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input
-              v-model="basicInfo.address"
-              maxlength="100"
-              placeholder="请输入"
-            ></el-input>
+            <el-input v-model="basicInfo.address"
+                      maxlength="100"
+                      placeholder="请输入"></el-input>
           </el-form-item>
-          <el-form-item label="备注" class="textareaInput">
-            <el-input
-              v-model="basicInfo.remark"
-              maxlength="200"
-              placeholder="请输入文字(不得超过200个字符)"
-            ></el-input>
+          <el-form-item label="备注"
+                        class="textareaInput">
+            <el-input v-model="basicInfo.remark"
+                      maxlength="200"
+                      placeholder="请输入文字(不得超过200个字符)"></el-input>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input
-              v-model="basicInfo.describe"
-              maxlength="100"
-              placeholder="请输入"
-            ></el-input>
+            <el-input v-model="basicInfo.describe"
+                      maxlength="100"
+                      placeholder="请输入"></el-input>
           </el-form-item>
           <div class="custonInfo">
-            <img src="../../images/icon_label.png" alt="" />
+            <img src="../../images/icon_label.png"
+                 alt="" />
             <span>联系人信息</span>
           </div>
           <el-form-item label="姓名">
-            <el-input
-              v-model="basicInfo.name"
-              maxlength="15"
-              placeholder="请输入"
-            ></el-input>
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
+                      placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="手机号:">
-            <el-input
-              v-model="basicInfo.phone"
-              maxlength="11"
-              placeholder="请输入"
-            ></el-input>
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender" placeholder="请选择">
-              <el-option label="男" value="1"></el-option>
-              <el-option label="女" value="2"></el-option>
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择">
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="职务:">
-            <el-input
-              v-model="basicInfo.position"
-              placeholder="请输入"
-              maxlength="20"
-            ></el-input>
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item label="微信号:">
-            <el-input
-              v-model="basicInfo.weixin"
-              placeholder="请输入"
-              maxlength="20"
-            ></el-input>
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"></el-input>
           </el-form-item>
           <el-form-item label="邮箱:">
-            <el-input
-              v-model="basicInfo.email"
-              placeholder="请输入"
-              maxlength="60"
-            ></el-input>
+            <el-input v-model="basicInfo.email"
+                      placeholder="请输入"
+                      maxlength="60"></el-input>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <div class="systemInformation">
       <span>
-        <img src="../../images/icon_label.png" alt="" />
+        <img src="../../images/icon_label.png"
+             alt="" />
       </span>
       <span>系统信息</span>
       <div class="formEdit">
         <van-form v-model="systemList">
-          <van-field
-            v-for="(item, index) in systemList"
-            label-align="center"
-            :ref="'barcode' + index"
-            readonly
-            :key="index"
-            v-model="item.value"
-            :label="item.name"
-          >
+          <van-field v-for="(item, index) in systemList"
+                     label-align="center"
+                     :ref="'barcode' + index"
+                     readonly
+                     :key="index"
+                     v-model="item.value"
+                     :label="item.name">
           </van-field>
         </van-form>
       </div>
@@ -206,23 +185,23 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <div class="editButton" @click="showCompany(1)">
+          <div class="editButton"
+               @click="showCompany(1)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
+          <div :class="{ 'over-hidden': !unfold }"
+               ref="textBox">
             <div ref="spanBox">
-              <span
-                v-for="(list, index) in tagList"
-                :key="index"
-                class="tagBox"
-                >{{ list.name }}</span
-              >
+              <span v-for="(list, index) in tagList"
+                    :key="index"
+                    class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn" @click="unfold = !unfold">
+          <div class="btn"
+               @click="unfold = !unfold">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -231,23 +210,23 @@
       <div class="personLabel">
         <div class="t_text">
           <span class="label_tag">个人标签</span>
-          <div class="editButton" @click="showCompany(2)">
+          <div class="editButton"
+               @click="showCompany(2)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+          <div :class="{ 'over-hidden': !isShowPerson }"
+               ref="textBox">
             <div ref="spanBox">
-              <span
-                v-for="(list, index) in tagList"
-                :key="index"
-                class="tagBox"
-                >{{ list.name }}</span
-              >
+              <span v-for="(list, index) in tagList"
+                    :key="index"
+                    class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn" @click="isShowPerson = !isShowPerson">
+          <div class="btn"
+               @click="isShowPerson = !isShowPerson">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -256,20 +235,20 @@
       <div class="dynamic">
         <div class="t_text">
           <span class="label_tag">动态</span>
-          <div class="editButton" @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png" alt="" />
+          <div class="editButton"
+               @click="showCompany(3)">
+            <img src="../../images/icon_repair1@2x.png"
+                 alt="" />
             <span>写跟进</span>
           </div>
         </div>
         <div class="allText">全部</div>
         <div class="timeLine">
           <el-timeline>
-            <el-timeline-item
-              v-for="(item, index) in timeLineList"
-              :key="index"
-              color="#4168F6"
-              type="danger "
-            >
+            <el-timeline-item v-for="(item, index) in timeLineList"
+                              :key="index"
+                              color="#4168F6"
+                              type="danger ">
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
                 <div class="inLineTwo">{{ item.context }}</div>
@@ -286,87 +265,89 @@
       </div>
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="show" :title="titleName">
+      <van-action-sheet v-model="show"
+                        :title="titleName">
         <div class="content">
-          <div class="tagWarp" v-if="isShowDialog == '1'">
-            <div class="tagRow" v-for="(item, index) in groupList" :key="index">
+          <div class="tagWarp"
+               v-if="isShowDialog == '1'">
+            <div class="tagRow"
+                 v-for="(item, index) in groupList"
+                 :key="index">
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
-                <span
-                  class="creatTag"
-                  :class="{ changeTag: highLightArr.includes(list.id) }"
-                  v-for="(list, index) in item.children"
-                  :key="list.id"
-                  v-show="list.name"
-                  @click="selectTag(list, index)"
-                  >{{ list.name }}</span
-                >
+                <span class="creatTag"
+                      :class="{ changeTag: highLightArr.includes(list.id) }"
+                      v-for="(list, index) in item.children"
+                      :key="list.id"
+                      v-show="list.name"
+                      @click="selectTag(list, index)">{{ list.name }}</span>
               </div>
             </div>
           </div>
 
-          <div class="tagWarp personWarp" v-if="isShowDialog == '2'">
+          <div class="tagWarp personWarp"
+               v-if="isShowDialog == '2'">
             <div class="tagRow">
               <!-- <div class="groupName">{{item.name}}</div> -->
               <div class="tagStyle">
-                <span class="addBtn pointer" @click="addTag">+添加</span>
-                <span class="perchInput" v-if="isShow">
-                  <input
-                    v-model="tagName"
-                    class="addInput"
-                    placeholder="输入后按回车完成"
-                    maxlength="30"
-                    @keyup.enter="handleSearch()"
-                  />
+                <span class="addBtn pointer"
+                      @click="addTag">+添加</span>
+                <span class="perchInput"
+                      v-if="isShow">
+                  <input v-model="tagName"
+                         class="addInput"
+                         placeholder="输入后按回车完成"
+                         maxlength="30"
+                         @keyup.enter="handleSearch()" />
                 </span>
-                <span
-                  class="creatTag"
-                  :class="{ changeTag: tempList.includes(list.id) }"
-                  v-for="(list, index) in personList"
-                  :key="list.id"
-                  v-show="list.name"
-                >
+                <span class="creatTag"
+                      :class="{ changeTag: tempList.includes(list.id) }"
+                      v-for="(list, index) in personList"
+                      :key="list.id"
+                      v-show="list.name">
                   <span @click="selectPersonTag(list, index)">{{
                     list.name
                   }}</span>
-                  <span class="deleteTag" @click="deleteTag(list, index)">
+                  <span class="deleteTag"
+                        @click="deleteTag(list, index)">
                     <van-icon name="cross" />
                   </span>
                 </span>
               </div>
             </div>
           </div>
-          <div class="writerInput" v-if="isShowDialog == '3'">
-            <van-field
-              v-model="message"
-              type="textarea"
-              maxlength="300"
-              placeholder="记录好跟进，多签单哟~"
-              show-word-limit
-            />
+          <div class="writerInput"
+               v-if="isShowDialog == '3'">
+            <van-field v-model="message"
+                       type="textarea"
+                       maxlength="300"
+                       placeholder="记录好跟进，多签单哟~"
+                       show-word-limit />
           </div>
-          <div class="changeUser" v-if="isShowDialog == '4'">
+          <div class="changeUser"
+               v-if="isShowDialog == '4'">
             <div class="nowUser">
               <span>现有所属人:</span>
               <span>{{ nowUser }}</span>
             </div>
             <div class="selectUser">
               <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.userNo"
-                  :label="item.name"
-                  :value="item.userNo"
-                  @change="fnChangeUser"
-                >
+              <el-select v-model="value"
+                         placeholder="请选择">
+                <el-option v-for="item in options"
+                           :key="item.userNo"
+                           :label="item.name"
+                           :value="item.userNo"
+                           @change="fnChangeUser">
                 </el-option>
               </el-select>
             </div>
           </div>
           <div class="buttonWarp">
-            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
+            <span class="cancel"
+                  @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save"
+                  @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -374,44 +355,44 @@
   </div>
 </template>
 <script>
-import { formatDate } from "../../utils/tool";
+import { formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
       item: {},
-      name: "",
-      image: "",
+      name: '',
+      image: '',
       basicInfo: {
-        customerName: "",
-        source: "",
-        customerType: "",
-        mobil: "",
-        cropFullName: "",
-        corpScale: "",
-        address: "",
-        remark: "",
-        describe: "",
-        name: "",
-        phone: "",
-        weixin: "",
-        gender: "",
-        position: "",
-        cropFullName: "",
-        cropSubIndustry: "",
-        source: "",
-        email: "",
+        customerName: '',
+        source: '',
+        customerType: '',
+        mobil: '',
+        cropFullName: '',
+        corpScale: '',
+        address: '',
+        remark: '',
+        describe: '',
+        name: '',
+        phone: '',
+        weixin: '',
+        gender: '',
+        position: '',
+        cropFullName: '',
+        cropSubIndustry: '',
+        source: '',
+        email: '',
       },
       systemList: [
-        { name: "添加人员", mapName: "createBy", value: "" },
-        { name: "添加时间", mapName: "createTime", value: "" },
-        { name: "所属人", mapName: "uname", value: "" },
-        { name: "领取时间", mapName: "getTime", value: "" },
-        { name: "最近跟进记录", mapName: "followRecord", value: "" },
-        { name: "最近跟进时间", mapName: "followTime", value: "" },
-        { name: "最近修改人", mapName: "updateBy", value: "" },
-        { name: "最近修改时间", mapName: "updateTime", value: "" },
-        { name: "前所属人", mapName: "beBelongBy", value: "" },
-        { name: "转换时间", mapName: "turnTime", value: "" },
+        { name: '添加人员', mapName: 'createBy', value: '' },
+        { name: '添加时间', mapName: 'createTime', value: '' },
+        { name: '所属人', mapName: 'uname', value: '' },
+        { name: '领取时间', mapName: 'getTime', value: '' },
+        { name: '最近跟进记录', mapName: 'followRecord', value: '' },
+        { name: '最近跟进时间', mapName: 'followTime', value: '' },
+        { name: '最近修改人', mapName: 'updateBy', value: '' },
+        { name: '最近修改时间', mapName: 'updateTime', value: '' },
+        { name: '前所属人', mapName: 'beBelongBy', value: '' },
+        { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       fieldIndex: null,
       unfold: false,
@@ -421,108 +402,108 @@ export default {
       personList: [],
       timeLineList: [
         {
-          title: "步骤一",
-          userName: "描述信息",
-          context: "描述信息描述信息描述信息描述信息",
+          title: '步骤一',
+          userName: '描述信息',
+          context: '描述信息描述信息描述信息描述信息',
           createTime: 1628128378602,
         },
       ],
       show: false,
       isShowDialog: null,
-      titleName: "",
+      titleName: '',
       highLightArr: [],
       tempList: [],
-      message: "",
+      message: '',
       showInput: null,
       isShow: false,
-      type: "",
-      tagName: "",
-      nowUser: "",
-      cluecustomerNo: "", //JSON.parse(localStorage.getItem("detail")).cluecustomerNo,
-      objItem: JSON.parse(localStorage.getItem("detail")),
-      value: "",
+      type: '',
+      tagName: '',
+      nowUser: '',
+      cluecustomerNo: '', //JSON.parse(localStorage.getItem("detail")).cluecustomerNo,
+      objItem: JSON.parse(localStorage.getItem('detail')),
+      value: '',
       options: [],
-    };
+    }
   },
   created() {
-    this.getdetile();
+    this.getdetile()
     //获取相应标签
-    this.gettag();
+    this.gettag()
   },
   methods: {
     formatDate,
     //获取详情
     getdetile() {
-      let tempObj = JSON.parse(localStorage.getItem("detail"));
-      console.log(tempObj);
-      this.basicInfo = { ...tempObj };
-      this.customName = tempObj.customerName;
+      let tempObj = JSON.parse(localStorage.getItem('detail'))
+      console.log(tempObj)
+      this.basicInfo = { ...tempObj }
+      this.customName = tempObj.customerName
       let tempSystem = this.systemList.map((item) => {
         return {
           name: item.name,
           value: tempObj[item.mapName],
           mapName: item.mapName,
-        };
-      });
+        }
+      })
       tempSystem.forEach((item) => {
         if (
-          item.name.includes("时间") &&
-          JSON.stringify(item.value) !== "null"
+          item.name.includes('时间') &&
+          JSON.stringify(item.value) !== 'null'
         ) {
-          item.value = formatDate(item.value, "yyyy-MM-dd");
+          item.value = formatDate(item.value, 'yyyy-MM-dd')
         }
-      });
-      this.systemList = tempSystem;
+      })
+      this.systemList = tempSystem
     },
 
     //
     gettag() {
-      console.log("qqq", this.cluecustomerNo);
+      console.log('qqq', this.cluecustomerNo)
       this.$network
-        .get("/customer-service/cluecustomer/gettag", {
+        .get('/customer-service/cluecustomer/gettag', {
           clueCustomerNo: this.cluecustomerNo,
         })
         .then((res) => {
-          console.log(res.data);
-          this.groupList = res.tagCorpList;
-        });
+          console.log(res.data)
+          this.groupList = res.tagCorpList
+        })
     },
     myclean() {
-      this.formList = [];
-      this.systemList = [];
+      this.formList = []
+      this.systemList = []
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     inputEdit(item, index) {
       // console.log(item, index)
-      this.fieldIndex = null;
+      this.fieldIndex = null
     },
     keyupClick(item, index) {
-      let p = "barcode" + index;
-      this.$refs[p][0].blur();
+      let p = 'barcode' + index
+      this.$refs[p][0].blur()
       // console.log(22222, this.$refs[p])
     },
     fnFocus(item, index) {
-      this.fieldIndex = index;
+      this.fieldIndex = index
     },
     showCompany(v) {
-      this.isShowDialog = v;
-      this.show = true;
+      this.isShowDialog = v
+      this.show = true
       if (v == 1) {
-        this.titleName = "企业标签";
+        this.titleName = '企业标签'
       } else if (v == 2) {
-        this.titleName = "个人标签";
+        this.titleName = '个人标签'
       } else if (v == 3) {
-        this.titleName = "写跟进";
+        this.titleName = '写跟进'
       }
     },
     addTag(item, index) {
-      this.tagName = "";
-      this.isShow = !this.isShow;
+      this.tagName = ''
+      this.isShow = !this.isShow
     },
     handleSearch() {
-      console.log(this.tagName);
+      console.log(this.tagName)
       // if (this.tagName) {
       //   this.$network
       //     .post('/customer-service/tag/add', {
@@ -531,127 +512,127 @@ export default {
       //       tagid: item.tagid,
       //     })
       //     .then((res) => {
-      this.personList.push({ name: this.tagName });
+      this.personList.push({ name: this.tagName })
       //     })
       // }
-      this.showInput = null;
-      this.isShow = false;
+      this.showInput = null
+      this.isShow = false
     },
     selectTag(list, index) {
       // console.log(list, index)
       if (this.highLightArr.includes(list.id)) {
-        let p = this.highLightArr.indexOf(list.id);
-        this.highLightArr.splice(p, 1);
+        let p = this.highLightArr.indexOf(list.id)
+        this.highLightArr.splice(p, 1)
       } else {
-        this.highLightArr.push(list.id);
+        this.highLightArr.push(list.id)
       }
     },
     selectPersonTag(list, index) {
       if (this.tempList.includes(list.id)) {
-        let p = this.tempList.indexOf(list.id);
-        this.tempList.splice(p, 1);
-        console.log(p);
+        let p = this.tempList.indexOf(list.id)
+        this.tempList.splice(p, 1)
+        console.log(p)
       } else {
-        this.tempList.push(list.id);
+        this.tempList.push(list.id)
       }
     },
     deleteTag(v, i) {
       // console.log(v)
       this.$dialog
         .confirm({
-          title: "温馨提示",
-          message: "是否确认删除",
-          className: "deleteBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+          title: '温馨提示',
+          message: '是否确认删除',
+          className: 'deleteBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {
           // on confirm
         })
         .catch(() => {
           // on cancel
-        });
+        })
     },
     transCustom() {
-      this.$router.push("turnCustomer");
+      this.$router.push('turnCustomer')
     },
     changeUser() {
-      this.isShowDialog = "4";
-      this.show = true;
-      this.titleName = "变更所属人";
+      this.isShowDialog = '4'
+      this.show = true
+      this.titleName = '变更所属人'
 
       this.$network
-        .get("/customer-service/cluecustomer/toallot", {})
+        .get('/customer-service/cluecustomer/toallot', {})
         .then((res) => {
-          console.log(res);
-          this.options = res.data;
-        });
+          console.log(res)
+          this.options = res.data
+        })
     },
     giveUp() {
       this.$dialog
         .confirm({
-          title: "放弃警告",
+          title: '放弃警告',
           message:
-            "是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。",
-          className: "giveUpBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+            '是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
+          className: 'giveUpBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {
           this.$network
-            .get("/customer-service/cluecustomer/giveUpType", {
+            .get('/customer-service/cluecustomer/giveUpType', {
               clueCustomerNo: this.objItem.clueCustomerNo,
               type: this.$route.query.type,
             })
             .then((res) => {
-              this.$router.go(-1);
-            });
+              this.$router.go(-1)
+            })
         })
         .catch(() => {
           // on cancel
-        });
+        })
     },
     fnChangeUser(val) {
-      console.log(val);
+      console.log(val)
     },
     closeDialog(v) {
-      this.show = false;
-      console.log(v);
+      this.show = false
+      console.log(v)
     },
     saveDialog(v) {
       this.$dialog
         .confirm({
-          title: "变更所属人提示",
-          message: "确认转让线索？",
-          className: "giveUpBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+          title: '变更所属人提示',
+          message: '确认转让线索？',
+          className: 'giveUpBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {
           this.$network
-            .get("/customer-service/cluecustomer/turnBlon", {
+            .get('/customer-service/cluecustomer/turnBlon', {
               cluecustomerno: this.cluecustomerNo,
               user_no: this.value,
               oldname: this.nowUser,
             })
             .then((res) => {
               if (res.result) {
-                this.$message({ type: "success", message: "变更成功" });
-                this.$router.go(-1);
-                this.options = [];
-                this.show = false;
-                console.log(this.value);
+                this.$message({ type: 'success', message: '变更成功' })
+                this.$router.go(-1)
+                this.options = []
+                this.show = false
+                console.log(this.value)
               } else {
-                alert(res.msg);
+                alert(res.msg)
               }
-            });
-        });
+            })
+        })
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .DetailCules {
@@ -771,6 +752,58 @@ export default {
             height: 80px;
           }
         }
+        /deep/.el-form {
+          height: 100%;
+          .el-form-item {
+            display: flex;
+            margin-bottom: 0;
+          }
+          .el-form-item__label {
+            font-size: 28px;
+            width: 234px;
+            height: 80px;
+            background: #fafbff;
+            border: 1px solid #f0f2f7;
+            line-height: 80px;
+            text-align: center;
+          }
+          .el-form-item__content {
+            width: 562px;
+            height: 80px;
+
+            .el-input__inner {
+              height: 80px;
+              width: 100%;
+              border-radius: 8px;
+              font-size: 28px;
+              border: 2px solid #d9dae4;
+              border-radius: 0;
+            }
+            .el-select,
+            .el-cascader {
+              width: 100%;
+              height: 80px;
+            }
+          }
+          .textareaInput {
+            // height: 400px;
+            .el-textarea {
+              .el-textarea__inner {
+                height: 400px;
+                font-size: 28px;
+              }
+            }
+          }
+          .submitBtn {
+            .el-button--primary {
+              font-size: 28px;
+              width: 702px;
+              height: 80px;
+              background: #4168f6;
+              border-radius: 8px;
+            }
+          }
+        }
       }
     }
     .infoContent {
@@ -793,7 +826,7 @@ export default {
             position: relative;
             padding-left: 10px;
             &::before {
-              content: "";
+              content: '';
               width: 8px;
               height: 28px;
               background: #4168f6;
@@ -853,7 +886,7 @@ export default {
             position: relative;
             padding-left: 10px;
             &::before {
-              content: "";
+              content: '';
               width: 8px;
               height: 28px;
               background: #4168f6;

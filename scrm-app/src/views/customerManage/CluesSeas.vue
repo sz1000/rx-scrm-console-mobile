@@ -26,7 +26,7 @@
         <span>领取</span>
       </div>
       <div class="btnBox"
-           @click="changeUser">
+           @click="distribution">
         <img src="../../images/icon_share@2x.png"
              alt="" />
         <span>分配</span>
@@ -39,24 +39,94 @@
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <van-form v-model="formList">
-          <van-field v-for="(item,index) in formList"
-                     label-align='center'
-                     placeholder="请输入"
-                     :ref="'barcode'+index"
-                     :key="index"
-                     v-model="item.value"
-                     :label="item.name"
-                     @blur='inputEdit(item,index)'
-                     @focus='fnFocus(item,index)'
-                     @keyup.enter.native="keyupClick(item,index)">
-            <template slot="right-icon">
-              <i class="el-icon-edit"
-                 v-show="fieldIndex == index"></i>
-            </template>
-          </van-field>
+        <el-form ref="form"
+                 :model="basicInfo">
+          <el-form-item label="姓名">
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号:">
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @input="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择"
+                       @change="changeGender">
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职务:">
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="公司名称">
+            <el-input v-model="basicInfo.cropFullName"
+                      placeholder="请输入"
+                      maxlength="100"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large"
+                         :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
+                         :options="optionsCreat"
+                         v-model="basicInfo.industry"
+                         @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="线索来源">
+            <el-select v-model="basicInfo.source"
+                       placeholder="请选择"
+                       @change="changeSource">
+              <el-option v-for="item in optionSource"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="邮箱:">
+            <el-input v-model="basicInfo.email"
+                      placeholder="请输入"
+                      maxlength="60"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input v-model="basicInfo.address"
+                      maxlength="100"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="备注"
+                        class="textareaInput">
+            <el-input v-model="basicInfo.remark"
+                      maxlength="200"
+                      placeholder="请输入文字(不得超过200个字符)"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input v-model="basicInfo.describe"
+                      maxlength="100"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
 
-        </van-form>
+        </el-form>
       </div>
     </div>
     <div class="systemInformation ">
@@ -98,7 +168,8 @@
             </div>
           </div>
           <div class="btn"
-               @click="unfold = !unfold">
+               @click="unfold = !unfold"
+               v-if="tagList.length>8">
             {{unfold ? '收起' : '展开'}}
             <van-icon name="arrow-down" />
           </div>
@@ -137,12 +208,12 @@
           <div class="changeUser">
             <div class="selectUser">
               <span style="color:red;">*</span><span>指定所属人:</span>
-              <el-select v-model="value"
+              <el-select v-model="userNo"
                          placeholder="请选择">
                 <el-option v-for="item in options"
                            :key="item.value"
-                           :label="item.label"
-                           :value="item.value"
+                           :label="item.name"
+                           :value="item.userNo"
                            @change='fnChangeUser'>
                 </el-option>
               </el-select>
@@ -165,145 +236,54 @@ export default {
   data() {
     return {
       name: '小鱼儿',
-      formList: [
-        { name: '姓名', value: '1', mapName: 'name' },
-        { name: '手机号', value: '1', mapName: 'livename' },
-        { name: '微信号', value: '1', mapName: 'source' },
-        { name: '性别', value: '1', mapName: 'instry' },
-        { name: '职务', value: '1', mapName: 'instry' },
-        { name: '公司名称', value: '1', mapName: 'instry' },
-        { name: '所属行业', value: '1', mapName: 'instry' },
-        { name: '线索来源', value: '1', mapName: 'instry' },
-        { name: '邮箱', value: '1', mapName: 'instry' },
-        { name: '地址', value: '1', mapName: 'instry' },
-        { name: '备注', value: '1', mapName: 'instry' },
-        { name: '描述', value: '1', mapName: 'instry' },
+      optionSource: [],
+      customList: [
+        { label: '微信用户', customerType: 1 },
+        { label: '企微用户', customerType: 2 },
       ],
+
+      optionsCreat: [],
+      optionsScale: [],
+      basicInfo: {
+        industry: [],
+        customerName: '',
+        source: '',
+        customerType: '',
+        mobil: '',
+        cropFullName: '',
+        corpScale: '',
+        address: '',
+        remark: '',
+        describe: '',
+        name: '',
+        phone: '',
+        weixin: '',
+        gender: '',
+        position: '',
+        cropFullName: '',
+        cropSubIndustry: '',
+        source: '',
+        email: '',
+      },
       systemList: [
-        { name: '添加人员', mapName: 'phone', value: '' },
-        { name: '添加时间', mapName: 'phone', value: '' },
-        { name: '所属人', mapName: 'phone', value: '' },
-        { name: '领取时间', mapName: 'phone', value: '' },
-        { name: '最近跟进记录', mapName: 'phone', value: '' },
-        { name: '最近跟进时间', mapName: 'phone', value: '' },
-        { name: '最近修改人', mapName: 'phone', value: '' },
-        { name: '最近修改时间', mapName: 'phone', value: '' },
-        { name: '前所属人', mapName: 'phone', value: '' },
-        { name: '转换时间', mapName: 'phone', value: '' },
+        { name: '添加人员', mapName: 'createBy', value: '' },
+        { name: '添加时间', mapName: 'createTime', value: '' },
+        { name: '所属人', mapName: 'uname', value: '' },
+        { name: '领取时间', mapName: 'getTime', value: '' },
+        { name: '最近跟进记录', mapName: 'followRecord', value: '' },
+        { name: '最近跟进时间', mapName: 'followTime', value: '' },
+        { name: '最近修改人', mapName: 'updateBy', value: '' },
+        { name: '最近修改时间', mapName: 'updateTime', value: '' },
+        { name: '前所属人', mapName: 'beBelongBy', value: '' },
+        { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       fieldIndex: null,
       unfold: false,
       isShowPerson: false,
-      tagList: [
-        { name: '很优秀' },
-        { name: '很优fafas秀' },
-        { name: '很优秀' },
-        { name: '很adsa优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-        { name: '很优秀' },
-      ],
-      groupList: [
-        {
-          name: '标签管理',
-          children: [
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-            {
-              name: 'hahhah',
-              id: 1,
-            },
-          ],
-        },
-        {
-          name: '标签管理',
-          children: [
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-            {
-              name: 'hahhah',
-              id: 2,
-            },
-          ],
-        },
-      ],
-      personList: [
-        {
-          name: '标签管理',
-          id: 1,
-        },
-        {
-          name: '标签管理',
-          id: 2,
-        },
-      ],
-      timeLineList: [
-        {
-          title: '步骤一',
-          userName: '描述信息',
-          context: '描述信息描述信息描述信息描述信息',
-          createTime: 1628128378602,
-        },
-      ],
+      tagList: [],
+      groupList: [],
+      personList: [],
+      timeLineList: [],
       show: false,
       isShowDialog: null,
       titleName: '',
@@ -313,45 +293,130 @@ export default {
       showInput: null,
       isShow: false,
       tagName: '',
-      nowUser: '马化腾',
-      value: '',
-      options: [
-        { label: 'hahha', value: '1' },
-        { label: '大撒大撒', value: '2' },
-      ],
+      nowUser: '',
+      userNo: '',
+      options: [],
+      objItem: JSON.parse(localStorage.getItem('detail')),
     }
   },
   created() {
-    let obj = {
-      livename: 'hahha',
-      source: 'jahkjh',
-      phone: '13213123',
-      instry: 'jajdkajk',
-    }
-    this.formList = this.formList.map((item) => {
+    let tempObj = JSON.parse(localStorage.getItem('detail'))
+    // this.customName = tempObj.customerName
+    console.log(tempObj)
+    let tempSystem = this.systemList.map((item) => {
       return {
         name: item.name,
-        value: obj[item.mapName],
+        value: tempObj[item.mapName],
+        mapName: item.mapName,
       }
     })
-    // console.log(this.formList)
+    tempSystem.forEach((item) => {
+      if (item.name.includes('时间') && JSON.stringify(item.value) !== 'null') {
+        item.value = formatDate(item.value, 'yyyy-MM-dd')
+      }
+    })
+    this.systemList = tempSystem
+  },
+  mounted() {
+    this.getTimeline()
+    this.getTagList()
+    this.getDetailForm()
   },
   methods: {
     formatDate,
+    changeInput(val) {
+      this.update()
+    },
+    changeCustom(val) {
+      this.update()
+    },
+    changeSource(val) {
+      this.update()
+    },
+    changeGender(val) {
+      // console.log(val, this.basicInfo)
+      this.update()
+    },
+    handleChange(val) {
+      this.basicInfo.cropSubIndustry = val.toString()
+      this.update()
+    },
+    scaleChange(val) {
+      // console.log(val, this.basicInfo)
+      this.update()
+    },
+    getTimeline() {
+      // console.log(this.objItem, '------')
+      this.$network
+        .get('/customer-service/cluecustomer/getMessage', {
+          cluecustomerno: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.timeLineList = res.data
+        })
+    },
+    getTagList() {
+      this.$network
+        .get('/customer-service/cluecustomer/gettag', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.tagList = res.data.corpTagList
+        })
+    },
+    processTree(data) {
+      data.forEach((item) => {
+        if (item.children.length) {
+          this.optionsCreat.push(item)
+          return this.processTree(item.children)
+        } else {
+          item.children = null
+        }
+      })
+    },
+    getDetailForm() {
+      this.$network
+        .get('/customer-service/cluecustomer/toupdate', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.processTree(res.data.comlist)
+          this.optionSource = res.data.list
+          this.optionsScale = res.data.corpScaleList
+          this.basicInfo = res.data.clueCustomerEntity
+          if (res.data.clueCustomerEntity.cropSubIndustry) {
+            let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
+            this.basicInfo.industry = arr.map(Number)
+          } else {
+            this.basicInfo.industry = []
+          }
+        })
+    },
+    update() {
+      this.$network
+        .post('/customer-service/cluecustomer/update', {
+          type: this.$route.query.type,
+          clueCustomerNo: this.objItem.clueCustomerNo,
+          ...this.basicInfo,
+        })
+        .then((res) => {
+          this.$message({ type: 'success', message: '更新成功' })
+        })
+    },
     goBack() {
       this.$router.go(-1)
     },
-    inputEdit(item, index) {
-      // console.log(item, index)
-      this.fieldIndex = null
-    },
-    keyupClick(item, index) {
-      let p = 'barcode' + index
-      this.$refs[p][0].blur()
-      // console.log(22222, this.$refs[p])
-    },
-    fnFocus(item, index) {
-      this.fieldIndex = index
+    distribution() {
+      // this.isShowDialog = '4'
+      this.show = true
+      this.titleName = '分配线索'
+      this.$network
+        .get('/customer-service/cluecustomer/getuserList', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.options = res.data.list
+        })
     },
     getReceive() {
       // this.$router.push('turnCustomer')
@@ -365,7 +430,15 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          // on confirm
+          this.$network
+            .get('/customer-service/cluecustomer/getclue', {
+              clueCustomerNo: this.objItem.clueCustomerNo,
+              type: this.$route.query.type,
+            })
+            .then((res) => {
+              this.$message({ type: 'success', message: '领取成功' })
+              this.$router.go(-1)
+            })
         })
         .catch(() => {
           // on cancel
@@ -385,7 +458,21 @@ export default {
     },
     saveDialog(v) {
       this.show = false
-      console.log(v)
+      // console.log(v)
+      this.$network
+        .get('/customer-service/cluecustomer/turnBlon', {
+          cluecustomerno: this.objItem.clueCustomerNo,
+          user_no: this.userNo,
+        })
+        .then((res) => {
+          // console.log(res)
+          if (res.result) {
+            this.$message({ type: 'success', message: '分配成功' })
+            this.$router.go(-1)
+          } else {
+            this.$message({ type: 'success', message: res.data.msg })
+          }
+        })
     },
   },
 }
@@ -506,6 +593,58 @@ export default {
           }
           .van-field__body {
             height: 80px;
+          }
+        }
+        /deep/.el-form {
+          height: 100%;
+          .el-form-item {
+            display: flex;
+            margin-bottom: 0;
+          }
+          .el-form-item__label {
+            font-size: 28px;
+            width: 234px;
+            height: 80px;
+            background: #fafbff;
+            border: 1px solid #f0f2f7;
+            line-height: 80px;
+            text-align: center;
+          }
+          .el-form-item__content {
+            width: 562px;
+            height: 80px;
+
+            .el-input__inner {
+              height: 80px;
+              width: 100%;
+              border-radius: 8px;
+              font-size: 28px;
+              border: 2px solid #d9dae4;
+              border-radius: 0;
+            }
+            .el-select,
+            .el-cascader {
+              width: 100%;
+              height: 80px;
+            }
+          }
+          .textareaInput {
+            // height: 400px;
+            .el-textarea {
+              .el-textarea__inner {
+                height: 400px;
+                font-size: 28px;
+              }
+            }
+          }
+          .submitBtn {
+            .el-button--primary {
+              font-size: 28px;
+              width: 702px;
+              height: 80px;
+              background: #4168f6;
+              border-radius: 8px;
+            }
           }
         }
       }

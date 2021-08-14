@@ -1,7 +1,8 @@
 <template>
   <div class="clueWarp">
     <div class="headerTitle">
-      <div class="backPage" @click="goBack">
+      <div class="backPage"
+           @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -9,43 +10,43 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
-        <span
-          :class="{ active: tabClick == 1 }"
-          class="mycule"
-          @click="myclue((tabClick = 1))"
-          >我的线索</span
-        >
-        <span
-          :class="{ active: tabClick == 2 }"
-          class="mycule"
-          @click="myclue((tabClick = 2))"
-          >线索公海</span
-        >
+        <span :class="{ active: tabClick == 1 }"
+              class="mycule"
+              @click="myclue((tabClick = 1))">我的线索</span>
+        <span :class="{ active: tabClick == 2 }"
+              class="mycule"
+              @click="myclue((tabClick = 2))">线索公海</span>
       </div>
-      <span class="addBtn" @click="addCules">
-        <img src="../../images/icon_add@2x.png" alt="" />
+      <span class="addBtn"
+            @click="addCules">
+        <img src="../../images/icon_add@2x.png"
+             alt="" />
         新增
       </span>
     </div>
     <div class="searchInput">
-      <input
-        type="text"
-        class="input"
-        v-model="inputValue"
-        placeholder="请输入姓名/公司/手机号"
-      />
-      <span class="searchBtn" @click="inquire">查询</span>
+      <input type="text"
+             class="input"
+             v-model="inputValue"
+             placeholder="请输入姓名/公司/手机号" />
+      <span class="searchBtn"
+            @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <div class="topInfo" v-for="(item, index) in cardList" :key="index">
+      <div class="topInfo"
+           v-for="(item, index) in cardList"
+           :key="index">
         <div class="customInfo">
           <div class="iconName">
             <!-- <div class="flag">{{ item.avatar }}</div> -->
-            <img :src="item.avatar" alt="" class="flag" />
+            <img :src="item.avatar"
+                 alt=""
+                 class="flag" />
             <div class="nameSex">
               <span>{{ item.name }}</span>
               <!-- <span>{{item.nameFrom}}</span> -->
-              <img src="../../images/icon_female@2x.png" alt="" />
+              <img src="../../images/icon_female@2x.png"
+                   alt="" />
             </div>
           </div>
           <!-- <div class="detailBtn" @click="deleteCard(item, index)">
@@ -53,7 +54,8 @@
             删除
           </div> -->
         </div>
-        <div class="detailInfo" @click="goDetail(item, index)">
+        <div class="detailInfo"
+             @click="goDetail(item, index)">
           <div class="left">
             <div class="rowStyle">
               <span>邮箱:</span>
@@ -90,7 +92,7 @@
           </div>
           <div class="box1">
             <span class="label">添加时间:</span>
-            <span class="value">{{ item.createTime }}</span>
+            <span class="value">{{ formatDate(item.createTime,'yyyy-MM-dd') }}</span>
           </div>
         </div>
       </div>
@@ -98,126 +100,128 @@
   </div>
 </template>
 <script>
-import { _throttle } from "../../utils/tool";
+import { _throttle, formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
       tabClick: 1,
-      inputValue: "",
+      inputValue: '',
       cardList: [],
-    };
+    }
   },
   watch: {
     inputValue(val) {
       // console.log(val)
-      if (val == "") {
-        this.getData();
+      if (val == '') {
+        this.getData()
       }
     },
   },
   created() {
-    this.getData();
+    this.getData()
   },
   methods: {
+    formatDate,
     getData() {
-      console.log(this.tabClick);
+      // console.log(this.tabClick)
       this.$network
-        .get("/customer-service/m/cluecustomer/getcluecustomerlist", {
+        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           page: this.page,
           type: this.tabClick,
         })
         .then((res) => {
           // this.cardList = res.data;
-          let rows = res.data.iPage.records; //请求返回当页的列表
-          this.loading = false;
-          this.total = res.data.iPage.total;
+          let rows = res.data.iPage.records //请求返回当页的列表
+          this.loading = false
+          this.total = res.data.iPage.total
 
           if (rows == null || rows.length === 0) {
             // 加载结束
-            this.finished = true;
-            return;
+            this.finished = true
+            return
           }
           // 将新数据与老数据进行合并
           // this.cardList = this.cardList.concat(rows)
-          this.cardList = rows;
+          this.cardList = rows
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.cardList.length >= this.total) {
-            this.finished = true;
+            this.finished = true
           }
-        });
+        })
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     //新增
     addCules() {
       // console.log(this.tabClick)
-      localStorage.setItem("type", this.tabClick);
-      this.$router.push("addCules");
+      localStorage.setItem('type', this.tabClick)
+      this.$router.push('addCules')
+      // this.$router.push({ path: 'addCules', query: { type: this.type } })
     },
 
     //列表页面
     myclue() {
-      console.log(this.tabClick);
-      this.cardList = [];
-      this.inputValue = "";
-      this.getData();
+      console.log(this.tabClick)
+      this.cardList = []
+      this.inputValue = ''
+      this.getData()
     },
     inquire: _throttle(function () {
       this.$network
-        .get("/customer-service/m/cluecustomer/getcluecustomerlist", {
+        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           page: 1,
           type: this.tabClick,
           allname: this.inputValue,
         })
         .then((res) => {
           // this.cardList = res.data;
-          let rows = res.data.iPage.records; //请求返回当页的列表
-          this.loading = false;
-          this.total = res.data.iPage.total;
+          let rows = res.data.iPage.records //请求返回当页的列表
+          this.loading = false
+          this.total = res.data.iPage.total
           // 将新数据与老数据进行合并
           // this.cardList = this.cardList.concat(rows)
-          this.cardList = rows;
+          this.cardList = rows
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.cardList.length >= this.total) {
-            this.finished = true;
+            this.finished = true
           }
-        });
+        })
     }, 2000),
     deleteCard(item, index) {
       this.$dialog
         .confirm({
-          title: "温馨提示",
-          message: "删除后将不可恢复，是否确认删除？",
-          className: "deleteBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+          title: '温馨提示',
+          message: '删除后将不可恢复，是否确认删除？',
+          className: 'deleteBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {
           // on confirm
         })
         .catch(() => {
           // on cancel
-        });
+        })
     },
     goDetail(item, index) {
-      console.log(item);
-      localStorage.setItem("detail", JSON.stringify(item));
+      // console.log(item)
+      localStorage.setItem('detail', JSON.stringify(item))
       if (this.tabClick == 1) {
         this.$router.push({
-          path: "detailCules",
+          path: 'detailCules',
           query: { type: this.tabClick },
-        });
+        })
       } else if (this.tabClick == 2) {
         this.$router.push({
-          path: "CluesSeas",
+          path: 'CluesSeas',
           query: { type: this.tabClick },
-        });
+        })
       }
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .Clues {
@@ -284,7 +288,7 @@ export default {
           color: #4168f6;
           position: relative;
           &::after {
-            content: "";
+            content: '';
             width: 112px;
             height: 4px;
             background: #4168f6;
@@ -335,7 +339,7 @@ export default {
             .flag {
               width: 88px;
               height: 88px;
-              background: #4168f6;
+              // background: #4168f6;
               border-radius: 12px;
               text-align: center;
               line-height: 88px;
@@ -421,17 +425,22 @@ export default {
             display: inline-block;
           }
           .label {
-            width: 140px;
+            width: 200px;
             color: #838a9d;
           }
           .value {
-            width: 140px;
+            width: 100%;
             color: #3c4353;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           .box {
+            display: flex;
             width: 50%;
           }
           .box1 {
+            display: flex;
             width: 50%;
             margin-left: 29px;
           }
