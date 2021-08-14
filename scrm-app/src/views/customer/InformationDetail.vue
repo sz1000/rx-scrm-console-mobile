@@ -140,7 +140,8 @@
                       maxlength="20"
                       @input="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱:">
+          <el-form-item label="邮箱:"
+                        class="describeBorder">
             <el-input v-model="basicInfo.email"
                       placeholder="请输入"
                       maxlength="60"
@@ -422,6 +423,11 @@ export default {
             display: flex;
             margin-bottom: 0;
           }
+          .describeBorder {
+            .el-input__inner {
+              border-bottom: 1px solid #d9dae4 !important;
+            }
+          }
           .el-form-item__label {
             font-size: 28px;
             width: 234px;
@@ -440,7 +446,8 @@ export default {
               width: 100%;
               border-radius: 8px;
               font-size: 28px;
-              border: 2px solid #d9dae4;
+              border-top: 1px solid #d9dae4;
+              border-right: 1px solid #d9dae4;
               border-radius: 0;
             }
             .el-select,

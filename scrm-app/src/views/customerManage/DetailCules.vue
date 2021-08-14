@@ -125,7 +125,8 @@
                       placeholder="请输入文字(不得超过200个字符)"
                       @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="描述">
+          <el-form-item label="描述"
+                        class="describeBorder">
             <el-input v-model="basicInfo.describe"
                       maxlength="100"
                       placeholder="请输入"
@@ -846,6 +847,11 @@ export default {
             display: flex;
             margin-bottom: 0;
           }
+          .describeBorder {
+            .el-input__inner {
+              border-bottom: 1px solid #d9dae4 !important;
+            }
+          }
           .el-form-item__label {
             font-size: 28px;
             width: 234px;
@@ -864,9 +870,12 @@ export default {
               width: 100%;
               border-radius: 8px;
               font-size: 28px;
-              border: 2px solid #d9dae4;
+              border: 0;
+              border-top: 1px solid #d9dae4;
+              border-right: 1px solid #d9dae4;
               border-radius: 0;
             }
+
             .el-select,
             .el-cascader {
               width: 100%;
@@ -1186,7 +1195,7 @@ export default {
                 border-radius: 8px;
                 font-size: 28px;
                 font-weight: normal;
-                border: 2px solid #d9dae4;
+                border: 1px solid #d9dae4;
               }
             }
           }
