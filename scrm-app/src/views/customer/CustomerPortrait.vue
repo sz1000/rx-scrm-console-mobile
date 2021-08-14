@@ -4,17 +4,22 @@
       <div class="customInfo">
         <div class="iconName">
           <div class="flag">
-            <img :src="avatar" alt="" class="flag" />
+            <img :src="avatar"
+                 alt=""
+                 class="flag" />
           </div>
           <div class="nameSex">
             <span>{{ name }}</span>
             <span>{{ nameFrom }}</span>
-            <img src="../../images/icon_female@2x.png" alt="" />
+            <img src="../../images/icon_female@2x.png"
+                 alt="" />
           </div>
         </div>
-        <div class="detailBtn" @click="goToDetail">
+        <div class="detailBtn"
+             @click="goToDetail">
           详情
-          <van-icon name="arrow" color="#4168F6" />
+          <van-icon name="arrow"
+                    color="#4168F6" />
         </div>
       </div>
       <div class="detailInfo">
@@ -62,27 +67,24 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <div class="editButton" @click="showCompany(1)">
+          <div class="editButton"
+               @click="showCompany(1)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
+          <div :class="{ 'over-hidden': !unfold }"
+               ref="textBox">
             <div ref="spanBox">
-              <span
-                v-for="(list, index) in companyTagList"
-                :key="index"
-                class="tagBox"
-                >{{ list.name }}</span
-              >
+              <span v-for="(list, index) in companyTagList"
+                    :key="index"
+                    class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div
-            class="btn"
-            @click="unfold = !unfold"
-            v-show="companyTagList.length > 8"
-          >
+          <div class="btn"
+               @click="unfold = !unfold"
+               v-show="companyTagList.length > 8">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -91,28 +93,25 @@
       <div class="personLabel">
         <div class="t_text">
           <span class="label_tag">个人标签</span>
-          <div class="editButton" @click="showCompany(2)">
+          <div class="editButton"
+               @click="showCompany(2)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+          <div :class="{ 'over-hidden': !isShowPerson }"
+               ref="textBox">
             <div ref="spanBox">
-              <span
-                v-for="(list, index) in personTagList"
-                :key="index"
-                class="tagBox"
-                v-show="list.isChecked"
-                >{{ list.name }}</span
-              >
+              <span v-for="(list, index) in personTagList"
+                    :key="index"
+                    class="tagBox"
+                    v-show="list.isChecked">{{ list.name }}</span>
             </div>
           </div>
-          <div
-            class="btn"
-            @click="isShowPerson = !isShowPerson"
-            v-show="personTagList.length > 8"
-          >
+          <div class="btn"
+               @click="isShowPerson = !isShowPerson"
+               v-show="personTagList.length > 8">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -121,20 +120,20 @@
       <div class="dynamic">
         <div class="t_text">
           <span class="label_tag">动态</span>
-          <div class="editButton" @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png" alt="" />
+          <div class="editButton"
+               @click="showCompany(3)">
+            <img src="../../images/icon_repair1@2x.png"
+                 alt="" />
             <span>写跟进</span>
           </div>
         </div>
         <div class="allText">全部</div>
         <div class="timeLine">
           <el-timeline>
-            <el-timeline-item
-              v-for="(item, index) in timeLineList"
-              :key="index"
-              color="#4168F6"
-              type="danger "
-            >
+            <el-timeline-item v-for="(item, index) in timeLineList"
+                              :key="index"
+                              color="#4168F6"
+                              type="danger ">
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
                 <div class="inLineTwo">{{ item.context }}</div>
@@ -151,50 +150,51 @@
       </div>
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="show" :title="titleName">
+      <van-action-sheet v-model="show"
+                        :title="titleName">
         <div class="content">
-          <div class="tagWarp" v-if="isShowDialog == '1'">
-            <div class="tagRow" v-for="(item, index) in groupList" :key="index">
+          <div class="tagWarp"
+               v-if="isShowDialog == '1'">
+            <div class="tagRow"
+                 v-for="(item, index) in groupList"
+                 :key="index">
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
-                <span
-                  class="creatTag"
-                  :class="{ changeTag: highLightArr.includes(list.id) }"
-                  v-for="(list, index) in item.children"
-                  :key="list.id"
-                  v-show="list.name"
-                  @click="selectTag(list, index)"
-                  >{{ list.name }}</span
-                >
+                <span class="creatTag"
+                      :class="{ 'changeTag': highLightArr.includes(list) }"
+                      v-for="(list, index) in item.children"
+                      :key="list.id"
+                      v-show="list.name"
+                      @click="selectTag(list, index)">{{ list.name }}</span>
               </div>
             </div>
           </div>
 
-          <div class="tagWarp personWarp" v-if="isShowDialog == '2'">
+          <div class="tagWarp personWarp"
+               v-if="isShowDialog == '2'">
             <div class="tagRow">
               <!-- <div class="groupName">{{item.name}}</div> -->
               <div class="tagStyle">
-                <span class="addBtn pointer" @click="addTag">+添加</span>
-                <span class="perchInput" v-if="isShow">
-                  <input
-                    v-model="tagName"
-                    class="addInput"
-                    placeholder="输入后按回车完成"
-                    maxlength="30"
-                    @keyup.enter="handleSearch()"
-                  />
+                <span class="addBtn pointer"
+                      @click="addTag">+添加</span>
+                <span class="perchInput"
+                      v-if="isShow">
+                  <input v-model="tagName"
+                         class="addInput"
+                         placeholder="输入后按回车完成"
+                         maxlength="30"
+                         @keyup.enter="handleSearch()" />
                 </span>
-                <span
-                  class="creatTag"
-                  :class="{ changeTag: tempList.includes(list.id) }"
-                  v-for="(list, index) in personList"
-                  :key="list.id"
-                  v-show="list.name"
-                >
+                <span class="creatTag"
+                      :class="{ 'changeTag':list.isChecked }"
+                      v-for="(list, index) in personTagList"
+                      :key="list.id"
+                      v-show="list.name">
                   <span @click="selectPersonTag(list, index)">{{
                     list.name
                   }}</span>
-                  <span class="deleteTag" @click="deleteTag(list, index)">
+                  <span class="deleteTag"
+                        @click="deleteTag(list, index)">
                     <van-icon name="cross" />
                   </span>
                 </span>
@@ -202,18 +202,19 @@
             </div>
           </div>
 
-          <div class="writerInput" v-if="isShowDialog == '3'">
-            <van-field
-              v-model="message"
-              type="textarea"
-              maxlength="300"
-              placeholder="记录好跟进，多签单哟~"
-              show-word-limit
-            />
+          <div class="writerInput"
+               v-if="isShowDialog == '3'">
+            <van-field v-model="message"
+                       type="textarea"
+                       maxlength="300"
+                       placeholder="记录好跟进，多签单哟~"
+                       show-word-limit />
           </div>
           <div class="buttonWarp">
-            <span class="cancel">取消</span>
-            <span class="save">保存</span>
+            <span class="cancel"
+                  @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save"
+                  @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -222,170 +223,253 @@
   </div>
 </template>
 <script>
-import BackTop from "@/components/BackTop";
-import { formatDate } from "../../utils/tool";
-import HomeVue from "../Home.vue";
+import BackTop from '@/components/BackTop'
+import { formatDate } from '../../utils/tool'
+import HomeVue from '../Home.vue'
 export default {
   components: {
     BackTop,
   },
-  created() {
-    // this.getwx();
-    this.getMethod();
-  },
 
   data() {
     return {
-      userid: "",
-      title: "客户资料详情",
-      name: "小鱼儿",
-      nameFrom: "@微信/企业",
-      email: "1234567890@qq.com",
+      userid: '',
+      title: '客户资料详情',
+      name: '小鱼儿',
+      nameFrom: '@微信/企业',
+      email: '1234567890@qq.com',
       unfold: false,
       isShowPerson: false,
-      tagList: [{ name: "很优秀" }], //企业标签
-      tagpersonList: [{ name: "很优秀" }],
+      tagList: [], //企业标签
+      tagpersonList: [],
+      personTagList: [],
+      companyTagList: [],
       item: {},
       groupList: [],
-      personList: [
-        {
-          name: "标签管理",
-          id: 1,
-        },
-        {
-          name: "标签管理",
-          id: 2,
-        },
-      ],
-      timeLineList: [
-        {
-          title: "步骤一",
-          userName: "描述信息",
-          context: "描述信息描述信息描述信息描述信息",
-          createTime: 1628128378602,
-        },
-      ],
+      personList: [],
+      timeLineList: [],
       show: false,
       isShowDialog: null,
-      titleName: "",
+      titleName: '',
       highLightArr: [],
       tempList: [],
-      message: "",
-      avatar: "",
+      message: '',
+      avatar: '',
       showInput: null,
       isShow: false,
-      tagName: "",
-    };
+      tagName: '',
+      wx: window.wx,
+      userId: '',
+    }
   },
-
-  mounted() {},
+  beforeCreate() {},
+  created() {
+    this.getWxAppid()
+  },
+  mounted() {
+    this.getWxConfig()
+    this.getMethod()
+    this.getTimeline()
+    this.getTagList()
+  },
 
   methods: {
     formatDate,
-    goToDetail() {
-      this.$router.push("/informationDetail");
+    getWxAppid() {
+      this.$network
+        .get('/user-service/m/user/getappid', {
+          redirect_uri: '/#/customTransition',
+        })
+        .then((res) => {
+          let params = {
+            appid: res.data.suiteid,
+            redirect_url: encodeURIComponent(
+              'https://' + res.data.redirect_uri
+            ),
+          }
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&scope=snsapi_base#wechat_redirect`
+        })
     },
-    getwx() {
-      wx.invoke("getCurExternalContact", {}, function (res) {
-        if (res.err_msg == "getCurExternalContact:ok") {
-          this.userId = res.userId; //返回当前外部联系人userId
-        } else {
-          //错误处理
-        }
-      });
+    getWxConfig() {
+      wx.config({
+        beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: this.$route.params.appid, // 必填，企业微信的corpID
+        // timestamp: , // 必填，生成签名的时间戳
+        nonceStr: '', // 必填，生成签名的随机串
+        signature: '', // 必填，签名，见 附录-JS-SDK使用权限签名算法
+        jsApiList: ['getCurExternalContact'], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
+      })
+      wx.ready(function () {
+        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+        wx.invoke('getCurExternalContact', {}, function (res) {
+          if (res.err_msg == 'getCurExternalContact:ok') {
+            this.userId = res.userId //返回当前外部联系人userId
+          } else {
+            //错误处理
+          }
+        })
+      })
+    },
+
+    goToDetail() {
+      this.$router.push({
+        path: '/informationDetail',
+        query: {
+          userid: this.userid,
+        },
+      })
     },
     //获取客户详情
-    // getMethod() {
-    //   this.$network
-    //     .get("/customer-service/m/cluecustomer/getClueCustomerByid", {
-    //       id: "wojhU-EAAA9iQsj1MSia3rLr7l7KNabwc",
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //       this.name = res.data.clueCustomerVO.name;
-    //       this.item = res.data.clueCustomerVO;
-    //       this.avatar = res.data.clueCustomerVO.avatar;
-    //     });
-    //   this.$network
-    //     .get("/customer-service/cluecustomer/gettag", {
-    //       clueCustomerNo: "wojhU-EAAA9iQsj1MSia3rLr7l7KNabwc",
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //       this.tagList = res.data.corpTagList;
-    //       this.tagpersonList = res.data.personTagList;
-    //       this.groupList = res.data.tagCorpList;
-    //     });
-    // },
+    getMethod() {
+      this.$network
+        .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+          id: this.userId,
+        })
+        .then((res) => {
+          // console.log(res)
+          this.name = res.data.clueCustomerVO.name
+          this.item = res.data.clueCustomerVO
+          this.avatar = res.data.clueCustomerVO.avatar
+        })
+    },
+    getTimeline() {
+      // console.log(this.objItem, '------')
+      this.$network
+        .get('/customer-service/cluecustomer/getMessage', {
+          cluecustomerno: this.userId,
+        })
+        .then((res) => {
+          this.timeLineList = res.data
+        })
+    },
+    getTagList() {
+      this.$network
+        .get('/customer-service/cluecustomer/gettag', {
+          clueCustomerNo: this.userId,
+        })
+        .then((res) => {
+          this.companyTagList = res.data.corpTagList
+          this.groupList = res.data.tagCorpList
+          this.personTagList = res.data.personTagList
+        })
+    },
     showCompany(v) {
-      this.isShowDialog = v;
-      this.show = true;
+      this.isShowDialog = v
+      this.show = true
       if (v == 1) {
-        this.titleName = "企业标签";
+        this.titleName = '企业标签'
       } else if (v == 2) {
-        this.titleName = "个人标签";
+        this.titleName = '个人标签'
       } else {
-        this.titleName = "写跟进";
+        this.titleName = '写跟进'
       }
     },
     addTag(item, index) {
-      this.tagName = "";
-      this.isShow = !this.isShow;
+      this.tagName = ''
+      this.isShow = !this.isShow
     },
     handleSearch() {
-      console.log(this.tagName);
-      // if (this.tagName) {
-      //   this.$network
-      //     .post('/customer-service/tag/add', {
-      //       name: this.tagName,
-      //       parentId: item.id,
-      //       tagid: item.tagid,
-      //     })
-      //     .then((res) => {
-      this.personList.push({ name: this.tagName });
-      //     })
-      // }
-      this.showInput = null;
-      this.isShow = false;
+      // console.log(this.tagName)
+      if (this.tagName) {
+        this.$network
+          .post('/customer-service/cluecustomer/addtag', {
+            name: this.tagName,
+            clueCustomerNo: this.userId,
+          })
+          .then((res) => {
+            this.personTagList = res.data
+          })
+      }
+      this.showInput = null
+      this.isShow = false
     },
     selectTag(list, index) {
       // console.log(list, index)
       if (this.highLightArr.includes(list.id)) {
-        let p = this.highLightArr.indexOf(list.id);
-        this.highLightArr.splice(p, 1);
+        let p = this.highLightArr.indexOf(list.id)
+        this.highLightArr.splice(p, 1)
       } else {
-        this.highLightArr.push(list.id);
+        this.highLightArr.push(list)
       }
+      // console.log(this.highLightArr)
     },
     selectPersonTag(list, index) {
-      if (this.tempList.includes(list.id)) {
-        let p = this.tempList.indexOf(list.id);
-        this.tempList.splice(p, 1);
-        console.log(p);
+      console.log(list)
+      if (list.isChecked == 1) {
+        list.isChecked = 0
       } else {
-        this.tempList.push(list.id);
+        list.isChecked = 1
+      }
+    },
+    closeDialog(v) {
+      this.show = false
+      if (v == 1) {
+        this.getTagList()
+      } else if (v == 2) {
+      } else if (v == 3) {
+        this.message = ''
+      }
+    },
+    saveDialog(v) {
+      if (v == 1) {
+        // console.log(this.highLightArr)
+        this.$network
+          .post(
+            `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
+            this.highLightArr
+          )
+          .then((res) => {})
+      } else if (v == 2) {
+        this.$network
+          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
+          })
+      } else if (v == 3) {
+        this.$network
+          .post('/customer-service/cluecustomer/addMessage', {
+            clueCustomerNo: this.userId,
+            context: this.message,
+          })
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.getTimeline()
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
+          })
       }
     },
     deleteTag(v, i) {
       // console.log(v)
       this.$dialog
         .confirm({
-          title: "温馨提示",
-          message: "是否确认删除",
-          className: "deleteBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+          title: '温馨提示',
+          message: '是否确认删除',
+          className: 'deleteBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {
           // on confirm
         })
         .catch(() => {
           // on cancel
-        });
+        })
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .CustomerPortrait {
@@ -489,17 +573,22 @@ export default {
           display: inline-block;
         }
         .label {
-          width: 140px;
+          width: 200px;
           color: #838a9d;
         }
         .value {
-          width: 140px;
+          width: 100%;
           color: #3c4353;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .box {
+          display: flex;
           width: 50%;
         }
         .box1 {
+          display: flex;
           width: 50%;
           margin-left: 29px;
         }
@@ -526,7 +615,7 @@ export default {
             position: relative;
             padding-left: 10px;
             &::before {
-              content: "";
+              content: '';
               width: 8px;
               height: 28px;
               background: #4168f6;
@@ -586,7 +675,7 @@ export default {
             position: relative;
             padding-left: 10px;
             &::before {
-              content: "";
+              content: '';
               width: 8px;
               height: 28px;
               background: #4168f6;

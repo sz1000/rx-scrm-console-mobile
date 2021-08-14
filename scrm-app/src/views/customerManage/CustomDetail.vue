@@ -576,7 +576,7 @@ export default {
       this.isShow = !this.isShow
     },
     handleSearch() {
-      console.log(this.tagName)
+      // console.log(this.tagName)
       if (this.tagName) {
         this.$network
           .post('/customer-service/cluecustomer/addtag', {
@@ -598,7 +598,7 @@ export default {
       } else {
         this.highLightArr.push(list)
       }
-      console.log(this.highLightArr)
+      // console.log(this.highLightArr)
     },
     selectPersonTag(list, index) {
       console.log(list)

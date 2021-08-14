@@ -5,6 +5,7 @@ import Test from '../views/talkTool/test.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
+import CustomTransition from '../views/customer/CustomTransition.vue'
 // 拓客工具
 import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
@@ -25,138 +26,146 @@ import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 Vue.use(VueRouter)
 
 const routes = [{
-    path: '/',
-    redirect: '/home',
-},
-{
-    path: '/home',
-    name: 'Home',
-    meta: {
-        bodyClass: 'HomeWarp',
-    },
-    component: Home,
-},
-// 客户画像
-{
-    path: '/customerPortrait',
-    name: 'CustomerPortrait',
-    meta: {
-        bodyClass: 'CustomerPortrait',
-    },
-    component: CustomerPortrait,
-},
-{
-    path: '/informationDetail',
-    name: 'informationDetail',
-    meta: {
-        bodyClass: 'InformationDetail',
-    },
-    component: InformationDetail,
-},
-// 拓客工具
-{
-    path: '/talkTool',
-    component: TalkTool,
-    redirect: '/talkTool/enterpriseCode',
-    children: [{
-        path: 'enterpriseCode',
-        meta: {
-            bodyClass: 'EnterpriseCode',
-        },
-        component: EnterpriseCode,
+        path: '/',
+        redirect: '/home',
     },
     {
-        path: 'channelConfiguration',
+        path: '/home',
+        name: 'Home',
         meta: {
-            bodyClass: 'ChannelConfiguration',
+            bodyClass: 'HomeWarp',
         },
-        component: ChannelConfiguration,
-    },
-    ],
-},
-//客户管理
-{
-    path: '/customerManage',
-    component: CustomerManage,
-    redirect: '/customerManage/clues',
-    children: [{
-        path: 'clues',
-        name: 'clues',
-        meta: {
-            bodyClass: 'Clues',
-            // keepAlive: true,
-        },
-        component: Clues,
-    },
-    {
-        path: 'addCules',
-        name: 'addCules',
-        meta: {
-            bodyClass: 'AddCules',
-        },
-        component: AddCules,
-    },
-    {
-        path: 'detailCules',
-        name: 'detailCules',
-        meta: {
-            bodyClass: 'DetailCules',
-            // keepAlive: true
-        },
-        component: DetailCules,
-    },
-    {
-        path: '/test',
-        name: 'test',
-        component: Test,
+        component: Home,
     },
     // 客户画像
     {
-        path: 'turnCustomer',
+        path: '/customerPortrait',
+        name: 'CustomerPortrait',
         meta: {
-            bodyClass: 'TurnCustomer',
+            bodyClass: 'CustomerPortrait',
         },
-        component: TurnCustomer,
+        component: CustomerPortrait,
     },
     {
-        path: 'cluesSeas',
+        path: '/informationDetail',
+        name: 'informationDetail',
         meta: {
-            bodyClass: 'CluesSeas',
+            bodyClass: 'InformationDetail',
         },
-        component: CluesSeas,
-    },
-    // 客户
-    {
-        path: 'myCustomer',
-        meta: {
-            bodyClass: 'MyCustomer',
-            // keepAlive: true,
-        },
-        component: MyCustomer,
+        component: InformationDetail,
     },
     {
-        path: 'addCustomer',
+        path: '/customTransition',
+        name: 'customTransition',
         meta: {
-            bodyClass: 'AddCustomer',
+            bodyClass: 'CustomTransition',
         },
-        component: AddCustomer,
+        component: CustomTransition,
     },
+    // 拓客工具
     {
-        path: 'customDetail',
-        meta: {
-            bodyClass: 'CustomDetail',
-        },
-        component: CustomDetail,
+        path: '/talkTool',
+        component: TalkTool,
+        redirect: '/talkTool/enterpriseCode',
+        children: [{
+                path: 'enterpriseCode',
+                meta: {
+                    bodyClass: 'EnterpriseCode',
+                },
+                component: EnterpriseCode,
+            },
+            {
+                path: 'channelConfiguration',
+                meta: {
+                    bodyClass: 'ChannelConfiguration',
+                },
+                component: ChannelConfiguration,
+            },
+        ],
     },
+    //客户管理
     {
-        path: 'customerSeas',
-        meta: {
-            bodyClass: 'CustomerSeas',
-        },
-        component: CustomerSeas,
+        path: '/customerManage',
+        component: CustomerManage,
+        redirect: '/customerManage/clues',
+        children: [{
+                path: 'clues',
+                name: 'clues',
+                meta: {
+                    bodyClass: 'Clues',
+                    // keepAlive: true,
+                },
+                component: Clues,
+            },
+            {
+                path: 'addCules',
+                name: 'addCules',
+                meta: {
+                    bodyClass: 'AddCules',
+                },
+                component: AddCules,
+            },
+            {
+                path: 'detailCules',
+                name: 'detailCules',
+                meta: {
+                    bodyClass: 'DetailCules',
+                    // keepAlive: true
+                },
+                component: DetailCules,
+            },
+            {
+                path: '/test',
+                name: 'test',
+                component: Test,
+            },
+            // 客户画像
+            {
+                path: 'turnCustomer',
+                meta: {
+                    bodyClass: 'TurnCustomer',
+                },
+                component: TurnCustomer,
+            },
+            {
+                path: 'cluesSeas',
+                meta: {
+                    bodyClass: 'CluesSeas',
+                },
+                component: CluesSeas,
+            },
+            // 客户
+            {
+                path: 'myCustomer',
+                meta: {
+                    bodyClass: 'MyCustomer',
+                    // keepAlive: true,
+                },
+                component: MyCustomer,
+            },
+            {
+                path: 'addCustomer',
+                meta: {
+                    bodyClass: 'AddCustomer',
+                },
+                component: AddCustomer,
+            },
+            {
+                path: 'customDetail',
+                meta: {
+                    bodyClass: 'CustomDetail',
+                },
+                component: CustomDetail,
+            },
+            {
+                path: 'customerSeas',
+                meta: {
+                    bodyClass: 'CustomerSeas',
+                },
+                component: CustomerSeas,
+            },
+        ],
     },
-    ],
-},
 ]
 
 const router = new VueRouter({
