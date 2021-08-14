@@ -559,9 +559,6 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    fnFocus(item, index) {
-      this.fieldIndex = index
-    },
     showCompany(v) {
       this.isShowDialog = v
       this.show = true
@@ -571,6 +568,7 @@ export default {
         this.titleName = '个人标签'
       } else if (v == 3) {
         this.titleName = '写跟进'
+        this.message = ''
       }
     },
     addTag(item, index) {
@@ -586,7 +584,7 @@ export default {
             clueCustomerNo: this.objItem.clueCustomerNo,
           })
           .then((res) => {
-            // this.personList.push({ name: this.tagName })
+            this.personTagList = res.data
           })
       }
       this.showInput = null
@@ -697,7 +695,10 @@ export default {
       if (v == 1) {
         // console.log(this.highLightArr)
         this.$network
-          .post('/customer-service/cluecustomer/updCorptag', this.highLightArr)
+          .post(
+            `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
+            this.highLightArr
+          )
           .then((res) => {})
       } else if (v == 2) {
         this.$network

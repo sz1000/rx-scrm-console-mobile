@@ -18,9 +18,9 @@
                :model="formObj"
                label-position='right'>
         <el-form-item label="客户简称:"
-                      prop="name"
+                      prop="customerName"
                       :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
-          <el-input v-model="formObj.name"
+          <el-input v-model="formObj.customerName"
                     placeholder="请输入"
                     maxlength="12"></el-input>
         </el-form-item>
@@ -31,7 +31,7 @@
                      placeholder="请选择"
                      @change="changeSource"
                      clearable>
-            <el-option v-for="item in optionsSource"
+            <el-option v-for="item in optionSource"
                        :key="item.value"
                        :label="item.name"
                        :value="item.type">
@@ -39,11 +39,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户类型:">
-          <el-select v-model="formObj.customType"
+          <el-select v-model="formObj.customerType"
                      placeholder="请选择"
                      @change="changeCustom"
                      clearable>
-            <el-option v-for="item in customList"
+            <el-option v-for="item in optionsCustom"
                        :key="item.value"
                        :label="item.name"
                        :value="item.type">
@@ -51,12 +51,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="电话:">
-          <el-input v-model="formObj.phone"
+          <el-input v-model="formObj.mobil"
                     placeholder="请输入"
                     maxlength="11"></el-input>
         </el-form-item>
         <el-form-item label="公司名称:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.cropFullName"
                     placeholder="请输入"
                     maxlength="60"></el-input>
         </el-form-item>
@@ -69,19 +69,19 @@
           </el-cascader>
         </el-form-item>
         <el-form-item label="企业规模:">
-          <el-select v-model="formObj.source"
+          <el-select v-model="formObj.corpScale"
                      placeholder="请选择"
-                     @change="changeSource"
+                     @change="scaleChange"
                      clearable>
-            <el-option v-for="item in optionsSource"
+            <el-option v-for="item in optionsScale"
                        :key="item.value"
                        :label="item.name"
-                       :value="item.type">
+                       :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="地址:">
-          <el-input v-model="formObj.remark"
+          <el-input v-model="formObj.address"
                     maxlength="100"
                     placeholder="请输入"></el-input>
         </el-form-item>
@@ -121,17 +121,17 @@
         </el-form-item>
 
         <el-form-item label="职务:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.position"
                     placeholder="请输入"
                     maxlength="20"></el-input>
         </el-form-item>
         <el-form-item label="微信号:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.weixin"
                     placeholder="请输入"
                     maxlength="20"></el-input>
         </el-form-item>
         <el-form-item label="邮箱:">
-          <el-input v-model="formObj.wechat"
+          <el-input v-model="formObj.email"
                     placeholder="请输入"
                     maxlength="60"></el-input>
         </el-form-item>
@@ -149,44 +149,45 @@ export default {
   data() {
     return {
       formObj: {
-        name: '',
-        customerType: '',
-        phone: '',
-        wechat: '',
-        gender: '',
-        industry: '',
+        customerName: '',
+        mobil: '',
         source: '',
+        customerType: '',
+        cropFullName: '',
+        corpScale: '',
+        industry: '',
+        address: '',
+        remark: '',
+        name: '',
+        phone: '',
+        gender: '',
+        position: '',
+        weixin: '',
+        email: '',
       },
-      optionsCreat: [
-        {
-          id: 13,
-          name: 'IT服务',
-          children: [
-            {
-              id: 14,
-              name: '计算机软件/硬件/信息服务',
-              type: null,
-              parentId: 13,
-              // children: [],
-            },
-          ],
-        },
+      optionSource: [],
+      optionsCustom: [
+        { label: '微信用户', customerType: 1 },
+        { label: '企微用户', customerType: 2 },
       ],
-      optionsSource: [],
-      changeCustom: [],
+      optionsScale: [],
+      optionsCreat: [],
     }
   },
   methods: {
     goBack() {
       this.$router.go(-1)
     },
+    changeCustom(val) {
+      console.log(val)
+    },
     handleChange(val) {
       console.log(val)
     },
-    changeSource(val) {
+    scaleChange(val) {
       console.log(val)
     },
-    customList(val) {
+    changeSource(val) {
       console.log(val)
     },
     onSubmit(formName) {

@@ -9,7 +9,7 @@
       <span class="textTitle">线索详情</span>
     </div>
     <div class="iconName">
-      <div class="flag"><img :src="image"
+      <div class="flag"><img :src="imageUser"
              alt="" /></div>
       <div class="nameSex">
         <span>{{ name }}</span>
@@ -47,12 +47,55 @@
       <div class="formEdit">
         <el-form ref="form"
                  :model="basicInfo">
-          <el-form-item label="客户简称">
-            <el-input v-model="basicInfo.customerName"
+          <el-form-item label="姓名">
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
                       placeholder="请输入"
-                      maxlength="30"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="客户来源">
+          <el-form-item label="手机号:">
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @input="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择"
+                       @change="changeGender">
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职务:">
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="公司名称">
+            <el-input v-model="basicInfo.cropFullName"
+                      placeholder="请输入"
+                      maxlength="100"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large"
+                         :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
+                         :options="optionsCreat"
+                         v-model="basicInfo.industry"
+                         @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="线索来源">
             <el-select v-model="basicInfo.source"
                        placeholder="请选择"
                        @change="changeSource">
@@ -63,102 +106,32 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="客户类型">
-            <el-select v-model="basicInfo.customerType"
-                       placeholder="请选择"
-                       @change="changeCustom">
-              <el-option v-for="item in customList"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="basicInfo.mobil"
+          <el-form-item label="邮箱:">
+            <el-input v-model="basicInfo.email"
                       placeholder="请输入"
-                      maxlength="13"></el-input>
-          </el-form-item>
-          <el-form-item label="公司名称">
-            <el-input v-model="basicInfo.cropFullName"
-                      placeholder="请输入"
-                      maxlength="100"></el-input>
-          </el-form-item>
-          <el-form-item label="所属行业">
-            <el-cascader size="large"
-                         :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
-                         :options="optionsCreat"
-                         v-model="basicInfo.industry"
-                         @change="handleChange">
-            </el-cascader>
-          </el-form-item>
-          <el-form-item label="企业规模">
-            <el-select v-model="basicInfo.corpScale"
-                       placeholder="请选择"
-                       @change="scaleChange">
-              <el-option v-for="item in optionsScale"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.type">
-              </el-option>
-            </el-select>
+                      maxlength="60"
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="地址">
             <el-input v-model="basicInfo.address"
                       maxlength="100"
-                      placeholder="请输入"></el-input>
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="备注"
                         class="textareaInput">
             <el-input v-model="basicInfo.remark"
                       maxlength="200"
-                      placeholder="请输入文字(不得超过200个字符)"></el-input>
+                      placeholder="请输入文字(不得超过200个字符)"
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="描述">
             <el-input v-model="basicInfo.describe"
                       maxlength="100"
-                      placeholder="请输入"></el-input>
-          </el-form-item>
-          <div class="custonInfo">
-            <img src="../../images/icon_label.png"
-                 alt="" />
-            <span>联系人信息</span>
-          </div>
-          <el-form-item label="姓名">
-            <el-input v-model="basicInfo.name"
-                      maxlength="15"
-                      placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone"
-                      maxlength="11"
-                      placeholder="请输入"></el-input>
-          </el-form-item>
-          <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender"
-                       placeholder="请选择">
-              <el-option label="男"
-                         value="1"></el-option>
-              <el-option label="女"
-                         value="2"></el-option>
-            </el-select>
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
           </el-form-item>
 
-          <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position"
-                      placeholder="请输入"
-                      maxlength="20"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin"
-                      placeholder="请输入"
-                      maxlength="20"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱:">
-            <el-input v-model="basicInfo.email"
-                      placeholder="请输入"
-                      maxlength="60"></el-input>
-          </el-form-item>
         </el-form>
       </div>
     </div>
@@ -195,13 +168,14 @@
           <div :class="{ 'over-hidden': !unfold }"
                ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in tagList"
+              <span v-for="(list, index) in companyTagList"
                     :key="index"
                     class="tagBox">{{ list.name }}</span>
             </div>
           </div>
           <div class="btn"
-               @click="unfold = !unfold">
+               @click="unfold = !unfold"
+               v-show="companyTagList.length>8">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -220,13 +194,15 @@
           <div :class="{ 'over-hidden': !isShowPerson }"
                ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in tagList"
+              <span v-for="(list, index) in personTagList"
                     :key="index"
-                    class="tagBox">{{ list.name }}</span>
+                    class="tagBox"
+                    v-show="list.isChecked">{{ list.name }}</span>
             </div>
           </div>
           <div class="btn"
-               @click="isShowPerson = !isShowPerson">
+               @click="isShowPerson = !isShowPerson"
+               v-show="personTagList.length>8">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -276,7 +252,7 @@
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
                 <span class="creatTag"
-                      :class="{ changeTag: highLightArr.includes(list.id) }"
+                      :class="{ 'changeTag': highLightArr.includes(list) }"
                       v-for="(list, index) in item.children"
                       :key="list.id"
                       v-show="list.name"
@@ -301,8 +277,8 @@
                          @keyup.enter="handleSearch()" />
                 </span>
                 <span class="creatTag"
-                      :class="{ changeTag: tempList.includes(list.id) }"
-                      v-for="(list, index) in personList"
+                      :class="{ 'changeTag': list.isChecked }"
+                      v-for="(list, index) in personTagList"
                       :key="list.id"
                       v-show="list.name">
                   <span @click="selectPersonTag(list, index)">{{
@@ -332,7 +308,7 @@
             </div>
             <div class="selectUser">
               <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="value"
+              <el-select v-model="userNo"
                          placeholder="请选择">
                 <el-option v-for="item in options"
                            :key="item.userNo"
@@ -361,9 +337,16 @@ export default {
     return {
       item: {},
       name: '',
-      image: '',
+      imageUser: '',
+      optionSource: [],
+      customList: [
+        { label: '微信用户', customerType: 1 },
+        { label: '企微用户', customerType: 2 },
+      ],
+
+      optionsCreat: [],
+      optionsScale: [],
       basicInfo: {
-        customerName: '',
         source: '',
         customerType: '',
         mobil: '',
@@ -397,9 +380,11 @@ export default {
       fieldIndex: null,
       unfold: false,
       isShowPerson: false,
+      companyTagList: [],
+      groupList: [],
+      personTagList: [],
       tagList: [],
       groupList: [],
-      personList: [],
       timeLineList: [
         {
           title: '步骤一',
@@ -419,74 +404,125 @@ export default {
       type: '',
       tagName: '',
       nowUser: '',
-      cluecustomerNo: '', //JSON.parse(localStorage.getItem("detail")).cluecustomerNo,
+      cluecustomerNo: '',
       objItem: JSON.parse(localStorage.getItem('detail')),
-      value: '',
+      userNo: '',
       options: [],
     }
   },
   created() {
-    this.getdetile()
-    //获取相应标签
-    this.gettag()
+    let tempObj = JSON.parse(localStorage.getItem('detail'))
+    console.log(tempObj)
+    this.imageUser = tempObj.avatar
+    this.name = tempObj.name
+    let tempSystem = this.systemList.map((item) => {
+      return {
+        name: item.name,
+        value: tempObj[item.mapName],
+        mapName: item.mapName,
+      }
+    })
+    tempSystem.forEach((item) => {
+      if (item.name.includes('时间') && JSON.stringify(item.value) !== 'null') {
+        item.value = formatDate(item.value, 'yyyy-MM-dd')
+      }
+    })
+    this.systemList = tempSystem
+  },
+  mounted() {
+    this.getTimeline()
+    this.getTagList()
+    this.getDetailForm()
   },
   methods: {
     formatDate,
-    //获取详情
-    getdetile() {
-      let tempObj = JSON.parse(localStorage.getItem('detail'))
-      console.log(tempObj)
-      this.basicInfo = { ...tempObj }
-      this.customName = tempObj.customerName
-      let tempSystem = this.systemList.map((item) => {
-        return {
-          name: item.name,
-          value: tempObj[item.mapName],
-          mapName: item.mapName,
-        }
-      })
-      tempSystem.forEach((item) => {
-        if (
-          item.name.includes('时间') &&
-          JSON.stringify(item.value) !== 'null'
-        ) {
-          item.value = formatDate(item.value, 'yyyy-MM-dd')
-        }
-      })
-      this.systemList = tempSystem
+    formatDate,
+    changeInput(val) {
+      console.log(val)
+      this.update()
     },
-
-    //
-    gettag() {
-      console.log('qqq', this.cluecustomerNo)
+    changeCustom(val) {
+      this.update()
+    },
+    changeSource(val) {
+      this.update()
+    },
+    changeGender(val) {
+      // console.log(val, this.basicInfo)
+      this.update()
+    },
+    handleChange(val) {
+      this.basicInfo.cropSubIndustry = val.toString()
+      this.update()
+    },
+    scaleChange(val) {
+      // console.log(val, this.basicInfo)
+      this.update()
+    },
+    getTimeline() {
+      // console.log(this.objItem, '------')
       this.$network
-        .get('/customer-service/cluecustomer/gettag', {
-          clueCustomerNo: this.cluecustomerNo,
+        .get('/customer-service/cluecustomer/getMessage', {
+          cluecustomerno: this.objItem.clueCustomerNo,
         })
         .then((res) => {
-          console.log(res.data)
-          this.groupList = res.tagCorpList
+          this.timeLineList = res.data
         })
     },
-    myclean() {
-      this.formList = []
-      this.systemList = []
+    getTagList() {
+      this.$network
+        .get('/customer-service/cluecustomer/gettag', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.companyTagList = res.data.corpTagList
+          this.groupList = res.data.tagCorpList
+          this.personTagList = res.data.personTagList
+        })
+    },
+    processTree(data) {
+      data.forEach((item) => {
+        if (item.children.length) {
+          this.optionsCreat.push(item)
+          return this.processTree(item.children)
+        } else {
+          item.children = null
+        }
+      })
+    },
+    getDetailForm() {
+      this.$network
+        .get('/customer-service/cluecustomer/toupdate', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.processTree(res.data.comlist)
+          this.optionSource = res.data.list
+          this.optionsScale = res.data.corpScaleList
+          this.basicInfo = res.data.clueCustomerEntity
+          if (res.data.clueCustomerEntity.cropSubIndustry) {
+            let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
+            this.basicInfo.industry = arr.map(Number)
+          } else {
+            this.basicInfo.industry = []
+          }
+        })
+    },
+    update() {
+      this.$network
+        .post('/customer-service/cluecustomer/update', {
+          type: this.$route.query.type,
+          clueCustomerNo: this.objItem.clueCustomerNo,
+          ...this.basicInfo,
+        })
+        .then((res) => {
+          this.$message({ type: 'success', message: '更新成功' })
+        })
     },
     goBack() {
       this.$router.go(-1)
     },
-    inputEdit(item, index) {
-      // console.log(item, index)
-      this.fieldIndex = null
-    },
-    keyupClick(item, index) {
-      let p = 'barcode' + index
-      this.$refs[p][0].blur()
-      // console.log(22222, this.$refs[p])
-    },
-    fnFocus(item, index) {
-      this.fieldIndex = index
-    },
+
     showCompany(v) {
       this.isShowDialog = v
       this.show = true
@@ -496,6 +532,7 @@ export default {
         this.titleName = '个人标签'
       } else if (v == 3) {
         this.titleName = '写跟进'
+        this.message = ''
       }
     },
     addTag(item, index) {
@@ -504,17 +541,16 @@ export default {
     },
     handleSearch() {
       console.log(this.tagName)
-      // if (this.tagName) {
-      //   this.$network
-      //     .post('/customer-service/tag/add', {
-      //       name: this.tagName,
-      //       parentId: item.id,
-      //       tagid: item.tagid,
-      //     })
-      //     .then((res) => {
-      this.personList.push({ name: this.tagName })
-      //     })
-      // }
+      if (this.tagName) {
+        this.$network
+          .post('/customer-service/cluecustomer/addtag', {
+            name: this.tagName,
+            clueCustomerNo: this.objItem.clueCustomerNo,
+          })
+          .then((res) => {
+            this.personTagList = res.data
+          })
+      }
       this.showInput = null
       this.isShow = false
     },
@@ -524,16 +560,16 @@ export default {
         let p = this.highLightArr.indexOf(list.id)
         this.highLightArr.splice(p, 1)
       } else {
-        this.highLightArr.push(list.id)
+        this.highLightArr.push(list)
       }
+      console.log(this.highLightArr)
     },
     selectPersonTag(list, index) {
-      if (this.tempList.includes(list.id)) {
-        let p = this.tempList.indexOf(list.id)
-        this.tempList.splice(p, 1)
-        console.log(p)
+      console.log(list)
+      if (list.isChecked == 1) {
+        list.isChecked = 0
       } else {
-        this.tempList.push(list.id)
+        list.isChecked = 1
       }
     },
     deleteTag(v, i) {
@@ -548,7 +584,13 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          // on confirm
+          this.$network
+            .post('/customer-service/cluecustomer/deltag', v)
+            .then((res) => {
+              if (res.result) {
+                // this.personTagList =
+              }
+            })
         })
         .catch(() => {
           // on cancel
@@ -561,12 +603,14 @@ export default {
       this.isShowDialog = '4'
       this.show = true
       this.titleName = '变更所属人'
-
+      let params = {
+        clueCustomerNo: this.objItem.clueCustomerNo,
+      }
       this.$network
-        .get('/customer-service/cluecustomer/toallot', {})
+        .get('/customer-service/cluecustomer/getuserList', params)
         .then((res) => {
-          console.log(res)
-          this.options = res.data
+          this.nowUser = res.data.userNo
+          this.options = res.data.list
         })
     },
     giveUp() {
@@ -587,7 +631,13 @@ export default {
               type: this.$route.query.type,
             })
             .then((res) => {
-              this.$router.go(-1)
+              if (res.result) {
+                this.$router.go(-1)
+                this.$message({
+                  type: 'success',
+                  message: '操作成功',
+                })
+              }
             })
         })
         .catch(() => {
@@ -602,34 +652,66 @@ export default {
       console.log(v)
     },
     saveDialog(v) {
-      this.$dialog
-        .confirm({
-          title: '变更所属人提示',
-          message: '确认转让线索？',
-          className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })
-        .then(() => {
-          this.$network
-            .get('/customer-service/cluecustomer/turnBlon', {
-              cluecustomerno: this.cluecustomerNo,
-              user_no: this.value,
-              oldname: this.nowUser,
-            })
-            .then((res) => {
-              if (res.result) {
-                this.$message({ type: 'success', message: '变更成功' })
-                this.$router.go(-1)
-                this.options = []
-                this.show = false
-                console.log(this.value)
-              } else {
-                alert(res.msg)
-              }
-            })
-        })
+      if (v == 1) {
+        // console.log(this.highLightArr)
+        this.$network
+          .post(
+            `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
+            this.highLightArr
+          )
+          .then((res) => {})
+      } else if (v == 2) {
+        this.$network
+          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
+          })
+      } else if (v == 3) {
+        this.$network
+          .post('/customer-service/cluecustomer/addMessage', {
+            clueCustomerNo: this.objItem.clueCustomerNo,
+            context: this.message,
+          })
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.getTimeline()
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
+          })
+      } else if (v == 4) {
+        let params = {
+          cluecustomerno: this.objItem.clueCustomerNo,
+          user_no: this.userNo,
+          oldname: this.nowUser,
+        }
+        this.$network
+          .get('/customer-service/cluecustomer/turnBlon', params)
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.$message({
+                type: 'success',
+                message: '编辑成功!',
+              })
+            } else {
+              this.show = false
+              this.$message({
+                type: 'error',
+                message: res.msg,
+              })
+            }
+          })
+      }
     },
   },
 }
