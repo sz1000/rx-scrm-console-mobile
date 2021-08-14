@@ -233,11 +233,10 @@ export default {
 
   data() {
     return {
-      userid: '',
-      title: '客户资料详情',
-      name: '小鱼儿',
-      nameFrom: '@微信/企业',
-      email: '1234567890@qq.com',
+      title: '',
+      name: '',
+      nameFrom: '',
+      email: '',
       unfold: false,
       isShowPerson: false,
       tagList: [], //企业标签
@@ -261,55 +260,86 @@ export default {
       userId: '',
     }
   },
-  beforeCreate() {},
   created() {
-    this.getWxAppid()
+    let href = window.location.href.split('?')[1]
+    let p = href.split('&')[0]
+    let authCode = p.split('=')[1]
+    this.getData(authCode)
   },
   mounted() {
-    // let appid = this.$route.params.appid
-    // this.getWxConfig(appid)
-    this.getMethod()
-    this.getTimeline()
-    this.getTagList()
+    // this.getMethod()
+    // this.getTimeline()
+    // this.getTagList()
   },
 
   methods: {
     formatDate,
-    getWxAppid() {
+    getData(v) {
+      let wx = window.wx
       this.$network
-        .get('/user-service/m/user/getappid', {
-          redirect_uri: '/#/customTransition',
+        .get('/user-service/m/user/getloguser', {
+          code: v,
+          url: location.href,
         })
         .then((res) => {
-          let params = {
-            appid: res.data.suiteid,
-            redirect_url: encodeURIComponent(
-              'https://' + res.data.redirect_uri
-            ),
-          }
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&scope=snsapi_base#wechat_redirect`
+          alert(res.data.signature)
+          alert(res.data.agent_config_data.signature)
+          this.token = res.data.accessToken
+          this.appid = res.data.corpId
+          localStorage.setItem('token', res.data.accessToken)
+          wx.config({
+            beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: res.data.corpId, // 必填，企业微信的corpID
+            timestamp: res.data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
+            signature: res.data.signature, // 必填，签名，见 附录-JS-SDK使用权限签名算法
+            jsApiList: ['getCurExternalContact'], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
+          })
+          wx.agentConfig({
+            corpid: res.data.corpId, // 必填，企业微信的corpid，必须与当前登录的企业一致
+            agentid: res.data.agentid, // 必填，企业微信的应用id （e.g. 1000247）
+            timestamp: res.data.agent_config_data.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.data.agent_config_data.noncestr, // 必填，生成签名的随机串
+            signature: res.data.agent_config_data.signature, // 必填，签名，见附录-JS-SDK使用权限签名算法
+            jsApiList: ['selectExternalContact', 'getCurExternalContact'], //必填，传入需要使用的接口名称
+            success: function (res) {},
+            fail: function (res) {
+              if (res.errMsg.indexOf('function not exist') > -1) {
+                // alert('版本过低请升级')
+              }
+            },
+          })
         })
-    },
-    getWxConfig(appid) {
-      // wx.config({
-      //   beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-      //   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-      //   appId: appid, // 必填，企业微信的corpID
-      //   // timestamp: , // 必填，生成签名的时间戳
-      //   nonceStr: '', // 必填，生成签名的随机串
-      //   signature: '', // 必填，签名，见 附录-JS-SDK使用权限签名算法
-      //   jsApiList: ['getCurExternalContact'], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
-      // })
-      // wx.ready(function () {
-      //   // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-      //   wx.invoke('getCurExternalContact', {}, function (res) {
-      //     if (res.err_msg == 'getCurExternalContact:ok') {
-      //       this.userId = res.userId //返回当前外部联系人userId
-      //     } else {
-      //       //错误处理
-      //     }
-      //   })
-      // })
+      wx.checkJsApi({
+        jsApiList: ['getCurExternalContact'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+        success: function (res) {
+          alert(res)
+          // 以键值对的形式返回，可用的api值true，不可用为false
+          // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+        },
+      })
+      wx.ready(function () {
+        // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+        wx.invoke('getCurExternalContact', {}, function (res) {
+          alert(res.err_msg)
+          alert(res.userId)
+          if (res.err_msg == 'getCurExternalContact:ok') {
+            alert('yesyesyes111')
+            this.userId = res.userId //返回当前外部联系人userId
+            this.getMethod()
+            this.getTimeline()
+            this.getTagList()
+          } else {
+            alert('nonononon1111', res)
+            //错误处理
+          }
+        })
+      })
+      wx.error(function (res) {
+        alert(res, 'jjjjjj')
+        // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+      })
     },
 
     goToDetail() {

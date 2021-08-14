@@ -11,28 +11,22 @@ export default {
     }
   },
   created() {
-    let href = window.location.href.split('?')[1]
-    let p = href.split('&')[0]
-    let authCode = p.split('=')[1]
-    this.getData(authCode)
+    this.getWxAppid()
   },
   methods: {
-    getData(v) {
+    getWxAppid() {
       this.$network
-        .get('/user-service/m/user/getloguser', {
-          code: v,
+        .get('/user-service/m/user/getappid', {
+          redirect_uri: '/customerPortrait',
         })
         .then((res) => {
-          this.token = res.data.accessToken
-          this.appid = res.data.corpId
-          localStorage.setItem('token', res.data.accessToken)
-          this.$router.push({
-            name: 'customerPortrait',
-            params: {
-              // appid: '131313',
-              appid: this.appid,
-            },
-          })
+          let params = {
+            appid: res.data.suiteid,
+            redirect_url: encodeURIComponent(
+              'https://' + res.data.redirect_uri
+            ),
+          }
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&scope=snsapi_base#wechat_redirect`
         })
     },
   },
