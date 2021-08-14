@@ -35,7 +35,8 @@
       <div class="formEdit">
         <el-form ref="form"
                  :model="basicInfo">
-          <el-form-item label="客户简称">
+          <el-form-item label="客户简称"
+                        class="nameBorder">
             <el-input v-model="basicInfo.customerName"
                       placeholder="请输入"
                       maxlength="30"
@@ -637,6 +638,11 @@ export default {
             display: flex;
             margin-bottom: 0;
           }
+          .nameBorder {
+            .el-input__inner {
+              border-top: 1px solid #d9dae4 !important;
+            }
+          }
           .el-form-item__label {
             font-size: 28px;
             width: 234px;
@@ -655,7 +661,9 @@ export default {
               width: 100%;
               border-radius: 8px;
               font-size: 28px;
-              border: 2px solid #d9dae4;
+              border: 0;
+              border-right: 1px solid #d9dae4;
+              border-bottom: 1px solid #d9dae4;
               border-radius: 0;
             }
             .el-select,
