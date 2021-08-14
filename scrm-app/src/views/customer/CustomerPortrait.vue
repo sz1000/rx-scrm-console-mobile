@@ -295,28 +295,28 @@ export default {
       });
     },
     //获取客户详情
-    getMethod() {
-      this.$network
-        .get("/customer-service/m/cluecustomer/getClueCustomerByid", {
-          id: "wojhU-EAAA9iQsj1MSia3rLr7l7KNabwc",
-        })
-        .then((res) => {
-          console.log(res);
-          this.name = res.data.clueCustomerVO.name;
-          this.item = res.data.clueCustomerVO;
-          this.avatar = res.data.clueCustomerVO.avatar;
-        });
-      this.$network
-        .get("/customer-service/cluecustomer/gettag", {
-          clueCustomerNo: "wojhU-EAAA9iQsj1MSia3rLr7l7KNabwc",
-        })
-        .then((res) => {
-          console.log(res);
-          this.tagList = res.data.corpTagList;
-          this.tagpersonList = res.data.personTagList;
-          this.groupList = res.data.tagCorpList;
-        });
-    },
+    // getMethod() {
+    //   this.$network
+    //     .get("/customer-service/m/cluecustomer/getClueCustomerByid", {
+    //       id: "wojhU-EAAA9iQsj1MSia3rLr7l7KNabwc",
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //       this.name = res.data.clueCustomerVO.name;
+    //       this.item = res.data.clueCustomerVO;
+    //       this.avatar = res.data.clueCustomerVO.avatar;
+    //     });
+    //   this.$network
+    //     .get("/customer-service/cluecustomer/gettag", {
+    //       clueCustomerNo: "wojhU-EAAA9iQsj1MSia3rLr7l7KNabwc",
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //       this.tagList = res.data.corpTagList;
+    //       this.tagpersonList = res.data.personTagList;
+    //       this.groupList = res.data.tagCorpList;
+    //     });
+    // },
     showCompany(v) {
       this.isShowDialog = v;
       this.show = true;
