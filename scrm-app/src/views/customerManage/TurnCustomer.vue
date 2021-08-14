@@ -45,8 +45,8 @@
                      clearable>
             <el-option v-for="item in optionsCustom"
                        :key="item.value"
-                       :label="item.name"
-                       :value="item.type">
+                       :label="item.label"
+                       :value="item.customerType">
             </el-option>
           </el-select>
         </el-form-item>
@@ -174,7 +174,38 @@ export default {
       optionsCreat: [],
     }
   },
+  created() {
+    this.getDataList()
+  },
   methods: {
+    getDataList() {
+      this.$network
+        .get('/customer-service/cluecustomer/toupdate', {
+          clueCustomerNo: this.$route.query.customno,
+        })
+        .then((res) => {
+          this.formObj = res.data.clueCustomerEntity
+          this.processTree(res.data.comlist)
+          this.optionSource = res.data.list
+          this.optionsScale = res.data.corpScaleList
+          if (res.data.clueCustomerEntity.cropSubIndustry) {
+            let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
+            this.formObj.industry = arr.map(Number)
+          } else {
+            this.formObj.industry = []
+          }
+        })
+    },
+    processTree(data) {
+      data.forEach((item) => {
+        if (item.children.length) {
+          this.optionsCreat.push(item)
+          return this.processTree(item.children)
+        } else {
+          item.children = null
+        }
+      })
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -193,7 +224,30 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          if (this.formObj.phone || this.formObj.weixin) {
+            let cropSubIndustry = this.formObj.industry.toString()
+            let params = {
+              ...this.formObj,
+              ...{
+                cropSubIndustry: cropSubIndustry,
+                type: this.$route.query.type,
+              },
+            }
+            this.$network
+              .post('/customer-service/cluecustomer/cluetocustomer', params)
+              .then((res) => {
+                this.$router.go(-1)
+                this.$message({
+                  type: 'success',
+                  message: '操作成功',
+                })
+              })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '手机号微信号请选填其一',
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
