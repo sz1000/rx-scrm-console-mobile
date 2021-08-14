@@ -91,11 +91,12 @@ methods.forEach((item) => {
             .then((res) => {
                 // console.log('---res1----', res)
                 let data = res.data
-                if (data.result) {
-                    return Promise.resolve(data)
-                } else {
-                    return Promise.reject(data.msg)
-                }
+
+                return Promise.resolve(data)
+                    // if (data.result) {
+                    // } else {
+                    //     return Promise.reject(data.msg)
+                    // }
             })
             .catch((err) => {
                 return Promise.reject(err.error)

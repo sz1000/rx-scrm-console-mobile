@@ -38,7 +38,8 @@
           <el-form-item label="客户简称">
             <el-input v-model="basicInfo.customerName"
                       placeholder="请输入"
-                      maxlength="30"></el-input>
+                      maxlength="30"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="客户来源">
             <el-select v-model="basicInfo.source"
@@ -58,19 +59,21 @@
               <el-option v-for="item in customList"
                          :key="item.value"
                          :label="item.label"
-                         :value="item.value">
+                         :value="item.customerType">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="电话">
             <el-input v-model="basicInfo.mobil"
                       placeholder="请输入"
-                      maxlength="13"></el-input>
+                      maxlength="13"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="公司名称">
             <el-input v-model="basicInfo.cropFullName"
                       placeholder="请输入"
-                      maxlength="100"></el-input>
+                      maxlength="100"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="所属行业">
             <el-cascader size="large"
@@ -87,25 +90,28 @@
               <el-option v-for="item in optionsScale"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.type">
+                         :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="地址">
             <el-input v-model="basicInfo.address"
                       maxlength="100"
-                      placeholder="请输入"></el-input>
+                      placeholder="请输入"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="备注"
                         class="textareaInput">
             <el-input v-model="basicInfo.remark"
                       maxlength="200"
-                      placeholder="请输入文字(不得超过200个字符)"></el-input>
+                      placeholder="请输入文字(不得超过200个字符)"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="描述">
             <el-input v-model="basicInfo.describe"
                       maxlength="100"
-                      placeholder="请输入"></el-input>
+                      placeholder="请输入"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <div class="custonInfo">
             <img src="../../images/icon_label.png"
@@ -115,16 +121,19 @@
           <el-form-item label="姓名">
             <el-input v-model="basicInfo.name"
                       maxlength="15"
-                      placeholder="请输入"></el-input>
+                      placeholder="请输入"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="手机号:">
             <el-input v-model="basicInfo.phone"
                       maxlength="11"
-                      placeholder="请输入"></el-input>
+                      placeholder="请输入"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
             <el-select v-model="basicInfo.gender"
-                       placeholder="请选择">
+                       placeholder="请选择"
+                       @change="changeGender">
               <el-option label="男"
                          value="1"></el-option>
               <el-option label="女"
@@ -135,17 +144,20 @@
           <el-form-item label="职务:">
             <el-input v-model="basicInfo.position"
                       placeholder="请输入"
-                      maxlength="20"></el-input>
+                      maxlength="20"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="微信号:">
             <el-input v-model="basicInfo.weixin"
                       placeholder="请输入"
-                      maxlength="20"></el-input>
+                      maxlength="20"
+                      @input="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="邮箱:">
             <el-input v-model="basicInfo.email"
                       placeholder="请输入"
-                      maxlength="60"></el-input>
+                      maxlength="60"
+                      @input="changeInput()"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -262,13 +274,14 @@ export default {
       customName: '',
       optionSource: [],
       customList: [
-        { label: '微信用户', value: '1' },
-        { label: '企微用户', value: '2' },
+        { label: '微信用户', customerType: 1 },
+        { label: '企微用户', customerType: 2 },
       ],
-      industry: [],
+
       optionsCreat: [],
       optionsScale: [],
       basicInfo: {
+        industry: [],
         customerName: '',
         source: '',
         customerType: '',
@@ -329,10 +342,18 @@ export default {
       objItem: JSON.parse(localStorage.getItem('customer')),
     }
   },
+  watch: {
+    // basicInfo: {
+    //   handler: function (val) {
+    //     console.log(val)
+    //     //可以做些相应的处理
+    //     this.update()
+    //   },
+    //   deep: true,
+    // },
+  },
   created() {
     let tempObj = JSON.parse(localStorage.getItem('customer'))
-    console.log(tempObj)
-    this.basicInfo = { ...tempObj }
     this.customName = tempObj.customerName
     let tempSystem = this.systemList.map((item) => {
       return {
@@ -351,13 +372,31 @@ export default {
   mounted() {
     this.getTimeline()
     this.getTagList()
+    this.getDetailForm()
   },
   methods: {
     formatDate,
-    changeCustom() {},
-    changeSource() {},
-    handleChange() {},
-    scaleChange() {},
+    changeInput(val) {
+      this.update()
+    },
+    changeCustom(val) {
+      this.update()
+    },
+    changeSource(val) {
+      this.update()
+    },
+    changeGender(val) {
+      // console.log(val, this.basicInfo)
+      this.update()
+    },
+    handleChange(val) {
+      this.basicInfo.cropSubIndustry = val.toString()
+      this.update()
+    },
+    scaleChange(val) {
+      // console.log(val, this.basicInfo)
+      this.update()
+    },
     getTimeline() {
       // console.log(this.objItem, '------')
       this.$network
@@ -377,35 +416,49 @@ export default {
           this.tagList = res.data.corpTagList
         })
     },
+    processTree(data) {
+      data.forEach((item) => {
+        if (item.children.length) {
+          this.optionsCreat.push(item)
+          return this.processTree(item.children)
+        } else {
+          item.children = null
+        }
+      })
+    },
+    getDetailForm() {
+      this.$network
+        .get('/customer-service/cluecustomer/toupdate', {
+          clueCustomerNo: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.processTree(res.data.comlist)
+          this.optionSource = res.data.list
+          this.optionsScale = res.data.corpScaleList
+          this.basicInfo = res.data.clueCustomerEntity
+          if (res.data.clueCustomerEntity.cropSubIndustry) {
+            let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
+            this.basicInfo.industry = arr.map(Number)
+          } else {
+            this.basicInfo.industry = []
+          }
+        })
+    },
     goBack() {
       this.$router.go(-1)
     },
-    // inputEdit(item, index) {
-    //   console.log(item, index)
-    //   console.log(this.formList)
-    //   let params = {}
-    //   let transitList = JSON.parse(JSON.stringify(this.formList))
-    //   transitList.forEach((item) => {
-    //     params[item.mapName] = item.value
-    //   })
-    //   console.log(params)
-    //   this.fieldIndex = null
-    //   this.$network
-    //     .post('/customer-service/cluecustomer/update', {
-    //       type: this.$route.query.type,
-    //       clueCustomerNo: this.objItem.clueCustomerNo,
-    //       ...params,
-    //     })
-    //     .then((res) => {})
-    // },
-    // keyupClick(item, index) {
-    //   let p = 'barcode' + index
-    //   this.$refs[p][0].blur()
-    //   // console.log(22222, this.$refs[p])
-    // },
-    // fnFocus(item, index) {
-    //   this.fieldIndex = index
-    // },
+    update() {
+      this.$network
+        .post('/customer-service/cluecustomer/update', {
+          type: this.$route.query.type,
+          clueCustomerNo: this.objItem.clueCustomerNo,
+          ...this.basicInfo,
+        })
+        .then((res) => {
+          this.$message({ type: 'success', message: '更新成功' })
+        })
+    },
+
     getReceive() {
       this.$dialog
         .confirm({
