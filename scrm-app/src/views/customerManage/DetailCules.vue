@@ -24,7 +24,7 @@
         <img src="../../images/icon_change2@2x.png" alt="" />
         <span>变更所属人</span>
       </div>
-      <div class="btnBox" @click="giveUp">
+      <div class="btnBox" @click="giveUp()">
         <img src="../../images/icon_clear@2x.png" alt="" />
         <span>放弃</span>
       </div>
@@ -35,24 +35,151 @@
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <van-form v-model="formList">
-          <van-field
-            v-for="(item, index) in formList"
-            label-align="center"
-            placeholder="请输入"
-            :ref="'barcode' + index"
-            :key="index"
-            v-model="item.value"
-            :label="item.name"
-            @blur="inputEdit(item, index)"
-            @focus="fnFocus(item, index)"
-            @keyup.enter.native="keyupClick(item, index)"
-          >
-            <template slot="right-icon">
-              <i class="el-icon-edit" v-show="fieldIndex == index"></i>
-            </template>
-          </van-field>
-        </van-form>
+        <el-form ref="form" :model="basicInfo">
+          <el-form-item label="客户简称">
+            <el-input
+              v-model="basicInfo.customerName"
+              placeholder="请输入"
+              maxlength="30"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="客户来源">
+            <el-select
+              v-model="basicInfo.source"
+              placeholder="请选择"
+              @change="changeSource"
+            >
+              <el-option
+                v-for="item in optionSource"
+                :key="item.value"
+                :label="item.name"
+                :value="item.type"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="客户类型">
+            <el-select
+              v-model="basicInfo.customerType"
+              placeholder="请选择"
+              @change="changeCustom"
+            >
+              <el-option
+                v-for="item in customList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="电话">
+            <el-input
+              v-model="basicInfo.mobil"
+              placeholder="请输入"
+              maxlength="13"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="公司名称">
+            <el-input
+              v-model="basicInfo.cropFullName"
+              placeholder="请输入"
+              maxlength="100"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader
+              size="large"
+              :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
+              :options="optionsCreat"
+              v-model="basicInfo.industry"
+              @change="handleChange"
+            >
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="企业规模">
+            <el-select
+              v-model="basicInfo.corpScale"
+              placeholder="请选择"
+              @change="scaleChange"
+            >
+              <el-option
+                v-for="item in optionsScale"
+                :key="item.value"
+                :label="item.name"
+                :value="item.type"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input
+              v-model="basicInfo.address"
+              maxlength="100"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="备注" class="textareaInput">
+            <el-input
+              v-model="basicInfo.remark"
+              maxlength="200"
+              placeholder="请输入文字(不得超过200个字符)"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input
+              v-model="basicInfo.describe"
+              maxlength="100"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <div class="custonInfo">
+            <img src="../../images/icon_label.png" alt="" />
+            <span>联系人信息</span>
+          </div>
+          <el-form-item label="姓名">
+            <el-input
+              v-model="basicInfo.name"
+              maxlength="15"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="手机号:">
+            <el-input
+              v-model="basicInfo.phone"
+              maxlength="11"
+              placeholder="请输入"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender" placeholder="请选择">
+              <el-option label="男" value="1"></el-option>
+              <el-option label="女" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="职务:">
+            <el-input
+              v-model="basicInfo.position"
+              placeholder="请输入"
+              maxlength="20"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input
+              v-model="basicInfo.weixin"
+              placeholder="请输入"
+              maxlength="20"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱:">
+            <el-input
+              v-model="basicInfo.email"
+              placeholder="请输入"
+              maxlength="60"
+            ></el-input>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
     <div class="systemInformation">
@@ -228,9 +355,9 @@
               <el-select v-model="value" placeholder="请选择">
                 <el-option
                   v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.userNo"
+                  :label="item.name"
+                  :value="item.userNo"
                   @change="fnChangeUser"
                 >
                 </el-option>
@@ -254,20 +381,26 @@ export default {
       item: {},
       name: "",
       image: "",
-      formList: [
-        { name: "姓名", value: "", mapName: "name" },
-        { name: "手机号", value: "", mapName: "phone" },
-        { name: "微信号", value: "", mapName: "weixin" },
-        { name: "性别", value: "", mapName: "gender" },
-        { name: "职务", value: "", mapName: "position" },
-        { name: "公司名称", value: "", mapName: "cropFullName" },
-        { name: "所属行业", value: "", mapName: "cropSubIndustry" },
-        { name: "线索来源", value: "", mapName: "source" },
-        { name: "邮箱", value: "", mapName: "email" },
-        { name: "地址", value: "", mapName: "address" },
-        { name: "备注", value: "", mapName: "remark" },
-        { name: "描述", value: "", mapName: "describe" },
-      ],
+      basicInfo: {
+        customerName: "",
+        source: "",
+        customerType: "",
+        mobil: "",
+        cropFullName: "",
+        corpScale: "",
+        address: "",
+        remark: "",
+        describe: "",
+        name: "",
+        phone: "",
+        weixin: "",
+        gender: "",
+        position: "",
+        cropFullName: "",
+        cropSubIndustry: "",
+        source: "",
+        email: "",
+      },
       systemList: [
         { name: "添加人员", mapName: "createBy", value: "" },
         { name: "添加时间", mapName: "createTime", value: "" },
@@ -283,108 +416,9 @@ export default {
       fieldIndex: null,
       unfold: false,
       isShowPerson: false,
-      tagList: [
-        { name: "很优秀" },
-        { name: "很优fafas秀" },
-        { name: "很优秀" },
-        { name: "很adsa优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-        { name: "很优秀" },
-      ],
-      groupList: [
-        {
-          name: "标签管理",
-          children: [
-            {
-              name: "hahhah",
-              id: 1,
-            },
-            {
-              name: "hahhah",
-              id: 2,
-            },
-            {
-              name: "hahhah",
-              id: 3,
-            },
-            {
-              name: "hahhah",
-              id: 4,
-            },
-            {
-              name: "hahhah",
-              id: 5,
-            },
-            {
-              name: "hahhah",
-              id: 6,
-            },
-            {
-              name: "hahhah",
-              id: 7,
-            },
-          ],
-        },
-        {
-          name: "标签管理",
-          children: [
-            {
-              name: "hahhah",
-              id: 8,
-            },
-            {
-              name: "hahhah",
-              id: 9,
-            },
-            {
-              name: "hahhah",
-              id: 10,
-            },
-            {
-              name: "hahhah",
-              id: 11,
-            },
-            {
-              name: "hahhah",
-              id: 12,
-            },
-            {
-              name: "hahhah",
-              id: 22,
-            },
-          ],
-        },
-      ],
-      personList: [
-        {
-          name: "标签管理",
-          id: 1,
-        },
-        {
-          name: "标签管理",
-          id: 2,
-        },
-      ],
+      tagList: [],
+      groupList: [],
+      personList: [],
       timeLineList: [
         {
           title: "步骤一",
@@ -401,63 +435,62 @@ export default {
       message: "",
       showInput: null,
       isShow: false,
+      type: "",
       tagName: "",
-      nowUser: "马化腾",
+      nowUser: "",
+      cluecustomerNo: "", //JSON.parse(localStorage.getItem("detail")).cluecustomerNo,
+      objItem: JSON.parse(localStorage.getItem("detail")),
       value: "",
-      options: [
-        { label: "hahha", value: "1" },
-        { label: "大撒大撒", value: "2" },
-      ],
+      options: [],
     };
   },
   created() {
-    console.log(this.$route.params.list);
-
-    let detail = JSON.parse(localStorage.getItem("detail"));
-    this.name = detail.name;
-    this.image = detail.avatar;
-    let obj = {
-      customerName: detail.customerName,
-      cropFullName: detail.cropFullName,
-      cropSubIndustry: detail.cropSubIndustry,
-      source: detail.source,
-      cropscale: detail.cropscale,
-      name: detail.name,
-      phone: detail.phone,
-      weixin: detail.weixin,
-      gender: detail.gender,
-      position: detail.position,
-      email: detail.email,
-      address: detail.address,
-      remark: detail.remark,
-      describe: detail.describe,
-      createBy: detail.createBy,
-      createTime: detail.createTime,
-      uname: detail.uname,
-      getTime: detail.getTime,
-      followRecord: detail.followRecord,
-      followTime: detail.followTime,
-      updateBy: detail.updateBy,
-      updateTime: detail.updateTime,
-      beBelongBy: detail.beBelongBy,
-      turnTime: detail.turnTime,
-    };
-    this.formList = this.formList.map((item) => {
-      return {
-        name: item.name,
-        value: obj[item.mapName],
-      };
-    });
-    this.systemList = this.systemList.map((item) => {
-      return {
-        name: item.name,
-        value: obj[item.mapName],
-      };
-    });
-    // console.log(this.formList)
+    this.getdetile();
+    //获取相应标签
+    this.gettag();
   },
   methods: {
     formatDate,
+    //获取详情
+    getdetile() {
+      let tempObj = JSON.parse(localStorage.getItem("detail"));
+      console.log(tempObj);
+      this.basicInfo = { ...tempObj };
+      this.customName = tempObj.customerName;
+      let tempSystem = this.systemList.map((item) => {
+        return {
+          name: item.name,
+          value: tempObj[item.mapName],
+          mapName: item.mapName,
+        };
+      });
+      tempSystem.forEach((item) => {
+        if (
+          item.name.includes("时间") &&
+          JSON.stringify(item.value) !== "null"
+        ) {
+          item.value = formatDate(item.value, "yyyy-MM-dd");
+        }
+      });
+      this.systemList = tempSystem;
+    },
+
+    //
+    gettag() {
+      console.log("qqq", this.cluecustomerNo);
+      this.$network
+        .get("/customer-service/cluecustomer/gettag", {
+          clueCustomerNo: this.cluecustomerNo,
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.groupList = res.tagCorpList;
+        });
+    },
+    myclean() {
+      this.formList = [];
+      this.systemList = [];
+    },
     goBack() {
       this.$router.go(-1);
     },
@@ -547,6 +580,13 @@ export default {
       this.isShowDialog = "4";
       this.show = true;
       this.titleName = "变更所属人";
+
+      this.$network
+        .get("/customer-service/cluecustomer/toallot", {})
+        .then((res) => {
+          console.log(res);
+          this.options = res.data;
+        });
     },
     giveUp() {
       this.$dialog
@@ -560,7 +600,14 @@ export default {
           messageAlign: "left",
         })
         .then(() => {
-          // on confirm
+          this.$network
+            .get("/customer-service/cluecustomer/giveUpType", {
+              clueCustomerNo: this.objItem.clueCustomerNo,
+              type: this.$route.query.type,
+            })
+            .then((res) => {
+              this.$router.go(-1);
+            });
         })
         .catch(() => {
           // on cancel
@@ -574,8 +621,34 @@ export default {
       console.log(v);
     },
     saveDialog(v) {
-      this.show = false;
-      console.log(v);
+      this.$dialog
+        .confirm({
+          title: "变更所属人提示",
+          message: "确认转让线索？",
+          className: "giveUpBtn",
+          confirmButtonText: "是",
+          cancelButtonText: "否",
+          messageAlign: "left",
+        })
+        .then(() => {
+          this.$network
+            .get("/customer-service/cluecustomer/turnBlon", {
+              cluecustomerno: this.cluecustomerNo,
+              user_no: this.value,
+              oldname: this.nowUser,
+            })
+            .then((res) => {
+              if (res.result) {
+                this.$message({ type: "success", message: "变更成功" });
+                this.$router.go(-1);
+                this.options = [];
+                this.show = false;
+                console.log(this.value);
+              } else {
+                alert(res.msg);
+              }
+            });
+        });
     },
   },
 };

@@ -155,10 +155,7 @@ export default {
             .post("/customer-service/cluecustomer/addCul", this.formObj)
             .then((res) => {
               if (res.result) {
-                this.$router.push({
-                  name: "clues",
-                  params: { tabClick: this.type },
-                });
+                this.$router.go(-1);
               }
             });
         } else {
