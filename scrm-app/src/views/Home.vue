@@ -55,8 +55,14 @@
 </template>
 
 <script>
+import wx from 'weixin-js-sdk'
 export default {
   components: {},
+  data() {
+    return {
+      // wx: window.wx,
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       //   let wx = window.wx
@@ -84,6 +90,7 @@ export default {
     })
   },
   created() {
+    console.log(wx)
     // this.$network.get('/customer-service/group/list').then((res) => {})
   },
   methods: {

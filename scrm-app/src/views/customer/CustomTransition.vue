@@ -1,6 +1,5 @@
 <template>
   <div class="CustomTransition">
-    hahha
   </div>
 </template>
 <script>

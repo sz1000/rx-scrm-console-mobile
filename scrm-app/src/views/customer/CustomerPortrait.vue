@@ -223,6 +223,7 @@
   </div>
 </template>
 <script>
+import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
 import HomeVue from '../Home.vue'
@@ -258,7 +259,6 @@ export default {
       showInput: null,
       isShow: false,
       tagName: '',
-      wx: window.wx,
       userId: '',
     }
   },
