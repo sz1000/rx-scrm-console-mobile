@@ -9,6 +9,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "element-ui": "^2.15.4",
+        "jweixin-module": "^1.6.0",
         "less": "^4.1.1",
         "lib-flexible": "^0.3.2",
         "postcss-px2rem": "^0.3.0",
