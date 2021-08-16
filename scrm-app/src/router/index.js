@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import HomeTransition from '../views/HomeTransition.vue'
 import Test from '../views/talkTool/test.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
@@ -27,7 +28,15 @@ Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
-        redirect: '/home',
+        redirect: '/homeTransition',
+    },
+    {
+        path: '/homeTransition',
+        name: 'homeTransition',
+        meta: {
+            bodyClass: 'HomeTransition',
+        },
+        component: HomeTransition,
     },
     {
         path: '/home',
@@ -37,6 +46,7 @@ const routes = [{
         },
         component: Home,
     },
+
     // 客户画像
     {
         path: '/customerPortrait',

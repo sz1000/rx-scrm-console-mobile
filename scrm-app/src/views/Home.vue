@@ -67,12 +67,26 @@ export default {
       userId: '',
     }
   },
-  created() {},
-  mounted() {
-    // console.log(wx)
-    // location.replace(window.location.href.split('#')[0] + '?' + window.location.hash)
+  created() {
+    let href = window.location.href.split('?')[1]
+    let p = href.split('&')[0]
+    let authCode = p.split('=')[1]
+    this.getData(authCode)
   },
-  methods: {},
+  mounted() {},
+  methods: {
+    getData(v) {
+      this.$network
+        .get('/user-service/m/user/getloguser', {
+          code: v,
+          url: location.href,
+        })
+        .then((res) => {
+          this.token = res.data.accessToken
+          localStorage.setItem('token', res.data.accessToken)
+        })
+    },
+  },
 }
 </script>
 <style lang='less' scoped>

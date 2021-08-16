@@ -369,6 +369,68 @@ export default {
     },
     sendCode(item, index) {
       console.log(item, index)
+
+      this.$network
+        .get('/user-service/m/user/getticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          // alert(res.data.corpId)
+          // alert(res.data.timestamp)
+          // alert(res.data.signature)
+          // alert(res.data.nonceStr)
+          // alert(res.data.signature)
+          // alert(res.data.agent_config_data.signature)
+          // this.obj = res.data
+          // alert(JSON.stringify(this.obj)
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'invoke',
+              'agentConfig',
+              'checkJsApi',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
+              },
+              function (res) {
+                wx.invoke(
+                  'sendChatMessage',
+                  {
+                    msgtype: 'text', //消息类型，必填
+                    text: {
+                      content: '你好', //文本内容
+                    },
+                    image: {
+                      mediaid: '', //图片的素材id
+                    },
+                  },
+                  function (res) {
+                    if (res.err_msg == 'sendChatMessage:ok') {
+                      //发送成功
+                    }
+                  }
+                )
+              }
+            )
+          })
+        })
     },
     checkDetail(item, index) {
       console.log(item)
@@ -390,7 +452,14 @@ export default {
           this.$network
             .post('/user-service/livecode/delLivecode', v)
             .then((res) => {
-              this.getData()
+              if (res.result) {
+                this.getData()
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.msg,
+                })
+              }
             })
         })
         .catch(() => {

@@ -222,8 +222,10 @@ export default {
         })
     },
     //保存新增
-    saveDialog: _throttle(function () {
-      // console.log(this.addForm)
+    // saveDialog: _throttle(function () {
+    //   // console.log(this.addForm)
+    // }),
+    saveDialog() {
       if (this.addForm.name == null) {
         return
       }
@@ -233,9 +235,14 @@ export default {
           if (res.result) {
             this.getData()
             this.closeDialog()
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg || '保存失败',
+            })
           }
         })
-    }),
+    },
     //保存编辑
     saveEdit() {
       this.$network
@@ -285,7 +292,14 @@ export default {
           this.$network
             .post('/user-service/channel/delChannel', v)
             .then((res) => {
-              this.getData()
+              if (res.result) {
+                this.getData()
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.msg,
+                })
+              }
             })
           // on confirm
         })
