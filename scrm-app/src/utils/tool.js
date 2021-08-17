@@ -18,7 +18,7 @@ export function _debounce(fn, delay) {
 export function _throttle(fn, interval) {
     var last
     var timer
-    var interval = interval || 2000
+    var interval = interval || 5000
     return function() {
         var th = this
         var args = arguments

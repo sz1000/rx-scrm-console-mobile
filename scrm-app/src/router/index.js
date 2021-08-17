@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import HomeTransition from '../views/HomeTransition.vue'
-import Test from '../views/talkTool/test.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
@@ -124,11 +123,7 @@ const routes = [{
                 },
                 component: DetailCules,
             },
-            {
-                path: '/test',
-                name: 'test',
-                component: Test,
-            },
+
             // 客户画像
             {
                 path: 'turnCustomer',

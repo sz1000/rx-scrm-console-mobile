@@ -448,7 +448,7 @@ export default {
     formatDate,
     formatDate,
     changeInput(val) {
-      console.log(val)
+      // console.log(val)
       this.update()
     },
     changeCustom(val) {
@@ -540,8 +540,10 @@ export default {
           ...this.basicInfo,
         })
         .then((res) => {
-          this.$message({ type: 'success', message: '更新成功' })
-          this.getDetailForm()
+          if (res.result) {
+            this.getDetailForm()
+            this.$message({ type: 'success', message: '更新成功' })
+          }
         })
     },
     goBack() {
