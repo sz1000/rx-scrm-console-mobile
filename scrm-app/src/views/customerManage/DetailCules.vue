@@ -15,7 +15,11 @@
         <span>{{ name }}</span>
         <!-- <span>{{nameFrom}}</span> -->
         <img src="../../images/icon_female@2x.png"
-             alt="" />
+             alt=""
+             v-if="basicInfo.gender=='2'" />
+        <img src="../../images/man.png"
+             alt=""
+             v-if="basicInfo.gender=='1'" />
       </div>
     </div>
     <div class="btnWarp">
@@ -415,7 +419,6 @@ export default {
     let tempObj = JSON.parse(localStorage.getItem('detail'))
     console.log(tempObj)
     this.imageUser = tempObj.avatar
-    this.name = tempObj.name
     let tempSystem = this.systemList.map((item) => {
       return {
         name: item.name,
@@ -501,6 +504,7 @@ export default {
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
+          this.name = res.data.clueCustomerEntity.name
           if (res.data.clueCustomerEntity.cropSubIndustry) {
             let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
             this.basicInfo.industry = arr.map(Number)
@@ -518,6 +522,7 @@ export default {
         })
         .then((res) => {
           this.$message({ type: 'success', message: '更新成功' })
+          this.getDetailForm()
         })
     },
     goBack() {
@@ -1165,6 +1170,7 @@ export default {
             border: 2px solid #d9dae4;
             /deep/.van-field__control {
               height: 350px;
+              padding-top: 10px;
             }
           }
         }

@@ -20,69 +20,71 @@
       </span>
     </div>
     <div>
-      <!-- <van-list v-model="loading"
+      <van-list v-model="loading"
                 :finished="finished"
                 finished-text="没有更多了"
-                :immediate-check='false'
                 @load="onLoad"
+                :immediate-check='false'
                 ref="vanlist"
-                :offset="10"> -->
-      <div class="cardCode"
-           v-for="(item,index) in liveList"
-           :key="index">
-        <div class="operationTop">
-          <div class="codeName">
-            <span>活码名称:</span>
-            <span>{{item.name}}</span>
+                :offset="20">
+        <div class="cardCode"
+             v-for="(item,index) in liveList"
+             :key="index">
+          <div class="operationTop">
+            <div class="codeName">
+              <span>活码名称:</span>
+              <span>{{item.name}}</span>
+            </div>
+            <div class="editBtn">
+              <span @click="editBtn(item)">
+                <van-icon name="edit" />
+                编辑
+              </span>
+              <span @click="deleteBtn(item)">
+                <van-icon name="delete-o" />
+                删除
+              </span>
+            </div>
           </div>
-          <div class="editBtn">
-            <span @click="editBtn(item)">
-              <van-icon name="edit" />
-              编辑
-            </span>
-            <span @click="deleteBtn(item)">
-              <van-icon name="delete-o" />
-              删除
-            </span>
+          <div class="contentBox">
+            <div class="leftCode">
+              <img :src="item.address"
+                   alt="">
+              <div class="shareCode"
+                   @click="sendCode(item,index)">
+                <span> <img src="../../images/send.png"
+                       alt=""></span>
+                发送二维码
+              </div>
+            </div>
+            <div class="rightInfo"
+                 @click="checkDetail(item,index)">
+              <div class="rowText">
+                <span>渠道:</span>
+                <span>{{item.chName}}</span>
+              </div>
+              <div class="rowText">
+                <span>创建人员:</span>
+                <span>{{item.createBy}}</span>
+              </div>
+              <div class="rowText">
+                <span>创建时间:</span>
+                <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+              </div>
+              <div class="rowText">
+                <span>使用员工:</span>
+                <span>{{item.userNames}}</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="contentBox">
-          <div class="leftCode">
-            <img :src="item.address"
-                 alt="">
-            <div class="shareCode"
-                 @click="sendCode(item,index)">
-              <span> <img src="../../images/send.png"
-                     alt=""></span>
-              发送二维码
-            </div>
-          </div>
-          <div class="rightInfo"
-               @click="checkDetail(item,index)">
-            <div class="rowText">
-              <span>渠道:</span>
-              <span>{{item.chName}}</span>
-            </div>
-            <div class="rowText">
-              <span>创建人员:</span>
-              <span>{{item.createBy}}</span>
-            </div>
-            <div class="rowText">
-              <span>创建时间:</span>
-              <span>{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
-            </div>
-            <div class="rowText">
-              <span>使用员工:</span>
-              <span>{{item.userNames}}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- </van-list> -->
+      </van-list>
     </div>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
-                        :title="titleName">
+                        :title="titleName"
+                        :overlay='overlay'
+                        :get-container="getContainer">
         <div class="content">
           <div class="addForm">
             <el-form ref="form"
@@ -121,7 +123,9 @@
                              @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
               </el-form-item>
 
-              <el-form-item label="渠道:">
+              <el-form-item label="渠道:"
+                            prop="chId"
+                            :rules="[ { required: true, message: '请选择',trigger:'change'}]">
                 <el-select v-model="addForm.chId"
                            placeholder="请选择"
                            @change="changeChannel"
@@ -152,7 +156,9 @@
         </div>
       </van-action-sheet>
       <van-action-sheet v-model="showEdit"
-                        :title="titleName">
+                        :title="titleName"
+                        :overlay='overlay'
+                        :get-container="getContainer">
         <div class="content">
           <div class="addForm">
             <el-form ref="form"
@@ -191,13 +197,15 @@
               </el-form-item>
 
               <el-form-item label="添加设置:">
-                <el-checkbox v-model="editForm.checked"
+                <el-checkbox v-model="editForm.status"
                              true-label='1'
                              false-label='0'
                              @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
               </el-form-item>
 
-              <el-form-item label="渠道:">
+              <el-form-item label="渠道:"
+                            prop="chId"
+                            :rules="[ { required: true, message: '请选择',trigger:'change'}]">
                 <el-select v-model="editForm.chId"
                            placeholder="请选择"
                            @change="changeChannel"
@@ -228,7 +236,8 @@
         </div>
       </van-action-sheet>
       <van-action-sheet v-model="showDetail"
-                        :title="titleName">
+                        :title="titleName"
+                        :overlay='overlay'>
         <div class="content">
           <div class="codeDetail">
             <el-form label-position="right"
@@ -238,10 +247,13 @@
                 <img :src="detailForm.address"
                      alt="" />
               </el-form-item>
+              <el-form-item label="活码名称:">
+                <span>{{ detailForm.name }}</span>
+              </el-form-item>
               <el-form-item label="使用员工:">
                 <span>{{ detailForm.userNames }}</span>
               </el-form-item>
-              <el-form-item label="创建人:">
+              <el-form-item label="创建人员:">
                 <span>{{ detailForm.createBy }}</span>
               </el-form-item>
               <el-form-item label="创建时间:">
@@ -250,7 +262,8 @@
               <el-form-item label="渠道:">
                 <span>{{ detailForm.chName }}</span>
               </el-form-item>
-              <el-form-item label="备注:">
+              <el-form-item label="备注:"
+                            class="remark">
                 <span>{{ detailForm.remark }}</span>
               </el-form-item>
             </el-form>
@@ -286,6 +299,7 @@ export default {
       page: 1, //请求第几页
       pageSize: 10, //每页请求的数量
       total: 0, //总共的数据条数
+      overlay: true,
     }
   },
   created() {
@@ -293,8 +307,10 @@ export default {
   },
   methods: {
     formatDate,
+    getContainer() {
+      return document.querySelector('.bottom_model')
+    },
     onLoad() {
-      console.log('----gundong------')
       this.page++
       this.getData()
     },
@@ -302,39 +318,38 @@ export default {
       this.$network
         .get('/user-service/livecode/getLivecodeList', {
           page: this.page,
-          limit: 10,
+          limit: this.pageSize,
         })
         .then((res) => {
+          this.liveList = []
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表
           this.total = res.data.iPage.total
-          this.liveList = rows
-          console.log(this.page)
-          // if (this.page > 1) {
-          //   if (rows == null || rows.length === 0) {
-          //     // 加载结束
-          //     this.finished = true
-          //     return
-          //   }
-          //   // 将新数据与老数据进行合并
-          //   this.liveList = this.liveList.concat(rows)
-          //   //如果列表数据条数>=总条数，不再触发滚动加载
-          //   if (this.liveList.length >= this.total) {
-          //     this.finished = true
-          //   }
-          // } else {
-          //   this.liveList = rows
-          // }
+          if (rows == null || rows.length === 0) {
+            this.finished = true
+            return
+          }
+          // this.liveList = this.liveList.concat(rows)
+          let newSetArr = this.liveList.concat(rows)
+          this.liveList = this.unique(newSetArr)
+          if (this.liveList.length >= this.total) {
+            this.finished = true
+          }
         })
+    },
+    unique(arr) {
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
     goBack() {
       this.$router.go(-1)
     },
     addCode() {
-      this.addForm = {}
       this.showAdd = true
       this.titleName = '新增企微活码'
-      this.getSelect()
+      this.$nextTick(() => {
+        this.getSelect()
+      })
     },
     getSelect() {
       this.$network.get('/user-service/livecode/toadd').then((res) => {
@@ -433,7 +448,7 @@ export default {
         })
     },
     checkDetail(item, index) {
-      console.log(item)
+      // console.log(item)
       this.titleName = '企微活码详情'
       this.showDetail = true
       this.detailForm = item
@@ -453,6 +468,8 @@ export default {
             .post('/user-service/livecode/delLivecode', v)
             .then((res) => {
               if (res.result) {
+                this.page = 1
+                this.liveList = []
                 this.getData()
               } else {
                 this.$message({
@@ -480,8 +497,16 @@ export default {
       this.$network
         .post('/user-service/livecode/addLivecode', params)
         .then((res) => {
-          this.getData()
-          this.showAdd = false
+          if (res.result) {
+            this.getData()
+            this.showAdd = false
+            this.addForm = {}
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg || '保存失败',
+            })
+          }
         })
     }, 2000),
     saveEdit: _throttle(function () {
@@ -677,6 +702,9 @@ export default {
       }
     }
     .bottom_model {
+      /deep/.van-overlay {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
       .van-action-sheet__header {
         height: 88px;
         line-height: 88px;
@@ -691,7 +719,7 @@ export default {
         // padding: 24px;
         .addForm,
         .codeDetail {
-          height: 800px;
+          // height: 800px;
           box-sizing: border-box;
           padding: 24px;
           font-size: 28px;
@@ -716,7 +744,8 @@ export default {
             .el-form-item__content {
               flex: 1;
               height: 80px;
-
+              line-height: 80px;
+              word-break: break-all;
               .el-input__inner {
                 height: 80px;
                 border-radius: 8px;
@@ -728,6 +757,15 @@ export default {
                 width: 100%;
                 // width: 562px;
                 height: 80px;
+              }
+              .el-select {
+                .el-tag--small {
+                  height: 50px;
+                  line-height: 50px;
+                }
+                .el-tag {
+                  font-size: 28px;
+                }
               }
               .el-checkbox {
                 width: 100%;
@@ -772,6 +810,7 @@ export default {
           }
         }
         .codeDetail {
+          height: 100%;
           /deep/.el-form {
             .codeImg {
               margin-bottom: 100px !important;
@@ -788,7 +827,7 @@ export default {
             }
             span {
               font-size: 24px;
-              line-height: 80px;
+              // line-height: 80px;
             }
           }
         }

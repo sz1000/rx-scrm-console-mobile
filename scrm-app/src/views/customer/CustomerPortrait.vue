@@ -338,6 +338,16 @@ export default {
                     //错误处理
                   }
                 })
+                wx.invoke('getContext', {}, function (res) {
+                  alert(JSON.stringify(res))
+                  alert(JSON.stringify(res.entry))
+                  if (res.err_msg == 'getContext:ok') {
+                    // entry = res.entry
+                    // shareTicket = res.shareTicket
+                  } else {
+                    //错误处理
+                  }
+                })
               }
             )
           })

@@ -19,50 +19,50 @@
         新增
       </span>
     </div>
-    <!-- :immediate-check="false" -->
-    <!-- <van-list v-model="loading"
+
+    <van-list v-model="loading"
               :finished="finished"
               :immediate-check='false'
               finished-text="没有更多了"
               @load="onLoad"
-              :offset="10"> -->
-    <div class="cardCode"
-         v-for="(item,index) in channelList"
-         :key="index">
-      <div class="operationTop">
-        <div class="codeName">
-          <span>渠道名称:</span>
-          <span>{{item.name}}</span>
+              :offset="20">
+      <div class="cardCode"
+           v-for="(item,index) in channelList"
+           :key="index">
+        <div class="operationTop">
+          <div class="codeName">
+            <span>渠道名称:</span>
+            <span>{{item.name}}</span>
+          </div>
+          <div class="editBtn">
+            <span @click="editBtn(item)">
+              <van-icon name="edit" />
+              编辑
+            </span>
+            <span @click="deleteBtn(item)">
+              <van-icon name="delete-o" />
+              删除
+            </span>
+          </div>
         </div>
-        <div class="editBtn">
-          <span @click="editBtn(item)">
-            <van-icon name="edit" />
-            编辑
-          </span>
-          <span @click="deleteBtn(item)">
-            <van-icon name="delete-o" />
-            删除
-          </span>
-        </div>
-      </div>
-      <div class="contentBox"
-           @click="channelDetail(item,index)">
-        <div class="codeNum">
-          <span>活码数:</span>
-          <span>{{item.livecodeSum}}</span>
-        </div>
-        <div class="codeNum">
-          <span>添加客户数:</span>
-          <span>{{item.userSum}}</span>
-        </div>
-        <div class="welcomelable">
-          <span>渠道欢迎语:</span>
-          <span>{{item.welText}}</span>
-        </div>
+        <div class="contentBox"
+             @click="channelDetail(item,index)">
+          <div class="codeNum">
+            <span>活码数:</span>
+            <span>{{item.livecodeSum}}</span>
+          </div>
+          <div class="codeNum">
+            <span>添加客户数:</span>
+            <span>{{item.cusSum}}</span>
+          </div>
+          <div class="welcomelable">
+            <span>渠道欢迎语:</span>
+            <span>{{item.welText}}</span>
+          </div>
 
+        </div>
       </div>
-    </div>
-    <!-- </van-list> -->
+    </van-list>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
                         :title="titleName">
@@ -84,7 +84,7 @@
                 <el-input type="textarea"
                           v-model="addForm.welText"
                           placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
-                          maxlength="300"
+                          maxlength="200"
                           show-word-limit></el-input>
               </el-form-item>
             </el-form>
@@ -109,7 +109,7 @@
                             :rules="[ { required: true, message: '请输入渠道名称',trigger:'blur'}]">
                 <el-input v-model="editForm.name"
                           placeholder="请输入渠道名称"
-                          maxlength="12"
+                          maxlength="20"
                           show-word-limit></el-input>
               </el-form-item>
               <el-form-item label="欢迎语:"
@@ -117,7 +117,7 @@
                 <el-input type="textarea"
                           v-model="editForm.welText"
                           placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
-                          maxlength="300"
+                          maxlength="200"
                           show-word-limit></el-input>
               </el-form-item>
             </el-form>
@@ -137,13 +137,13 @@
             <el-form label-position="right"
                      :model="detailForm">
               <el-form-item label="渠道名称:">
-                <span>{{ detailForm.userNames }}</span>
+                <span>{{ detailForm.name }}</span>
               </el-form-item>
               <el-form-item label="活码数:">
-                <span>{{ detailForm.userNames }}</span>
+                <span>{{ detailForm.livecodeSum }}</span>
               </el-form-item>
               <el-form-item label="添加客户数:">
-                <span>{{ detailForm.createBy }}</span>
+                <span>{{ detailForm.cusSum }}</span>
               </el-form-item>
               <el-form-item label="客户最近添加时间:">
                 <span>{{ formatDate( detailForm.createTime ,'yyyy-MM-dd') }}</span>
@@ -155,7 +155,7 @@
                 <span>{{ formatDate( detailForm.createTime ,'yyyy-MM-dd') }}</span>
               </el-form-item>
               <el-form-item label="渠道欢迎语:">
-                <span>{{ detailForm.remark }}</span>
+                <span>{{ detailForm.welText }}</span>
               </el-form-item>
             </el-form>
           </div>
@@ -176,8 +176,8 @@ export default {
       titleName: '',
       addForm: {},
       editForm: {
-        creatBy: 'hahah',
-        creatTime: 1628660777971,
+        creatBy: '',
+        creatTime: '',
       },
       detailForm: {},
       loading: false,
@@ -193,35 +193,35 @@ export default {
   methods: {
     formatDate,
     onLoad() {
-      // console.log(1111111111)
       this.page++
       this.getData()
     },
     getData() {
       this.$network
-        .get('/user-service/channel/getChannelList', { page: this.page })
+        .get('/user-service/channel/getChannelList', {
+          page: this.page,
+          limit: this.pageSize,
+        })
         .then((res) => {
-          // console.log(res)
-          let rows = res.data.channelEntityPage.records //请求返回当页的列表
           this.loading = false
-          this.channelList = rows
+          let rows = res.data.channelEntityPage.records //请求返回当页的列表
           this.total = res.data.channelEntityPage.total
-
-          // if (rows == null || rows.length === 0) {
-          //   // 加载结束
-          //   this.finished = true
-          //   return
-          // }
-          // // 将新数据与老数据进行合并
-          // // this.channelList = this.channelList.concat(rows)
-          // this.channelList = rows
-          // //如果列表数据条数>=总条数，不再触发滚动加载
-          // if (this.channelList.length >= this.total) {
-          //   this.finished = true
-          // }
+          if (rows == null || rows.length === 0) {
+            this.finished = true
+            return
+          }
+          let newSetArr = this.channelList.concat(rows)
+          this.channelList = this.unique(newSetArr)
+          if (this.channelList.length >= this.total) {
+            this.finished = true
+          }
         })
     },
-    //保存新增
+    //去重一次
+    unique(arr) {
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
+    },
     // saveDialog: _throttle(function () {
     //   // console.log(this.addForm)
     // }),
@@ -275,8 +275,10 @@ export default {
       this.editForm = item
     },
     channelDetail(item, index) {
+      console.log(item)
       this.titleName = '渠道详情'
       this.showDetail = true
+      this.detailForm = item
     },
     deleteBtn(v) {
       this.$dialog
@@ -293,6 +295,8 @@ export default {
             .post('/user-service/channel/delChannel', v)
             .then((res) => {
               if (res.result) {
+                this.page = 1
+                this.channelList = []
                 this.getData()
               } else {
                 this.$message({
@@ -461,6 +465,7 @@ export default {
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 3;
             overflow: hidden;
+            word-break: break-all;
           }
         }
       }
@@ -504,7 +509,8 @@ export default {
             .el-form-item__content {
               flex: 1;
               height: 80px;
-
+              word-break: break-all;
+              line-height: 80px;
               .el-input__inner {
                 height: 80px;
                 border-radius: 8px;
@@ -559,6 +565,7 @@ export default {
           }
         }
         .codeDetail {
+          height: 100%;
           /deep/.el-form {
             .el-form-item__label {
               width: 216px;
