@@ -119,7 +119,8 @@
                  alt="">
             <span>联系人信息</span>
           </div>
-          <el-form-item label="姓名">
+          <el-form-item label="姓名"
+                        class="nameBorder">
             <el-input v-model="basicInfo.name"
                       maxlength="15"
                       placeholder="请输入"
@@ -604,16 +605,20 @@ export default {
       .formEdit {
         padding: 24px 0;
         /deep/.van-form {
-          border: 1px solid #f0f2f7;
+          border: 2px solid #f0f2f7;
           .van-cell {
             padding: 0;
             font-size: 28px;
+            border: 1px solid #f0f2f7;
+            &::after {
+              border-bottom: 0;
+            }
           }
           .van-field__label {
             width: 234px;
             height: 80px;
             background: #fafbff;
-            border: 1px solid #f0f2f7;
+            border-right: 1px solid #f0f2f7;
             line-height: 80px;
           }
           .van-field__body {
@@ -653,7 +658,8 @@ export default {
             text-align: center;
           }
           .el-form-item__content {
-            width: 562px;
+            // width: 562px;
+            flex: 1;
             height: 80px;
 
             .el-input__inner {

@@ -33,70 +33,69 @@
             @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <!-- <van-list v-model="loading"
+      <van-list v-model="loading"
                 :finished="finished"
                 :immediate-check='false'
                 finished-text="没有更多了"
                 @load="onLoad"
-                ref="vanlist"
-                :offset="10"> -->
-      <div class="topInfo"
-           v-for="(item,index) in cardList"
-           :key="index">
-        <div class="customInfo">
-          <div class="iconName">
-            <span>客户简称:</span>
-            <span>{{item.customerName}}</span>
-          </div>
-          <!-- <div class="detailBtn"
+                :offset="20">
+        <div class="topInfo"
+             v-for="(item,index) in cardList"
+             :key="index">
+          <div class="customInfo">
+            <div class="iconName">
+              <span>客户简称:</span>
+              <span>{{item.customerName}}</span>
+            </div>
+            <!-- <div class="detailBtn"
                @click="deleteCard(item,index)">
             <van-icon name="delete-o" />
             删除
           </div> -->
+          </div>
+          <div class="detailInfo"
+               @click="goDetail(item,index)">
+            <div class="left">
+              <div class="rowStyle">
+                <span>公司名称:</span>
+                <span>{{item.cropFullName}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>所属行业:</span>
+                <span>{{item.cropSubIndustry}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>联系人员:</span>
+                <span>{{item.name}}</span>
+              </div>
+            </div>
+            <div class="right">
+              <div class="rowStyle">
+                <span>职务:</span>
+                <span>{{item.position}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>性别:</span>
+                <span>{{item.gender == '1' ? '男':'女'}}</span>
+              </div>
+              <div class="rowStyle">
+                <span>邮箱:</span>
+                <span>{{item.email}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="tjry">
+            <div class="box">
+              <span class="label">添加人员:</span>
+              <span class="value">{{item.createBy}}</span>
+            </div>
+            <div class="box1">
+              <span class="label">添加时间:</span>
+              <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
+            </div>
+          </div>
         </div>
-        <div class="detailInfo"
-             @click="goDetail(item,index)">
-          <div class="left">
-            <div class="rowStyle">
-              <span>公司名称:</span>
-              <span>{{item.cropFullName}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>所属行业:</span>
-              <span>{{item.cropSubIndustry}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>联系人员:</span>
-              <span>{{item.name}}</span>
-            </div>
-          </div>
-          <div class="right">
-            <div class="rowStyle">
-              <span>职务:</span>
-              <span>{{item.position}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>性别:</span>
-              <span>{{item.gender == '1' ? '男':'女'}}</span>
-            </div>
-            <div class="rowStyle">
-              <span>邮箱:</span>
-              <span>{{item.email}}</span>
-            </div>
-          </div>
-        </div>
-        <div class="tjry">
-          <div class="box">
-            <span class="label">添加人员:</span>
-            <span class="value">{{item.createBy}}</span>
-          </div>
-          <div class="box1">
-            <span class="label">添加时间:</span>
-            <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')}}</span>
-          </div>
-        </div>
-      </div>
-      <!-- </van-list> -->
+      </van-list>
     </div>
   </div>
 </template>
@@ -134,7 +133,7 @@ export default {
       this.getListData()
     },
     onLoad() {
-      console.log('----gundong------')
+      // console.log('----gundong------')
       this.page++
       this.getListData()
     },
@@ -144,35 +143,30 @@ export default {
         .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           type: this.type,
           page: this.page,
+          limit: this.pageSize,
           allname: this.inputValue,
         })
         .then((res) => {
-          this.cardList = []
+          // this.cardList = []
+          // this.loading = false
+          // this.cardList = res.data.iPage.records
+          this.total = res.data.iPage.total
           this.loading = false
-          this.cardList = res.data.iPage.records
-          // if (res.data.iPage.records.length) {
-          //   this.cardList = res.data.iPage.records
-          // } else {
-          //   this.finished = true
-          // }
-          // let rows = res.data.iPage.records //请求返回当页的列表
-          // this.total = res.data.iPage.total
-          // if (this.page > 1) {
-          //   if (rows == null || rows.length === 0) {
-          //     // 加载结束
-          //     this.finished = true
-          //     return
-          //   }
-          //   // 将新数据与老数据进行合并
-          //   this.cardList = this.cardList.concat(rows)
-          //   //如果列表数据条数>=总条数，不再触发滚动加载
-          //   if (this.cardList.length >= this.total) {
-          //     this.finished = true
-          //   }
-          // } else {
-          //   this.cardList = rows
-          // }
+          let rows = res.data.iPage.records //请求返回当页的列表
+          if (rows == null || rows.length === 0) {
+            this.finished = true
+            return
+          }
+          let newSetArr = this.cardList.concat(rows)
+          this.cardList = this.unique(newSetArr)
+          if (this.cardList.length >= this.total) {
+            this.finished = true
+          }
         })
+    },
+    unique(arr) {
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
     goBack() {
       this.$router.go(-1)
