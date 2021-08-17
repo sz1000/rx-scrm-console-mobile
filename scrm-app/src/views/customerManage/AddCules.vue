@@ -106,7 +106,7 @@ export default {
         wechat: '',
         position: '',
         gender: '',
-        industry: '',
+        cropSubIndustry: '',
         address: '',
         source: '',
         remark: '',
@@ -136,13 +136,18 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.formObj.type = this.type
-          console.log(this.formObj)
-
+          this.formObj.cropSubIndustry = this.formObj.cropSubIndustry.toString()
+          // console.log(this.formObj)
           this.$network
             .post('/customer-service/cluecustomer/addCul', this.formObj)
             .then((res) => {
               if (res.result) {
                 this.$router.go(-1)
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res.msg || '新增失败',
+                })
               }
             })
         } else {
@@ -220,7 +225,7 @@ export default {
         height: 100%;
         .el-form-item {
           display: flex;
-          margin-bottom: 26px;
+          margin-bottom: 35px;
         }
         .el-form-item__label {
           width: 140px;

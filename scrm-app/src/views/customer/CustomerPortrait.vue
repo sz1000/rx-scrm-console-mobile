@@ -161,7 +161,7 @@
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
                 <span class="creatTag"
-                      :class="{ 'changeTag': highLightArr.includes(list) }"
+                      :class="{ 'changeTag': highLightArr.findIndex(item=>{return item.tagid == list.tagid})>-1}"
                       v-for="(list, index) in item.children"
                       :key="list.id"
                       v-show="list.name"
@@ -387,6 +387,7 @@ export default {
         })
     },
     getTagList() {
+      this.highLightArr = []
       this.$network
         .get('/customer-service/cluecustomer/gettag', {
           clueCustomerNo: this.userId,
@@ -395,6 +396,18 @@ export default {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+          this.companyTagList.forEach((item) => {
+            this.groupList.forEach((v, i) => {
+              if (item.parenttag == v.tagid) {
+                this.groupList[i].children.forEach((chItem, chIndex) => {
+                  if (item.tagid == chItem.tagid) {
+                    this.highLightArr.push(chItem)
+                  }
+                })
+              }
+            })
+            // console.log(this.highLightArr)
+          })
         })
     },
     showCompany(v) {
@@ -428,10 +441,16 @@ export default {
       this.isShow = false
     },
     selectTag(list, index) {
-      // console.log(list, index)
-      if (this.highLightArr.includes(list.id)) {
-        let p = this.highLightArr.indexOf(list.id)
-        this.highLightArr.splice(p, 1)
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid
+      })
+      if (result > -1) {
+        // console.log(111111111111)
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1)
+          }
+        })
       } else {
         this.highLightArr.push(list)
       }
@@ -462,7 +481,17 @@ export default {
             `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
             this.highLightArr
           )
-          .then((res) => {})
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.getTagList()
+            } else {
+              this.message({
+                type: 'error',
+                message: '添加失败',
+              })
+            }
+          })
       } else if (v == 2) {
         this.$network
           .post('/customer-service/cluecustomer/updPertag', this.personTagList)

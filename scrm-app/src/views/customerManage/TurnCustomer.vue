@@ -38,13 +38,15 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户类型:">
+        <el-form-item label="客户类型:"
+                      prop="customerType"
+                      :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
           <el-select v-model="formObj.customerType"
                      placeholder="请选择"
                      @change="changeCustom"
                      clearable>
             <el-option v-for="item in optionsCustom"
-                       :key="item.value"
+                       :key="item.customerType"
                        :label="item.label"
                        :value="item.customerType">
             </el-option>
@@ -167,6 +169,7 @@ export default {
       },
       optionSource: [],
       optionsCustom: [
+        { label: '未知', customerType: 0 },
         { label: '微信用户', customerType: 1 },
         { label: '企微用户', customerType: 2 },
       ],
@@ -185,6 +188,7 @@ export default {
         })
         .then((res) => {
           this.formObj = res.data.clueCustomerEntity
+
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
@@ -306,7 +310,7 @@ export default {
         height: 100%;
         .el-form-item {
           display: flex;
-          margin-bottom: 26px;
+          margin-bottom: 35px;
         }
         .el-form-item__label {
           width: 155px;

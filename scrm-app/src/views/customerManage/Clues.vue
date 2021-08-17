@@ -33,69 +33,80 @@
             @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <div class="topInfo"
-           v-for="(item, index) in cardList"
-           :key="index">
-        <div class="customInfo">
-          <div class="iconName">
-            <!-- <div class="flag">{{ item.avatar }}</div> -->
-            <img :src="item.avatar"
-                 alt=""
-                 class="flag" />
-            <div class="nameSex">
-              <span>{{ item.name }}</span>
-              <!-- <span>{{item.nameFrom}}</span> -->
-              <img src="../../images/icon_female@2x.png"
-                   alt="" />
+      <van-list v-model="loading"
+                :finished="finished"
+                :immediate-check='false'
+                finished-text="没有更多了"
+                @load="onLoad"
+                :offset="20">
+        <div class="topInfo"
+             v-for="(item, index) in cardList"
+             :key="index">
+          <div class="customInfo">
+            <div class="iconName">
+              <img :src="item.avatar"
+                   alt=""
+                   v-if="item.avatar" />
+              <div class="flag"
+                   v-else>{{ item.name.substr(0,1) }}</div>
+              <div class="nameSex">
+                <span>{{ item.name }}</span>
+                <img src="../../images/icon_female@2x.png"
+                     alt=""
+                     v-show="item.gender == '2'" />
+                <img src="../../images/man.png"
+                     alt=""
+                     v-show="item.gender == '1'" />
+              </div>
             </div>
-          </div>
-          <!-- <div class="detailBtn" @click="deleteCard(item, index)">
+            <!-- <div class="detailBtn" @click="deleteCard(item, index)">
             <van-icon name="delete-o" />
             删除
           </div> -->
+          </div>
+          <div class="detailInfo"
+               @click="goDetail(item, index)">
+            <div class="left">
+              <div class="rowStyle">
+                <span>邮箱:</span>
+                <span>{{ item.email }}</span>
+              </div>
+              <div class="rowStyle">
+                <span>来源:</span>
+                <span>{{ item.source }}</span>
+              </div>
+              <div class="rowStyle">
+                <span>职务:</span>
+                <span>{{ item.position }}</span>
+              </div>
+            </div>
+            <div class="right">
+              <div class="rowStyle">
+                <span>手机号码:</span>
+                <span>{{ item.phone }}</span>
+              </div>
+              <div class="rowStyle">
+                <span>公司名称:</span>
+                <span>{{ item.cropFullName }}</span>
+              </div>
+              <div class="rowStyle">
+                <span>所属行业:</span>
+                <span>{{ item.cropSubIndustry }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="tjry">
+            <div class="box">
+              <span class="label">添加人员:</span>
+              <span class="value">{{ item.createBy }}</span>
+            </div>
+            <div class="box1">
+              <span class="label">添加时间:</span>
+              <span class="value">{{ formatDate(item.createTime,'yyyy-MM-dd') }}</span>
+            </div>
+          </div>
         </div>
-        <div class="detailInfo"
-             @click="goDetail(item, index)">
-          <div class="left">
-            <div class="rowStyle">
-              <span>邮箱:</span>
-              <span>{{ item.email }}</span>
-            </div>
-            <div class="rowStyle">
-              <span>来源:</span>
-              <span>{{ item.source }}</span>
-            </div>
-            <div class="rowStyle">
-              <span>职务:</span>
-              <span>{{ item.position }}</span>
-            </div>
-          </div>
-          <div class="right">
-            <div class="rowStyle">
-              <span>手机号码:</span>
-              <span>{{ item.phone }}</span>
-            </div>
-            <div class="rowStyle">
-              <span>公司名称:</span>
-              <span>{{ item.cropFullName }}</span>
-            </div>
-            <div class="rowStyle">
-              <span>所属行业:</span>
-              <span>{{ item.cropSubIndustry }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="tjry">
-          <div class="box">
-            <span class="label">添加人员:</span>
-            <span class="value">{{ item.createBy }}</span>
-          </div>
-          <div class="box1">
-            <span class="label">添加时间:</span>
-            <span class="value">{{ formatDate(item.createTime,'yyyy-MM-dd') }}</span>
-          </div>
-        </div>
-      </div>
+      </van-list>
     </div>
   </div>
 </template>
@@ -107,11 +118,15 @@ export default {
       tabClick: 1,
       inputValue: '',
       cardList: [],
+      loading: false,
+      finished: false,
+      page: 1, //请求第几页
+      pageSize: 10, //每页请求的数量
+      total: 0, //总共的数据条数
     }
   },
   watch: {
     inputValue(val) {
-      // console.log(val)
       if (val == '') {
         this.getData()
       }
@@ -122,32 +137,38 @@ export default {
   },
   methods: {
     formatDate,
+    onLoad() {
+      this.page++
+      this.getData()
+    },
     getData() {
       // console.log(this.tabClick)
       this.$network
         .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           page: this.page,
+          limit: this.pageSize,
           type: this.tabClick,
+          allname: this.inputValue,
         })
         .then((res) => {
           // this.cardList = res.data;
-          let rows = res.data.iPage.records //请求返回当页的列表
-          this.loading = false
           this.total = res.data.iPage.total
-
+          this.loading = false
+          let rows = res.data.iPage.records //请求返回当页的列表
           if (rows == null || rows.length === 0) {
-            // 加载结束
             this.finished = true
             return
           }
-          // 将新数据与老数据进行合并
-          // this.cardList = this.cardList.concat(rows)
-          this.cardList = rows
-          //如果列表数据条数>=总条数，不再触发滚动加载
+          let newSetArr = this.cardList.concat(rows)
+          this.cardList = this.unique(newSetArr)
           if (this.cardList.length >= this.total) {
             this.finished = true
           }
         })
+    },
+    unique(arr) {
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
     goBack() {
       this.$router.go(-1)
@@ -168,25 +189,7 @@ export default {
       this.getData()
     },
     inquire: _throttle(function () {
-      this.$network
-        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
-          page: 1,
-          type: this.tabClick,
-          allname: this.inputValue,
-        })
-        .then((res) => {
-          // this.cardList = res.data;
-          let rows = res.data.iPage.records //请求返回当页的列表
-          this.loading = false
-          this.total = res.data.iPage.total
-          // 将新数据与老数据进行合并
-          // this.cardList = this.cardList.concat(rows)
-          this.cardList = rows
-          //如果列表数据条数>=总条数，不再触发滚动加载
-          if (this.cardList.length >= this.total) {
-            this.finished = true
-          }
-        })
+      this.getData()
     }, 2000),
     deleteCard(item, index) {
       this.$dialog
@@ -336,10 +339,14 @@ export default {
           align-items: center;
           .iconName {
             display: flex;
+            img {
+              width: 88px;
+              height: 88px;
+            }
             .flag {
               width: 88px;
               height: 88px;
-              // background: #4168f6;
+              background: #4168f6;
               border-radius: 12px;
               text-align: center;
               line-height: 88px;
@@ -442,6 +449,7 @@ export default {
           .box1 {
             display: flex;
             width: 50%;
+            line-height: 87px;
             margin-left: 29px;
           }
         }

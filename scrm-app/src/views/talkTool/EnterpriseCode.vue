@@ -346,6 +346,7 @@ export default {
     },
     addCode() {
       this.showAdd = true
+      this.addForm.status = '1'
       this.titleName = '新增企微活码'
       this.$nextTick(() => {
         this.getSelect()
@@ -365,7 +366,7 @@ export default {
       console.log(val)
     },
     editBtn(v) {
-      console.log(v)
+      // console.log(v)
       this.titleName = '编辑企微活码'
       this.showEdit = true
       this.editForm = v
@@ -384,7 +385,19 @@ export default {
     },
     sendCode(item, index) {
       console.log(item, index)
-
+      this.$network
+        .get('/user-service/m/user/getmaterial', {
+          url: item.address,
+          livecodeNo: item.livecodeNo,
+        })
+        .then((res) => {
+          if (res.result) {
+            let mediaid = res.data
+            this.sendMessage(mediaid)
+          }
+        })
+    },
+    sendMessage(mediaid) {
       this.$network
         .get('/user-service/m/user/getticket', {
           url: location.href,
@@ -428,12 +441,12 @@ export default {
                 wx.invoke(
                   'sendChatMessage',
                   {
-                    msgtype: 'text', //消息类型，必填
+                    msgtype: 'image', //消息类型，必填
                     text: {
                       content: '你好', //文本内容
                     },
                     image: {
-                      mediaid: '', //图片的素材id
+                      mediaid: mediaid, //图片的素材id
                     },
                   },
                   function (res) {

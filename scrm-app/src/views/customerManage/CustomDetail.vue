@@ -286,7 +286,7 @@
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
                 <span class="creatTag"
-                      :class="{'changeTag':highLightArr.includes(list)}"
+                      :class="{'changeTag':highLightArr.findIndex(item=>{return item.tagid == list.tagid})>-1}"
                       v-for="(list,index) in item.children"
                       :key="list.id"
                       v-show="list.name"
@@ -363,7 +363,7 @@
   </div>
 </template>
 <script>
-import { formatDate } from '../../utils/tool'
+import { formatDate, _throttle } from '../../utils/tool'
 export default {
   data() {
     return {
@@ -508,6 +508,7 @@ export default {
         })
     },
     getTagList() {
+      this.highLightArr = []
       this.$network
         .get('/customer-service/cluecustomer/gettag', {
           clueCustomerNo: this.objItem.clueCustomerNo,
@@ -516,6 +517,18 @@ export default {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+          this.companyTagList.forEach((item) => {
+            this.groupList.forEach((v, i) => {
+              if (item.parenttag == v.tagid) {
+                this.groupList[i].children.forEach((chItem, chIndex) => {
+                  if (item.tagid == chItem.tagid) {
+                    this.highLightArr.push(chItem)
+                  }
+                })
+              }
+            })
+            // console.log(this.highLightArr)
+          })
         })
     },
     processTree(data) {
@@ -592,10 +605,17 @@ export default {
       this.isShow = false
     },
     selectTag(list, index) {
-      // console.log(list, index)
-      if (this.highLightArr.includes(list.id)) {
-        let p = this.highLightArr.indexOf(list.id)
-        this.highLightArr.splice(p, 1)
+      // console.log(list)
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid
+      })
+      if (result > -1) {
+        // console.log(111111111111)
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1)
+          }
+        })
       } else {
         this.highLightArr.push(list)
       }
@@ -692,15 +712,24 @@ export default {
       } else if (v == 4) {
       }
     },
-    saveDialog(v) {
+    saveDialog: _throttle(function (v) {
       if (v == 1) {
-        // console.log(this.highLightArr)
         this.$network
           .post(
             `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
             this.highLightArr
           )
-          .then((res) => {})
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.getTagList()
+            } else {
+              this.message({
+                type: 'error',
+                message: '添加失败',
+              })
+            }
+          })
       } else if (v == 2) {
         this.$network
           .post('/customer-service/cluecustomer/updPertag', this.personTagList)
@@ -753,7 +782,7 @@ export default {
             }
           })
       }
-    },
+    }, 2000),
   },
 }
 </script>

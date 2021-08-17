@@ -149,7 +149,7 @@
                 <span>{{ formatDate( detailForm.createTime ,'yyyy-MM-dd') }}</span>
               </el-form-item>
               <el-form-item label="渠道创建人:">
-                <span>{{ detailForm.chName }}</span>
+                <span>{{ detailForm.createBy }}</span>
               </el-form-item>
               <el-form-item label="创建时间:">
                 <span>{{ formatDate( detailForm.createTime ,'yyyy-MM-dd') }}</span>

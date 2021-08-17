@@ -9,11 +9,16 @@
       <span class="textTitle">线索详情</span>
     </div>
     <div class="iconName">
-      <div class="flag"><img :src="imageUser"
-             alt="" /></div>
+      <div v-if="imageUser">
+        <img :src="imageUser"
+             alt="" />
+      </div>
+      <div class="flag"
+           v-else>
+        {{name ? name.substr(0,1) : ''}}
+      </div>
       <div class="nameSex">
         <span>{{ name }}</span>
-        <!-- <span>{{nameFrom}}</span> -->
         <img src="../../images/icon_female@2x.png"
              alt=""
              v-if="basicInfo.gender=='2'" />
@@ -257,7 +262,7 @@
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
                 <span class="creatTag"
-                      :class="{ 'changeTag': highLightArr.includes(list) }"
+                      :class="{ 'changeTag': highLightArr.findIndex(item=>{return item.tagid == list.tagid})>-1 }"
                       v-for="(list, index) in item.children"
                       :key="list.id"
                       v-show="list.name"
@@ -336,13 +341,14 @@
   </div>
 </template>
 <script>
-import { formatDate } from '../../utils/tool'
+import { formatDate, _throttle } from '../../utils/tool'
 export default {
   data() {
     return {
       item: {},
       name: '',
       imageUser: '',
+      userName: '',
       optionSource: [],
       customList: [
         { label: '微信用户', customerType: 1 },
@@ -402,7 +408,7 @@ export default {
       isShowDialog: null,
       titleName: '',
       highLightArr: [],
-      tempList: [],
+      picthList: [],
       message: '',
       showInput: null,
       isShow: false,
@@ -417,7 +423,7 @@ export default {
   },
   created() {
     let tempObj = JSON.parse(localStorage.getItem('detail'))
-    console.log(tempObj)
+    // console.log(tempObj)
     this.imageUser = tempObj.avatar
     let tempSystem = this.systemList.map((item) => {
       return {
@@ -474,6 +480,7 @@ export default {
         })
     },
     getTagList() {
+      this.highLightArr = []
       this.$network
         .get('/customer-service/cluecustomer/gettag', {
           clueCustomerNo: this.objItem.clueCustomerNo,
@@ -482,6 +489,18 @@ export default {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+          this.companyTagList.forEach((item) => {
+            this.groupList.forEach((v, i) => {
+              if (item.parenttag == v.tagid) {
+                this.groupList[i].children.forEach((chItem, chIndex) => {
+                  if (item.tagid == chItem.tagid) {
+                    this.highLightArr.push(chItem)
+                  }
+                })
+              }
+            })
+            // console.log(this.highLightArr)
+          })
         })
     },
     processTree(data) {
@@ -561,14 +580,21 @@ export default {
       this.isShow = false
     },
     selectTag(list, index) {
-      // console.log(list, index)
-      if (this.highLightArr.includes(list.id)) {
-        let p = this.highLightArr.indexOf(list.id)
-        this.highLightArr.splice(p, 1)
+      // console.log(list)
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid
+      })
+      if (result > -1) {
+        // console.log(111111111111)
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1)
+          }
+        })
       } else {
         this.highLightArr.push(list)
       }
-      console.log(this.highLightArr)
+      // console.log(this.highLightArr)
     },
     selectPersonTag(list, index) {
       console.log(list)
@@ -663,15 +689,25 @@ export default {
       this.show = false
       console.log(v)
     },
-    saveDialog(v) {
+    saveDialog: _throttle(function (v) {
+      // console.log(v)
       if (v == 1) {
-        // console.log(this.highLightArr)
         this.$network
           .post(
             `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
             this.highLightArr
           )
-          .then((res) => {})
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.getTagList()
+            } else {
+              this.message({
+                type: 'error',
+                message: '添加失败',
+              })
+            }
+          })
       } else if (v == 2) {
         this.$network
           .post('/customer-service/cluecustomer/updPertag', this.personTagList)
@@ -725,7 +761,7 @@ export default {
             }
           })
       }
-    },
+    }, 2000),
   },
 }
 </script>
@@ -761,6 +797,10 @@ export default {
       display: flex;
       padding: 24px;
       background: #fff;
+      img {
+        width: 88px;
+        height: 88px;
+      }
       .flag {
         width: 88px;
         height: 88px;
