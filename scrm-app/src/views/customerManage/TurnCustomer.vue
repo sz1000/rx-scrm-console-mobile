@@ -60,7 +60,7 @@
         <el-form-item label="公司名称:">
           <el-input v-model="formObj.cropFullName"
                     placeholder="请输入"
-                    maxlength="60"></el-input>
+                    maxlength="100"></el-input>
         </el-form-item>
         <el-form-item label="所属行业:">
           <el-cascader size="large"
@@ -286,7 +286,7 @@ export default {
       .textTitle {
         flex: 1;
         display: inline-block;
-        padding-left: 120px;
+        padding-left: 150px;
       }
     }
     .addForm {

@@ -63,7 +63,9 @@
     </van-list>
     <div class="bottom_model">
       <van-action-sheet v-model="showAdd"
-                        :title="titleName">
+                        :title="titleName"
+                        ref="vantWarp"
+                        class="vant_sheet">
         <div class="content">
           <div class="addForm">
             <el-form ref="form"
@@ -87,7 +89,8 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp">
+          <div class="buttonWarp"
+               v-show="hidshow">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
@@ -96,7 +99,8 @@
         </div>
       </van-action-sheet>
       <van-action-sheet v-model="showEdit"
-                        :title="titleName">
+                        :title="titleName"
+                        class="vant_sheet">
         <div class="content">
           <div class="addForm">
             <el-form ref="form"
@@ -104,7 +108,7 @@
                      label-position='right'>
               <el-form-item label="渠道名称:"
                             prop="chanName"
-                            :rules="[ { required: true, message: '请输入渠道名称',trigger:'blur'}]">
+                            :rules="[{ required: true, message: '请输入渠道名称',trigger:'blur'}]">
                 <el-input v-model="editForm.chanName"
                           placeholder="请输入渠道名称"
                           maxlength="20"
@@ -120,7 +124,8 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp">
+          <div class="buttonWarp"
+               v-show="hidshow">
             <span class="cancel"
                   @click="closeEdit()">取消</span>
             <span class="save"
@@ -183,7 +188,28 @@ export default {
       page: 1, //请求第几页
       pageSize: 10, //每页请求的数量
       total: 0, //总共的数据条数
+
+      docmHeight: 0, //默认屏幕高度
+      showHeight: 0, //实时屏幕高度
+      hidshow: true, //显示或者隐藏footer,
     }
+  },
+  watch: {
+    showHeight(val) {
+      if (this.docmHeight > this.showHeight) {
+        this.hidshow = false
+      } else {
+        this.hidshow = true
+      }
+    },
+  },
+  mounted() {
+    window.onresize = () =>
+      (() => {
+        this.showHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        // console.log(this.showHeight, this.docmHeight)
+      })()
   },
   created() {
     this.getData()
@@ -191,7 +217,6 @@ export default {
   methods: {
     formatDate,
     onLoad() {
-      console.log(11111111111111)
       this.page += 1
       this.getData()
     },
@@ -242,6 +267,7 @@ export default {
           if (res.result) {
             this.showAdd = false
             // this.page = 1
+            this.addForm = {}
             this.getData()
           } else {
             this.$message({
@@ -286,6 +312,12 @@ export default {
     addChannel() {
       this.showAdd = true
       this.titleName = '新增渠道'
+
+      setTimeout(() => {
+        this.docmHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        console.log(this.docmHeight)
+      }, 200)
     },
     editBtn(item, index) {
       // console.log(item)
@@ -293,6 +325,12 @@ export default {
       this.showEdit = true
       this.editForm.chanName = item.name
       this.editForm.welcomTxt = item.welText
+
+      setTimeout(() => {
+        this.docmHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        console.log(this.docmHeight)
+      }, 200)
     },
     channelDetail(item, index) {
       console.log(item)
@@ -359,7 +397,7 @@ export default {
       .textTitle {
         flex: 1;
         display: inline-block;
-        padding-left: 120px;
+        padding-left: 150px;
       }
     }
     .tabMenu {
@@ -537,8 +575,9 @@ export default {
               .el-input__inner {
                 height: 80px;
                 border-radius: 8px;
+                border: 0;
                 font-size: 28px;
-                border: 1px solid #d9dae4;
+                border: 2px solid #d9dae4;
               }
               .el-select,
               .el-cascader {
@@ -573,6 +612,7 @@ export default {
                 .el-textarea__inner {
                   font-size: 28px;
                   height: 400px;
+                  border: 2px solid #d9dae4 !important;
                 }
               }
             }

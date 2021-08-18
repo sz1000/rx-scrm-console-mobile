@@ -39,7 +39,7 @@
           <el-form-item label="客户简称">
             <el-input v-model="basicInfo.customerName"
                       placeholder="请输入"
-                      maxlength="30"
+                      maxlength="15"
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="客户来源">
@@ -362,7 +362,7 @@ export default {
       .textTitle {
         flex: 1;
         display: inline-block;
-        padding-left: 120px;
+        padding-left: 150px;
       }
     }
     .iconName {

@@ -84,7 +84,8 @@
       <van-action-sheet v-model="showAdd"
                         :title="titleName"
                         :overlay='overlay'
-                        :get-container="getContainer">
+                        :get-container="getContainer"
+                        class="vant_sheet">
         <div class="content">
           <div class="addForm">
             <el-form ref="form"
@@ -147,7 +148,8 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp">
+          <div class="buttonWarp"
+               v-show="hidshow">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
@@ -158,7 +160,8 @@
       <van-action-sheet v-model="showEdit"
                         :title="titleName"
                         :overlay='overlay'
-                        :get-container="getContainer">
+                        :get-container="getContainer"
+                        class="vant_sheet">
         <div class="content">
           <div class="addForm">
             <el-form ref="form"
@@ -227,7 +230,8 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp">
+          <div class="buttonWarp"
+               v-show="hidshow">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
@@ -300,7 +304,28 @@ export default {
       pageSize: 10, //每页请求的数量
       total: 0, //总共的数据条数
       overlay: true,
+
+      docmHeight: 0, //默认屏幕高度
+      showHeight: 0, //实时屏幕高度
+      hidshow: true, //显示或者隐藏footer,
     }
+  },
+  watch: {
+    showHeight(val) {
+      if (this.docmHeight > this.showHeight) {
+        this.hidshow = false
+      } else {
+        this.hidshow = true
+      }
+    },
+  },
+  mounted() {
+    window.onresize = () =>
+      (() => {
+        this.showHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        // console.log(this.showHeight, this.docmHeight)
+      })()
   },
   created() {
     this.getData()
@@ -353,6 +378,11 @@ export default {
       this.$nextTick(() => {
         this.getSelect()
       })
+      setTimeout(() => {
+        this.docmHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        console.log(this.docmHeight)
+      }, 200)
     },
     getSelect() {
       this.$network.get('/user-service/livecode/toadd').then((res) => {
@@ -384,6 +414,11 @@ export default {
         })
         // console.log('----finalArr', this.editForm.userArr)
       })
+      setTimeout(() => {
+        this.docmHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        console.log(this.docmHeight)
+      }, 200)
     },
     sendCode(item, index) {
       var a = document.createElement('a')
@@ -563,7 +598,7 @@ export default {
       .textTitle {
         flex: 1;
         display: inline-block;
-        padding-left: 120px;
+        padding-left: 150px;
       }
     }
     .tabMenu {
@@ -678,7 +713,7 @@ export default {
             border-radius: 6px;
             border: 2px solid #4168f6;
             color: #4168f6;
-            text-align: center;
+            justify-content: center;
             img {
               width: 24px;
               height: 24px;
@@ -727,6 +762,7 @@ export default {
       }
       .content {
         height: 944px;
+        overflow: scroll;
         // padding: 24px;
         .addForm,
         .codeDetail {
@@ -761,7 +797,8 @@ export default {
                 height: 80px;
                 border-radius: 8px;
                 font-size: 28px;
-                border: 1px solid #d9dae4;
+                border: 0;
+                border: 2px solid #d9dae4;
               }
               .el-select,
               .el-cascader {
@@ -806,6 +843,7 @@ export default {
                 .el-textarea__inner {
                   font-size: 28px;
                   height: 400px;
+                  border: 2px solid #d9dae4 !important;
                 }
               }
             }

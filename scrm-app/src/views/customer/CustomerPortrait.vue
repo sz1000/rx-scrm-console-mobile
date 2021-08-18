@@ -293,10 +293,10 @@ export default {
           url: location.href,
         })
         .then((res) => {
-          // alert(res.data.corpId)
-          // alert(res.data.timestamp)
-          // alert(res.data.signature)
-          // alert(res.data.nonceStr)
+          alert(res.data.corpId)
+          alert(res.data.timestamp)
+          alert(res.data.signature)
+          alert(res.data.nonceStr)
           // alert(res.data.signature)
           // alert(res.data.agent_config_data.signature)
           // this.obj = res.data
