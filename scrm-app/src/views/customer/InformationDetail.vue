@@ -17,6 +17,7 @@
            v-else> {{name ? name.substr(0,1) : ''}}</div>
       <div class="nameSex">
         <span>{{name}}</span>
+        <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
         <img src="../../images/icon_female@2x.png"
              alt=""
              v-if="basicInfo.gender=='2'" />
@@ -188,7 +189,6 @@ export default {
       name: '',
       imageUser: '',
       nameFrom: '',
-      customName: '',
       optionSource: [],
       customList: [
         { label: '微信用户', customerType: 1 },
@@ -270,6 +270,8 @@ export default {
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
           this.imageUser = res.data.clueCustomerEntity.avatar
+          this.name = res.data.clueCustomerEntity.name
+          this.nameFrom = res.data.clueCustomerEntity.customerType
           if (res.data.clueCustomerEntity.cropSubIndustry) {
             let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
             this.basicInfo.industry = arr.map(Number)
@@ -317,7 +319,7 @@ export default {
         })
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.push('/customTransition')
     },
     inputEdit(item, index) {
       // console.log(item, index)

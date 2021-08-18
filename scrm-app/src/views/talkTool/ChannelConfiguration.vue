@@ -230,6 +230,10 @@ export default {
     // }),
     saveDialog() {
       if (this.addForm.name == null) {
+        this.$message({
+          type: 'error',
+          message: '请输入渠道名称',
+        })
         return
       }
       this.$network
@@ -487,6 +491,9 @@ export default {
       }
     }
     .bottom_model {
+      /deep/.van-overlay {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
       .van-action-sheet__header {
         height: 88px;
         line-height: 88px;

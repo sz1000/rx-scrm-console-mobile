@@ -3,16 +3,21 @@
     <div class="topInfo">
       <div class="customInfo">
         <div class="iconName">
-          <div class="flag">
-            <img :src="avatar"
-                 alt=""
-                 class="flag" />
+          <div v-if="imageUser">
+            <img :src="imageUser"
+                 alt="" />
           </div>
+          <div class="flag"
+               v-else> {{name ? name.substr(0,1) : ''}}</div>
           <div class="nameSex">
             <span>{{ name }}</span>
-            <span>{{ nameFrom }}</span>
+            <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
             <img src="../../images/icon_female@2x.png"
-                 alt="" />
+                 alt=""
+                 v-if="basicInfo.gender=='2'" />
+            <img src="../../images/man.png"
+                 alt=""
+                 v-if="basicInfo.gender=='1'" />
           </div>
         </div>
         <div class="detailBtn"
@@ -236,6 +241,8 @@ export default {
       title: '',
       name: '',
       nameFrom: '',
+      customerName: '',
+      imageUser: '',
       email: '',
       unfold: false,
       isShowPerson: false,
@@ -357,7 +364,7 @@ export default {
     goToDetail() {
       // alert(this.userId)
       this.$router.push({
-        name: '/informationDetail',
+        name: 'informationDetail',
         params: {
           userid: this.userId,
         },
@@ -372,8 +379,10 @@ export default {
         .then((res) => {
           // console.log(res)
           this.name = res.data.clueCustomerVO.name
+          this.nameFrom = res.data.clueCustomerVO.customerType
+          this.customerName = res.data.clueCustomerVO.customerName
           this.item = res.data.clueCustomerVO
-          this.avatar = res.data.clueCustomerVO.avatar
+          this.imageUser = res.data.clueCustomerVO.avatar
         })
     },
     getTimeline() {
@@ -836,6 +845,9 @@ export default {
       }
     }
     .bottom_model {
+      /deep/.van-overlay {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
       .van-action-sheet__header {
         height: 88px;
         line-height: 88px;
