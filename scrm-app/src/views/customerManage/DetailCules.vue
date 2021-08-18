@@ -15,10 +15,10 @@
       </div>
       <div class="flag"
            v-else>
-        {{name ? name.substr(0,1) : ''}}
+        {{basicInfo.name ? basicInfo.name.substr(0,1) : ''}}
       </div>
       <div class="nameSex">
-        <span>{{ name }}</span>
+        <span>{{ basicInfo.name }}</span>
         <img src="../../images/icon_female@2x.png"
              alt=""
              v-if="basicInfo.gender=='2'" />
@@ -509,7 +509,7 @@ export default {
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
-          this.name = res.data.clueCustomerEntity.name
+          // this.name = res.data.clueCustomerEntity.name
           let tempSystem = this.systemList.map((item) => {
             return {
               name: item.name,

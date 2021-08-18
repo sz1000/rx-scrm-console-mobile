@@ -84,6 +84,7 @@
       <van-action-sheet v-model="showAdd"
                         :title="titleName"
                         :overlay='overlay'
+                        :lock-scroll='false'
                         :get-container="getContainer"
                         class="vant_sheet">
         <div class="content">
@@ -160,6 +161,7 @@
       <van-action-sheet v-model="showEdit"
                         :title="titleName"
                         :overlay='overlay'
+                        :lock-scroll='false'
                         :get-container="getContainer"
                         class="vant_sheet">
         <div class="content">
@@ -418,7 +420,7 @@ export default {
         this.docmHeight =
           document.getElementsByClassName('vant_sheet ')[0].clientHeight
         console.log(this.docmHeight)
-      }, 200)
+      }, 500)
     },
     sendCode(item, index) {
       var a = document.createElement('a')
@@ -763,9 +765,9 @@ export default {
       .van-action-sheet__content {
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
-        &::-webkit-scrollbar {
-          // height: 30px;
-        }
+        // &::-webkit-scrollbar {
+        //   height: 30px;
+        // }
       }
       .content {
         height: 944px;

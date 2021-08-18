@@ -14,9 +14,9 @@
              alt="" />
       </div>
       <div class="flag"
-           v-else> {{name ? name.substr(0,1) : ''}}</div>
+           v-else> {{basicInfo.name ? basicInfo.name.substr(0,1) : ''}}</div>
       <div class="nameSex">
-        <span>{{name}}</span>
+        <span>{{basicInfo.name}}</span>
         <img src="../../images/icon_female@2x.png"
              alt=""
              v-if="basicInfo.gender=='2'" />
