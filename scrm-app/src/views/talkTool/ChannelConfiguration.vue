@@ -107,9 +107,9 @@
                      :model="editForm"
                      label-position='right'>
               <el-form-item label="渠道名称:"
-                            prop="chanName"
+                            prop="name"
                             :rules="[{ required: true, message: '请输入渠道名称',trigger:'blur'}]">
-                <el-input v-model="editForm.chanName"
+                <el-input v-model="editForm.name"
                           placeholder="请输入渠道名称"
                           maxlength="20"
                           show-word-limit></el-input>
@@ -117,7 +117,7 @@
               <el-form-item label="欢迎语:"
                             class="textareaInput">
                 <el-input type="textarea"
-                          v-model="editForm.welcomTxt"
+                          v-model="editForm.welText"
                           placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
                           maxlength="200"
                           show-word-limit></el-input>
@@ -183,6 +183,7 @@ export default {
         welcomTxt: '',
       },
       detailForm: {},
+      saveEditObj: {},
       loading: false,
       finished: false,
       page: 1, //请求第几页
@@ -279,13 +280,13 @@ export default {
     },
     //保存编辑
     saveEdit() {
-      console.log()
-      let params = {
-        name: this.editForm.chanName,
-        welText: this.editForm.welcomTxt,
-      }
+      // console.log()
+      // let params = {
+      //   name: this.editForm.chanName,
+      //   welText: this.editForm.welcomTxt,
+      // }
       this.$network
-        .post('/user-service/channel/updChannel', params)
+        .post('/user-service/channel/updChannel', this.editForm)
         .then((res) => {
           if (res.result) {
             this.showEdit = false
@@ -323,9 +324,10 @@ export default {
       // console.log(item)
       this.titleName = '编辑渠道'
       this.showEdit = true
-      this.editForm.chanName = item.name
-      this.editForm.welcomTxt = item.welText
-
+      this.editForm = JSON.parse(JSON.stringify(item))
+      // this.editForm.chanName = item.name
+      // this.editForm.welcomTxt = item.welText
+      // this.saveEditObj = item
       setTimeout(() => {
         this.docmHeight =
           document.getElementsByClassName('vant_sheet ')[0].clientHeight

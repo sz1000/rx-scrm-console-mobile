@@ -64,7 +64,7 @@
         </div>
         <div class="box1">
           <span class="label">添加时间:</span>
-          <span class="value">{{ item.createTime }}</span>
+          <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')  }}</span>
         </div>
       </div>
     </div>
@@ -254,7 +254,9 @@ export default {
       tagpersonList: [],
       personTagList: [],
       companyTagList: [],
-      item: {},
+      item: {
+        createTime: 1609434061,
+      },
       groupList: [],
       personList: [],
       timeLineList: [],

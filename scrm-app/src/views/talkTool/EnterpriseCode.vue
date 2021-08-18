@@ -402,6 +402,7 @@ export default {
       this.titleName = '编辑企微活码'
       this.showEdit = true
       this.editForm = JSON.parse(JSON.stringify(v))
+      this.editForm.status = this.editForm.status.toString()
       this.$network.get('/user-service/livecode/toadd').then((res) => {
         this.usreList = res.data.userlist
         this.channelList = res.data.chlist
