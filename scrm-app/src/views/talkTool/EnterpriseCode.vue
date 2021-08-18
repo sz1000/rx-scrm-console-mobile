@@ -760,12 +760,20 @@ export default {
         color: #3c4353;
         font-weight: 600;
       }
+      .van-action-sheet__content {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+        &::-webkit-scrollbar {
+          // height: 30px;
+        }
+      }
       .content {
         height: 944px;
-        overflow: scroll;
+        // overflow: scroll;
         // padding: 24px;
         .addForm,
         .codeDetail {
+          // overflow: scroll;
           // height: 800px;
           box-sizing: border-box;
           padding: 24px;

@@ -179,6 +179,8 @@ export default {
     },
     inquire: _throttle(function () {
       // console.log(this.inputValue)
+      this.page = 1
+      this.cardList = []
       this.getListData()
     }, 2000),
     deleteCard(item, index) {

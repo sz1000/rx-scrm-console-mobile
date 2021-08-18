@@ -194,6 +194,8 @@ export default {
       this.getData()
     },
     inquire: _throttle(function () {
+      this.page = 1
+      this.cardList = []
       this.getData()
     }, 2000),
     deleteCard(item, index) {
