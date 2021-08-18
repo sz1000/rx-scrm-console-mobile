@@ -158,14 +158,9 @@
       </div>
     </div>
     <div class="infoContent">
-      <div class="companyLabel">
+      <!-- <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <!-- <div class='editButton'
-               @click="showCompany(1)">
-            <i class="el-icon-edit"></i>
-            编辑
-          </div> -->
         </div>
         <div class="b_content">
           <div :class="{ 'over-hidden': !unfold }"
@@ -183,7 +178,7 @@
             <van-icon name="arrow-down" />
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="dynamic">
         <div class="t_text">
           <span class="label_tag">动态</span>

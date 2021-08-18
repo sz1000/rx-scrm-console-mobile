@@ -69,7 +69,7 @@
       </div>
     </div>
     <div class="infoContent">
-      <div class="companyLabel">
+      <!-- <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
           <div class="editButton"
@@ -121,7 +121,7 @@
             <van-icon name="arrow-down" />
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="dynamic">
         <div class="t_text">
           <span class="label_tag">动态</span>
@@ -156,7 +156,8 @@
     </div>
     <div class="bottom_model">
       <van-action-sheet v-model="show"
-                        :title="titleName">
+                        :title="titleName"
+                        class="vant_sheet">
         <div class="content">
           <div class="tagWarp"
                v-if="isShowDialog == '1'">
@@ -215,7 +216,8 @@
                        placeholder="记录好跟进，多签单哟~"
                        show-word-limit />
           </div>
-          <div class="buttonWarp">
+          <div class="buttonWarp"
+               v-show="hidshow">
             <span class="cancel"
                   @click="closeDialog(isShowDialog)">取消</span>
             <span class="save"
@@ -267,6 +269,9 @@ export default {
       tagName: '',
       userId: '',
       obj: {},
+      docmHeight: 0, //默认屏幕高度
+      showHeight: 0, //实时屏幕高度
+      hidshow: true, //显示或者隐藏footer,
     }
   },
   created() {
@@ -275,13 +280,22 @@ export default {
     let authCode = p.split('=')[1]
     this.getData(authCode)
   },
+  watch: {
+    // showHeight(val) {
+    //   if (this.docmHeight > this.showHeight) {
+    //     this.hidshow = false
+    //   } else {
+    //     this.hidshow = true
+    //   }
+    // },
+  },
   mounted() {
-    this.$nextTick(() => {
-      // alert(this.userId)
-      // this.getMethod(this.userId)
-      // this.getTimeline(this.userId)
-      // this.getTagList(this.userId)
-    })
+    window.onresize = () =>
+      (() => {
+        this.showHeight =
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        // console.log(this.showHeight, this.docmHeight)
+      })()
   },
 
   methods: {
@@ -426,9 +440,14 @@ export default {
         this.titleName = '企业标签'
       } else if (v == 2) {
         this.titleName = '个人标签'
-      } else {
+      } else if (v == 3) {
         this.titleName = '写跟进'
         this.message = ''
+        setTimeout(() => {
+          this.docmHeight =
+            document.getElementsByClassName('vant_sheet ')[0].clientHeight
+          console.log(this.docmHeight)
+        }, 200)
       }
     },
     addTag(item, index) {

@@ -235,11 +235,13 @@ export default {
         .el-form-item__content {
           width: 562px;
           height: 80px;
+          // border: 1px solid #d9dae4;
 
           .el-input__inner {
             height: 80px;
             border-radius: 8px;
             font-size: 28px;
+            border: 0;
             border: 1px solid #d9dae4;
           }
           .el-select,
@@ -254,6 +256,8 @@ export default {
             .el-textarea__inner {
               font-size: 28px;
               height: 400px;
+              border: 0;
+              border: 1px solid #d9dae4;
             }
           }
         }

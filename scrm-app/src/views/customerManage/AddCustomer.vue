@@ -324,6 +324,7 @@ export default {
             width: 100%;
             border-radius: 8px;
             font-size: 28px;
+            border: 0;
             border: 1px solid #d9dae4;
           }
           .el-select,
@@ -338,6 +339,8 @@ export default {
             .el-textarea__inner {
               height: 400px;
               font-size: 28px;
+              border: 0;
+              border: 1px solid #d9dae4;
             }
           }
         }
