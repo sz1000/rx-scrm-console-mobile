@@ -307,7 +307,7 @@
                v-if="isShowDialog == '3'">
             <van-field v-model="message"
                        type="textarea"
-                       maxlength="300"
+                       maxlength="200"
                        placeholder="记录好跟进，多签单哟~"
                        show-word-limit />
           </div>

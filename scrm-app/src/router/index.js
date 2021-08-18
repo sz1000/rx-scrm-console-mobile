@@ -48,6 +48,14 @@ const routes = [{
 
     // 客户画像
     {
+        path: '/customTransition',
+        name: 'customTransition',
+        meta: {
+            bodyClass: 'CustomTransition',
+        },
+        component: CustomTransition,
+    },
+    {
         path: '/customerPortrait',
         name: 'CustomerPortrait',
         meta: {
@@ -63,14 +71,7 @@ const routes = [{
         },
         component: InformationDetail,
     },
-    {
-        path: '/customTransition',
-        name: 'customTransition',
-        meta: {
-            bodyClass: 'CustomTransition',
-        },
-        component: CustomTransition,
-    },
+
     // 拓客工具
     {
         path: '/talkTool',

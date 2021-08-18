@@ -52,8 +52,8 @@
                    alt="">
               <div class="shareCode"
                    @click="sendCode(item,index)">
-                <span> <img src="../../images/send.png"
-                       alt=""></span>
+                <!-- <span> <img src="../../images/send.png"
+                       alt=""></span> -->
                 下载二维码
               </div>
             </div>
@@ -386,31 +386,12 @@ export default {
       })
     },
     sendCode(item, index) {
-      this.downloadIamge(item.address, '二维码')
+      var a = document.createElement('a')
+      a.download = ''
+      a.href = item.address
+      a.click()
     },
-    downloadIamge(imgsrc, name) {
-      // 下载图片地址和图片名
-      const image = new Image()
-      // 解决跨域 Canvas 污染问题
-      image.setAttribute('crossOrigin', 'anonymous')
-      // eslint-disable-next-line func-names
-      image.onload = function () {
-        const canvas = document.createElement('canvas')
-        canvas.width = image.width
-        canvas.height = image.height
-        const context = canvas.getContext('2d')
-        context.drawImage(image, 0, 0, image.width, image.height)
-        const url = canvas.toDataURL('image/png') // 得到图片的base64编码数据
-        const a = document.createElement('a') // 生成一个a元素
-        a.download = name || 'photo' // 设置图片名称
-        a.href = url // 将生成的URL设置为a.href属性
-        a.click()
-      }
-      image.src = imgsrc
-      // this.$popup.open({
-      //   content: '下载成功',
-      // })
-    },
+
     checkDetail(item, index) {
       // console.log(item)
       this.titleName = '企微活码详情'
