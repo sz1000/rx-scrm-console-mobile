@@ -940,6 +940,7 @@ export default {
             border: 2px solid #d9dae4;
             /deep/.van-field__control {
               height: 350px;
+              padding-top: 10px;
             }
           }
         }
