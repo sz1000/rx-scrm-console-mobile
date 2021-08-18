@@ -94,7 +94,7 @@
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
-                  @click="saveDialog()">保存</span>
+                  @click.once="saveDialog()">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -129,7 +129,7 @@
             <span class="cancel"
                   @click="closeEdit()">取消</span>
             <span class="save"
-                  @click="saveEdit()">保存</span>
+                  @click.once="saveEdit()">保存</span>
           </div>
         </div>
       </van-action-sheet>

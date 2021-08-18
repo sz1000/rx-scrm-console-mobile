@@ -356,7 +356,7 @@
             <span class="cancel"
                   @click="closeDialog(isShowDialog)">取消</span>
             <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
+                  @click.once="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -774,6 +774,7 @@ export default {
           .then((res) => {
             if (res.result) {
               this.show = false
+              this.$router.go(-1)
               this.$message({
                 type: 'success',
                 message: '编辑成功!',
@@ -787,7 +788,7 @@ export default {
             }
           })
       }
-    }, 2000),
+    }, 5000),
   },
 }
 </script>
@@ -1268,7 +1269,7 @@ export default {
                 border-radius: 8px;
                 font-size: 28px;
                 font-weight: normal;
-                border: 2px solid #d9dae4;
+                border: 1px solid #d9dae4;
               }
             }
           }
