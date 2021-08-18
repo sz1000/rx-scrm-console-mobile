@@ -356,7 +356,7 @@
             <span class="cancel"
                   @click="closeDialog(isShowDialog)">取消</span>
             <span class="save"
-                  @click.once="saveDialog(isShowDialog)">保存</span>
+                  @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>

@@ -84,7 +84,6 @@
       <van-action-sheet v-model="showAdd"
                         :title="titleName"
                         :overlay='overlay'
-                        :lock-scroll='false'
                         :get-container="getContainer"
                         class="vant_sheet">
         <div class="content">
@@ -154,14 +153,13 @@
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
-                  @click.once="saveDialog()">保存</span>
+                  @click="saveDialog()">保存</span>
           </div>
         </div>
       </van-action-sheet>
       <van-action-sheet v-model="showEdit"
                         :title="titleName"
                         :overlay='overlay'
-                        :lock-scroll='false'
                         :get-container="getContainer"
                         class="vant_sheet">
         <div class="content">
@@ -237,7 +235,7 @@
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
-                  @click.once="saveEdit('form')">保存</span>
+                  @click="saveEdit('form')">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -763,20 +761,19 @@ export default {
         font-weight: 600;
       }
       .van-action-sheet__content {
-        overflow-y: scroll;
+        height: 944px;
         -webkit-overflow-scrolling: touch;
         // &::-webkit-scrollbar {
         //   height: 30px;
         // }
       }
       .content {
-        height: 944px;
         // overflow: scroll;
         // padding: 24px;
         .addForm,
         .codeDetail {
-          // overflow: scroll;
-          // height: 800px;
+          overflow-y: scroll;
+          height: 800px;
           box-sizing: border-box;
           padding: 24px;
           font-size: 28px;
@@ -869,7 +866,7 @@ export default {
           }
         }
         .codeDetail {
-          height: 100%;
+          // height: 100%;
           /deep/.el-form {
             .codeImg {
               margin-bottom: 100px !important;
