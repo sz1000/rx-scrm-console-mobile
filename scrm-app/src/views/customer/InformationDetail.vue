@@ -320,6 +320,7 @@ export default {
     },
     goBack() {
       this.$router.push('/customTransition')
+      // this.$router.go(-1)
     },
     inputEdit(item, index) {
       // console.log(item, index)

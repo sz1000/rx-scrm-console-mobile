@@ -11,13 +11,13 @@
                v-else> {{name ? name.substr(0,1) : ''}}</div>
           <div class="nameSex">
             <span>{{ name }}</span>
-            <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
+            <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${item.customerName}` }}</span>
             <img src="../../images/icon_female@2x.png"
                  alt=""
-                 v-if="basicInfo.gender=='2'" />
+                 v-if="item.gender=='2'" />
             <img src="../../images/man.png"
                  alt=""
-                 v-if="basicInfo.gender=='1'" />
+                 v-if="item.gender=='1'" />
           </div>
         </div>
         <div class="detailBtn"
@@ -89,7 +89,7 @@
           </div>
           <div class="btn"
                @click="unfold = !unfold"
-               v-show="companyTagList.length > 8">
+               v-show="companyTagList.length > 5">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -116,7 +116,7 @@
           </div>
           <div class="btn"
                @click="isShowPerson = !isShowPerson"
-               v-show="personTagList.length > 8">
+               v-show="personTagList.length > 5">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -243,6 +243,7 @@ export default {
       nameFrom: '',
       customerName: '',
       imageUser: '',
+      gender: '',
       email: '',
       unfold: false,
       isShowPerson: false,
@@ -380,7 +381,6 @@ export default {
           // console.log(res)
           this.name = res.data.clueCustomerVO.name
           this.nameFrom = res.data.clueCustomerVO.customerType
-          this.customerName = res.data.clueCustomerVO.customerName
           this.item = res.data.clueCustomerVO
           this.imageUser = res.data.clueCustomerVO.avatar
         })

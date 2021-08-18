@@ -210,7 +210,7 @@
           </div>
           <div class="btn"
                @click="unfold = !unfold"
-               v-show="companyTagList.length>8">
+               v-show="companyTagList.length>5">
             {{unfold ? '收起' : '展开'}}
             <van-icon name="arrow-down" />
           </div>
@@ -237,7 +237,7 @@
           </div>
           <div class="btn"
                @click="isShowPerson = !isShowPerson"
-               v-show="personTagList.length>8">
+               v-show="personTagList.length>5">
             {{isShowPerson ? '收起' : '展开'}}
             <van-icon name="arrow-down" />
           </div>

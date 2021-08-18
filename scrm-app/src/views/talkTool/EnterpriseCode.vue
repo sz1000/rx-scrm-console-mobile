@@ -678,6 +678,7 @@ export default {
             border-radius: 6px;
             border: 2px solid #4168f6;
             color: #4168f6;
+            text-align: center;
             img {
               width: 24px;
               height: 24px;
