@@ -132,7 +132,8 @@
             <span>写跟进</span>
           </div>
         </div>
-        <div class="allText">全部</div>
+        <div class="allText"
+             v-show="timeLineList.length">全部</div>
         <div class="timeLine">
           <el-timeline>
             <el-timeline-item v-for="(item, index) in timeLineList"
@@ -307,10 +308,10 @@ export default {
           url: location.href,
         })
         .then((res) => {
-          alert(res.data.corpId)
-          alert(res.data.timestamp)
-          alert(res.data.signature)
-          alert(res.data.nonceStr)
+          // alert(res.data.corpId)
+          // alert(res.data.timestamp)
+          // alert(res.data.signature)
+          // alert(res.data.nonceStr)
           // alert(res.data.signature)
           // alert(res.data.agent_config_data.signature)
           // this.obj = res.data

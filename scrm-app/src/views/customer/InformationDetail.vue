@@ -451,7 +451,8 @@ export default {
             text-align: center;
           }
           .el-form-item__content {
-            width: 562px;
+            // width: 562px;
+            flex: 1;
             height: 80px;
 
             .el-input__inner {
