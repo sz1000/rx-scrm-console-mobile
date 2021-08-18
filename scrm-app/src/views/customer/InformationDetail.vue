@@ -9,12 +9,20 @@
       <span class="textTitle">客户资料详情</span>
     </div>
     <div class="iconName">
-      <div class="flag">鱼</div>
+      <div v-if="imageUser">
+        <img :src="imageUser"
+             alt="" />
+      </div>
+      <div class="flag"
+           v-else> {{name ? name.substr(0,1) : ''}}</div>
       <div class="nameSex">
         <span>{{name}}</span>
-        <span>{{nameFrom}}</span>
         <img src="../../images/icon_female@2x.png"
-             alt="" />
+             alt=""
+             v-if="basicInfo.gender=='2'" />
+        <img src="../../images/man.png"
+             alt=""
+             v-if="basicInfo.gender=='1'" />
 
       </div>
     </div>
@@ -177,8 +185,9 @@ import { formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
-      name: '小鱼儿',
-      nameFrom: '@微信/企业',
+      name: '',
+      imageUser: '',
+      nameFrom: '',
       customName: '',
       optionSource: [],
       customList: [
@@ -253,13 +262,14 @@ export default {
     getDetailForm() {
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
-          clueCustomerNo: this.$route.query.userid,
+          clueCustomerNo: this.$route.params.userid,
         })
         .then((res) => {
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
+          this.imageUser = res.data.clueCustomerEntity.avatar
           if (res.data.clueCustomerEntity.cropSubIndustry) {
             let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
             this.basicInfo.industry = arr.map(Number)

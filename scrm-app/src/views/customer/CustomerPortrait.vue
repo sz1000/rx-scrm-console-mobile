@@ -355,16 +355,16 @@ export default {
     },
 
     goToDetail() {
+      // alert(this.userId)
       this.$router.push({
-        path: '/informationDetail',
-        query: {
-          userid: this.userid,
+        name: '/informationDetail',
+        params: {
+          userid: this.userId,
         },
       })
     },
     //获取客户详情
     getMethod() {
-      // alert(this.userId)
       this.$network
         .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
           id: this.userId,
