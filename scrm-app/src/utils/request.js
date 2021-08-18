@@ -3,6 +3,7 @@ import axios from 'axios'
 let BASE_URL = ''
 if (location.hostname == 'localhost') {
     BASE_URL = 'http://172.10.7.114:8099' //袁
+        // BASE_URL = 'https://api-scrm.ruixin.tech'
 } else {
     BASE_URL = 'https://api-scrm.ruixin.tech'
 }

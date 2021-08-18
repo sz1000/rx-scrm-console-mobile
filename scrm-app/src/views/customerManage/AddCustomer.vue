@@ -251,7 +251,13 @@ export default {
             this.$network
               .post('/customer-service/cluecustomer/addCul', params)
               .then((res) => {
-                this.$router.go(-1)
+                if (res.result) {
+                  this.$message({
+                    type: 'success',
+                    message: '新增成功',
+                  })
+                  this.$router.go(-1)
+                }
               })
           } else {
             this.$message({

@@ -24,8 +24,7 @@
               :finished="finished"
               :immediate-check='false'
               finished-text="没有更多了"
-              @load="onLoad"
-              :offset="20">
+              @load="onLoad">
       <div class="cardCode"
            v-for="(item,index) in channelList"
            :key="index">
@@ -193,6 +192,7 @@ export default {
   methods: {
     formatDate,
     onLoad() {
+      console.log(11111111111111)
       this.page++
       this.getData()
     },
@@ -212,6 +212,7 @@ export default {
           }
           let newSetArr = this.channelList.concat(rows)
           this.channelList = this.unique(newSetArr)
+          console.log(this.channelList.length)
           if (this.channelList.length >= this.total) {
             this.finished = true
           }

@@ -301,22 +301,9 @@ export default {
     }
   },
   created() {
-    let tempObj = JSON.parse(localStorage.getItem('detail'))
+    // let tempObj = JSON.parse(localStorage.getItem('detail'))
     // this.customName = tempObj.customerName
-    console.log(tempObj)
-    let tempSystem = this.systemList.map((item) => {
-      return {
-        name: item.name,
-        value: tempObj[item.mapName],
-        mapName: item.mapName,
-      }
-    })
-    tempSystem.forEach((item) => {
-      if (item.name.includes('时间') && JSON.stringify(item.value) !== 'null') {
-        item.value = formatDate(item.value, 'yyyy-MM-dd')
-      }
-    })
-    this.systemList = tempSystem
+    // console.log(tempObj)
   },
   mounted() {
     this.getTimeline()
@@ -385,6 +372,23 @@ export default {
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
+          let tempSystem = this.systemList.map((item) => {
+            return {
+              name: item.name,
+              value: this.basicInfo[item.mapName],
+              mapName: item.mapName,
+            }
+          })
+          tempSystem.forEach((item) => {
+            if (
+              item.name.includes('时间') &&
+              JSON.stringify(item.value) !== 'null'
+            ) {
+              item.value = formatDate(item.value, 'yyyy-MM-dd')
+            }
+          })
+          this.systemList = tempSystem
+
           if (res.data.clueCustomerEntity.cropSubIndustry) {
             let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
             this.basicInfo.industry = arr.map(Number)

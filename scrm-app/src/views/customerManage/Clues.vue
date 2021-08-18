@@ -10,12 +10,12 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
-        <span :class="{ active: tabClick == 1 }"
+        <span :class="{ 'active': tabClick == 1 }"
               class="mycule"
-              @click="myclue((tabClick = 1))">我的线索</span>
-        <span :class="{ active: tabClick == 2 }"
+              @click="myclue(1)">我的线索</span>
+        <span :class="{ 'active': tabClick == 2 }"
               class="mycule"
-              @click="myclue((tabClick = 2))">线索公海</span>
+              @click="myclue(2)">线索公海</span>
       </div>
       <span class="addBtn"
             @click="addCules">
@@ -133,6 +133,7 @@ export default {
     },
   },
   created() {
+    this.page = 1
     this.getData()
   },
   methods: {
@@ -178,13 +179,15 @@ export default {
       // console.log(this.tabClick)
       localStorage.setItem('type', this.tabClick)
       this.$router.push('addCules')
-      // this.$router.push({ path: 'addCules', query: { type: this.type } })
+      // this.$router.push({ path: 'addCules', query: { type: this.tabClick } })
     },
 
     //列表页面
-    myclue() {
-      console.log(this.tabClick)
+    myclue(v) {
+      console.log(v)
+      this.tabClick = v
       this.cardList = []
+      this.page = 1
       this.inputValue = ''
       this.getData()
     },
