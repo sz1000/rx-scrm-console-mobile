@@ -428,6 +428,7 @@ export default {
         this.titleName = '个人标签'
       } else {
         this.titleName = '写跟进'
+        this.message = ''
       }
     },
     addTag(item, index) {
