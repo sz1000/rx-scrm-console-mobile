@@ -38,7 +38,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户类型:">
+        <el-form-item label="客户类型:"
+                      prop="customerType"
+                      :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
           <el-select v-model="formObj.customerType"
                      placeholder="请选择"
                      @change="changeCustom"
@@ -108,7 +110,7 @@
         <el-form-item label="手机号:">
           <el-input v-model="formObj.phone"
                     maxlength="11"
-                    placeholder="请输入"></el-input>
+                    placeholder="手机号与微信号选填一个即可"></el-input>
         </el-form-item>
         <el-form-item label="性别:">
           <el-select v-model="formObj.gender"
@@ -127,7 +129,7 @@
         </el-form-item>
         <el-form-item label="微信号:">
           <el-input v-model="formObj.weixin"
-                    placeholder="请输入"
+                    placeholder="手机号与微信号选填一个即可"
                     maxlength="20"></el-input>
         </el-form-item>
         <el-form-item label="邮箱:">
@@ -166,21 +168,7 @@ export default {
         email: '',
       },
       optionSource: [],
-      optionsCreat: [
-        {
-          id: 13,
-          name: 'IT服务',
-          children: [
-            {
-              id: 14,
-              name: '计算机软件/硬件/信息服务',
-              type: null,
-              parentId: 13,
-              // children: [],
-            },
-          ],
-        },
-      ],
+      optionsCreat: [],
       optionsScale: [],
       customList: [
         { label: '微信用户', value: '1' },

@@ -30,5 +30,11 @@
     }
   }
 }
+//解决ios双击才能选中
+.el-scrollbar {
+  > .el-scrollbar__bar {
+    opacity: 1 !important;
+  }
+}
 </style>
 

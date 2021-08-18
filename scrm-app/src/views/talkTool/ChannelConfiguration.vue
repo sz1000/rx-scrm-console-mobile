@@ -19,7 +19,6 @@
         新增
       </span>
     </div>
-
     <van-list v-model="loading"
               :finished="finished"
               :immediate-check='false'
@@ -104,7 +103,7 @@
                      :model="editForm"
                      label-position='right'>
               <el-form-item label="渠道名称:"
-                            prop="name"
+                            prop="chanName"
                             :rules="[ { required: true, message: '请输入渠道名称',trigger:'blur'}]">
                 <el-input v-model="editForm.chanName"
                           placeholder="请输入渠道名称"
@@ -192,11 +191,12 @@ export default {
   methods: {
     formatDate,
     onLoad() {
-      // console.log(11111111111111)
-      this.page++
+      console.log(11111111111111)
+      this.page += 1
       this.getData()
     },
     getData() {
+      this.loading = true
       this.$network
         .get('/user-service/channel/getChannelList', {
           page: this.page,
@@ -212,9 +212,11 @@ export default {
           }
           let newSetArr = this.channelList.concat(rows)
           this.channelList = this.unique(newSetArr)
-          console.log(this.channelList.length)
+          console.log(this.channelList.length, this.total)
           if (this.channelList.length >= this.total) {
             this.finished = true
+          } else {
+            this.onLoad()
           }
         })
     },
@@ -234,8 +236,9 @@ export default {
         .post('/user-service/channel/addChannel', this.addForm)
         .then((res) => {
           if (res.result) {
+            this.showAdd = false
+            // this.page = 1
             this.getData()
-            this.closeDialog()
           } else {
             this.$message({
               type: 'error',
@@ -246,11 +249,18 @@ export default {
     },
     //保存编辑
     saveEdit() {
+      console.log()
+      let params = {
+        name: this.editForm.chanName,
+        welText: this.editForm.welcomTxt,
+      }
       this.$network
-        .post('/user-service/channel/updChannel', this.editForm)
+        .post('/user-service/channel/updChannel', params)
         .then((res) => {
           if (res.result) {
             this.showEdit = false
+            this.channelList = []
+            this.page = 1
             this.getData()
           }
         })

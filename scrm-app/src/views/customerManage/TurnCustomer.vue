@@ -240,7 +240,7 @@ export default {
             this.$network
               .post('/customer-service/cluecustomer/cluetocustomer', params)
               .then((res) => {
-                this.$router.go(-1)
+                this.$router.push('/customerManage/clues')
                 this.$message({
                   type: 'success',
                   message: '操作成功',

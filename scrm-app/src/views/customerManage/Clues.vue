@@ -164,6 +164,8 @@ export default {
           this.cardList = this.unique(newSetArr)
           if (this.cardList.length >= this.total) {
             this.finished = true
+          } else {
+            this.onLoad()
           }
         })
     },

@@ -93,7 +93,7 @@
               <el-form-item label="活码名称:"
                             prop="name"
                             :rules="[ { required: true, message: '请输入活码名称',trigger:'blur'}]">
-                <el-input v-model="addForm.name"
+                <el-input v-model.trim="addForm.name"
                           placeholder="请输入"
                           maxlength="12"
                           show-word-limit></el-input>
@@ -173,7 +173,7 @@
               <el-form-item label="活码名称:"
                             prop="name"
                             :rules="[ { required: true, message: '请输入活码名称'}]">
-                <el-input v-model="editForm.name"
+                <el-input v-model.trim="editForm.name"
                           placeholder="请输入"
                           maxlength="12"
                           show-word-limit></el-input>
@@ -231,7 +231,7 @@
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
-                  @click="saveEdit()">保存</span>
+                  @click="saveEdit('form')">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -334,6 +334,8 @@ export default {
           this.liveList = this.unique(newSetArr)
           if (this.liveList.length >= this.total) {
             this.finished = true
+          } else {
+            this.onLoad()
           }
         })
     },
@@ -369,7 +371,7 @@ export default {
       // console.log(v)
       this.titleName = '编辑企微活码'
       this.showEdit = true
-      this.editForm = v
+      this.editForm = JSON.parse(JSON.stringify(v))
       this.$network.get('/user-service/livecode/toadd').then((res) => {
         this.usreList = res.data.userlist
         this.channelList = res.data.chlist
@@ -384,22 +386,30 @@ export default {
       })
     },
     sendCode(item, index) {
-      console.log(item, index)
-      // this.$network
-      //   .get('/user-service/m/user/getmaterial', {
-      //     url: item.address,
-      //     livecodeNo: item.livecodeNo,
-      //   })
-      //   .then((res) => {
-      //     if (res.result) {
-      //       let mediaid = res.data
-      //       // this.sendMessage(mediaid)
-      //     }
-      //   })
-      var a = document.createElement('a')
-      a.download = 'png'
-      a.href = item.address
-      a.click()
+      this.downloadIamge(item.address, '二维码')
+    },
+    downloadIamge(imgsrc, name) {
+      // 下载图片地址和图片名
+      const image = new Image()
+      // 解决跨域 Canvas 污染问题
+      image.setAttribute('crossOrigin', 'anonymous')
+      // eslint-disable-next-line func-names
+      image.onload = function () {
+        const canvas = document.createElement('canvas')
+        canvas.width = image.width
+        canvas.height = image.height
+        const context = canvas.getContext('2d')
+        context.drawImage(image, 0, 0, image.width, image.height)
+        const url = canvas.toDataURL('image/png') // 得到图片的base64编码数据
+        const a = document.createElement('a') // 生成一个a元素
+        a.download = name || 'photo' // 设置图片名称
+        a.href = url // 将生成的URL设置为a.href属性
+        a.click()
+      }
+      image.src = imgsrc
+      // this.$popup.open({
+      //   content: '下载成功',
+      // })
     },
     checkDetail(item, index) {
       // console.log(item)
@@ -462,19 +472,29 @@ export default {
             })
           }
         })
-    }, 2000),
-    saveEdit: _throttle(function () {
-      console.log(this.editForm)
+    }, 5000),
+    saveEdit: _throttle(function (formName) {
       let params = {
         livecodeEntity: { ...this.editForm },
         userArr: this.editForm.userArr,
       }
-      this.$network
-        .post('/user-service/livecode/updLivecode', params)
-        .then((res) => {
-          this.getData()
-          this.showEdit = false
-        })
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$network
+            .post('/user-service/livecode/updLivecode', params)
+            .then((res) => {
+              if (res.result) {
+                this.getData()
+                this.showEdit = false
+              }
+            })
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.msg || '修改失败',
+          })
+        }
+      })
     }, 5000),
     fnChangeUser(val) {
       console.log(val)

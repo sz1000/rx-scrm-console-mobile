@@ -179,7 +179,7 @@
                       @click="addTag">+添加</span>
                 <span class="perchInput"
                       v-if="isShow">
-                  <input v-model="tagName"
+                  <input v-model.trim="tagName"
                          class="addInput"
                          placeholder="输入后按回车完成"
                          maxlength="30"
@@ -299,7 +299,7 @@ export default {
 
           wx.config({
             beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: res.data.corpId, // 必填，企业微信的corpID
             timestamp: res.data.timestamp, // 必填，生成签名的时间戳
             nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
@@ -329,8 +329,8 @@ export default {
                 wx.invoke('getCurExternalContact', {}, function (res) {
                   if (res.err_msg == 'getCurExternalContact:ok') {
                     that.userId = res.userId //返回当前外部联系人userId
-                    alert(JSON.stringify(that.userId))
-                    alert(JSON.stringify(that.obj))
+                    // alert(JSON.stringify(that.userId))
+                    // alert(JSON.stringify(that.obj))
                     that.getMethod()
                     that.getTimeline()
                     that.getTagList()
@@ -339,8 +339,8 @@ export default {
                   }
                 })
                 wx.invoke('getContext', {}, function (res) {
-                  alert(JSON.stringify(res))
-                  alert(JSON.stringify(res.entry))
+                  // alert(JSON.stringify(res))
+                  // alert(JSON.stringify(res.entry))
                   if (res.err_msg == 'getContext:ok') {
                     // entry = res.entry
                     // shareTicket = res.shareTicket
@@ -364,7 +364,7 @@ export default {
     },
     //获取客户详情
     getMethod() {
-      alert(this.userId)
+      // alert(this.userId)
       this.$network
         .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
           id: this.userId,
@@ -427,7 +427,7 @@ export default {
     },
     handleSearch() {
       // console.log(this.tagName)
-      if (this.tagName) {
+      if (this.tagName !== '') {
         this.$network
           .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
@@ -910,6 +910,13 @@ export default {
             }
             .creatTag {
               padding-right: 0;
+              span:nth-child(1) {
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 300px;
+              }
               span {
                 border: none;
                 padding: 0;

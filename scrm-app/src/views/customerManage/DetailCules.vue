@@ -72,7 +72,7 @@
             <el-input v-model="basicInfo.weixin"
                       placeholder="请输入"
                       maxlength="20"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
             <el-select v-model="basicInfo.gender"
@@ -280,7 +280,7 @@
                       @click="addTag">+添加</span>
                 <span class="perchInput"
                       v-if="isShow">
-                  <input v-model="tagName"
+                  <input v-model.trim="tagName"
                          class="addInput"
                          placeholder="输入后按回车完成"
                          maxlength="30"
@@ -291,7 +291,8 @@
                       v-for="(list, index) in personTagList"
                       :key="list.id"
                       v-show="list.name">
-                  <span @click="selectPersonTag(list, index)">{{
+                  <span @click="selectPersonTag(list, index)"
+                        class="textTag">{{
                     list.name
                   }}</span>
                   <span class="deleteTag"
@@ -575,7 +576,7 @@ export default {
     },
     handleSearch() {
       console.log(this.tagName)
-      if (this.tagName) {
+      if (this.tagName !== '') {
         this.$network
           .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
@@ -1205,8 +1206,16 @@ export default {
                 padding: 0;
                 margin: 0;
               }
+              .textTag {
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 300px;
+              }
               .deleteTag {
                 width: 50px;
+                vertical-align: middle;
               }
             }
           }

@@ -66,7 +66,7 @@
             <el-input v-model="basicInfo.weixin"
                       placeholder="请输入"
                       maxlength="20"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
             <el-select v-model="basicInfo.gender"

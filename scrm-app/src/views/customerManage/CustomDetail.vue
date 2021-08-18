@@ -46,7 +46,7 @@
             <el-input v-model="basicInfo.customerName"
                       placeholder="请输入"
                       maxlength="30"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="客户来源">
             <el-select v-model="basicInfo.source"
@@ -74,13 +74,13 @@
             <el-input v-model="basicInfo.mobil"
                       placeholder="请输入"
                       maxlength="13"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="公司名称">
             <el-input v-model="basicInfo.cropFullName"
                       placeholder="请输入"
                       maxlength="100"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="所属行业">
             <el-cascader size="large"
@@ -105,20 +105,20 @@
             <el-input v-model="basicInfo.address"
                       maxlength="100"
                       placeholder="请输入"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="备注"
                         class="textareaInput">
             <el-input v-model="basicInfo.remark"
                       maxlength="200"
                       placeholder="请输入文字(不得超过200个字符)"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="描述">
             <el-input v-model="basicInfo.describe"
                       maxlength="100"
                       placeholder="请输入"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <div class="custonInfo">
             <img src="../../images/icon_label.png"
@@ -130,13 +130,13 @@
             <el-input v-model="basicInfo.name"
                       maxlength="15"
                       placeholder="请输入"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="手机号:">
             <el-input v-model="basicInfo.phone"
                       maxlength="11"
                       placeholder="请输入"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
             <el-select v-model="basicInfo.gender"
@@ -153,19 +153,19 @@
             <el-input v-model="basicInfo.position"
                       placeholder="请输入"
                       maxlength="20"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="微信号:">
             <el-input v-model="basicInfo.weixin"
                       placeholder="请输入"
                       maxlength="20"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="邮箱:">
             <el-input v-model="basicInfo.email"
                       placeholder="请输入"
                       maxlength="60"
-                      @input="changeInput()"></el-input>
+                      @change="changeInput()"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -305,7 +305,7 @@
                       @click="addTag">+添加</span>
                 <span class="perchInput"
                       v-if="isShow">
-                  <input v-model="tagName"
+                  <input v-model.trim="tagName"
                          class="addInput"
                          placeholder="输入后按回车完成"
                          maxlength="30"
@@ -595,8 +595,8 @@ export default {
       this.isShow = !this.isShow
     },
     handleSearch() {
-      // console.log(this.tagName)
-      if (this.tagName) {
+      console.log(this.tagName)
+      if (this.tagName !== '') {
         this.$network
           .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
@@ -1203,6 +1203,13 @@ export default {
             }
             .creatTag {
               padding-right: 0;
+              span:nth-child(1) {
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 300px;
+              }
               span {
                 border: none;
                 padding: 0;
