@@ -106,7 +106,7 @@
               <el-form-item label="渠道名称:"
                             prop="name"
                             :rules="[ { required: true, message: '请输入渠道名称',trigger:'blur'}]">
-                <el-input v-model="editForm.name"
+                <el-input v-model="editForm.chanName"
                           placeholder="请输入渠道名称"
                           maxlength="20"
                           show-word-limit></el-input>
@@ -114,7 +114,7 @@
               <el-form-item label="欢迎语:"
                             class="textareaInput">
                 <el-input type="textarea"
-                          v-model="editForm.welText"
+                          v-model="editForm.welcomTxt"
                           placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
                           maxlength="200"
                           show-word-limit></el-input>
@@ -123,7 +123,7 @@
           </div>
           <div class="buttonWarp">
             <span class="cancel"
-                  @click="closeDialog()">取消</span>
+                  @click="closeEdit()">取消</span>
             <span class="save"
                   @click="saveEdit()">保存</span>
           </div>
@@ -175,8 +175,8 @@ export default {
       titleName: '',
       addForm: {},
       editForm: {
-        creatBy: '',
-        creatTime: '',
+        chanName: '',
+        welcomTxt: '',
       },
       detailForm: {},
       loading: false,
@@ -192,7 +192,7 @@ export default {
   methods: {
     formatDate,
     onLoad() {
-      console.log(11111111111111)
+      // console.log(11111111111111)
       this.page++
       this.getData()
     },
@@ -250,18 +250,21 @@ export default {
         .post('/user-service/channel/updChannel', this.editForm)
         .then((res) => {
           if (res.result) {
+            this.showEdit = false
             this.getData()
-            this.closeDialog()
           }
         })
     },
 
     //关闭弹框
+    closeEdit() {
+      this.showEdit = false
+      this.editForm = {}
+      this.getData()
+    },
     closeDialog() {
       this.showAdd = false
-      this.showEdit = false
       this.addForm = {}
-      this.editForm = {}
     },
     goBack() {
       this.$router.go(-1)
@@ -271,9 +274,11 @@ export default {
       this.titleName = '新增渠道'
     },
     editBtn(item, index) {
+      // console.log(item)
       this.titleName = '编辑渠道'
       this.showEdit = true
-      this.editForm = item
+      this.editForm.chanName = item.name
+      this.editForm.welcomTxt = item.welText
     },
     channelDetail(item, index) {
       console.log(item)

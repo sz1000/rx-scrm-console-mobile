@@ -9,12 +9,20 @@
       <span class="textTitle">线索详情</span>
     </div>
     <div class="iconName">
-      <div class="flag">鱼</div>
+      <div v-if="imageUser">
+        <img :src="imageUser"
+             alt="" />
+      </div>
+      <div class="flag"
+           v-else> {{name ? name.substr(0,1) : ''}}</div>
       <div class="nameSex">
         <span>{{name}}</span>
-        <!-- <span>{{nameFrom}}</span> -->
         <img src="../../images/icon_female@2x.png"
-             alt="" />
+             alt=""
+             v-if="basicInfo.gender=='2'" />
+        <img src="../../images/man.png"
+             alt=""
+             v-if="basicInfo.gender=='1'" />
 
       </div>
     </div>
@@ -236,7 +244,8 @@ import { formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
-      name: '小鱼儿',
+      name: '',
+      imageUser: '',
       optionSource: [],
       customList: [
         { label: '微信用户', customerType: 1 },
@@ -301,7 +310,8 @@ export default {
     }
   },
   created() {
-    // let tempObj = JSON.parse(localStorage.getItem('detail'))
+    let tempObj = JSON.parse(localStorage.getItem('detail'))
+    this.imageUser = tempObj.avatar
     // this.customName = tempObj.customerName
     // console.log(tempObj)
   },

@@ -123,12 +123,15 @@ export default {
     },
   },
   created() {
+    this.page = 1
     this.getListData()
   },
   methods: {
     formatDate,
     tabClick(v) {
       this.type = v
+      this.page = 1
+      this.cardList = []
       this.inputValue = ''
       this.getListData()
     },
@@ -147,9 +150,6 @@ export default {
           allname: this.inputValue,
         })
         .then((res) => {
-          // this.cardList = []
-          // this.loading = false
-          // this.cardList = res.data.iPage.records
           this.total = res.data.iPage.total
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表
@@ -172,7 +172,7 @@ export default {
       this.$router.go(-1)
     },
     addCules() {
-      console.log(this.type)
+      // console.log(this.type)
       this.$router.push({ path: 'addCustomer', query: { type: this.type } })
     },
     inquire: _throttle(function () {
