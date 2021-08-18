@@ -130,6 +130,8 @@
             <el-select v-model="basicInfo.gender"
                        placeholder="请选择"
                        @change="changeGender">
+              <el-option label="未知"
+                         value="0"></el-option>
               <el-option label="男"
                          value="1"></el-option>
               <el-option label="女"
