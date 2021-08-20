@@ -742,6 +742,7 @@ export default {
             if (res.result) {
               this.show = false
               this.getTimeline()
+              this.getDetailForm()
               this.$message({
                 type: 'success',
                 message: '修改成功',

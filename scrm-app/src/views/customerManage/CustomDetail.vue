@@ -376,6 +376,7 @@ export default {
       customList: [
         { label: '微信用户', customerType: 1 },
         { label: '企微用户', customerType: 2 },
+        { label: '未知', customerType: 0 },
       ],
 
       optionsCreat: [],
@@ -760,6 +761,7 @@ export default {
             if (res.result) {
               this.show = false
               this.getTimeline()
+              this.getDetailForm()
               this.$message({
                 type: 'success',
                 message: '修改成功',

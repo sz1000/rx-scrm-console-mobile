@@ -275,6 +275,7 @@ export default {
       customList: [
         { label: '微信用户', customerType: 1 },
         { label: '企微用户', customerType: 2 },
+        { label: '未知', customerType: 0 },
       ],
 
       optionsCreat: [],

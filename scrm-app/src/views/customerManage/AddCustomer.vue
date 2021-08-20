@@ -48,7 +48,7 @@
             <el-option v-for="item in customList"
                        :key="item.value"
                        :label="item.label"
-                       :value="item.value">
+                       :value="item.customerType">
             </el-option>
           </el-select>
         </el-form-item>
@@ -173,8 +173,9 @@ export default {
       optionsCreat: [],
       optionsScale: [],
       customList: [
-        { label: '微信用户', value: '1' },
-        { label: '企微用户', value: '2' },
+        { label: '微信用户', customerType: 1 },
+        { label: '企微用户', customerType: 2 },
+        { label: '未知', customerType: 0 },
       ],
     }
   },
