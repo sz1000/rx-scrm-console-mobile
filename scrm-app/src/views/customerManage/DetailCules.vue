@@ -399,14 +399,7 @@ export default {
       personTagList: [],
       tagList: [],
       groupList: [],
-      timeLineList: [
-        {
-          title: '步骤一',
-          userName: '描述信息',
-          context: '描述信息描述信息描述信息描述信息',
-          createTime: 1628128378602,
-        },
-      ],
+      timeLineList: [],
       show: false,
       isShowDialog: null,
       titleName: '',
@@ -1181,6 +1174,11 @@ export default {
               .creatTag {
                 background: #fafbff;
                 margin-bottom: 16px;
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 300px;
               }
               .changeTag {
                 background: #4168f6;

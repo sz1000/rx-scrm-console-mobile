@@ -921,6 +921,11 @@ export default {
               .creatTag {
                 background: #fafbff;
                 margin-bottom: 16px;
+                vertical-align: middle;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 300px;
               }
               .changeTag {
                 background: #4168f6;

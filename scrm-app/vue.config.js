@@ -19,9 +19,9 @@ module.exports = {
     },
     transpileDependencies: ['element-ui', 'vant'],
 
-    chainWebpack(config) {
+    chainWebpack: (config) => {
         // 在chainWebpack中添加下面的代码
-        config.entry('./src/main.js').add('babel-polyfill') // main是入口js文件
+        config.entry('main').add('babel-polyfill') // main是入口js文件
     },
     // chainWebpack: (config) => {
     //     config.module
