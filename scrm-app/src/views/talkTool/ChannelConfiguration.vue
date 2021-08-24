@@ -76,7 +76,7 @@
                             :rules="[ { required: true, message: '请输入渠道名称',trigger:'blur'}]">
                 <el-input v-model="addForm.name"
                           placeholder="请输入渠道名称"
-                          maxlength="20"
+                          maxlength="15"
                           show-word-limit></el-input>
               </el-form-item>
               <el-form-item label="欢迎语:"
