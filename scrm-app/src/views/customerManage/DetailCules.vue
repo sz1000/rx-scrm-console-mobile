@@ -187,7 +187,7 @@
           </div>
           <div class="btn"
                @click="unfold = !unfold"
-               v-show="companyTagList.length>5">
+               v-show="companyTagList.length>2">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -263,7 +263,7 @@
                  :key="index">
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
-                <span class="creatTag"
+                <span class="creatTag "
                       :class="{ 'changeTag': highLightArr.findIndex(item=>{return item.tagid == list.tagid})>-1 }"
                       v-for="(list, index) in item.children"
                       :key="list.id"
@@ -1174,11 +1174,11 @@ export default {
               .creatTag {
                 background: #fafbff;
                 margin-bottom: 16px;
-                vertical-align: middle;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 300px;
+                // vertical-align: middle;
+                // white-space: nowrap;
+                // overflow: hidden;
+                // text-overflow: ellipsis;
+                // max-width: 300px;
               }
               .changeTag {
                 background: #4168f6;
