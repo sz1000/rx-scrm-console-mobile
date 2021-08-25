@@ -214,7 +214,7 @@
           </div>
           <div class="btn"
                @click="isShowPerson = !isShowPerson"
-               v-show="personTagList.length>5">
+               v-show="personTagList.filter(item=>{return item.isChecked == 1}).length>5">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -578,7 +578,9 @@ export default {
             clueCustomerNo: this.objItem.clueCustomerNo,
           })
           .then((res) => {
-            this.personTagList = res.data
+            if (res.result) {
+              this.personTagList = res.data
+            }
           })
       }
       this.showInput = null
@@ -1001,7 +1003,7 @@ export default {
           .over-hidden {
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             overflow: hidden;
           }
           .btn {
