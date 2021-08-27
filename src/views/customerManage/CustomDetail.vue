@@ -388,7 +388,7 @@ export default {
         customerType: '',
         mobil: '',
         cropFullName: '',
-        cropscale: '',
+        corpScale: '',
         address: '',
         remark: '',
         describe: '',
@@ -487,7 +487,7 @@ export default {
     },
     scaleChange(val) {
       // console.log(val, this.basicInfo)
-      this.basicInfo.cropscale = val
+      this.basicInfo.corpScale = val
       this.update()
     },
     getTimeline() {
