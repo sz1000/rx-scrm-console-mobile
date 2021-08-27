@@ -85,7 +85,7 @@
             </el-cascader>
           </el-form-item>
           <el-form-item label="企业规模">
-            <el-select v-model="basicInfo.corpScale"
+            <el-select v-model="basicInfo.cropscale"
                        placeholder="请选择"
                        @change="scaleChange">
               <el-option v-for="item in optionsScale"
@@ -287,7 +287,7 @@ export default {
         customerType: '',
         mobil: '',
         cropFullName: '',
-        corpScale: '',
+        cropscale: '',
         address: '',
         remark: '',
         describe: '',
@@ -382,6 +382,7 @@ export default {
     },
     scaleChange(val) {
       // console.log(val, this.basicInfo)
+      this.basicInfo.cropscale = val
       this.update()
     },
     getTimeline() {
