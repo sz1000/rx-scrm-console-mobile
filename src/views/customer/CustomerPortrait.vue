@@ -278,6 +278,7 @@ export default {
     }
   },
   created() {
+    // console.log(wx)
     let href = window.location.href.split('?')[1]
     let p = href.split('&')[0]
     let authCode = p.split('=')[1]
