@@ -834,7 +834,7 @@ export default {
             }
           }
           .el-form-item__label {
-            width: 155px;
+            // width: 155px;
             font-size: 28px;
             line-height: 80px;
             color: #838a9d;

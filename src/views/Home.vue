@@ -98,6 +98,7 @@ export default {
   padding: 24px;
   background: #fff;
   height: 100%;
+  overflow: auto;
   .customAccont {
     position: relative;
     font-size: 28px;
