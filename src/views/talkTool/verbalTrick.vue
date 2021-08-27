@@ -12,18 +12,18 @@
       <!-- 头部 -->
       <div class="warp-box">
         <div class="head">
-          <van-collapse v-model="activeNames">
-            <van-collapse-item name="1" value="查看">
-              <template #title>
-                <div class="head-warp">
-                  <van-icon name="bell" /><span class="sop-tite family-regular"
-                    >[个人SOP]</span
-                  >
-                  <span class="message">1条消息待发送</span>
-                </div>
+          <div>
+            <van-nav-bar>
+              <template #left>
+                <i class="el-icon-message-solid"></i>
+                <span class="sop-tite family-regular">[个人SOP]</span>
+                <span class="message">1条消息待发送</span>
               </template>
-            </van-collapse-item>
-          </van-collapse>
+              <template #right>
+                <span class="ck-text">查看</span><van-icon name="arrow-down" />
+              </template>
+            </van-nav-bar>
+          </div>
         </div>
       </div>
       <!-- tabMenu -->
@@ -390,7 +390,7 @@ export default {
   background: #fff;
 }
 // 头部
-.van-collapse {
+.van-nav-bar {
   padding: 10px;
   background: rgba(65, 104, 246, 0.04);
   border-radius: 8px;
@@ -412,8 +412,10 @@ export default {
   font-size: 28px;
   margin-left: 16px;
 }
-.head-warp {
-  width: 30vh;
+.ck-text {
+  font-weight: 400;
+  color: #838a9d;
+  font-size: 24px;
 }
 // 查询
 .searchInput {

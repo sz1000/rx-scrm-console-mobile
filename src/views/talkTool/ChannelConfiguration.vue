@@ -233,7 +233,7 @@ export default {
       this.getData();
     },
     getData() {
-      this.loading = true;
+      this.loading = false;
       this.$network
         .get("/user-service/channel/getChannelList", {
           page: this.page,
@@ -386,8 +386,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.ChannelConfiguration {
-}
 .channelConfig {
   .headerTitle {
     background: #fff;
