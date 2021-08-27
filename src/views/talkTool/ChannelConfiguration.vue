@@ -1,36 +1,31 @@
 <template>
   <div class="channelConfig">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
       <span class="textTitle">渠道配置</span>
     </div>
     <div class="tabMenu">
-      <div class="tabBtn">
-        全部渠道
-      </div>
-      <span class="addBtn"
-            @click="addChannel">
-        <img src="../../images/icon_add@2x.png"
-             alt="">
+      <div class="tabBtn">全部渠道</div>
+      <span class="addBtn" @click="addChannel">
+        <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
     </div>
-    <van-list v-model="loading"
-              :finished="finished"
-              :immediate-check='false'
-              finished-text="没有更多了"
-              @load="onLoad">
-      <div class="cardCode"
-           v-for="(item,index) in channelList"
-           :key="index">
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      :immediate-check="false"
+      finished-text="没有更多了"
+      @load="onLoad"
+    >
+      <div class="cardCode" v-for="(item, index) in channelList" :key="index">
         <div class="operationTop">
           <div class="codeName">
             <span>渠道名称:</span>
-            <span>{{item.name}}</span>
+            <span>{{ item.name }}</span>
           </div>
           <div class="editBtn">
             <span @click="editBtn(item)">
@@ -43,102 +38,114 @@
             </span>
           </div>
         </div>
-        <div class="contentBox"
-             @click="channelDetail(item,index)">
+        <div class="contentBox" @click="channelDetail(item, index)">
           <div class="codeNum">
             <span>活码数:</span>
-            <span>{{item.livecodeSum}}</span>
+            <span>{{ item.livecodeSum }}</span>
           </div>
           <div class="codeNum">
             <span>添加客户数:</span>
-            <span>{{item.cusSum}}</span>
+            <span>{{ item.cusSum }}</span>
           </div>
           <div class="welcomelable">
             <span>渠道欢迎语:</span>
-            <span>{{item.welText}}</span>
+            <span>{{ item.welText }}</span>
           </div>
-
         </div>
       </div>
     </van-list>
     <div class="bottom_model">
-      <van-action-sheet v-model="showAdd"
-                        :title="titleName"
-                        ref="vantWarp"
-                        class="vant_sheet">
+      <van-action-sheet
+        v-model="showAdd"
+        :title="titleName"
+        ref="vantWarp"
+        class="vant_sheet"
+      >
         <div class="content">
           <div class="addForm">
-            <el-form ref="form"
-                     :model="addForm"
-                     label-position='right'>
-              <el-form-item label="渠道名称:"
-                            prop="name"
-                            :rules="[ { required: true, message: '请输入渠道名称',trigger:'blur'}]">
-                <el-input v-model="addForm.name"
-                          placeholder="请输入渠道名称"
-                          maxlength="15"
-                          show-word-limit></el-input>
+            <el-form ref="form" :model="addForm" label-position="right">
+              <el-form-item
+                label="渠道名称:"
+                prop="name"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入渠道名称',
+                    trigger: 'blur',
+                  },
+                ]"
+              >
+                <el-input
+                  v-model="addForm.name"
+                  placeholder="请输入渠道名称"
+                  maxlength="15"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
-              <el-form-item label="欢迎语:"
-                            class="textareaInput">
-                <el-input type="textarea"
-                          v-model="addForm.welText"
-                          placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
-                          maxlength="200"
-                          show-word-limit></el-input>
+              <el-form-item label="欢迎语:" class="textareaInput">
+                <el-input
+                  type="textarea"
+                  v-model="addForm.welText"
+                  placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
+                  maxlength="200"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
-            <span class="cancel"
-                  @click="closeDialog()">取消</span>
-            <span class="save"
-                  @click="saveDialog()">保存</span>
+          <div class="buttonWarp" v-show="hidshow">
+            <span class="cancel" @click="closeDialog()">取消</span>
+            <span class="save" @click="saveDialog()">保存</span>
           </div>
         </div>
       </van-action-sheet>
-      <van-action-sheet v-model="showEdit"
-                        :title="titleName"
-                        class="vant_sheet">
+      <van-action-sheet
+        v-model="showEdit"
+        :title="titleName"
+        class="vant_sheet"
+      >
         <div class="content">
           <div class="addForm">
-            <el-form ref="form"
-                     :model="editForm"
-                     label-position='right'>
-              <el-form-item label="渠道名称:"
-                            prop="name"
-                            :rules="[{ required: true, message: '请输入渠道名称',trigger:'blur'}]">
-                <el-input v-model="editForm.name"
-                          placeholder="请输入渠道名称"
-                          maxlength="15"
-                          show-word-limit></el-input>
+            <el-form ref="form" :model="editForm" label-position="right">
+              <el-form-item
+                label="渠道名称:"
+                prop="name"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入渠道名称',
+                    trigger: 'blur',
+                  },
+                ]"
+              >
+                <el-input
+                  v-model="editForm.name"
+                  placeholder="请输入渠道名称"
+                  maxlength="15"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
-              <el-form-item label="欢迎语:"
-                            class="textareaInput">
-                <el-input type="textarea"
-                          v-model="editForm.welText"
-                          placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
-                          maxlength="200"
-                          show-word-limit></el-input>
+              <el-form-item label="欢迎语:" class="textareaInput">
+                <el-input
+                  type="textarea"
+                  v-model="editForm.welText"
+                  placeholder="快来设置欢迎语吧~ 设置个性化欢迎语，扫描该员工活码添加的客户，将自动推送该欢迎语"
+                  maxlength="200"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
-            <span class="cancel"
-                  @click="closeEdit()">取消</span>
-            <span class="save"
-                  @click="saveEdit()">保存</span>
+          <div class="buttonWarp" v-show="hidshow">
+            <span class="cancel" @click="closeEdit()">取消</span>
+            <span class="save" @click="saveEdit()">保存</span>
           </div>
         </div>
       </van-action-sheet>
-      <van-action-sheet v-model="showDetail"
-                        :title="titleName">
+      <van-action-sheet v-model="showDetail" :title="titleName">
         <div class="content">
           <div class="codeDetail">
-            <el-form label-position="right"
-                     :model="detailForm">
+            <el-form label-position="right" :model="detailForm">
               <el-form-item label="渠道名称:">
                 <span>{{ detailForm.name }}</span>
               </el-form-item>
@@ -149,13 +156,17 @@
                 <span>{{ detailForm.cusSum }}</span>
               </el-form-item>
               <el-form-item label="客户最近添加时间:">
-                <span>{{ formatDate( detailForm.createTime ,'yyyy-MM-dd') }}</span>
+                <span>{{
+                  formatDate(detailForm.createTime, "yyyy-MM-dd")
+                }}</span>
               </el-form-item>
               <el-form-item label="渠道创建人:">
                 <span>{{ detailForm.createBy }}</span>
               </el-form-item>
               <el-form-item label="创建时间:">
-                <span>{{ formatDate( detailForm.createTime ,'yyyy-MM-dd') }}</span>
+                <span>{{
+                  formatDate(detailForm.createTime, "yyyy-MM-dd")
+                }}</span>
               </el-form-item>
               <el-form-item label="渠道欢迎语:">
                 <span>{{ detailForm.welText }}</span>
@@ -168,7 +179,7 @@
   </div>
 </template>
 <script>
-import { formatDate, _throttle } from '../../utils/tool'
+import { formatDate, _throttle } from "../../utils/tool";
 export default {
   data() {
     return {
@@ -176,11 +187,11 @@ export default {
       showAdd: false,
       showEdit: false,
       showDetail: false,
-      titleName: '',
+      titleName: "",
       addForm: {},
       editForm: {
-        chanName: '',
-        welcomTxt: '',
+        chanName: "",
+        welcomTxt: "",
       },
       detailForm: {},
       saveEditObj: {},
@@ -193,14 +204,14 @@ export default {
       docmHeight: 0, //默认屏幕高度
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
-    }
+    };
   },
   watch: {
     showHeight(val) {
       if (this.docmHeight > this.showHeight) {
-        this.hidshow = false
+        this.hidshow = false;
       } else {
-        this.hidshow = true
+        this.hidshow = true;
       }
     },
   },
@@ -208,48 +219,48 @@ export default {
     window.onresize = () =>
       (() => {
         this.showHeight =
-          document.getElementsByClassName('vant_sheet ')[0].clientHeight
+          document.getElementsByClassName("vant_sheet ")[0].clientHeight;
         // console.log(this.showHeight, this.docmHeight)
-      })()
+      })();
   },
   created() {
-    this.getData()
+    this.getData();
   },
   methods: {
     formatDate,
     onLoad() {
-      this.page += 1
-      this.getData()
+      this.page += 1;
+      this.getData();
     },
     getData() {
-      this.loading = true
+      this.loading = true;
       this.$network
-        .get('/user-service/channel/getChannelList', {
+        .get("/user-service/channel/getChannelList", {
           page: this.page,
           limit: this.pageSize,
         })
         .then((res) => {
-          this.loading = false
-          let rows = res.data.channelEntityPage.records //请求返回当页的列表
-          this.total = res.data.channelEntityPage.total
+          this.loading = false;
+          let rows = res.data.channelEntityPage.records; //请求返回当页的列表
+          this.total = res.data.channelEntityPage.total;
           if (rows == null || rows.length === 0) {
-            this.finished = true
-            return
+            this.finished = true;
+            return;
           }
-          let newSetArr = this.channelList.concat(rows)
-          this.channelList = this.unique(newSetArr)
-          console.log(this.channelList.length, this.total)
+          let newSetArr = this.channelList.concat(rows);
+          this.channelList = this.unique(newSetArr);
+          console.log(this.channelList.length, this.total);
           if (this.channelList.length >= this.total) {
-            this.finished = true
+            this.finished = true;
           } else {
-            this.onLoad()
+            this.onLoad();
           }
-        })
+        });
     },
     //去重一次
     unique(arr) {
-      const res = new Map()
-      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
+      const res = new Map();
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     // saveDialog: _throttle(function () {
     //   // console.log(this.addForm)
@@ -257,26 +268,26 @@ export default {
     saveDialog() {
       if (this.addForm.name == null) {
         this.$message({
-          type: 'error',
-          message: '请输入渠道名称',
-        })
-        return
+          type: "error",
+          message: "请输入渠道名称",
+        });
+        return;
       }
       this.$network
-        .post('/user-service/channel/addChannel', this.addForm)
+        .post("/user-service/channel/addChannel", this.addForm)
         .then((res) => {
           if (res.result) {
-            this.showAdd = false
+            this.showAdd = false;
             // this.page = 1
-            this.addForm = {}
-            this.getData()
+            this.addForm = {};
+            this.getData();
           } else {
             this.$message({
-              type: 'error',
-              message: res.msg || '保存失败',
-            })
+              type: "error",
+              message: res.msg || "保存失败",
+            });
           }
-        })
+        });
     },
     //保存编辑
     saveEdit() {
@@ -286,93 +297,93 @@ export default {
       //   welText: this.editForm.welcomTxt,
       // }
       this.$network
-        .post('/user-service/channel/updChannel', this.editForm)
+        .post("/user-service/channel/updChannel", this.editForm)
         .then((res) => {
           if (res.result) {
-            this.showEdit = false
-            this.channelList = []
-            this.page = 1
-            this.getData()
+            this.showEdit = false;
+            this.channelList = [];
+            this.page = 1;
+            this.getData();
           }
-        })
+        });
     },
 
     //关闭弹框
     closeEdit() {
-      this.showEdit = false
-      this.editForm = {}
-      this.getData()
+      this.showEdit = false;
+      this.editForm = {};
+      this.getData();
     },
     closeDialog() {
-      this.showAdd = false
-      this.addForm = {}
+      this.showAdd = false;
+      this.addForm = {};
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     addChannel() {
-      this.showAdd = true
-      this.titleName = '新增渠道'
+      this.showAdd = true;
+      this.titleName = "新增渠道";
 
       setTimeout(() => {
         this.docmHeight =
-          document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        console.log(this.docmHeight)
-      }, 200)
+          document.getElementsByClassName("vant_sheet ")[0].clientHeight;
+        console.log(this.docmHeight);
+      }, 200);
     },
     editBtn(item, index) {
       // console.log(item)
-      this.titleName = '编辑渠道'
-      this.showEdit = true
-      this.editForm = JSON.parse(JSON.stringify(item))
+      this.titleName = "编辑渠道";
+      this.showEdit = true;
+      this.editForm = JSON.parse(JSON.stringify(item));
       // this.editForm.chanName = item.name
       // this.editForm.welcomTxt = item.welText
       // this.saveEditObj = item
       setTimeout(() => {
         this.docmHeight =
-          document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        console.log(this.docmHeight)
-      }, 200)
+          document.getElementsByClassName("vant_sheet ")[0].clientHeight;
+        console.log(this.docmHeight);
+      }, 200);
     },
     channelDetail(item, index) {
-      console.log(item)
-      this.titleName = '渠道详情'
-      this.showDetail = true
-      this.detailForm = item
+      console.log(item);
+      this.titleName = "渠道详情";
+      this.showDetail = true;
+      this.detailForm = item;
     },
     deleteBtn(v) {
       this.$dialog
         .confirm({
-          title: '温馨提示',
-          message: '删除后将不可恢复，是否确认删除？',
-          className: 'deleteBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
+          title: "温馨提示",
+          message: "删除后将不可恢复，是否确认删除？",
+          className: "deleteBtn",
+          confirmButtonText: "是",
+          cancelButtonText: "否",
+          messageAlign: "left",
         })
         .then(() => {
           this.$network
-            .post('/user-service/channel/delChannel', v)
+            .post("/user-service/channel/delChannel", v)
             .then((res) => {
               if (res.result) {
-                this.page = 1
-                this.channelList = []
-                this.getData()
+                this.page = 1;
+                this.channelList = [];
+                this.getData();
               } else {
                 this.$message({
-                  type: 'error',
+                  type: "error",
                   message: res.msg,
-                })
+                });
               }
-            })
+            });
           // on confirm
         })
         .catch(() => {
           // on cancel
-        })
+        });
     },
   },
-}
+};
 </script>
 <style lang="less" scoped>
 .ChannelConfiguration {
@@ -437,7 +448,7 @@ export default {
       padding-left: 16px;
       position: relative;
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 5px;
         left: 0;
@@ -463,7 +474,7 @@ export default {
       height: 88px;
       position: relative;
       &::after {
-        content: '';
+        content: "";
         height: 1px;
         width: 750px;
         background: #f0f2f7;
@@ -545,7 +556,7 @@ export default {
       font-weight: 600;
     }
     .content {
-      height: 845px;
+      // height: 845px;
       .addForm,
       .codeDetail {
         // height: 800px;
@@ -553,7 +564,7 @@ export default {
         padding: 24px;
         font-size: 28px;
         font-weight: 500;
-        overflow-y: scroll;
+        // overflow-y: scroll;
         /deep/.el-form {
           height: 100%;
           .el-form-item {
@@ -612,6 +623,7 @@ export default {
           .textareaInput {
             height: 400px;
             .el-textarea {
+              margin-top: 20px;
               .el-textarea__inner {
                 font-size: 28px;
                 height: 400px;
@@ -653,8 +665,9 @@ export default {
         justify-content: space-around;
         font-size: 28px;
         width: 100%;
-        position: fixed;
+        // position: fixed;
         bottom: 24px;
+        // margin-top: 80px;
 
         span {
           display: inline-block;
@@ -675,6 +688,18 @@ export default {
         }
       }
     }
+  }
+}
+@media screen and (min-width: 750px) {
+  .van-action-sheet {
+    width: 750px;
+  }
+  .buttonWarp {
+    width: 750px !important;
+  }
+  .van-popup--bottom {
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 }
 </style>

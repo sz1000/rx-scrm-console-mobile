@@ -10,6 +10,7 @@ import CustomTransition from '../views/customer/CustomTransition.vue'
 import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
+import verbalTrick from '../views/talkTool/verbalTrick.vue'
 // // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
@@ -90,6 +91,13 @@ const routes = [{
                     bodyClass: 'ChannelConfiguration',
                 },
                 component: ChannelConfiguration,
+            },
+            {
+                path: 'verbalTrick',
+                meta: {
+                    bodyClass: 'verbalTrick',
+                },
+                component: verbalTrick,
             },
         ],
     },

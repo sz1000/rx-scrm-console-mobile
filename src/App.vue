@@ -11,10 +11,12 @@
 <style lang="less">
 #app {
   padding: 0;
-  width: 100%;
+  width: 750px;
   height: 100%;
+  margin: 0 auto;
   background: #f6f7f9;
 }
+
 .el-select-dropdown {
   .el-select-dropdown__item {
     font-size: 28px;
