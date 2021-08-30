@@ -610,6 +610,11 @@ export default {
           .then((res) => {
             if (res.result) {
               this.personTagList = res.data
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.msg || '添加失败',
+              })
             }
           })
       }
