@@ -35,12 +35,12 @@
           <span>渠道配置</span>
         </div>
       </router-link>
-      <!-- <router-link to="/talkTool/verbalTrick">
+      <router-link to="/talkTool/verbalTrick">
         <div class="commonBtn">
           <img src="../images/qudao.png" alt="" />
           <span>话术</span>
         </div>
-      </router-link> -->
+      </router-link>
     </div>
     <div class="customAccont manage">客户管理</div>
     <div class="btnRouter custom">
