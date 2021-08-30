@@ -24,6 +24,7 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+
 Vue.use(VueRouter)
 
 const routes = [{
@@ -179,6 +180,10 @@ const routes = [{
                 component: CustomerSeas,
             },
         ],
+    },
+    //营销互动
+    {
+        path: '',
     },
 ]
 

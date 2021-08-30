@@ -4,14 +4,13 @@ let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
     BASE_URL = 'http://172.10.7.114:8099' //袁
-} else if (location.hostname == 'h5-scrm.ruixin.tech') {
-    BASE_URL = 'https://api-scrm.ruixin.tech'
-} else if (location.hostname == 'dev-h5-console.jizhouhudong.com') {
-    BASE_URL = 'dev-h5-console.jizhouhudong.com' //开发
-} else if (location.hostname == 'test-h5-console.jizhouhudong.com') {
-    BASE_URL = 'https://test-h5-console.jizhouhudong.com' //测试
+} else if (location.hostname == 'dev-h5.jizhouhudong.com') {
+    BASE_URL = 'https://dev-api.jizhouhudong.com' //开发
+        // console.log('11111111111111', BASE_URL)
+} else if (location.hostname == 'test-h5.jizhouhudong.com') {
+    BASE_URL = 'https://test-api.jizhouhudong.com' //测试
 } else {
-    BASE_URL = 'https://h5-console.jizhouhudong.com' //生产
+    BASE_URL = 'https://api.jizhouhudong.com' //生产
 }
 let instance = axios.create({
     baseURL: BASE_URL,
