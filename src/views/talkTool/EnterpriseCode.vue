@@ -115,7 +115,8 @@
                            multiple
                            collapse-tags
                            @change="changeUsre"
-                           clearable>
+                           clearable
+                           popper-class="popper-select-class">
                   <el-option v-for="item in usreList"
                              :key="item.value"
                              :label="item.name"
@@ -139,7 +140,8 @@
                 <el-select v-model="addForm.chId"
                            placeholder="请选择"
                            @change="changeChannel"
-                           clearable>
+                           clearable
+                           popper-class="popper-select-class">
                   <el-option v-for="item in channelList"
                              :key="item.value"
                              :label="item.name"
@@ -203,7 +205,8 @@
                            multiple
                            collapse-tags
                            @change="changeUsre"
-                           clearable>
+                           clearable
+                           popper-class="popper-select-class">
                   <el-option v-for="item in usreList"
                              :key="item.value"
                              :label="item.name"
@@ -226,7 +229,8 @@
                 <el-select v-model="editForm.chId"
                            placeholder="请选择"
                            @change="changeChannel"
-                           clearable>
+                           clearable
+                           popper-class="popper-select-class">
                   <el-option v-for="item in channelList"
                              :key="item.value"
                              :label="item.name"

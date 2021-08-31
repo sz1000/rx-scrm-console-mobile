@@ -413,6 +413,7 @@ export default {
         .box1 {
           display: flex;
           width: 50%;
+          line-height: 87px;
           margin-left: 29px;
         }
       }
