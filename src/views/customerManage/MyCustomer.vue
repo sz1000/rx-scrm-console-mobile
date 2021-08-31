@@ -396,16 +396,22 @@ export default {
           display: inline-block;
         }
         .label {
-          width: 140px;
+          width: 200px;
           color: #838a9d;
         }
         .value {
+          width: 100%;
           color: #3c4353;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .box {
+          display: flex;
           width: 50%;
         }
         .box1 {
+          display: flex;
           width: 50%;
           margin-left: 29px;
         }

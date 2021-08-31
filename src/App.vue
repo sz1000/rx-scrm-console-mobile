@@ -17,11 +17,11 @@ export default {}
   height: 100%;
   margin: 0 auto;
   background: #f6f7f9;
-  //解决ios双击才能选中
-  /deep/.el-scrollbar {
-    > .el-scrollbar__bar {
-      opacity: 1 !important;
-    }
+}
+//解决ios双击才能选中
+/deep/.el-scrollbar {
+  > .el-scrollbar__bar {
+    opacity: 1 !important;
   }
 }
 .el-select-dropdown {
