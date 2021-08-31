@@ -425,17 +425,20 @@ export default {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+          let allChildTag = res.data.tagCorpList.map((item) => {
+            return item.children
+          })
+          // let childTag = allChildTag.flat()
+          let childTag = [].concat.apply([], allChildTag)
+          // console.log('---allChildTag---', allChildTag, childTag)
+
           this.companyTagList.forEach((item) => {
-            this.groupList.forEach((v, i) => {
-              if (item.parenttag == v.tagid) {
-                this.groupList[i].children.forEach((chItem, chIndex) => {
-                  if (item.tagid == chItem.tagid) {
-                    this.highLightArr.push(chItem)
-                  }
-                })
+            childTag.forEach((chItem, chIndex) => {
+              if (item.tagid == chItem.tagid) {
+                this.highLightArr.push(chItem)
               }
             })
-            // console.log(this.highLightArr)
+            // console.log('-----列表----', this.highLightArr)
           })
         })
     },
