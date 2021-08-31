@@ -19,7 +19,7 @@ export default {}
   background: #f6f7f9;
 }
 //解决ios双击才能选中
-/deep/.el-scrollbar {
+.el-scrollbar {
   > .el-scrollbar__bar {
     opacity: 1 !important;
   }
