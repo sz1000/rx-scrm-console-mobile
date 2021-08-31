@@ -13,12 +13,12 @@ import 'vant/lib/index.css'
 import './styles/common.less'
 import preventReClick from './utils/directive.js' //防多次点击，重复提交
 import Network from './utils/request'
+
 Vue.use(preventReClick)
 Vue.use(Vant)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.prototype.$network = Network
-
 new Vue({
     router,
     store,

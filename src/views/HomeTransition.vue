@@ -15,6 +15,9 @@ export default {
     }
   },
   created() {
+    let state = this.$route.params.state || '/home'
+    console.log(state)
+    // localStorage.setItem('state', state)
     this.getWxAppid()
   },
   methods: {
@@ -30,7 +33,7 @@ export default {
               'https://' + res.data.redirect_uri
             ),
           }
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&scope=snsapi_base#wechat_redirect`
+          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=${state}&scope=snsapi_base#wechat_redirect`
         })
     },
   },

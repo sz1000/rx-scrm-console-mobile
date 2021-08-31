@@ -358,8 +358,8 @@ export default {
                     // alert(JSON.stringify(that.userId))
                     // alert(JSON.stringify(that.obj))
                     that.getMethod()
-                    that.getTimeline()
-                    that.getTagList()
+                    // that.getTimeline()
+                    // that.getTagList()
                   } else {
                     //错误处理
                   }
@@ -401,13 +401,15 @@ export default {
           this.nameFrom = res.data.clueCustomerVO.customerType
           this.item = res.data.clueCustomerVO
           this.imageUser = res.data.clueCustomerVO.avatar
+          this.timeLineList = res.data.followMessageEntity
+          this.getTagList()
         })
     },
     getTimeline() {
       // console.log(this.objItem, '------')
       this.$network
         .get('/customer-service/cluecustomer/getMessage', {
-          cluecustomerno: this.userId,
+          cluecustomerno: this.item.clueCustomerNo,
         })
         .then((res) => {
           this.timeLineList = res.data
@@ -417,7 +419,7 @@ export default {
       this.highLightArr = []
       this.$network
         .get('/customer-service/cluecustomer/gettag', {
-          clueCustomerNo: this.userId,
+          clueCustomerNo: this.item.clueCustomerNo,
         })
         .then((res) => {
           this.companyTagList = res.data.corpTagList
@@ -464,7 +466,7 @@ export default {
         this.$network
           .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
-            clueCustomerNo: this.userId,
+            clueCustomerNo: this.item.clueCustomerNo,
           })
           .then((res) => {
             if (res.result) {
@@ -547,13 +549,13 @@ export default {
       } else if (v == 3) {
         this.$network
           .post('/customer-service/cluecustomer/addMessage', {
-            clueCustomerNo: this.userId,
+            clueCustomerNo: this.item.clueCustomerNo,
             context: this.message,
           })
           .then((res) => {
             if (res.result) {
               this.show = false
-              this.getTimeline()
+              // this.getTimeline()
               this.getMethod()
               this.$message({
                 type: 'success',

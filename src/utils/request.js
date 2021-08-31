@@ -4,7 +4,7 @@ let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
     // BASE_URL = 'http://172.10.7.114:8099' //袁
-    BASE_URL = 'https://dev-api.jizhouhudong.com' //开发
+    BASE_URL = 'https://test-api.jizhouhudong.com' //开发
 } else if (location.hostname == 'dev-h5.jizhouhudong.com') {
     BASE_URL = 'https://dev-api.jizhouhudong.com' //开发
         // console.log('11111111111111', BASE_URL)
@@ -66,9 +66,6 @@ const errorHandle = (status, other) => {
             break
         case 401:
             // console.log('---1111-----', router)
-            router.replace({
-                path: '/login',
-            })
             console.log('认证失败')
             break
         case 403:
@@ -98,12 +95,22 @@ methods.forEach((item) => {
             .then((res) => {
                 // console.log('---res1----', res)
                 let data = res.data
-
-                return Promise.resolve(data)
-                    // if (data.result) {
-                    // } else {
-                    //     return Promise.reject(data.msg)
-                    // }
+                if (data.result) {
+                    return Promise.resolve(data)
+                } else {
+                    if (
+                        data.code == 'error_token_expired' ||
+                        data.code == 'error_token_null'
+                    ) {
+                        console.log('--------pathname-----', window.location.pathname)
+                        let pathname = window.location.pathname
+                        router.replace({
+                            name: 'homeTransition',
+                            params: { state: pathname },
+                        })
+                    }
+                    // return Promise.reject(data.msg)
+                }
             })
             .catch((err) => {
                 return Promise.reject(err.error)

@@ -180,6 +180,7 @@
 </template>
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
+
 export default {
   data() {
     return {

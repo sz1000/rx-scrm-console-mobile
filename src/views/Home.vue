@@ -91,6 +91,8 @@ export default {
         .then((res) => {
           this.token = res.data.accessToken
           localStorage.setItem('token', res.data.accessToken)
+          // let pathurl = localStorage.getItem('state')
+          // this.$router.push(pathurl)
         })
     },
   },
