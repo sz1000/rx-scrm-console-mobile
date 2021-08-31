@@ -309,7 +309,13 @@ export default {
         chId: '',
         remark: '',
       },
-      editForm: {},
+      editForm: {
+        name: '',
+        userArr: [],
+        status: '1',
+        chId: '',
+        remark: '',
+      },
       detailForm: {},
       usreList: [],
       channelList: [],
@@ -361,7 +367,6 @@ export default {
           limit: this.pageSize,
         })
         .then((res) => {
-          // this.liveList = []
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表
           this.total = res.data.iPage.total
@@ -413,7 +418,7 @@ export default {
       // console.log(val)
     },
     editBtn(v) {
-      // console.log(v)
+      // console.log(this.editForm)
       this.titleName = '编辑企微活码'
       this.showEdit = true
       this.editForm = JSON.parse(JSON.stringify(v))
@@ -498,6 +503,7 @@ export default {
           if (res.result) {
             this.getData()
             this.showAdd = false
+            this.liveList = []
             this.addForm = {}
           } else {
             this.$message({
@@ -508,6 +514,7 @@ export default {
         })
     }, 5000),
     saveEdit: _throttle(function () {
+      // console.log(this.editForm)
       let params = {
         livecodeEntity: { ...this.editForm },
         userArr: this.editForm.userArr,
@@ -519,6 +526,8 @@ export default {
           if (res.result) {
             this.getData()
             this.showEdit = false
+            this.liveList = []
+            this.editForm = {}
           } else {
             this.$message({
               type: 'error',
