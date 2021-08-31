@@ -92,8 +92,7 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
+          <div class="buttonWarp">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
@@ -133,8 +132,7 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
+          <div class="buttonWarp">
             <span class="cancel"
                   @click="closeEdit()">取消</span>
             <span class="save"

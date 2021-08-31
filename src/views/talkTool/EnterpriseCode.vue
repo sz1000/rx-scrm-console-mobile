@@ -82,6 +82,7 @@
       <van-action-sheet v-model="showAdd"
                         :title="titleName"
                         :overlay="overlay"
+                        lock-scroll
                         :get-container="getContainer"
                         class="vant_sheet">
         <div class="content">
@@ -156,8 +157,7 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
+          <div class="buttonWarp">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
@@ -168,6 +168,7 @@
       <van-action-sheet v-model="showEdit"
                         :title="titleName"
                         :overlay="overlay"
+                        lock-scroll
                         :get-container="getContainer"
                         class="vant_sheet">
         <div class="content">
@@ -195,7 +196,7 @@
               <el-form-item label="使用员工:"
                             prop="userArr"
                             :rules="[
-                  { required: true, message: '请选择', trigger: 'change' },
+                  { required: true, message: '请选择',},
                 ]">
                 <el-select v-model="editForm.userArr"
                            placeholder="请选择使用员工，可多选"
@@ -217,7 +218,6 @@
                              false-label="0"
                              @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
               </el-form-item>
-
               <el-form-item label="渠道:"
                             prop="chId"
                             :rules="[
@@ -244,8 +244,7 @@
               </el-form-item>
             </el-form>
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
+          <div class="buttonWarp">
             <span class="cancel"
                   @click="closeDialog()">取消</span>
             <span class="save"
@@ -362,7 +361,7 @@ export default {
           limit: this.pageSize,
         })
         .then((res) => {
-          this.liveList = []
+          // this.liveList = []
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表
           this.total = res.data.iPage.total
@@ -411,7 +410,7 @@ export default {
       this.addForm.userArr = val
     },
     checkChange(val) {
-      console.log(val)
+      // console.log(val)
     },
     editBtn(v) {
       // console.log(v)
@@ -423,18 +422,20 @@ export default {
         this.usreList = res.data.userlist
         this.channelList = res.data.chlist
         let tempArr = v.userNames.split(',')
+        // console.log('----tempArr', tempArr)
         let finalArr = this.usreList.filter(
           (item) => tempArr.indexOf(item.name) > -1
         )
         this.editForm.userArr = finalArr.map((item) => {
           return item.userNo
         })
+        // console.log('----finalArr', finalArr)
         // console.log('----finalArr', this.editForm.userArr)
       })
       setTimeout(() => {
         this.docmHeight =
           document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        console.log(this.docmHeight)
+        // console.log(this.docmHeight)
       }, 500)
     },
     sendCode(item, index) {
@@ -506,28 +507,25 @@ export default {
           }
         })
     }, 5000),
-    saveEdit: _throttle(function (formName) {
+    saveEdit: _throttle(function () {
       let params = {
         livecodeEntity: { ...this.editForm },
         userArr: this.editForm.userArr,
       }
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$network
-            .post('/user-service/livecode/updLivecode', params)
-            .then((res) => {
-              if (res.result) {
-                this.getData()
-                this.showEdit = false
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res.msg || '修改失败',
-                })
-              }
+
+      this.$network
+        .post('/user-service/livecode/updLivecode', params)
+        .then((res) => {
+          if (res.result) {
+            this.getData()
+            this.showEdit = false
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg || '修改失败',
             })
-        }
-      })
+          }
+        })
     }, 5000),
     fnChangeUser(val) {
       console.log(val)
@@ -766,6 +764,7 @@ export default {
     }
   }
   .bottom_model {
+    -webkit-overflow-scrolling: touch;
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);
     }
