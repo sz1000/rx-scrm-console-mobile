@@ -64,7 +64,7 @@
         </div>
         <div class="box1">
           <span class="label">添加时间:</span>
-          <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')  }}</span>
+          <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd hh:mm:ss')  }}</span>
         </div>
       </div>
     </div>
@@ -146,7 +146,7 @@
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
                   <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd") }}
+                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
                   </span>
                 </div>
               </div>
@@ -523,7 +523,7 @@ export default {
         // console.log(this.highLightArr)
         this.$network
           .post(
-            `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
+            `/customer-service/cluecustomer/updCorptag/${this.item.clueCustomerNo}`,
             this.highLightArr
           )
           .then((res) => {

@@ -294,7 +294,7 @@ export default {
               item.name.includes('时间') &&
               JSON.stringify(item.value) !== 'null'
             ) {
-              item.value = formatDate(item.value, 'yyyy-MM-dd')
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
             }
           })
           this.systemList = tempSystem
@@ -422,6 +422,10 @@ export default {
         .van-cell {
           padding: 0;
           font-size: 28px;
+          border: 1px solid #f0f2f7;
+          &::after {
+            border-bottom: 0;
+          }
         }
         .van-field__label {
           width: 234px;

@@ -67,7 +67,7 @@
               </div>
               <div class="rowText">
                 <span>创建时间:</span>
-                <span>{{ formatDate(item.createTime, "yyyy-MM-dd") }}</span>
+                <span>{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
               </div>
               <div class="rowText">
                 <span>使用员工:</span>
@@ -181,7 +181,7 @@
               </el-form-item>
               <el-form-item label="创建时间:">
                 <span class="editText">{{
-                  formatDate(editForm.createTime, "yyyy-MM-dd")
+                  formatDate(editForm.createTime, "yyyy-MM-dd hh:mm:ss")
                 }}</span>
               </el-form-item>
               <el-form-item label="活码名称:"
@@ -275,7 +275,7 @@
               </el-form-item>
               <el-form-item label="创建时间:">
                 <span>{{
-                  formatDate(detailForm.createTime, "yyyy-MM-dd")
+                  formatDate(detailForm.createTime, "yyyy-MM-dd hh:mm:ss")
                 }}</span>
               </el-form-item>
               <el-form-item label="渠道:">

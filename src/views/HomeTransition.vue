@@ -18,10 +18,10 @@ export default {
     let state = this.$route.params.state || '/home'
     console.log(state)
     // localStorage.setItem('state', state)
-    this.getWxAppid()
+    this.getWxAppid(state)
   },
   methods: {
-    getWxAppid() {
+    getWxAppid(state) {
       this.$network
         .get('/user-service/m/user/getappid', {
           redirect_uri: '/home',

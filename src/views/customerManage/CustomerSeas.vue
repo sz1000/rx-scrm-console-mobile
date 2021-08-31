@@ -225,7 +225,7 @@
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{item.userName}}</div>
                   <span class="time_right">
-                    {{formatDate(item.createTime,'yyyy-MM-dd')}}
+                    {{formatDate(item.createTime,'yyyy-MM-dd hh:mm:ss')}}
                   </span>
                 </div>
               </div>
@@ -436,7 +436,7 @@ export default {
               item.name.includes('时间') &&
               JSON.stringify(item.value) !== 'null'
             ) {
-              item.value = formatDate(item.value, 'yyyy-MM-dd')
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
             }
           })
           this.systemList = tempSystem

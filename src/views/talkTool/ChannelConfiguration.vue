@@ -157,7 +157,7 @@
               </el-form-item>
               <el-form-item label="客户最近添加时间:">
                 <span>{{
-                  formatDate(detailForm.createTime, "yyyy-MM-dd")
+                  formatDate(detailForm.createTime, "yyyy-MM-dd hh:mm:ss")
                 }}</span>
               </el-form-item>
               <el-form-item label="渠道创建人:">
@@ -165,7 +165,7 @@
               </el-form-item>
               <el-form-item label="创建时间:">
                 <span>{{
-                  formatDate(detailForm.createTime, "yyyy-MM-dd")
+                  formatDate(detailForm.createTime, "yyyy-MM-dd hh:mm:ss")
                 }}</span>
               </el-form-item>
               <el-form-item label="渠道欢迎语:">
