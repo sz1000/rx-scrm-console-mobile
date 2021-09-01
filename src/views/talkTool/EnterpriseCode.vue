@@ -724,7 +724,7 @@ export default {
     }
     .contentBox {
       height: 292px;
-      padding: 24px;
+      padding: 24px 0;
       box-sizing: border-box;
       display: flex;
       .leftCode {

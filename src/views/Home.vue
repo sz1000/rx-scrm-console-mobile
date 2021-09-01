@@ -65,7 +65,7 @@
 </template>
 
 <script>
-// import wx from 'weixin-js-sdk'
+import { getToken } from '../utils/getToken'
 export default {
   components: {},
   data() {
@@ -82,19 +82,29 @@ export default {
   },
   mounted() {},
   methods: {
-    getData(v) {
-      this.$network
-        .get('/user-service/m/user/getloguser', {
-          code: v,
-          url: location.href,
-        })
-        .then((res) => {
-          this.token = res.data.accessToken
-          localStorage.setItem('token', res.data.accessToken)
-          // let pathurl = localStorage.getItem('state')
-          // this.$router.push(pathurl)
-        })
+    getDate(v) {
+      let params = {
+        code: v,
+        url: location.href,
+      }
+      getToken(params).then((res) => {
+        this.token = res.data.accessToken
+        localStorage.setItem('token', res.data.accessToken)
+      })
     },
+    // getData(v) {
+    //   this.$network
+    //     .get('/user-service/m/user/getloguser', {
+    //       code: v,
+    //       url: location.href,
+    //     })
+    //     .then((res) => {
+    //       this.token = res.data.accessToken
+    //       localStorage.setItem('token', res.data.accessToken)
+    //       // let pathurl = localStorage.getItem('state')
+    //       // this.$router.push(pathurl)
+    //     })
+    // },
   },
 }
 </script>

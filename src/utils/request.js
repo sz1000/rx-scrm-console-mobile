@@ -28,7 +28,6 @@ instance.interceptors.request.use(
             if (token) {
                 config.headers.common.token = token
             }
-            // console.log('-----config----', config)
             return config
         },
         (error) => Promise.reject(error)
@@ -47,7 +46,6 @@ instance.interceptors.response.use(
     },
 
     (err) => {
-        // console.log(11111111)
         const { response } = err
         // console.log('--------', response)
         if (response) {
