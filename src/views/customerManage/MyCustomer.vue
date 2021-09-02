@@ -76,7 +76,7 @@
               </div>
               <div class="rowStyle">
                 <span>性别:</span>
-                <span>{{ item.gender == "1" ? "男" : "女" }}</span>
+                <span>{{ item.gender ? (item.gender == "1" ? "男" : "女"):'未知'  }}</span>
               </div>
               <div class="rowStyle">
                 <span>邮箱:</span>

@@ -79,183 +79,186 @@
       </van-list>
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="showAdd"
-                        :title="titleName"
-                        :overlay="overlay"
-                        lock-scroll
-                        :get-container="getContainer"
-                        class="vant_sheet">
-        <div class="content">
-          <div class="addForm">
-            <el-form ref="form"
-                     :model="addForm"
-                     label-position="right">
-              <el-form-item label="活码名称:"
-                            prop="name"
-                            :rules="[
+      <div v-if="showAdd">
+        <van-action-sheet v-model="showAdd"
+                          :title="titleName"
+                          :overlay="overlay"
+                          lock-scroll
+                          :get-container="getContainer"
+                          class="vant_sheet">
+          <div class="content">
+            <div class="addForm">
+              <el-form ref="form"
+                       :model="addForm"
+                       label-position="right">
+                <el-form-item label="活码名称:"
+                              prop="name"
+                              :rules="[
                   {
                     required: true,
                     message: '请输入活码名称',
                     trigger: 'blur',
                   },
                 ]">
-                <el-input v-model.trim="addForm.name"
-                          placeholder="请输入"
-                          maxlength="12"
-                          show-word-limit></el-input>
-              </el-form-item>
+                  <el-input v-model.trim="addForm.name"
+                            placeholder="请输入"
+                            maxlength="12"
+                            show-word-limit></el-input>
+                </el-form-item>
 
-              <el-form-item label="使用员工:"
-                            prop="userArr"
-                            :rules="[
+                <el-form-item label="使用员工:"
+                              prop="userArr"
+                              :rules="[
                   { required: true, message: '请选择', trigger: 'change' },
                 ]">
-                <el-select v-model="addForm.userArr"
-                           placeholder="请选择使用员工，可多选"
-                           multiple
-                           collapse-tags
-                           @change="changeUsre"
-                           clearable
-                           popper-class="popper-select-class">
-                  <el-option v-for="item in usreList"
-                             :key="item.value"
-                             :label="item.name"
-                             :value="item.userNo">
-                  </el-option>
-                </el-select>
-              </el-form-item>
+                  <el-select v-model="addForm.userArr"
+                             placeholder="请选择使用员工，可多选"
+                             multiple
+                             collapse-tags
+                             @change="changeUsre"
+                             clearable
+                             popper-class="popper-select-class">
+                    <el-option v-for="item in usreList"
+                               :key="item.value"
+                               :label="item.name"
+                               :value="item.userNo">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
 
-              <el-form-item label="添加设置:">
-                <el-checkbox v-model="addForm.status"
-                             true-label="1"
-                             false-label="0"
-                             @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
-              </el-form-item>
+                <el-form-item label="添加设置:">
+                  <el-checkbox v-model="addForm.status"
+                               true-label="1"
+                               false-label="0"
+                               @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
+                </el-form-item>
 
-              <el-form-item label="渠道:"
-                            prop="chId"
-                            :rules="[
+                <el-form-item label="渠道:"
+                              prop="chId"
+                              :rules="[
                   { required: true, message: '请选择', trigger: 'change' },
                 ]">
-                <el-select v-model="addForm.chId"
-                           placeholder="请选择"
-                           @change="changeChannel"
-                           clearable
-                           popper-class="popper-select-class">
-                  <el-option v-for="item in channelList"
-                             :key="item.value"
-                             :label="item.name"
-                             :value="item.chId">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="备注:"
-                            class="textareaInput">
-                <el-input type="textarea"
-                          v-model="addForm.remark"
-                          placeholder="请输入文字(不得超过200个字符)"
-                          maxlength="200"
-                          show-word-limit></el-input>
-              </el-form-item>
-            </el-form>
+                  <el-select v-model="addForm.chId"
+                             placeholder="请选择"
+                             @change="changeChannel"
+                             clearable
+                             popper-class="popper-select-class">
+                    <el-option v-for="item in channelList"
+                               :key="item.value"
+                               :label="item.name"
+                               :value="item.chId">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="备注:"
+                              class="textareaInput">
+                  <el-input type="textarea"
+                            v-model="addForm.remark"
+                            placeholder="请输入文字(不得超过200个字符)"
+                            maxlength="200"
+                            show-word-limit></el-input>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="buttonWarp">
+              <span class="cancel"
+                    @click="closeDialog()">取消</span>
+              <span class="save"
+                    @click="saveDialog()">保存</span>
+            </div>
           </div>
-          <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog()">取消</span>
-            <span class="save"
-                  @click="saveDialog()">保存</span>
-          </div>
-        </div>
-      </van-action-sheet>
-      <van-action-sheet v-model="showEdit"
-                        :title="titleName"
-                        :overlay="overlay"
-                        lock-scroll
-                        :get-container="getContainer"
-                        class="vant_sheet">
-        <div class="content">
-          <div class="addForm">
-            <el-form ref="form"
-                     :model="editForm"
-                     label-position="right">
-              <el-form-item label="创建人员:">
-                <span class="editText">{{ editForm.createBy }}</span>
-              </el-form-item>
-              <el-form-item label="创建时间:">
-                <span class="editText">{{
+        </van-action-sheet>
+      </div>
+      <div v-if="showEdit">
+        <van-action-sheet v-model="showEdit"
+                          :title="titleName"
+                          :overlay="overlay"
+                          lock-scroll
+                          :get-container="getContainer"
+                          class="vant_sheet">
+          <div class="content">
+            <div class="addForm">
+              <el-form ref="form"
+                       :model="editForm"
+                       label-position="right">
+                <el-form-item label="创建人员:">
+                  <span class="editText">{{ editForm.createBy }}</span>
+                </el-form-item>
+                <el-form-item label="创建时间:">
+                  <span class="editText">{{
                   formatDate(editForm.createTime, "yyyy-MM-dd hh:mm:ss")
                 }}</span>
-              </el-form-item>
-              <el-form-item label="活码名称:"
-                            prop="name"
-                            :rules="[{ required: true, message: '请输入活码名称' }]">
-                <el-input v-model.trim="editForm.name"
-                          placeholder="请输入"
-                          maxlength="12"
-                          show-word-limit></el-input>
-              </el-form-item>
+                </el-form-item>
+                <el-form-item label="活码名称:"
+                              prop="name"
+                              :rules="[{ required: true, message: '请输入活码名称' }]">
+                  <el-input v-model.trim="editForm.name"
+                            placeholder="请输入"
+                            maxlength="12"
+                            show-word-limit></el-input>
+                </el-form-item>
 
-              <el-form-item label="使用员工:"
-                            prop="userArr"
-                            :rules="[
+                <el-form-item label="使用员工:"
+                              prop="userArr"
+                              :rules="[
                   { required: true, message: '请选择',},
                 ]">
-                <el-select v-model="editForm.userArr"
-                           placeholder="请选择使用员工，可多选"
-                           multiple
-                           collapse-tags
-                           @change="changeUsre"
-                           clearable
-                           popper-class="popper-select-class">
-                  <el-option v-for="item in usreList"
-                             :key="item.value"
-                             :label="item.name"
-                             :value="item.userNo">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="添加设置:">
-                <el-checkbox v-model="editForm.status"
-                             true-label="1"
-                             false-label="0"
-                             @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
-              </el-form-item>
-              <el-form-item label="渠道:"
-                            prop="chId"
-                            :rules="[
+                  <el-select v-model="editForm.userArr"
+                             placeholder="请选择使用员工，可多选"
+                             multiple
+                             collapse-tags
+                             @change="changeUsre"
+                             clearable
+                             popper-class="popper-select-class">
+                    <el-option v-for="item in usreList"
+                               :key="item.value"
+                               :label="item.name"
+                               :value="item.userNo">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="添加设置:">
+                  <el-checkbox v-model="editForm.status"
+                               true-label="1"
+                               false-label="0"
+                               @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
+                </el-form-item>
+                <el-form-item label="渠道:"
+                              prop="chId"
+                              :rules="[
                   { required: true, message: '请选择', trigger: 'change' },
                 ]">
-                <el-select v-model="editForm.chId"
-                           placeholder="请选择"
-                           @change="changeChannel"
-                           clearable
-                           popper-class="popper-select-class">
-                  <el-option v-for="item in channelList"
-                             :key="item.value"
-                             :label="item.name"
-                             :value="item.chId">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="备注:"
-                            class="textareaInput">
-                <el-input type="textarea"
-                          v-model="editForm.remark"
-                          placeholder="请输入文字(不得超过200个字符)"
-                          maxlength="200"
-                          show-word-limit></el-input>
-              </el-form-item>
-            </el-form>
+                  <el-select v-model="editForm.chId"
+                             placeholder="请选择"
+                             @change="changeChannel"
+                             clearable
+                             popper-class="popper-select-class">
+                    <el-option v-for="item in channelList"
+                               :key="item.value"
+                               :label="item.name"
+                               :value="item.chId">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="备注:"
+                              class="textareaInput">
+                  <el-input type="textarea"
+                            v-model="editForm.remark"
+                            placeholder="请输入文字(不得超过200个字符)"
+                            maxlength="200"
+                            show-word-limit></el-input>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div class="buttonWarp">
+              <span class="cancel"
+                    @click="closeDialog()">取消</span>
+              <span class="save"
+                    @click="saveEdit('form')">保存</span>
+            </div>
           </div>
-          <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog()">取消</span>
-            <span class="save"
-                  @click="saveEdit('form')">保存</span>
-          </div>
-        </div>
-      </van-action-sheet>
+        </van-action-sheet>
+      </div>
       <van-action-sheet v-model="showDetail"
                         :title="titleName"
                         :overlay="overlay">
@@ -405,7 +408,6 @@ export default {
       setTimeout(() => {
         this.docmHeight =
           document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        console.log(this.docmHeight)
       }, 200)
     },
     getSelect() {
@@ -415,7 +417,7 @@ export default {
       })
     },
     changeUsre(val) {
-      console.log(val)
+      // console.log(val)
       this.addForm.userArr = val
     },
     checkChange(val) {
@@ -444,7 +446,6 @@ export default {
       setTimeout(() => {
         this.docmHeight =
           document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        // console.log(this.docmHeight)
       }, 500)
     },
     sendCode(item, index) {
@@ -804,7 +805,7 @@ export default {
       // padding: 24px;
       .addForm,
       .codeDetail {
-        // overflow-y: scroll;
+        overflow-y: scroll;
         box-sizing: content-box;
         // height: 800px;
         // box-sizing: border-box;
