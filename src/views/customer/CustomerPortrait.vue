@@ -284,6 +284,7 @@ export default {
     let p = href.split('&')[0]
     let authCode = p.split('=')[1]
     this.getData(authCode)
+    // https://h5.jizhouhudong.com/customerPortrait?code=n546a8dTuFZIa5IB533Mru2uhYNCoocLGDal3JUjkcc&state=
   },
   watch: {
     // showHeight(val) {
@@ -312,10 +313,10 @@ export default {
       }
       getToken(params).then((res) => {
         // alert(JSON.stringify(this.obj))
-        if (!res.result) {
-          this.$router.push('/customerPortrait')
-          return
-        }
+        // if (!res.result) {
+        //   this.$router.push('/customerPortrait')
+        //   return
+        // }
         this.token = res.data.accessToken
         this.appid = res.data.corpId
         localStorage.setItem('token', res.data.accessToken)
@@ -712,6 +713,7 @@ export default {
       .box1 {
         display: flex;
         width: 50%;
+        line-height: 87px;
         margin-left: 29px;
       }
     }
