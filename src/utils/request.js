@@ -11,7 +11,7 @@ if (location.hostname == 'localhost') {
 } else if (location.hostname == 'test-h5.jizhouhudong.com') {
     BASE_URL = 'https://test-api.jizhouhudong.com' //测试
 } else {
-    BASE_URL = 'https://h5.jizhouhudong.com' //生产
+    BASE_URL = 'https://api.jizhouhudong.com' //生产
 }
 let instance = axios.create({
     baseURL: BASE_URL,
