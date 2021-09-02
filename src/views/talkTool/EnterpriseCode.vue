@@ -796,6 +796,9 @@ export default {
     .van-action-sheet__content {
       height: 944px;
       -webkit-overflow-scrolling: touch;
+      overflow-scrolling: touch;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
       // &::-webkit-scrollbar {
       //   height: 30px;
       // }
@@ -805,7 +808,7 @@ export default {
       // padding: 24px;
       .addForm,
       .codeDetail {
-        overflow-y: scroll;
+        // overflow-y: scroll;
         box-sizing: content-box;
         // height: 800px;
         // box-sizing: border-box;
