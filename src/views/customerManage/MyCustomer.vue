@@ -76,7 +76,7 @@
               </div>
               <div class="rowStyle">
                 <span>性别:</span>
-                <span>{{ item.gender ? (item.gender == "1" ? "男" : "女"):'未知'  }}</span>
+                <span>{{item.gender}}</span>
               </div>
               <div class="rowStyle">
                 <span>邮箱:</span>
@@ -161,6 +161,15 @@ export default {
           }
           let newSetArr = this.cardList.concat(rows)
           this.cardList = this.unique(newSetArr)
+          this.cardList.forEach((item) => {
+            if (item.gender == '0' || item.gender == '') {
+              item.gender = '未知'
+            } else if (item.gender == '1') {
+              item.gender = '男'
+            } else if (item.gender == '2') {
+              item.gender = '女'
+            }
+          })
           if (this.cardList.length >= this.total) {
             this.finished = true
           } else {
