@@ -93,7 +93,7 @@ methods.forEach((item) => {
             .then((res) => {
                 // console.log('---res1----', res)
                 let data = res.data
-                if (data.result) {
+                if (data) {
                     return Promise.resolve(data)
                 } else {
                     if (

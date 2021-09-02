@@ -720,7 +720,7 @@ export default {
             } else {
               this.message({
                 type: 'error',
-                message: '添加失败',
+                message: res.msg || '添加失败',
               })
             }
           })
@@ -762,6 +762,7 @@ export default {
         this.$network
           .get('/customer-service/cluecustomer/turnBlon', params)
           .then((res) => {
+            // console.log(res)
             if (res.result) {
               this.show = false
               this.$router.go(-1)
@@ -770,11 +771,11 @@ export default {
                 message: '编辑成功!',
               })
             } else {
-              this.show = false
               this.$message({
                 type: 'error',
-                message: res.msg,
+                message: res.msg || '转换失败',
               })
+              this.show = false
             }
           })
       }
