@@ -505,10 +505,11 @@ export default {
         .post('/user-service/livecode/addLivecode', params)
         .then((res) => {
           if (res.result) {
-            this.getData()
+            this.page = 1
             this.showAdd = false
             this.liveList = []
             this.addForm = {}
+            this.getData()
           } else {
             this.$message({
               type: 'error',
@@ -528,10 +529,11 @@ export default {
         .post('/user-service/livecode/updLivecode', params)
         .then((res) => {
           if (res.result) {
-            this.getData()
+            this.page = 1
             this.showEdit = false
             this.liveList = []
             this.editForm = {}
+            this.getData()
           } else {
             this.$message({
               type: 'error',
