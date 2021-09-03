@@ -200,7 +200,7 @@ export default {
       this.page = 1
       this.cardList = []
       this.getData()
-    }, 2000),
+    }, 3000),
     deleteCard(item, index) {
       this.$dialog
         .confirm({

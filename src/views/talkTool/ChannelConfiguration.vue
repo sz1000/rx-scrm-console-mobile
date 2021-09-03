@@ -17,6 +17,14 @@
         新增
       </span>
     </div>
+    <div class="searchInput">
+      <input type="text"
+             class="input"
+             v-model="inputValue"
+             placeholder="请输入渠道名称" />
+      <span class="searchBtn"
+            @click="inquire">查询</span>
+    </div>
     <van-list v-model="loading"
               :finished="finished"
               :immediate-check="false"
@@ -184,6 +192,7 @@ import { formatDate, _throttle } from '../../utils/tool'
 export default {
   data() {
     return {
+      inputValue: '',
       channelList: [],
       showAdd: false,
       showEdit: false,
@@ -215,6 +224,11 @@ export default {
         this.hidshow = true
       }
     },
+    inputValue(val) {
+      if (val == '') {
+        this.getData()
+      }
+    },
   },
   mounted() {
     window.onresize = () =>
@@ -229,6 +243,11 @@ export default {
   },
   methods: {
     formatDate,
+    inquire: _throttle(function () {
+      this.page = 1
+      this.channelList = []
+      this.getData()
+    }, 3000),
     onLoad() {
       this.page += 1
       this.getData()
@@ -239,6 +258,7 @@ export default {
         .get('/user-service/channel/getChannelList', {
           page: this.page,
           limit: this.pageSize,
+          name: this.inputValue,
         })
         .then((res) => {
           this.loading = false
@@ -455,6 +475,31 @@ export default {
         height: 28px;
         background: #4168f6;
       }
+    }
+  }
+  .searchInput {
+    background: #fff;
+    padding: 24px 24px;
+    .input {
+      width: 582px;
+      height: 80px;
+      border-radius: 8px;
+      border: 2px solid #d9dae4;
+      font-size: 28px;
+      padding-left: 24px;
+      box-sizing: border-box;
+    }
+    .searchBtn {
+      display: inline-block;
+      width: 104px;
+      height: 80px;
+      background: #4168f6;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 28px;
+      text-align: center;
+      line-height: 80px;
+      margin-left: 16px;
     }
   }
   .cardCode {
