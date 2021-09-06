@@ -24,6 +24,8 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+//错误页
+import NoPermissions from '../views/404.vue'
 
 Vue.use(VueRouter)
 
@@ -46,6 +48,11 @@ const routes = [{
             bodyClass: 'HomeWarp',
         },
         component: Home,
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: NoPermissions,
     },
 
     // 客户画像

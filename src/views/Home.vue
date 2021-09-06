@@ -99,10 +99,14 @@ export default {
           url: location.href,
         })
         .then((res) => {
-          this.token = res.data.accessToken
-          localStorage.setItem('token', res.data.accessToken)
-          // let pathurl = localStorage.getItem('state')
-          // this.$router.push(pathurl)
+          if (res.result) {
+            this.token = res.data.accessToken
+            localStorage.setItem('token', res.data.accessToken)
+            // let pathurl = localStorage.getItem('state')
+            // this.$router.push(pathurl)
+          } else {
+            this.$router.push('/404')
+          }
         })
     },
   },
