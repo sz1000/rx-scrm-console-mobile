@@ -78,7 +78,10 @@ export default {
     let href = window.location.href.split('?')[1]
     let p = href.split('&')[0]
     let authCode = p.split('=')[1]
-    this.getData(authCode)
+    let token = localStorage.getItem('token')
+    if (!token) {
+      this.getData(authCode)
+    }
   },
   mounted() {},
   methods: {
@@ -102,8 +105,6 @@ export default {
           if (res.result) {
             this.token = res.data.accessToken
             localStorage.setItem('token', res.data.accessToken)
-            // let pathurl = localStorage.getItem('state')
-            // this.$router.push(pathurl)
           } else {
             this.$router.push('/404')
           }

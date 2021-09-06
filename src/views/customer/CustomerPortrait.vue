@@ -283,7 +283,12 @@ export default {
     let href = window.location.href.split('?')[1]
     let p = href.split('&')[0]
     let authCode = p.split('=')[1]
-    this.getData(authCode)
+    let token = localStorage.getItem('token')
+    if (token) {
+      this.getMethod()
+    } else {
+      this.getData(authCode)
+    }
     // https://h5.jizhouhudong.com/customerPortrait?code=n546a8dTuFZIa5IB533Mru2uhYNCoocLGDal3JUjkcc&state=
   },
   watch: {
