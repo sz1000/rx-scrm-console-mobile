@@ -570,7 +570,7 @@ export default {
     },
     sendMessage(mediaid) {
       this.$network
-        .get('/user-service/m/user/getticket', {
+        .get('/user-service/user/getticket', {
           url: location.href,
         })
         .then((res) => {

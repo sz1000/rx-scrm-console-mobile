@@ -79,8 +79,16 @@ export default {
     let p = href.split('&')[0]
     let authCode = p.split('=')[1]
     let token = localStorage.getItem('token')
-    if (!token) {
+    if (token == null) {
       this.getData(authCode)
+    } else {
+      this.$network.post('/user-service/user/getstatus').then((res) => {
+        if (res.result) {
+          return true
+        } else {
+          this.$router.push('/404')
+        }
+      })
     }
   },
   mounted() {},
@@ -107,6 +115,7 @@ export default {
             localStorage.setItem('token', res.data.accessToken)
           } else {
             this.$router.push('/404')
+            localStorage.removeItem('token')
           }
         })
     },

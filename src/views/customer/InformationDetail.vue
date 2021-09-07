@@ -185,6 +185,8 @@
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
+import { getToken } from '../../utils/getToken'
+import commonFun from '../../utils/commonToken'
 export default {
   data() {
     return {
@@ -237,9 +239,39 @@ export default {
     }
   },
   created() {
-    this.getDetailForm()
+    commonFun.getWxAppid()
+    setTimeout(() => {
+      this.getDetailForm()
+    }, 2000)
+    // alert(1111111111)
+    // let href = window.location.href.split('?')[1]
+    // alert(href)
+    // let p = href.split('&')[0]
+    // let authCode = p.split('=')[1]
+    // if (authCode == '' || authCode == null) {
+    //   this.getDetailForm()
+    // }
+    // let token = localStorage.getItem('token')
+    // alert(token)
+    // if (token == null) {
+    //   this.getData(authCode)
+    // } else {
+    //   this.getDetailForm()
+    // }
   },
   methods: {
+    getData(v) {
+      let params = {
+        code: v,
+        url: location.href,
+      }
+      getToken(params).then((res) => {
+        // alert(JSON.stringify(res))
+        this.token = res.data.accessToken
+        localStorage.setItem('token', res.data.accessToken)
+        this.getDetailForm()
+      })
+    },
     changeInput(val) {
       console.log(val)
       this.update()
@@ -263,11 +295,14 @@ export default {
       this.update()
     },
     getDetailForm() {
+      // alert(222222222222222)
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
-          clueCustomerNo: this.$route.params.userid,
+          clueCustomerNo:
+            this.$route.params.userid || localStorage.getItem('userId'),
         })
         .then((res) => {
+          // alert(JSON.stringify(res))
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
@@ -322,7 +357,7 @@ export default {
         })
     },
     goBack() {
-      this.$router.push('/customTransition')
+      this.$router.push('/customerPortrait')
       // this.$router.go(-1)
     },
     inputEdit(item, index) {

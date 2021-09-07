@@ -39,6 +39,7 @@ instance.interceptors.response.use(
     (res) => {
         // console.log('---resUse------', res)
         if (res.status === 200) {
+            // alert('--------pathname-----', window.location.pathname)
             return Promise.resolve(res)
         } else {
             return Promise.reject(res)
@@ -93,22 +94,23 @@ methods.forEach((item) => {
             .then((res) => {
                 // console.log('---res1----', res)
                 let data = res.data
-                if (data) {
-                    return Promise.resolve(data)
+                    // if (data) {
+                    // alert(JSON.stringify(data))
+                if (
+                    data.code == 'error_token_expired' ||
+                    data.code == 'error_token_null' ||
+                    data.code == 'error_token_empty'
+                ) {
+                    // alert('request------')
+                    window.localStorage.removeItem('token')
+                    window.localStorage.removeItem('userId')
+                    window.location.reload()
                 } else {
-                    if (
-                        data.code == 'error_token_expired' ||
-                        data.code == 'error_token_null'
-                    ) {
-                        console.log('--------pathname-----', window.location.pathname)
-                        let pathname = window.location.pathname
-                        router.replace({
-                            name: 'homeTransition',
-                            params: { state: pathname },
-                        })
-                    }
-                    // return Promise.reject(data.msg)
+                    // console.log(axios)
+                    // router.go(0)
+                    return Promise.resolve(data)
                 }
+                // }
             })
             .catch((err) => {
                 return Promise.reject(err.error)

@@ -16,7 +16,7 @@ export default {
   },
   created() {
     let state = this.$route.params.state || '/home'
-    console.log(state)
+    // console.log(state)
     // localStorage.setItem('state', state)
     this.getWxAppid(state)
   },
