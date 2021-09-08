@@ -1,11 +1,10 @@
 import Network from './request'
 const getWxAppid = function() {
-    // alert(window.location.pathname)
-    let token = localStorage.getItem('token')
+        // let token = localStorage.getItem('token')
         // alert(token)
-    if (token == '' || (!token && typeof token != 'undefined')) {
-        // alert('132123123')
-        // alert(window.location.href)
+        // if (token == '' || (!token && typeof token != 'undefined')) {
+        //     alert('132123123')
+        //     alert(window.location.href)
         let authCode
         if (window.location.href.indexOf('?') > -1) {
             let href = window.location.href.split('?')[1]
@@ -32,11 +31,12 @@ const getWxAppid = function() {
             // alert('----getWxCofig----前')
             getWxCofig(authCode)
         }
-    } else {
-        // alert('----getTicket----前')
-        getTicket()
     }
-}
+    // else {
+    //     alert('----getTicket----前')
+    //     getTicket()
+    // }
+    // }
 
 function getWxCofig(v) {
     // alert('getWxCofig---后---')

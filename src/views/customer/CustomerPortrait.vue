@@ -280,6 +280,18 @@ export default {
     }
   },
   created() {
+    // alert(window.location.href)
+    // let dt = this.$route.query.dt || ''
+    // alert(dt)
+    // if (dt == 1) {
+    //   alert('清token')
+    //   localStorage.removeItem('token')
+    //   this.$router.push('/customerPortrait')
+    //   // window.location.href = window.location.host + window.location.pathname
+    //   alert(window.location.href)
+    //   return false
+    // }
+    // alert('正常执行')
     commonFun.getWxAppid()
   },
   watch: {},
@@ -446,12 +458,17 @@ export default {
     //获取客户详情
     getMethod() {
       // alert(JSON.stringify(localStorage.getItem('userId')))
+      this.$toast.loading({
+        // message: '加载中...',
+        duration: 0,
+      })
       this.$network
         .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
           id: localStorage.getItem('userId'),
         })
         .then((res) => {
           // console.log(res)
+          this.$toast.clear()
           this.name = res.data.clueCustomerVO.name
           this.nameFrom = res.data.clueCustomerVO.customerType
           this.item = res.data.clueCustomerVO

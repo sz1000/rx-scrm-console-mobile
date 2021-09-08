@@ -12,8 +12,8 @@ export default {
   },
   created() {
     // this.getWxAppid()
-    localStorage.removeItem('token')
-    localStorage.removeItem('userId')
+    // localStorage.removeItem('token')
+    // localStorage.removeItem('userId')
   },
   methods: {
     getWxAppid() {

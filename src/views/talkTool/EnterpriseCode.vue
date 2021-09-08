@@ -418,7 +418,7 @@ export default {
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.push('/home')
     },
     addCode() {
       this.showAdd = true

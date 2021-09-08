@@ -340,7 +340,7 @@ export default {
       this.addForm = {}
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.push('/home')
     },
     addChannel() {
       this.showAdd = true

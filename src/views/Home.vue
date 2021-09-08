@@ -65,7 +65,8 @@
 </template>
 
 <script>
-import { getToken } from '../utils/getToken'
+import resetToken from '../utils/commonToken'
+
 export default {
   components: {},
   data() {
@@ -75,34 +76,37 @@ export default {
     }
   },
   created() {
-    let href = window.location.href.split('?')[1]
-    let p = href.split('&')[0]
-    let authCode = p.split('=')[1]
-    let token = localStorage.getItem('token')
-    if (token == null) {
-      this.getData(authCode)
+    let authCode
+    if (window.location.href.indexOf('?') > -1) {
+      let href = window.location.href.split('?')[1]
+      let p = href.split('&')[0]
+      authCode = p.split('=')[1]
     } else {
-      this.$network.post('/user-service/user/getstatus').then((res) => {
-        if (res.result) {
-          return true
-        } else {
-          this.$router.push('/404')
-        }
-      })
+      // alert('ppppppp')
+      authCode = ''
     }
+    // alert(authCode)
+
+    if (!authCode) {
+      // alert(11111111)
+      this.$router.push('/homeTransition')
+    } else {
+      // alert(222222222)
+      this.getData(authCode)
+    }
+    // if (!token && typeof token != 'undefined') {
+    // } else {
+    //   this.$network.post('/user-service/user/getstatus').then((res) => {
+    //     if (res.result) {
+    //       return true
+    //     } else {
+    //       this.$router.push('/404')
+    //     }
+    //   })
+    // }
   },
   mounted() {},
   methods: {
-    // getDate(v) {
-    //   let params = {
-    //     code: v,
-    //     url: location.href,
-    //   }
-    //   getToken(params).then((res) => {
-    //     this.token = res.data.accessToken
-    //     localStorage.setItem('token', res.data.accessToken)
-    //   })
-    // },
     getData(v) {
       this.$network
         .get('/user-service/m/user/getloguser', {

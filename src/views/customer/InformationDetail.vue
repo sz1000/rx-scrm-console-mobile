@@ -296,6 +296,10 @@ export default {
     },
     getDetailForm() {
       // alert(222222222222222)
+      this.$toast.loading({
+        // message: '加载中...',
+        duration: 0,
+      })
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
           clueCustomerNo:
@@ -303,6 +307,7 @@ export default {
         })
         .then((res) => {
           // alert(JSON.stringify(res))
+          this.$toast.clear()
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
