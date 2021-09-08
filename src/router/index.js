@@ -11,6 +11,7 @@ import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
+import Added from "../views/talkTool/Added.vue"
 // // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
@@ -92,12 +93,21 @@ const routes = [{
                 },
                 component: ChannelConfiguration,
             },
+            // 话术
             {
                 path: 'verbalTrick',
                 meta: {
                     bodyClass: 'verbalTrick',
                 },
                 component: verbalTrick,
+            },
+            // 新增
+            {
+                path: 'added',
+                meta: {
+                    bodyClass: 'Added',
+                },
+                component: Added,
             },
         ],
     },

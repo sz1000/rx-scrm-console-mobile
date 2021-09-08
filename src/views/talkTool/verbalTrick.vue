@@ -10,7 +10,7 @@
         <span class="textTitle">快捷回复</span>
       </div>
       <!-- 头部 -->
-      <div class="warp-box">
+      <!-- <div class="warp-box">
         <div class="head">
           <div>
             <van-nav-bar>
@@ -25,7 +25,7 @@
             </van-nav-bar>
           </div>
         </div>
-      </div>
+      </div> -->
       <!-- tabMenu -->
       <div class="tabMenu">
         <div class="tabBtn">
@@ -53,160 +53,310 @@
           type="text"
           class="input"
           v-model="inputValue"
-          placeholder="请输入姓名/公司/手机号"
+          placeholder="请输入内容"
         />
         <span class="searchBtn">查询</span>
       </div>
-      <!-- center列表 -->
+      <!-- center列表  @click="addGroups"-->
       <div v-if="tabClick == 1" class="pd-24">
-        <div class="newgrouping">
+        <div class="newgrouping" @click="addGroups">
           <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
           <span class="add-grp">添加分组</span>
         </div>
         <div>
           <template>
-            <el-tree
+            <!-- <el-tree
               :data="data"
               :props="defaultProps"
               accordion
               @node-click="handleNodeClick"
             >
-            </el-tree>
+            </el-tree> -->
+            <div>
+              <div>
+                <div class="tree-box">
+                  <div
+                    v-for="(item, i) in treeData"
+                    :key="i + 'out'"
+                    class="out-li"
+                  >
+                    <div class="tree-header">
+                      <span class="header-left">
+                        <span class="corner"></span>
+                      </span>
+                      <span class="header-mid" @click.stop="groupNameList(item)"
+                        >{{ item.name }}
+                        <span class="gray"
+                          >({{ item.children.length }})</span
+                        ></span
+                      >
+                      <!-- <span
+                        class="header-right"
+                        @click.stop="item.isOpen = !item.isOpen"
+                      >
+                        展开1
+                        <span class="corner"></span>
+                      </span> -->
+                    </div>
+                    <div v-show="isOpen" class="out-panel">
+                      <div class="warp_group">
+                        <img
+                          class="group_img"
+                          src="../../images/group.png"
+                          alt=""
+                        />
+                        <p class="title_verba">{{ item.title }}</p>
+                      </div>
+
+                      <div class="item-box">
+                        <div class="sop-text">
+                          <div class="text_img">
+                            <img
+                              class="share_img"
+                              src="../../images/share_two@2x.png"
+                              alt=""
+                            />
+                          </div>
+                          <div class="sop_title">
+                            欢迎您加入哈哈哈哈哈哈，一起加油吧~
+                          </div>
+                        </div>
+                        <div
+                          v-for="(chi, c) in item.items"
+                          :key="c + 'in'"
+                          @click.stop="_down(chi)"
+                          class="cen_item"
+                        >
+                          <div class="text_img">
+                            <img
+                              class="share_img"
+                              src="../../images/share_two@2x.png"
+                              alt=""
+                            />
+                          </div>
+                          <div class="sop-text">
+                            <div class="list_box">
+                              <div class="sop_imgWarp">
+                                <div class="img-up">
+                                  <img :src="chi.icon" alt="" />
+                                </div>
+                                <div class="center_img">
+                                  <p class="img_text">{{ chi.title }}</p>
+                                  <p class="img_size">{{ chi.size }}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- <div class="">
+                            <div class="center_list">
+                              <div>
+                                <div class="center_list list_box">
+                                  <div>
+                                    <img
+                                      class="cen_img"
+                                      :src="chi.icon"
+                                      alt=""
+                                    />
+                                  </div>
+                                  <div>
+                                    <p>{{ chi.title }}</p>
+                                    <p class="gray">{{ chi.size }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
+                        </div>
+                        <div class="up" @click.stop="item.isOpen = false">
+                          {{ item.label }}-收起
+                        </div>
+                      </div>
+                      <div v-if="item.children.length">
+                        <div
+                          v-for="(sub, k) in item.children"
+                          :key="k + 'chi'"
+                          class="out-li"
+                        >
+                          <div class="tree-header">
+                            <span class="header-left">
+                              <span class="corner"></span>
+                            </span>
+                            <span
+                              class="header-mid"
+                              @click.stop="sub.isOpen = !sub.isOpen"
+                              >{{ sub.label }}
+                              <span class="gray">({{ sub.length }})</span></span
+                            >
+                            <!-- <span
+                              class="header-right"
+                              @click.stop="sub.isOpen = true"
+                            >
+                              展开2
+                              <span class="corner"></span>
+                            </span> -->
+                          </div>
+                          <div v-show="sub.isOpen" class="out-panel">
+                            <div class="warp_group">
+                              <img
+                                class="group_img"
+                                src="../../images/group.png"
+                                alt=""
+                              />
+                              <p class="title_verba">{{ sub.title }}</p>
+                            </div>
+                            <!-- <p>{{ sub.title }}</p> -->
+                            <div class="item-box">
+                              <div
+                                v-for="(ss, s) in sub.items"
+                                :key="s + 'in-in'"
+                                class="cen_item"
+                                @click.stop="_down(ss)"
+                              >
+                                <!-- <img class="cen_img" :src="ss.icon" alt="" />
+                                <div>
+                                  <p>{{ ss.title }}</p>
+                                  <p class="gray">{{ ss.size }}</p>
+                                </div> -->
+                                <div class="text_img">
+                                  <img
+                                    class="share_img"
+                                    src="../../images/share_two@2x.png"
+                                    alt=""
+                                  />
+                                </div>
+                                <div class="sop-text">
+                                  <div class="list_box">
+                                    <div class="sop_imgWarp">
+                                      <div class="img-up">
+                                        <img :src="ss.icon" alt="" />
+                                      </div>
+                                      <div class="center_img">
+                                        <p class="img_text">{{ ss.title }}</p>
+                                        <p class="img_size">{{ ss.size }}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="up" @click.stop="sub.isOpen = false">
+                                {{ item.label }}-{{ sub.label }}收起
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </template>
         </div>
       </div>
       <!--  -->
       <div v-if="tabClick == 2">
         <div>
-          <el-menu
-            class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
-          >
-            <el-submenu index="4">
-              <template slot="title">
-                <div class="relative">
-                  <div class="content-list">
-                    <div>
-                      <i class="el-icon-caret-right"></i>
-                      <span slot="title">列表一</span>
-                    </div>
-                    <div @click="callOclick">
-                      <i class="el-icon-more"></i>
-                    </div>
-                  </div>
-                  <div class="call" v-if="callbox">
-                    <p @click="newgroup">新建分组</p>
-                    <p>重命名</p>
-                    <p>删除</p>
-                  </div>
+          <van-collapse v-model="activeName" accordion>
+            <van-collapse-item title="列表一" name="1">
+              <div>
+                <h1>这是话术标题哈哈哈哈哈哈哈哈哈哈…</h1>
+                <div>
+                  <img
+                    style="width: 50px"
+                    src="../../images/icon_change2@2x.png"
+                    alt=""
+                  />
                 </div>
-              </template>
-              <el-menu-item index="3">列表1</el-menu-item>
-              <el-submenu index="2">
-                <template slot="title">
-                  <div class="relative">
-                    <div class="content-list">
-                      <div>
-                        <i class="el-icon-caret-right"></i>
-                        <span slot="title">列表一</span>
-                      </div>
-                      <div>
-                        <i class="el-icon-more"></i>
-                      </div>
-                    </div>
-                    <!-- <div class="call" v-if="callbox">
-                      <p>新建分组</p>
-                      <p>重命名</p>
-                      <p>删除</p>
-                    </div> -->
-                  </div>
-                </template>
-                <el-menu-item index="1">列表2</el-menu-item>
-              </el-submenu>
-            </el-submenu>
-          </el-menu>
+                <h2>PDF</h2>
+              </div>
+              <van-collapse-item title="列表1.1" name="4">
+                <div>3333</div>
+              </van-collapse-item>
+            </van-collapse-item>
+            <van-collapse-item title="列表二" name="2">内容</van-collapse-item>
+            <van-collapse-item title="列表3" name="3">内容</van-collapse-item>
+          </van-collapse>
         </div>
       </div>
     </div>
-    <!-- 新增弹框 -->
-    <van-action-sheet v-model="newshow" title="新增话术">
+    <!-- 新建分组 -->
+    <van-action-sheet v-model="newshow" title="新建分组">
       <div class="content">
         <div class="codeDetail">
-          <el-form :model="newform">
-            <el-form-item label="分组">
+          <div class="select-Tree">
+            <span class="groupname"
+              ><span style="color: red">*</span> 上级分组:</span
+            >
+            <SelectTree
+              :options="options"
+              v-model="value"
+              :multiple="false"
+              :searchable="false"
+              placeholder="请选择分组"
+              :normalizer="normalizer"
+              @select="changeSelect"
+            >
+              <label
+                slot="option-label"
+                slot-scope="{ node, labelClassName }"
+                :class="labelClassName"
+              >
+                <img
+                  src="../../images/wenjian.png"
+                  alt=""
+                  style="width: 14px; height: 12px"
+                />
+                <span class="nodeName">{{ node.label }}</span>
+              </label>
+            </SelectTree>
+          </div>
+          <div class="input_text">
+            <span class="groupname"
+              ><span style="color: red">*</span> 分组名称:</span
+            >
+
+            <el-input
+              v-model="groupingName"
+              placeholder="请输入内容"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+          <div class="buttonWarp">
+            <span class="cancel" @click="cancel">取消</span>
+            <span class="save" @click="saveBut">保存1</span>
+          </div>
+        </div>
+      </div>
+    </van-action-sheet>
+    <!-- 重命名 -->
+    <van-action-sheet v-model="rename" title="重命名">
+      <div class="content">
+        <div class="codeDetail">
+          <!-- <el-form :model="newform">
+            <el-form-item label="上级分组">
               <el-select placeholder="请选择分组" v-model="newform.grouping">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="活码名称">
+            <el-form-item label="分组名称">
               <el-input v-model="newform.verbaltite"></el-input>
             </el-form-item>
+          </el-form> -->
+          <div class="select-Tree"></div>
+          <div class="input_text">
+            <span class="groupname"
+              ><span style="color: red">*</span> 重命名:</span
+            >
 
-            <template>
-              <el-radio-group v-model="radio" @change="redioClick">
-                <el-radio :label="1" size="medium">文字</el-radio>
-                <el-radio :label="2" size="small">图片</el-radio>
-                <el-radio :label="3" size="mini">PDF</el-radio>
-                <el-radio :label="4">链接</el-radio>
-              </el-radio-group>
-            </template>
-            <!-- 文字 -->
-            <div v-if="tablist == 1">
-              <el-form-item>
-                <el-input
-                  type="textarea"
-                  v-model="newform.remark"
-                  placeholder="请输入文字内容"
-                  maxlength="200"
-                  show-word-limit
-                ></el-input>
-              </el-form-item>
-            </div>
-            <!-- 图片 -->
-            <div v-if="tablist == 2">
-              <template>
-                <el-upload
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove"
-                >
-                  <i class="el-icon-plus"><p>上传图片</p></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="" />
-                </el-dialog>
-              </template>
-            </div>
-            <!-- PDF -->
-            <div v-if="tablist == 3">
-              <template>
-                <el-upload
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove"
-                  accept=".pdf"
-                >
-                  <i class="el-icon-plus"><p>上传pdf</p></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible">
-                  <img width="100%" :src="dialogImageUrl" alt="" />
-                </el-dialog>
-              </template>
-            </div>
-            <!-- 链接 -->
-            <div v-if="tablist == 4">
-              <el-form-item>
-                <el-input
-                  v-model="newform.link"
-                  placeholder="请输入链接"
-                ></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
+            <el-input
+              v-model="wordTitle"
+              placeholder="请输入内容"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
           <div class="buttonWarp">
             <span class="cancel" @click="cancel">取消</span>
             <span class="save">保存</span>
@@ -214,82 +364,415 @@
         </div>
       </div>
     </van-action-sheet>
+
+    <!-- 删除 -->
+    <!-- <van-popup v-model="deleteCenter">内容</van-popup> -->
+    <!-- Sop弹框 -->
+    <van-action-sheet v-model="sopPopup" title="个人SOP提醒">
+      <div class="content">
+        <div class="codeDetail">
+          <div class="sop-box">
+            <div class="sop-newsText">
+              <span class="line-border"></span>
+              <span class="sop-time"> [2021-07-02 12:00] </span>
+              给客户发送以下 <span class="sop-num"> 4 </span>消息
+            </div>
+            <div class="sop-text">
+              <div class="text_img">
+                <img
+                  style="width: 24px; height: 24px"
+                  src="../../images/icon_add@2x.png"
+                  alt=""
+                />
+              </div>
+              <div class="sop_title">欢迎您加入哈哈哈哈哈哈，一起加油吧~</div>
+            </div>
+            <div class="sop-text">
+              <div class="text_img">
+                <img
+                  style="width: 24px; height: 24px"
+                  src="../../images/icon_add@2x.png"
+                  alt=""
+                />
+              </div>
+              <div class="sop_warp">
+                <div class="sop_imgWarp">
+                  <div class="img-up">
+                    <img src="../../images/iconadd.png" alt="" />
+                  </div>
+                  <div class="center_img">
+                    <p class="img_text">图片副本.png</p>
+                    <p class="img_size">29/9K</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sop-text">
+              <div class="text_img">
+                <img
+                  style="width: 24px; height: 24px"
+                  src="../../images/icon_add@2x.png"
+                  alt=""
+                />
+              </div>
+              <div class="sop_warp">
+                <div class="sop_imgWarp">
+                  <div class="img-up">
+                    <img src="../../images/iconadd.png" alt="" />
+                  </div>
+                  <div class="center_img">
+                    <p class="img_text">图片副本.png</p>
+                    <p class="img_size">29/9K</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-action-sheet>
   </div>
 </template>
 <script>
+import SelectTree from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+
 export default {
+  components: {
+    SelectTree,
+  },
   data() {
     return {
+      sopPopup: false,
+      isOpen: true,
+      groupingName: "", //输入分组名称
+      isShowOperate: false,
+      activeName: "1",
+      numberValidateForm: {
+        age: "",
+      },
+      treeData: [
+        {
+          label: "分组1",
+          title: "这是话术标题",
+          isOpen: true,
+          items: [
+            {
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "图片的标题.png",
+              size: "27.35k",
+              url: "https://www.xinghuijin.com/",
+            },
+            {
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "公司简介.pdf",
+              size: "729k",
+              url: "https://www.xinghuijin.com/",
+            },
+            {
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "瑞信科技",
+              size: "Wera sorry xxxxxx",
+              url: "https://www.xinghuijin.com/",
+            },
+          ],
+          children: [
+            {
+              label: "子分组1",
+              title: "这是话术标题",
+              isOpen: false,
+              items: [
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
+                },
+              ],
+            },
+            {
+              label: "子分组2",
+              title: "这是话术标题",
+              isOpen: false,
+              items: [
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
+                },
+              ],
+            },
+            {
+              label: "子分组3",
+              title: "这是话术标题",
+              isOpen: false,
+              items: [
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: "分组2",
+          title: "这是话术标题",
+          isOpen: false,
+          items: [
+            {
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "图片的标题.png",
+              size: "27.35k",
+              url: "https://www.xinghuijin.com/",
+            },
+            {
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "公司简介.pdf",
+              size: "729k",
+              url: "https://www.xinghuijin.com/",
+            },
+            {
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "瑞信科技",
+              size: "Wera sorry xxxxxx",
+              url: "https://www.xinghuijin.com/",
+            },
+          ],
+          children: [
+            {
+              label: "子分组1",
+              title: "这是话术标题",
+              isOpen: false,
+              items: [
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
+                },
+              ],
+            },
+            {
+              label: "子分组2",
+              title: "这是话术标题",
+              isOpen: false,
+              items: [
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
+                },
+                {
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      showList: false, //列表显示
       callbox: false,
       dialogImageUrl: "",
+      wordTitle: "",
       dialogVisible: false,
+      groupingId: "", //分组id
+
       newform: {
-        grouping: "",
-        verbaltite: "",
-        remark: "",
-        link: "",
+        renameText: "",
+        // grouping: "",
+        // verbaltite: "",
+        // remark: "",
+        // link: "",
       },
       radio: 1,
       newshow: false, //新增弹框
+      rename: false, //重命名
       tablist: 1, //弹框tab列表
       activeNames: [],
-      tabClick: 1,
+      tabClick: 1, //切换
       inputValue: "",
-      data: [
+      options: [
         {
-          label: "一级 1",
+          id: 1,
+          name: " 1一级 1",
           children: [
             {
+              id: 4,
               label: "二级 1-1",
               children: [
                 {
+                  id: 9,
                   label: "三级 1-1-1",
+                },
+                {
+                  id: 10,
+                  label: "三级 1-1-2",
                 },
               ],
             },
           ],
         },
         {
+          id: 2,
+          name: "一级 2",
+          children: [
+            {
+              id: 5,
+              label: "二级 2-1",
+            },
+            {
+              id: 6,
+              label: "二级 2-2",
+            },
+          ],
+        },
+        {
+          id: 3,
+          name: "一级 3",
+          children: [
+            {
+              id: 7,
+              label: "二级 3-1",
+            },
+            {
+              id: 8,
+              label: "二级 3-2",
+            },
+          ],
+        },
+      ],
+      value: null,
+      normalizer(node) {
+        // console.log(node.id);
+        return {
+          id: node.id,
+          label: node.name,
+          children: node.children,
+        };
+      },
+      dataListTrre: [
+        {
+          id: 1,
+          label: "一级一级 1",
+          items: [
+            {
+              name: "11111",
+            },
+            {
+              name: "222",
+            },
+          ],
+          children: [
+            {
+              id: 4,
+              label: "二级 1-1",
+              children: [
+                {
+                  id: 9,
+                  label: "三级 1-1-1",
+                },
+                {
+                  id: 10,
+                  label: "三级 1-1-2",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 2,
           label: "一级 2",
           children: [
             {
+              id: 5,
               label: "二级 2-1",
-              children: [
-                {
-                  label: "三级 2-1-1",
-                },
-              ],
             },
             {
+              id: 6,
               label: "二级 2-2",
-              children: [
-                {
-                  label: "三级 2-2-1",
-                },
-              ],
             },
           ],
         },
         {
+          id: 3,
           label: "一级 3",
           children: [
             {
+              id: 7,
               label: "二级 3-1",
-              children: [
-                {
-                  label: "三级 3-1-1",
-                },
-              ],
             },
             {
+              id: 8,
               label: "二级 3-2",
-              children: [
-                {
-                  label: "三级 3-2-1",
-                },
-              ],
             },
           ],
+        },
+      ],
+      firstList: [
+        {
+          name: "111",
         },
       ],
       defaultProps: {
@@ -298,29 +781,60 @@ export default {
       },
     };
   },
+  created() {
+    this.verbaltrickList();
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     //列表页面
     myclue(v) {
       console.log(v);
       this.tabClick = v;
     },
+    //列表点击
+    clickList() {
+      this.showList = !this.showList;
+    },
     // 点击树形结构
     handleNodeClick(data) {
       console.log(data);
+      this.isShowOperate = data.id;
     },
     // 点击新增按钮
     newaddClick() {
+      // this.newshow = true;
+      this.$router.push("/talkTool/added");
+    },
+    //添加分组
+    addGroups() {
       this.newshow = true;
     },
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    // 重命名
+    // rechristen(){
+
+    // },
+    _down(item) {
+      // window.open(item.url);
+      console.log(item);
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
+    // handleOpen(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
+    // handleClose(key, keyPath) {
+    //   console.log(key, keyPath);
+    // },
 
     redioClick(value) {
       this.tablist = value;
@@ -334,16 +848,127 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
+    // 个人话术分组列表
+    verbaltrickList() {
+      this.$network
+        .get("/material-service/verbaltrickgroup/getlist", {
+          parentId: 0,
+          groupType: this.tabClick,
+        })
+        .then((res) => {
+          console.log(res.data);
+          console.log(res);
+          this.options = res.data;
+          this.treeData = res.data;
+          if (res.result) {
+          }
+        });
+    },
+    //新增分组
+    newclickList() {
+      let params = {
+        name: this.groupingName,
+        parentId: this.groupingId || 0,
+        groupType: this.tabClick,
+      };
+      this.$network
+        .post("/material-service/verbaltrickgroup/add", params)
+        .then((res) => {
+          console.log(res);
+          if (res.result) {
+          }
+        });
+    },
+    // 点击分组列表名字
+    groupNameList(value) {
+      console.log(value);
+      this.$network
+        .get("/material-service/verbaltrick/getlist", {
+          page: 1,
+          limit: 20,
+          value: "",
+          groupId: value.id,
+          groupType: this.tabClick,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.result) {
+            this.newclickList;
+          }
+        });
+    },
+    // 删除
+    open() {
+      this.$confirm(
+        "此操作将删除本分组及分组内全部内容，是否确认删除分组？",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
+        }
+      )
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "删除成功!",
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
     // 点击取消
     cancel() {
       this.newshow = false;
     },
-    // 点击点点点，出来卡片
-    callOclick() {
-      this.callbox = true;
+    // 新建分组baoc
+    saveBut() {
+      this.newclickList();
+      console.log(this.groupingName);
+    },
+    // 点击点点点，来卡片
+    handleCommand(command) {
+      // this.$message("click on item " + command);
+      console.log(command);
+      if (command == "a") {
+        // this.newshow = true;
+      } else if (command == "b") {
+        // this.rename = true;
+        // this.newshow = false;
+      } else if (command == "c") {
+        // this.newshow = false;
+        // this.rename = false;
+        this.open();
+      }
+    },
+    changeSelect(val) {
+      console.log(val.id);
+      this.groupingId = val.id;
     },
     newgroup() {
       console.log(123);
+    },
+    renameSave(formName) {
+      console.log(formName);
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    beforeHandleCommand(node, data, command) {
+      return {
+        node: node,
+        data: data,
+        command: command,
+      };
     },
   },
 };
@@ -353,7 +978,29 @@ export default {
 .tetx {
   font-size: 50px;
 }
-
+.all_group {
+  .custom-tree-node {
+    font-size: 14px;
+    width: 100%;
+    .text_node {
+      display: inline-block;
+      width: 100%;
+      .nodeName {
+        display: inline-block;
+        margin-left: 5px;
+        width: 70%;
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .look_more {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+}
 .headerTitle {
   background: #fff;
   padding: 0 24px;
@@ -490,6 +1137,9 @@ export default {
     }
   }
 }
+.listData {
+  transition: all 3s;
+}
 // 过渡动画
 .transform {
   transform: rotate(95deg);
@@ -563,20 +1213,43 @@ export default {
   font-size: 28px;
   margin-left: 8px;
 }
+.group_img {
+  width: 48px;
+  height: 48px;
+}
+.warp_group {
+  display: flex;
+  align-items: center;
+  margin: 28px auto;
+}
+.title_verba {
+  font-weight: 400;
+  color: #3c4353;
+  font-size: 28px;
+  margin-left: 16px;
+}
+.center_list {
+  display: flex;
+  align-items: center;
+}
+.share_img {
+  width: 26px;
+  height: 26px;
+}
 .content {
   // overflow: scroll;
   // padding: 24px;
   .addForm,
   .codeDetail {
-    overflow-y: scroll;
-    height: 800px;
+    // overflow-y: scroll;
+    height: 750px;
     box-sizing: border-box;
     padding: 24px;
     font-size: 28px;
     font-weight: 500;
-    overflow-y: scroll;
+    // overflow-y: scroll;
     /deep/.el-form {
-      height: 100%;
+      // height: 100%;
       .el-form-item {
         display: flex;
         margin-bottom: 26px;
@@ -685,14 +1358,63 @@ export default {
     }
   }
 }
+// 新建分组
+.select-Tree {
+  display: flex;
+}
+.groupname {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  // width: 250px;
+}
+.cent {
+  justify-content: center;
+}
+/deep/.vue-treeselect__control {
+  width: 547px;
+  height: 80px;
+  line-height: 80px;
+}
+/deep/.vue-treeselect__placeholder,
+.vue-treeselect__single-value {
+  top: 30%;
+}
+/deep/.vue-treeselect__single-value {
+  top: 30%;
+}
+.input_text {
+  display: flex;
+  margin-top: 24px;
+}
+/deep/ .el-input,
+.el-input__inner {
+  width: 547px;
+}
+.el-dropdown-link {
+  position: relative;
+}
+.dropdown_box {
+  width: 236px;
+  // height: 208px;
+  background: #ffffff;
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+.el-dropdown-link img {
+  width: 28px;
+  height: 28px;
+}
 // 底部按钮
 .buttonWarp {
   display: flex;
-  justify-content: space-around;
+  // justify-content: space-around;
+  position: absolute;
   font-size: 28px;
   width: 100%;
   // position: fixed;
   bottom: 24px;
+  // margin-top: 243px;
 
   span {
     display: inline-block;
@@ -710,6 +1432,202 @@ export default {
   .save {
     background: #4168f6;
     color: #fff;
+    margin-left: 10px;
   }
+}
+/deep/.van-action-sheet {
+  width: 751.5px;
+  // margin: 0 auto;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+//
+.tree-box {
+  background: white;
+  font-size: 14px;
+  color: #323232;
+  .corner {
+    position: absolute;
+    top: 5px;
+    width: 0px;
+    height: 0px;
+    border: 10px solid #a0a0a0;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+  }
+  .gray {
+    color: gray;
+  }
+  .tree-header {
+    display: flex;
+    line-height: 20px;
+    font-weight: 400;
+    color: #3c4353;
+    font-size: 28px;
+    margin-top: 24px;
+    .header-left {
+      position: relative;
+      flex: 1;
+      min-width: 20px;
+      max-width: 20px;
+      margin-right: 5px;
+    }
+    .header-mid {
+      flex: 1;
+    }
+    .header-right {
+      position: relative;
+      white-space: nowrap;
+      max-width: 60px;
+      min-width: 60px;
+      flex: 1;
+      margin-left: 5px;
+    }
+  }
+  .out-panel {
+    padding-left: 20px;
+  }
+  .out-li {
+    margin-bottom: 20px;
+  }
+  .item-box {
+    padding: 20px;
+    background-color: #f5f5f5;
+    .item-li {
+      // display: flex;
+      margin-bottom: 20px;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      // img {
+      //   width: 112px;
+      //   height: 112px;
+      // }
+    }
+  }
+  .up {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+.cen_item {
+  display: flex;
+  align-items: center;
+}
+.cen_img {
+  flex: 1;
+  // max-width: 60px;
+  width: 112px;
+  height: 112px;
+  // min-width: 60px;
+  margin-right: 10px;
+}
+// sop
+.sop-box {
+  height: 750px;
+  background: #fafbff;
+  border-radius: 8px;
+  border: 1px solid #d9dae4;
+  padding: 24px;
+}
+.sop-newsText {
+  font-weight: 400;
+  color: #3c4353;
+  font-size: 28px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  .sop-time {
+    margin-right: 20px;
+  }
+}
+.line-border {
+  width: 8px;
+  height: 28px;
+  background: #4168f6;
+  display: inline-block;
+  margin-right: 12px;
+  margin-top: 4px;
+}
+.sop-num {
+  color: #4168f6;
+  margin: 0 5px;
+}
+.text_img {
+  margin-right: 24px;
+}
+.sop-text {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.sop_title {
+  font-weight: 400;
+  color: #838a9d;
+  font-size: 28px;
+  width: 606px;
+  height: 88px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d9dae4;
+  line-height: 88px;
+  padding-left: 24px;
+}
+.list_box {
+  // display: flex;
+  width: 565px;
+  display: flex;
+  align-items: center;
+  // // width: 606px;
+  // width: 582px;
+  height: 160px;
+  padding-left: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d9dae4;
+}
+.sop_warp {
+  // display: flex;
+  width: 606px;
+  display: flex;
+  align-items: center;
+  // // width: 606px;
+  // width: 582px;
+  height: 160px;
+  padding-left: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d9dae4;
+}
+.sop_imgWarp {
+  display: flex;
+  align-items: center;
+  // // width: 606px;
+  // width: 582px;
+  // height: 160px;
+  // padding-left: 24px;
+  // background: #ffffff;
+  // border-radius: 8px;
+  // border: 1px solid #d9dae4;
+}
+.img-up img {
+  width: 112px;
+  height: 112px;
+}
+.img_text {
+  font-weight: 400;
+  color: #3c4353;
+  font-size: 28px;
+}
+.img_size {
+  font-weight: 400;
+  color: #c0c4cc;
+  font-size: 24px;
+}
+.center_img {
+  line-height: 50px;
+  margin-left: 16px;
 }
 </style>
