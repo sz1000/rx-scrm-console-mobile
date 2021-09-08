@@ -309,6 +309,7 @@
 </template>
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
+import CommonHome from '../../utils/CommonHome'
 export default {
   data() {
     return {
@@ -366,7 +367,6 @@ export default {
       (() => {
         this.showHeight =
           document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        // console.log(this.showHeight, this.docmHeight)
       })()
   },
   created() {

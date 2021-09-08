@@ -1,5 +1,6 @@
 import router from '../router/index'
 import axios from 'axios'
+import { getStoreValue, setStoreValue } from '../utils/LocalStorageDate'
 let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
@@ -22,9 +23,10 @@ let instance = axios.create({
 instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
-            const token = window.localStorage.getItem('token')
+            // const token = window.localStorage.getItem('token')
+
+            const token = getStoreValue('token')
                 // const token = 'bcf9ec|62319231BFC44258AB928608AF9C92E3'
-                // console.log('------token----', token)
             if (token) {
                 config.headers.common.token = token
             }
@@ -104,7 +106,7 @@ methods.forEach((item) => {
                     // alert('request------')
                     window.localStorage.removeItem('token')
                     window.localStorage.removeItem('userId')
-                    window.location.reload()
+                    router.push(window.location.pathname)
                 } else {
                     // console.log(axios)
                     // router.go(0)

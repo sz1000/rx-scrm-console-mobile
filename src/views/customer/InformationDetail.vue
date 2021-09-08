@@ -240,26 +240,12 @@ export default {
   },
   created() {
     commonFun.getWxAppid()
-    // alert(1111111111)
-    // let href = window.location.href.split('?')[1]
-    // alert(href)
-    // let p = href.split('&')[0]
-    // let authCode = p.split('=')[1]
-    // if (authCode == '' || authCode == null) {
-    //   this.getDetailForm()
-    // }
-    // let token = localStorage.getItem('token')
-    // alert(token)
-    // if (token == null) {
-    //   this.getData(authCode)
-    // } else {
-    //   this.getDetailForm()
-    // }
   },
   mounted() {
     setTimeout(() => {
       this.getDetailForm()
     }, 2000)
+    // this.getDetailForm()
   },
   methods: {
     changeInput(val) {
