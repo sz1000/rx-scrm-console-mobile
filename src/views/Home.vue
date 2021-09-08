@@ -108,18 +108,27 @@ export default {
   mounted() {},
   methods: {
     getData(v) {
+      // alert(JSON.stringify(v))
       this.$network
         .get('/user-service/m/user/getloguser', {
           code: v,
           url: location.href,
         })
         .then((res) => {
+          // alert(JSON.stringify(res))
           if (res.result) {
             this.token = res.data.accessToken
             localStorage.setItem('token', res.data.accessToken)
           } else {
-            this.$router.push('/404')
-            localStorage.removeItem('token')
+            if (res.code == 'error_busy') {
+              this.$message({
+                type: 'error',
+                message: '系统繁忙,请稍后重试' || res.msg,
+              })
+            } else {
+              this.$router.push('/404')
+              localStorage.removeItem('token')
+            }
           }
         })
     },

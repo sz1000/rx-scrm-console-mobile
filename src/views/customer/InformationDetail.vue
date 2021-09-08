@@ -240,9 +240,6 @@ export default {
   },
   created() {
     commonFun.getWxAppid()
-    setTimeout(() => {
-      this.getDetailForm()
-    }, 2000)
     // alert(1111111111)
     // let href = window.location.href.split('?')[1]
     // alert(href)
@@ -259,19 +256,12 @@ export default {
     //   this.getDetailForm()
     // }
   },
+  mounted() {
+    setTimeout(() => {
+      this.getDetailForm()
+    }, 2000)
+  },
   methods: {
-    getData(v) {
-      let params = {
-        code: v,
-        url: location.href,
-      }
-      getToken(params).then((res) => {
-        // alert(JSON.stringify(res))
-        this.token = res.data.accessToken
-        localStorage.setItem('token', res.data.accessToken)
-        this.getDetailForm()
-      })
-    },
     changeInput(val) {
       console.log(val)
       this.update()
@@ -300,10 +290,12 @@ export default {
         // message: '加载中...',
         duration: 0,
       })
+      // alert(JSON.stringify(localStorage.getItem('userId')))
+      // alert(JSON.stringify(this.$route.params.userid))
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
-          clueCustomerNo:
-            this.$route.params.userid || localStorage.getItem('userId'),
+          clueCustomerNo: localStorage.getItem('userId'),
+          // clueCustomerNo: this.$route.params.userid,
         })
         .then((res) => {
           // alert(JSON.stringify(res))
@@ -338,6 +330,7 @@ export default {
             }
           })
           this.systemList = tempSystem
+          localStorage.removeItem('userId')
         })
     },
     processTree(data) {

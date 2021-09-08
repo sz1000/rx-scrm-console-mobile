@@ -1,4 +1,5 @@
 import Network from './request'
+
 const getWxAppid = function() {
         // let token = localStorage.getItem('token')
         // alert(token)
@@ -96,12 +97,10 @@ function getAgent(res) {
                     if (res.err_msg == 'getCurExternalContact:ok') {
                         // that.userId = res.userId //返回当前外部联系人userId
                         // alert(JSON.stringify(res))
+                        // alert(JSON.stringify(res.userId))
                         localStorage.setItem('userId', res.userId)
-                            // alert(JSON.stringify(res.userId))
                             // alert(JSON.stringify(that.obj))
                             // that.getMethod()
-
-                        // Promise.resolve(res.userId)
                     } else {
                         //错误处理
                         // alert(JSON.stringify(res.err_msg))
