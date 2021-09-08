@@ -25,34 +25,38 @@
     <div class="btnRouter">
       <router-link to="talkTool">
         <div class="commonBtn">
-          <img src="../images/huoma.png" alt="" />
+          <img src="../images/huoma.png"
+               alt="" />
           <span>企微活码</span>
         </div>
       </router-link>
       <router-link to="/talkTool/channelConfiguration">
         <div class="commonBtn">
-          <img src="../images/qudao.png" alt="" />
+          <img src="../images/qudao.png"
+               alt="" />
           <span>渠道配置</span>
         </div>
       </router-link>
-      <router-link to="/talkTool/verbalTrick">
+      <!-- <router-link to="/talkTool/verbalTrick">
         <div class="commonBtn">
           <img src="../images/qudao.png" alt="" />
           <span>话术</span>
         </div>
-      </router-link>
+      </router-link> -->
     </div>
     <div class="customAccont manage">客户管理</div>
     <div class="btnRouter custom">
       <router-link to="/customerManage/clues">
         <div class="commonBtn">
-          <img src="../images/xiansuo.png" alt="" />
+          <img src="../images/xiansuo.png"
+               alt="" />
           <span>线索</span>
         </div>
       </router-link>
       <router-link to="/customerManage/myCustomer">
         <div class="commonBtn">
-          <img src="../images/kehu.png" alt="" />
+          <img src="../images/kehu.png"
+               alt="" />
           <span>客户</span>
         </div>
       </router-link>
@@ -61,36 +65,75 @@
 </template>
 
 <script>
-// import wx from 'weixin-js-sdk'
+import resetToken from '../utils/commonToken'
+
 export default {
   components: {},
   data() {
     return {
-      userId: "",
-      token: "",
-    };
+      userId: '',
+      token: '',
+    }
   },
   created() {
-    let href = window.location.href.split("?")[1];
-    let p = href.split("&")[0];
-    let authCode = p.split("=")[1];
-    this.getData(authCode);
+    let authCode
+    if (window.location.href.indexOf('?') > -1) {
+      let href = window.location.href.split('?')[1]
+      let p = href.split('&')[0]
+      authCode = p.split('=')[1]
+    } else {
+      // alert('ppppppp')
+      authCode = ''
+    }
+    // alert(authCode)
+
+    if (!authCode) {
+      // alert(11111111)
+      this.$router.push('/homeTransition')
+    } else {
+      // alert(222222222)
+      this.getData(authCode)
+    }
+    // if (!token && typeof token != 'undefined') {
+    // } else {
+    //   this.$network.post('/user-service/user/getstatus').then((res) => {
+    //     if (res.result) {
+    //       return true
+    //     } else {
+    //       this.$router.push('/404')
+    //     }
+    //   })
+    // }
   },
   mounted() {},
   methods: {
     getData(v) {
+      // alert(JSON.stringify(v))
       this.$network
-        .get("/user-service/m/user/getloguser", {
+        .get('/user-service/m/user/getloguser', {
           code: v,
           url: location.href,
         })
         .then((res) => {
-          this.token = res.data.accessToken;
-          localStorage.setItem("token", res.data.accessToken);
-        });
+          // alert(JSON.stringify(res))
+          if (res.result) {
+            this.token = res.data.accessToken
+            localStorage.setItem('token', res.data.accessToken)
+          } else {
+            if (res.code == 'error_busy') {
+              this.$message({
+                type: 'error',
+                message: '系统繁忙,请稍后重试' || res.msg,
+              })
+            } else {
+              this.$router.push('/404')
+              localStorage.removeItem('token')
+            }
+          }
+        })
     },
   },
-};
+}
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
@@ -107,7 +150,7 @@ export default {
     padding-left: 20px;
     margin-bottom: 24px;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 5px;
       left: 0;
@@ -136,19 +179,19 @@ export default {
       }
     }
     .card1 {
-      background: url("../images/kehuzongshu.png") no-repeat;
+      background: url('../images/kehuzongshu.png') no-repeat;
       background-size: contain;
     }
     .card2 {
-      background: url("../images/xinzeng.png") no-repeat;
+      background: url('../images/xinzeng.png') no-repeat;
       background-size: contain;
     }
     .card3 {
-      background: url("../images/liushi.png") no-repeat;
+      background: url('../images/liushi.png') no-repeat;
       background-size: contain;
     }
     .card4 {
-      background: url("../images/shenqing.png") no-repeat;
+      background: url('../images/shenqing.png') no-repeat;
       background-size: contain;
     }
   }

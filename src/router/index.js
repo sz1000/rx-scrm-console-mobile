@@ -25,6 +25,9 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+//错误页
+import NoPermissions from '../views/404.vue'
+
 Vue.use(VueRouter)
 
 const routes = [{
@@ -46,6 +49,11 @@ const routes = [{
             bodyClass: 'HomeWarp',
         },
         component: Home,
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: NoPermissions,
     },
 
     // 客户画像
@@ -190,18 +198,22 @@ const routes = [{
             },
         ],
     },
+    //营销互动
+    {
+        path: '',
+    },
 ]
 
 const router = new VueRouter({
-        mode: 'history',
-        base: process.env.BASE_URL,
-        routes,
-    })
-    // router.beforeEach((to, from, next) => {
-    //     document.getElementsByTagName('body')[0].className = to.meta.bodyClass
-    //     document.body.scrollTop = 0
-    //     document.documentElement.scrollTop = 0
-    //     window.pageYOffset = 0
-    //     next()
-    // })
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes,
+})
+router.beforeEach((to, from, next) => {
+    // document.getElementsByTagName('body')[0].className = to.meta.bodyClass
+    document.body.scrollTop = 0
+    document.documentElement.scrollTop = 0
+    window.pageYOffset = 0
+    next()
+})
 export default router

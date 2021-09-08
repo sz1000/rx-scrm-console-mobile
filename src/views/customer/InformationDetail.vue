@@ -185,6 +185,8 @@
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
+import { getToken } from '../../utils/getToken'
+import commonFun from '../../utils/commonToken'
 export default {
   data() {
     return {
@@ -237,7 +239,27 @@ export default {
     }
   },
   created() {
-    this.getDetailForm()
+    commonFun.getWxAppid()
+    // alert(1111111111)
+    // let href = window.location.href.split('?')[1]
+    // alert(href)
+    // let p = href.split('&')[0]
+    // let authCode = p.split('=')[1]
+    // if (authCode == '' || authCode == null) {
+    //   this.getDetailForm()
+    // }
+    // let token = localStorage.getItem('token')
+    // alert(token)
+    // if (token == null) {
+    //   this.getData(authCode)
+    // } else {
+    //   this.getDetailForm()
+    // }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.getDetailForm()
+    }, 2000)
   },
   methods: {
     changeInput(val) {
@@ -263,11 +285,21 @@ export default {
       this.update()
     },
     getDetailForm() {
+      // alert(222222222222222)
+      this.$toast.loading({
+        // message: '加载中...',
+        duration: 0,
+      })
+      // alert(JSON.stringify(localStorage.getItem('userId')))
+      // alert(JSON.stringify(this.$route.params.userid))
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
-          clueCustomerNo: this.$route.params.userid,
+          clueCustomerNo: localStorage.getItem('userId'),
+          // clueCustomerNo: this.$route.params.userid,
         })
         .then((res) => {
+          // alert(JSON.stringify(res))
+          this.$toast.clear()
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
@@ -294,10 +326,11 @@ export default {
               item.name.includes('时间') &&
               JSON.stringify(item.value) !== 'null'
             ) {
-              item.value = formatDate(item.value, 'yyyy-MM-dd')
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
             }
           })
           this.systemList = tempSystem
+          localStorage.removeItem('userId')
         })
     },
     processTree(data) {
@@ -322,7 +355,7 @@ export default {
         })
     },
     goBack() {
-      this.$router.push('/customTransition')
+      this.$router.push('/customerPortrait')
       // this.$router.go(-1)
     },
     inputEdit(item, index) {
@@ -422,6 +455,10 @@ export default {
         .van-cell {
           padding: 0;
           font-size: 28px;
+          border: 1px solid #f0f2f7;
+          &::after {
+            border-bottom: 0;
+          }
         }
         .van-field__label {
           width: 234px;

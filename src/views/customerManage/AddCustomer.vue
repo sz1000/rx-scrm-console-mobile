@@ -78,7 +78,7 @@
             <el-option v-for="item in optionsScale"
                        :key="item.value"
                        :label="item.name"
-                       :value="item.type">
+                       :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>

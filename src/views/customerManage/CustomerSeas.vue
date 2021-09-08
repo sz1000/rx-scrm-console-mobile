@@ -225,7 +225,7 @@
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{item.userName}}</div>
                   <span class="time_right">
-                    {{formatDate(item.createTime,'yyyy-MM-dd')}}
+                    {{formatDate(item.createTime,'yyyy-MM-dd hh:mm:ss')}}
                   </span>
                 </div>
               </div>
@@ -244,7 +244,8 @@
             <div class="selectUser">
               <span style="color:red;">*</span><span>指定所属人:</span>
               <el-select v-model="userNo"
-                         placeholder="请选择员工">
+                         placeholder="请选择员工"
+                         popper-class="popper-select-class">
                 <el-option v-for="item in options"
                            :key="item.value"
                            :label="item.name"
@@ -436,7 +437,7 @@ export default {
               item.name.includes('时间') &&
               JSON.stringify(item.value) !== 'null'
             ) {
-              item.value = formatDate(item.value, 'yyyy-MM-dd')
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
             }
           })
           this.systemList = tempSystem

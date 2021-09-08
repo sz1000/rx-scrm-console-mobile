@@ -11,12 +11,12 @@ module.exports = {
             },
         },
     },
-    // publicPath: '/',
-    // devServer: {
-    //     historyApiFallback: {
-    //         index: '/index.html',
-    //     },
-    // },
+    publicPath: '/',
+    devServer: {
+        historyApiFallback: {
+            index: '/index.html',
+        },
+    },
     // transpileDependencies: ['element-ui', 'vant'],
     // // transpileDependencies: ['*'],
     // chainWebpack: (config) => {

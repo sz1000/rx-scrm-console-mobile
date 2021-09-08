@@ -64,7 +64,7 @@
         </div>
         <div class="box1">
           <span class="label">添加时间:</span>
-          <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd')  }}</span>
+          <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd hh:mm:ss')  }}</span>
         </div>
       </div>
     </div>
@@ -146,7 +146,7 @@
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
                   <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd") }}
+                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
                   </span>
                 </div>
               </div>
@@ -234,7 +234,10 @@
 import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
+// import { MyMixin } from '../../utils/commonToken'
+import commonFun from '../../utils/commonToken'
 export default {
+  // mixins: [MyMixin],
   components: {
     BackTop,
   },
@@ -278,22 +281,14 @@ export default {
     }
   },
   created() {
-    // console.log(wx)
-    let href = window.location.href.split('?')[1]
-    let p = href.split('&')[0]
-    let authCode = p.split('=')[1]
-    this.getData(authCode)
+    commonFun.getWxAppid()
   },
-  watch: {
-    // showHeight(val) {
-    //   if (this.docmHeight > this.showHeight) {
-    //     this.hidshow = false
-    //   } else {
-    //     this.hidshow = true
-    //   }
-    // },
-  },
+  watch: {},
   mounted() {
+    setTimeout(() => {
+      this.getMethod()
+    }, 2000)
+
     window.onresize = () =>
       (() => {
         this.showHeight =
@@ -301,113 +296,52 @@ export default {
         // console.log(this.showHeight, this.docmHeight)
       })()
   },
-
   methods: {
     formatDate,
-    getData(v) {
-      this.$network
-        .get('/user-service/m/user/getloguser', {
-          code: v,
-          url: location.href,
-        })
-        .then((res) => {
-          // alert(res.data.corpId)
-          // alert(res.data.timestamp)
-          // alert(res.data.signature)
-          // alert(res.data.nonceStr)
-          // alert(res.data.signature)
-          // alert(res.data.agent_config_data.signature)
-          // this.obj = res.data
-          // alert(JSON.stringify(this.obj))
-          this.token = res.data.accessToken
-          this.appid = res.data.corpId
-          localStorage.setItem('token', res.data.accessToken)
-
-          wx.config({
-            beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: res.data.corpId, // 必填，企业微信的corpID
-            timestamp: res.data.timestamp, // 必填，生成签名的时间戳
-            nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
-            signature: res.data.signature, // 必填，签名，见 附录-JS-SDK使用权限签名算法
-            jsApiList: [
-              'getCurExternalContact',
-              'invoke',
-              'agentConfig',
-              'checkJsApi',
-            ], // 必填，需要使用的JS接口列表，凡是要调用的接口都需要传进来
-          })
-          // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-          var that = this
-          wx.ready(function () {
-            wx.invoke(
-              'agentConfig',
-              {
-                corpid: res.data.corpId, // 必填，企业微信的corpid，必须与当前登录的企业一致
-                agentid: res.data.agent_id + '', // 必填，企业微信的应用id （e.g. 1000247）
-                timestamp: res.data.agent_config_data.timestamp, // 必填，生成签名的时间戳
-                nonceStr: res.data.agent_config_data.noncestr, // 必填，生成签名的随机串
-                signature: res.data.agent_config_data.signature, // 必填，签名，见附录-JS-SDK使用权限签名算法
-                jsApiList: ['getCurExternalContact', 'getContext', 'invoke'], //必填，传入需要使用的接口名称飞)
-              },
-              function (res) {
-                that.obj = res
-                wx.invoke('getCurExternalContact', {}, function (res) {
-                  if (res.err_msg == 'getCurExternalContact:ok') {
-                    that.userId = res.userId //返回当前外部联系人userId
-                    // alert(JSON.stringify(that.userId))
-                    // alert(JSON.stringify(that.obj))
-                    that.getMethod()
-                    that.getTimeline()
-                    that.getTagList()
-                  } else {
-                    //错误处理
-                  }
-                })
-                wx.invoke('getContext', {}, function (res) {
-                  // alert(JSON.stringify(res))
-                  // alert(JSON.stringify(res.entry))
-                  if (res.err_msg == 'getContext:ok') {
-                    // entry = res.entry
-                    // shareTicket = res.shareTicket
-                  } else {
-                    //错误处理
-                  }
-                })
-              }
-            )
-          })
-        })
-    },
-
     goToDetail() {
-      // alert(this.userId)
+      // alert(JSON.stringify(this.item.clueCustomerNo))
       this.$router.push({
         name: 'informationDetail',
         params: {
-          userid: this.userId,
+          // userid: localStorage.getItem('userId'),
+          userid: this.item.clueCustomerNo,
         },
       })
     },
     //获取客户详情
     getMethod() {
-      this.$network
-        .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-          id: this.userId,
-        })
-        .then((res) => {
-          // console.log(res)
-          this.name = res.data.clueCustomerVO.name
-          this.nameFrom = res.data.clueCustomerVO.customerType
-          this.item = res.data.clueCustomerVO
-          this.imageUser = res.data.clueCustomerVO.avatar
-        })
+      // alert(JSON.stringify(localStorage.getItem('userId')))
+      this.$toast.loading({
+        // message: '加载中...',
+        duration: 0,
+      })
+      // alert(JSON.stringify(localStorage.getItem('userId')))
+      if (!localStorage.getItem('userId')) {
+        commonFun.getWxAppid()
+      } else {
+        this.$network
+          .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+            // id: v,
+            id: localStorage.getItem('userId'),
+          })
+          .then((res) => {
+            // console.log(res)
+            this.$toast.clear()
+            this.name = res.data.clueCustomerVO.name
+            this.nameFrom = res.data.clueCustomerVO.customerType
+            this.item = res.data.clueCustomerVO
+            this.imageUser = res.data.clueCustomerVO.avatar
+            this.timeLineList = res.data.followMessageEntity
+            this.getTagList()
+            localStorage.removeItem('userId')
+          })
+      }
     },
     getTimeline() {
       // console.log(this.objItem, '------')
       this.$network
         .get('/customer-service/cluecustomer/getMessage', {
-          cluecustomerno: this.userId,
+          cluecustomerno: this.item.clueCustomerNo,
         })
         .then((res) => {
           this.timeLineList = res.data
@@ -417,23 +351,26 @@ export default {
       this.highLightArr = []
       this.$network
         .get('/customer-service/cluecustomer/gettag', {
-          clueCustomerNo: this.userId,
+          clueCustomerNo: this.item.clueCustomerNo,
         })
         .then((res) => {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+          let allChildTag = res.data.tagCorpList.map((item) => {
+            return item.children
+          })
+          // let childTag = allChildTag.flat()
+          let childTag = [].concat.apply([], allChildTag)
+          // console.log('---allChildTag---', allChildTag, childTag)
+
           this.companyTagList.forEach((item) => {
-            this.groupList.forEach((v, i) => {
-              if (item.parenttag == v.tagid) {
-                this.groupList[i].children.forEach((chItem, chIndex) => {
-                  if (item.tagid == chItem.tagid) {
-                    this.highLightArr.push(chItem)
-                  }
-                })
+            childTag.forEach((chItem, chIndex) => {
+              if (item.tagid == chItem.tagid) {
+                this.highLightArr.push(chItem)
               }
             })
-            // console.log(this.highLightArr)
+            // console.log('-----列表----', this.highLightArr)
           })
         })
     },
@@ -464,7 +401,7 @@ export default {
         this.$network
           .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
-            clueCustomerNo: this.userId,
+            clueCustomerNo: this.item.clueCustomerNo,
           })
           .then((res) => {
             if (res.result) {
@@ -518,7 +455,7 @@ export default {
         // console.log(this.highLightArr)
         this.$network
           .post(
-            `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
+            `/customer-service/cluecustomer/updCorptag/${this.item.clueCustomerNo}`,
             this.highLightArr
           )
           .then((res) => {
@@ -547,13 +484,13 @@ export default {
       } else if (v == 3) {
         this.$network
           .post('/customer-service/cluecustomer/addMessage', {
-            clueCustomerNo: this.userId,
+            clueCustomerNo: this.item.clueCustomerNo,
             context: this.message,
           })
           .then((res) => {
             if (res.result) {
               this.show = false
-              this.getTimeline()
+              // this.getTimeline()
               this.getMethod()
               this.$message({
                 type: 'success',
@@ -710,6 +647,7 @@ export default {
       .box1 {
         display: flex;
         width: 50%;
+        line-height: 87px;
         margin-left: 29px;
       }
     }

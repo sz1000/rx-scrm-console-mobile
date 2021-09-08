@@ -269,7 +269,7 @@
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
                   <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd") }}
+                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
                   </span>
                 </div>
               </div>
@@ -345,7 +345,8 @@
             <div class="selectUser">
               <span style="color:red;">*</span><span>指定所属人:</span>
               <el-select v-model="userNo"
-                         placeholder="请选择">
+                         placeholder="请选择"
+                         popper-class="popper-select-class">
                 <el-option v-for="item in options"
                            :key="item.value"
                            :label="item.name"
@@ -510,17 +511,21 @@ export default {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+
+          let allChildTag = res.data.tagCorpList.map((item) => {
+            return item.children
+          })
+          // let childTag = allChildTag.flat()
+          let childTag = [].concat.apply([], allChildTag)
+          // console.log('---allChildTag---', allChildTag, childTag)
+
           this.companyTagList.forEach((item) => {
-            this.groupList.forEach((v, i) => {
-              if (item.parenttag == v.tagid) {
-                this.groupList[i].children.forEach((chItem, chIndex) => {
-                  if (item.tagid == chItem.tagid) {
-                    this.highLightArr.push(chItem)
-                  }
-                })
+            childTag.forEach((chItem, chIndex) => {
+              if (item.tagid == chItem.tagid) {
+                this.highLightArr.push(chItem)
               }
             })
-            // console.log(this.highLightArr)
+            // console.log('-----列表----', this.highLightArr)
           })
         })
     },
@@ -556,7 +561,7 @@ export default {
               item.name.includes('时间') &&
               JSON.stringify(item.value) !== 'null'
             ) {
-              item.value = formatDate(item.value, 'yyyy-MM-dd')
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
             }
           })
           this.systemList = tempSystem

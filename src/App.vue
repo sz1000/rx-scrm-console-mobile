@@ -7,7 +7,9 @@
     <router-view />
   </div>
 </template>
-
+<script>
+export default {}
+</script>
 <style lang="less">
 #app {
   padding: 0;
@@ -16,7 +18,12 @@
   margin: 0 auto;
   background: #f6f7f9;
 }
-
+//解决ios双击才能选中
+.el-scrollbar {
+  > .el-scrollbar__bar {
+    opacity: 1 !important;
+  }
+}
 .el-select-dropdown {
   .el-select-dropdown__item {
     font-size: 28px;
@@ -34,12 +41,6 @@
         height: 60px;
       }
     }
-  }
-}
-//解决ios双击才能选中
-/deep/ .el-scrollbar {
-  > .el-scrollbar__bar {
-    opacity: 1 !important;
   }
 }
 </style>

@@ -243,7 +243,7 @@
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
                   <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd") }}
+                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
                   </span>
                 </div>
               </div>
@@ -470,17 +470,21 @@ export default {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList
+
+          let allChildTag = res.data.tagCorpList.map((item) => {
+            return item.children
+          })
+          // let childTag = allChildTag.flat()
+          let childTag = [].concat.apply([], allChildTag)
+          // console.log('---allChildTag---', allChildTag, childTag)
+
           this.companyTagList.forEach((item) => {
-            this.groupList.forEach((v, i) => {
-              if (item.parenttag == v.tagid) {
-                this.groupList[i].children.forEach((chItem, chIndex) => {
-                  if (item.tagid == chItem.tagid) {
-                    this.highLightArr.push(chItem)
-                  }
-                })
+            childTag.forEach((chItem, chIndex) => {
+              if (item.tagid == chItem.tagid) {
+                this.highLightArr.push(chItem)
               }
             })
-            // console.log(this.highLightArr)
+            // console.log('-----列表----', this.highLightArr)
           })
         })
     },
@@ -522,7 +526,7 @@ export default {
                 item.mapName == 'createTime') &&
               JSON.stringify(item.value) !== 'null'
             ) {
-              item.value = formatDate(item.value, 'yyyy-MM-dd')
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
             }
           })
           this.systemList = tempSystem
@@ -606,7 +610,7 @@ export default {
       } else {
         this.highLightArr.push(list)
       }
-      // console.log(this.highLightArr)
+      // console.log('------选择后----', this.highLightArr)
     },
     selectPersonTag(list, index) {
       console.log(list)
@@ -716,7 +720,7 @@ export default {
             } else {
               this.message({
                 type: 'error',
-                message: '添加失败',
+                message: res.msg || '添加失败',
               })
             }
           })
@@ -758,6 +762,7 @@ export default {
         this.$network
           .get('/customer-service/cluecustomer/turnBlon', params)
           .then((res) => {
+            // console.log(res)
             if (res.result) {
               this.show = false
               this.$router.go(-1)
@@ -766,11 +771,11 @@ export default {
                 message: '编辑成功!',
               })
             } else {
-              this.show = false
               this.$message({
                 type: 'error',
-                message: res.msg,
+                message: res.msg || '转换失败',
               })
+              this.show = false
             }
           })
       }
