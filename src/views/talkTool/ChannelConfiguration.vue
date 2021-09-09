@@ -254,6 +254,11 @@ export default {
     },
     getData() {
       this.loading = false
+      this.$toast.loading({
+        loadingType: 'spinner',
+        // overlay: true,
+        duration: 0,
+      })
       this.$network
         .get('/user-service/channel/getChannelList', {
           page: this.page,
@@ -261,6 +266,7 @@ export default {
           name: this.inputValue,
         })
         .then((res) => {
+          this.$toast.clear()
           this.loading = false
           let rows = res.data.channelEntityPage.records //请求返回当页的列表
           this.total = res.data.channelEntityPage.total

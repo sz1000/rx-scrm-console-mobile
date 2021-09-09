@@ -23,15 +23,6 @@ let instance = axios.create({
 instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
-            // const token = window.localStorage.getItem('token')
-            // let token
-            // if (
-            //     config.url.indexof('customerPortrait') > -1 ||
-            //     config.url.indexof('InformationDetail') > -1
-            // ) {
-            //     token = getStoreValue2Customer('token')
-            // } else {
-            // }
             const token = getStoreValue('token')
                 // const token = 'bcf9ec|62319231BFC44258AB928608AF9C92E3'
             if (token) {

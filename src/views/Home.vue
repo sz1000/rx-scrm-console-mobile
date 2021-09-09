@@ -77,9 +77,16 @@ export default {
   },
   created() {
     // alert(window.location.href)
+    this.$toast.loading({
+      // overlay: true,
+      duration: 1000,
+      loadingType: 'spinner',
+    })
     CommonHome.getWxToken()
   },
-  mounted() {},
+  mounted() {
+    // this.$toast.clear()
+  },
   methods: {},
 }
 </script>

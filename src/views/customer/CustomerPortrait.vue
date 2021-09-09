@@ -1,240 +1,247 @@
 <template>
-  <div class="custom_warp">
-    <div class="topInfo">
-      <div class="customInfo">
-        <div class="iconName">
-          <div v-if="imageUser">
-            <img :src="imageUser"
-                 alt="" />
-          </div>
-          <div class="flag"
-               v-else> {{name ? name.substr(0,1) : ''}}</div>
-          <div class="nameSex">
-            <span>{{ name }}</span>
-            <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${item.customerName}` }}</span>
-            <img src="../../images/icon_female@2x.png"
-                 alt=""
-                 v-if="item.gender=='2'" />
-            <img src="../../images/man.png"
-                 alt=""
-                 v-if="item.gender=='1'" />
-          </div>
-        </div>
-        <div class="detailBtn"
-             @click="goToDetail">
-          详情
-          <van-icon name="arrow"
-                    color="#4168F6" />
-        </div>
-      </div>
-      <div class="detailInfo">
-        <div class="left">
-          <div class="rowStyle">
-            <span>邮箱:</span>
-            <span>{{ item.email }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>来源:</span>
-            <span>{{ item.source }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>职务:</span>
-            <span>{{ item.position }}</span>
-          </div>
-        </div>
-        <div class="right">
-          <div class="rowStyle">
-            <span>手机号码:</span>
-            <span>{{ item.phone }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>公司名称:</span>
-            <span>{{ item.cropFullName }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>所属行业:</span>
-            <span>{{ item.cropSubIndustry }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="tjry">
-        <div class="box">
-          <span class="label">添加人员:</span>
-          <span class="value">{{ item.createBy }}</span>
-        </div>
-        <div class="box1">
-          <span class="label">添加时间:</span>
-          <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd hh:mm:ss')  }}</span>
-        </div>
-      </div>
+  <div class="main_warp">
+    <div v-show="loadingShow"
+         class="loadingStyle">
+      <img src="../../images/loading.gif"
+           alt="">
     </div>
-    <div class="infoContent">
-      <div class="companyLabel">
-        <div class="t_text">
-          <span class="label_tag">企业标签</span>
-          <div class="editButton"
-               @click="showCompany(1)">
-            <i class="el-icon-edit"></i>
-            编辑
-          </div>
-        </div>
-        <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }"
-               ref="textBox">
-            <div ref="spanBox">
-              <span v-for="(list, index) in companyTagList"
-                    :key="index"
-                    class="tagBox">{{ list.name }}</span>
+
+    <div class="custom_warp">
+      <div class="topInfo">
+        <div class="customInfo">
+          <div class="iconName">
+            <div v-if="imageUser">
+              <img :src="imageUser"
+                   alt="" />
+            </div>
+            <div class="flag"
+                 v-else> {{name ? name.substr(0,1) : ''}}</div>
+            <div class="nameSex">
+              <span>{{ name }}</span>
+              <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${item.customerName}` }}</span>
+              <img src="../../images/icon_female@2x.png"
+                   alt=""
+                   v-if="item.gender=='2'" />
+              <img src="../../images/man.png"
+                   alt=""
+                   v-if="item.gender=='1'" />
             </div>
           </div>
-          <div class="btn"
-               @click="unfold = !unfold"
-               v-show="companyTagList.length > 5">
-            {{ unfold ? "收起" : "展开" }}
-            <van-icon name="arrow-down" />
+          <div class="detailBtn"
+               @click="goToDetail">
+            详情
+            <van-icon name="arrow"
+                      color="#4168F6" />
+          </div>
+        </div>
+        <div class="detailInfo">
+          <div class="left">
+            <div class="rowStyle">
+              <span>邮箱:</span>
+              <span>{{ item.email }}</span>
+            </div>
+            <div class="rowStyle">
+              <span>来源:</span>
+              <span>{{ item.source }}</span>
+            </div>
+            <div class="rowStyle">
+              <span>职务:</span>
+              <span>{{ item.position }}</span>
+            </div>
+          </div>
+          <div class="right">
+            <div class="rowStyle">
+              <span>手机号码:</span>
+              <span>{{ item.phone }}</span>
+            </div>
+            <div class="rowStyle">
+              <span>公司名称:</span>
+              <span>{{ item.cropFullName }}</span>
+            </div>
+            <div class="rowStyle">
+              <span>所属行业:</span>
+              <span>{{ item.cropSubIndustry }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="tjry">
+          <div class="box">
+            <span class="label">添加人员:</span>
+            <span class="value">{{ item.createBy }}</span>
+          </div>
+          <div class="box1">
+            <span class="label">添加时间:</span>
+            <span class="value">{{formatDate(item.createTime,'yyyy-MM-dd hh:mm:ss')  }}</span>
           </div>
         </div>
       </div>
-      <div class="personLabel">
-        <div class="t_text">
-          <span class="label_tag">个人标签</span>
-          <div class="editButton"
-               @click="showCompany(2)">
-            <i class="el-icon-edit"></i>
-            编辑
-          </div>
-        </div>
-        <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }"
-               ref="textBox">
-            <div ref="spanBox">
-              <span v-for="(list, index) in personTagList"
-                    :key="index"
-                    class="tagBox"
-                    v-show="list.isChecked">{{ list.name }}</span>
+      <div class="infoContent">
+        <div class="companyLabel">
+          <div class="t_text">
+            <span class="label_tag">企业标签</span>
+            <div class="editButton"
+                 @click="showCompany(1)">
+              <i class="el-icon-edit"></i>
+              编辑
             </div>
           </div>
-          <div class="btn"
-               @click="isShowPerson = !isShowPerson"
-               v-show="personTagList.filter(item=>{return item.isChecked == 1}).length>5">
-            {{ isShowPerson ? "收起" : "展开" }}
-            <van-icon name="arrow-down" />
+          <div class="b_content">
+            <div :class="{ 'over-hidden': !unfold }"
+                 ref="textBox">
+              <div ref="spanBox">
+                <span v-for="(list, index) in companyTagList"
+                      :key="index"
+                      class="tagBox">{{ list.name }}</span>
+              </div>
+            </div>
+            <div class="btn"
+                 @click="unfold = !unfold"
+                 v-show="companyTagList.length > 5">
+              {{ unfold ? "收起" : "展开" }}
+              <van-icon name="arrow-down" />
+            </div>
+          </div>
+        </div>
+        <div class="personLabel">
+          <div class="t_text">
+            <span class="label_tag">个人标签</span>
+            <div class="editButton"
+                 @click="showCompany(2)">
+              <i class="el-icon-edit"></i>
+              编辑
+            </div>
+          </div>
+          <div class="b_content">
+            <div :class="{ 'over-hidden': !isShowPerson }"
+                 ref="textBox">
+              <div ref="spanBox">
+                <span v-for="(list, index) in personTagList"
+                      :key="index"
+                      class="tagBox"
+                      v-show="list.isChecked">{{ list.name }}</span>
+              </div>
+            </div>
+            <div class="btn"
+                 @click="isShowPerson = !isShowPerson"
+                 v-show="personTagList.filter(item=>{return item.isChecked == 1}).length>5">
+              {{ isShowPerson ? "收起" : "展开" }}
+              <van-icon name="arrow-down" />
+            </div>
+          </div>
+        </div>
+        <div class="dynamic">
+          <div class="t_text">
+            <span class="label_tag">动态</span>
+            <div class="editButton"
+                 @click="showCompany(3)">
+              <img src="../../images/icon_repair1@2x.png"
+                   alt="" />
+              <span>写跟进</span>
+            </div>
+          </div>
+          <div class="allText"
+               v-show="timeLineList.length">全部</div>
+          <div class="timeLine">
+            <el-timeline>
+              <el-timeline-item v-for="(item, index) in timeLineList"
+                                :key="index"
+                                color="#4168F6"
+                                type="danger ">
+                <div class="recordBox">
+                  <div class="descTxt">{{ item.title }}</div>
+                  <div class="inLineTwo">{{ item.context }}</div>
+                  <div class="inLine">
+                    <div class="inLineEnd">操作人：{{ item.userName }}</div>
+                    <span class="time_right">
+                      {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
+                    </span>
+                  </div>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
           </div>
         </div>
       </div>
-      <div class="dynamic">
-        <div class="t_text">
-          <span class="label_tag">动态</span>
-          <div class="editButton"
-               @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png"
-                 alt="" />
-            <span>写跟进</span>
-          </div>
-        </div>
-        <div class="allText"
-             v-show="timeLineList.length">全部</div>
-        <div class="timeLine">
-          <el-timeline>
-            <el-timeline-item v-for="(item, index) in timeLineList"
-                              :key="index"
-                              color="#4168F6"
-                              type="danger ">
-              <div class="recordBox">
-                <div class="descTxt">{{ item.title }}</div>
-                <div class="inLineTwo">{{ item.context }}</div>
-                <div class="inLine">
-                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                  <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
+      <div class="bottom_model">
+        <van-action-sheet v-model="show"
+                          :title="titleName"
+                          class="vant_sheet">
+          <div class="content">
+            <div class="tagWarp"
+                 v-if="isShowDialog == '1'">
+              <div class="tagRow"
+                   v-for="(item, index) in groupList"
+                   :key="index">
+                <div class="groupName">{{ item.name }}</div>
+                <div class="tagStyle">
+                  <span class="creatTag"
+                        :class="{ 'changeTag': highLightArr.findIndex(item=>{return item.tagid == list.tagid})>-1}"
+                        v-for="(list, index) in item.children"
+                        :key="list.id"
+                        v-show="list.name"
+                        @click="selectTag(list, index)">{{ list.name }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tagWarp personWarp"
+                 v-if="isShowDialog == '2'">
+              <div class="tagRow">
+                <!-- <div class="groupName">{{item.name}}</div> -->
+                <div class="tagStyle">
+                  <span class="addBtn pointer"
+                        @click="addTag">+添加</span>
+                  <span class="perchInput"
+                        v-if="isShow">
+                    <input v-model.trim="tagName"
+                           class="addInput"
+                           placeholder="输入后按回车完成"
+                           maxlength="30"
+                           @keyup.enter="handleSearch()" />
+                  </span>
+                  <span class="creatTag"
+                        :class="{ 'changeTag':list.isChecked }"
+                        v-for="(list, index) in personTagList"
+                        :key="list.id"
+                        v-show="list.name">
+                    <span @click="selectPersonTag(list, index)">{{
+                    list.name
+                  }}</span>
+                    <span class="deleteTag"
+                          @click="deleteTag(list, index)">
+                      <van-icon name="cross" />
+                    </span>
                   </span>
                 </div>
               </div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
+            </div>
+
+            <div class="writerInput"
+                 v-if="isShowDialog == '3'">
+              <van-field v-model="message"
+                         type="textarea"
+                         maxlength="200"
+                         placeholder="记录好跟进，多签单哟~"
+                         show-word-limit />
+            </div>
+            <div class="buttonWarp"
+                 v-show="hidshow">
+              <span class="cancel"
+                    @click="closeDialog(isShowDialog)">取消</span>
+              <span class="save"
+                    @click="saveDialog(isShowDialog)">保存</span>
+            </div>
+          </div>
+        </van-action-sheet>
       </div>
+      <!-- <BackTop></BackTop> -->
     </div>
-    <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName"
-                        class="vant_sheet">
-        <div class="content">
-          <div class="tagWarp"
-               v-if="isShowDialog == '1'">
-            <div class="tagRow"
-                 v-for="(item, index) in groupList"
-                 :key="index">
-              <div class="groupName">{{ item.name }}</div>
-              <div class="tagStyle">
-                <span class="creatTag"
-                      :class="{ 'changeTag': highLightArr.findIndex(item=>{return item.tagid == list.tagid})>-1}"
-                      v-for="(list, index) in item.children"
-                      :key="list.id"
-                      v-show="list.name"
-                      @click="selectTag(list, index)">{{ list.name }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="tagWarp personWarp"
-               v-if="isShowDialog == '2'">
-            <div class="tagRow">
-              <!-- <div class="groupName">{{item.name}}</div> -->
-              <div class="tagStyle">
-                <span class="addBtn pointer"
-                      @click="addTag">+添加</span>
-                <span class="perchInput"
-                      v-if="isShow">
-                  <input v-model.trim="tagName"
-                         class="addInput"
-                         placeholder="输入后按回车完成"
-                         maxlength="30"
-                         @keyup.enter="handleSearch()" />
-                </span>
-                <span class="creatTag"
-                      :class="{ 'changeTag':list.isChecked }"
-                      v-for="(list, index) in personTagList"
-                      :key="list.id"
-                      v-show="list.name">
-                  <span @click="selectPersonTag(list, index)">{{
-                    list.name
-                  }}</span>
-                  <span class="deleteTag"
-                        @click="deleteTag(list, index)">
-                    <van-icon name="cross" />
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
-          </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
-          </div>
-        </div>
-      </van-action-sheet>
-    </div>
-    <BackTop></BackTop>
   </div>
 </template>
 <script>
-import wx from 'weixin-js-sdk'
+// import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
-// import { MyMixin } from '../../utils/commonToken'
 import commonFun from '../../utils/commonToken'
 export default {
   // mixins: [MyMixin],
@@ -278,6 +285,7 @@ export default {
       docmHeight: 0, //默认屏幕高度
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
+      loadingShow: true,
     }
   },
   created() {
@@ -310,15 +318,14 @@ export default {
     },
     //获取客户详情
     getMethod() {
-      // alert(JSON.stringify(localStorage.getItem('userId')))
-      this.$toast.loading({
-        // message: '加载中...',
-        duration: 0,
-      })
-      // alert(JSON.stringify(localStorage.getItem('userId')))
       if (!localStorage.getItem('userId')) {
         commonFun.getWxAppid()
       } else {
+        // this.$toast.loading({
+        //   overlay: true,
+        //   loadingType: 'spinner',
+        //   duration: 0,
+        // })
         this.$network
           .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
             // id: v,
@@ -326,7 +333,8 @@ export default {
           })
           .then((res) => {
             // console.log(res)
-            this.$toast.clear()
+            // this.$toast.clear()
+            this.loadingShow = false
             this.name = res.data.clueCustomerVO.name
             this.nameFrom = res.data.clueCustomerVO.customerType
             this.item = res.data.clueCustomerVO
@@ -955,6 +963,27 @@ export default {
         }
       }
     }
+  }
+}
+.main_warp {
+  height: 100%;
+  width: 100%;
+}
+.loadingStyle {
+  height: 200px;
+  width: 200px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  background: rgba(24, 27, 32, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 80px;
+    height: 80px;
   }
 }
 </style>

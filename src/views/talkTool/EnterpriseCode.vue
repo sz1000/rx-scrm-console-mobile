@@ -389,6 +389,11 @@ export default {
       this.getData()
     },
     getData() {
+      this.$toast.loading({
+        // overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
       this.$network
         .get('/user-service/livecode/getLivecodeList', {
           page: this.page,
@@ -396,6 +401,7 @@ export default {
           livename: this.inputValue,
         })
         .then((res) => {
+          this.$toast.clear()
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表
           this.total = res.data.iPage.total

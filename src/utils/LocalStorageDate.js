@@ -32,7 +32,14 @@ export function getStoreValue(keyName, defaultVal = '') {
             // alert(minutes)
         if (minutes <= 5) {
             // alert(1111111111111)
-            router.push('/home')
+            if (
+                window.location.pathname.indexOf('customerPortrait') > -1 ||
+                window.location.pathname.indexOf('informationDetail') > -1
+            ) {
+                router.push('/customerPortrait')
+            } else {
+                router.push('/home')
+            }
             return defaultVal
                 // alert(jsonData.userNo)
                 // let code = await Network.get('/user-service/m/user/getaccessToken', {
