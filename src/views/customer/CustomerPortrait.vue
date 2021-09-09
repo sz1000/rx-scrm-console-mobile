@@ -498,8 +498,8 @@ export default {
           .then((res) => {
             if (res.result) {
               this.show = false
-              // this.getTimeline()
-              this.getMethod()
+              this.getTimeline()
+              // this.getMethod()
               this.$message({
                 type: 'success',
                 message: '修改成功',
