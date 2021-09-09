@@ -8,13 +8,20 @@ import router from '../router/index'
  * @returns {any}
  */
 
- export function getStoreValue(keyName, defaultVal = '') {
+export function getStoreValue(keyName, defaultVal = '') {
     const data = localStorage.getItem(keyName)
         // alert(JSON.stringify(data))
     const jsonData = JSON.parse(data)
     if (data == null || data === '') {
         // 跳转home
-        router.push('/home')
+        if (
+            window.location.pathname.indexOf('customerPortrait') > -1 ||
+            window.location.pathname.indexOf('informationDetail') > -1
+        ) {
+            router.push('/customerPortrait')
+        } else {
+            router.push('/home')
+        }
         return defaultVal
     } else {
         // 判断是否过期
@@ -62,7 +69,6 @@ import router from '../router/index'
     // }
 }
 
-
 export function getStoreValue2Customer(keyName, defaultVal = '') {
     const data = localStorage.getItem(keyName)
         // alert(JSON.stringify(data))
@@ -103,17 +109,6 @@ export function getStoreValue2Customer(keyName, defaultVal = '') {
             return jsonData.value
         }
     }
-    // 保存token
-    // try {
-    //     const jsonData = JSON.parse(data)
-    //     if (Date.now() - jsonData.time >= exp) {
-    //         removeStoreValue(keyName)
-    //         return defaultVal
-    //     }
-    //     return jsonData.value
-    // } catch (error) {
-    //     return defaultVal
-    // }
 }
 
 /**
