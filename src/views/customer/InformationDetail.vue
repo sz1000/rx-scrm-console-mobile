@@ -1,194 +1,194 @@
 <template>
-  <div class="main_warp">
+  <!-- <div class="main_warp">
     <div v-show="loadingShow"
          class="loadingStyle">
       <img src="../../images/loading.gif"
            alt="">
+    </div> -->
+  <div class="detailWarp">
+    <div class="headerTitle">
+      <div class="backPage"
+           @click="goBack">
+        <van-icon name="arrow-left" />
+        返回
+      </div>
+      <span class="textTitle">客户资料详情</span>
     </div>
-    <div class="detailWarp">
-      <div class="headerTitle">
-        <div class="backPage"
-             @click="goBack">
-          <van-icon name="arrow-left" />
-          返回
-        </div>
-        <span class="textTitle">客户资料详情</span>
+    <div class="iconName">
+      <div v-if="imageUser">
+        <img :src="imageUser"
+             alt="" />
       </div>
-      <div class="iconName">
-        <div v-if="imageUser">
-          <img :src="imageUser"
-               alt="" />
-        </div>
-        <div class="flag"
-             v-else> {{name ? name.substr(0,1) : ''}}</div>
-        <div class="nameSex">
-          <span>{{name}}</span>
-          <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
-          <img src="../../images/icon_female@2x.png"
-               alt=""
-               v-if="basicInfo.gender=='2'" />
-          <img src="../../images/man.png"
-               alt=""
-               v-if="basicInfo.gender=='1'" />
+      <div class="flag"
+           v-else> {{name ? name.substr(0,1) : ''}}</div>
+      <div class="nameSex">
+        <span>{{name}}</span>
+        <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
+        <img src="../../images/icon_female@2x.png"
+             alt=""
+             v-if="basicInfo.gender=='2'" />
+        <img src="../../images/man.png"
+             alt=""
+             v-if="basicInfo.gender=='1'" />
 
-        </div>
       </div>
-      <div class="basicInformation">
-        <span>
-          <img src="../../images/icon_label.png"
-               alt="" />
-        </span>
-        <span>基本信息</span>
-        <div class="formEdit">
-          <el-form ref="form"
-                   :model="basicInfo">
-            <el-form-item label="客户简称">
-              <el-input v-model="basicInfo.customerName"
-                        placeholder="请输入"
-                        maxlength="15"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="客户来源">
-              <el-select v-model="basicInfo.source"
-                         placeholder="请选择"
-                         @change="changeSource">
-                <el-option v-for="item in optionSource"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.type">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="客户类型">
-              <el-select v-model="basicInfo.customerType"
-                         placeholder="请选择"
-                         @change="changeCustom">
-                <el-option v-for="item in customList"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.customerType">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="电话">
-              <el-input v-model="basicInfo.mobil"
-                        placeholder="请输入"
-                        maxlength="13"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="公司名称">
-              <el-input v-model="basicInfo.cropFullName"
-                        placeholder="请输入"
-                        maxlength="100"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="所属行业">
-              <el-cascader size="large"
-                           :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
-                           :options="optionsCreat"
-                           v-model="basicInfo.industry"
-                           @change="handleChange">
-              </el-cascader>
-            </el-form-item>
-            <el-form-item label="企业规模">
-              <el-select v-model="basicInfo.corpScale"
-                         placeholder="请选择"
-                         @change="scaleChange">
-                <el-option v-for="item in optionsScale"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="地址">
-              <el-input v-model="basicInfo.address"
-                        maxlength="100"
-                        placeholder="请输入"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="备注"
-                          class="textareaInput">
-              <el-input v-model="basicInfo.remark"
-                        maxlength="200"
-                        placeholder="请输入文字(不得超过200个字符)"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="描述">
-              <el-input v-model="basicInfo.describe"
-                        maxlength="100"
-                        placeholder="请输入"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名">
-              <el-input v-model="basicInfo.name"
-                        maxlength="15"
-                        placeholder="请输入"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号:">
-              <el-input v-model="basicInfo.phone"
-                        maxlength="11"
-                        placeholder="请输入"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="性别:">
-              <el-select v-model="basicInfo.gender"
-                         placeholder="请选择"
-                         @change="changeGender">
-                <el-option label="未知"
-                           value="0"></el-option>
-                <el-option label="男"
-                           value="1"></el-option>
-                <el-option label="女"
-                           value="2"></el-option>
-              </el-select>
-            </el-form-item>
-
-            <el-form-item label="职务:">
-              <el-input v-model="basicInfo.position"
-                        placeholder="请输入"
-                        maxlength="20"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="微信号:">
-              <el-input v-model="basicInfo.weixin"
-                        placeholder="请输入"
-                        maxlength="20"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱:"
-                          class="describeBorder">
-              <el-input v-model="basicInfo.email"
-                        placeholder="请输入"
-                        maxlength="60"
-                        @change="changeInput()"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
-      </div>
-      <div class="systemInformation ">
-        <span>
-          <img src="../../images/icon_label.png"
-               alt="" />
-        </span>
-        <span>系统信息</span>
-        <div class="formEdit">
-          <van-form v-model="systemList">
-            <van-field v-for="(item,index) in systemList"
-                       label-align='center'
-                       :ref="'barcode'+index"
-                       readonly
-                       :key="index"
-                       v-model="item.value"
-                       :label="item.name">
-            </van-field>
-          </van-form>
-        </div>
-      </div>
-
     </div>
+    <div class="basicInformation">
+      <span>
+        <img src="../../images/icon_label.png"
+             alt="" />
+      </span>
+      <span>基本信息</span>
+      <div class="formEdit">
+        <el-form ref="form"
+                 :model="basicInfo">
+          <el-form-item label="客户简称">
+            <el-input v-model="basicInfo.customerName"
+                      placeholder="请输入"
+                      maxlength="15"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="客户来源">
+            <el-select v-model="basicInfo.source"
+                       placeholder="请选择"
+                       @change="changeSource">
+              <el-option v-for="item in optionSource"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="客户类型">
+            <el-select v-model="basicInfo.customerType"
+                       placeholder="请选择"
+                       @change="changeCustom">
+              <el-option v-for="item in customList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.customerType">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="电话">
+            <el-input v-model="basicInfo.mobil"
+                      placeholder="请输入"
+                      maxlength="13"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="公司名称">
+            <el-input v-model="basicInfo.cropFullName"
+                      placeholder="请输入"
+                      maxlength="100"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large"
+                         :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
+                         :options="optionsCreat"
+                         v-model="basicInfo.industry"
+                         @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="企业规模">
+            <el-select v-model="basicInfo.corpScale"
+                       placeholder="请选择"
+                       @change="scaleChange">
+              <el-option v-for="item in optionsScale"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input v-model="basicInfo.address"
+                      maxlength="100"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="备注"
+                        class="textareaInput">
+            <el-input v-model="basicInfo.remark"
+                      maxlength="200"
+                      placeholder="请输入文字(不得超过200个字符)"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input v-model="basicInfo.describe"
+                      maxlength="100"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名">
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号:">
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择"
+                       @change="changeGender">
+              <el-option label="未知"
+                         value="0"></el-option>
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="职务:">
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱:"
+                        class="describeBorder">
+            <el-input v-model="basicInfo.email"
+                      placeholder="请输入"
+                      maxlength="60"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+    <div class="systemInformation ">
+      <span>
+        <img src="../../images/icon_label.png"
+             alt="" />
+      </span>
+      <span>系统信息</span>
+      <div class="formEdit">
+        <van-form v-model="systemList">
+          <van-field v-for="(item,index) in systemList"
+                     label-align='center'
+                     :ref="'barcode'+index"
+                     readonly
+                     :key="index"
+                     v-model="item.value"
+                     :label="item.name">
+          </van-field>
+        </van-form>
+      </div>
+    </div>
+
   </div>
+  <!-- </div> -->
 
 </template>
 <script>
@@ -280,19 +280,19 @@ export default {
     },
     getDetailForm() {
       // alert(222222222222222)
-      // this.$toast.loading({
-      //   // message: '加载中...',
-      //   overlay: true,
-      //   loadingType: 'spinner',
-      //   duration: 0,
-      // })
+      this.$toast.loading({
+        // message: '加载中...',
+        overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
           clueCustomerNo: localStorage.getItem('userId'),
           // clueCustomerNo: this.$route.params.userid,
         })
         .then((res) => {
-          // this.$toast.clear()
+          this.$toast.clear()
           this.loadingShow = false
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list

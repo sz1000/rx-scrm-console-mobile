@@ -145,7 +145,7 @@ export default {
     getListData() {
       // console.log(this.tabClick)
       this.$toast.loading({
-        // overlay: true,
+        overlay: true,
         loadingType: 'spinner',
         duration: 0,
       })

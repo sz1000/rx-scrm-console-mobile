@@ -148,7 +148,7 @@ export default {
       // console.log(this.tabClick)
       this.$toast.loading({
         loadingType: 'spinner',
-        // overlay: true,
+        overlay: true,
         duration: 0,
       })
       this.$network

@@ -256,7 +256,7 @@ export default {
       this.loading = false
       this.$toast.loading({
         loadingType: 'spinner',
-        // overlay: true,
+        overlay: true,
         duration: 0,
       })
       this.$network

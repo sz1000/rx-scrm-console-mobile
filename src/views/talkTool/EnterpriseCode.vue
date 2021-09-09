@@ -390,7 +390,7 @@ export default {
     },
     getData() {
       this.$toast.loading({
-        // overlay: true,
+        overlay: true,
         loadingType: 'spinner',
         duration: 0,
       })
