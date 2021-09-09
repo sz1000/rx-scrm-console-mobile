@@ -1,4 +1,10 @@
 import Network from './request'
+import router from '../router/index'
+import {
+    setStoreValue,
+    getStoreValue,
+    removeStoreValue,
+} from '../utils/LocalStorageDate'
 
 const getWxAppid = function() {
         // let token = localStorage.getItem('token')
@@ -49,10 +55,29 @@ function getWxCofig(v) {
         if (res.result) {
             // this.token = res.data.accessToken
             // this.appid = res.data.corpId
-            localStorage.setItem('token', res.data.accessToken)
+            // localStorage.setItem('token', res.data.accessToken)
+            setStoreValue(
+                'token',
+                res.data.accessToken,
+                res.data.expire_time,
+                res.data.userNo
+            )
             getAgent(res)
         } else {
-            this.$router.push('/404')
+            if (
+                res.code == 'error_busy' ||
+                res.code == 'error_code' ||
+                res.code == 'error_forbid' ||
+                res.code == 'error_corp_forbid'
+            ) {
+                this.$message({
+                    type: 'error',
+                    message: '系统繁忙,请稍后重试' || res.msg,
+                })
+            } else {
+                router.push('/404')
+                localStorage.removeItem('token')
+            }
         }
     })
 }

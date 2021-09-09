@@ -144,6 +144,11 @@ export default {
     },
     getListData() {
       // console.log(this.tabClick)
+      this.$toast.loading({
+        overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
       this.$network
         .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           type: this.type,
@@ -152,6 +157,7 @@ export default {
           allname: this.inputValue,
         })
         .then((res) => {
+          this.$toast.clear()
           this.total = res.data.iPage.total
           this.loading = false
           let rows = res.data.iPage.records //请求返回当页的列表

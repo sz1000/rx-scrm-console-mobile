@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import resetToken from '../utils/commonToken'
+import CommonHome from '../utils/CommonHome'
 
 export default {
   components: {},
@@ -76,63 +76,18 @@ export default {
     }
   },
   created() {
-    let authCode
-    if (window.location.href.indexOf('?') > -1) {
-      let href = window.location.href.split('?')[1]
-      let p = href.split('&')[0]
-      authCode = p.split('=')[1]
-    } else {
-      // alert('ppppppp')
-      authCode = ''
-    }
-    // alert(authCode)
-
-    if (!authCode) {
-      // alert(11111111)
-      this.$router.push('/homeTransition')
-    } else {
-      // alert(222222222)
-      this.getData(authCode)
-    }
-    // if (!token && typeof token != 'undefined') {
-    // } else {
-    //   this.$network.post('/user-service/user/getstatus').then((res) => {
-    //     if (res.result) {
-    //       return true
-    //     } else {
-    //       this.$router.push('/404')
-    //     }
-    //   })
-    // }
+    // alert(window.location.href)
+    this.$toast.loading({
+      overlay: true,
+      duration: 1000,
+      loadingType: 'spinner',
+    })
+    CommonHome.getWxToken()
   },
-  mounted() {},
-  methods: {
-    getData(v) {
-      // alert(JSON.stringify(v))
-      this.$network
-        .get('/user-service/m/user/getloguser', {
-          code: v,
-          url: location.href,
-        })
-        .then((res) => {
-          // alert(JSON.stringify(res))
-          if (res.result) {
-            this.token = res.data.accessToken
-            localStorage.setItem('token', res.data.accessToken)
-          } else {
-            if (res.code == 'error_busy') {
-              this.$message({
-                type: 'error',
-                message: '系统繁忙,请稍后重试' || res.msg,
-              })
-            } else {
-              this.$router.push('/404')
-              localStorage.removeItem('token')
-            }
-          }
-        })
-    },
+  mounted() {
+    // this.$toast.clear()
   },
+  methods: {},
 }
 </script>
 <style lang='less' scoped>

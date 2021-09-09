@@ -1,4 +1,10 @@
 <template>
+  <!-- <div class="main_warp">
+    <div v-show="loadingShow"
+         class="loadingStyle">
+      <img src="../../images/loading.gif"
+           alt="">
+    </div> -->
   <div class="detailWarp">
     <div class="headerTitle">
       <div class="backPage"
@@ -182,6 +188,8 @@
     </div>
 
   </div>
+  <!-- </div> -->
+
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
@@ -236,25 +244,11 @@ export default {
         { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       fieldIndex: null,
+      loadingShow: true,
     }
   },
   created() {
     commonFun.getWxAppid()
-    // alert(1111111111)
-    // let href = window.location.href.split('?')[1]
-    // alert(href)
-    // let p = href.split('&')[0]
-    // let authCode = p.split('=')[1]
-    // if (authCode == '' || authCode == null) {
-    //   this.getDetailForm()
-    // }
-    // let token = localStorage.getItem('token')
-    // alert(token)
-    // if (token == null) {
-    //   this.getData(authCode)
-    // } else {
-    //   this.getDetailForm()
-    // }
   },
   mounted() {
     setTimeout(() => {
@@ -288,18 +282,18 @@ export default {
       // alert(222222222222222)
       this.$toast.loading({
         // message: '加载中...',
+        overlay: true,
+        loadingType: 'spinner',
         duration: 0,
       })
-      // alert(JSON.stringify(localStorage.getItem('userId')))
-      // alert(JSON.stringify(this.$route.params.userid))
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
           clueCustomerNo: localStorage.getItem('userId'),
           // clueCustomerNo: this.$route.params.userid,
         })
         .then((res) => {
-          // alert(JSON.stringify(res))
           this.$toast.clear()
+          this.loadingShow = false
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
@@ -531,6 +525,27 @@ export default {
         }
       }
     }
+  }
+}
+.main_warp {
+  height: 100%;
+  width: 100%;
+}
+.loadingStyle {
+  height: 200px;
+  width: 200px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  background: rgba(24, 27, 32, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 80px;
+    height: 80px;
   }
 }
 </style>

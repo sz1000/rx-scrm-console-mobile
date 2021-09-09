@@ -1,4 +1,11 @@
 <template>
+  <!-- <div class="main_warp">
+    <div v-show="loadingShow"
+         class="loadingStyle">
+      <img src="../../images/loading.gif"
+           alt="">
+    </div> -->
+
   <div class="custom_warp">
     <div class="topInfo">
       <div class="customInfo">
@@ -227,14 +234,14 @@
         </div>
       </van-action-sheet>
     </div>
-    <BackTop></BackTop>
+    <!-- <BackTop></BackTop> -->
   </div>
+  <!-- </div> -->
 </template>
 <script>
-import wx from 'weixin-js-sdk'
+// import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
-// import { MyMixin } from '../../utils/commonToken'
 import commonFun from '../../utils/commonToken'
 export default {
   // mixins: [MyMixin],
@@ -278,6 +285,7 @@ export default {
       docmHeight: 0, //默认屏幕高度
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
+      loadingShow: true,
     }
   },
   created() {
@@ -310,15 +318,14 @@ export default {
     },
     //获取客户详情
     getMethod() {
-      // alert(JSON.stringify(localStorage.getItem('userId')))
-      this.$toast.loading({
-        // message: '加载中...',
-        duration: 0,
-      })
-      // alert(JSON.stringify(localStorage.getItem('userId')))
       if (!localStorage.getItem('userId')) {
         commonFun.getWxAppid()
       } else {
+        this.$toast.loading({
+          overlay: true,
+          loadingType: 'spinner',
+          duration: 0,
+        })
         this.$network
           .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
             // id: v,
@@ -327,6 +334,7 @@ export default {
           .then((res) => {
             // console.log(res)
             this.$toast.clear()
+            this.loadingShow = false
             this.name = res.data.clueCustomerVO.name
             this.nameFrom = res.data.clueCustomerVO.customerType
             this.item = res.data.clueCustomerVO
@@ -490,8 +498,8 @@ export default {
           .then((res) => {
             if (res.result) {
               this.show = false
-              // this.getTimeline()
-              this.getMethod()
+              this.getTimeline()
+              // this.getMethod()
               this.$message({
                 type: 'success',
                 message: '修改成功',
@@ -955,6 +963,27 @@ export default {
         }
       }
     }
+  }
+}
+.main_warp {
+  height: 100%;
+  width: 100%;
+}
+.loadingStyle {
+  height: 200px;
+  width: 200px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  background: rgba(24, 27, 32, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    width: 80px;
+    height: 80px;
   }
 }
 </style>

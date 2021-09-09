@@ -15,6 +15,7 @@ export default {
     }
   },
   created() {
+    localStorage.removeItem('token')
     this.getWxAppid()
   },
   methods: {

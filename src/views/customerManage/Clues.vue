@@ -146,6 +146,11 @@ export default {
     },
     getData() {
       // console.log(this.tabClick)
+      this.$toast.loading({
+        loadingType: 'spinner',
+        overlay: true,
+        duration: 0,
+      })
       this.$network
         .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           page: this.page,
@@ -154,6 +159,7 @@ export default {
           allname: this.inputValue,
         })
         .then((res) => {
+          this.$toast.clear()
           // this.cardList = res.data;
           this.total = res.data.iPage.total
           this.loading = false
