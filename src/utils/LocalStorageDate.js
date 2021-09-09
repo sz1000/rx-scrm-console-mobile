@@ -8,7 +8,7 @@ import router from '../router/index'
  * @returns {any}
  */
 
-export function getStoreValue(keyName, defaultVal = '') {
+ export function getStoreValue(keyName, defaultVal = '') {
     const data = localStorage.getItem(keyName)
         // alert(JSON.stringify(data))
     const jsonData = JSON.parse(data)
@@ -26,6 +26,60 @@ export function getStoreValue(keyName, defaultVal = '') {
         if (minutes <= 5) {
             // alert(1111111111111)
             router.push('/home')
+                // alert(jsonData.userNo)
+                // let code = await Network.get('/user-service/m/user/getaccessToken', {
+                //     userNo: jsonData.userNo,
+                // }).then((res) => {
+                //     alert(JSON.stringify(res))
+                //     if (res.result) {
+                //         setStoreValue(
+                //             'token',
+                //             res.data.accessToken,
+                //             res.data.expire_time,
+                //             res.data.userNo
+                //         )
+
+            //     } else {
+            // }
+            // })
+            // 1531105426709
+        } else {
+            // 未过期,直接用
+            return jsonData.value
+        }
+    }
+    // 保存token
+    // try {
+    //     const jsonData = JSON.parse(data)
+    //     if (Date.now() - jsonData.time >= exp) {
+    //         removeStoreValue(keyName)
+    //         return defaultVal
+    //     }
+    //     return jsonData.value
+    // } catch (error) {
+    //     return defaultVal
+    // }
+}
+
+
+export function getStoreValue2Customer(keyName, defaultVal = '') {
+    const data = localStorage.getItem(keyName)
+        // alert(JSON.stringify(data))
+    const jsonData = JSON.parse(data)
+    if (data == null || data === '') {
+        // 跳转home
+        router.push('/customerPortrait')
+        return defaultVal
+    } else {
+        // 判断是否过期
+        let overdueTime = jsonData.time - new Date().getTime()
+            // alert(overdueTime)
+        var minutes = Math.floor(overdueTime / (60 * 1000)) //计算相差分钟数
+            // 如果过期,通过userno重新获取token
+            // alert(minutes)
+        if (minutes <= 5) {
+            // alert(1111111111111)
+            router.push('/customerPortrait')
                 // alert(jsonData.userNo)
                 // let code = await Network.get('/user-service/m/user/getaccessToken', {
                 //     userNo: jsonData.userNo,
