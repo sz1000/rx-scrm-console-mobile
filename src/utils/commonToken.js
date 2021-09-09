@@ -64,7 +64,12 @@ function getWxCofig(v) {
             )
             getAgent(res)
         } else {
-            if (res.code == 'error_busy' || res.code == 'error_code') {
+            if (
+                res.code == 'error_busy' ||
+                res.code == 'error_code' ||
+                res.code == 'error_forbid' ||
+                res.code == 'error_corp_forbid'
+            ) {
                 this.$message({
                     type: 'error',
                     message: '系统繁忙,请稍后重试' || res.msg,
