@@ -216,8 +216,9 @@ export default {
     verbaltrickList() {
       this.$network
         .get("/material-service/verbaltrickgroup/getlist", {
-          // parentId: 0,
+          parentId: 0,
           groupType: 1,
+          type: 1,
         })
         .then((res) => {
           // console.log(res.data);

@@ -4,8 +4,8 @@ import { getStoreValue, setStoreValue } from '../utils/LocalStorageDate'
 let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
-    // BASE_URL = 'http://172.10.7.114:8099' //袁
-    BASE_URL = 'https://dev-api.jizhouhudong.com' 
+    BASE_URL = 'http://172.10.7.114:8099' //袁
+    // BASE_URL = 'https://dev-api.jizhouhudong.com' 
    // BASE_URL = 'https://test-api.jizhouhudong.com' //开发
 } else if (location.hostname == 'dev-h5.jizhouhudong.com') {
     BASE_URL = 'https://dev-api.jizhouhudong.com' //开发

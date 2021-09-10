@@ -64,14 +64,8 @@
           <span class="add-grp">添加分组</span>
         </div>
         <div>
-          <template>
-            <!-- <el-tree
-              :data="data"
-              :props="defaultProps"
-              accordion
-              @node-click="handleNodeClick"
-            >
-            </el-tree> -->
+          <GroupLists />
+          <!-- <template>
             <div>
               <div>
                 <div class="tree-box">
@@ -90,23 +84,6 @@
                           >({{ item.children.length }})</span
                         ></span
                       >
-                      <!-- <span
-                        class="header-right"
-                        @click.stop="item.isOpen = !item.isOpen"
-                      >
-                        展开1
-                        <span class="corner"></span>
-                      </span> -->
-                      <!-- <el-dropdown @command="handleCommand">
-                        <span class="el-dropdown-link">
-                          下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item command="a">黄金糕</el-dropdown-item>
-                          <el-dropdown-item command="b">狮子头</el-dropdown-item>
-                          <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
-                        </el-dropdown-menu>
-                      </el-dropdown> -->
 
                       <div>
                         <img src="" alt="" />
@@ -133,7 +110,6 @@
                             />
                           </div>
                           <div class="sop_title">
-                            <!-- 欢迎您加入哈哈哈哈哈哈，一起加油吧~ -->
                             {{ item.title }}
                           </div>
                         </div>
@@ -163,32 +139,12 @@
                               </div>
                             </div>
                           </div>
-                          <!-- <div class="">
-                            <div class="center_list">
-                              <div>
-                                <div class="center_list list_box">
-                                  <div>
-                                    <img
-                                      class="cen_img"
-                                      :src="chi.icon"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div>
-                                    <p>{{ chi.title }}</p>
-                                    <p class="gray">{{ chi.size }}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div> -->
                         </div>
                         <div class="up" @click.stop="item.isOpen = false">
                           {{ item.label }}-收起
                         </div>
                       </div>
                       <div v-if="item.children.length">
-                        <!-- 子分组 -->
                         <div
                           v-for="(sub, k) in item.children"
                           :key="k + 'chi'"
@@ -204,13 +160,6 @@
                               >{{ sub.name }}
                               <span class="gray">({{ sub.length }})</span></span
                             >
-                            <!-- <span
-                              class="header-right"
-                              @click.stop="sub.isOpen = true"
-                            >
-                              展开2
-                              <span class="corner"></span>
-                            </span> -->
                           </div>
                           <div v-show="sub.isOpen" class="out-panel">
                             <div class="warp_group">
@@ -221,7 +170,7 @@
                               />
                               <p class="title_verba">{{ sub.title }}</p>
                             </div>
-                            <!-- <p>{{ sub.title }}</p> -->
+
                             <div class="item-box">
                               <div
                                 v-for="(ss, s) in sub.items"
@@ -229,11 +178,6 @@
                                 class="cen_item"
                                 @click.stop="_down(ss)"
                               >
-                                <!-- <img class="cen_img" :src="ss.icon" alt="" />
-                                <div>
-                                  <p>{{ ss.title }}</p>
-                                  <p class="gray">{{ ss.size }}</p>
-                                </div> -->
                                 <div class="text_img">
                                   <img
                                     class="share_img"
@@ -267,13 +211,17 @@
                 </div>
               </div>
             </div>
-          </template>
+          </template> -->
         </div>
       </div>
       <!--  -->
-      <div v-if="tabClick == 2">
+      <div v-if="tabClick == 2" class="pd-24">
         <div>
-          <van-collapse v-model="activeName" accordion>
+          <div class="newgrouping" @click="addGroups">
+            <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
+            <span class="add-grp">添加分组</span>
+          </div>
+          <!-- <van-collapse v-model="activeName" accordion>
             <van-collapse-item title="列表一" name="1">
               <div>
                 <h1>这是话术标题哈哈哈哈哈哈哈哈哈哈…</h1>
@@ -292,7 +240,8 @@
             </van-collapse-item>
             <van-collapse-item title="列表二" name="2">内容</van-collapse-item>
             <van-collapse-item title="列表3" name="3">内容</van-collapse-item>
-          </van-collapse>
+          </van-collapse> -->
+          <GroupLists />
         </div>
       </div>
     </div>
@@ -454,11 +403,13 @@
 <script>
 import SelectTree from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import GroupLists from "./gropLIst.vue";
 
 export default {
   components: {
     SelectTree,
     // Details,
+    GroupLists,
   },
   data() {
     return {
