@@ -55,7 +55,7 @@
           v-model="inputValue"
           placeholder="请输入内容"
         />
-        <span class="searchBtn">查询</span>
+        <span @click="queryCenten" class="searchBtn">查询</span>
       </div>
       <!-- center列表  @click="addGroups"-->
       <div v-if="tabClick == 1" class="pd-24">
@@ -84,7 +84,7 @@
                       <span class="header-left">
                         <span class="corner"></span>
                       </span>
-                      <span class="header-mid" @click.stop="groupNameList(item)"
+                      <span class="header-mid" @click="groupNameList(item)"
                         >{{ item.name }}
                         <span class="gray"
                           >({{ item.children.length }})</span
@@ -97,6 +97,28 @@
                         展开1
                         <span class="corner"></span>
                       </span> -->
+                      <el-dropdown @command="handleCommand">
+                        <span class="el-dropdown-link">
+                          下拉菜单<i
+                            class="el-icon-arrow-down el-icon--right"
+                          ></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item command="a"
+                            >黄金糕</el-dropdown-item
+                          >
+                          <el-dropdown-item command="b"
+                            >狮子头</el-dropdown-item
+                          >
+                          <el-dropdown-item command="c"
+                            >螺蛳粉</el-dropdown-item
+                          >
+                        </el-dropdown-menu>
+                      </el-dropdown>
+
+                      <div>
+                        <img src="" alt="" />
+                      </div>
                     </div>
                     <div v-show="isOpen" class="out-panel">
                       <div class="warp_group">
@@ -172,6 +194,7 @@
                         </div>
                       </div>
                       <div v-if="item.children.length">
+                        <!-- 子分组 -->
                         <div
                           v-for="(sub, k) in item.children"
                           :key="k + 'chi'"
@@ -184,7 +207,7 @@
                             <span
                               class="header-mid"
                               @click.stop="sub.isOpen = !sub.isOpen"
-                              >{{ sub.label }}
+                              >{{ sub.name }}
                               <span class="gray">({{ sub.length }})</span></span
                             >
                             <!-- <span
@@ -445,6 +468,7 @@ export default {
     return {
       sopPopup: false,
       isOpen: true,
+      dotlist: false, //控制小点显示
       groupingName: "", //输入分组名称
       isShowOperate: false,
       activeName: "1",
@@ -803,6 +827,8 @@ export default {
       console.log(v);
       this.tabClick = v;
     },
+    // 点击查询
+
     //列表点击
     clickList() {
       this.showList = !this.showList;
@@ -829,12 +855,6 @@ export default {
       // window.open(item.url);
       console.log(item);
     },
-    // handleOpen(key, keyPath) {
-    //   console.log(key, keyPath);
-    // },
-    // handleClose(key, keyPath) {
-    //   console.log(key, keyPath);
-    // },
 
     redioClick(value) {
       this.tablist = value;
@@ -886,9 +906,9 @@ export default {
         .get("/material-service/verbaltrick/getlist", {
           page: 1,
           limit: 20,
-          value: "",
+          value: this.inputValue,
           groupId: value.id,
-          groupType: this.tabClick,
+          // groupType: this.tabClick,
         })
         .then((res) => {
           console.log(res);
@@ -896,6 +916,39 @@ export default {
             this.newclickList;
           }
         });
+    },
+    // 点击删除
+    deleteverbal() {
+      // console.log(value);
+      this.$network
+        .post("/material-service/verbaltrick/deleteverbal", {
+          // id
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.result) {
+            this.newclickList;
+          }
+        });
+    },
+    // 新增话术
+    addverbal() {
+      // console.log(value);
+      this.$network
+        .post("/material-service/verbaltrick/addverbal", {
+          // id
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.result) {
+            this.newclickList;
+          }
+        });
+    },
+    //点击查询
+    queryCenten() {
+      // this.groupNameList();
+      console.log(this.inputValue);
     },
     // 删除
     open() {
@@ -925,6 +978,7 @@ export default {
     cancel() {
       this.newshow = false;
     },
+
     // 新建分组baoc
     saveBut() {
       this.newclickList();

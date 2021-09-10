@@ -143,9 +143,10 @@ export default {
       ],
       value: null,
       normalizer(node) {
+        // console.log(node.id);
         return {
           id: node.id,
-          label: node.label,
+          label: node.name,
           children: node.children,
         };
       },
@@ -159,7 +160,9 @@ export default {
       ],
     };
   },
-  created() {},
+  created() {
+    this.verbaltrickList();
+  },
   methods: {
     dialogFormCancel() {
       this.$emit("closeAddDialog");
@@ -185,6 +188,22 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
+    },
+    // 个人话术分组列表
+    verbaltrickList() {
+      this.$network
+        .get("/material-service/verbaltrickgroup/getlist", {
+          parentId: 0,
+          groupType: 1,
+        })
+        .then((res) => {
+          console.log(res.data);
+          console.log(res);
+          this.options = res.data;
+          this.treeData = res.data;
+          if (res.result) {
+          }
+        });
     },
   },
 };
