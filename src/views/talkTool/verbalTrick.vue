@@ -97,29 +97,22 @@
                         展开1
                         <span class="corner"></span>
                       </span> -->
-                      <el-dropdown @command="handleCommand">
+                      <!-- <el-dropdown @command="handleCommand">
                         <span class="el-dropdown-link">
-                          下拉菜单<i
-                            class="el-icon-arrow-down el-icon--right"
-                          ></i>
+                          下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item command="a"
-                            >黄金糕</el-dropdown-item
-                          >
-                          <el-dropdown-item command="b"
-                            >狮子头</el-dropdown-item
-                          >
-                          <el-dropdown-item command="c"
-                            >螺蛳粉</el-dropdown-item
-                          >
+                          <el-dropdown-item command="a">黄金糕</el-dropdown-item>
+                          <el-dropdown-item command="b">狮子头</el-dropdown-item>
+                          <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
                         </el-dropdown-menu>
-                      </el-dropdown>
+                      </el-dropdown> -->
 
                       <div>
                         <img src="" alt="" />
                       </div>
                     </div>
+
                     <div v-show="isOpen" class="out-panel">
                       <div class="warp_group">
                         <img
@@ -140,7 +133,8 @@
                             />
                           </div>
                           <div class="sop_title">
-                            欢迎您加入哈哈哈哈哈哈，一起加油吧~
+                            <!-- 欢迎您加入哈哈哈哈哈哈，一起加油吧~ -->
+                            {{ item.title }}
                           </div>
                         </div>
                         <div
@@ -163,7 +157,7 @@
                                   <img :src="chi.icon" alt="" />
                                 </div>
                                 <div class="center_img">
-                                  <p class="img_text">{{ chi.title }}</p>
+                                  <p class="img_text">{{ chi.groupName }}</p>
                                   <p class="img_size">{{ chi.size }}</p>
                                 </div>
                               </div>
@@ -459,7 +453,6 @@
 </template>
 <script>
 import SelectTree from "@riophae/vue-treeselect";
-import Details from "./details";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
@@ -478,6 +471,7 @@ export default {
       numberValidateForm: {
         age: "",
       },
+      options: [],
       treeData: [
         {
           label: "分组1",
@@ -680,56 +674,7 @@ export default {
       activeNames: [],
       tabClick: 1, //切换
       inputValue: "",
-      options: [
-        {
-          id: 1,
-          name: " 1一级 1",
-          children: [
-            {
-              id: 4,
-              label: "二级 1-1",
-              children: [
-                {
-                  id: 9,
-                  label: "三级 1-1-1",
-                },
-                {
-                  id: 10,
-                  label: "三级 1-1-2",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: "一级 2",
-          children: [
-            {
-              id: 5,
-              label: "二级 2-1",
-            },
-            {
-              id: 6,
-              label: "二级 2-2",
-            },
-          ],
-        },
-        {
-          id: 3,
-          name: "一级 3",
-          children: [
-            {
-              id: 7,
-              label: "二级 3-1",
-            },
-            {
-              id: 8,
-              label: "二级 3-2",
-            },
-          ],
-        },
-      ],
+
       value: null,
       normalizer(node) {
         // console.log(node.id);
@@ -739,64 +684,7 @@ export default {
           children: node.children,
         };
       },
-      dataListTrre: [
-        {
-          id: 1,
-          label: "一级一级 1",
-          items: [
-            {
-              name: "11111",
-            },
-            {
-              name: "222",
-            },
-          ],
-          children: [
-            {
-              id: 4,
-              label: "二级 1-1",
-              children: [
-                {
-                  id: 9,
-                  label: "三级 1-1-1",
-                },
-                {
-                  id: 10,
-                  label: "三级 1-1-2",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: "一级 2",
-          children: [
-            {
-              id: 5,
-              label: "二级 2-1",
-            },
-            {
-              id: 6,
-              label: "二级 2-2",
-            },
-          ],
-        },
-        {
-          id: 3,
-          label: "一级 3",
-          children: [
-            {
-              id: 7,
-              label: "二级 3-1",
-            },
-            {
-              id: 8,
-              label: "二级 3-2",
-            },
-          ],
-        },
-      ],
+
       firstList: [
         {
           name: "111",
@@ -916,7 +804,9 @@ export default {
         .then((res) => {
           console.log(res);
           if (res.result) {
-            this.newclickList;
+            // this.newclickList
+            this.$set(value, "items", res.data.iPage.records);
+            console.log("--------", this.treeData);
           }
         });
     },
