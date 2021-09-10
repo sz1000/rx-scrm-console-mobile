@@ -1,15 +1,16 @@
 
-
 <template>
   <div>
     <div class="tree-box">
-      <div v-for="(item, i) in treeData" :key="i + 'out'" class="out-li">
+      <div v-for="(item, i) in treeData"
+           :key="i + 'out'"
+           class="out-li">
         <div class="tree-header">
           <span class="header-left jianto">
             <span :class="item.isOpen ? 'cenr' : 'cenrs'"></span>
           </span>
-          <span class="header-mid" @click="groupNameList(item)"
-            >{{ item.name }}
+          <span class="header-mid"
+                @click="groupNameList(item)">{{ item.name }}
             <!-- <span class="gray">({{ treeData.length }})</span>
             (item.isOpen = true ? 'rotate' : '') :class="(showAll = true ? 'corner' : 'rotate')"-->
           </span>
@@ -18,32 +19,35 @@
           <!-- <span class="corner"></span> -->
           <!-- </span> -->
         </div>
-        <div class="tree-body" v-show="item.isOpen">
-          <div class="out-panel" v-for="(group, gi) in item.items" :key="gi">
+        <div class="tree-body"
+             v-show="item.isOpen">
+          <div class="out-panel"
+               v-for="(group, gi) in item.items"
+               :key="gi">
             <div>
               <!-- <p>{{ item.title }}</p> -->
               <div class="warp_group">
-                <img class="group_img" src="../../images/group.png" alt="" />
+                <img class="group_img"
+                     src="../../images/group.png"
+                     alt=""
+                     @click="shareText(group)" />
                 <p class="title_verba">{{ item.title }}</p>
               </div>
               <div class="item-box">
-                <div
-                  v-for="(chi, c) in group.contentList"
-                  :key="c + 'in'"
-                  class="cen_item"
-                  @click.stop="_down(chi)"
-                >
+                <div v-for="(chi, c) in group.contentList"
+                     :key="c + 'in'"
+                     class="cen_item"
+                     @click.stop="_down(chi)">
                   <!-- <img :src="chi.icon" alt="" />
                   <div>
                     <p>{{ chi.title }}</p>
                     <p class="gray">{{ chi.size }}</p>
                   </div> -->
                   <div class="text_img">
-                    <img
-                      class="share_img"
-                      src="../../images/share_two@2x.png"
-                      alt=""
-                    />
+                    <img class="share_img"
+                         src="../../images/share_two@2x.png"
+                         alt=""
+                         @click="firstShare(chi)" />
                   </div>
                   <div class="sop-text">
                     <div class="list_box">
@@ -52,14 +56,15 @@
                           <img :src="chi.icon" alt="" />
                         </div> -->
                         <div class="center_img">
-                          <p class="img_text">{{ chi.groupName }}</p>
+                          <p class="img_text">{{ chi.value }}</p>
                           <p class="img_size">{{ chi.size }}</p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="up" @click.stop="item.isOpen = false">
+                <div class="up"
+                     @click.stop="item.isOpen = false">
                   {{ item.label }}-收起
                 </div>
               </div>
@@ -67,48 +72,42 @@
           </div>
           <div class="child-panel">
             <!-- 子分组 -->
-            <div
-              v-for="(sub, k) in item.children"
-              :key="k + 'chi'"
-              class="out-li"
-            >
+            <div v-for="(sub, k) in item.children"
+                 :key="k + 'chi'"
+                 class="out-li">
               <div class="tree-header">
                 <span class="header-left">
                   <span :class="item.isOpen ? 'cenr' : 'cenrs'"></span>
                 </span>
-                <span class="header-mid" @click="groupchildrenList(sub)"
-                  >{{ sub.name }}
+                <span class="header-mid"
+                      @click="groupchildrenList(sub)">{{ sub.name }}
                   <!-- <span class="gray">({{ sub.length }})</span> -->
                 </span>
-                <span
-                  class="header-right"
-                  @click.stop="sub.isOpen = !sub.isOpen"
-                >
+                <span class="header-right"
+                      @click.stop="sub.isOpen = !sub.isOpen">
                   展开
                   <!-- <span class="corner"></span> -->
                 </span>
               </div>
-              <div
-                v-show="sub.isOpen"
-                class="out-panel"
-                v-for="(ch, ci) in sub.items"
-                :key="ci"
-              >
+              <div v-show="sub.isOpen"
+                   class="out-panel"
+                   v-for="(ch, ci) in sub.items"
+                   :key="ci">
                 <p>{{ sub.title }}</p>
                 <div class="item-box">
-                  <div
-                    v-for="(ss, s) in ch.contentList"
-                    :key="s + 'in-in'"
-                    class="item-li"
-                    @click.stop="_down(ss)"
-                  >
-                    <img :src="ss.icon" alt="" />
+                  <div v-for="(ss, s) in ch.contentList"
+                       :key="s + 'in-in'"
+                       class="item-li"
+                       @click.stop="_down(ss)">
+                    <img :src="ss.icon"
+                         alt="" />
                     <div>
                       <p>{{ ss.title }}</p>
                       <p class="gray">{{ ss.size }}</p>
                     </div>
                   </div>
-                  <div class="up" @click.stop="sub.isOpen = false">
+                  <div class="up"
+                       @click.stop="sub.isOpen = false">
                     {{ item.label }}-{{ sub.label }}收起
                   </div>
                 </div>
@@ -123,24 +122,24 @@
 
 <script>
 export default {
-  name: "index",
+  name: 'index',
   components: {},
   data() {
     return {
       treeData: [],
       showAll: true,
-    };
+    }
   },
   created() {
-    this.verbaltrickList();
+    this.verbaltrickList()
   },
   methods: {
     _down(item) {
-      window.open(item.url);
+      // window.open(item.url)
     },
     verbaltrickList() {
       this.$network
-        .get("/material-service/verbaltrickgroup/getlist", {
+        .get('/material-service/verbaltrickgroup/getlist', {
           parentId: 0,
           groupType: 1,
           type: 1,
@@ -149,57 +148,163 @@ export default {
           // console.log(res.data);
           // console.log(res);
           // this.options = res.data;
-          this.treeData = res.data;
+          this.treeData = res.data
           if (res.result) {
           }
-        });
+        })
     },
     // 点击分组列表名字
     groupNameList(value) {
-      value.isOpen = !value.isOpen;
-      this.showAll = true;
-      console.log(value);
+      value.isOpen = !value.isOpen
+      this.showAll = true
+      console.log(value)
       this.$network
-        .get("/material-service/verbaltrick/getlist", {
+        .get('/material-service/verbaltrick/getlist', {
           page: 1,
           limit: 20,
-          value: "",
-          groupId: "",
+          value: '',
+          groupId: value.id,
           // groupType: this.tabClick,
         })
         .then((res) => {
-          console.log(res);
+          console.log(res)
           if (res.result) {
             // this.newclickList
-            this.$set(value, "items", res.data.iPage.records);
-            console.log("--------", this.treeData);
+            this.$set(value, 'items', res.data.iPage.records)
+            console.log('--------', this.treeData)
           }
-        });
+        })
     },
     groupchildrenList(valuel) {
-      valuel.isOpen = !valuel.isOpen;
+      valuel.isOpen = !valuel.isOpen
 
-      console.log(valuel);
+      console.log(valuel)
       this.$network
-        .get("/material-service/verbaltrick/getlist", {
+        .get('/material-service/verbaltrick/getlist', {
           page: 1,
           limit: 20,
-          value: "",
-          groupId: "",
+          value: '',
+          groupId: '',
           // groupType: this.tabClick,
         })
         .then((res) => {
-          console.log(res);
+          console.log(res)
           if (res.result) {
             // this.newclickList
 
-            this.$set(value, "items", res.data.iPage.records);
-            console.log("--------", this.treeData);
+            this.$set(value, 'items', res.data.iPage.records)
+            console.log('--------', this.treeData)
           }
-        });
+        })
+    },
+    shareText(v) {
+      console.log('---v-----v', v)
+      this.$network
+        .get('/user-service/user/getticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'invoke',
+              'agentConfig',
+              'checkJsApi',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
+              },
+              function (res) {
+                wx.invoke(
+                  'sendChatMessage',
+                  {
+                    msgtype: 'text', //消息类型，必填
+                    text: {
+                      content: v.value, //文本内容
+                    },
+                  },
+                  function (res) {
+                    if (res.err_msg == 'sendChatMessage:ok') {
+                      //发送成功
+                    }
+                  }
+                )
+              }
+            )
+          })
+        })
+    },
+    firstShare(v) {
+      console.log('---v-----v', v)
+      this.$network
+        .get('/user-service/user/getticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'invoke',
+              'agentConfig',
+              'checkJsApi',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
+              },
+              function (res) {
+                wx.invoke(
+                  'sendChatMessage',
+                  {
+                    msgtype: 'text', //消息类型，必填
+                    text: {
+                      content: v.value, //文本内容
+                    },
+                  },
+                  function (res) {
+                    if (res.err_msg == 'sendChatMessage:ok') {
+                      //发送成功
+                    }
+                  }
+                )
+              }
+            )
+          })
+        })
     },
   },
-};
+}
 </script>
 <style scoped lang="less">
 .rotate {
@@ -382,7 +487,7 @@ export default {
       color: #4168f6;
       position: relative;
       &::after {
-        content: "";
+        content: '';
         width: 112px;
         height: 4px;
         background: #4168f6;
@@ -438,7 +543,7 @@ export default {
   margin-bottom: 30px;
 }
 /deep/ .el-icon-arrow-down:before {
-  content: "";
+  content: '';
 }
 .content-list {
   display: flex;

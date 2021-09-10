@@ -1,7 +1,8 @@
 <template>
   <div class="dialogWarp">
     <div class="headerTitle">
-      <div class="backPage" @click="goBack">
+      <div class="backPage"
+           @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -11,25 +12,19 @@
       <div class="selectBox">
         <div class="select_group">
           <span class="groupname">分组:</span>
-          <SelectTree
-            :options="options"
-            v-model="value"
-            :multiple="false"
-            :searchable="false"
-            placeholder="请选择分组"
-            :normalizer="normalizer"
-            @select="changeSelect"
-          >
-            <label
-              slot="option-label"
-              slot-scope="{ node, labelClassName }"
-              :class="labelClassName"
-            >
-              <img
-                src="../../images/wenjian.png"
-                alt=""
-                style="width: 14px; height: 12px"
-              />
+          <SelectTree :options="options"
+                      v-model="value"
+                      :multiple="false"
+                      :searchable="false"
+                      placeholder="请选择分组"
+                      :normalizer="normalizer"
+                      @select="changeSelect">
+            <label slot="option-label"
+                   slot-scope="{ node, labelClassName }"
+                   :class="labelClassName">
+              <img src="../../images/wenjian.png"
+                   alt=""
+                   style="width: 14px; height: 12px" />
               <span class="nodeName">{{ node.label }}</span>
             </label>
           </SelectTree>
@@ -46,46 +41,45 @@
           ></el-input>
         </div> -->
         <div class="input_text">
-          <span class="groupname"
-            ><span style="color: red">*</span>话术标题:</span
-          >
-          <el-input
-            v-model.trim="wordTitle"
-            placeholder="请输入话术标题名称"
-            show-word-limit
-            maxlength="10"
-            @change="changeTitle"
-          ></el-input>
+          <span class="groupname"><span style="color: red">*</span>话术标题:</span>
+          <el-input v-model.trim="wordTitle"
+                    placeholder="请输入话术标题名称"
+                    show-word-limit
+                    maxlength="10"
+                    @change="changeTitle"></el-input>
         </div>
       </div>
       <div class="techniqueBox">
-        <ComponentWord
-          :single="index"
-          :itemInfo="item"
-          @fnDelete="fnDelete"
-          v-for="(item, index) in wordsList"
-          :key="index"
-        ></ComponentWord>
+        <ComponentWord :single="index"
+                       :itemInfo="item"
+                       @fnDelete="fnDelete"
+                       v-for="(item, index) in wordsList"
+                       :key="index"></ComponentWord>
       </div>
       <div class="operation flex">
-        <div class="addBtn pointer" @click="newAddTech">
-          <img src="../../images/icon_add@2x.png" alt="" />
+        <div class="addBtn pointer"
+             @click="newAddTech">
+          <img src="../../images/icon_add@2x.png"
+               alt="" />
           新增话术内容
         </div>
         <span>(最多可新增9条话术内容)</span>
       </div>
 
-      <div class="buttonWarp" slot="footer">
-        <span class="cancel" @click="dialogFormCancel">取消</span>
-        <span class="save" @click="dialogFormSure">保存</span>
+      <div class="buttonWarp"
+           slot="footer">
+        <span class="cancel"
+              @click="dialogFormCancel">取消</span>
+        <span class="save"
+              @click="dialogFormSure">保存</span>
       </div>
     </div>
   </div>
 </template>
 <script>
-import SelectTree from "@riophae/vue-treeselect";
-import ComponentWord from "./ComponentWord.vue";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import SelectTree from '@riophae/vue-treeselect'
+import ComponentWord from './ComponentWord.vue'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   components: {
     SelectTree,
@@ -101,7 +95,7 @@ export default {
   },
   data() {
     return {
-      wordTitle: "",
+      wordTitle: '',
       options: [],
       value: null,
       normalizer(node) {
@@ -110,112 +104,112 @@ export default {
           id: node.id,
           label: node.name,
           children: node.children,
-        };
+        }
       },
       wordsList: [
         {
-          text: "",
-          imageUrl: "",
-          pdf: "",
-          url: "",
-          activeIndex: "text",
+          text: '',
+          imageUrl: '',
+          pdf: '',
+          url: '',
+          activeIndex: 'text',
         },
       ],
-    };
+    }
   },
   created() {
-    this.verbaltrickList();
+    this.verbaltrickList()
   },
   methods: {
     // 话术标题
     changeTitle(val) {
-      console.log(val);
-      this.wordTitle = val;
+      console.log(val)
+      this.wordTitle = val
     },
     dialogFormCancel() {
-      this.$emit("closeAddDialog");
+      this.$emit('closeAddDialog')
     },
     // 点击确定  // 上传标题链接
     dialogFormSure() {
       // this.filterList(this.wordsList)
-      let isTrue = this.filterList(this.wordsList);
-      console.log(isTrue);
+      let isTrue = this.filterList(this.wordsList)
+      console.log(isTrue)
       if (isTrue[0]) {
-        if (this.value == "" || this.wordTitle == "") {
+        if (this.value == '' || this.wordTitle == '') {
           this.$message({
-            type: "error",
-            message: "请填写分组信息",
-          });
+            type: 'error',
+            message: '请填写分组信息',
+          })
         } else {
           let templist = this.wordsList.map((item) => {
             return {
               type: item.activeIndex,
               value: item[item.activeIndex],
-            };
-          });
+            }
+          })
           // console.log('------templist----', templist)
           let params = {
             groupType: this.groupType,
             groupId: this.value,
             title: this.wordTitle,
             contentList: templist,
-          };
+          }
           // console.log('---this.wordsList----', params)
           this.$network
-            .post("/material-service/verbaltrick/addverbal", params)
+            .post('/material-service/verbaltrick/addverbal', params)
             .then((res) => {
               this.$message({
-                type: "success",
-                message: "新增成功",
-              });
-              this.$emit("closeAddDialog");
-            });
+                type: 'success',
+                message: '新增成功',
+              })
+              this.$emit('closeAddDialog')
+            })
         }
       }
     },
 
     changeSelect(val) {
-      console.log("-----val---", val);
+      console.log('-----val---', val)
     },
 
     filterList(list) {
       const p = list.map((item) => {
-        if (item[item.activeIndex] == "") {
+        if (item[item.activeIndex] == '') {
           this.$message({
-            type: "error",
-            message: "请完善话术内容",
-          });
-          return false;
+            type: 'error',
+            message: '请完善话术内容',
+          })
+          return false
         } else {
-          return true;
+          return true
         }
-      });
-      return p;
+      })
+      return p
     },
     newAddTech() {
       if (this.wordsList.length < 9) {
         this.wordsList.push({
-          text: "",
-          image: "",
-          pdf: "",
-          url: "",
-          activeIndex: "text",
-        });
+          text: '',
+          image: '',
+          pdf: '',
+          url: '',
+          activeIndex: 'text',
+        })
       }
     },
     fnDelete(index) {
-      console.log("2222222222------------", index, this.wordsList);
+      console.log('2222222222------------', index, this.wordsList)
       if (this.wordsList.length > 1) {
-        this.wordsList.splice(index, 1);
+        this.wordsList.splice(index, 1)
       }
     },
     goBack() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     },
     // 个人话术分组列表
     verbaltrickList() {
       this.$network
-        .get("/material-service/verbaltrickgroup/getlist", {
+        .get('/material-service/verbaltrickgroup/getlist', {
           parentId: 0,
           groupType: 1,
           type: 1,
@@ -223,16 +217,20 @@ export default {
         .then((res) => {
           // console.log(res.data);
           // console.log(res);
-          this.options = res.data;
+          this.options = res.data
           // this.treeData = res.data;
           if (res.result) {
           }
-        });
+        })
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
+.dialogWarp {
+  height: 100%;
+  background: #fff;
+}
 // 头部
 .headerTitle {
   background: #fff;
