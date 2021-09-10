@@ -3,8 +3,7 @@
     <div class="warp-bg">
       <!-- 标题 -->
       <div class="headerTitle">
-        <div class="backPage"
-             @click="goBack">
+        <div class="backPage" @click="goBack">
           <van-icon name="arrow-left" />
           返回
         </div>
@@ -30,37 +29,38 @@
       <!-- tabMenu -->
       <div class="tabMenu">
         <div class="tabBtn">
-          <span :class="{ active: tabClick == 1 }"
-                class="mycule"
-                @click="myclue(1)">个人话术</span>
-          <span :class="{ active: tabClick == 2 }"
-                class="mycule"
-                @click="myclue(2)">公共话术</span>
+          <span
+            :class="{ active: tabClick == 1 }"
+            class="mycule"
+            @click="myclue(1)"
+            >个人话术</span
+          >
+          <span
+            :class="{ active: tabClick == 2 }"
+            class="mycule"
+            @click="myclue(2)"
+            >公共话术</span
+          >
         </div>
-        <span class="addBtn"
-              @click="newaddClick">
-          <img src="../../images/icon_add@2x.png"
-               alt="" />
+        <span class="addBtn" @click="newaddClick">
+          <img src="../../images/icon_add@2x.png" alt="" />
           新增
         </span>
       </div>
       <!-- 查询 -->
       <div class="searchInput">
-        <input type="text"
-               class="input"
-               v-model="inputValue"
-               placeholder="请输入内容" />
-        <span @click="queryCenten"
-              class="searchBtn">查询</span>
+        <input
+          type="text"
+          class="input"
+          v-model="inputValue"
+          placeholder="请输入内容"
+        />
+        <span @click="queryCenten" class="searchBtn">查询</span>
       </div>
       <!-- center列表  @click="addGroups"-->
-      <div v-if="tabClick == 1"
-           class="pd-24">
-        <div class="newgrouping"
-             @click="addGroups">
-          <img class="newgrp-img"
-               src="../../images/iconadd.png"
-               alt="" />
+      <div v-if="tabClick == 1" class="pd-24">
+        <div class="newgrouping" @click="addGroups">
+          <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
           <span class="add-grp">添加分组</span>
         </div>
         <div>
@@ -75,16 +75,21 @@
             <div>
               <div>
                 <div class="tree-box">
-                  <div v-for="(item, i) in treeData"
-                       :key="i + 'out'"
-                       class="out-li">
+                  <div
+                    v-for="(item, i) in treeData"
+                    :key="i + 'out'"
+                    class="out-li"
+                  >
                     <div class="tree-header">
                       <span class="header-left">
                         <span class="corner"></span>
                       </span>
-                      <span class="header-mid"
-                            @click="groupNameList(item)">{{ item.name }}
-                        <span class="gray">({{ item.children.length }})</span></span>
+                      <span class="header-mid" @click="groupNameList(item)"
+                        >{{ item.name }}
+                        <span class="gray"
+                          >({{ item.children.length }})</span
+                        ></span
+                      >
                       <!-- <span
                         class="header-right"
                         @click.stop="item.isOpen = !item.isOpen"
@@ -104,47 +109,52 @@
                       </el-dropdown> -->
 
                       <div>
-                        <img src=""
-                             alt="" />
+                        <img src="" alt="" />
                       </div>
                     </div>
 
-                    <div v-show="isOpen"
-                         class="out-panel">
+                    <div v-show="isOpen" class="out-panel">
                       <div class="warp_group">
-                        <img class="group_img"
-                             src="../../images/group.png"
-                             alt="" />
+                        <img
+                          class="group_img"
+                          src="../../images/group.png"
+                          alt=""
+                        />
                         <p class="title_verba">{{ item.title }}</p>
                       </div>
 
                       <div class="item-box">
                         <div class="sop-text">
                           <div class="text_img">
-                            <img class="share_img"
-                                 src="../../images/share_two@2x.png"
-                                 alt="" />
+                            <img
+                              class="share_img"
+                              src="../../images/share_two@2x.png"
+                              alt=""
+                            />
                           </div>
                           <div class="sop_title">
                             <!-- 欢迎您加入哈哈哈哈哈哈，一起加油吧~ -->
-                            {{item.title}}
+                            {{ item.title }}
                           </div>
                         </div>
-                        <div v-for="(chi, c) in item.items"
-                             :key="c + 'in'"
-                             @click.stop="_down(chi)"
-                             class="cen_item">
+                        <div
+                          v-for="(chi, c) in item.items"
+                          :key="c + 'in'"
+                          @click.stop="_down(chi)"
+                          class="cen_item"
+                        >
                           <div class="text_img">
-                            <img class="share_img"
-                                 src="../../images/share_two@2x.png"
-                                 alt="" />
+                            <img
+                              class="share_img"
+                              src="../../images/share_two@2x.png"
+                              alt=""
+                            />
                           </div>
                           <div class="sop-text">
                             <div class="list_box">
                               <div class="sop_imgWarp">
                                 <div class="img-up">
-                                  <img :src="chi.icon"
-                                       alt="" />
+                                  <img :src="chi.icon" alt="" />
                                 </div>
                                 <div class="center_img">
                                   <p class="img_text">{{ chi.groupName }}</p>
@@ -173,23 +183,27 @@
                             </div>
                           </div> -->
                         </div>
-                        <div class="up"
-                             @click.stop="item.isOpen = false">
+                        <div class="up" @click.stop="item.isOpen = false">
                           {{ item.label }}-收起
                         </div>
                       </div>
                       <div v-if="item.children.length">
                         <!-- 子分组 -->
-                        <div v-for="(sub, k) in item.children"
-                             :key="k + 'chi'"
-                             class="out-li">
+                        <div
+                          v-for="(sub, k) in item.children"
+                          :key="k + 'chi'"
+                          class="out-li"
+                        >
                           <div class="tree-header">
                             <span class="header-left">
                               <span class="corner"></span>
                             </span>
-                            <span class="header-mid"
-                                  @click.stop="sub.isOpen = !sub.isOpen">{{ sub.name }}
-                              <span class="gray">({{ sub.length }})</span></span>
+                            <span
+                              class="header-mid"
+                              @click.stop="sub.isOpen = !sub.isOpen"
+                              >{{ sub.name }}
+                              <span class="gray">({{ sub.length }})</span></span
+                            >
                             <!-- <span
                               class="header-right"
                               @click.stop="sub.isOpen = true"
@@ -198,36 +212,40 @@
                               <span class="corner"></span>
                             </span> -->
                           </div>
-                          <div v-show="sub.isOpen"
-                               class="out-panel">
+                          <div v-show="sub.isOpen" class="out-panel">
                             <div class="warp_group">
-                              <img class="group_img"
-                                   src="../../images/group.png"
-                                   alt="" />
+                              <img
+                                class="group_img"
+                                src="../../images/group.png"
+                                alt=""
+                              />
                               <p class="title_verba">{{ sub.title }}</p>
                             </div>
                             <!-- <p>{{ sub.title }}</p> -->
                             <div class="item-box">
-                              <div v-for="(ss, s) in sub.items"
-                                   :key="s + 'in-in'"
-                                   class="cen_item"
-                                   @click.stop="_down(ss)">
+                              <div
+                                v-for="(ss, s) in sub.items"
+                                :key="s + 'in-in'"
+                                class="cen_item"
+                                @click.stop="_down(ss)"
+                              >
                                 <!-- <img class="cen_img" :src="ss.icon" alt="" />
                                 <div>
                                   <p>{{ ss.title }}</p>
                                   <p class="gray">{{ ss.size }}</p>
                                 </div> -->
                                 <div class="text_img">
-                                  <img class="share_img"
-                                       src="../../images/share_two@2x.png"
-                                       alt="" />
+                                  <img
+                                    class="share_img"
+                                    src="../../images/share_two@2x.png"
+                                    alt=""
+                                  />
                                 </div>
                                 <div class="sop-text">
                                   <div class="list_box">
                                     <div class="sop_imgWarp">
                                       <div class="img-up">
-                                        <img :src="ss.icon"
-                                             alt="" />
+                                        <img :src="ss.icon" alt="" />
                                       </div>
                                       <div class="center_img">
                                         <p class="img_text">{{ ss.title }}</p>
@@ -237,8 +255,7 @@
                                   </div>
                                 </div>
                               </div>
-                              <div class="up"
-                                   @click.stop="sub.isOpen = false">
+                              <div class="up" @click.stop="sub.isOpen = false">
                                 {{ item.label }}-{{ sub.label }}收起
                               </div>
                             </div>
@@ -256,76 +273,81 @@
       <!--  -->
       <div v-if="tabClick == 2">
         <div>
-          <van-collapse v-model="activeName"
-                        accordion>
-            <van-collapse-item title="列表一"
-                               name="1">
+          <van-collapse v-model="activeName" accordion>
+            <van-collapse-item title="列表一" name="1">
               <div>
                 <h1>这是话术标题哈哈哈哈哈哈哈哈哈哈…</h1>
                 <div>
-                  <img style="width: 50px"
-                       src="../../images/icon_change2@2x.png"
-                       alt="" />
+                  <img
+                    style="width: 50px"
+                    src="../../images/icon_change2@2x.png"
+                    alt=""
+                  />
                 </div>
                 <h2>PDF</h2>
               </div>
-              <van-collapse-item title="列表1.1"
-                                 name="4">
+              <van-collapse-item title="列表1.1" name="4">
                 <div>3333</div>
               </van-collapse-item>
             </van-collapse-item>
-            <van-collapse-item title="列表二"
-                               name="2">内容</van-collapse-item>
-            <van-collapse-item title="列表3"
-                               name="3">内容</van-collapse-item>
+            <van-collapse-item title="列表二" name="2">内容</van-collapse-item>
+            <van-collapse-item title="列表3" name="3">内容</van-collapse-item>
           </van-collapse>
         </div>
       </div>
     </div>
     <!-- 新建分组 -->
-    <van-action-sheet v-model="newshow"
-                      title="新建分组">
+    <van-action-sheet v-model="newshow" title="新建分组">
       <div class="content">
         <div class="codeDetail">
           <div class="select-Tree">
-            <span class="groupname"><span style="color: red">*</span> 上级分组:</span>
-            <SelectTree :options="options"
-                        v-model="value"
-                        :multiple="false"
-                        :searchable="false"
-                        placeholder="请选择分组"
-                        :normalizer="normalizer"
-                        @select="changeSelect">
-              <label slot="option-label"
-                     slot-scope="{ node, labelClassName }"
-                     :class="labelClassName">
-                <img src="../../images/wenjian.png"
-                     alt=""
-                     style="width: 14px; height: 12px" />
+            <span class="groupname"
+              ><span style="color: red">*</span> 上级分组:</span
+            >
+            <SelectTree
+              :options="options"
+              v-model="value"
+              :multiple="false"
+              :searchable="false"
+              placeholder="请选择分组"
+              :normalizer="normalizer"
+              @select="changeSelect"
+            >
+              <label
+                slot="option-label"
+                slot-scope="{ node, labelClassName }"
+                :class="labelClassName"
+              >
+                <img
+                  src="../../images/wenjian.png"
+                  alt=""
+                  style="width: 14px; height: 12px"
+                />
                 <span class="nodeName">{{ node.label }}</span>
               </label>
             </SelectTree>
           </div>
           <div class="input_text">
-            <span class="groupname"><span style="color: red">*</span> 分组名称:</span>
+            <span class="groupname"
+              ><span style="color: red">*</span> 分组名称:</span
+            >
 
-            <el-input v-model="groupingName"
-                      placeholder="请输入内容"
-                      maxlength="10"
-                      show-word-limit></el-input>
+            <el-input
+              v-model="groupingName"
+              placeholder="请输入内容"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="buttonWarp">
-            <span class="cancel"
-                  @click="cancel">取消</span>
-            <span class="save"
-                  @click="saveBut">保存1</span>
+            <span class="cancel" @click="cancel">取消</span>
+            <span class="save" @click="saveBut">保存1</span>
           </div>
         </div>
       </div>
     </van-action-sheet>
     <!-- 重命名 -->
-    <van-action-sheet v-model="rename"
-                      title="重命名">
+    <van-action-sheet v-model="rename" title="重命名">
       <div class="content">
         <div class="codeDetail">
           <!-- <el-form :model="newform">
@@ -341,16 +363,19 @@
           </el-form> -->
           <div class="select-Tree"></div>
           <div class="input_text">
-            <span class="groupname"><span style="color: red">*</span> 重命名:</span>
+            <span class="groupname"
+              ><span style="color: red">*</span> 重命名:</span
+            >
 
-            <el-input v-model="wordTitle"
-                      placeholder="请输入内容"
-                      maxlength="10"
-                      show-word-limit></el-input>
+            <el-input
+              v-model="wordTitle"
+              placeholder="请输入内容"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="buttonWarp">
-            <span class="cancel"
-                  @click="cancel">取消</span>
+            <span class="cancel" @click="cancel">取消</span>
             <span class="save">保存</span>
           </div>
         </div>
@@ -360,8 +385,7 @@
     <!-- 删除 -->
     <!-- <van-popup v-model="deleteCenter">内容</van-popup> -->
     <!-- Sop弹框 -->
-    <van-action-sheet v-model="sopPopup"
-                      title="个人SOP提醒">
+    <van-action-sheet v-model="sopPopup" title="个人SOP提醒">
       <div class="content">
         <div class="codeDetail">
           <div class="sop-box">
@@ -372,23 +396,26 @@
             </div>
             <div class="sop-text">
               <div class="text_img">
-                <img style="width: 24px; height: 24px"
-                     src="../../images/icon_add@2x.png"
-                     alt="" />
+                <img
+                  style="width: 24px; height: 24px"
+                  src="../../images/icon_add@2x.png"
+                  alt=""
+                />
               </div>
               <div class="sop_title">欢迎您加入哈哈哈哈哈哈，一起加油吧~</div>
             </div>
             <div class="sop-text">
               <div class="text_img">
-                <img style="width: 24px; height: 24px"
-                     src="../../images/icon_add@2x.png"
-                     alt="" />
+                <img
+                  style="width: 24px; height: 24px"
+                  src="../../images/icon_add@2x.png"
+                  alt=""
+                />
               </div>
               <div class="sop_warp">
                 <div class="sop_imgWarp">
                   <div class="img-up">
-                    <img src="../../images/iconadd.png"
-                         alt="" />
+                    <img src="../../images/iconadd.png" alt="" />
                   </div>
                   <div class="center_img">
                     <p class="img_text">图片副本.png</p>
@@ -399,15 +426,16 @@
             </div>
             <div class="sop-text">
               <div class="text_img">
-                <img style="width: 24px; height: 24px"
-                     src="../../images/icon_add@2x.png"
-                     alt="" />
+                <img
+                  style="width: 24px; height: 24px"
+                  src="../../images/icon_add@2x.png"
+                  alt=""
+                />
               </div>
               <div class="sop_warp">
                 <div class="sop_imgWarp">
                   <div class="img-up">
-                    <img src="../../images/iconadd.png"
-                         alt="" />
+                    <img src="../../images/iconadd.png" alt="" />
                   </div>
                   <div class="center_img">
                     <p class="img_text">图片副本.png</p>
@@ -420,203 +448,205 @@
         </div>
       </div>
     </van-action-sheet>
+    <Details />
   </div>
 </template>
 <script>
-import SelectTree from '@riophae/vue-treeselect'
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import SelectTree from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   components: {
     SelectTree,
+    Details,
   },
   data() {
     return {
       sopPopup: false,
       isOpen: true,
       dotlist: false, //控制小点显示
-      groupingName: '', //输入分组名称
+      groupingName: "", //输入分组名称
       isShowOperate: false,
-      activeName: '1',
+      activeName: "1",
       numberValidateForm: {
-        age: '',
+        age: "",
       },
       options: [],
       treeData: [
         {
-          label: '分组1',
-          title: '这是话术标题',
+          label: "分组1",
+          title: "这是话术标题",
           isOpen: true,
           items: [
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '图片的标题.png',
-              size: '27.35k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "图片的标题.png",
+              size: "27.35k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '公司简介.pdf',
-              size: '729k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "公司简介.pdf",
+              size: "729k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '瑞信科技',
-              size: 'Wera sorry xxxxxx',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "瑞信科技",
+              size: "Wera sorry xxxxxx",
+              url: "https://www.xinghuijin.com/",
             },
           ],
           children: [
             {
-              label: '子分组1',
-              title: '这是话术标题',
+              label: "子分组1",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
             {
-              label: '子分组2',
-              title: '这是话术标题',
+              label: "子分组2",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
             {
-              label: '子分组3',
-              title: '这是话术标题',
+              label: "子分组3",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
           ],
         },
         {
-          label: '分组2',
-          title: '这是话术标题',
+          label: "分组2",
+          title: "这是话术标题",
           isOpen: false,
           items: [
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '图片的标题.png',
-              size: '27.35k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "图片的标题.png",
+              size: "27.35k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '公司简介.pdf',
-              size: '729k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "公司简介.pdf",
+              size: "729k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '瑞信科技',
-              size: 'Wera sorry xxxxxx',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "瑞信科技",
+              size: "Wera sorry xxxxxx",
+              url: "https://www.xinghuijin.com/",
             },
           ],
           children: [
             {
-              label: '子分组1',
-              title: '这是话术标题',
+              label: "子分组1",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
             {
-              label: '子分组2',
-              title: '这是话术标题',
+              label: "子分组2",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
@@ -625,13 +655,13 @@ export default {
       ],
       showList: false, //列表显示
       callbox: false,
-      dialogImageUrl: '',
-      wordTitle: '',
+      dialogImageUrl: "",
+      wordTitle: "",
       dialogVisible: false,
-      groupingId: '', //分组id
+      groupingId: "", //分组id
 
       newform: {
-        renameText: '',
+        renameText: "",
         // grouping: "",
         // verbaltite: "",
         // remark: "",
@@ -643,7 +673,7 @@ export default {
       tablist: 1, //弹框tab列表
       activeNames: [],
       tabClick: 1, //切换
-      inputValue: '',
+      inputValue: "",
 
       value: null,
       normalizer(node) {
@@ -652,61 +682,61 @@ export default {
           id: node.id,
           label: node.name,
           children: node.children,
-        }
+        };
       },
 
       firstList: [
         {
-          name: '111',
+          name: "111",
         },
       ],
       defaultProps: {
-        children: 'children',
-        label: 'label',
+        children: "children",
+        label: "label",
       },
-    }
+    };
   },
   created() {
-    this.verbaltrickList()
+    this.verbaltrickList();
   },
   methods: {
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          alert("submit!");
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     //列表页面
     myclue(v) {
-      console.log(v)
-      this.tabClick = v
+      console.log(v);
+      this.tabClick = v;
     },
     // 点击查询
 
     //列表点击
     clickList() {
-      this.showList = !this.showList
+      this.showList = !this.showList;
     },
     // 点击树形结构
     handleNodeClick(data) {
-      console.log(data)
-      this.isShowOperate = data.id
+      console.log(data);
+      this.isShowOperate = data.id;
     },
     // 点击新增按钮
     newaddClick() {
       // this.newshow = true;
-      this.$router.push('/talkTool/added')
+      this.$router.push("/talkTool/added");
     },
     //添加分组
     addGroups() {
-      this.newshow = true
+      this.newshow = true;
     },
     // 重命名
     // rechristen(){
@@ -714,36 +744,36 @@ export default {
     // },
     _down(item) {
       // window.open(item.url);
-      console.log(item)
+      console.log(item);
     },
 
     redioClick(value) {
-      this.tablist = value
-      console.log(value)
+      this.tablist = value;
+      console.log(value);
     },
     // 上传图片
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
     // 个人话术分组列表
     verbaltrickList() {
       this.$network
-        .get('/material-service/verbaltrickgroup/getlist', {
+        .get("/material-service/verbaltrickgroup/getlist", {
           parentId: 0,
           groupType: this.tabClick,
         })
         .then((res) => {
-          console.log(res.data)
-          console.log(res)
-          this.options = res.data
-          this.treeData = res.data
+          console.log(res.data);
+          console.log(res);
+          this.options = res.data;
+          this.treeData = res.data;
           if (res.result) {
           }
-        })
+        });
     },
     //新增分组
     newclickList() {
@@ -751,20 +781,20 @@ export default {
         name: this.groupingName,
         parentId: this.groupingId || 0,
         groupType: this.tabClick,
-      }
+      };
       this.$network
-        .post('/material-service/verbaltrickgroup/add', params)
+        .post("/material-service/verbaltrickgroup/add", params)
         .then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.result) {
           }
-        })
+        });
     },
     // 点击分组列表名字
     groupNameList(value) {
-      console.log(value)
+      console.log(value);
       this.$network
-        .get('/material-service/verbaltrick/getlist', {
+        .get("/material-service/verbaltrick/getlist", {
           page: 1,
           limit: 20,
           value: this.inputValue,
@@ -772,123 +802,123 @@ export default {
           // groupType: this.tabClick,
         })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.result) {
             // this.newclickList
-            this.$set(value, 'items', res.data.iPage.records)
-            console.log('--------', this.treeData)
+            this.$set(value, "items", res.data.iPage.records);
+            console.log("--------", this.treeData);
           }
-        })
+        });
     },
     // 点击删除
     deleteverbal() {
       // console.log(value);
       this.$network
-        .post('/material-service/verbaltrick/deleteverbal', {
+        .post("/material-service/verbaltrick/deleteverbal", {
           // id
         })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.result) {
-            this.newclickList
+            this.newclickList;
           }
-        })
+        });
     },
     // 新增话术
     addverbal() {
       // console.log(value);
       this.$network
-        .post('/material-service/verbaltrick/addverbal', {
+        .post("/material-service/verbaltrick/addverbal", {
           // id
         })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.result) {
-            this.newclickList
+            this.newclickList;
           }
-        })
+        });
     },
     //点击查询
     queryCenten() {
       // this.groupNameList();
-      console.log(this.inputValue)
+      console.log(this.inputValue);
     },
     // 删除
     open() {
       this.$confirm(
-        '此操作将删除本分组及分组内全部内容，是否确认删除分组？',
-        '提示',
+        "此操作将删除本分组及分组内全部内容，是否确认删除分组？",
+        "提示",
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'error',
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "error",
         }
       )
         .then(() => {
           this.$message({
-            type: 'success',
-            message: '删除成功!',
-          })
+            type: "success",
+            message: "删除成功!",
+          });
         })
         .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除',
-          })
-        })
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
     // 点击取消
     cancel() {
-      this.newshow = false
+      this.newshow = false;
     },
 
     // 新建分组baoc
     saveBut() {
-      this.newclickList()
-      console.log(this.groupingName)
+      this.newclickList();
+      console.log(this.groupingName);
     },
     // 点击点点点，来卡片
     handleCommand(command) {
       // this.$message("click on item " + command);
-      console.log(command)
-      if (command == 'a') {
+      console.log(command);
+      if (command == "a") {
         // this.newshow = true;
-      } else if (command == 'b') {
+      } else if (command == "b") {
         // this.rename = true;
         // this.newshow = false;
-      } else if (command == 'c') {
+      } else if (command == "c") {
         // this.newshow = false;
         // this.rename = false;
-        this.open()
+        this.open();
       }
     },
     changeSelect(val) {
-      console.log(val.id)
-      this.groupingId = val.id
+      console.log(val.id);
+      this.groupingId = val.id;
     },
     newgroup() {
-      console.log(123)
+      console.log(123);
     },
     renameSave(formName) {
-      console.log(formName)
+      console.log(formName);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          alert("submit!");
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     beforeHandleCommand(node, data, command) {
       return {
         node: node,
         data: data,
         command: command,
-      }
+      };
     },
   },
-}
+};
 </script>
 
 <style scoped lang="less">
@@ -1043,7 +1073,7 @@ export default {
       color: #4168f6;
       position: relative;
       &::after {
-        content: '';
+        content: "";
         width: 112px;
         height: 4px;
         background: #4168f6;
@@ -1099,7 +1129,7 @@ export default {
   margin-bottom: 30px;
 }
 /deep/ .el-icon-arrow-down:before {
-  content: '';
+  content: "";
 }
 .content-list {
   display: flex;

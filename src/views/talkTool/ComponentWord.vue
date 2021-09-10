@@ -115,8 +115,8 @@ export default {
     return {
       radioList: [
         { name: "文字", value: "txt" },
-        { name: "图片", value: "image" },
-        { name: "PDF", value: "pdf" },
+        // { name: "图片", value: "image" },
+        // { name: "PDF", value: "pdf" },
         { name: "链接", value: "url" },
       ],
       activeIndex: "txt",
