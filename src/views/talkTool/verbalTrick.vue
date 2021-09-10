@@ -454,15 +454,18 @@
         </div>
       </div>
     </van-action-sheet>
+    <Details />
   </div>
 </template>
 <script>
 import SelectTree from "@riophae/vue-treeselect";
+import Details from "./details";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   components: {
     SelectTree,
+    Details,
   },
   data() {
     return {

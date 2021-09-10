@@ -34,7 +34,7 @@
             </label>
           </SelectTree>
         </div>
-        <div class="input_text">
+        <!-- <div class="input_text">
           <span class="groupname">话术标题:</span>
 
           <el-input
@@ -43,6 +43,18 @@
             v-model="wordTitle"
             maxlength="10"
             show-word-limit
+          ></el-input>
+        </div> -->
+        <div class="input_text">
+          <span class="groupname"
+            ><span style="color: red">*</span>话术标题:</span
+          >
+          <el-input
+            v-model.trim="wordTitle"
+            placeholder="请输入话术标题名称"
+            show-word-limit
+            maxlength="10"
+            @change="changeTitle"
           ></el-input>
         </div>
       </div>
@@ -62,10 +74,7 @@
         </div>
         <span>(最多可新增9条话术内容)</span>
       </div>
-      <!-- <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormCancel">取 消</el-button>
-        <el-button type="primary" @click="dialogFormSure">确 定</el-button>
-      </div> -->
+
       <div class="buttonWarp" slot="footer">
         <span class="cancel" @click="dialogFormCancel">取消</span>
         <span class="save" @click="dialogFormSure">保存</span>
@@ -86,61 +95,14 @@ export default {
     addVisible: {
       type: Boolean,
     },
+    groupType: {
+      type: String,
+    },
   },
   data() {
     return {
       wordTitle: "",
-      options: [
-        {
-          id: 1,
-          label:
-            "一级1一级 1一级 1一级 1一级 1一级 1一级 1一级 1一级 1一级 1一级 1一级 1",
-          children: [
-            {
-              id: 4,
-              label: "二级 1-1",
-              children: [
-                {
-                  id: 9,
-                  label: "三级 1-1-1",
-                },
-                {
-                  id: 10,
-                  label: "三级 1-1-2",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          label: "一级 2",
-          children: [
-            {
-              id: 5,
-              label: "二级 2-1",
-            },
-            {
-              id: 6,
-              label: "二级 2-2",
-            },
-          ],
-        },
-        {
-          id: 3,
-          label: "一级 3",
-          children: [
-            {
-              id: 7,
-              label: "二级 3-1",
-            },
-            {
-              id: 8,
-              label: "二级 3-2",
-            },
-          ],
-        },
-      ],
+      options: [],
       value: null,
       normalizer(node) {
         // console.log(node.id);
@@ -156,6 +118,7 @@ export default {
           imageUrl: "",
           pdf: "",
           url: "",
+          activeIndex: "text",
         },
       ],
     };
@@ -164,21 +127,81 @@ export default {
     this.verbaltrickList();
   },
   methods: {
+    // 话术标题
+    changeTitle(val) {
+      console.log(val);
+      this.wordTitle = val;
+    },
     dialogFormCancel() {
       this.$emit("closeAddDialog");
     },
-    dialogFormSure() {},
-    changeSelect(val) {
-      // console.log('-----val---', val)
+    // 点击确定  // 上传标题链接
+    dialogFormSure() {
+      // this.filterList(this.wordsList)
+      let isTrue = this.filterList(this.wordsList);
+      console.log(isTrue);
+      if (isTrue[0]) {
+        if (this.value == "" || this.wordTitle == "") {
+          this.$message({
+            type: "error",
+            message: "请填写分组信息",
+          });
+        } else {
+          let templist = this.wordsList.map((item) => {
+            return {
+              type: item.activeIndex,
+              value: item[item.activeIndex],
+            };
+          });
+          // console.log('------templist----', templist)
+          let params = {
+            groupType: this.groupType,
+            groupId: this.value,
+            title: this.wordTitle,
+            contentList: templist,
+          };
+          // console.log('---this.wordsList----', params)
+          this.$network
+            .post("/material-service/verbaltrick/addverbal", params)
+            .then((res) => {
+              this.$message({
+                type: "success",
+                message: "新增成功",
+              });
+              this.$emit("closeAddDialog");
+            });
+        }
+      }
     },
 
-    newAddTech() {
-      this.wordsList.push({
-        text: "",
-        image: "",
-        pdf: "",
-        url: "",
+    changeSelect(val) {
+      console.log("-----val---", val);
+    },
+
+    filterList(list) {
+      const p = list.map((item) => {
+        if (item[item.activeIndex] == "") {
+          this.$message({
+            type: "error",
+            message: "请完善话术内容",
+          });
+          return false;
+        } else {
+          return true;
+        }
       });
+      return p;
+    },
+    newAddTech() {
+      if (this.wordsList.length < 9) {
+        this.wordsList.push({
+          text: "",
+          image: "",
+          pdf: "",
+          url: "",
+          activeIndex: "text",
+        });
+      }
     },
     fnDelete(index) {
       console.log("2222222222------------", index, this.wordsList);
@@ -193,14 +216,14 @@ export default {
     verbaltrickList() {
       this.$network
         .get("/material-service/verbaltrickgroup/getlist", {
-          parentId: 0,
+          // parentId: 0,
           groupType: 1,
         })
         .then((res) => {
-          console.log(res.data);
-          console.log(res);
+          // console.log(res.data);
+          // console.log(res);
           this.options = res.data;
-          this.treeData = res.data;
+          // this.treeData = res.data;
           if (res.result) {
           }
         });
@@ -355,7 +378,7 @@ export default {
   justify-content: space-around;
   font-size: 28px;
   width: 100%;
-  position: fixed;
+  // position: fixed;
   bottom: 24px;
   margin-top: 80px;
 
