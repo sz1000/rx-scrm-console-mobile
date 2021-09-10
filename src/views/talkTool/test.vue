@@ -89,63 +89,65 @@
             <span class="corner"></span>
           </span>
         </div>
-        <div v-show="item.isOpen"
-             class="out-panel"
-             v-for="(group,gi) in item.items"
-             :key="gi">
-          <div>
-            <p>{{item.title}}</p>
-            <div class="item-box">
-              <div v-for="(chi, c) in group.contentList"
-                   :key="c + 'in'"
-                   class="item-li"
-                   @click.stop="_down(chi)">
-                <img :src="chi.icon"
-                     alt="">
-                <div>
-                  <p>{{chi.title}}</p>
-                  <p class="gray">{{chi.size}}</p>
-                </div>
-              </div>
-              <div class="up"
-                   @click.stop="item.isOpen=false">{{item.label}}-收起</div>
-            </div>
-          </div>
-        </div>
-        <div class="child-panel">
-          <div v-for="(sub, k) in item.children"
-               :key="k + 'chi'"
-               class="out-li">
-            <div class="tree-header">
-              <span class="header-left">
-                <span class="corner"></span>
-              </span>
-              <span class="header-mid">{{sub.label}} <span class="gray">({{sub.length}})</span></span>
-              <span class="header-right"
-                    @click.stop="sub.isOpen=true">
-                展开
-                <span class="corner"></span>
-              </span>
-            </div>
-            <div v-show="sub.isOpen"
-                 class="out-panel"
-                 v-for="(ch,ci) in sub.items"
-                 :key="ci">
-              <p>{{sub.title}}</p>
+        <div class="tree-body"
+             v-show="item.isOpen">
+          <div class="out-panel"
+               v-for="(group,gi) in item.items"
+               :key="gi">
+            <div>
+              <p>{{item.title}}</p>
               <div class="item-box">
-                <div v-for="(ss, s) in ch.contentList"
-                     :key="s + 'in-in'"
+                <div v-for="(chi, c) in group.contentList"
+                     :key="c + 'in'"
                      class="item-li"
-                     @click.stop="_down(ss)">
-                  <img :src="ss.icon"
+                     @click.stop="_down(chi)">
+                  <img :src="chi.icon"
                        alt="">
                   <div>
-                    <p>{{ss.title}}</p>
-                    <p class="gray">{{ss.size}}</p>
+                    <p>{{chi.title}}</p>
+                    <p class="gray">{{chi.size}}</p>
                   </div>
                 </div>
                 <div class="up"
-                     @click.stop="sub.isOpen=false">{{item.label}}-{{sub.label}}收起</div>
+                     @click.stop="item.isOpen=false">{{item.label}}-收起</div>
+              </div>
+            </div>
+          </div>
+          <div class="child-panel">
+            <div v-for="(sub, k) in item.children"
+                 :key="k + 'chi'"
+                 class="out-li">
+              <div class="tree-header">
+                <span class="header-left">
+                  <span class="corner"></span>
+                </span>
+                <span class="header-mid">{{sub.label}} <span class="gray">({{sub.length}})</span></span>
+                <span class="header-right"
+                      @click.stop="sub.isOpen=true">
+                  展开
+                  <span class="corner"></span>
+                </span>
+              </div>
+              <div v-show="sub.isOpen"
+                   class="out-panel"
+                   v-for="(ch,ci) in sub.items"
+                   :key="ci">
+                <p>{{sub.title}}</p>
+                <div class="item-box">
+                  <div v-for="(ss, s) in ch.contentList"
+                       :key="s + 'in-in'"
+                       class="item-li"
+                       @click.stop="_down(ss)">
+                    <img :src="ss.icon"
+                         alt="">
+                    <div>
+                      <p>{{ss.title}}</p>
+                      <p class="gray">{{ss.size}}</p>
+                    </div>
+                  </div>
+                  <div class="up"
+                       @click.stop="sub.isOpen=false">{{item.label}}-{{sub.label}}收起</div>
+                </div>
               </div>
             </div>
           </div>
