@@ -75,77 +75,89 @@
 <template>
   <div>
     <div class="tree-box">
-      <div v-for="(item, i) in treeData"
-           :key="i + 'out'"
-           class="out-li">
+      <div v-for="(item, i) in treeData" :key="i + 'out'" class="out-li">
         <div class="tree-header">
           <span class="header-left">
             <span class="corner"></span>
           </span>
-          <span class="header-mid">{{item.label}} <span class="gray">({{treeData.length}})</span></span>
-          <span class="header-right"
-                @click.stop="item.isOpen=true">
+          <span class="header-mid"
+            >{{ item.label }}
+            <span class="gray">({{ treeData.length }})</span></span
+          >
+          <span class="header-right" @click.stop="item.isOpen = true">
             展开
             <span class="corner"></span>
           </span>
         </div>
-        <div v-show="item.isOpen"
-             class="out-panel"
-             v-for="(group,gi) in item.items"
-             :key="gi">
+        <div
+          v-show="item.isOpen"
+          class="out-panel"
+          v-for="(group, gi) in item.items"
+          :key="gi"
+        >
           <div>
-            <p>{{item.title}}</p>
+            <p>{{ item.title }}</p>
             <div class="item-box">
-              <div v-for="(chi, c) in group.contentList"
-                   :key="c + 'in'"
-                   class="item-li"
-                   @click.stop="_down(chi)">
-                <img :src="chi.icon"
-                     alt="">
+              <div
+                v-for="(chi, c) in group.contentList"
+                :key="c + 'in'"
+                class="item-li"
+                @click.stop="_down(chi)"
+              >
+                <img :src="chi.icon" alt="" />
                 <div>
-                  <p>{{chi.title}}</p>
-                  <p class="gray">{{chi.size}}</p>
+                  <p>{{ chi.title }}</p>
+                  <p class="gray">{{ chi.size }}</p>
                 </div>
               </div>
-              <div class="up"
-                   @click.stop="item.isOpen=false">{{item.label}}-收起</div>
+              <div class="up" @click.stop="item.isOpen = false">
+                {{ item.label }}-收起
+              </div>
             </div>
           </div>
         </div>
-        <div class="child-panel">
-          <div v-for="(sub, k) in item.children"
-               :key="k + 'chi'"
-               class="out-li">
+        <div class="child-panel" v-show="isOpen">
+          <div
+            v-for="(sub, k) in item.children"
+            :key="k + 'chi'"
+            class="out-li"
+          >
             <div class="tree-header">
               <span class="header-left">
                 <span class="corner"></span>
               </span>
-              <span class="header-mid">{{sub.label}} <span class="gray">({{sub.length}})</span></span>
-              <span class="header-right"
-                    @click.stop="sub.isOpen=true">
+              <span class="header-mid"
+                >{{ sub.label }}
+                <span class="gray">({{ sub.length }})</span></span
+              >
+              <span class="header-right" @click.stop="sub.isOpen = true">
                 展开
                 <span class="corner"></span>
               </span>
             </div>
-            <div v-show="sub.isOpen"
-                 class="out-panel"
-                 v-for="(ch,ci) in sub.items"
-                 :key="ci">
-              <p>{{sub.title}}</p>
+            <div
+              v-show="sub.isOpen"
+              class="out-panel"
+              v-for="(ch, ci) in sub.items"
+              :key="ci"
+            >
+              <p>{{ sub.title }}</p>
               <div class="item-box">
-                <div v-for="(ss, s) in ch.contentList"
-                     :key="s + 'in-in'"
-                     class="item-li"
-                     @click.stop="_down(ss)">
-                  <img :src="ss.icon"
-                       alt="">
+                <div
+                  v-for="(ss, s) in ch.contentList"
+                  :key="s + 'in-in'"
+                  class="item-li"
+                  @click.stop="_down(ss)"
+                >
+                  <img :src="ss.icon" alt="" />
                   <div>
-                    <p>{{ss.title}}</p>
-                    <p class="gray">{{ss.size}}</p>
+                    <p>{{ ss.title }}</p>
+                    <p class="gray">{{ ss.size }}</p>
                   </div>
                 </div>
-                <div class="up"
-                     @click.stop="sub.isOpen=false">{{item.label}}-{{sub.label}}收起</div>
+                <div class="up" @click.stop="sub.isOpen = false">
+                  {{ item.label }}-{{ sub.label }}收起
+                </div>
               </div>
             </div>
           </div>
@@ -157,188 +169,188 @@
 
 <script>
 export default {
-  name: 'index',
+  name: "index",
   components: {},
   data() {
     return {
       treeData: [
         {
-          label: '分组1',
-          title: '这是话术标题',
+          label: "分组1",
+          title: "这是话术标题",
           isOpen: true,
           items: [
             {
               contentList: [
                 {
-                  title: 'hahahhahah',
+                  title: "hahahhahah",
                 },
                 {
-                  title: '222222222',
+                  title: "222222222",
                 },
               ],
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '图片的标题.png',
-              size: '27.35k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "图片的标题.png",
+              size: "27.35k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '公司简介.pdf',
-              size: '729k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "公司简介.pdf",
+              size: "729k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '瑞信科技',
-              size: 'Wera sorry xxxxxx',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "瑞信科技",
+              size: "Wera sorry xxxxxx",
+              url: "https://www.xinghuijin.com/",
             },
           ],
           children: [
             {
-              label: '子分组1',
-              title: '这是话术标题',
+              label: "子分组1",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
                   contentList: [
                     {
-                      title: '1-1-1',
+                      title: "1-1-1",
                     },
                     {
-                      title: '1-1-2',
+                      title: "1-1-2",
                     },
                   ],
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
             {
-              label: '子分组2',
-              title: '这是话术标题',
+              label: "子分组2",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
           ],
         },
         {
-          label: '分组2',
-          title: '这是话术标题',
+          label: "分组2",
+          title: "这是话术标题",
           isOpen: false,
           items: [
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '图片的标题.png',
-              size: '27.35k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "图片的标题.png",
+              size: "27.35k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '公司简介.pdf',
-              size: '729k',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "公司简介.pdf",
+              size: "729k",
+              url: "https://www.xinghuijin.com/",
             },
             {
-              icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-              title: '瑞信科技',
-              size: 'Wera sorry xxxxxx',
-              url: 'https://www.xinghuijin.com/',
+              icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+              title: "瑞信科技",
+              size: "Wera sorry xxxxxx",
+              url: "https://www.xinghuijin.com/",
             },
           ],
           children: [
             {
-              label: '子分组1',
-              title: '这是话术标题',
+              label: "子分组1",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
             {
-              label: '子分组2',
-              title: '这是话术标题',
+              label: "子分组2",
+              title: "这是话术标题",
               isOpen: false,
               items: [
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '图片的标题.png',
-                  size: '27.35k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "图片的标题.png",
+                  size: "27.35k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '公司简介.pdf',
-                  size: '729k',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "公司简介.pdf",
+                  size: "729k",
+                  url: "https://www.xinghuijin.com/",
                 },
                 {
-                  icon: 'http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123',
-                  title: '瑞信科技',
-                  size: 'Wera sorry xxxxxx',
-                  url: 'https://www.xinghuijin.com/',
+                  icon: "http://img.xinghuijin.com/blog_pyhon1.jpeg?t=123",
+                  title: "瑞信科技",
+                  size: "Wera sorry xxxxxx",
+                  url: "https://www.xinghuijin.com/",
                 },
               ],
             },
           ],
         },
       ],
-    }
+    };
   },
   methods: {
     _down(item) {
-      window.open(item.url)
+      window.open(item.url);
     },
   },
-}
+};
 </script>

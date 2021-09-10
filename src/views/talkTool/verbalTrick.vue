@@ -448,7 +448,7 @@
         </div>
       </div>
     </van-action-sheet>
-    <Details />
+    <!-- <Details /> -->
   </div>
 </template>
 <script>
@@ -458,7 +458,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
   components: {
     SelectTree,
-    Details,
+    // Details,
   },
   data() {
     return {
