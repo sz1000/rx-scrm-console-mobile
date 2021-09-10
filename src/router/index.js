@@ -11,7 +11,7 @@ import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
-import Added from "../views/talkTool/Added.vue"
+import Added from '../views/talkTool/Added.vue'
 // // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
@@ -27,12 +27,19 @@ import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
+import Test from '../views/talkTool/test.vue'
 
 Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
         redirect: '/homeTransition',
+    },
+    {
+        path: '/test',
+        name: 'test',
+
+        component: Test,
     },
     {
         path: '/homeTransition',
