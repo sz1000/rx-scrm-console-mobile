@@ -638,7 +638,7 @@ export default {
     }
   },
   created() {
-    commonFun.getWxAppid()
+    // commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {

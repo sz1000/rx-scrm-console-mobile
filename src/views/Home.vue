@@ -25,34 +25,38 @@
     <div class="btnRouter">
       <router-link to="talkTool">
         <div class="commonBtn">
-          <img src="../images/huoma.png" alt="" />
+          <img src="../images/huoma.png"
+               alt="" />
           <span>企微活码</span>
         </div>
       </router-link>
       <router-link to="/talkTool/channelConfiguration">
         <div class="commonBtn">
-          <img src="../images/qudao.png" alt="" />
+          <img src="../images/qudao.png"
+               alt="" />
           <span>渠道配置</span>
         </div>
       </router-link>
-      <router-link to="/talkTool/verbalTrick">
+      <!-- <router-link to="/talkTool/verbalTrick">
         <div class="commonBtn">
           <img src="../images/qudao.png" alt="" />
           <span>话术</span>
         </div>
-      </router-link>
+      </router-link> -->
     </div>
     <div class="customAccont manage">客户管理</div>
     <div class="btnRouter custom">
       <router-link to="/customerManage/clues">
         <div class="commonBtn">
-          <img src="../images/xiansuo.png" alt="" />
+          <img src="../images/xiansuo.png"
+               alt="" />
           <span>线索</span>
         </div>
       </router-link>
       <router-link to="/customerManage/myCustomer">
         <div class="commonBtn">
-          <img src="../images/kehu.png" alt="" />
+          <img src="../images/kehu.png"
+               alt="" />
           <span>客户</span>
         </div>
       </router-link>
@@ -61,30 +65,30 @@
 </template>
 
 <script>
-import CommonHome from "../utils/CommonHome";
+import CommonHome from '../utils/CommonHome'
 
 export default {
   components: {},
   data() {
     return {
-      userId: "",
-      token: "",
-    };
+      userId: '',
+      token: '',
+    }
   },
   created() {
     // alert(window.location.href)
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-      loadingType: "spinner",
-    });
+      loadingType: 'spinner',
+    })
     // CommonHome.getWxToken()
   },
   mounted() {
     // this.$toast.clear()
   },
   methods: {},
-};
+}
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
@@ -101,7 +105,7 @@ export default {
     padding-left: 20px;
     margin-bottom: 24px;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 5px;
       left: 0;
@@ -130,19 +134,19 @@ export default {
       }
     }
     .card1 {
-      background: url("../images/kehuzongshu.png") no-repeat;
+      background: url('../images/kehuzongshu.png') no-repeat;
       background-size: contain;
     }
     .card2 {
-      background: url("../images/xinzeng.png") no-repeat;
+      background: url('../images/xinzeng.png') no-repeat;
       background-size: contain;
     }
     .card3 {
-      background: url("../images/liushi.png") no-repeat;
+      background: url('../images/liushi.png') no-repeat;
       background-size: contain;
     }
     .card4 {
-      background: url("../images/shenqing.png") no-repeat;
+      background: url('../images/shenqing.png') no-repeat;
       background-size: contain;
     }
   }
