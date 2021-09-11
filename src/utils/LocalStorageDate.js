@@ -19,6 +19,8 @@ export function getStoreValue(keyName, defaultVal = '') {
             window.location.pathname.indexOf('informationDetail') > -1
         ) {
             router.push('/customerPortrait')
+        } else if (window.location.pathname.indexOf('verbalTrick') > -1) {
+            router.push('/talkTool/verbalTrick')
         } else {
             router.push('/home')
         }
@@ -44,23 +46,7 @@ export function getStoreValue(keyName, defaultVal = '') {
                 router.push('/home')
             }
             return defaultVal
-                // alert(jsonData.userNo)
-                // let code = await Network.get('/user-service/m/user/getaccessToken', {
-                //     userNo: jsonData.userNo,
-                // }).then((res) => {
-                //     alert(JSON.stringify(res))
-                //     if (res.result) {
-                //         setStoreValue(
-                //             'token',
-                //             res.data.accessToken,
-                //             res.data.expire_time,
-                //             res.data.userNo
-                //         )
-
-            //     } else {
-            // }
-            // })
-            // 1531105426709
+                // 1531105426709
         } else {
             // 未过期,直接用
             return jsonData.value

@@ -2,14 +2,14 @@
   <div class="main-content">
     <div class="warp-bg">
       <!-- 标题 -->
-      <div class="headerTitle">
+      <!-- <div class="headerTitle">
         <div class="backPage"
              @click="goBack">
           <van-icon name="arrow-left" />
           返回
         </div>
         <span class="textTitle">快捷回复</span>
-      </div>
+      </div> -->
       <!-- 头部 -->
       <!-- <div class="warp-box">
         <div class="head">
@@ -37,12 +37,12 @@
                 class="mycule"
                 @click="myclue(2)">公共话术</span>
         </div>
-        <span class="addBtn"
+        <!-- <span class="addBtn"
               @click="newaddClick">
           <img src="../../images/icon_add@2x.png"
                alt="" />
           新增
-        </span>
+        </span> -->
       </div>
       <!-- 查询 -->
       <div class="searchInput">
@@ -72,7 +72,7 @@
                   <span :class="item.isOpen ? 'cenr' : 'cenrs'"></span>
                 </span>
                 <span class="header-mid"
-                      @click.stop="groupNameList(item, i)">{{ item.name }}
+                      @click="groupNameList(item, i)">{{ item.name }}
                 </span>
                 <div class="header-right"
                      v-if="i == actDot">
@@ -85,8 +85,8 @@
                     </div>
                     <ul class="listAlat-box"
                         v-if="listTite">
-                      <li @click="rechristen">重命名</li>
-                      <li @click="openDelete">删除</li>
+                      <li @click="rechristen(item)">重命名</li>
+                      <li @click="openDelete(item)">删除</li>
                     </ul>
                   </div>
                 </div>
@@ -136,10 +136,10 @@
                         </div>
                       </div>
 
-                      <div class="up"
-                           @click.stop="item.isOpen = false">
+                      <!-- <div class="up"
+                           @click="item.isOpen = false">
                         {{ item.label }}-收起
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -150,12 +150,28 @@
                        class="out-li">
                     <div class="tree-header">
                       <span class="header-left">
-                        <span :class="item.isOpen ? 'cenr' : 'cenrs'"></span>
+                        <span :class="sub.isOpen ? 'cenr' : 'cenrs'"></span>
                       </span>
                       <span class="header-mid"
-                            @click.stop="groupchildrenList(sub)">{{ sub.name }}
+                            @click.stop="groupchildrenList(sub,k)">{{ sub.name }}
                         <!-- <span class="gray">({{ sub.length }})</span> -->
                       </span>
+                      <div class="header-right"
+                           v-if="k == chiDot">
+                        <div class="morePosition">
+                          <div class=""
+                               @click="moreChiDot">
+                            <img style="width: 28px; height: 28px"
+                                 src="../../images/icon_more@2x.png"
+                                 alt="" />
+                          </div>
+                          <ul class="listAlat-box"
+                              v-if="chiTitle">
+                            <li @click="rechristen">重命名</li>
+                            <li @click="openDelete(item)">删除</li>
+                          </ul>
+                        </div>
+                      </div>
                       <!-- <span
                   class="header-right"
                   @click.stop="sub.isOpen = !sub.isOpen"
@@ -184,22 +200,34 @@
                          v-for="(ch, ci) in sub.items"
                          :key="ci">
                       <p>{{ sub.title }}</p>
-                      <div class="item-box">
+                      <div class="child-box">
                         <div v-for="(ss, s) in ch.contentList"
                              :key="s + 'in-in'"
                              class="item-li"
                              @click.stop="_down(ss)">
-                          <img :src="ss.icon"
-                               alt="" />
-                          <div>
-                            <p>{{ ss.title }}</p>
-                            <p class="gray">{{ ss.size }}</p>
+                          <!-- <img :src="ss.icon"
+                               alt="" /> -->
+
+                          <div class="text_img">
+                            <img class="share_img"
+                                 src="../../images/share_two@2x.png"
+                                 alt=""
+                                 @click="firstShare(ss)" />
                           </div>
+                          <div class="text-box">
+                            <div class="chi-box">
+                              <div class="center_img">
+                                <p class="img_text">{{ ss.value }}</p>
+                                <p class="img_size">{{ ss.size }}</p>
+                              </div>
+                            </div>
+                          </div>
+
                         </div>
-                        <div class="up"
-                             @click.stop="sub.isOpen = false">
+                        <!-- <div class="up"
+                             @click="ss.isOpen = false">
                           {{ item.label }}-{{ sub.label }}收起
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -397,7 +425,9 @@ export default {
         }
       },
       actDot: 0,
+      chiDot: null,
       listTite: false,
+      chiTitle: false,
       firstList: [
         {
           // name: '111',
@@ -410,7 +440,7 @@ export default {
     }
   },
   created() {
-    // commonFun.getWxAppid()
+    commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {
@@ -424,7 +454,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          // alert('submit!')
         } else {
           console.log('error submit!!')
           return false
@@ -440,6 +470,9 @@ export default {
     // 点击查询
     moreDot() {
       this.listTite = !this.listTite
+    },
+    moreChiDot() {
+      this.chiTitle = !this.chiTitle
     },
     //列表点击
     clickList() {
@@ -464,9 +497,11 @@ export default {
     rechristen() {
       this.rename = true
       this.listTite = false
+      this.chiTitle = false
     },
     //删除
-    openDelete() {
+    openDelete(v) {
+      console.log(v)
       this.$confirm(
         '此操作将删除本分组及分组内全部内容，是否确认删除分组？',
         '提示',
@@ -477,12 +512,17 @@ export default {
         }
       )
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!',
-          })
-          this.deleteverbal()
-          this.verbaltrickList()
+          this.$network
+            .get('/material-service/verbaltrickgroup/delete', {
+              id: v.id,
+            })
+            .then((res) => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+              })
+              this.verbaltrickList()
+            })
         })
         .catch(() => {
           this.$message({
@@ -510,21 +550,19 @@ export default {
     },
     // 个人话术分组列表
     verbaltrickList() {
-      this.$toast.loading({
-        overlay: true,
-        loadingType: 'spinner',
-        duration: 0,
-      })
+      // this.$toast.loading({
+      //   overlay: true,
+      //   loadingType: 'spinner',
+      //   duration: 0,
+      // })
       this.$network
         .get('/material-service/verbaltrickgroup/getlist', {
           parentId: 0,
           groupType: this.tabClick,
-          type: 0,
+          type: 1,
         })
         .then((res) => {
-          this.$toast.clear()
-          // console.log(res.data)
-          // console.log(res)
+          // this.$toast.clear()
           if (res.result) {
             this.options = res.data
             this.treeData = res.data
@@ -549,42 +587,19 @@ export default {
     // 点击分组列表名字
     groupNameList(value, i) {
       this.actDot = i
+      this.chiDot = null
       this.groupId = value.id
       console.log(value.id)
       value.isOpen = !value.isOpen //控制折叠与展开
       // console.log(11111)
       this.$network
         .get('/material-service/verbaltrick/getlist', {
-          page: 1,
-          limit: 20,
           value: '',
           groupId: value.id,
           // groupType: this.tabClick,
         })
         .then((res) => {
-          console.log(res)
-          if (res.result) {
-            // this.newclickList
-            this.$set(value, 'items', res.data.iPage.records)
-            console.log('--------', this.treeData)
-          }
-        })
-    },
-    groupNameList(value, i) {
-      this.actDot = i
-      this.groupId = value.id
-      console.log(value.id)
-      value.isOpen = !value.isOpen //控制折叠与展开
-      this.$network
-        .get('/material-service/verbaltrick/getlist', {
-          page: 1,
-          limit: 20,
-          value: '',
-          groupId: value.id,
-          // groupType: this.tabClick,
-        })
-        .then((res) => {
-          console.log(res)
+          // console.log(res)
           if (res.result) {
             // this.newclickList
             this.$set(value, 'items', res.data.iPage.records)
@@ -593,16 +608,17 @@ export default {
         })
     },
     // 子分组标题
-    groupchildrenList(valuel) {
+    groupchildrenList(valuel, i) {
+      this.chiDot = i
+      this.actDot = null
+
       valuel.isOpen = !valuel.isOpen
       this.groupId = valuel.id
-      console.log(valuel.id)
+      // console.log(valuel.id)
       this.$network
         .get('/material-service/verbaltrick/getlist', {
-          page: 1,
-          limit: 20,
           value: '',
-          groupId: '',
+          groupId: valuel.id,
           // groupType: this.tabClick,
         })
         .then((res) => {
@@ -617,15 +633,15 @@ export default {
     },
     //分享
     shareText(v) {
-      alert(JSON.parse(JSON.stringify(v)))
+      // console.log(v)
       this.$network
-        .get('/user-service/user/getticket', {
+        .get('/user-service/m/user/getticket', {
           url: location.href,
         })
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -650,20 +666,23 @@ export default {
                 jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
               },
               function (res) {
-                wx.invoke(
-                  'sendChatMessage',
-                  {
-                    msgtype: 'text', //消息类型，必填
-                    text: {
-                      content: v.value, //文本内容
+                for (let i = 0; i < v.contentList.length; i++) {
+                  wx.invoke(
+                    'sendChatMessage',
+                    {
+                      msgtype: 'text', //消息类型，必填
+                      // enterChat: true,
+                      text: {
+                        content: v.contentList[i].value, //文本内容
+                      },
                     },
-                  },
-                  function (res) {
-                    if (res.err_msg == 'sendChatMessage:ok') {
-                      //发送成功
+                    function (res) {
+                      if (res.err_msg == 'sendChatMessage:ok') {
+                        //发送成功
+                      }
                     }
-                  }
-                )
+                  )
+                }
               }
             )
           })
@@ -671,16 +690,17 @@ export default {
     },
     //分享子列表
     firstShare(v) {
-      alert(JSON.parse(JSON.stringify(v)))
+      // console.log(v)
+      // alert(JSON.parse(JSON.stringify(v)))
       this.$network
-        .get('/user-service/user/getticket', {
+        .get('/user-service/m/user/getticket', {
           url: location.href,
         })
         .then((res) => {
-          alert(JSON.parse(JSON.stringify(res)))
+          // alert(JSON.parse(JSON.stringify(res)))
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -705,6 +725,7 @@ export default {
                 jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
               },
               function (res) {
+                // alert('进入invoke')
                 wx.invoke(
                   'sendChatMessage',
                   {
@@ -715,7 +736,7 @@ export default {
                   },
                   function (res) {
                     if (res.err_msg == 'sendChatMessage:ok') {
-                      alert('发送成功')
+                      // alert('发送成功')
                       //发送成功
                     }
                   }
@@ -726,19 +747,10 @@ export default {
         })
     },
     // 点击删除
-    deleteverbal() {
-      // console.log(value);
-      this.$network
-        .post('/material-service/verbaltrick/deleteverbal', {
-          // id
-        })
-        .then((res) => {
-          console.log(res)
-          if (res.result) {
-            this.newclickList
-          }
-        })
-    },
+    // deleteverbal() {
+    //   // console.log(value);
+
+    // },
     // 新增话术
     addverbal() {
       // console.log(value);
@@ -853,7 +865,7 @@ export default {
       console.log(formName)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          // alert('submit!')
         } else {
           console.log('error submit!!')
           return false
@@ -932,7 +944,7 @@ export default {
 }
 .pd-24 {
   padding: 0 24px;
-  height: 100%;
+  // height: 100%;
 }
 .tree-box {
   background: white;
@@ -983,6 +995,26 @@ export default {
   .out-panel {
     padding-left: 20px;
   }
+  .child-box {
+    padding: 20px;
+    background-color: #f5f5f5;
+    .item-li {
+      display: flex;
+      .text_img {
+        display: flex;
+        align-items: center;
+      }
+      .text-box {
+        border: 1px solid #d9dae4;
+        border-radius: 6px;
+        height: 160px;
+        background: #fff;
+        width: 100%;
+        .img_text {
+        }
+      }
+    }
+  }
   .out-li {
     margin-bottom: 20px;
   }
@@ -990,11 +1022,18 @@ export default {
     padding: 20px;
     background-color: #f5f5f5;
     .item-li {
-      // display: flex;
-      margin-bottom: 20px;
+      display: flex;
       background: white;
       border-radius: 6px;
       border: 1px solid #ccc;
+      .text_img {
+        // margin-right: 24px;
+      }
+      p {
+        font-size: 14px;
+        font-weight: 400;
+        color: #3c4353;
+      }
       // img {
       //   width: 112px;
       //   height: 112px;
