@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">快捷回复</span>
+      <span class="textTitle">新增话术</span>
     </div>
     <div class="pd-warp">
       <div class="selectBox">
@@ -20,11 +20,11 @@
                       :normalizer="normalizer"
                       @select="changeSelect">
             <label slot="option-label"
-                   slot-scope="{ node, labelClassName }"
-                   :class="labelClassName">
+                   slot-scope="{ node  }"
+                   class="labelClassName">
               <img src="../../images/wenjian.png"
                    alt=""
-                   style="width: 14px; height: 12px" />
+                   style="width: 10px; height: 10px" />
               <span class="nodeName">{{ node.label }}</span>
             </label>
           </SelectTree>
@@ -52,6 +52,7 @@
       <div class="techniqueBox">
         <ComponentWord :single="index"
                        :itemInfo="item"
+                       :allList='wordsList'
                        @fnDelete="fnDelete"
                        v-for="(item, index) in wordsList"
                        :key="index"></ComponentWord>
@@ -100,6 +101,13 @@ export default {
       value: null,
       normalizer(node) {
         // console.log(node.id);
+        if (
+          node.children == null ||
+          node.children == 'null' ||
+          node.children.length == 0
+        ) {
+          delete node.children
+        }
         return {
           id: node.id,
           label: node.name,
@@ -127,7 +135,18 @@ export default {
       this.wordTitle = val
     },
     dialogFormCancel() {
-      this.$emit('closeAddDialog')
+      // this.$emit('closeAddDialog')
+      this.value = null
+      this.wordTitle = ''
+      this.wordsList = [
+        {
+          text: '',
+          imageUrl: '',
+          pdf: '',
+          url: '',
+          activeIndex: 'text',
+        },
+      ]
     },
     // 点击确定  // 上传标题链接
     dialogFormSure() {
@@ -158,11 +177,12 @@ export default {
           this.$network
             .post('/material-service/verbaltrick/addverbal', params)
             .then((res) => {
+              this.$router.go(-1)
               this.$message({
                 type: 'success',
                 message: '新增成功',
               })
-              this.$emit('closeAddDialog')
+              // this.$emit('closeAddDialog')
             })
         }
       }
@@ -228,7 +248,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .dialogWarp {
-  height: 100%;
+  // height: 100%;
   background: #fff;
 }
 // 头部
@@ -295,11 +315,24 @@ export default {
   height: 80px;
   line-height: 80px;
 }
-.nodeName {
-  color: #3c4353;
-  font-size: 14px;
-  font-weight: normal;
+.labelClassName {
+  display: flex;
+  align-items: center;
+  img {
+    margin-right: 5px;
+  }
 }
+.vue-treeselect {
+  flex: 1;
+  .nodeName {
+    display: inline-block;
+    margin-left: 8px;
+    color: #3c4353;
+    font-size: 14px;
+    font-weight: normal;
+  }
+}
+
 .select_group {
   display: flex;
   margin-top: 15px;
@@ -308,9 +341,6 @@ export default {
   line-height: 80px;
 }
 
-.vue-treeselect {
-  flex: 1;
-}
 .addBtn {
   padding: 0 8px;
   width: 252px;
@@ -368,7 +398,6 @@ export default {
   height: 80px;
   // width: 562px;
 }
-
 /deep/.vue-treeselect__single-value {
   top: 30%;
 }

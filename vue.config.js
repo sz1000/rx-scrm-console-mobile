@@ -17,6 +17,15 @@ module.exports = {
             index: '/index.html',
         },
     },
+    pwa: {
+        iconPaths: {
+            favicon32: 'favicon.ico',
+            favicon16: 'favicon.ico',
+            appleTouchIcon: 'favicon.ico',
+            maskIcon: 'favicon.ico',
+            msTileImage: 'favicon.ico',
+        },
+    },
     // transpileDependencies: ['element-ui', 'vant'],
     // // transpileDependencies: ['*'],
     // chainWebpack: (config) => {
