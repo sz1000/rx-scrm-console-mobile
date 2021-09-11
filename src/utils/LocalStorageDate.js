@@ -37,6 +37,9 @@ export function getStoreValue(keyName, defaultVal = '') {
                 window.location.pathname.indexOf('informationDetail') > -1
             ) {
                 router.push('/customerPortrait')
+            }
+            if (window.location.pathname.indexOf('verbalTrick') > -1) {
+                router.push('/talkTool/verbalTrick')
             } else {
                 router.push('/home')
             }
