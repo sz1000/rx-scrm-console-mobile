@@ -176,8 +176,7 @@
                   class="header-right"
                   @click.stop="sub.isOpen = !sub.isOpen"
                 >
-                  展开
-                 
+                  展开                
                 </span> -->
                       <!-- <div class="header-right" v-if="k == actDots">
                   <div class="morePosition">
@@ -222,7 +221,6 @@
                               </div>
                             </div>
                           </div>
-
                         </div>
                         <!-- <div class="up"
                              @click="ss.isOpen = false">
@@ -968,7 +966,7 @@ export default {
   }
   .tree-header {
     display: flex;
-    line-height: 20px;
+    // line-height: 20px;
     font-weight: 400;
     color: #3c4353;
     font-size: 28px;
@@ -1531,7 +1529,7 @@ export default {
   }
   .tree-header {
     display: flex;
-    line-height: 20px;
+    // line-height: 20px;
     font-weight: 400;
     color: #3c4353;
     font-size: 28px;
