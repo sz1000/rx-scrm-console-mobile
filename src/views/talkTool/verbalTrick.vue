@@ -225,7 +225,7 @@
         <div class="codeDetail">
           <div class="select-Tree">
             <span class="groupname"><span style="color: red">*</span> 上级分组:</span>
-            <SelectTree :options="options"
+            <SelectTree :options="optionSelect"
                         v-model="value"
                         :multiple="false"
                         :searchable="false"
@@ -369,6 +369,7 @@ export default {
         age: '',
       },
       options: [],
+      optionSelect: [],
       listTite: false,
       moreSet: null,
       treeData: [],
@@ -481,6 +482,15 @@ export default {
       this.newshow = true
       this.value = null
       this.groupingName = ''
+      this.$network
+        .get('/material-service/verbaltrickgroup/getSelect', {
+          groupType: this.tabClick,
+        })
+        .then((res) => {
+          // console.log(res)
+          this.optionSelect = res.data
+          // console.log('----this.value---', this.value)
+        })
     },
     // 重命名
     rechristen(val) {
