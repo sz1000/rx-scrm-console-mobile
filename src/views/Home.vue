@@ -39,7 +39,8 @@
       </router-link>
       <!-- <router-link to="/talkTool/verbalTrick">
         <div class="commonBtn">
-          <img src="../images/qudao.png" alt="" />
+          <img src="../images/qudao.png"
+               alt="" />
           <span>话术</span>
         </div>
       </router-link> -->
@@ -82,7 +83,7 @@ export default {
       duration: 1000,
       loadingType: 'spinner',
     })
-    CommonHome.getWxToken()
+    // CommonHome.getWxToken()
   },
   mounted() {
     // this.$toast.clear()

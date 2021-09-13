@@ -29,24 +29,16 @@
             </label>
           </SelectTree>
         </div>
-        <!-- <div class="input_text">
-          <span class="groupname">话术标题:</span>
 
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="wordTitle"
-            maxlength="10"
-            show-word-limit
-          ></el-input>
-        </div> -->
         <div class="input_text">
+
           <span class="groupname"><span style="color: red">*</span>话术标题:</span>
           <el-input v-model.trim="wordTitle"
                     placeholder="请输入话术标题名称"
                     show-word-limit
                     maxlength="10"
                     @change="changeTitle"></el-input>
+
         </div>
       </div>
       <div class="techniqueBox">
@@ -298,7 +290,7 @@ export default {
 }
 .groupname {
   display: inline-block;
-  width: 120px;
+  min-width: 120px;
   line-height: 32px;
   text-align: right;
   margin-right: 8px;
@@ -308,9 +300,14 @@ export default {
   // width: 562px;
   flex: 1;
 }
+.el-textarea {
+  border: 1px solid #d9dae4;
+  outline: none;
+}
 .input_text {
   display: flex;
   margin-top: 20px;
+  // justify-content: space-between;
   align-items: center;
   height: 80px;
   line-height: 80px;
