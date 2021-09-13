@@ -334,7 +334,18 @@ export default {
     padding: 16px;
     /deep/.el-input__inner {
       width: 100% !important;
+      font-size: 28px;
     }
+  }
+  /deep/.el-input {
+    font-size: 28px;
+    flex: 1;
+  }
+  /deep/.el-textarea {
+    border: 2px solid #d9dae4;
+    font-size: 28px;
+    outline: none;
+    transform: rotateZ(360deg);
   }
 }
 </style>

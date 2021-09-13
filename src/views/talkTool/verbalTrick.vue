@@ -269,7 +269,7 @@
 
             <el-input v-model="wordTitle"
                       placeholder="请输入内容"
-                      maxlength="10"
+                      maxlength="20"
                       show-word-limit></el-input>
           </div>
           <div class="buttonWarp">
@@ -413,7 +413,6 @@ export default {
       actDot: 0,
       chiDot: null,
       listTite: false,
-      chiTitle: false,
       firstList: [
         {
           // name: '111',
@@ -457,9 +456,7 @@ export default {
     moreDot() {
       this.listTite = !this.listTite
     },
-    moreChiDot() {
-      this.chiTitle = !this.chiTitle
-    },
+
     //列表点击
     clickList() {
       this.showList = !this.showList
@@ -471,19 +468,26 @@ export default {
     },
     // 点击新增按钮
     newaddClick() {
-      // this.newshow = true;
-      this.$router.push('/talkTool/added')
+      this.$router.push({
+        path: '/talkTool/added',
+        query: {
+          type: this.tabClick,
+        },
+      })
     },
     //添加分组
     addGroups(v) {
       console.log('---v-----', v)
       this.newshow = true
+      this.value = null
+      this.groupingName = ''
     },
     // 重命名
-    rechristen() {
+    rechristen(val) {
+      // console.log('----重命名----', val)
       this.rename = true
       this.listTite = false
-      this.chiTitle = false
+      this.wordTitle = val.name
     },
     //删除
     openDelete(v) {
@@ -791,18 +795,25 @@ export default {
     //重命名 保存
     saveName() {
       // console.log('---this.saveName---', this.groupId)
-      this.$network
-        .post('/material-service/verbaltrickgroup/update', {
-          id: this.groupId,
-          name: this.wordTitle,
+      if (this.wordTitle == '') {
+        this.$message({
+          type: 'error',
+          message: '分组名不能为空',
         })
-        .then((res) => {
-          // console.log(res);
-          if (res.result) {
-            this.rename = false
-            this.verbaltrickList()
-          }
-        })
+      } else {
+        this.$network
+          .post('/material-service/verbaltrickgroup/update', {
+            id: this.groupId,
+            name: this.wordTitle,
+          })
+          .then((res) => {
+            // console.log(res);
+            if (res.result) {
+              this.rename = false
+              this.verbaltrickList()
+            }
+          })
+      }
     },
     // 新建分组baoc
     saveBut() {
@@ -1139,6 +1150,7 @@ export default {
 /deep/ .el-input__inner {
   height: 80px;
   line-height: 80px;
+  font-size: 28px;
 }
 .van-action-sheet__header {
   height: 88px;

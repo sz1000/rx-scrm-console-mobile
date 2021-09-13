@@ -69,7 +69,17 @@ hgroup,
 menu,
 nav,
 section {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+/deep/.el-textarea {
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+/deep/.el-input[type='text'] {
+  -webkit-appearance: none;
+
 }
 
 /* 图片自适应 */
