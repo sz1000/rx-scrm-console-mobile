@@ -63,7 +63,7 @@
       </div>
       <ul class="tree-box">
         <!-- 最外层 一级 -->
-        <li v-for="(parent,index) in treeData"
+        <li v-for="(parent, index) in treeData"
             :key="index"
             class="all-group">
           <div class="tree-header">
@@ -73,7 +73,9 @@
               <i class="el-icon-caret-bottom"
                  v-show="parent.isOpen"></i>
               <span class="header-name"
-                    @click="groupNameList(parent,index)">{{parent.name}}</span>
+                    @click="groupNameList(parent, index)">{{
+                parent.name
+              }}</span>
             </div>
             <!-- <div class="header-r">
           <div @click="moreDot(parent)">
@@ -92,16 +94,16 @@
                v-show="parent.isOpen">
             <!-- 第二级 -->
             <ul class="child-box">
-              <li v-for="(child,childidx) in parent.children"
+              <li v-for="(child, childidx) in parent.children"
                   :key="childidx">
-                <div class="tree-header ">
+                <div class="tree-header">
                   <div class="header-left child-title">
                     <i class="el-icon-caret-right"
                        v-show="!child.isOpen"></i>
                     <i class="el-icon-caret-bottom"
                        v-show="child.isOpen"></i>
                     <span class="header-name"
-                          @click="groupNameList(child,index)">{{child.name}}</span>
+                          @click="groupNameList(child, index)">{{ child.name }}</span>
                   </div>
                   <div class="header-r"
                        v-show="moreSet == child.id">
@@ -118,18 +120,18 @@
                   </div>
                 </div>
                 <ul v-show="child.isOpen">
-                  <li v-for="(oneitem,oneidx) in child.items"
-                      :key='oneidx'
+                  <li v-for="(oneitem, oneidx) in child.items"
+                      :key="oneidx"
                       class="word-box">
                     <div class="group-box">
                       <img class="group_img"
                            src="../../images/group.png"
                            alt=""
                            @click="shareText(oneitem)" />
-                      <span class="word-title">{{oneitem.title}}</span>
+                      <span class="word-title">{{ oneitem.title }}</span>
                     </div>
                     <div class="word-list">
-                      <div v-for="(list,lidx) in oneitem.contentList"
+                      <div v-for="(list, lidx) in oneitem.contentList"
                            :key="lidx"
                            class="slot-box">
                         <div class="text_img">
@@ -139,7 +141,7 @@
                                @click="firstShare(list)" />
 
                           <div class="text-value">
-                            {{list.value}}
+                            {{ list.value }}
                           </div>
                         </div>
                       </div>
@@ -150,17 +152,17 @@
                      v-show="child.isOpen">
                   <!-- 第三级 -->
                   <ul class="child-box">
-                    <li v-for="(grandson,grandindex) in child.children"
+                    <li v-for="(grandson, grandindex) in child.children"
                         :key="grandindex"
                         class="word-box">
-                      <div class="tree-header ">
+                      <div class="tree-header">
                         <div class="header-left three-title">
                           <i class="el-icon-caret-right"
                              v-show="!grandson.isOpen"></i>
                           <i class="el-icon-caret-bottom"
                              v-show="grandson.isOpen"></i>
                           <span class="header-name"
-                                @click="groupNameList(grandson,index)">{{grandson.name}}</span>
+                                @click="groupNameList(grandson, index)">{{ grandson.name }}</span>
                         </div>
                         <div class="header-r"
                              v-show="moreSet == grandson.id">
@@ -179,18 +181,20 @@
                       <div class="tree-body"
                            v-show="grandson.isOpen">
                         <ul>
-                          <li v-for="(grandword,grandidx) in grandson.items"
-                              :key='grandidx'
+                          <li v-for="(grandword, grandidx) in grandson.items"
+                              :key="grandidx"
                               class="word-box">
                             <div class="group-box">
                               <img class="group_img"
                                    src="../../images/group.png"
                                    alt=""
                                    @click="shareText(grandword)" />
-                              <span class="word-title">{{grandword.title}}</span>
+                              <span class="word-title">{{
+                                grandword.title
+                              }}</span>
                             </div>
                             <div class="word-list">
-                              <div v-for="(list,lidx) in grandword.contentList"
+                              <div v-for="(list, lidx) in grandword.contentList"
                                    :key="lidx"
                                    class="slot-box">
                                 <div class="text_img">
@@ -200,7 +204,7 @@
                                        @click="firstShare(list)" />
 
                                   <div class="text-value">
-                                    {{list.value}}
+                                    {{ list.value }}
                                   </div>
                                 </div>
                               </div>
@@ -216,7 +220,6 @@
           </div>
         </li>
       </ul>
-
     </div>
     <!-- 新建分组 -->
     <van-action-sheet v-model="newshow"
@@ -457,7 +460,6 @@ export default {
     moreDot() {
       this.listTite = !this.listTite
     },
-
     //列表点击
     clickList() {
       this.showList = !this.showList
