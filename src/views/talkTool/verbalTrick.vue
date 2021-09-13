@@ -49,34 +49,59 @@
         </span>
       </div>
       <!-- 查询 -->
-      <div class="searchInput">
-        <input
-          type="text"
-          class="input"
-          v-model="inputValue"
-          placeholder="请输入内容"
-        />
-        <span @click="queryCenten" class="searchBtn">查询</span>
+      <!-- <div class="searchInput">
+        <input type="text"
+               class="input"
+               v-model="inputValue"
+               placeholder="请输入内容" />
+        <span @click="queryCenten"
+              class="searchBtn">查询</span>
+      </div> -->
+      <!-- center列表-->
+      <div class="newgrouping">
+        <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
+        <span class="add-grp" @click="addGroups(tabClick)">添加分组</span>
       </div>
-      <!-- center列表  @click="addGroups"-->
-      <div class="pd-24">
-        <div class="newgrouping">
-          <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
-          <span class="add-grp" @click="addGroups(tabClick)">添加分组</span>
-        </div>
-        <div>
-          <div class="tree-box">
-            <div v-for="(item, i) in treeData" :key="i + 'out'" class="out-li">
-              <div class="tree-header">
-                <span class="header-left jianto">
-                  <span :class="item.isOpen ? 'cenr' : 'cenrs'"></span>
-                </span>
-                <span class="header-mid" @click="groupNameList(item, i)"
-                  >{{ item.name }}
-                </span>
-                <div class="header-right" v-if="i == actDot">
-                  <div class="morePosition">
-                    <div class="" @click="moreDot">
+      <ul class="tree-box">
+        <!-- 最外层 一级 -->
+        <li v-for="(parent, index) in treeData" :key="index" class="all-group">
+          <div class="tree-header">
+            <div class="header-left">
+              <i class="el-icon-caret-right" v-show="!parent.isOpen"></i>
+              <i class="el-icon-caret-bottom" v-show="parent.isOpen"></i>
+              <span class="header-name" @click="groupNameList(parent, index)">{{
+                parent.name
+              }}</span>
+            </div>
+            <!-- <div class="header-r">
+          <div @click="moreDot(parent)">
+            <img style="width: 28px; height: 28px"
+                 src="../../images/icon_more@2x.png"
+                 alt="" />
+          </div>
+          <ul class="listAlat-box"
+              v-if="listTite">
+            <li @click="rechristen(item)">重命名</li>
+            <li @click="openDelete(item)">删除</li>
+          </ul>
+        </div> -->
+          </div>
+          <div class="tree-body" v-show="parent.isOpen">
+            <!-- 第二级 -->
+            <ul class="child-box">
+              <li v-for="(child, childidx) in parent.children" :key="childidx">
+                <div class="tree-header">
+                  <div class="header-left child-title">
+                    <i class="el-icon-caret-right" v-show="!child.isOpen"></i>
+                    <i class="el-icon-caret-bottom" v-show="child.isOpen"></i>
+                    <span
+                      class="header-name"
+                      @click="groupNameList(child, index)"
+                      >{{ child.name }}</span
+                    >
+                  </div>
+                  <div class="header-r" v-show="moreSet == child.id">
+                    <div @click="moreDot(child)">
                       <img
                         style="width: 28px; height: 28px"
                         src="../../images/icon_more@2x.png"
@@ -84,172 +109,135 @@
                       />
                     </div>
                     <ul class="listAlat-box" v-if="listTite">
-                      <li @click="rechristen(item)">重命名</li>
-                      <li @click="openDelete(item)">删除</li>
+                      <li @click="rechristen(child)">重命名</li>
+                      <li @click="openDelete(child)">删除</li>
                     </ul>
                   </div>
                 </div>
-              </div>
-              <div class="tree-body" v-show="item.isOpen">
-                <div
-                  class="out-panel"
-                  v-for="(group, gi) in item.items"
-                  :key="gi"
-                >
-                  <div>
-                    <!-- <p>{{ item.title }}</p> -->
-                    <div class="warp_group">
+                <ul v-show="child.isOpen">
+                  <li
+                    v-for="(oneitem, oneidx) in child.items"
+                    :key="oneidx"
+                    class="word-box"
+                  >
+                    <div class="group-box">
                       <img
                         class="group_img"
                         src="../../images/group.png"
                         alt=""
-                        @click="shareText(group)"
+                        @click="shareText(oneitem)"
                       />
-                      <p class="title_verba">{{ group.title }}</p>
+                      <span class="word-title">{{ oneitem.title }}</span>
                     </div>
-                    <div class="item-box">
+                    <div class="word-list">
                       <div
-                        v-for="(chi, c) in group.contentList"
-                        :key="c + 'in'"
-                        class="cen_item"
-                        @click.stop="_down(chi)"
+                        v-for="(list, lidx) in oneitem.contentList"
+                        :key="lidx"
+                        class="slot-box"
                       >
-                        <!-- <img :src="chi.icon" alt="" />
-                  <div>
-                    <p>{{ chi.title }}</p>
-                    <p class="gray">{{ chi.size }}</p>
-                  </div> -->
                         <div class="text_img">
                           <img
                             class="share_img"
                             src="../../images/share_two@2x.png"
                             alt=""
-                            @click="firstShare(chi)"
+                            @click="firstShare(list)"
                           />
-                        </div>
-                        <div class="sop-text">
-                          <div class="list_box">
-                            <div class="sop_imgWarp">
-                              <!-- <div class="img-up">
-                          <img :src="chi.icon" alt="" />
-                        </div> -->
-                              <div class="center_img">
-                                <p class="img_text">{{ chi.value }}</p>
-                                <p class="img_size">{{ chi.size }}</p>
-                              </div>
-                            </div>
+
+                          <div class="text-value">
+                            {{ list.value }}
                           </div>
                         </div>
                       </div>
-
-                      <!-- <div class="up"
-                           @click="item.isOpen = false">
-                        {{ item.label }}-收起
-                      </div> -->
                     </div>
-                  </div>
-                </div>
-                <div class="child-panel">
-                  <!-- 子分组 -->
-                  <div
-                    v-for="(sub, k) in item.children"
-                    :key="k + 'chi'"
-                    class="out-li"
-                  >
-                    <div class="tree-header">
-                      <span class="header-left">
-                        <span :class="sub.isOpen ? 'cenr' : 'cenrs'"></span>
-                      </span>
-                      <span
-                        class="header-mid"
-                        @click.stop="groupchildrenList(sub, k)"
-                        >{{ sub.name }}
-                        <!-- <span class="gray">({{ sub.length }})</span> -->
-                      </span>
-                      <div class="header-right" v-if="k == chiDot">
-                        <div class="morePosition">
-                          <div class="" @click="moreChiDot">
+                  </li>
+                </ul>
+                <div class="tree-body" v-show="child.isOpen">
+                  <!-- 第三级 -->
+                  <ul class="child-box">
+                    <li
+                      v-for="(grandson, grandindex) in child.children"
+                      :key="grandindex"
+                      class="word-box"
+                    >
+                      <div class="tree-header">
+                        <div class="header-left three-title">
+                          <i
+                            class="el-icon-caret-right"
+                            v-show="!grandson.isOpen"
+                          ></i>
+                          <i
+                            class="el-icon-caret-bottom"
+                            v-show="grandson.isOpen"
+                          ></i>
+                          <span
+                            class="header-name"
+                            @click="groupNameList(grandson, index)"
+                            >{{ grandson.name }}</span
+                          >
+                        </div>
+                        <div class="header-r" v-show="moreSet == grandson.id">
+                          <div @click="moreDot(grandson)">
                             <img
                               style="width: 28px; height: 28px"
                               src="../../images/icon_more@2x.png"
                               alt=""
                             />
                           </div>
-                          <ul class="listAlat-box" v-if="chiTitle">
-                            <li @click="rechristen">重命名</li>
-                            <li @click="openDelete(item)">删除</li>
+                          <ul class="listAlat-box" v-if="listTite">
+                            <li @click="rechristen(grandson)">重命名</li>
+                            <li @click="openDelete(grandson)">删除</li>
                           </ul>
                         </div>
                       </div>
-                      <!-- <span
-                  class="header-right"
-                  @click.stop="sub.isOpen = !sub.isOpen"
-                >
-                  展开                
-                </span> -->
-                      <!-- <div class="header-right" v-if="k == actDots">
-                  <div class="morePosition">
-                    <div class="" @click="moreDots">
-                      <img
-                        style="width: 28px; height: 28px"
-                        src="../../images/icon_more@2x.png"
-                        alt=""
-                      />
-                    </div>
-                    <ul class="listAlat-box" v-if="listTites">
-                      <li @click="rechristens">重命名</li>
-                      <li @click="openDeletes">删除</li>
-                    </ul>
-                  </div>
-                </div> -->
-                    </div>
-                    <div
-                      v-show="sub.isOpen"
-                      class="out-panel"
-                      v-for="(ch, ci) in sub.items"
-                      :key="ci"
-                    >
-                      <p>{{ sub.title }}</p>
-                      <div class="child-box">
-                        <div
-                          v-for="(ss, s) in ch.contentList"
-                          :key="s + 'in-in'"
-                          class="item-li"
-                          @click.stop="_down(ss)"
-                        >
-                          <!-- <img :src="ss.icon"
-                               alt="" /> -->
+                      <div class="tree-body" v-show="grandson.isOpen">
+                        <ul>
+                          <li
+                            v-for="(grandword, grandidx) in grandson.items"
+                            :key="grandidx"
+                            class="word-box"
+                          >
+                            <div class="group-box">
+                              <img
+                                class="group_img"
+                                src="../../images/group.png"
+                                alt=""
+                                @click="shareText(grandword)"
+                              />
+                              <span class="word-title">{{
+                                grandword.title
+                              }}</span>
+                            </div>
+                            <div class="word-list">
+                              <div
+                                v-for="(list, lidx) in grandword.contentList"
+                                :key="lidx"
+                                class="slot-box"
+                              >
+                                <div class="text_img">
+                                  <img
+                                    class="share_img"
+                                    src="../../images/share_two@2x.png"
+                                    alt=""
+                                    @click="firstShare(list)"
+                                  />
 
-                          <div class="text_img">
-                            <img
-                              class="share_img"
-                              src="../../images/share_two@2x.png"
-                              alt=""
-                              @click="firstShare(ss)"
-                            />
-                          </div>
-                          <div class="text-box">
-                            <div class="chi-box">
-                              <div class="center_img">
-                                <p class="img_text">{{ ss.value }}</p>
-                                <p class="img_size">{{ ss.size }}</p>
+                                  <div class="text-value">
+                                    {{ list.value }}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                        <!-- <div class="up"
-                             @click="ss.isOpen = false">
-                          {{ item.label }}-{{ sub.label }}收起
-                        </div> -->
+                          </li>
+                        </ul>
                       </div>
-                    </div>
-                  </div>
+                    </li>
+                  </ul>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
     <!-- 新建分组 -->
     <van-action-sheet v-model="newshow" title="新建分组">
@@ -313,7 +301,7 @@
             <el-input
               v-model="wordTitle"
               placeholder="请输入内容"
-              maxlength="10"
+              maxlength="20"
               show-word-limit
             ></el-input>
           </div>
@@ -397,13 +385,11 @@
 <script>
 import SelectTree from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import GroupLists from "./gropLIst.vue";
 import commonFun from "../../utils/commonToken";
 export default {
   components: {
     SelectTree,
     // Details,
-    GroupLists,
   },
   data() {
     return {
@@ -417,6 +403,8 @@ export default {
         age: "",
       },
       options: [],
+      listTite: false,
+      moreSet: null,
       treeData: [],
       showList: false, //列表显示
       callbox: false,
@@ -442,7 +430,14 @@ export default {
 
       value: null,
       normalizer(node) {
-        // console.log(node.id);
+        // console.log(node.id)
+        if (
+          node.children == null ||
+          node.children == "null" ||
+          node.children.length == 0
+        ) {
+          delete node.children;
+        }
         return {
           id: node.id,
           label: node.name,
@@ -452,7 +447,6 @@ export default {
       actDot: 0,
       chiDot: null,
       listTite: false,
-      chiTitle: false,
       firstList: [
         {
           // name: '111',
@@ -496,9 +490,6 @@ export default {
     moreDot() {
       this.listTite = !this.listTite;
     },
-    moreChiDot() {
-      this.chiTitle = !this.chiTitle;
-    },
     //列表点击
     clickList() {
       this.showList = !this.showList;
@@ -510,32 +501,39 @@ export default {
     },
     // 点击新增按钮
     newaddClick() {
-      // this.newshow = true;
-      this.$router.push("/talkTool/added");
+      this.$router.push({
+        path: "/talkTool/added",
+        query: {
+          type: this.tabClick,
+        },
+      });
     },
     //添加分组
     addGroups(v) {
       console.log("---v-----", v);
       this.newshow = true;
+      this.value = null;
+      this.groupingName = "";
     },
     // 重命名
-    rechristen() {
+    rechristen(val) {
+      // console.log('----重命名----', val)
       this.rename = true;
       this.listTite = false;
-      this.chiTitle = false;
+      this.wordTitle = val.name;
     },
     //删除
     openDelete(v) {
       console.log(v);
-      this.$confirm(
-        "此操作将删除本分组及分组内全部内容，是否确认删除分组？",
-        "提示",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "error",
-        }
-      )
+      this.$dialog
+        .confirm({
+          title: "提示",
+          message: "此操作将删除本分组及分组内全部内容，是否确认删除分组？",
+          className: "deleteWordBtn",
+          confirmButtonText: "是",
+          cancelButtonText: "否",
+          messageAlign: "left",
+        })
         .then(() => {
           this.$network
             .get("/material-service/verbaltrickgroup/delete", {
@@ -584,7 +582,7 @@ export default {
         .get("/material-service/verbaltrickgroup/getlist", {
           parentId: 0,
           groupType: this.tabClick,
-          type: 1,
+          type: 0,
         })
         .then((res) => {
           // this.$toast.clear()
@@ -611,31 +609,34 @@ export default {
     },
     // 点击分组列表名字
     groupNameList(value, i) {
-      this.actDot = i;
-      this.chiDot = null;
+      console.log("----分组---", value);
+      this.moreSet = value.id;
       this.groupId = value.id;
-      console.log(value.id);
       value.isOpen = !value.isOpen; //控制折叠与展开
       // console.log(11111)
-      this.$network
-        .get("/material-service/verbaltrick/getlist", {
-          value: "",
-          groupId: value.id,
-          // groupType: this.tabClick,
-        })
-        .then((res) => {
-          // console.log(res)
-          if (res.result) {
-            // this.newclickList
-            this.$set(value, "items", res.data.iPage.records);
-            // console.log('--------', this.treeData)
-          }
-        });
+      if (value.id == 0) {
+        return;
+      } else {
+        this.$network
+          .get("/material-service/verbaltrick/getlist", {
+            value: "",
+            groupId: value.id,
+            // groupType: this.tabClick,
+          })
+          .then((res) => {
+            // console.log(res)
+            if (res.result) {
+              // this.newclickList
+              this.$set(value, "items", res.data.iPage.records);
+              // console.log('--------', this.treeData)
+            }
+          });
+      }
     },
     // 子分组标题
     groupchildrenList(valuel, i) {
       this.chiDot = i;
-      this.actDot = null;
+      // this.actDot = null
 
       valuel.isOpen = !valuel.isOpen;
       this.groupId = valuel.id;
@@ -658,7 +659,7 @@ export default {
     },
     //分享
     shareText(v) {
-      // console.log(v)
+      console.log("----分享分组----", v);
       this.$network
         .get("/user-service/m/user/getticket", {
           url: location.href,
@@ -715,7 +716,7 @@ export default {
     },
     //分享子列表
     firstShare(v) {
-      // console.log(v)
+      console.log("分享话术----", v);
       // alert(JSON.parse(JSON.stringify(v)))
       this.$network
         .get("/user-service/m/user/getticket", {
@@ -827,18 +828,25 @@ export default {
     //重命名 保存
     saveName() {
       // console.log('---this.saveName---', this.groupId)
-      this.$network
-        .post("/material-service/verbaltrickgroup/update", {
-          id: this.groupId,
-          name: this.wordTitle,
-        })
-        .then((res) => {
-          // console.log(res);
-          if (res.result) {
-            this.rename = false;
-            this.verbaltrickList();
-          }
+      if (this.wordTitle == "") {
+        this.$message({
+          type: "error",
+          message: "分组名不能为空",
         });
+      } else {
+        this.$network
+          .post("/material-service/verbaltrickgroup/update", {
+            id: this.groupId,
+            name: this.wordTitle,
+          })
+          .then((res) => {
+            // console.log(res);
+            if (res.result) {
+              this.rename = false;
+              this.verbaltrickList();
+            }
+          });
+      }
     },
     // 新建分组baoc
     saveBut() {
@@ -915,29 +923,107 @@ export default {
 .tetx {
   font-size: 50px;
 }
-.all_group {
-  .custom-tree-node {
-    font-size: 14px;
-    width: 100%;
-    .text_node {
-      display: inline-block;
-      width: 100%;
-      .nodeName {
+
+.tree-box {
+  padding: 0 24px;
+  font-size: 28px;
+  background: #fff;
+  .tree-header {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 28px;
+    padding: 5px 16px;
+    .header-left {
+      span {
         display: inline-block;
-        margin-left: 5px;
-        width: 70%;
-        vertical-align: middle;
+      }
+      .header-name {
+      }
+    }
+    .header-r {
+      .listAlat-box {
+        padding: 24px 0;
+        width: 236px;
+        height: 208px;
+        background: #ffffff;
+        box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        box-sizing: border-box;
+        li {
+          width: 188px;
+          height: 80px;
+          margin: 0 auto;
+          line-height: 80px;
+        }
+      }
+    }
+    .child-title {
+      padding-left: 20px;
+    }
+    .three-title {
+      // padding-left: 40px;
+    }
+  }
+  .tree-body {
+    margin-top: 24px;
+  }
+  .word-box {
+    padding-left: 40px;
+    .group-box {
+      display: flex;
+      align-items: center;
+      margin: 28px 0;
+      .group_img {
+        width: 48px;
+        height: 48px;
+      }
+      .group-box {
+        flex: 1;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      .look_more {
-        position: absolute;
-        right: 0;
+    }
+    .word-list {
+      // width: 638px;
+      // height: 752px;
+      background: #fafbff;
+      border-radius: 8px;
+      border: 1px solid #d9dae4;
+      padding: 24px;
+      .slot-box {
+        margin-bottom: 24px;
+        .text_img {
+          display: flex;
+          align-items: center;
+          .share_img {
+            width: 26px;
+            height: 26px;
+            margin-right: 23px;
+          }
+          .text-value {
+            width: 542px;
+            height: 88px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #d9dae4;
+            padding: 24px;
+            box-sizing: border-box;
+            overflow-y: scroll;
+          }
+        }
       }
     }
   }
+  .sun-box {
+  }
 }
+
 .headerTitle {
   background: #fff;
   padding: 0 24px;
@@ -967,159 +1053,7 @@ export default {
   padding: 0 24px;
   margin-top: 32px;
 }
-.pd-24 {
-  padding: 0 24px;
-  // height: 100%;
-}
-.tree-box {
-  background: white;
-  font-size: 14px;
-  color: #323232;
-  .corner {
-    position: absolute;
-    top: 5px;
-    width: 0px;
-    height: 0px;
-    border: 10px solid #a0a0a0;
-    // border-bottom-color: transparent;
-    // border-left-color: transparent;
-    // border-right-color: transparent;
-    border-bottom-color: transparent;
-    border-right-color: transparent;
-    border-top-color: transparent;
-  }
-  .gray {
-    color: gray;
-  }
-  .tree-header {
-    display: flex;
-    // line-height: 20px;
-    font-weight: 400;
-    color: #3c4353;
-    font-size: 28px;
-    margin-top: 24px;
-    .header-left {
-      position: relative;
-      flex: 1;
-      min-width: 20px;
-      max-width: 20px;
-      margin-right: 5px;
-    }
-    .header-mid {
-      flex: 1;
-    }
-    .header-right {
-      position: relative;
-      white-space: nowrap;
-      max-width: 60px;
-      min-width: 60px;
-      flex: 1;
-      margin-left: 5px;
-    }
-  }
-  .out-panel {
-    padding-left: 20px;
-  }
-  .child-box {
-    padding: 20px;
-    background-color: #f5f5f5;
-    .item-li {
-      display: flex;
-      .text_img {
-        display: flex;
-        align-items: center;
-      }
-      .text-box {
-        border: 1px solid #d9dae4;
-        border-radius: 6px;
-        height: 160px;
-        background: #fff;
-        width: 100%;
-        .img_text {
-        }
-      }
-    }
-  }
-  .out-li {
-    margin-bottom: 20px;
-  }
-  .item-box {
-    padding: 20px;
-    background-color: #f5f5f5;
-    .item-li {
-      display: flex;
-      background: white;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      .text_img {
-        // margin-right: 24px;
-      }
-      p {
-        font-size: 14px;
-        font-weight: 400;
-        color: #3c4353;
-      }
-      // img {
-      //   width: 112px;
-      //   height: 112px;
-      // }
-    }
-  }
-  .up {
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-.listAlat-box {
-  padding: 24px 0;
-  width: 236px;
-  height: 208px;
-  background: #ffffff;
-  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  box-sizing: border-box;
-  li {
-    width: 188px;
-    height: 80px;
-    margin: 0 auto;
-    line-height: 80px;
-  }
-}
-.morePosition {
-  position: relative;
-}
-.rotate {
-  transform: rotate(90deg);
-}
-.jianto {
-}
 
-// 展开
-.cenr {
-  top: 5px;
-  width: 0px;
-  height: 0px;
-  border: 10px solid #a0a0a0;
-  border-bottom-color: transparent;
-  border-right-color: transparent;
-  border-left-color: transparent;
-  display: inline-block;
-}
-
-// 折叠
-.cenrs {
-  top: 5px;
-  width: 0px;
-  height: 0px;
-  border: 10px solid #a0a0a0;
-  border-bottom-color: transparent;
-  border-right-color: transparent;
-  border-top-color: transparent;
-  display: inline-block;
-}
 .warp-bg {
   height: 100%;
   background: #fff;
@@ -1249,6 +1183,7 @@ export default {
 /deep/ .el-input__inner {
   height: 80px;
   line-height: 80px;
+  font-size: 28px;
 }
 .van-action-sheet__header {
   height: 88px;
@@ -1289,7 +1224,8 @@ export default {
 .newgrouping {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
+  margin: 24px 0;
+  padding-left: 24px;
 }
 .newgrp-img {
   width: 28px;
@@ -1536,108 +1472,7 @@ export default {
   left: 50%;
   transform: translate(-50%, 0);
 }
-//
-.tree-box {
-  background: white;
-  font-size: 14px;
-  color: #323232;
-  .corner {
-    position: absolute;
-    top: 5px;
-    width: 0px;
-    height: 0px;
-    border: 10px solid #a0a0a0;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
-    border-right-color: transparent;
-  }
-  .gray {
-    color: gray;
-  }
-  .tree-header {
-    display: flex;
-    // line-height: 20px;
-    font-weight: 400;
-    color: #3c4353;
-    font-size: 28px;
-    margin-top: 24px;
-    .header-left {
-      position: relative;
-      flex: 1;
-      min-width: 20px;
-      max-width: 20px;
-      margin-right: 5px;
-    }
-    .header-mid {
-      flex: 1;
-    }
-    .header-right {
-      position: relative;
-      white-space: nowrap;
-      max-width: 60px;
-      min-width: 60px;
-      flex: 1;
-      margin-left: 5px;
-    }
-  }
-  .out-panel {
-    padding-left: 20px;
-  }
-  .out-li {
-    margin-bottom: 20px;
-  }
-  .item-box {
-    padding: 20px;
-    background-color: #f5f5f5;
-    .item-li {
-      // display: flex;
-      margin-bottom: 20px;
-      background: white;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      // img {
-      //   width: 112px;
-      //   height: 112px;
-      // }
-    }
-  }
-  .up {
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-.cen_item {
-  display: flex;
-  align-items: center;
-}
-.cen_img {
-  flex: 1;
-  // max-width: 60px;
-  width: 112px;
-  height: 112px;
-  // min-width: 60px;
-  margin-right: 10px;
-}
-// sop
-.sop-box {
-  height: 750px;
-  background: #fafbff;
-  border-radius: 8px;
-  border: 1px solid #d9dae4;
-  padding: 24px;
-}
-.sop-newsText {
-  font-weight: 400;
-  color: #3c4353;
-  font-size: 28px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-  .sop-time {
-    margin-right: 20px;
-  }
-}
+
 .line-border {
   width: 8px;
   height: 28px;

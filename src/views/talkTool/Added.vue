@@ -29,24 +29,16 @@
             </label>
           </SelectTree>
         </div>
-        <!-- <div class="input_text">
-          <span class="groupname">话术标题:</span>
 
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="wordTitle"
-            maxlength="10"
-            show-word-limit
-          ></el-input>
-        </div> -->
         <div class="input_text">
+
           <span class="groupname"><span style="color: red">*</span>话术标题:</span>
           <el-input v-model.trim="wordTitle"
                     placeholder="请输入话术标题名称"
                     show-word-limit
-                    maxlength="10"
+                    maxlength="20"
                     @change="changeTitle"></el-input>
+
         </div>
       </div>
       <div class="techniqueBox">
@@ -168,7 +160,7 @@ export default {
           })
           // console.log('------templist----', templist)
           let params = {
-            groupType: this.groupType,
+            groupType: this.$route.query.type,
             groupId: this.value,
             title: this.wordTitle,
             contentList: templist,
@@ -261,8 +253,8 @@ export default {
   line-height: 87px;
   font-size: 28px;
   color: #3c4353;
-  border-top: 1px solid #f0f2f7;
-  border-bottom: 1px solid #f0f2f7;
+  border-top: 2px solid #f0f2f7;
+  border-bottom: 2px solid #f0f2f7;
   .backPage {
     width: 150px;
     .van-icon {
@@ -298,19 +290,25 @@ export default {
 }
 .groupname {
   display: inline-block;
-  width: 120px;
+  min-width: 120px;
   line-height: 32px;
   text-align: right;
   margin-right: 8px;
 }
 /deep/.el-input {
-  // height: 80px;
-  // width: 562px;
+  font-size: 28px;
   flex: 1;
+}
+/deep/.el-textarea {
+  border: 2px solid #d9dae4;
+  font-size: 28px;
+  outline: none;
+  transform: rotateZ(360deg);
 }
 .input_text {
   display: flex;
   margin-top: 20px;
+  // justify-content: space-between;
   align-items: center;
   height: 80px;
   line-height: 80px;
@@ -348,7 +346,7 @@ export default {
   line-height: 68px;
   background: rgba(65, 104, 246, 0.04);
   border-radius: 4px;
-  border: 1px solid #4168f6;
+  border: 2px solid #4168f6;
   color: #4168f6;
   margin-right: 20px;
   display: flex;
@@ -361,7 +359,7 @@ export default {
   border-radius: 4px;
   text-align: center;
   padding: 0;
-  border: 1px solid #d9dae4;
+  border: 2px solid #d9dae4;
 }
 .operation {
   display: flex;
@@ -384,11 +382,12 @@ export default {
   height: 64px;
   line-height: 64px;
   padding-right: 16px;
-  border-top: 1px solid #f0f2f7;
+  border-top: 2px solid #f0f2f7;
 }
 /deep/ .vue-treeselect__control {
   height: 80px;
   width: 580px;
+  font-size: 28px;
 }
 /deep/.vue-treeselect__placeholder,
 .vue-treeselect__single-value {

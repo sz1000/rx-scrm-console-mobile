@@ -69,7 +69,17 @@ hgroup,
 menu,
 nav,
 section {
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+/deep/.el-textarea {
+  -webkit-appearance: none !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+/deep/.el-input[type='text'] {
+  -webkit-appearance: none;
+
 }
 
 /* 图片自适应 */
@@ -267,6 +277,7 @@ a:hover {
   .van-dialog__message {
     margin-top: 24px;
     font-size: 28px;
+    line-height: 35px;
   }
 
   .van-dialog__footer {
@@ -313,6 +324,16 @@ a:hover {
 .deleteBtn {
   width: 702px;
   height: 244px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #eeeeee;
+  font-size: 28px;
+  .commonVant()
+}
+
+.deleteWordBtn {
+  width: 702px;
+  height: 284px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #eeeeee;
