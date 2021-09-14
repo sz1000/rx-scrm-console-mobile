@@ -21,13 +21,19 @@
                 <span class="message">1条消息待发送</span>
               </template>
               <template #right>
-                <span class="ck-text">查看</span><van-icon name="arrow-down" />
+                <span class="ck-text">查看</span>
+                <van-icon name="arrow-down" />
               </template>
             </van-nav-bar>
           </div>
         </div>
       </div> -->
       <!-- tabMenu -->
+      <div class="top-message">
+        <img src="../../images/bell.png"
+             alt="">
+        <span>如需新增话术请至电脑端修改</span>
+      </div>
       <div class="tabMenu">
         <div class="tabBtn">
           <span :class="{ active: tabClick == 1 }"
@@ -123,10 +129,10 @@
                       :key="oneidx"
                       class="word-box">
                     <div class="group-box">
-                      <img class="group_img"
+                      <!-- <img class="group_img"
                            src="../../images/group.png"
                            alt=""
-                           @click="shareText(oneitem)" />
+                           @click="shareText(oneitem)" /> -->
                       <span class="word-title">{{ oneitem.title }}</span>
                     </div>
                     <div class="word-list">
@@ -184,10 +190,10 @@
                               :key="grandidx"
                               class="word-box">
                             <div class="group-box">
-                              <img class="group_img"
+                              <!-- <img class="group_img"
                                    src="../../images/group.png"
                                    alt=""
-                                   @click="shareText(grandword)" />
+                                   @click="shareText(grandword)" /> -->
                               <span class="word-title">{{
                                 grandword.title
                               }}</span>
@@ -428,7 +434,7 @@ export default {
     }
   },
   created() {
-    // commonFun.getWxAppid()
+    commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {
@@ -670,31 +676,31 @@ export default {
                 jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
               },
               function (res) {
-                for (let i = 0; i < v.contentList.length; i++) {
-                  wx.invoke(
-                    'sendChatMessage',
-                    {
-                      msgtype: 'text', //消息类型，必填
-                      // enterChat: true,
-                      text: {
-                        content: v.contentList[i].value, //文本内容
-                      },
+                // for (let i = 0; i < v.contentList.length; i++) {
+                wx.invoke(
+                  'sendChatMessage',
+                  {
+                    msgtype: 'text', //消息类型，必填
+                    // enterChat: true,
+                    text: {
+                      content: v.contentList[i].value, //文本内容
                     },
-                    function (res) {
-                      if (res.err_msg == 'sendChatMessage:ok') {
-                        //发送成功
-                      }
+                  },
+                  function (res) {
+                    if (res.err_msg == 'sendChatMessage:ok') {
+                      //发送成功
                     }
-                  )
-                }
+                  }
+                )
               }
+              // }
             )
           })
         })
     },
     //分享子列表
     firstShare(v) {
-      console.log('分享话术----', v)
+      // console.log('分享话术----', v)
       // alert(JSON.parse(JSON.stringify(v)))
       this.$network
         .get('/user-service/m/user/getticket', {
@@ -1033,6 +1039,25 @@ export default {
 .warp-bg {
   height: 100%;
   background: #fff;
+  .top-message {
+    width: 702px;
+    height: 68px;
+    background: rgba(65, 104, 246, 0.04);
+    border: 1px solid #4168f6;
+    border-radius: 8px;
+    margin: 30px auto;
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    img {
+      width: 24px;
+      height: 29px;
+      margin-right: 16px;
+    }
+    span {
+      display: inline-block;
+    }
+  }
 }
 // 头部
 .van-nav-bar {

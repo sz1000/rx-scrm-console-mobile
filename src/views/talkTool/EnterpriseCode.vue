@@ -60,7 +60,7 @@
                    @click="sendCode(item, index)">
                 <!-- <span> <img src="../../images/send.png"
                        alt=""></span> -->
-                下载二维码
+                查看二维码
               </div>
             </div>
             <div class="rightInfo"
