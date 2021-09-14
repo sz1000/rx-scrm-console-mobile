@@ -360,6 +360,7 @@
 import SelectTree from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import commonFun from '../../utils/commonToken'
+import { _throttle } from '../../utils/tool'
 export default {
   components: {
     SelectTree,
@@ -573,6 +574,7 @@ export default {
           if (res.result) {
             this.options = res.data
             this.treeData = res.data
+            this.treeData[0].isOpen = true
           }
         })
     },
@@ -810,8 +812,8 @@ export default {
       this.newshow = false
     },
     //重命名 保存
-    saveName() {
-      // console.log('---this.saveName---', this.groupId)
+    saveName: _throttle(function () {
+      console.log('---this.saveName---', this.groupId)
       if (this.wordTitle == '') {
         this.$message({
           type: 'error',
@@ -834,10 +836,10 @@ export default {
             console.log(err)
           })
       }
-    },
+    }, 3000),
+
     // 新建分组baoc
-    saveBut() {
-      // this.newclickList()
+    saveBut: _throttle(function () {
       let params = {
         name: this.groupingName,
         parentId: this.groupingId || 0,
@@ -857,8 +859,9 @@ export default {
           }
         })
 
-      console.log(this.groupingName)
-    },
+      // console.log(this.groupingName)
+    }, 3000),
+
     // 点击点点点，来卡片
     handleCommand(command) {
       // this.$message("click on item " + command);
