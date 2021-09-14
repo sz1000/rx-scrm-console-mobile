@@ -778,7 +778,7 @@ export default {
     //点击查询
     queryCenten() {
       // this.groupNameList();
-      console.log(this.inputValue)
+      // console.log(this.inputValue)
       this.verbaltrickList()
     },
     // 删除
@@ -1039,13 +1039,14 @@ export default {
 .warp-bg {
   height: 100%;
   background: #fff;
+  padding-top: 30px;
   .top-message {
     width: 702px;
     height: 68px;
     background: rgba(65, 104, 246, 0.04);
     border: 1px solid #4168f6;
     border-radius: 8px;
-    margin: 30px auto;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     padding-left: 16px;
@@ -1056,6 +1057,7 @@ export default {
     }
     span {
       display: inline-block;
+      font-size: 28px;
     }
   }
 }

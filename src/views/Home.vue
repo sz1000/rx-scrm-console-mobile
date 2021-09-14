@@ -64,7 +64,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import CommonHome from '../utils/CommonHome'
 
