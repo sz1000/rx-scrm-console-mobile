@@ -139,12 +139,13 @@ export default {
           activeIndex: 'text',
         },
       ]
+      this.$router.go(-1)
     },
     // 点击确定  // 上传标题链接
     dialogFormSure() {
       // this.filterList(this.wordsList)
       let isTrue = this.filterList(this.wordsList)
-      console.log(isTrue)
+      // console.log(isTrue)
       if (isTrue[0]) {
         if (this.value == '' || this.wordTitle == '') {
           this.$message({

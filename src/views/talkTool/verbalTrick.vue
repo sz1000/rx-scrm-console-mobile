@@ -53,7 +53,7 @@
         <span @click="queryCenten"
               class="searchBtn">查询</span>
       </div> -->
-      <!-- center列表-->
+      <!-- 添加分组-->
       <div class="newgrouping">
         <img class="newgrp-img"
              src="../../images/iconadd.png"
@@ -61,6 +61,7 @@
         <span class="add-grp"
               @click="addGroups(tabClick)">添加分组</span>
       </div>
+      <!-- 列表 -->
       <ul class="tree-box">
         <!-- 最外层 一级 -->
         <li v-for="(parent, index) in treeData"
@@ -429,7 +430,7 @@ export default {
     }
   },
   created() {
-    // commonFun.getWxAppid()
+    commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {
@@ -919,6 +920,7 @@ export default {
         display: inline-block;
       }
       .header-name {
+        // margin-left: 16px;
       }
     }
     .header-r {
@@ -933,6 +935,7 @@ export default {
         right: 0;
         text-align: center;
         box-sizing: border-box;
+        z-index: 10;
         li {
           width: 188px;
           height: 80px;
@@ -960,6 +963,7 @@ export default {
       .group_img {
         width: 48px;
         height: 48px;
+        margin-right: 16px;
       }
       .group-box {
         flex: 1;

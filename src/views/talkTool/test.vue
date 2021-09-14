@@ -320,6 +320,7 @@ export default {
       .group_img {
         width: 48px;
         height: 48px;
+        // margin-right: 16px;
       }
       .group-box {
         flex: 1;
