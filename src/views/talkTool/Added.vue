@@ -20,7 +20,7 @@
                       :normalizer="normalizer"
                       @select="changeSelect">
             <label slot="option-label"
-                   slot-scope="{ node  }"
+                   slot-scope="{ node }"
                    class="labelClassName">
               <img src="../../images/wenjian.png"
                    alt=""
@@ -31,20 +31,18 @@
         </div>
 
         <div class="input_text">
-
           <span class="groupname"><span style="color: red">*</span>话术标题:</span>
           <el-input v-model.trim="wordTitle"
                     placeholder="请输入话术标题名称"
                     show-word-limit
                     maxlength="20"
                     @change="changeTitle"></el-input>
-
         </div>
       </div>
       <div class="techniqueBox">
         <ComponentWord :single="index"
                        :itemInfo="item"
-                       :allList='wordsList'
+                       :allList="wordsList"
                        @fnDelete="fnDelete"
                        v-for="(item, index) in wordsList"
                        :key="index"></ComponentWord>

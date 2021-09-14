@@ -37,12 +37,10 @@
                 class="mycule"
                 @click="myclue(2)">公共话术</span>
         </div>
-        <span class="addBtn"
-              @click="newaddClick">
-          <img src="../../images/icon_add@2x.png"
-               alt="" />
+        <!-- <span class="addBtn" @click="newaddClick">
+          <img src="../../images/icon_add@2x.png" alt="" />
           新增
-        </span>
+        </span> -->
       </div>
       <!-- 查询 -->
       <!-- <div class="searchInput">
@@ -250,7 +248,7 @@
             <span class="groupname"><span style="color: red">*</span> 分组名称:</span>
             <el-input v-model="groupingName"
                       placeholder="请输入内容"
-                      maxlength="10"
+                      maxlength="20"
                       show-word-limit></el-input>
           </div>
           <div class="buttonWarp">
@@ -825,6 +823,9 @@ export default {
               this.rename = false
               this.verbaltrickList()
             }
+          })
+          .catch((err) => {
+            console.log(err)
           })
       }
     },
