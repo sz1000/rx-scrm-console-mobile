@@ -211,7 +211,7 @@ export default {
       }
     },
     fnDelete(index) {
-      console.log('2222222222------------', index, this.wordsList)
+      // console.log('2222222222------------', index, this.wordsList)
       if (this.wordsList.length > 1) {
         this.wordsList.splice(index, 1)
       }
@@ -224,7 +224,7 @@ export default {
       this.$network
         .get('/material-service/verbaltrickgroup/getlist', {
           parentId: 0,
-          groupType: 1,
+          groupType: this.$route.query.type,
           type: 1,
         })
         .then((res) => {

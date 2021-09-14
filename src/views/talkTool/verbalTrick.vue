@@ -430,7 +430,7 @@ export default {
     }
   },
   created() {
-    commonFun.getWxAppid()
+    // commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {
@@ -919,9 +919,6 @@ export default {
       span {
         display: inline-block;
       }
-      .header-name {
-        // margin-left: 16px;
-      }
     }
     .header-r {
       .listAlat-box {
@@ -946,9 +943,6 @@ export default {
     }
     .child-title {
       padding-left: 20px;
-    }
-    .three-title {
-      // padding-left: 40px;
     }
   }
   .tree-body {
@@ -1002,8 +996,6 @@ export default {
         }
       }
     }
-  }
-  .sun-box {
   }
 }
 

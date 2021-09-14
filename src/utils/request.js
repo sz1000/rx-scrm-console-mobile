@@ -24,8 +24,8 @@ let instance = axios.create({
 instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
-            const token = getStoreValue('token') //生产token
-                // const token = localStorage.getItem('token') //本地token
+            // const token = getStoreValue('token') //生产token
+            const token = localStorage.getItem('token') //本地token
             if (token) {
                 config.headers.common.token = token
             }
@@ -34,7 +34,7 @@ instance.interceptors.request.use(
         },
         (error) => Promise.reject(error)
     )
-    //     //响应
+    //响应
 instance.interceptors.response.use(
     // 响应包含以下信息data,status,statusText,headers,config
     // (res) => (res.status === 200 ? Promise.resolve(res) : Promise.reject(res)),
