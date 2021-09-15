@@ -435,7 +435,7 @@ export default {
     }
   },
   created() {
-    commonFun.getWxAppid()
+    // commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {
@@ -926,6 +926,16 @@ export default {
     height: 28px;
     padding: 5px 16px;
     .header-left {
+      display: flex;
+      .header-name {
+        flex: 1;
+        max-width: 500px;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: middle;
+      }
       span {
         display: inline-block;
       }

@@ -27,6 +27,7 @@
         "@vue/cli-service": "~4.5.0",
         "lib-flexible": "^0.3.2",
         "px2rem-loader": "^0.1.9",
+        "vue-loader": "^14.2.4",
         "vue-template-compiler": "^2.6.11"
     },
     "browserslist": [
