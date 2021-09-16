@@ -4,43 +4,74 @@
     <div class="customInfo">
       <div class="iconName">
         <div v-if="imageUser">
-          <img :src="imageUser"
-               alt="" />
+          <img :src="imageUser" alt="" />
         </div>
-        <div class="flag"
-             v-else> {{name ? name.substr(0,1) : ''}}</div>
+        <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
         <div class="nameSex">
           <span>{{ name }}</span>
-          <span>{{ date}}</span>
+          <span>{{ date }}</span>
         </div>
       </div>
     </div>
     <div class="main-warp">
+      <van-form @submit="onSubmit">
+        <van-field name="radio" class="borderNone" required label="客户类型:">
+          <template #input>
+            <van-radio-group v-model="radio" direction="horizontal">
+              <van-radio name="1" icon-size="16px"> 新客户</van-radio>
+              <van-radio name="2" icon-size="16px">已有客户</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
 
-      <van-field name="radio"
-                 required
-                 label="客户类型">
-        <template #input>
-          <van-radio-group v-model="radio"
-                           direction="horizontal">
-            <van-radio name="1">单选框 1</van-radio>
-            <van-radio name="2">单选框 2</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
-      <van-field v-model="phone"
-                 required
-                 label="对应客户:"
-                 :rules="[{ required: true, message: '请输入' }]"
-                 maxlength='15' />
+        <van-field
+          v-if="radio == 2"
+          required
+          :value="value"
+          label="对应客户:"
+          placeholder="请选择"
+          @click="showPicker = true"
+          right-icon="arrow-down"
+          :rules="[{ required: true, message: '请选择对应客户名称' }]"
+        />
 
-      <!-- <div style="margin: 16px;">
-          <van-button round
-                      block
-                      type="info"
-                      native-type="submit">提交</van-button>
-        </div> -->
+        <van-field
+          v-if="radio == 1"
+          v-model="client"
+          required
+          placeholder="请输入"
+          label="对应客户:"
+          :rules="[{ required: true, message: '请输入对应客户名称' }]"
+        />
+        <van-field v-model="phone" label="手机号码:" placeholder="请输入" />
+        <van-field v-model="address" label="客户地址:" placeholder="请输入" />
+        <van-field
+          class="remark"
+          v-model="remark"
+          rows="2"
+          label="备注:"
+          type="textarea"
+          maxlength="200"
+          placeholder="请输入"
+          show-word-limit
+        />
 
+        <van-button class="punch" native-type="submit">去打卡</van-button>
+      </van-form>
+      <!-- <div style="margin: 16px">
+        <van-button round block type="info" native-type="submit"
+          >提交</van-button
+        >
+      </div> -->
+      <!-- <div class="punch" @click="punchClock">去打卡</div> -->
+      <van-popup v-model="showPicker" position="bottom">
+        <van-picker
+          show-toolbar
+          :columns="columns"
+          @confirm="onConfirm"
+          @cancel="showPicker = false"
+        />
+      </van-popup>
     </div>
   </div>
 </template>
@@ -48,15 +79,33 @@
 export default {
   data() {
     return {
-      imageUser: '',
-      name: '员工姓名',
-      date: '2010-01-01',
-      radio: '',
-      phone: '',
-    }
+      imageUser: "",
+      name: "员工姓名",
+      date: "2010-01-01",
+      radio: "1", //客户类型
+      client: "", //对应客户
+      address: "", //客户地址
+      remark: "", //备注
+      phone: "", //手机号
+      //
+      value: "",
+      columns: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      showPicker: false,
+    };
   },
-  methods: {},
-}
+  methods: {
+    // punchClock() {
+    //   console.log(111);
+    // },
+    onConfirm(value) {
+      this.value = value;
+      this.showPicker = false;
+    },
+    onSubmit(values) {
+      console.log("submit", values);
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 .out-warp {
@@ -111,6 +160,7 @@ export default {
   .main-warp {
     margin-top: 48px;
     /deep/ .van-cell {
+      margin-bottom: 60px;
       padding: 0;
       height: 80px;
       line-height: 80px;
@@ -139,8 +189,8 @@ export default {
             }
           }
         }
-        // border: 1px solid #d9dae4;
-        // border-radius: 8px;
+        border: 1px solid #d9dae4;
+        border-radius: 8px;
         .van-field__control {
           padding-left: 16px;
         }
@@ -150,6 +200,38 @@ export default {
         // }
       }
     }
+    .borderNone {
+      /deep/.van-cell__value {
+        border: none;
+      }
+    }
+    .remark {
+      height: 400px;
+      /deep/.van-cell__value {
+        // height: 400px;
+        .van-field__body {
+          // height: 400px;
+          .van-field__control {
+            height: 350px;
+          }
+        }
+      }
+    }
   }
+}
+/deep/ .van-field__right-icon {
+  padding-right: 20px;
+}
+
+.punch {
+  width: 702px;
+  height: 80px;
+  background: #4168f6;
+  border-radius: 8px;
+  text-align: center;
+  line-height: 80px;
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 400;
 }
 </style>
