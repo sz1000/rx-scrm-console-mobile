@@ -3,22 +3,22 @@
     <div class="customAccont">客户统计</div>
     <div class="cardContent">
       <div class="box card1">
-        <span>1000</span>
-        <span>客户总数</span>
+        <span>{{clues}}</span>
+        <span>我的线索</span>
       </div>
       <div class="box card2">
-        <span>1000</span>
-        <span>今日新增</span>
+        <span>{{cluSee}}</span>
+        <span>线索公海</span>
       </div>
     </div>
     <div class="cardContent">
       <div class="box card3">
-        <span>1000</span>
-        <span>客户流失数</span>
+        <span>{{customer}}</span>
+        <span>我的客户</span>
       </div>
       <div class="box card4">
-        <span>1000</span>
-        <span>发请申请数</span>
+        <span>{{customerSee}}</span>
+        <span>客户公海</span>
       </div>
     </div>
     <div class="customAccont tool">拓客工具</div>
@@ -80,6 +80,10 @@ export default {
     return {
       userId: '',
       token: '',
+      clues: '',
+      cluSee: '',
+      customer: '',
+      customerSee: '',
     }
   },
   created() {
@@ -91,6 +95,16 @@ export default {
     CommonHome.getWxToken()
   },
   mounted() {
+    setTimeout(() => {
+      this.$network
+        .get('/customer-service/cluecustomer/homedata')
+        .then((res) => {
+          this.clues = res.data.myThread
+          this.cluSee = res.data.derThread
+          this.customer = res.data.myCustomer
+          this.customerSee = res.data.derCustomer
+        })
+    }, 2000)
     // this.$toast.clear()
   },
   methods: {},
@@ -140,19 +154,19 @@ export default {
       }
     }
     .card1 {
-      background: url('../images/kehuzongshu.png') no-repeat;
+      background: url('../images/three.png') no-repeat;
       background-size: contain;
     }
     .card2 {
-      background: url('../images/xinzeng.png') no-repeat;
+      background: url('../images/one.png') no-repeat;
       background-size: contain;
     }
     .card3 {
-      background: url('../images/liushi.png') no-repeat;
+      background: url('../images/four.png') no-repeat;
       background-size: contain;
     }
     .card4 {
-      background: url('../images/shenqing.png') no-repeat;
+      background: url('../images/two.png') no-repeat;
       background-size: contain;
     }
   }
