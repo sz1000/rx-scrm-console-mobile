@@ -6,10 +6,19 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">企微活码</span>
+      <span class="textTitle">渠道活码</span>
     </div>
     <div class="tabMenu">
-      <div class="tabBtn">全部活码</div>
+      <!-- <div class="tabBtn">全部活码</div> -->
+      <div class="tabBtn">
+        <span :class="{ active: type == 1 }"
+              class="mycule"
+              @click="tabClick(1)">我的活码</span>
+        <span :class="{ active: type == 2 }"
+              class="mycule"
+              @click="tabClick(2)">全部活码</span>
+      </div>
+
       <span class="addBtn"
             @click="addCode">
         <img src="../../images/icon_add@2x.png"
@@ -313,6 +322,7 @@ import CommonHome from '../../utils/CommonHome'
 export default {
   data() {
     return {
+      type: 1,
       inputValue: '',
       liveList: [],
       showAdd: false,
@@ -375,6 +385,14 @@ export default {
   },
   methods: {
     formatDate,
+    tabClick(v) {
+      this.type = v
+      this.page = 1
+      this.liveList = []
+      this.inputValue = ''
+      this.getData()
+    },
+
     inquire: _throttle(function () {
       this.page = 1
       this.liveList = []
@@ -399,6 +417,7 @@ export default {
           page: this.page,
           limit: this.pageSize,
           livename: this.inputValue,
+          type: this.type,
         })
         .then((res) => {
           this.$toast.clear()
@@ -691,17 +710,25 @@ export default {
     }
     .tabBtn {
       font-size: 28px;
-      font-weight: 600;
-      padding-left: 16px;
+      // font-weight: 600;
+      // padding-left: 16px;
       position: relative;
-      &::before {
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: 0;
-        width: 8px;
-        height: 28px;
-        background: #4168f6;
+      span:nth-child(2) {
+        display: inline-block;
+        margin-left: 16px;
+      }
+      .active {
+        color: #4168f6;
+        position: relative;
+        &::after {
+          content: '';
+          width: 112px;
+          height: 4px;
+          background: #4168f6;
+          position: absolute;
+          bottom: -40px;
+          left: 0;
+        }
       }
     }
   }

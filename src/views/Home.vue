@@ -27,7 +27,7 @@
         <div class="commonBtn">
           <img src="../images/huoma.png"
                alt="" />
-          <span>企微活码</span>
+          <span>渠道活码</span>
         </div>
       </router-link>
       <router-link to="/talkTool/channelConfiguration">
@@ -81,7 +81,7 @@ export default {
       duration: 1000,
       loadingType: 'spinner',
     })
-    CommonHome.getWxToken()
+    // CommonHome.getWxToken()
   },
   mounted() {
     // this.$toast.clear()
