@@ -25,9 +25,14 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+// 群画像
+import  Groupportrait from "../views/portrait/Groupportrait"
+// 群列表
+import Grouplist from '../views/customerManage/Grouplist.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
+
 
 Vue.use(VueRouter)
 
@@ -87,6 +92,15 @@ const routes = [{
             bodyClass: 'InformationDetail',
         },
         component: InformationDetail,
+    },
+    // 群画像
+    {
+        path: '/groupportrait',
+        name: 'groupportrait',
+        meta: {
+            bodyClass: 'groupportrait',
+        },
+        component: Groupportrait,
     },
 
     // 拓客工具
@@ -156,6 +170,15 @@ const routes = [{
                     // keepAlive: true
                 },
                 component: DetailCules,
+            },
+            // 群列表
+            {
+                path: 'grouplist',
+                name: 'grouplist',
+                meta: {
+                    bodyClass: 'grouplist',
+                },
+                component: Grouplist,
             },
 
             // 客户画像
