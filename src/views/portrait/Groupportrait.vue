@@ -3,7 +3,8 @@
     <div class="portrait-box">
       <div class="flex">
         <div class="portrait_img">
-          <img src="../../images/groupico.png" alt="" />
+          <img src="../../images/groupico.png"
+               alt="" />
         </div>
         <div>
           <p class="portrait_tite">
@@ -33,28 +34,27 @@
     </div>
     <!-- 列表 -->
     <div>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
+      <van-list v-model="loading"
+                :finished="finished"
+                finished-text="没有更多了"
+                @load="onLoad">
         <ul>
           <!--  -->
-          <li
-            class="lsits list-warp"
-            v-for="(item, index) in dataList"
-            :key="index"
-          >
+          <li class="lsits list-warp"
+              v-for="(item, index) in dataList"
+              :key="index">
             <div class="flex">
               <div class="portrait_img">
-                <img src="../../assets/logo.png" alt="" />
+                <img src="../../assets/logo.png"
+                     alt="" />
               </div>
               <div>
                 <p class="portrait_tite">
                   {{ item.name }}
-                  <span class="firm" v-if="item.admintype == 0">@企业</span>
-                  <span class="weix" v-if="item.admintype == 1">@微信</span>
+                  <span class="firm"
+                        v-if="item.admintype == 0">@企业</span>
+                  <span class="weix"
+                        v-if="item.admintype == 1">@微信</span>
                 </p>
                 <p class="portrait_message">
                   {{ item.type }}
@@ -80,22 +80,23 @@
   </div>
 </template>         
 <script>
-import { formatDate } from "../../utils/tool.js";
+import { formatDate } from '../../utils/tool.js'
+import commonFun from '../../utils/commonToken'
 export default {
   data() {
     return {
       loading: false,
       finished: true,
-      chatId: "",
+      chatId: '',
       // 群信息
       datatTite: {
-        name: "",
-        usersum: "",
-        createTime: "",
-        owmerName: "",
-        usersum: "",
-        leavesum: "",
-        joinsum: "",
+        name: '',
+        usersum: '',
+        createTime: '',
+        owmerName: '',
+        usersum: '',
+        leavesum: '',
+        joinsum: '',
       },
       pageInfo: {
         page: 1,
@@ -103,66 +104,71 @@ export default {
       },
       // 群用户列表
       dataList: [],
-    };
+    }
   },
   created() {
-    // console.log(this.$route.query.id + "----id--");
-    this.chatId = this.$route.query.id;
-    console.log(this.$route.query.id + "----id--");
-    this.getGroupDetail();
-    this.getList();
+    // commonFun.getWxAppid()
+  },
+  mounted() {
+    setTimeout(() => {
+      // console.log(this.$route.query.id + '----id--')
+      this.getGroupDetail()
+      this.getList()
+    }, 3000)
   },
   methods: {
     onLoad() {
-      this.page++;
-      this.getList();
+      this.page++
+      this.getList()
     },
     getGroupDetail() {
       this.$network
-        .get("/customer-service/group/getGroupDetail", {
-          chatId: this.chatId,
+        .get('/customer-service/group/getGroupDetail', {
+          // chatId: this.chatId,
+          chatId: localStorage.getItem('chatId'),
         })
         .then((res) => {
-          console.log(res);
-          this.datatTite.name = res.data.name;
-          this.datatTite.usersum = res.data.usersum;
-          this.datatTite.owmerName = res.data.owmerName;
+          console.log(res)
+          this.datatTite.name = res.data.name
+          this.datatTite.usersum = res.data.usersum
+          this.datatTite.owmerName = res.data.owmerName
           this.datatTite.createTime = formatDate(
             res.data.createTime,
-            "yyyy-MM-dd hh:mm:ss"
-          );
-          this.datatTite.joinsum = res.data.joinsum;
-          this.datatTite.leavesum = res.data.leavesum;
-        });
+            'yyyy-MM-dd hh:mm:ss'
+          )
+          this.datatTite.joinsum = res.data.joinsum
+          this.datatTite.leavesum = res.data.leavesum
+        })
     },
     getList() {
       this.$network
-        .get("/customer-service/group/getGroupUserPage", {
-          chatId: this.chatId,
+        .get('/customer-service/group/getGroupUserPage', {
+          // chatId: this.chatId,
+          chatId: localStorage.getItem('chatId'),
           ...this.pageInfo,
         })
         .then((res) => {
-          let tempList = res.data.data.records;
+          let tempList = res.data.data.records
           tempList.forEach((item) => {
             item.joinTime = item.joinTime
-              ? formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss")
-              : "-";
-            item.type = item.type == "1" ? "企业成员" : "外部联系人";
-            if (item.joinScene == "1") {
-              item.joinScene = "直接邀请入群";
-            } else if (item.joinScene == "2") {
-              item.joinScene = "通过邀请链接入群";
+              ? formatDate(item.joinTime, 'yyyy-MM-dd hh:mm:ss')
+              : '-'
+            item.type = item.type == '1' ? '企业成员' : '外部联系人'
+            if (item.joinScene == '1') {
+              item.joinScene = '直接邀请入群'
+            } else if (item.joinScene == '2') {
+              item.joinScene = '通过邀请链接入群'
             } else {
-              item.joinScene = "通过扫描群二维码入群";
+              item.joinScene = '通过扫描群二维码入群'
             }
-            item.showName = item.showName ? item.showName : item.name;
-          });
-          this.dataList = tempList;
+            item.showName = item.showName ? item.showName : item.name
+          })
+          this.dataList = tempList
           // this.total = res.data.data.total;
-        });
+        })
     },
   },
-};
+}
 </script>
 <style scoped>
 .warp-portrait {
