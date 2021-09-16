@@ -12,7 +12,9 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-// // 客户管理
+//打卡
+import PunchCard from '../views/clockPage/PunchCard.vue'
+// 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
 import Clues from '../views/customerManage/Clues.vue'
@@ -103,6 +105,12 @@ const routes = [{
         component: Groupportrait,
     },
 
+    //打卡
+    {
+        path: '/punchCard',
+        name: 'punchCard',
+        component: PunchCard,
+    },
     // 拓客工具
     {
         path: '/talkTool',
