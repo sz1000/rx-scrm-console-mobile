@@ -61,13 +61,13 @@
           <span>客户</span>
         </div>
       </router-link>
-      <router-link to="/customerManage/Grouplist">
+      <!-- <router-link to="/customerManage/Grouplist">
         <div class="commonBtn">
           <img src="../images/grouplist.png"
                alt="" />
           <span>群列表</span>
         </div>
-      </router-link>
+      </router-link> -->
     </div>
   </div>
 </template>
@@ -88,7 +88,7 @@ export default {
       duration: 1000,
       loadingType: 'spinner',
     })
-    // CommonHome.getWxToken()
+    CommonHome.getWxToken()
   },
   mounted() {
     // this.$toast.clear()
