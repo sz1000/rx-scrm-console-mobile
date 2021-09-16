@@ -25,11 +25,7 @@ instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
             // const token = getStoreValue('token') //生产token
-<<<<<<< HEAD
-                const token = localStorage.getItem('token') //本地token
-=======
             const token = localStorage.getItem('token') //本地token
->>>>>>> fe37610aed41ea9a772d3cab10a20951b2ee823a
             if (token) {
                 config.headers.common.token = token
             }
