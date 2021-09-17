@@ -14,6 +14,7 @@ import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
+import ClockPage from '../views/clockPage/ClockPage.vue'
 // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
@@ -28,13 +29,12 @@ import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 // 群画像
-import  Groupportrait from "../views/portrait/Groupportrait"
+import Groupportrait from '../views/portrait/Groupportrait'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
-
 
 Vue.use(VueRouter)
 
@@ -109,7 +109,15 @@ const routes = [{
     {
         path: '/punchCard',
         name: 'punchCard',
+        meta: {
+            keepAlive: true,
+        },
         component: PunchCard,
+    },
+    {
+        path: '/clockPage',
+        name: 'clockPage',
+        component: ClockPage,
     },
     // 拓客工具
     {

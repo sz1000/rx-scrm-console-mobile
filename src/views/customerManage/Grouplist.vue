@@ -2,37 +2,33 @@
   <div>
     <div>
       <div class="headerTitle">
-        <div class="backPage" @click="goBack">
+        <div class="backPage"
+             @click="goBack">
           <van-icon name="arrow-left" />
           返回
         </div>
         <span class="textTitle">群列表</span>
       </div>
       <div class="searchInput">
-        <input
-          type="text"
-          class="input"
-          v-model="inputValue"
-          placeholder="请输入群名称"
-        />
-        <span class="searchBtn" @click="inquire">查询</span>
+        <input type="text"
+               class="input"
+               v-model="inputValue"
+               placeholder="请输入群名称" />
+        <span class="searchBtn"
+              @click="inquire">查询</span>
       </div>
     </div>
     <!-- 列表 -->
     <div>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-        :offset="20"
-      >
+      <van-list v-model="loading"
+                :finished="finished"
+                finished-text="没有更多了"
+                @load="onLoad"
+                :offset="20">
         <ul>
-          <li
-            v-for="(item, index) in dataList"
-            :key="index"
-            @click="clickChatid(item.chatId)"
-          >
+          <li v-for="(item, index) in dataList"
+              :key="index"
+              @click="clickChatid(item.chatId)">
             <div class="lsits">
               <p class="name_tite">
                 群名称： <span class="num">{{ item.name || "暂无" }}</span>
@@ -63,24 +59,24 @@
   </div>
 </template>
 <script>
-import { formatDate } from "../../utils/tool.js";
+import { formatDate } from '../../utils/tool.js'
 export default {
   data() {
     return {
-      inputValue: "",
+      inputValue: '',
       loading: false,
       finished: true,
       page: 1, //请求第几页
       pageSize: 10, //每页请求的数量
       dataList: [],
-    };
+    }
   },
   created() {
-    this.getGroupList();
+    this.getGroupList()
   },
   methods: {
     goBack() {
-      this.$router.push("/home");
+      this.$router.push('/home')
     },
     // 获取输入群名称
     // groupName(value) {
@@ -90,35 +86,35 @@ export default {
     // },
     // 点击查询
     inquire() {
-      console.log(this.inputValue);
-      this.getGroupList();
+      console.log(this.inputValue)
+      this.getGroupList()
     },
     onLoad() {
-      console.log(1);
-      this.page++;
-      this.getGroupList();
+      // console.log(1)
+      this.page++
+      this.getGroupList()
     },
     // 请求群列表
     getGroupList() {
       this.$network
-        .get("/customer-service/group/list", {
+        .get('/customer-service/group/list', {
           page: this.page,
           limit: this.pageSize,
           name: this.inputValue,
-          owmer: "",
-          createTimeSta: "",
-          createTimeEnd: "",
+          owmer: '',
+          createTimeSta: '',
+          createTimeEnd: '',
         })
         .then((res) => {
-          console.log(res);
-          let tempList = res.data.groupEntityPage.records;
+          console.log(res)
+          let tempList = res.data.groupEntityPage.records
           tempList.forEach((item) => {
             item.createTime = item.createTime
-              ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-              : "-";
-          });
-          this.dataList = tempList;
-        });
+              ? formatDate(item.createTime, 'yyyy-MM-dd hh:mm:ss')
+              : '-'
+          })
+          this.dataList = tempList
+        })
     },
     //获取群id跳转
     clickChatid(id) {
@@ -133,7 +129,7 @@ export default {
       // });
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

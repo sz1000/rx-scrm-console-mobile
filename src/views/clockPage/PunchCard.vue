@@ -22,7 +22,7 @@
                    required
                    label="客户类型:">
           <template #input>
-            <van-radio-group v-model="ruleForm.radio"
+            <van-radio-group v-model="radio"
                              direction="horizontal"
                              @change="changeRadio">
               <van-radio name="1"
@@ -32,29 +32,34 @@
             </van-radio-group>
           </template>
         </van-field>
-        <van-field v-if="ruleForm.radio == 2"
+        <van-field v-if="radio == 2"
                    required
-                   :value="ruleForm.customerVal"
+                   :value="customerVal"
+                   name="customerVal"
                    label="对应客户:"
                    placeholder="请选择"
                    @click="showPicker = true"
                    right-icon="arrow-down"
                    :rules="[{ required: true, message: '请选择对应客户名称' }]" />
 
-        <van-field v-if="ruleForm.radio == 1"
-                   v-model="ruleForm.client"
+        <van-field v-if="radio == 1"
+                   v-model="client"
+                   name="client"
                    required
                    placeholder="请输入"
                    label="对应客户:"
                    :rules="[{ required: true, message: '请输入' }]" />
-        <van-field v-model="ruleForm.phone"
+        <van-field v-model="phone"
+                   name="phone"
                    label="手机号码:"
                    placeholder="请输入" />
-        <van-field v-model="ruleForm.address"
+        <van-field v-model="address"
+                   name="address"
                    label="客户地址:"
                    placeholder="请输入" />
         <van-field class="remark"
-                   v-model="ruleForm.remark"
+                   name="remark"
+                   v-model="remark"
                    rows="2"
                    label="备注:"
                    type="textarea"
@@ -83,38 +88,31 @@ export default {
       imageUser: '',
       name: '员工姓名',
       date: '2010-01-01',
-      ruleForm: {
-        client: '', //对应客户
-        address: '', //客户地址
-        remark: '', //备注
-        phone: '', //手机号
-        customerVal: '', //选择客户
-        radio: '1', //客户类型
-      },
+      ruleForm: {},
+      client: '', //对应客户
+      address: '', //客户地址
+      remark: '', //备注
+      phone: '', //手机号
+      customerVal: '', //选择客户
+      radio: '1', //客户类型
       columns: [{ name: 'hahah', id: 1 }],
       showPicker: false,
     }
   },
   methods: {
     onConfirm(value) {
-      // console.log('------', value)
-      this.ruleForm.customerVal = value.name
+      this.customerVal = value.name
       this.showPicker = false
     },
     changeRadio(val) {
-      this.ruleForm = {
-        client: '',
-        address: '',
-        remark: '',
-        phone: '',
-        customerVal: '',
-        radio: val,
-      }
-      // console.log('-----radio----', this.ruleForm)
+      // console.log('-----val----', val)
+      this.address = ''
+      this.phone = ''
+      this.remark = ''
     },
     onSubmit(values) {
-      console.log('------ruleForm---', this.ruleForm)
-      this.$router.push()
+      // console.log('------values---', values)
+      this.$router.push('/clockPage')
     },
   },
 }
