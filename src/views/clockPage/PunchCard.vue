@@ -4,9 +4,11 @@
     <div class="customInfo">
       <div class="iconName">
         <div v-if="imageUser">
-          <img :src="imageUser" alt="" />
+          <img :src="imageUser"
+               alt="" />
         </div>
-        <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
+        <div class="flag"
+             v-else>{{ name ? name.substr(0, 1) : "" }}</div>
         <div class="nameSex">
           <span>{{ name }}</span>
           <span>{{ date }}</span>
@@ -15,62 +17,61 @@
     </div>
     <div class="main-warp">
       <van-form @submit="onSubmit">
-        <van-field name="radio" class="borderNone" required label="客户类型:">
+        <van-field name="radio"
+                   class="borderNone"
+                   required
+                   label="客户类型:">
           <template #input>
-            <van-radio-group v-model="radio" direction="horizontal">
-              <van-radio name="1" icon-size="16px"> 新客户</van-radio>
-              <van-radio name="2" icon-size="16px">已有客户</van-radio>
+            <van-radio-group v-model="ruleForm.radio"
+                             direction="horizontal"
+                             @change="changeRadio">
+              <van-radio name="1"
+                         icon-size="16px"> 新客户</van-radio>
+              <van-radio name="2"
+                         icon-size="16px">已有客户</van-radio>
             </van-radio-group>
           </template>
         </van-field>
+        <van-field v-if="ruleForm.radio == 2"
+                   required
+                   :value="ruleForm.customerVal"
+                   label="对应客户:"
+                   placeholder="请选择"
+                   @click="showPicker = true"
+                   right-icon="arrow-down"
+                   :rules="[{ required: true, message: '请选择对应客户名称' }]" />
 
-        <van-field
-          v-if="radio == 2"
-          required
-          :value="value"
-          label="对应客户:"
-          placeholder="请选择"
-          @click="showPicker = true"
-          right-icon="arrow-down"
-          :rules="[{ required: true, message: '请选择对应客户名称' }]"
-        />
+        <van-field v-if="ruleForm.radio == 1"
+                   v-model="ruleForm.client"
+                   required
+                   placeholder="请输入"
+                   label="对应客户:"
+                   :rules="[{ required: true, message: '请输入' }]" />
+        <van-field v-model="ruleForm.phone"
+                   label="手机号码:"
+                   placeholder="请输入" />
+        <van-field v-model="ruleForm.address"
+                   label="客户地址:"
+                   placeholder="请输入" />
+        <van-field class="remark"
+                   v-model="ruleForm.remark"
+                   rows="2"
+                   label="备注:"
+                   type="textarea"
+                   maxlength="200"
+                   placeholder="请输入"
+                   show-word-limit />
 
-        <van-field
-          v-if="radio == 1"
-          v-model="client"
-          required
-          placeholder="请输入"
-          label="对应客户:"
-          :rules="[{ required: true, message: '请输入对应客户名称' }]"
-        />
-        <van-field v-model="phone" label="手机号码:" placeholder="请输入" />
-        <van-field v-model="address" label="客户地址:" placeholder="请输入" />
-        <van-field
-          class="remark"
-          v-model="remark"
-          rows="2"
-          label="备注:"
-          type="textarea"
-          maxlength="200"
-          placeholder="请输入"
-          show-word-limit
-        />
-
-        <van-button class="punch" native-type="submit">去打卡</van-button>
+        <van-button class="punch"
+                    native-type="submit">去打卡</van-button>
       </van-form>
-      <!-- <div style="margin: 16px">
-        <van-button round block type="info" native-type="submit"
-          >提交</van-button
-        >
-      </div> -->
-      <!-- <div class="punch" @click="punchClock">去打卡</div> -->
-      <van-popup v-model="showPicker" position="bottom">
-        <van-picker
-          show-toolbar
-          :columns="columns"
-          @confirm="onConfirm"
-          @cancel="showPicker = false"
-        />
+      <van-popup v-model="showPicker"
+                 position="bottom">
+        <van-picker show-toolbar
+                    value-key='name'
+                    :columns="columns"
+                    @confirm="onConfirm"
+                    @cancel="showPicker = false" />
       </van-popup>
     </div>
   </div>
@@ -79,33 +80,44 @@
 export default {
   data() {
     return {
-      imageUser: "",
-      name: "员工姓名",
-      date: "2010-01-01",
-      radio: "1", //客户类型
-      client: "", //对应客户
-      address: "", //客户地址
-      remark: "", //备注
-      phone: "", //手机号
-      //
-      value: "",
-      columns: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      imageUser: '',
+      name: '员工姓名',
+      date: '2010-01-01',
+      ruleForm: {
+        client: '', //对应客户
+        address: '', //客户地址
+        remark: '', //备注
+        phone: '', //手机号
+        customerVal: '', //选择客户
+        radio: '1', //客户类型
+      },
+      columns: [{ name: 'hahah', id: 1 }],
       showPicker: false,
-    };
+    }
   },
   methods: {
-    // punchClock() {
-    //   console.log(111);
-    // },
     onConfirm(value) {
-      this.value = value;
-      this.showPicker = false;
+      // console.log('------', value)
+      this.ruleForm.customerVal = value.name
+      this.showPicker = false
+    },
+    changeRadio(val) {
+      this.ruleForm = {
+        client: '',
+        address: '',
+        remark: '',
+        phone: '',
+        customerVal: '',
+        radio: val,
+      }
+      // console.log('-----radio----', this.ruleForm)
     },
     onSubmit(values) {
-      console.log("submit", values);
+      console.log('------ruleForm---', this.ruleForm)
+      this.$router.push()
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .out-warp {
@@ -120,6 +132,7 @@ export default {
     font-size: 34px;
     color: #3c4353;
     font-weight: 500;
+    margin-bottom: 48px;
   }
   .customInfo {
     display: flex;
@@ -164,6 +177,9 @@ export default {
       padding: 0;
       height: 80px;
       line-height: 80px;
+      &::after {
+        border-bottom: 0;
+      }
       .van-cell--required::before {
         top: 0;
         left: 0;
@@ -179,25 +195,20 @@ export default {
         font-weight: 400;
       }
       .van-cell__value {
+        border: 1px solid #d9dae4;
+        border-radius: 8px;
+        .van-field__error-message {
+          display: none;
+        }
         .van-field__body {
           .van-radio-group {
             line-height: 80px;
             height: 80px;
-            .van-radio__icon {
-            }
-            .van-radio__label {
-            }
           }
         }
-        border: 1px solid #d9dae4;
-        border-radius: 8px;
         .van-field__control {
           padding-left: 16px;
         }
-        // .van-field__error-message {
-        //   height: 20px;
-        //   line-height: 20px;
-        // }
       }
     }
     .borderNone {

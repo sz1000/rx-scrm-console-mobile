@@ -275,8 +275,9 @@ export default {
             return
           }
           let newSetArr = this.channelList.concat(rows)
+          // let newSetArr = rows.concat(this.channelList)
           this.channelList = this.unique(newSetArr)
-          console.log(this.channelList.length, this.total)
+          // console.log('--------', this.channelList)
           if (this.channelList.length >= this.total) {
             this.finished = true
           } else {
@@ -305,8 +306,9 @@ export default {
         .then((res) => {
           if (res.result) {
             this.showAdd = false
-            // this.page = 1
+            this.page = 1
             this.addForm = {}
+            this.channelList = []
             this.getData()
           } else {
             this.$message({
