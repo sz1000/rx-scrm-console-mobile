@@ -25,14 +25,14 @@
             <van-radio-group v-model="radio"
                              direction="horizontal"
                              @change="changeRadio">
-              <van-radio name="1"
-                         icon-size="16px"> 新客户</van-radio>
               <van-radio name="2"
+                         icon-size="16px"> 新客户</van-radio>
+              <van-radio name="1"
                          icon-size="16px">已有客户</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field v-if="radio == 2"
+        <van-field v-if="radio == 1"
                    required
                    :value="customerVal"
                    name="customerVal"
@@ -42,20 +42,23 @@
                    right-icon="arrow-down"
                    :rules="[{ required: true, message: '请选择对应客户名称' }]" />
 
-        <van-field v-if="radio == 1"
+        <van-field v-if="radio == 2"
                    v-model="client"
                    name="client"
                    required
                    placeholder="请输入"
+                   maxlength="15"
                    label="对应客户:"
                    :rules="[{ required: true, message: '请输入' }]" />
         <van-field v-model="phone"
                    name="phone"
                    label="手机号码:"
+                   maxlength="11"
                    placeholder="请输入" />
         <van-field v-model="address"
                    name="address"
                    label="客户地址:"
+                   maxlength="60"
                    placeholder="请输入" />
         <van-field class="remark"
                    name="remark"
@@ -78,29 +81,35 @@
                     @confirm="onConfirm"
                     @cancel="showPicker = false" />
       </van-popup>
+
+    </div>
+    <div class="bottom-warp">
+
     </div>
   </div>
 </template>
 <script>
+import { formatDate } from '../../utils/tool'
 export default {
   data() {
     return {
       imageUser: '',
-      name: '员工姓名',
-      date: '2010-01-01',
+      name: '',
+      date: formatDate(new Date().getTime(), 'yyyy-MM-dd'),
       ruleForm: {},
       client: '', //对应客户
       address: '', //客户地址
       remark: '', //备注
       phone: '', //手机号
       customerVal: '', //选择客户
-      radio: '1', //客户类型
-      columns: [{ customerName: 'hahah', clueCustomerNo: 1 }],
+      radio: '2', //客户类型
+      columns: [],
       showPicker: false,
       clueCustomerNo: '',
     }
   },
   mounted() {
+    this.getUserName()
     this.getCustomerList()
   },
   methods: {
@@ -115,13 +124,23 @@ export default {
       this.address = ''
       this.phone = ''
       this.remark = ''
+      this.customerVal = ''
     },
     onSubmit(values) {
       // console.log('------values---', values)
-      this.$router.push({
-        name: 'clockPage',
-        params: { clueCustomerNo: this.clueCustomerNo, ...values },
-      })
+      this.$router.push('clockPage')
+      localStorage.setItem(
+        'addObj',
+        JSON.stringify({ clueCustomerNo: this.clueCustomerNo, ...values })
+      )
+    },
+    getUserName() {
+      this.$network
+        .get('/user-service/punckClock/getPunckClockList')
+        .then((res) => {
+          this.imageUser = res.data.plist[0].avatar
+          this.name = res.data.plist[0].name
+        })
     },
     getCustomerList() {
       this.$network
@@ -137,7 +156,7 @@ export default {
 .out-warp {
   height: 100%;
   background: #fff;
-  padding: 48px 24px;
+  padding: 48px 0;
   .title-area {
     text-align: center;
     height: 48px;
@@ -149,6 +168,7 @@ export default {
     margin-bottom: 48px;
   }
   .customInfo {
+    padding: 0 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -185,6 +205,7 @@ export default {
     }
   }
   .main-warp {
+    padding: 0 24px;
     margin-top: 48px;
     /deep/ .van-cell {
       margin-bottom: 60px;
@@ -242,6 +263,13 @@ export default {
         }
       }
     }
+  }
+  .bottom-warp {
+    height: 112px;
+    border-top: 1px solid #f0f2f7;
+    border-bottom: 1px solid #f0f2f7;
+    background: #fff;
+    margin-top: 48px;
   }
 }
 /deep/ .van-field__right-icon {

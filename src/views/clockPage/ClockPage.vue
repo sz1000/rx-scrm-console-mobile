@@ -77,9 +77,7 @@ export default {
       remark: '111111',
     }
   },
-  created() {
-    console.log('---object---', this.$route.params)
-  },
+  created() {},
   mounted() {
     this.getDateTime()
     this.getLocation()
@@ -96,10 +94,6 @@ export default {
     },
     fnUpdate() {},
     clickCard() {
-      console.log('1111111111111111111')
-      this.prepare = false
-    },
-    getLocation() {
       this.$network
         .get('/user-service/m/user/getticket', {
           url: location.href,
@@ -107,17 +101,12 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: false,
+            debug: true,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
             signature: res.data.signature,
-            jsApiList: [
-              'sendChatMessage',
-              'invoke',
-              'agentConfig',
-              'checkJsApi',
-            ],
+            jsApiList: ['invoke', 'agentConfig', 'checkJsApi'],
           })
           var that = this
           wx.ready(function () {
@@ -129,7 +118,69 @@ export default {
                 timestamp: res.data.agent_config_data.timestamp,
                 nonceStr: res.data.agent_config_data.noncestr,
                 signature: res.data.agent_config_data.signature,
-                jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
+                jsApiList: ['getContext', 'invoke'],
+              },
+              function (res) {
+                alert(JSON.stringify(res))
+                wx.chooseImage({
+                  count: 1, // 默认9
+                  sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                  sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                  defaultCameraMode: 'batch', //表示进入拍照界面的默认模式，目前有normal与batch两种选择，normal表示普通单拍模式，batch表示连拍模式，不传该参数则为normal模式。从3.0.26版本开始支持front和batch_front两种值，其中front表示默认为前置摄像头单拍模式，batch_front表示默认为前置摄像头连拍模式。（注：用户进入拍照界面仍然可自由切换两种模式）
+                  isSaveToAlbum: 1, //整型值，0表示拍照时不保存到系统相册，1表示自动保存，默认值是1
+                  success: function (res) {
+                    alert(JSON.stringify(res))
+                    // var localIds = res.localIds // 返回选定照片的本地ID列表，
+                    // andriod中localId可以作为img标签的src属性显示图片；
+                    // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
+                  },
+                })
+              }
+            )
+          })
+        })
+
+      // let obj = JSON.parse(localStorage.getItem('addObj'))
+      // let params = {
+      //   customerType: obj.radio,
+      //   phone: obj.phone,
+      //   customerPlace: obj.address,
+      //   content: obj.remark,
+      //   customerName: obj.client,
+      //   clueCustomerNo: obj.clueCustomerNo,
+      //   punchPlace: this.addressName,
+      // }
+      // this.$network
+      //   .post('/user-service/punckClock/addPunckClock', params)
+      //   .then()
+      // this.prepare = false
+    },
+    getLocation() {
+      this.$network
+        .get('/user-service/m/user/getticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: ['invoke', 'agentConfig', 'checkJsApi'],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: ['getContext', 'invoke'],
               },
               function (res) {
                 alert(JSON.stringify(res))
