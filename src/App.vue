@@ -16,6 +16,7 @@ export default {}
   height: 100%;
   margin: 0 auto;
   background: #f6f7f9;
+  overflow: hidden;
 }
 //解决ios双击才能选中
 .el-scrollbar {
