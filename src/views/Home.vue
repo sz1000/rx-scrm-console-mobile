@@ -35,13 +35,6 @@
           <span>渠道配置</span>
         </div>
       </router-link>
-      <!-- <router-link to="/talkTool/verbalTrick">
-        <div class="commonBtn">
-          <img src="../images/qudao.png"
-               alt="" />
-          <span>话术</span>
-        </div>
-      </router-link> -->
     </div>
     <div class="customAccont manage">客户管理</div>
     <div class="btnRouter custom">
@@ -57,12 +50,12 @@
           <span>客户</span>
         </div>
       </router-link>
-      <!-- <router-link to="/customerManage/grouplist">
+      <router-link to="/customerManage/grouplist">
         <div class="commonBtn">
           <img src="../images/grouplist.png" alt="" />
           <span>群列表</span>
         </div>
-      </router-link> -->
+      </router-link>
     </div>
   </div>
 </template>

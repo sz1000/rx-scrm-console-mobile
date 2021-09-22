@@ -77,13 +77,20 @@ export default {
       remark: '111111',
     }
   },
+  created() {
+    console.log('---object---', this.$route.params)
+  },
   mounted() {
-    setInterval(() => {
-      this.nowDate = this.formatDate(new Date().getTime(), 'hh:mm')
-    }, 1000)
+    this.getDateTime()
+    this.getLocation()
   },
   methods: {
     formatDate,
+    getDateTime() {
+      setInterval(() => {
+        this.nowDate = this.formatDate(new Date().getTime(), 'hh:mm')
+      }, 1000)
+    },
     returnPage() {
       this.$router.go(-1)
     },
@@ -91,6 +98,54 @@ export default {
     clickCard() {
       console.log('1111111111111111111')
       this.prepare = false
+    },
+    getLocation() {
+      this.$network
+        .get('/user-service/m/user/getticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'invoke',
+              'agentConfig',
+              'checkJsApi',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
+              },
+              function (res) {
+                alert(JSON.stringify(res))
+                wx.getLocation({
+                  type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                  success: function (res) {
+                    // var latitude = res.latitude // 纬度，浮点数，范围为90 ~ -90
+                    // var longitude = res.longitude // 经度，浮点数，范围为180 ~ -180。
+                    // var speed = res.speed // 速度，以米/每秒计
+                    that.addressName = res.accuracy // 位置精度
+                  },
+                })
+              }
+            )
+          })
+        })
     },
   },
 }

@@ -645,7 +645,7 @@ export default {
     },
     //分享
     shareText(v) {
-      console.log('----分享分组----', v)
+      // console.log('----分享分组----', v)
       this.$network
         .get('/user-service/m/user/getticket', {
           url: location.href,
