@@ -9,7 +9,6 @@ if (location.hostname == 'localhost') {
         // BASE_URL = 'https://test-api.jizhouhudong.com' //开发
 } else if (location.hostname == 'dev-h5.jizhouhudong.com') {
     BASE_URL = 'https://dev-api.jizhouhudong.com' //开发
-        // console.log('11111111111111', BASE_URL)
 } else if (location.hostname == 'test-h5.jizhouhudong.com') {
     BASE_URL = 'https://test-api.jizhouhudong.com' //测试
 } else {
