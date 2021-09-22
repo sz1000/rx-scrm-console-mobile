@@ -116,7 +116,7 @@ export default {
   },
   created() {
     // alert(localStorage.getItem("chatId"), "获取chatid");
-    commonFun.getWxAppid();
+    // commonFun.getWxAppid();
     // this.getGroupDetail();
   },
   mounted() {
@@ -135,8 +135,8 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
           // chatId: this.$route.query.id,
-          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          chatId: localStorage.getItem("chatId"),
+          chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          // chatId: localStorage.getItem("chatId"),
         })
         .then((res) => {
           console.log(res);
@@ -155,9 +155,9 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupUserPage", {
           // chatId: this.$route.query.id,
-          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
-          chatId: localStorage.getItem("chatId"),
+          // chatId: localStorage.getItem("chatId"),
           ...this.pageInfo,
         })
         .then((res) => {
