@@ -130,6 +130,7 @@ function getAgent(res) {
             function() {
                 //获取外部联系人ID
                 wx.invoke('getCurExternalContact', {}, function(res) {
+                    // alert(JSON.stringify(res))
                         if (res.err_msg == 'getCurExternalContact:ok') {
                             // that.userId = res.userId //返回当前外部联系人userId
                             // alert(JSON.stringify(res))
@@ -142,14 +143,15 @@ function getAgent(res) {
                         }
                     })
                     //获取当前客户群ID
-                    // wx.invoke('getCurExternalChat', {}, function(res) {
-                    //         if (res.err_msg == 'getCurExternalChat:ok') {
-                    //             // chatId = res.chatId //返回当前客户群的群聊ID
-                    //             localStorage.setItem('chatId', res.chatId)
-                    //         } else {
-                    //             //错误处理
-                    //         }
-                    //     })
+                    wx.invoke('getCurExternalChat', {}, function(res) {
+                        // alert(JSON.stringify(res))
+                            if (res.err_msg == 'getCurExternalChat:ok') {
+                                // chatId = res.chatId //返回当前客户群的群聊ID
+                                localStorage.setItem('chatId', res.chatId)
+                            } else {
+                                //错误处理
+                            }
+                        })
                     //判断入口
                 wx.invoke('getContext', {}, function(res) {
                     // alert(JSON.stringify(res))

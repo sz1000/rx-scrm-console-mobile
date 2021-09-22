@@ -38,23 +38,25 @@
                 群名称： <span class="num">{{ item.name || "暂无" }}</span>
               </p>
               <p class="name_tite">
-                群主：<span class="num">{{ item.owmerName }}</span>
+                群主：<span class="num">{{ item.owmerName || "暂无" }}</span>
               </p>
               <p class="name_tite">
-                创建时间：<span class="num">{{ item.createTime }}</span>
+                创建时间：<span class="num">{{
+                  item.createTime || "暂无"
+                }}</span>
               </p>
             </div>
             <div class="ling"></div>
             <div class="flex">
               <p class="name_tite">
-                群人数：<span class="num">{{ item.usersum }}</span>
+                群人数：<span class="num">{{ item.usersum || "暂无" }}</span>
               </p>
-              <p class="name_tite">
-                当日入群：<span class="num">{{ item.joinsum }}</span>
+              <p class="name_tite ml-205">
+                当日入群：<span class="num">{{ item.joinsum || "暂无" }}</span>
               </p>
-              <p class="name_tite">
+              <!-- <p class="name_tite">
                 当日退群：<span class="num">{{ item.leavesum }}</span>
-              </p>
+              </p> -->
             </div>
           </li>
         </ul>
@@ -201,7 +203,7 @@ export default {
 }
 .flex {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
   background: #fff;
   padding: 0 24px;
   height: 87px;
@@ -216,5 +218,8 @@ export default {
   font-size: 28px;
   color: #3c4353;
   font-weight: 400;
+}
+.ml-205 {
+  margin-left: 205px;
 }
 </style>
