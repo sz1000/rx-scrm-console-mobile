@@ -21,7 +21,10 @@ export function getStoreValue(keyName, defaultVal = '') {
             router.push('/customerPortrait')
         } else if (window.location.pathname.indexOf('verbalTrick') > -1) {
             router.push('/talkTool/verbalTrick')
-        } else {
+        }else if(window.location.pathname.indexOf('groupportrait') > -1){
+            router.push('/groupportrait')
+        }
+        else {
             router.push('/home')
         }
         return defaultVal
@@ -42,7 +45,10 @@ export function getStoreValue(keyName, defaultVal = '') {
             }
             if (window.location.pathname.indexOf('verbalTrick') > -1) {
                 router.push('/talkTool/verbalTrick')
-            } else {
+            } else if(window.location.pathname.indexOf('groupportrait') > -1){
+                router.push('/groupportrait')
+            }
+            else {
                 router.push('/home')
             }
             return defaultVal
