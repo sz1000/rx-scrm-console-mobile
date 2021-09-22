@@ -73,7 +73,7 @@
       <van-popup v-model="showPicker"
                  position="bottom">
         <van-picker show-toolbar
-                    value-key='name'
+                    value-key='customerName'
                     :columns="columns"
                     @confirm="onConfirm"
                     @cancel="showPicker = false" />
@@ -95,13 +95,19 @@ export default {
       phone: '', //手机号
       customerVal: '', //选择客户
       radio: '1', //客户类型
-      columns: [{ name: 'hahah', id: 1 }],
+      columns: [{ customerName: 'hahah', clueCustomerNo: 1 }],
       showPicker: false,
+      clueCustomerNo: '',
     }
+  },
+  mounted() {
+    this.getCustomerList()
   },
   methods: {
     onConfirm(value) {
-      this.customerVal = value.name
+      // console.log('------value----', value)
+      this.customerVal = value.customerName
+      this.clueCustomerNo = value.clueCustomerNo
       this.showPicker = false
     },
     changeRadio(val) {
@@ -112,7 +118,17 @@ export default {
     },
     onSubmit(values) {
       // console.log('------values---', values)
-      this.$router.push('/clockPage')
+      this.$router.push({
+        name: 'clockPage',
+        params: { clueCustomerNo: this.clueCustomerNo, ...values },
+      })
+    },
+    getCustomerList() {
+      this.$network
+        .get('/user-service/punckClock/getClueCustomerList')
+        .then((res) => {
+          this.columns = res.data
+        })
     },
   },
 }
