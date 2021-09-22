@@ -21,10 +21,11 @@ export function getStoreValue(keyName, defaultVal = '') {
             router.push('/customerPortrait')
         } else if (window.location.pathname.indexOf('verbalTrick') > -1) {
             router.push('/talkTool/verbalTrick')
-        }else if(window.location.pathname.indexOf('groupportrait') > -1){
+        } else if (window.location.pathname.indexOf('groupportrait') > -1) {
             router.push('/groupportrait')
-        }
-        else {
+        } else if (window.location.pathname.indexOf('punchCard') > -1) {
+            router.push('/punchCard')
+        } else {
             router.push('/home')
         }
         return defaultVal
@@ -42,13 +43,13 @@ export function getStoreValue(keyName, defaultVal = '') {
                 window.location.pathname.indexOf('informationDetail') > -1
             ) {
                 router.push('/customerPortrait')
-            }
-            if (window.location.pathname.indexOf('verbalTrick') > -1) {
+            } else if (window.location.pathname.indexOf('verbalTrick') > -1) {
                 router.push('/talkTool/verbalTrick')
-            } else if(window.location.pathname.indexOf('groupportrait') > -1){
+            } else if (window.location.pathname.indexOf('groupportrait') > -1) {
                 router.push('/groupportrait')
-            }
-            else {
+            } else if (window.location.pathname.indexOf('punchCard') > -1) {
+                router.push('/punchCard')
+            } else {
                 router.push('/home')
             }
             return defaultVal

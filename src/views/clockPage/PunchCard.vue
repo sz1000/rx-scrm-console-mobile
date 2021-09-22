@@ -83,13 +83,14 @@
       </van-popup>
 
     </div>
-    <div class="bottom-warp">
-
-    </div>
+    <!-- <div class="bottom-warp">
+    </div> -->
   </div>
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
+import CommonHome from '../../utils/CommonHome'
+
 export default {
   data() {
     return {
@@ -108,9 +109,19 @@ export default {
       clueCustomerNo: '',
     }
   },
+  created() {
+    this.$toast.loading({
+      overlay: true,
+      duration: 1000,
+      loadingType: 'spinner',
+    })
+    CommonHome.getWxToken()
+  },
   mounted() {
-    this.getUserName()
-    this.getCustomerList()
+    setTimeout(() => {
+      this.getUserName()
+      this.getCustomerList()
+    }, 3000)
   },
   methods: {
     onConfirm(value) {
