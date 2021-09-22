@@ -38,53 +38,62 @@
     </div>
     <!-- 列表 -->
     <div>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <ul>
-          <!--  -->
-          <li
-            class="lsits list-warp"
-            v-for="(item, index) in dataList"
-            :key="index"
-          >
-            <div class="flex">
-              <div class="portrait_img">
-                <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
-                <div class="flag" v-if="item.avatar == ''">
-                  {{ item.name.substr(0, 1) }}
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <ul>
+            <!--  -->
+            <li
+              class="lsits list-warp"
+              v-for="(item, index) in dataList"
+              :key="index"
+            >
+              <div class="flex">
+                <div class="portrait_img">
+                  <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
+                  <div class="flag" v-if="item.avatar == ''">
+                    {{ item.name.substr(0, 1) }}
+                  </div>
+                </div>
+                <div>
+                  <p class="portrait_tite">
+                    {{ item.name }}
+                    <span class="firm" v-if="item.customerType == 2"
+                      >@{{ item.corpName }}</span
+                    >
+                    <span class="weix" v-if="item.customerType == 1"
+                      >@微信</span
+                    >
+                  </p>
+                  <p class="portrait_message">
+                    {{ item.type }}
+                  </p>
                 </div>
               </div>
-              <div>
-                <p class="portrait_tite">
-                  {{ item.name }}
-                  <span class="firm" v-if="item.customerType == 0">@企业</span>
-                  <span class="weix" v-if="item.customerType == 1">@微信</span>
+              <div class="list-box">
+                <p class="list_tite">
+                  入群时间：<span class="num">{{ item.joinTime }}</span>
                 </p>
-                <p class="portrait_message">
-                  {{ item.type }}
+                <p class="list_tite">
+                  入群方式： <span class="num">{{ item.joinScene }}</span>
+                </p>
+                <p class="list_tite">
+                  邀请员工： <span class="num">{{ item.invitorName }}</span>
                 </p>
               </div>
-            </div>
-            <div class="list-box">
-              <p class="list_tite">
-                入群时间：<span class="num">{{ item.joinTime }}</span>
-              </p>
-              <p class="list_tite">
-                入群方式： <span class="num">{{ item.joinScene }}</span>
-              </p>
-              <p class="list_tite">
-                邀请员工： <span class="num">{{ item.invitorName }}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </van-list>
+            </li>
+          </ul>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <!-- <p class="no_more">没有更多</p> -->
+    <van-overlay :show="show">
+      <van-loading class="loding" type="spinner" color="#fff" size="24" />
+    </van-overlay>
   </div>
 </template>         
 <script>
@@ -93,8 +102,11 @@ import commonFun from "../../utils/commonToken";
 export default {
   data() {
     return {
+      channelList: [],
+      show: true,
       loading: false,
-      finished: true,
+      finished: false,
+      refreshing: false,
       chatId: "",
       // 群信息
       datatTite: {
@@ -105,10 +117,11 @@ export default {
         usersum: "",
         leavesum: "",
         joinsum: "",
+        total: 0, //总共的数据条数
       },
       pageInfo: {
         page: 1,
-        limit: 20,
+        limit: 10,
       },
       // 群用户列表
       dataList: [],
@@ -118,6 +131,10 @@ export default {
     // alert(localStorage.getItem("chatId"), "获取chatid");
     // commonFun.getWxAppid();
     // this.getGroupDetail();
+    if (this.refreshing) {
+      this.dataList = [];
+      this.refreshing = false;
+    }
   },
   mounted() {
     setTimeout(() => {
@@ -128,18 +145,20 @@ export default {
   },
   methods: {
     onLoad() {
-      this.page++;
+      console.log("屏幕滚动");
+
+      // this.pageInfo.page++;
+      // console.log(this.pageInfo.page++);
       this.getList();
     },
     getGroupDetail() {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
           // chatId: this.$route.query.id,
-          chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
           // chatId: localStorage.getItem("chatId"),
         })
         .then((res) => {
-          console.log(res);
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
           this.datatTite.owmerName = res.data.owmerName;
@@ -155,12 +174,29 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupUserPage", {
           // chatId: this.$route.query.id,
-          chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
           // chatId: localStorage.getItem("chatId"),
           ...this.pageInfo,
         })
         .then((res) => {
+          console.log(res);
+          this.total = res.data.data.total;
+          if (res.data.data.records.length === 0) {
+            this.finished = true;
+          } else {
+            let arr1 = this.channelList;
+            const arr2 = res.data.data.records;
+            arr1 = arr1.concat(arr2);
+            this.channelList = arr1;
+            console.log("this.lawyer", this.channelList);
+            this.pageInfo.page++;
+          }
+          if (res.result) {
+            this.show = false;
+            // this.finished = true;
+          }
+
           let tempList = res.data.data.records;
           tempList.forEach((item) => {
             item.joinTime = item.joinTime
@@ -178,12 +214,42 @@ export default {
           });
           this.dataList = tempList;
           // this.total = res.data.data.total;
+          // let lengrod = res.data.data.records;
+          // let newSetArr = this.channelList.concat(lengrod);
+
+          // this.channelList = this.unique(newSetArr);
+
+          // console.log(this.channelList);
+          // if (lengrod == null || lengrod.length === 0)
+          //   if (this.channelList.length >= this.total) {
+          //     this.finished = true;
+          //   } else {
+          //     // this.onLoad();
+          //   }
         });
     },
+    //去重一次
+    // unique(arr) {
+    //   const res = new Map();
+    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
+    // },
   },
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
+/deep/.van-overlay {
+  // background-color: rgba(0, 0, 0, 0.3);
+}
+/deep/ .van-loading {
+  // top: 50%;
+  // left: 50%;
+}
+.loding {
+  top: 50%;
+  left: 50%;
+  transform: translate(-2%, -50%);
+  // transform: translate(-50%, -50%);
+}
 .warp-portrait {
   /* padding: 24px; */
   /* background: #838a9d; */
@@ -252,6 +318,7 @@ export default {
 }
 .list-warp {
   margin-top: 24px;
+  // height: 1000px;
 }
 .lsits {
   padding: 24px;

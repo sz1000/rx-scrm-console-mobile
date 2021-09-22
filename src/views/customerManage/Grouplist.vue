@@ -71,7 +71,7 @@ export default {
     return {
       inputValue: "",
       loading: false,
-      finished: true,
+      finished: false,
       page: 1, //请求第几页
       pageSize: 10, //每页请求的数量
       dataList: [],
