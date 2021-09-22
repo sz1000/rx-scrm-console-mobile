@@ -83,13 +83,14 @@
       </van-popup>
 
     </div>
-    <div class="bottom-warp">
-
-    </div>
+    <!-- <div class="bottom-warp">
+    </div> -->
   </div>
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
+import CommonHome from '../../utils/CommonHome'
+
 export default {
   data() {
     return {
@@ -108,9 +109,19 @@ export default {
       clueCustomerNo: '',
     }
   },
+  created() {
+    this.$toast.loading({
+      overlay: true,
+      duration: 1000,
+      loadingType: 'spinner',
+    })
+    CommonHome.getWxToken()
+  },
   mounted() {
-    this.getUserName()
-    this.getCustomerList()
+    setTimeout(() => {
+      this.getUserName()
+      this.getCustomerList()
+    }, 3000)
   },
   methods: {
     onConfirm(value) {
@@ -174,6 +185,10 @@ export default {
     align-items: center;
     .iconName {
       display: flex;
+      img {
+        width: 88px;
+        height: 88px;
+      }
       .flag {
         width: 88px;
         height: 88px;
@@ -219,6 +234,9 @@ export default {
         top: 0;
         left: 0;
       }
+      .van-radio__label {
+        font-size: 28px;
+      }
       .van-field__label {
         width: 140px;
         font-family: PingFangSC-Regular;
@@ -243,6 +261,7 @@ export default {
         }
         .van-field__control {
           padding-left: 16px;
+          font-size: 28px;
         }
       }
     }
@@ -275,7 +294,15 @@ export default {
 /deep/ .van-field__right-icon {
   padding-right: 20px;
 }
-
+/deep/.van-picker {
+  .van-picker__cancel,
+  .van-picker__confirm {
+    font-size: 28px;
+  }
+  .van-picker-column {
+    font-size: 28px;
+  }
+}
 .punch {
   width: 702px;
   height: 80px;

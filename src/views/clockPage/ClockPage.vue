@@ -67,14 +67,14 @@ export default {
     return {
       prepare: true,
       nowDate: '',
-      addressName: '上海市',
-      addressDetail: '杨浦区',
+      addressName: '',
+      addressDetail: '',
       cardDate: '',
       address: '',
       customer: '',
       customertype: '',
       customerAddress: '',
-      remark: '111111',
+      remark: '',
     }
   },
   created() {},
@@ -121,39 +121,52 @@ export default {
                 jsApiList: ['getContext', 'invoke'],
               },
               function (res) {
-                alert(JSON.stringify(res))
                 wx.chooseImage({
                   count: 1, // 默认9
                   sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                   sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                  defaultCameraMode: 'batch', //表示进入拍照界面的默认模式，目前有normal与batch两种选择，normal表示普通单拍模式，batch表示连拍模式，不传该参数则为normal模式。从3.0.26版本开始支持front和batch_front两种值，其中front表示默认为前置摄像头单拍模式，batch_front表示默认为前置摄像头连拍模式。（注：用户进入拍照界面仍然可自由切换两种模式）
+                  defaultCameraMode: 'normal', //表示进入拍照界面的默认模式，目前有normal与batch两种选择，normal表示普通单拍模式，batch表示连拍模式，不传该参数则为normal模式。从3.0.26版本开始支持front和batch_front两种值，其中front表示默认为前置摄像头单拍模式，batch_front表示默认为前置摄像头连拍模式。（注：用户进入拍照界面仍然可自由切换两种模式）
                   isSaveToAlbum: 1, //整型值，0表示拍照时不保存到系统相册，1表示自动保存，默认值是1
                   success: function (res) {
-                    alert(JSON.stringify(res))
-                    // var localIds = res.localIds // 返回选定照片的本地ID列表，
+                    var localIds = res.localIds // 返回选定照片的本地ID列表，
+                    alert('图片id为' + localIds)
                     // andriod中localId可以作为img标签的src属性显示图片；
                     // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
+                    // alert(1111111111111111)
+                    setTimeout(function () {
+                      wx.uploadImage({
+                        localId: localIds[0].toString(), // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1, // 默认为1，显示进度提示
+                        success: function (res) {
+                          // alert(2222222222222222222)
+                          alert('上传服务器端ID' + res.serverId)
+                          var serverId = res.serverId // 返回图片的服务器端ID
+                          that.addCodeSuccess(serverId)
+                        },
+                      })
+                    }, 1000)
                   },
                 })
               }
             )
           })
         })
-
-      // let obj = JSON.parse(localStorage.getItem('addObj'))
-      // let params = {
-      //   customerType: obj.radio,
-      //   phone: obj.phone,
-      //   customerPlace: obj.address,
-      //   content: obj.remark,
-      //   customerName: obj.client,
-      //   clueCustomerNo: obj.clueCustomerNo,
-      //   punchPlace: this.addressName,
-      // }
-      // this.$network
-      //   .post('/user-service/punckClock/addPunckClock', params)
-      //   .then()
-      // this.prepare = false
+    },
+    addCodeSuccess(v) {
+      let obj = JSON.parse(localStorage.getItem('addObj'))
+      let params = {
+        customerType: obj.radio,
+        phone: obj.phone,
+        customerPlace: obj.address,
+        content: obj.remark,
+        customerName: obj.client,
+        clueCustomerNo: obj.clueCustomerNo,
+        punchPlace: this.addressName,
+      }
+      this.$network
+        .post('/user-service/punckClock/addPunckClock', params)
+        .then()
+      this.prepare = false
     },
     getLocation() {
       this.$network
@@ -183,14 +196,20 @@ export default {
                 jsApiList: ['getContext', 'invoke'],
               },
               function (res) {
-                alert(JSON.stringify(res))
                 wx.getLocation({
                   type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                   success: function (res) {
+                    alert(
+                      '经纬度为：（' +
+                        res.latitude +
+                        '，' +
+                        res.longitude +
+                        '）'
+                    )
                     // var latitude = res.latitude // 纬度，浮点数，范围为90 ~ -90
                     // var longitude = res.longitude // 经度，浮点数，范围为180 ~ -180。
                     // var speed = res.speed // 速度，以米/每秒计
-                    that.addressName = res.accuracy // 位置精度
+                    // that.addressName = res.accuracy // 位置精度
                   },
                 })
               }
