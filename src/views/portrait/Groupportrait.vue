@@ -12,24 +12,28 @@
             <span>({{ datatTite.usersum }})</span>
           </p>
           <p class="portrait_message">
-            <span class="grom_name"> 群主：{{ datatTite.owmerName }}</span>
-            <span class="ml24">建群时间 ：{{ datatTite.createTime }}</span>
+            <span class="grom_name">
+              群主：{{ datatTite.owmerName || "暂无" }}</span
+            >
+            <span class="ml24"
+              >建群时间 ：{{ datatTite.createTime || "暂无" }}</span
+            >
           </p>
         </div>
       </div>
       <div class="group_num">
         <div>
-          <p class="num">{{ datatTite.usersum }}</p>
+          <p class="num">{{ datatTite.usersum || "0" }}</p>
           <p class="num_tite">总人数</p>
         </div>
         <div>
-          <p class="num">{{ datatTite.joinsum }}</p>
+          <p class="num">{{ datatTite.joinsum || "0" }}</p>
           <p class="num_tite">今日新增</p>
         </div>
-        <div>
+        <!-- <div>
           <p class="num">{{ datatTite.leavesum }}</p>
           <p class="num_tite">今日退群</p>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 列表 -->
@@ -67,7 +71,7 @@
             </div>
             <div class="list-box">
               <p class="list_tite">
-                入群时间: <span class="num">{{ item.joinTime }}</span>
+                入群时间：<span class="num">{{ item.joinTime }}</span>
               </p>
               <p class="list_tite">
                 入群方式： <span class="num">{{ item.joinScene }}</span>
@@ -111,7 +115,9 @@ export default {
     };
   },
   created() {
+    // alert(localStorage.getItem("chatId"), "获取chatid");
     commonFun.getWxAppid();
+    // this.getGroupDetail();
   },
   mounted() {
     setTimeout(() => {
@@ -129,6 +135,7 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
           // chatId: this.$route.query.id,
+          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           chatId: localStorage.getItem("chatId"),
         })
         .then((res) => {
@@ -148,6 +155,8 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupUserPage", {
           // chatId: this.$route.query.id,
+          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
           chatId: localStorage.getItem("chatId"),
           ...this.pageInfo,
         })
