@@ -38,57 +38,53 @@
     </div>
     <!-- 列表 -->
     <div>
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
-        >
-          <ul>
-            <!--  -->
-            <li
-              class="lsits list-warp"
-              v-for="(item, index) in dataList"
-              :key="index"
-            >
-              <div class="flex">
-                <div class="portrait_img">
-                  <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
-                  <div class="flag" v-if="item.avatar == ''">
-                    {{ item.name.substr(0, 1) }}
-                  </div>
-                </div>
-                <div>
-                  <p class="portrait_tite">
-                    {{ item.name }}
-                    <span class="firm" v-if="item.customerType == 2"
-                      >@{{ item.corpName }}</span
-                    >
-                    <span class="weix" v-if="item.customerType == 1"
-                      >@微信</span
-                    >
-                  </p>
-                  <p class="portrait_message">
-                    {{ item.type }}
-                  </p>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <ul>
+          <!--  -->
+          <li
+            class="lsits list-warp"
+            v-for="(item, index) in dataList"
+            :key="index"
+          >
+            <div class="flex">
+              <div class="portrait_img">
+                <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
+                <div class="flag" v-if="item.avatar == ''">
+                  {{ item.name.substr(0, 1) }}
                 </div>
               </div>
-              <div class="list-box">
-                <p class="list_tite">
-                  入群时间：<span class="num">{{ item.joinTime }}</span>
+              <div>
+                <p class="portrait_tite">
+                  {{ item.name }}
+                  <span class="firm" v-if="item.customerType == 2"
+                    >@{{ item.corpName }}</span
+                  >
+                  <span class="weix" v-if="item.customerType == 1">@微信</span>
                 </p>
-                <p class="list_tite">
-                  入群方式： <span class="num">{{ item.joinScene }}</span>
-                </p>
-                <p class="list_tite">
-                  邀请员工： <span class="num">{{ item.invitorName }}</span>
+                <p class="portrait_message">
+                  {{ item.type }}
                 </p>
               </div>
-            </li>
-          </ul>
-        </van-list>
-      </van-pull-refresh>
+            </div>
+            <div class="list-box">
+              <p class="list_tite">
+                入群时间：<span class="num">{{ item.joinTime }}</span>
+              </p>
+              <p class="list_tite">
+                入群方式： <span class="num">{{ item.joinScene }}</span>
+              </p>
+              <p class="list_tite">
+                邀请员工： <span class="num">{{ item.invitorName }}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+      </van-list>
     </div>
     <!-- <p class="no_more">没有更多</p> -->
     <van-overlay :show="show">
@@ -131,10 +127,6 @@ export default {
     // alert(localStorage.getItem("chatId"), "获取chatid");
     // commonFun.getWxAppid();
     // this.getGroupDetail();
-    if (this.refreshing) {
-      this.dataList = [];
-      this.refreshing = false;
-    }
   },
   mounted() {
     setTimeout(() => {
@@ -147,7 +139,7 @@ export default {
     onLoad() {
       console.log("屏幕滚动");
 
-      // this.pageInfo.page++;
+      this.pageInfo.page++;
       // console.log(this.pageInfo.page++);
       this.getList();
     },
@@ -159,6 +151,10 @@ export default {
           // chatId: localStorage.getItem("chatId"),
         })
         .then((res) => {
+          if (res.result) {
+            this.show = false;
+            // this.finished = true;
+          }
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
           this.datatTite.owmerName = res.data.owmerName;
@@ -181,23 +177,30 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          // this.total = res.data.data.total;
+          // if (res.data.data.records.length === 0) {
+          //   this.finished = true;
+          // } else {
+          //   let arr1 = this.channelList;
+          //   const arr2 = res.data.data.records;
+          //   arr1 = arr1.concat(arr2);
+          //   this.channelList = arr1;
+          //   console.log("this.lawyer", this.channelList);
+          // }
+          // if (res.result) {
+          //   this.show = false;
+          //   // this.finished = true;
+          // }
+
+          let tempList = res.data.data.records; //请求返回当页的列表
+          this.loading = false;
           this.total = res.data.data.total;
-          if (res.data.data.records.length === 0) {
+          if (tempList == null || tempList.length === 0) {
+            // 加载结束
             this.finished = true;
-          } else {
-            let arr1 = this.channelList;
-            const arr2 = res.data.data.records;
-            arr1 = arr1.concat(arr2);
-            this.channelList = arr1;
-            console.log("this.lawyer", this.channelList);
-            this.pageInfo.page++;
-          }
-          if (res.result) {
-            this.show = false;
-            // this.finished = true;
+            return;
           }
 
-          let tempList = res.data.data.records;
           tempList.forEach((item) => {
             item.joinTime = item.joinTime
               ? formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss")
@@ -212,7 +215,15 @@ export default {
             }
             item.showName = item.showName ? item.showName : item.name;
           });
-          this.dataList = tempList;
+          // 将新数据与老数据进行合并
+          this.dataList = this.dataList.concat(tempList);
+          //如果列表数据条数>=总条数，不再触发滚动加载
+          if (this.dataList.length >= this.total) {
+            this.finished = true;
+          } else {
+            this.onLoad();
+          }
+          // this.dataList = tempList;
           // this.total = res.data.data.total;
           // let lengrod = res.data.data.records;
           // let newSetArr = this.channelList.concat(lengrod);
@@ -228,6 +239,10 @@ export default {
           //   }
         });
     },
+    // onRefresh() {
+    //   // 清空列表数据
+    //   console.log("清空列表数据");
+    // },
     //去重一次
     // unique(arr) {
     //   const res = new Map();
