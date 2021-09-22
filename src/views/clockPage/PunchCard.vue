@@ -115,13 +115,13 @@ export default {
       duration: 1000,
       loadingType: 'spinner',
     })
-    CommonHome.getWxToken()
+    // CommonHome.getWxToken()
   },
   mounted() {
     setTimeout(() => {
       this.getUserName()
       this.getCustomerList()
-    }, 3000)
+    }, 2000)
   },
   methods: {
     onConfirm(value) {
@@ -142,22 +142,30 @@ export default {
       this.$router.push('clockPage')
       localStorage.setItem(
         'addObj',
-        JSON.stringify({ clueCustomerNo: this.clueCustomerNo, ...values })
+        JSON.stringify({
+          clueCustomerNo: this.clueCustomerNo,
+          name: this.customerVal,
+          ...values,
+        })
       )
     },
     getUserName() {
       this.$network
         .get('/user-service/punckClock/getPunckClockList')
         .then((res) => {
-          this.imageUser = res.data.plist[0].avatar
-          this.name = res.data.plist[0].name
+          if (res) {
+            this.imageUser = res.data.plist[0].avatar || ''
+            this.name = res.data.plist[0].name || ''
+          }
         })
     },
     getCustomerList() {
       this.$network
         .get('/user-service/punckClock/getClueCustomerList')
         .then((res) => {
-          this.columns = res.data
+          if (res) {
+            this.columns = res.data || []
+          }
         })
     },
   },

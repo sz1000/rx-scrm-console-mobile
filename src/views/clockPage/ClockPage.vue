@@ -17,7 +17,7 @@
       <div class="now-address">
         <span>当前地址:</span>
         <span>{{addressName}}</span>
-        <span>{{addressDetail}}</span>
+        <!-- <span>{{addressDetail}}</span> -->
       </div>
       <div class="updateAddress"
            @click="fnUpdate">
@@ -38,7 +38,7 @@
         </div>
         <div class="box">
           <span>打卡地址:</span>
-          <span>{{address}}</span>
+          <span>{{addressName}}</span>
         </div>
         <div class="box">
           <span>客户类型:</span>
@@ -74,13 +74,14 @@ export default {
       customer: '',
       customertype: '',
       customerAddress: '',
-      remark: '',
+      remark:
+        '哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊',
     }
   },
   created() {},
   mounted() {
-    this.getDateTime()
     this.getLocation()
+    this.getDateTime()
   },
   methods: {
     formatDate,
@@ -92,7 +93,9 @@ export default {
     returnPage() {
       this.$router.go(-1)
     },
-    fnUpdate() {},
+    fnUpdate() {
+      this.getLocation()
+    },
     clickCard() {
       this.$network
         .get('/user-service/m/user/getticket', {
@@ -132,13 +135,11 @@ export default {
                     alert('图片id为' + localIds)
                     // andriod中localId可以作为img标签的src属性显示图片；
                     // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
-                    // alert(1111111111111111)
                     setTimeout(function () {
                       wx.uploadImage({
                         localId: localIds[0].toString(), // 需要上传的图片的本地ID，由chooseImage接口获得
                         isShowProgressTips: 1, // 默认为1，显示进度提示
                         success: function (res) {
-                          // alert(2222222222222222222)
                           alert('上传服务器端ID' + res.serverId)
                           var serverId = res.serverId // 返回图片的服务器端ID
                           that.addCodeSuccess(serverId)
@@ -162,11 +163,27 @@ export default {
         customerName: obj.client,
         clueCustomerNo: obj.clueCustomerNo,
         punchPlace: this.addressName,
+        photoFile: v,
       }
       this.$network
         .post('/user-service/punckClock/addPunckClock', params)
-        .then()
-      this.prepare = false
+        .then((res) => {
+          if (res.result) {
+            this.prepare = false
+            this.cardDate = formatDate(
+              new Date().getTime(),
+              'yyyy-MM-dd hh:mm:ss'
+            )
+            if (res.data.customertype == 1) {
+              this.customertype = '已有客户'
+            } else {
+              this.customertype = '新客户'
+            }
+            this.customer = res.data.name
+            this.customerAddress = res.data.customerPlace
+            this.remark = res.data.content
+          }
+        })
     },
     getLocation() {
       this.$network
@@ -199,22 +216,28 @@ export default {
                 wx.getLocation({
                   type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                   success: function (res) {
-                    alert(
-                      '经纬度为：（' +
-                        res.latitude +
-                        '，' +
-                        res.longitude +
-                        '）'
-                    )
+                    // alert(res.latitude, res.longitude)
+                    that.getAddress(res)
                     // var latitude = res.latitude // 纬度，浮点数，范围为90 ~ -90
                     // var longitude = res.longitude // 经度，浮点数，范围为180 ~ -180。
                     // var speed = res.speed // 速度，以米/每秒计
-                    // that.addressName = res.accuracy // 位置精度
+                    // var.accuracy  = res.accuracy // 位置精度
                   },
                 })
               }
             )
           })
+        })
+    },
+    getAddress(val) {
+      this.$network
+        .get('/user-service/punckClock/getTengXunMap', {
+          lng: val.longitude,
+          lat: val.latitude,
+        })
+        .then((res) => {
+          // alert(JSON.stringify(res))
+          this.addressName = res.data
         })
     },
   },
@@ -300,24 +323,28 @@ export default {
       font-weight: 600;
     }
     .detail-info {
-      padding: 48px 132px 0;
+      padding: 48px 0 0 132px;
       margin-top: 48px;
       border-top: 1px solid #f0f2f7;
       border-bottom: 1px solid #f0f2f7;
       .box {
         font-size: 28px;
         margin-bottom: 24px;
+        display: flex;
         span {
           display: inline-block;
         }
         span:nth-child(1) {
           width: 140px;
           text-align: right;
-          color: #838a9d 100%;
+          color: #838a9d;
           margin-right: 16px;
         }
         span:nth-child(2) {
-          color: #3c4353 100%;
+          flex: 1;
+          color: #3c4353;
+          overflow-y: scroll;
+          max-height: 100px;
         }
       }
     }

@@ -15,11 +15,10 @@ if (location.hostname == 'localhost') {
     BASE_URL = 'https://api.jizhouhudong.com' //生产
 }
 let instance = axios.create({
-    baseURL: BASE_URL,
-    timeout: 30000,
-})
-
-// 请求
+        baseURL: BASE_URL,
+        timeout: 30000,
+    })
+    // 请求
 instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
