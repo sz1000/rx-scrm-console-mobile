@@ -185,6 +185,10 @@ export default {
     align-items: center;
     .iconName {
       display: flex;
+      img {
+        width: 88px;
+        height: 88px;
+      }
       .flag {
         width: 88px;
         height: 88px;
@@ -230,6 +234,9 @@ export default {
         top: 0;
         left: 0;
       }
+      .van-radio__label {
+        font-size: 28px;
+      }
       .van-field__label {
         width: 140px;
         font-family: PingFangSC-Regular;
@@ -254,6 +261,7 @@ export default {
         }
         .van-field__control {
           padding-left: 16px;
+          font-size: 28px;
         }
       }
     }
@@ -286,7 +294,15 @@ export default {
 /deep/ .van-field__right-icon {
   padding-right: 20px;
 }
-
+/deep/.van-picker {
+  .van-picker__cancel,
+  .van-picker__confirm {
+    font-size: 28px;
+  }
+  .van-picker-column {
+    font-size: 28px;
+  }
+}
 .punch {
   width: 702px;
   height: 80px;
