@@ -75,6 +75,7 @@ export default {
       page: 1, //请求第几页
       pageSize: 10, //每页请求的数量
       dataList: [],
+      total: 0, //总共的数据条数
     };
   },
   created() {
@@ -93,7 +94,35 @@ export default {
     // 点击查询
     inquire() {
       console.log(this.inputValue);
-      this.getGroupList();
+      // this.page = 1;
+      // this.getGroupList();
+      // this.dataList = [];
+      this.$network
+        .get("/customer-service/group/list", {
+          page: 1,
+          limit: this.pageSize,
+          name: this.inputValue,
+          owmer: "",
+          createTimeSta: "",
+          createTimeEnd: "",
+        })
+        .then((res) => {
+          console.log(res);
+          this.total = res.data.groupEntityPage.total;
+          this.loading = false;
+          let tempList = res.data.groupEntityPage.records;
+          if (tempList == null || tempList.length === 0) {
+            // 加载结束
+            this.finished = true;
+            return;
+          }
+          tempList.forEach((item) => {
+            item.createTime = item.createTime
+              ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
+              : "-";
+          });
+          this.dataList = tempList;
+        });
     },
     onLoad() {
       // console.log(1)
@@ -102,6 +131,7 @@ export default {
     },
     // 请求群列表
     getGroupList() {
+      // this.dataList = [];
       this.$network
         .get("/customer-service/group/list", {
           page: this.page,
@@ -113,13 +143,26 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          this.total = res.data.groupEntityPage.total;
+          this.loading = false;
           let tempList = res.data.groupEntityPage.records;
+          if (tempList == null || tempList.length === 0) {
+            // 加载结束
+            this.finished = true;
+            return;
+          }
           tempList.forEach((item) => {
             item.createTime = item.createTime
               ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
               : "-";
           });
-          this.dataList = tempList;
+          // this.dataList = tempList;
+          // 将新数据与老数据进行合并
+          this.dataList = this.dataList.concat(tempList);
+          // 如果列表数据条数>=总条数，不再触发滚动加载
+          if (this.dataList.length >= this.total) {
+            this.finished = true;
+          }
         });
     },
     //获取群id跳转

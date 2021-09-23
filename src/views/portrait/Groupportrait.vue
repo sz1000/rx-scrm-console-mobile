@@ -125,8 +125,9 @@ export default {
   },
   created() {
     // alert(localStorage.getItem("chatId"), "获取chatid");
-    // commonFun.getWxAppid();
+    commonFun.getWxAppid();
     // this.getGroupDetail();
+    // this.getList();
   },
   mounted() {
     setTimeout(() => {
@@ -147,8 +148,9 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
           // chatId: this.$route.query.id,
-          chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
-          // chatId: localStorage.getItem("chatId"),
+          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          chatId: localStorage.getItem("chatId"),
         })
         .then((res) => {
           if (res.result) {
@@ -170,13 +172,15 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupUserPage", {
           // chatId: this.$route.query.id,
-          chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
-          // chatId: localStorage.getItem("chatId"),
+          chatId: localStorage.getItem("chatId"),
           ...this.pageInfo,
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
+          // this.dataList = [];
           // this.total = res.data.data.total;
           // if (res.data.data.records.length === 0) {
           //   this.finished = true;
@@ -216,12 +220,14 @@ export default {
             item.showName = item.showName ? item.showName : item.name;
           });
           // 将新数据与老数据进行合并
+          // let newSetArr = this.dataList.concat(tempList);
           this.dataList = this.dataList.concat(tempList);
+          // this.dataList = this.unique(newSetArr);
+          // this.dataList = tempList;
+          console.log(this.dataList);
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
             this.finished = true;
-          } else {
-            this.onLoad();
           }
           // this.dataList = tempList;
           // this.total = res.data.data.total;
@@ -243,7 +249,7 @@ export default {
     //   // 清空列表数据
     //   console.log("清空列表数据");
     // },
-    //去重一次
+    // 去重一次
     // unique(arr) {
     //   const res = new Map();
     //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
