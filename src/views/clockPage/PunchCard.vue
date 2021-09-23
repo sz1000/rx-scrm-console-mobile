@@ -76,6 +76,7 @@
       <van-popup v-model="showPicker"
                  position="bottom">
         <van-picker show-toolbar
+                    title="选择客户"
                     value-key='customerName'
                     :columns="columns"
                     @confirm="onConfirm"
@@ -115,7 +116,7 @@ export default {
       duration: 1000,
       loadingType: 'spinner',
     })
-    // CommonHome.getWxToken()
+    CommonHome.getWxToken()
   },
   mounted() {
     setTimeout(() => {
@@ -150,21 +151,26 @@ export default {
       )
     },
     getUserName() {
-      this.$network
-        .get('/user-service/punckClock/getPunckClockList')
-        .then((res) => {
-          if (res) {
-            this.imageUser = res.data.plist[0].avatar || ''
-            this.name = res.data.plist[0].name || ''
-          }
-        })
+      this.$network.get('/user-service/punckClock/getLoginName').then((res) => {
+        if (res) {
+          this.imageUser = res.data.avatar || ''
+          this.name = res.data.name || ''
+        }
+      })
     },
     getCustomerList() {
       this.$network
         .get('/user-service/punckClock/getClueCustomerList')
         .then((res) => {
           if (res) {
-            this.columns = res.data || []
+            this.columns = res.data.map((item) => {
+              return {
+                customerName: item.customerName
+                  ? item.name + '@' + item.customerName
+                  : item.name,
+                clueCustomerNo: item.clueCustomerNo,
+              }
+            })
           }
         })
     },
@@ -302,13 +308,22 @@ export default {
 /deep/ .van-field__right-icon {
   padding-right: 20px;
 }
-/deep/.van-picker {
-  .van-picker__cancel,
-  .van-picker__confirm {
-    font-size: 28px;
-  }
-  .van-picker-column {
-    font-size: 28px;
+/deep/.van-popup {
+  border-radius: 16px 16px 0 0;
+  .van-picker {
+    .van-picker__toolbar {
+      height: 88px;
+      background: #fafbff;
+    }
+    .van-picker__cancel,
+    .van-picker__title,
+    .van-picker__confirm {
+      font-size: 28px;
+      line-height: 88px;
+    }
+    .van-picker-column {
+      font-size: 28px;
+    }
   }
 }
 .punch {
