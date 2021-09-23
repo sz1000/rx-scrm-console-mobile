@@ -77,25 +77,15 @@
 
         <van-button class="punch" native-type="submit">去打卡</van-button>
       </van-form>
-<<<<<<< HEAD
       <van-popup v-model="showPicker" position="bottom">
         <van-picker
           show-toolbar
+          title="选择客户"
           value-key="customerName"
           :columns="columns"
           @confirm="onConfirm"
           @cancel="showPicker = false"
         />
-=======
-      <van-popup v-model="showPicker"
-                 position="bottom">
-        <van-picker show-toolbar
-                    title="选择客户"
-                    value-key='customerName'
-                    :columns="columns"
-                    @confirm="onConfirm"
-                    @cancel="showPicker = false" />
->>>>>>> 9a12ce1da8da362e4812ebe238f5eba4c0ce8395
       </van-popup>
     </div>
     <!-- <div class="bottom-warp">
@@ -128,15 +118,9 @@ export default {
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-<<<<<<< HEAD
       loadingType: "spinner",
     });
     CommonHome.getWxToken();
-=======
-      loadingType: 'spinner',
-    })
-    CommonHome.getWxToken()
->>>>>>> 9a12ce1da8da362e4812ebe238f5eba4c0ce8395
   },
   mounted() {
     setTimeout(() => {
@@ -171,41 +155,26 @@ export default {
       );
     },
     getUserName() {
-<<<<<<< HEAD
-      this.$network
-        .get("/user-service/punckClock/getPunckClockList")
-        .then((res) => {
-          if (res) {
-            this.imageUser = res.data.plist[0].avatar || "";
-            this.name = res.data.plist[0].name || "";
-          }
-        });
-=======
-      this.$network.get('/user-service/punckClock/getLoginName').then((res) => {
+      this.$network.get("/user-service/punckClock/getLoginName").then((res) => {
         if (res) {
-          this.imageUser = res.data.avatar || ''
-          this.name = res.data.name || ''
+          this.imageUser = res.data.avatar || "";
+          this.name = res.data.name || "";
         }
-      })
->>>>>>> 9a12ce1da8da362e4812ebe238f5eba4c0ce8395
+      });
     },
     getCustomerList() {
       this.$network
         .get("/user-service/punckClock/getClueCustomerList")
         .then((res) => {
           if (res) {
-<<<<<<< HEAD
-            this.columns = res.data || [];
-=======
             this.columns = res.data.map((item) => {
               return {
                 customerName: item.customerName
-                  ? item.name + '@' + item.customerName
+                  ? item.name + "@" + item.customerName
                   : item.name,
                 clueCustomerNo: item.clueCustomerNo,
-              }
-            })
->>>>>>> 9a12ce1da8da362e4812ebe238f5eba4c0ce8395
+              };
+            });
           }
         });
     },
