@@ -103,7 +103,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -147,19 +147,16 @@ export default {
                     // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
                     const u = navigator.userAgent
                     const isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-                    alert(isiOS)
                     if (isiOS) {
-                      alert('ios111111111')
+                      // alert('ios111111111')
                       wx.getLocalImgData({
                         localId: localIds[0].toString(), // 图片的localID
                         success: function (res) {
                           var localData = res.localData // localData是图片的base64数据，可以用img标签显示
-                          alert('ios+' + localData)
                           that.addCodeSuccess(localData, 2)
                         },
                       })
                     } else {
-                      alert('andrio')
                       setTimeout(function () {
                         wx.uploadImage({
                           localId: localIds[0].toString(), // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -179,7 +176,6 @@ export default {
         })
     },
     addCodeSuccess(v, p) {
-      alert('进入打卡' + v + p)
       let obj = JSON.parse(localStorage.getItem('addObj'))
       let params = {
         customerType: Number(obj.radio),
@@ -192,24 +188,22 @@ export default {
         photoFile: v,
         phoneType: p,
       }
-      // alert(JSON.stringify(params))
       this.$network
         .post('/user-service/punckClock/addPunckClock', params)
         .then((res) => {
-          alert('进入提交')
-          alert(JSON.stringify(res))
+          // alert('进入提交')
           if (res.result) {
             this.prepare = false
             this.cardDate = formatDate(
               new Date().getTime(),
               'yyyy-MM-dd hh:mm:ss'
             )
-            if (res.data.customertype == 1) {
+            if (res.data.customerType == 1) {
               this.customertype = '已有客户'
             } else {
               this.customertype = '新客户'
             }
-            this.customer = res.data.name
+            this.customer = res.data.customerName
             this.customerAddress = res.data.customerPlace
             this.remark = res.data.content
           }

@@ -54,6 +54,7 @@
         <van-field v-model="phone"
                    name="phone"
                    label="手机号码:"
+                   @blur='validator'
                    maxlength="11"
                    placeholder="请输入" />
         <van-field v-model="address"
@@ -125,10 +126,15 @@ export default {
     }, 2000)
   },
   methods: {
+    validator(event) {
+      // console.log(event.target.value)
+    },
     onConfirm(value) {
       // console.log('------value----', value)
       this.customerVal = value.customerName
       this.clueCustomerNo = value.clueCustomerNo
+      this.phone = value.phone
+      this.address = value.address
       this.showPicker = false
     },
     changeRadio(val) {
@@ -136,6 +142,7 @@ export default {
       this.address = ''
       this.phone = ''
       this.remark = ''
+      this.client = ''
       this.customerVal = ''
     },
     selectDate() {
@@ -143,15 +150,25 @@ export default {
     },
     onSubmit(values) {
       // console.log('------values---', values)
-      this.$router.push('clockPage')
-      localStorage.setItem(
-        'addObj',
-        JSON.stringify({
-          clueCustomerNo: this.clueCustomerNo,
-          name: this.customerVal,
-          ...values,
+      var str = values.phone
+      var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      if (!myreg.test(str)) {
+        this.$notify({
+          message: '请填写正确的手机号码',
+          background: '#4168f6',
+          duration: 1000,
         })
-      )
+      } else {
+        this.$router.push('clockPage')
+        localStorage.setItem(
+          'addObj',
+          JSON.stringify({
+            clueCustomerNo: this.clueCustomerNo,
+            name: this.customerVal,
+            ...values,
+          })
+        )
+      }
     },
     getUserName() {
       this.$network.get('/user-service/punckClock/getLoginName').then((res) => {
@@ -172,6 +189,8 @@ export default {
                   ? item.name + '@' + item.customerName
                   : item.name,
                 clueCustomerNo: item.clueCustomerNo,
+                phone: item.phone,
+                address: item.address,
               }
             })
           }
@@ -265,7 +284,7 @@ export default {
         font-weight: 400;
       }
       .van-cell__value {
-        border: 1px solid #d9dae4;
+        border: 2px solid #d9dae4;
         border-radius: 8px;
         .van-field__error-message {
           display: none;
