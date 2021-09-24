@@ -61,7 +61,9 @@
               <div>
                 <p class="portrait_tite">
                   {{ item.name }}
-                  <span class="firm" v-if="item.customerType == 0">@企业</span>
+                  <span class="firm" v-if="item.customerType == 2"
+                    >@{{ item.corpName }}</span
+                  >
                   <span class="weix" v-if="item.customerType == 1">@微信</span>
                 </p>
                 <p class="portrait_message">
@@ -85,6 +87,9 @@
       </van-list>
     </div>
     <!-- <p class="no_more">没有更多</p> -->
+    <van-overlay :show="show">
+      <van-loading class="loding" type="spinner" color="#fff" size="24" />
+    </van-overlay>
   </div>
 </template>         
 <script>
@@ -93,8 +98,11 @@ import commonFun from "../../utils/commonToken";
 export default {
   data() {
     return {
+      channelList: [],
+      show: true,
       loading: false,
-      finished: true,
+      finished: false,
+      refreshing: false,
       chatId: "",
       // 群信息
       datatTite: {
@@ -105,10 +113,11 @@ export default {
         usersum: "",
         leavesum: "",
         joinsum: "",
+        total: 0, //总共的数据条数
       },
       pageInfo: {
         page: 1,
-        limit: 20,
+        limit: 10,
       },
       // 群用户列表
       dataList: [],
@@ -116,8 +125,9 @@ export default {
   },
   created() {
     // alert(localStorage.getItem("chatId"), "获取chatid");
-    // commonFun.getWxAppid();
+    commonFun.getWxAppid();
     // this.getGroupDetail();
+    // this.getList();
   },
   mounted() {
     setTimeout(() => {
@@ -128,18 +138,25 @@ export default {
   },
   methods: {
     onLoad() {
-      this.page++;
+      console.log("屏幕滚动");
+
+      this.pageInfo.page++;
+      // console.log(this.pageInfo.page++);
       this.getList();
     },
     getGroupDetail() {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
           // chatId: this.$route.query.id,
-          chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          // chatId: localStorage.getItem("chatId"),
+          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          chatId: localStorage.getItem("chatId"),
         })
         .then((res) => {
-          console.log(res);
+          if (res.result) {
+            this.show = false;
+            // this.finished = true;
+          }
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
           this.datatTite.owmerName = res.data.owmerName;
@@ -155,13 +172,39 @@ export default {
       this.$network
         .get("/customer-service/group/getGroupUserPage", {
           // chatId: this.$route.query.id,
-          chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
+          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
-          // chatId: localStorage.getItem("chatId"),
+          chatId: localStorage.getItem("chatId"),
           ...this.pageInfo,
         })
         .then((res) => {
-          let tempList = res.data.data.records;
+          // console.log(res);
+          // this.dataList = [];
+          // this.total = res.data.data.total;
+          // if (res.data.data.records.length === 0) {
+          //   this.finished = true;
+          // } else {
+          //   let arr1 = this.channelList;
+          //   const arr2 = res.data.data.records;
+          //   arr1 = arr1.concat(arr2);
+          //   this.channelList = arr1;
+          //   console.log("this.lawyer", this.channelList);
+          // }
+          // if (res.result) {
+          //   this.show = false;
+          //   // this.finished = true;
+          // }
+
+          let tempList = res.data.data.records; //请求返回当页的列表
+          this.loading = false;
+          this.total = res.data.data.total;
+          if (tempList == null || tempList.length === 0) {
+            // 加载结束
+            this.finished = true;
+            return;
+          }
+
           tempList.forEach((item) => {
             item.joinTime = item.joinTime
               ? formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss")
@@ -176,14 +219,58 @@ export default {
             }
             item.showName = item.showName ? item.showName : item.name;
           });
-          this.dataList = tempList;
+          // 将新数据与老数据进行合并
+          // let newSetArr = this.dataList.concat(tempList);
+          this.dataList = this.dataList.concat(tempList);
+          // this.dataList = this.unique(newSetArr);
+          // this.dataList = tempList;
+          console.log(this.dataList);
+          //如果列表数据条数>=总条数，不再触发滚动加载
+          if (this.dataList.length >= this.total) {
+            this.finished = true;
+          }
+          // this.dataList = tempList;
           // this.total = res.data.data.total;
+          // let lengrod = res.data.data.records;
+          // let newSetArr = this.channelList.concat(lengrod);
+
+          // this.channelList = this.unique(newSetArr);
+
+          // console.log(this.channelList);
+          // if (lengrod == null || lengrod.length === 0)
+          //   if (this.channelList.length >= this.total) {
+          //     this.finished = true;
+          //   } else {
+          //     // this.onLoad();
+          //   }
         });
     },
+    // onRefresh() {
+    //   // 清空列表数据
+    //   console.log("清空列表数据");
+    // },
+    // 去重一次
+    // unique(arr) {
+    //   const res = new Map();
+    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
+    // },
   },
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
+/deep/.van-overlay {
+  // background-color: rgba(0, 0, 0, 0.3);
+}
+/deep/ .van-loading {
+  // top: 50%;
+  // left: 50%;
+}
+.loding {
+  top: 50%;
+  left: 50%;
+  transform: translate(-2%, -50%);
+  // transform: translate(-50%, -50%);
+}
 .warp-portrait {
   /* padding: 24px; */
   /* background: #838a9d; */
@@ -252,6 +339,7 @@ export default {
 }
 .list-warp {
   margin-top: 24px;
+  // height: 1000px;
 }
 .lsits {
   padding: 24px;

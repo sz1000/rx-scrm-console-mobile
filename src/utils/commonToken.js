@@ -144,7 +144,7 @@ function getAgent(res) {
                     })
                     //获取当前客户群ID
                     wx.invoke('getCurExternalChat', {}, function(res) {
-                        // alert(JSON.stringify(res))
+                        // alert(("群id"+ res.chatId))
                             if (res.err_msg == 'getCurExternalChat:ok') {
                                 // chatId = res.chatId //返回当前客户群的群聊ID
                                 localStorage.setItem('chatId', res.chatId)

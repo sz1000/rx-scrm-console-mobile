@@ -84,7 +84,9 @@
               </div>
               <div class="rowText">
                 <span>创建时间:</span>
-                <span>{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
+                <span>{{
+                  formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
+                }}</span>
               </div>
               <div class="rowText">
                 <span>使用员工:</span>
@@ -111,12 +113,12 @@
                 <el-form-item label="活码名称:"
                               prop="name"
                               :rules="[
-                  {
-                    required: true,
-                    message: '请输入活码名称',
-                    trigger: 'blur',
-                  },
-                ]">
+                    {
+                      required: true,
+                      message: '请输入活码名称',
+                      trigger: 'blur',
+                    },
+                  ]">
                   <el-input v-model.trim="addForm.name"
                             placeholder="请输入"
                             maxlength="12"
@@ -154,8 +156,8 @@
                 <el-form-item label="渠道:"
                               prop="chId"
                               :rules="[
-                  { required: true, message: '请选择', trigger: 'change' },
-                ]">
+                    { required: true, message: '请选择', trigger: 'change' },
+                  ]">
                   <el-select v-model="addForm.chId"
                              placeholder="请选择"
                              @change="changeChannel"
@@ -204,8 +206,8 @@
                 </el-form-item>
                 <el-form-item label="创建时间:">
                   <span class="editText">{{
-                  formatDate(editForm.createTime, "yyyy-MM-dd hh:mm:ss")
-                }}</span>
+                    formatDate(editForm.createTime, "yyyy-MM-dd hh:mm:ss")
+                  }}</span>
                 </el-form-item>
                 <el-form-item label="活码名称:"
                               prop="name"
@@ -245,8 +247,8 @@
                 <el-form-item label="渠道:"
                               prop="chId"
                               :rules="[
-                  { required: true, message: '请选择', trigger: 'change' },
-                ]">
+                    { required: true, message: '请选择', trigger: 'change' },
+                  ]">
                   <el-select v-model="editForm.chId"
                              placeholder="请选择"
                              @change="changeChannel"

@@ -78,12 +78,11 @@
                  position="bottom">
         <van-picker show-toolbar
                     title="选择客户"
-                    value-key='customerName'
+                    value-key="customerName"
                     :columns="columns"
                     @confirm="onConfirm"
                     @cancel="showPicker = false" />
       </van-popup>
-
     </div>
     <!-- <div class="bottom-warp">
     </div> -->
