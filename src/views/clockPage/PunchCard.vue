@@ -4,9 +4,11 @@
     <div class="customInfo">
       <div class="iconName">
         <div v-if="imageUser">
-          <img :src="imageUser" alt="" />
+          <img :src="imageUser"
+               alt="" />
         </div>
-        <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
+        <div class="flag"
+             v-else>{{ name ? name.substr(0, 1) : "" }}</div>
         <div class="nameSex">
           <span>{{ name }}</span>
           <span>{{ date }}</span>
@@ -15,177 +17,227 @@
     </div>
     <div class="main-warp">
       <van-form @submit="onSubmit">
-        <van-field name="radio" class="borderNone" required label="客户类型:">
+        <van-field name="radio"
+                   class="borderNone"
+                   required
+                   label="客户类型:">
           <template #input>
-            <van-radio-group
-              v-model="radio"
-              direction="horizontal"
-              @change="changeRadio"
-            >
-              <van-radio name="2" icon-size="16px"> 新客户</van-radio>
-              <van-radio name="1" icon-size="16px">已有客户</van-radio>
+            <van-radio-group v-model="radio"
+                             direction="horizontal"
+                             @change="changeRadio">
+              <van-radio name="2"
+                         icon-size="16px"> 新客户</van-radio>
+              <van-radio name="1"
+                         icon-size="16px">已有客户</van-radio>
             </van-radio-group>
           </template>
         </van-field>
-        <van-field
-          v-if="radio == 1"
-          required
-          :value="customerVal"
-          name="customerVal"
-          label="对应客户:"
-          placeholder="请选择"
-          @click="showPicker = true"
-          right-icon="arrow-down"
-          :rules="[{ required: true, message: '请选择对应客户名称' }]"
-        />
+        <van-field v-if="radio == 1"
+                   required
+                   :value="customerVal"
+                   name="customerVal"
+                   label="对应客户:"
+                   @focus='selectDate'
+                   placeholder="请选择"
+                   @click="showPicker = true"
+                   right-icon="arrow-down"
+                   :rules="[{ required: true, message: '请选择对应客户名称' }]" />
 
-        <van-field
-          v-if="radio == 2"
-          v-model="client"
-          name="client"
-          required
-          placeholder="请输入"
-          maxlength="15"
-          label="对应客户:"
-          :rules="[{ required: true, message: '请输入' }]"
-        />
-        <van-field
-          v-model="phone"
-          name="phone"
-          label="手机号码:"
-          maxlength="11"
-          placeholder="请输入"
-        />
-        <van-field
-          v-model="address"
-          name="address"
-          label="客户地址:"
-          maxlength="60"
-          placeholder="请输入"
-        />
-        <van-field
-          class="remark"
-          name="remark"
-          v-model="remark"
-          rows="2"
-          label="备注:"
-          type="textarea"
-          maxlength="200"
-          placeholder="请输入"
-          show-word-limit
-        />
+        <van-field v-if="radio == 2"
+                   v-model="client"
+                   name="client"
+                   required
+                   placeholder="请输入"
+                   maxlength="15"
+                   label="对应客户:"
+                   :rules="[{ required: true, message: '请输入' }]" />
+        <van-field v-model="phone"
+                   name="phone"
+                   label="手机号码:"
+                   @blur='validator'
+                   maxlength="11"
+                   placeholder="请输入" />
+        <van-field v-model="address"
+                   name="address"
+                   label="客户地址:"
+                   maxlength="60"
+                   placeholder="请输入" />
+        <van-field class="remark"
+                   name="remark"
+                   v-model="remark"
+                   rows="2"
+                   label="备注:"
+                   type="textarea"
+                   maxlength="200"
+                   placeholder="请输入"
+                   show-word-limit />
 
-        <van-button class="punch" native-type="submit">去打卡</van-button>
+        <van-button class="punch"
+                    native-type="submit">去打卡</van-button>
       </van-form>
-      <van-popup v-model="showPicker" position="bottom">
-        <van-picker
-          show-toolbar
-          title="选择客户"
-          value-key="customerName"
-          :columns="columns"
-          @confirm="onConfirm"
-          @cancel="showPicker = false"
-        />
+      <van-popup v-model="showPicker"
+                 position="bottom">
+        <van-picker show-toolbar
+                    title="选择客户"
+                    value-key="customerName"
+                    :columns="columns"
+                    @confirm="onConfirm"
+                    @cancel="showPicker = false" />
       </van-popup>
     </div>
-    <!-- <div class="bottom-warp">
-    </div> -->
+    <div class="btm-box">
+      <div class="bottom-warp">
+        <div class="routerbtn"
+             @click="goToCard">
+          <img src="../../images/daka1.png"
+               alt="">
+          <span class="textname">打卡</span>
+        </div>
+        <div class="routerbtn"
+             @click="goHome">
+          <img src="../../images/gongju2.png"
+               alt="">
+          <span>运营工具</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import { formatDate } from "../../utils/tool";
-import CommonHome from "../../utils/CommonHome";
+import { formatDate } from '../../utils/tool'
+import CommonHome from '../../utils/CommonHome'
 
 export default {
   data() {
     return {
-      imageUser: "",
-      name: "",
-      date: formatDate(new Date().getTime(), "yyyy-MM-dd"),
+      imageUser: '',
+      name: '',
+      date: formatDate(new Date().getTime(), 'yyyy-MM-dd'),
       ruleForm: {},
-      client: "", //对应客户
-      address: "", //客户地址
-      remark: "", //备注
-      phone: "", //手机号
-      customerVal: "", //选择客户
-      radio: "2", //客户类型
+      client: '', //对应客户
+      address: '', //客户地址
+      remark: '', //备注
+      phone: '', //手机号
+      customerVal: '', //选择客户
+      radio: '2', //客户类型
       columns: [],
       showPicker: false,
-      clueCustomerNo: "",
-    };
+      clueCustomerNo: '',
+    }
   },
   created() {
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-      loadingType: "spinner",
-    });
-    CommonHome.getWxToken();
+      loadingType: 'spinner',
+    })
+    CommonHome.getWxToken()
   },
   mounted() {
     setTimeout(() => {
-      this.getUserName();
-      this.getCustomerList();
-    }, 2000);
+      this.getUserName()
+      this.getCustomerList()
+    }, 2000)
   },
   methods: {
+    goToCard() {},
+    goHome() {
+      this.$router.push('/home')
+    },
+    validator(event) {
+      // console.log(event.target.value)
+    },
     onConfirm(value) {
       // console.log('------value----', value)
-      this.customerVal = value.customerName;
-      this.clueCustomerNo = value.clueCustomerNo;
-      this.showPicker = false;
+      this.customerVal = value.customerName
+      this.clueCustomerNo = value.clueCustomerNo
+      this.phone = value.phone
+      this.address = value.address
+      this.showPicker = false
     },
     changeRadio(val) {
       // console.log('-----val----', val)
-      this.address = "";
-      this.phone = "";
-      this.remark = "";
-      this.customerVal = "";
+      this.address = ''
+      this.phone = ''
+      this.remark = ''
+      this.client = ''
+      this.customerVal = ''
+    },
+    selectDate() {
+      document.activeElement.blur()
     },
     onSubmit(values) {
       // console.log('------values---', values)
-      this.$router.push("clockPage");
+      // var str = values.phone
+      // var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      // if (!myreg.test(str)) {
+      //   this.$notify({
+      //     message: '请填写正确的手机号码',
+      //     background: '#4168f6',
+      //     duration: 1000,
+      //   })
+      // } else {
+      // }
+      this.$router.push('clockPage')
       localStorage.setItem(
-        "addObj",
+        'addObj',
         JSON.stringify({
           clueCustomerNo: this.clueCustomerNo,
           name: this.customerVal,
           ...values,
         })
-      );
+      )
     },
     getUserName() {
-      this.$network.get("/user-service/punckClock/getLoginName").then((res) => {
+      this.$network.get('/user-service/punckClock/getLoginName').then((res) => {
         if (res) {
-          this.imageUser = res.data.avatar || "";
-          this.name = res.data.name || "";
+          this.imageUser = res.data.avatar || ''
+          this.name = res.data.name || ''
         }
-      });
+      })
     },
     getCustomerList() {
       this.$network
-        .get("/user-service/punckClock/getClueCustomerList")
+        .get('/user-service/punckClock/getClueCustomerList')
         .then((res) => {
           if (res) {
             this.columns = res.data.map((item) => {
-              return {
-                customerName: item.customerName
-                  ? item.name + "@" + item.customerName
-                  : item.name,
-                clueCustomerNo: item.clueCustomerNo,
-              };
-            });
+              if (item.customerName == '') {
+                return {
+                  customerName: item.name,
+                  clueCustomerNo: item.clueCustomerNo,
+                  phone: item.phone,
+                  address: item.address,
+                }
+              } else if (item.name == '') {
+                return {
+                  customerName: item.customerName,
+                  clueCustomerNo: item.clueCustomerNo,
+                  phone: item.phone,
+                  address: item.address,
+                }
+              } else {
+                return {
+                  customerName: item.customerName
+                    ? item.name + '@' + item.customerName
+                    : item.name,
+                  clueCustomerNo: item.clueCustomerNo,
+                  phone: item.phone,
+                  address: item.address,
+                }
+              }
+            })
           }
-        });
+        })
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .out-warp {
-  height: 100%;
+  // height: 100%;
   background: #fff;
-  padding: 48px 0;
+  padding: 48px 0 68px 0;
   .title-area {
     text-align: center;
     height: 48px;
@@ -238,7 +290,7 @@ export default {
     }
   }
   .main-warp {
-    padding: 0 24px;
+    padding: 0 24px 140px;
     margin-top: 48px;
     /deep/ .van-cell {
       margin-bottom: 60px;
@@ -266,7 +318,7 @@ export default {
         font-weight: 400;
       }
       .van-cell__value {
-        border: 1px solid #d9dae4;
+        border: 2px solid #d9dae4;
         border-radius: 8px;
         .van-field__error-message {
           display: none;
@@ -291,7 +343,10 @@ export default {
     .remark {
       height: 400px;
       /deep/.van-cell__value {
-        // height: 400px;
+        .van-field__word-limit {
+          font-size: 28px;
+          line-height: 30px;
+        }
         .van-field__body {
           // height: 400px;
           .van-field__control {
@@ -301,12 +356,34 @@ export default {
       }
     }
   }
-  .bottom-warp {
-    height: 112px;
-    border-top: 1px solid #f0f2f7;
-    border-bottom: 1px solid #f0f2f7;
+  .btm-box {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 180px;
     background: #fff;
-    margin-top: 48px;
+    .bottom-warp {
+      height: 112px;
+      border-top: 1px solid #f0f2f7;
+      border-bottom: 1px solid #f0f2f7;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 168px;
+      justify-content: space-between;
+      .routerbtn {
+        font-size: 28px;
+        .textname {
+          color: #4168f6;
+        }
+        img {
+          width: 40px;
+          height: 40px;
+          margin: 0 auto;
+          margin-bottom: 12px;
+        }
+      }
+    }
   }
 }
 /deep/ .van-field__right-icon {

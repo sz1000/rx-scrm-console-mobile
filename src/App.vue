@@ -42,4 +42,7 @@ export default {};
     }
   }
 }
+/deep/.popper-select-class {
+  z-index: 3000 !important;
+}
 </style>

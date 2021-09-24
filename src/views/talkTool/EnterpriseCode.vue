@@ -137,6 +137,7 @@
                     multiple
                     collapse-tags
                     @change="changeUsre"
+                    popper-append-to-body
                     clearable
                     popper-class="popper-select-class"
                   >
@@ -245,6 +246,7 @@
                     multiple
                     collapse-tags
                     @change="changeUsre"
+                    popper-append-to-body
                     clearable
                     popper-class="popper-select-class"
                   >
@@ -478,9 +480,9 @@ export default {
       this.showAdd = true;
       this.addForm.status = "1";
       this.titleName = "新增企微活码";
-      this.$nextTick(() => {
-        this.getSelect();
-      });
+      // this.$nextTick(() => {
+      this.getSelect();
+      // })
       setTimeout(() => {
         this.docmHeight =
           document.getElementsByClassName("vant_sheet ")[0].clientHeight;
@@ -493,7 +495,8 @@ export default {
       });
     },
     changeUsre(val) {
-      // console.log(val)
+      console.log(document.getElementsByClassName("popper-select-class"));
+
       this.addForm.userArr = val;
     },
     checkChange(val) {
@@ -890,8 +893,12 @@ export default {
   }
   .bottom_model {
     -webkit-overflow-scrolling: touch;
+    /deep/.vant_sheet {
+      z-index: 2002 !important;
+    }
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);
+      z-index: 2000 !important;
     }
     .van-action-sheet__header {
       height: 88px;

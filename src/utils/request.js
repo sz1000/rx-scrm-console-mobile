@@ -27,7 +27,6 @@ instance.interceptors.request.use(
             if (token) {
                 config.headers.common.token = token
             }
-
             return config
         },
         (error) => Promise.reject(error)
