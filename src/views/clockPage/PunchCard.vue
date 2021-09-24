@@ -341,17 +341,11 @@ export default {
       }
     }
     .remark {
-      height: 400px;
+      height: 200px;
       /deep/.van-cell__value {
         .van-field__word-limit {
           font-size: 28px;
-          line-height: 30px;
-        }
-        .van-field__body {
-          // height: 400px;
-          .van-field__control {
-            height: 350px;
-          }
+          // line-height: 30px;
         }
       }
     }
