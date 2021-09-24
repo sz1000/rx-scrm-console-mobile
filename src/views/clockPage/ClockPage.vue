@@ -93,6 +93,11 @@ export default {
       this.$router.go(-1)
     },
     fnUpdate() {
+      this.$toast.loading({
+        overlay: true,
+        duration: 1000,
+        loadingType: 'spinner',
+      })
       this.getLocation()
     },
     clickCard() {
@@ -182,7 +187,8 @@ export default {
         phone: obj.phone,
         customerPlace: obj.address,
         content: obj.remark,
-        customerName: obj.client,
+        customerName: obj.client || obj.customerVal.split('@')[1],
+        splicingName: obj.customerVal || obj.client,
         clueCustomerNo: obj.clueCustomerNo,
         punchPlace: this.addressName,
         photoFile: v,
@@ -203,7 +209,7 @@ export default {
             } else {
               this.customertype = '新客户'
             }
-            this.customer = res.data.customerName
+            this.customer = res.data.splicingName
             this.customerAddress = res.data.customerPlace
             this.remark = res.data.content
           }
@@ -322,8 +328,11 @@ export default {
       margin-top: 48px;
       span {
         display: inline-block;
-        margin-right: 16px;
         font-size: 28px;
+      }
+      span:nth-child(2) {
+        // margin-left: 16px;
+        display: inline-block;
       }
     }
     .updateAddress {
@@ -352,7 +361,6 @@ export default {
       padding: 48px 0 0 132px;
       margin-top: 48px;
       border-top: 1px solid #f0f2f7;
-      border-bottom: 1px solid #f0f2f7;
       .box {
         font-size: 28px;
         margin-bottom: 24px;
@@ -370,7 +378,7 @@ export default {
           flex: 1;
           color: #3c4353;
           overflow-y: scroll;
-          max-height: 100px;
+          max-height: 300px;
         }
       }
     }

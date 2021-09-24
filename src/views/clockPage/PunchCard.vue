@@ -85,8 +85,22 @@
                     @cancel="showPicker = false" />
       </van-popup>
     </div>
-    <!-- <div class="bottom-warp">
-    </div> -->
+    <div class="btm-box">
+      <div class="bottom-warp">
+        <div class="routerbtn"
+             @click="goToCard">
+          <img src="../../images/daka1.png"
+               alt="">
+          <span class="textname">打卡</span>
+        </div>
+        <div class="routerbtn"
+             @click="goHome">
+          <img src="../../images/gongju2.png"
+               alt="">
+          <span>运营工具</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -126,6 +140,10 @@ export default {
     }, 2000)
   },
   methods: {
+    goToCard() {},
+    goHome() {
+      this.$router.push('/home')
+    },
     validator(event) {
       // console.log(event.target.value)
     },
@@ -150,25 +168,25 @@ export default {
     },
     onSubmit(values) {
       // console.log('------values---', values)
-      var str = values.phone
-      var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/
-      if (!myreg.test(str)) {
-        this.$notify({
-          message: '请填写正确的手机号码',
-          background: '#4168f6',
-          duration: 1000,
+      // var str = values.phone
+      // var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/
+      // if (!myreg.test(str)) {
+      //   this.$notify({
+      //     message: '请填写正确的手机号码',
+      //     background: '#4168f6',
+      //     duration: 1000,
+      //   })
+      // } else {
+      // }
+      this.$router.push('clockPage')
+      localStorage.setItem(
+        'addObj',
+        JSON.stringify({
+          clueCustomerNo: this.clueCustomerNo,
+          name: this.customerVal,
+          ...values,
         })
-      } else {
-        this.$router.push('clockPage')
-        localStorage.setItem(
-          'addObj',
-          JSON.stringify({
-            clueCustomerNo: this.clueCustomerNo,
-            name: this.customerVal,
-            ...values,
-          })
-        )
-      }
+      )
     },
     getUserName() {
       this.$network.get('/user-service/punckClock/getLoginName').then((res) => {
@@ -184,13 +202,29 @@ export default {
         .then((res) => {
           if (res) {
             this.columns = res.data.map((item) => {
-              return {
-                customerName: item.customerName
-                  ? item.name + '@' + item.customerName
-                  : item.name,
-                clueCustomerNo: item.clueCustomerNo,
-                phone: item.phone,
-                address: item.address,
+              if (item.customerName == '') {
+                return {
+                  customerName: item.name,
+                  clueCustomerNo: item.clueCustomerNo,
+                  phone: item.phone,
+                  address: item.address,
+                }
+              } else if (item.name == '') {
+                return {
+                  customerName: item.customerName,
+                  clueCustomerNo: item.clueCustomerNo,
+                  phone: item.phone,
+                  address: item.address,
+                }
+              } else {
+                return {
+                  customerName: item.customerName
+                    ? item.name + '@' + item.customerName
+                    : item.name,
+                  clueCustomerNo: item.clueCustomerNo,
+                  phone: item.phone,
+                  address: item.address,
+                }
               }
             })
           }
@@ -201,9 +235,9 @@ export default {
 </script>
 <style lang="less" scoped>
 .out-warp {
-  height: 100%;
+  // height: 100%;
   background: #fff;
-  padding: 48px 0;
+  padding: 48px 0 68px 0;
   .title-area {
     text-align: center;
     height: 48px;
@@ -256,7 +290,7 @@ export default {
     }
   }
   .main-warp {
-    padding: 0 24px;
+    padding: 0 24px 140px;
     margin-top: 48px;
     /deep/ .van-cell {
       margin-bottom: 60px;
@@ -309,7 +343,10 @@ export default {
     .remark {
       height: 400px;
       /deep/.van-cell__value {
-        // height: 400px;
+        .van-field__word-limit {
+          font-size: 28px;
+          line-height: 30px;
+        }
         .van-field__body {
           // height: 400px;
           .van-field__control {
@@ -319,12 +356,34 @@ export default {
       }
     }
   }
-  .bottom-warp {
-    height: 112px;
-    border-top: 1px solid #f0f2f7;
-    border-bottom: 1px solid #f0f2f7;
+  .btm-box {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 180px;
     background: #fff;
-    margin-top: 48px;
+    .bottom-warp {
+      height: 112px;
+      border-top: 1px solid #f0f2f7;
+      border-bottom: 1px solid #f0f2f7;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      padding: 0 168px;
+      justify-content: space-between;
+      .routerbtn {
+        font-size: 28px;
+        .textname {
+          color: #4168f6;
+        }
+        img {
+          width: 40px;
+          height: 40px;
+          margin: 0 auto;
+          margin-bottom: 12px;
+        }
+      }
+    }
   }
 }
 /deep/ .van-field__right-icon {

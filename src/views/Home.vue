@@ -1,66 +1,83 @@
 <template>
   <div class="settinWarp">
-    <div class="customAccont">客户统计</div>
-    <div class="cardContent">
-      <div class="box card1">
-        <span>{{ clues }}</span>
-        <span>我的线索</span>
+    <div class="main-warp">
+      <div class="customAccont">客户统计</div>
+      <div class="cardContent">
+        <div class="box card1">
+          <span>{{ clues }}</span>
+          <span>我的线索</span>
+        </div>
+        <div class="box card2">
+          <span>{{ cluSee }}</span>
+          <span>线索公海</span>
+        </div>
       </div>
-      <div class="box card2">
-        <span>{{ cluSee }}</span>
-        <span>线索公海</span>
+      <div class="cardContent">
+        <div class="box card3">
+          <span>{{ customer }}</span>
+          <span>我的客户</span>
+        </div>
+        <div class="box card4">
+          <span>{{ customerSee }}</span>
+          <span>客户公海</span>
+        </div>
+      </div>
+      <div class="customAccont tool">拓客工具</div>
+      <div class="btnRouter">
+        <router-link to="/talkTool/enterpriseCode">
+          <div class="commonBtn">
+            <img src="../images/huoma.png"
+                 alt="" />
+            <span>渠道活码</span>
+          </div>
+        </router-link>
+        <router-link to="/talkTool/channelConfiguration">
+          <div class="commonBtn">
+            <img src="../images/qudao.png"
+                 alt="" />
+            <span>渠道配置</span>
+          </div>
+        </router-link>
+      </div>
+      <div class="customAccont manage">客户管理</div>
+      <div class="btnRouter custom">
+        <router-link to="/customerManage/clues">
+          <div class="commonBtn">
+            <img src="../images/xiansuo.png"
+                 alt="" />
+            <span>线索</span>
+          </div>
+        </router-link>
+        <router-link to="/customerManage/myCustomer">
+          <div class="commonBtn">
+            <img src="../images/kehu.png"
+                 alt="" />
+            <span>客户</span>
+          </div>
+        </router-link>
+        <router-link to="/customerManage/grouplist">
+          <div class="commonBtn">
+            <img src="../images/grouplist.png"
+                 alt="" />
+            <span>群列表</span>
+          </div>
+        </router-link>
       </div>
     </div>
-    <div class="cardContent">
-      <div class="box card3">
-        <span>{{ customer }}</span>
-        <span>我的客户</span>
+    <div class="btm-box">
+      <div class="bottom-warp">
+        <div class="routerbtn"
+             @click="goToCard">
+          <img src="../images/daka2.png"
+               alt="">
+          <span>打卡</span>
+        </div>
+        <div class="routerbtn">
+          <img src="../images/gongju1.png"
+               alt="">
+          <span class="textname">运营工具</span>
+        </div>
       </div>
-      <div class="box card4">
-        <span>{{ customerSee }}</span>
-        <span>客户公海</span>
-      </div>
-    </div>
-    <div class="customAccont tool">拓客工具</div>
-    <div class="btnRouter">
-      <router-link to="/talkTool/enterpriseCode">
-        <div class="commonBtn">
-          <img src="../images/huoma.png"
-               alt="" />
-          <span>渠道活码</span>
-        </div>
-      </router-link>
-      <router-link to="/talkTool/channelConfiguration">
-        <div class="commonBtn">
-          <img src="../images/qudao.png"
-               alt="" />
-          <span>渠道配置</span>
-        </div>
-      </router-link>
-    </div>
-    <div class="customAccont manage">客户管理</div>
-    <div class="btnRouter custom">
-      <router-link to="/customerManage/clues">
-        <div class="commonBtn">
-          <img src="../images/xiansuo.png"
-               alt="" />
-          <span>线索</span>
-        </div>
-      </router-link>
-      <router-link to="/customerManage/myCustomer">
-        <div class="commonBtn">
-          <img src="../images/kehu.png"
-               alt="" />
-          <span>客户</span>
-        </div>
-      </router-link>
-      <router-link to="/customerManage/grouplist">
-        <div class="commonBtn">
-          <img src="../images/grouplist.png"
-               alt="" />
-          <span>群列表</span>
-        </div>
-      </router-link>
     </div>
   </div>
 </template>
@@ -100,16 +117,22 @@ export default {
     }, 2000)
     // this.$toast.clear()
   },
-  methods: {},
+  methods: {
+    goToCard() {
+      this.$router.push('/punchCard')
+    },
+  },
 }
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
 .settinWarp {
-  padding: 24px;
   background: #fff;
   height: 100%;
   overflow: auto;
+  .main-warp {
+    padding: 24px;
+  }
   .customAccont {
     position: relative;
     font-size: 28px;
@@ -195,6 +218,33 @@ export default {
     .commonBtn {
       span {
         margin-left: 5px;
+      }
+    }
+  }
+}
+.btm-box {
+  position: fixed;
+  bottom: 68px;
+  width: 100%;
+  .bottom-warp {
+    border-top: 1px solid #f0f2f7;
+    border-bottom: 1px solid #f0f2f7;
+    height: 112px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 168px;
+    justify-content: space-between;
+    .routerbtn {
+      font-size: 28px;
+      .textname {
+        color: #4168f6;
+      }
+      img {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+        margin-bottom: 12px;
       }
     }
   }
