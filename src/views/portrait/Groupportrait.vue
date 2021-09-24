@@ -12,10 +12,10 @@
             <span>({{ datatTite.usersum }})</span>
           </p>
           <p class="portrait_message">
-            <span class="grom_name">
-              群主：{{ datatTite.owmerName || "暂无" }}</span
+            <span class="grom_name"
+              >群主：{{ datatTite.owmerName || "暂无" }}</span
             >
-            <span class="ml24"
+            <span class="ml24 in_block"
               >建群时间 ：{{ datatTite.createTime || "暂无" }}</span
             >
           </p>
@@ -131,16 +131,18 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      this.pageInfo.page = 1;
       // console.log(this.$route.query.id + "----id--");
       this.getGroupDetail();
       this.getList();
+      // alert(JSON.stringify(localStorage.getItem("chatId")));
     }, 3000);
   },
   methods: {
     onLoad() {
       console.log("屏幕滚动");
 
-      this.pageInfo.page++;
+      this.pageInfo.page += 1;
       // console.log(this.pageInfo.page++);
       this.getList();
     },
@@ -150,7 +152,9 @@ export default {
           // chatId: this.$route.query.id,
           // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          chatId: localStorage.getItem("chatId"),
+          // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
+          // chatId: localStorage.getItem("chatId"),
+          chatId: sessionStorage.getItem("chatId"),
         })
         .then((res) => {
           if (res.result) {
@@ -173,29 +177,14 @@ export default {
         .get("/customer-service/group/getGroupUserPage", {
           // chatId: this.$route.query.id,
           // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
-          chatId: localStorage.getItem("chatId"),
+          // chatId: localStorage.getItem("chatId"),
+          chatId: sessionStorage.getItem("chatId"),
           ...this.pageInfo,
         })
         .then((res) => {
-          // console.log(res);
-          // this.dataList = [];
-          // this.total = res.data.data.total;
-          // if (res.data.data.records.length === 0) {
-          //   this.finished = true;
-          // } else {
-          //   let arr1 = this.channelList;
-          //   const arr2 = res.data.data.records;
-          //   arr1 = arr1.concat(arr2);
-          //   this.channelList = arr1;
-          //   console.log("this.lawyer", this.channelList);
-          // }
-          // if (res.result) {
-          //   this.show = false;
-          //   // this.finished = true;
-          // }
-
           let tempList = res.data.data.records; //请求返回当页的列表
           this.loading = false;
           this.total = res.data.data.total;
@@ -218,11 +207,12 @@ export default {
               item.joinScene = "通过扫描群二维码入群";
             }
             item.showName = item.showName ? item.showName : item.name;
+            console.log(item.id);
           });
           // 将新数据与老数据进行合并
-          // let newSetArr = this.dataList.concat(tempList);
-          this.dataList = this.dataList.concat(tempList);
-          // this.dataList = this.unique(newSetArr);
+          let newSetArr = this.dataList.concat(tempList);
+          // this.dataList = this.dataList.concat(tempList);
+          this.dataList = this.unique(newSetArr);
           // this.dataList = tempList;
           console.log(this.dataList);
           //如果列表数据条数>=总条数，不再触发滚动加载
@@ -250,11 +240,19 @@ export default {
     //   console.log("清空列表数据");
     // },
     // 去重一次
-    // unique(arr) {
-    //   const res = new Map();
-    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
-    // },
+    unique(arr) {
+      const res = new Map();
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
+    },
   },
+  // mounted() {
+  //   console.log("mounted");
+  //   localStorage.removeItem("chatId");
+  // },
+  // beforeDestroy() {
+  //   console.log("beforeDestroy");
+  //   localStorage.removeItem("chatId");
+  // },
 };
 </script>
 <style lang="less" scoped>
@@ -298,6 +296,7 @@ export default {
   font-weight: 400;
   margin-top: 16px;
   display: flex;
+  align-items: center;
 }
 .flex {
   display: flex;
@@ -383,11 +382,15 @@ export default {
   margin-right: 20px;
 }
 .grom_name {
-  width: 150px;
+  width: 180px;
   /* color: #3c4353; */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
+.in_block {
   display: inline-block;
 }
 </style>

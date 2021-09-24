@@ -158,6 +158,8 @@ export default {
           });
           // this.dataList = tempList;
           // 将新数据与老数据进行合并
+          // let newSetArr = this.dataList.concat(tempList);
+          // this.dataList = this.unique(newSetArr);
           this.dataList = this.dataList.concat(tempList);
           // 如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
@@ -165,6 +167,10 @@ export default {
           }
         });
     },
+    // unique(arr) {
+    //   const res = new Map();
+    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
+    // },
     //获取群id跳转
     clickChatid(id) {
       // console.log(id);

@@ -463,6 +463,7 @@ export default {
       border: 2px solid #d9dae4;
       text-align: center;
       line-height: 68px;
+      color: #3c4353;
       img {
         display: inline-block;
         width: 28px;
@@ -517,7 +518,7 @@ export default {
     // min-height: 382px;
     background: #ffffff;
     margin-top: 16px;
-    padding: 24px;
+    padding: 0 24px;
     box-sizing: border-box;
     font-size: 28px;
     .operationTop {
@@ -525,6 +526,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       height: 88px;
+      // padding: 24px 0;
       position: relative;
       &::after {
         content: "";
@@ -560,7 +562,7 @@ export default {
       }
     }
     .contentBox {
-      height: 292px;
+      // height: 292px;
       padding: 24px 0;
       box-sizing: border-box;
       .codeNum {
@@ -754,5 +756,11 @@ export default {
     left: 50%;
     transform: translate(-50%, 0);
   }
+}
+/deep/ .van-list__finished-text {
+  font-size: 24px;
+}
+.deleteBtn {
+  padding-bottom: 10px;
 }
 </style>

@@ -194,7 +194,7 @@
                 </el-form-item>
               </el-form>
             </div>
-            <div class="buttonWarp">
+            <div class="buttonWarp" slot="footer">
               <span class="cancel" @click="closeDialog()">取消</span>
               <span class="save" @click="saveDialog()">保存</span>
             </div>
@@ -300,7 +300,7 @@
                 </el-form-item>
               </el-form>
             </div>
-            <div class="buttonWarp">
+            <div class="buttonWarp2">
               <span class="cancel" @click="closeDialog()">取消</span>
               <span class="save" @click="saveEdit('form')">保存</span>
             </div>
@@ -935,10 +935,11 @@ export default {
             }
           }
           .el-form-item__label {
-            // width: 155px;
+            width: 155px;
             font-size: 28px;
             line-height: 80px;
-            color: #838a9d;
+            // color: #838a9d;
+            color: #606266;
           }
           .el-form-item__content {
             flex: 1;
@@ -994,7 +995,7 @@ export default {
             .el-textarea {
               .el-textarea__inner {
                 font-size: 28px;
-                height: 400px;
+                height: 300px;
                 border: 2px solid #d9dae4 !important;
               }
             }
@@ -1037,8 +1038,37 @@ export default {
         justify-content: space-around;
         font-size: 28px;
         width: 100%;
-        // position: fixed;
-        bottom: 24px;
+        margin-bottom: 20px;
+        position: fixed;
+        bottom: 2px;
+        // margin-top: 80px;
+
+        span {
+          display: inline-block;
+          width: 339px;
+          height: 80px;
+          border-radius: 8px;
+          border: 2px solid #4168f6;
+          text-align: center;
+          line-height: 80px;
+        }
+        .cancel {
+          color: #4168f6;
+          background: #fff;
+        }
+        .save {
+          background: #4168f6;
+          color: #fff;
+        }
+      }
+      .buttonWarp2 {
+        display: flex;
+        justify-content: space-around;
+        font-size: 28px;
+        width: 100%;
+        margin-bottom: 20px;
+        position: fixed;
+        bottom: -250px;
         // margin-top: 80px;
 
         span {
@@ -1073,5 +1103,8 @@ export default {
     left: 50%;
     transform: translate(-50%, 0);
   }
+}
+.deleteBtn {
+  padding-bottom: 10px;
 }
 </style>
