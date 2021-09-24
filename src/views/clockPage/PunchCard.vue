@@ -42,9 +42,8 @@
                    @click="showPicker = true"
                    right-icon="arrow-down"
                    :rules="[{ required: true, message: '请选择对应客户名称' }]" />
-
         <van-field v-if="radio == 2"
-                   v-model="client"
+                   v-model.trim="client"
                    name="client"
                    required
                    placeholder="请输入"
@@ -237,7 +236,7 @@ export default {
 .out-warp {
   // height: 100%;
   background: #fff;
-  padding: 48px 0 68px 0;
+  padding-top: 48px;
   .title-area {
     text-align: center;
     height: 48px;
@@ -292,6 +291,7 @@ export default {
   .main-warp {
     padding: 0 24px 140px;
     margin-top: 48px;
+    overflow: hidden;
     /deep/ .van-cell {
       margin-bottom: 60px;
       padding: 0;
@@ -341,17 +341,16 @@ export default {
       }
     }
     .remark {
-      height: 400px;
+      height: 200px;
       /deep/.van-cell__value {
+        .van-field__control {
+          padding-top: 10px;
+          height: 160px;
+          line-height: 40px;
+        }
         .van-field__word-limit {
           font-size: 28px;
-          line-height: 30px;
-        }
-        .van-field__body {
-          // height: 400px;
-          .van-field__control {
-            height: 350px;
-          }
+          // line-height: 30px;
         }
       }
     }
@@ -360,7 +359,7 @@ export default {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 180px;
+    height: 112px;
     background: #fff;
     .bottom-warp {
       height: 112px;
