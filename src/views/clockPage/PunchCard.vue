@@ -37,6 +37,7 @@
                    :value="customerVal"
                    name="customerVal"
                    label="对应客户:"
+                   @focus='selectDate'
                    placeholder="请选择"
                    @click="showPicker = true"
                    right-icon="arrow-down"
@@ -137,6 +138,9 @@ export default {
       this.phone = ''
       this.remark = ''
       this.customerVal = ''
+    },
+    selectDate() {
+      document.activeElement.blur()
     },
     onSubmit(values) {
       // console.log('------values---', values)

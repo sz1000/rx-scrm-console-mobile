@@ -74,8 +74,7 @@ export default {
       customer: '',
       customertype: '',
       customerAddress: '',
-      remark:
-        '哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊哈结婚登记啊是多久啊',
+      remark: '',
     }
   },
   created() {},
@@ -109,7 +108,13 @@ export default {
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
             signature: res.data.signature,
-            jsApiList: ['invoke', 'agentConfig', 'checkJsApi'],
+            jsApiList: [
+              'invoke',
+              'agentConfig',
+              'checkJsApi',
+              'getLocalImgData',
+              'chooseImage',
+            ],
           })
           var that = this
           wx.ready(function () {
@@ -121,7 +126,12 @@ export default {
                 timestamp: res.data.agent_config_data.timestamp,
                 nonceStr: res.data.agent_config_data.noncestr,
                 signature: res.data.agent_config_data.signature,
-                jsApiList: ['getContext', 'invoke'],
+                jsApiList: [
+                  'getContext',
+                  'invoke',
+                  'getLocalImgData',
+                  'chooseImage',
+                ],
               },
               function (res) {
                 wx.chooseImage({
@@ -132,20 +142,35 @@ export default {
                   isSaveToAlbum: 1, //整型值，0表示拍照时不保存到系统相册，1表示自动保存，默认值是1
                   success: function (res) {
                     var localIds = res.localIds // 返回选定照片的本地ID列表，
-                    alert('图片id为' + localIds)
+                    // alert('图片id为' + localIds)
                     // andriod中localId可以作为img标签的src属性显示图片；
                     // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
-                    setTimeout(function () {
-                      wx.uploadImage({
-                        localId: localIds[0].toString(), // 需要上传的图片的本地ID，由chooseImage接口获得
-                        isShowProgressTips: 1, // 默认为1，显示进度提示
+                    const u = navigator.userAgent
+                    const isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+                    alert(isiOS)
+                    if (isiOS) {
+                      alert('ios111111111')
+                      wx.getLocalImgData({
+                        localId: localIds[0].toString(), // 图片的localID
                         success: function (res) {
-                          alert('上传服务器端ID' + res.serverId)
-                          var serverId = res.serverId // 返回图片的服务器端ID
-                          that.addCodeSuccess(serverId)
+                          var localData = res.localData // localData是图片的base64数据，可以用img标签显示
+                          alert('ios+' + localData)
+                          that.addCodeSuccess(localData, 2)
                         },
                       })
-                    }, 1000)
+                    } else {
+                      alert('andrio')
+                      setTimeout(function () {
+                        wx.uploadImage({
+                          localId: localIds[0].toString(), // 需要上传的图片的本地ID，由chooseImage接口获得
+                          isShowProgressTips: 1, // 默认为1，显示进度提示
+                          success: function (res) {
+                            var serverId = res.serverId // 返回图片的服务器端ID
+                            that.addCodeSuccess(serverId, 1)
+                          },
+                        })
+                      }, 1000)
+                    }
                   },
                 })
               }
@@ -153,10 +178,11 @@ export default {
           })
         })
     },
-    addCodeSuccess(v) {
+    addCodeSuccess(v, p) {
+      alert('进入打卡' + v + p)
       let obj = JSON.parse(localStorage.getItem('addObj'))
       let params = {
-        customerType: obj.radio,
+        customerType: Number(obj.radio),
         phone: obj.phone,
         customerPlace: obj.address,
         content: obj.remark,
@@ -164,10 +190,14 @@ export default {
         clueCustomerNo: obj.clueCustomerNo,
         punchPlace: this.addressName,
         photoFile: v,
+        phoneType: p,
       }
+      // alert(JSON.stringify(params))
       this.$network
         .post('/user-service/punckClock/addPunckClock', params)
         .then((res) => {
+          alert('进入提交')
+          alert(JSON.stringify(res))
           if (res.result) {
             this.prepare = false
             this.cardDate = formatDate(
@@ -193,7 +223,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -234,9 +264,10 @@ export default {
         .get('/user-service/punckClock/getTengXunMap', {
           lng: val.longitude,
           lat: val.latitude,
+          // lng: '121.501088',
+          // lat: '31.310884',
         })
         .then((res) => {
-          // alert(JSON.stringify(res))
           this.addressName = res.data
         })
     },
@@ -315,6 +346,7 @@ export default {
       justify-content: center;
       img {
         width: 272px;
+        height: 272px;
       }
     }
     .text-success {
