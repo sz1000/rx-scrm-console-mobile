@@ -178,7 +178,10 @@
                 }}</span>
               </el-form-item>
               <el-form-item label="渠道欢迎语:">
-                <span>{{ detailForm.welText }}</span>
+                <!-- <span class="channel">{{ detailForm.welText }}</span> -->
+                <div style="line-height: 22px; margin-top: 10px">
+                  {{ detailForm.welText }}
+                </div>
               </el-form-item>
             </el-form>
           </div>
@@ -631,7 +634,7 @@ export default {
             }
           }
           .el-form-item__label {
-            // width: 155px;
+            width: 155px;
             font-size: 28px;
             line-height: 80px;
             color: #838a9d;
