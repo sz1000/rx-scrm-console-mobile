@@ -217,7 +217,8 @@ export default {
 .btm-box {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  // width: 100%;
+  width: 750px;
   .bottom-warp {
     border-top: 1px solid #f0f2f7;
     border-bottom: 1px solid #f0f2f7;
