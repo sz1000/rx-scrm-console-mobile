@@ -350,7 +350,7 @@ export default {
         }
         .van-field__word-limit {
           font-size: 28px;
-          // line-height: 30px;
+          line-height: 28px;
         }
       }
     }
