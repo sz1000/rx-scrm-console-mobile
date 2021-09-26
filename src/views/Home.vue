@@ -26,13 +26,15 @@
       <div class="btnRouter">
         <router-link to="/talkTool/enterpriseCode">
           <div class="commonBtn">
-            <img src="../images/huoma.png" alt="" />
+            <img src="../images/huoma.png"
+                 alt="" />
             <span>渠道活码</span>
           </div>
         </router-link>
         <router-link to="/talkTool/channelConfiguration">
           <div class="commonBtn">
-            <img src="../images/qudao.png" alt="" />
+            <img src="../images/qudao.png"
+                 alt="" />
             <span>渠道配置</span>
           </div>
         </router-link>
@@ -41,19 +43,22 @@
       <div class="btnRouter custom">
         <router-link to="/customerManage/clues">
           <div class="commonBtn">
-            <img src="../images/xiansuo.png" alt="" />
+            <img src="../images/xiansuo.png"
+                 alt="" />
             <span>线索</span>
           </div>
         </router-link>
         <router-link to="/customerManage/myCustomer">
           <div class="commonBtn">
-            <img src="../images/kehu.png" alt="" />
+            <img src="../images/kehu.png"
+                 alt="" />
             <span>客户</span>
           </div>
         </router-link>
         <router-link to="/customerManage/grouplist">
           <div class="commonBtn">
-            <img src="../images/grouplist.png" alt="" />
+            <img src="../images/grouplist.png"
+                 alt="" />
             <span>群列表</span>
           </div>
         </router-link>
@@ -61,12 +66,15 @@
     </div>
     <div class="btm-box">
       <div class="bottom-warp">
-        <div class="routerbtn" @click="goToCard">
-          <img src="../images/daka2.png" alt="" />
+        <div class="routerbtn"
+             @click="goToCard">
+          <img src="../images/daka2.png"
+               alt="" />
           <span>打卡</span>
         </div>
         <div class="routerbtn">
-          <img src="../images/gongju1.png" alt="" />
+          <img src="../images/gongju1.png"
+               alt="" />
           <span class="textname">运营工具</span>
         </div>
       </div>
@@ -74,56 +82,66 @@
   </div>
 </template>
 <script>
-import CommonHome from "../utils/CommonHome";
+import CommonHome from '../utils/CommonHome'
 
 export default {
   components: {},
   data() {
     return {
-      userId: "",
-      token: "",
-      clues: "",
-      cluSee: "",
-      customer: "",
-      customerSee: "",
-    };
+      userId: '',
+      token: '',
+      clues: '',
+      cluSee: '',
+      customer: '',
+      customerSee: '',
+    }
   },
   created() {
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-      loadingType: "spinner",
-    });
-    // CommonHome.getWxToken()
+      loadingType: 'spinner',
+    })
+    CommonHome.getWxToken()
   },
   mounted() {
     setTimeout(() => {
       this.$network
-        .get("/customer-service/cluecustomer/homedata")
+        .get('/customer-service/cluecustomer/homedata')
         .then((res) => {
-          this.clues = res.data.myThread;
-          this.cluSee = res.data.derThread;
-          this.customer = res.data.myCustomer;
-          this.customerSee = res.data.derCustomer;
-        });
-    }, 2000);
+          this.clues = res.data.myThread
+          this.cluSee = res.data.derThread
+          this.customer = res.data.myCustomer
+          this.customerSee = res.data.derCustomer
+        })
+    }, 2000)
     // this.$toast.clear()
   },
   methods: {
     goToCard() {
-      this.$router.push("/punchCard");
+      this.$router.push('/punchCard')
     },
   },
-};
+}
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
 .settinWarp {
+  position: relative;
   background: #fff;
   height: 100%;
-  overflow: auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding-bottom: 130px;
   .main-warp {
-    padding: 24px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 24px 24px 140px;
+    overflow-y: scroll;
+    scrollbar-width: 0;
+    &::-webkit-scrollbar {
+      width: 0;
+    }
   }
   .customAccont {
     position: relative;
@@ -133,7 +151,7 @@ export default {
     padding-left: 20px;
     margin-bottom: 24px;
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 5px;
       left: 0;
@@ -162,19 +180,19 @@ export default {
       }
     }
     .card1 {
-      background: url("../images/three.png") no-repeat;
+      background: url('../images/three.png') no-repeat;
       background-size: contain;
     }
     .card2 {
-      background: url("../images/one.png") no-repeat;
+      background: url('../images/one.png') no-repeat;
       background-size: contain;
     }
     .card3 {
-      background: url("../images/four.png") no-repeat;
+      background: url('../images/four.png') no-repeat;
       background-size: contain;
     }
     .card4 {
-      background: url("../images/two.png") no-repeat;
+      background: url('../images/two.png') no-repeat;
       background-size: contain;
     }
   }
@@ -215,8 +233,11 @@ export default {
   }
 }
 .btm-box {
-  position: fixed;
+  position: absolute;
   bottom: 0;
+  left: 0;
+  transform: translateZ(0);
+  -webkit-overflow-scroll: touch;
   // width: 100%;
   width: 750px;
   .bottom-warp {

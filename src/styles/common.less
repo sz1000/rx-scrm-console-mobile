@@ -7,13 +7,13 @@ html {
   height: 100%;
   width: 100%;
   overflow: scroll;
+  scrollbar-width: 0;
 }
 
 body {
   height: 100%;
   width: 100%;
 
-  // overflow: scroll;
 }
 
 // html::-webkit-scrollbar,
@@ -288,6 +288,7 @@ a:hover {
     justify-content: flex-end;
     padding-right: 24px;
     padding-top: 24px;
+
     .van-button--default {
       flex: 0;
       margin-left: 24px;
@@ -378,7 +379,14 @@ a:hover {
   }
 
 }
-.el-input__count-inner,.el-input__count{
+
+.el-input__count-inner,
+.el-input__count {
   font-size: 30px !important;
 }
-input,textarea{-webkit-appearance: none;box-shadow:0px 0px 0px rgba(0,0,0,0); }
+
+input,
+textarea {
+  -webkit-appearance: none;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+}

@@ -1,93 +1,94 @@
 <template>
   <div class="out-warp">
-    <div class="title-area">外出打卡</div>
-    <div class="customInfo">
-      <div class="iconName">
-        <div v-if="imageUser">
-          <img :src="imageUser" alt="" />
-        </div>
-        <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
-        <div class="nameSex">
-          <span>{{ name }}</span>
-          <span>{{ date }}</span>
+    <div class="content-warp">
+      <div class="title-area">外出打卡</div>
+      <div class="customInfo">
+        <div class="iconName">
+          <div v-if="imageUser">
+            <img :src="imageUser" alt="" />
+          </div>
+          <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
+          <div class="nameSex">
+            <span>{{ name }}</span>
+            <span>{{ date }}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="main-warp">
-      <van-form @submit="onSubmit">
-        <van-field name="radio" class="borderNone" required label="客户类型:">
-          <template #input>
-            <van-radio-group
-              v-model="radio"
-              direction="horizontal"
-              @change="changeRadio"
-            >
-              <van-radio name="2" icon-size="16px"> 新客户</van-radio>
-              <van-radio name="1" icon-size="16px">已有客户</van-radio>
-            </van-radio-group>
-          </template>
-        </van-field>
-        <van-field
-          v-if="radio == 1"
-          required
-          :value="customerVal"
-          name="customerVal"
-          label="对应客户:"
-          @focus="selectDate"
-          placeholder="请选择"
-          @click="showPicker = true"
-          right-icon="arrow-down"
-          :rules="[{ required: true, message: '请选择对应客户名称' }]"
-        />
-        <van-field
-          v-if="radio == 2"
-          v-model.trim="client"
-          name="client"
-          required
-          placeholder="请输入"
-          maxlength="15"
-          label="对应客户:"
-          :rules="[{ required: true, message: '请输入' }]"
-        />
-        <van-field
-          v-model="phone"
-          name="phone"
-          label="手机号码:"
-          @blur="validator"
-          maxlength="11"
-          placeholder="请输入"
-        />
-        <van-field
-          v-model="address"
-          name="address"
-          label="客户地址:"
-          maxlength="60"
-          placeholder="请输入"
-        />
-        <van-field
-          class="remark"
-          name="remark"
-          v-model="remark"
-          rows="2"
-          label="备注:"
-          type="textarea"
-          maxlength="200"
-          placeholder="请输入"
-          show-word-limit
-        />
-
-        <van-button class="punch" native-type="submit">去打卡</van-button>
-      </van-form>
-      <van-popup v-model="showPicker" position="bottom">
-        <van-picker
-          show-toolbar
-          title="选择客户"
-          value-key="customerName"
-          :columns="columns"
-          @confirm="onConfirm"
-          @cancel="showPicker = false"
-        />
-      </van-popup>
+      <div class="main-warp">
+        <van-form @submit="onSubmit">
+          <van-field name="radio" class="borderNone" required label="客户类型:">
+            <template #input>
+              <van-radio-group
+                v-model="radio"
+                direction="horizontal"
+                @change="changeRadio"
+              >
+                <van-radio name="2" icon-size="16px"> 新客户</van-radio>
+                <van-radio name="1" icon-size="16px">已有客户</van-radio>
+              </van-radio-group>
+            </template>
+          </van-field>
+          <van-field
+            v-if="radio == 1"
+            required
+            :value="customerVal"
+            name="customerVal"
+            label="对应客户:"
+            @focus="selectDate"
+            placeholder="请选择"
+            @click="showPicker = true"
+            right-icon="arrow-down"
+            :rules="[{ required: true, message: '请选择对应客户名称' }]"
+          />
+          <van-field
+            v-if="radio == 2"
+            v-model.trim="client"
+            name="client"
+            required
+            placeholder="请输入"
+            maxlength="15"
+            label="对应客户:"
+            :rules="[{ required: true, message: '请输入' }]"
+          />
+          <van-field
+            v-model="phone"
+            name="phone"
+            label="手机号码:"
+            @blur="validator"
+            maxlength="11"
+            placeholder="请输入"
+          />
+          <van-field
+            v-model="address"
+            name="address"
+            label="客户地址:"
+            maxlength="60"
+            placeholder="请输入"
+          />
+          <van-field
+            class="remark"
+            name="remark"
+            v-model="remark"
+            rows="2"
+            label="备注:"
+            type="textarea"
+            maxlength="200"
+            placeholder="请输入"
+            show-word-limit
+          />
+          <van-button class="punch" native-type="submit">去打卡</van-button>
+        </van-form>
+        <van-popup v-model="showPicker" position="bottom">
+          <van-picker
+            show-toolbar
+            title="选择客户"
+            value-key="customerName"
+            :columns="columns"
+            @confirm="onConfirm"
+            @cancel="showPicker = false"
+          />
+        </van-popup>
+      </div>
     </div>
     <div class="btm-box">
       <div class="bottom-warp">
@@ -235,9 +236,20 @@ export default {
 </script>
 <style lang="less" scoped>
 .out-warp {
-  // height: 100%;
   background: #fff;
   padding-top: 48px;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+  .content-warp {
+    overflow: scroll;
+    height: 100%;
+    scrollbar-width: 0;
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+  }
   .title-area {
     text-align: center;
     height: 48px;
@@ -292,7 +304,18 @@ export default {
   .main-warp {
     padding: 0 24px 140px;
     margin-top: 48px;
-    overflow: hidden;
+    box-sizing: border-box;
+    /deep/.van-cell--required {
+      &::before {
+        top: 5px;
+        left: 0;
+        font-size: 40px;
+      }
+    }
+    /deep/.van-radio__icon--checked .van-icon {
+      background-color: #4168f6;
+      border-color: #4168f6;
+    }
     /deep/ .van-cell {
       margin-bottom: 60px;
       padding: 0;
@@ -300,10 +323,6 @@ export default {
       line-height: 80px;
       &::after {
         border-bottom: 0;
-      }
-      .van-cell--required::before {
-        top: 0;
-        left: 0;
       }
       .van-radio__label {
         font-size: 28px;
@@ -350,19 +369,24 @@ export default {
           line-height: 40px;
         }
         .van-field__word-limit {
-          font-size: 28px;
           line-height: 28px;
+          font-family: PingFangSC-Regular;
+          font-size: 28px;
+          color: #c0c4cc;
         }
       }
     }
   }
   .btm-box {
-    position: fixed;
+    position: absolute;
     bottom: 0;
+    left: 0;
     // width: 100%;
     width: 750px;
     height: 112px;
     background: #fff;
+    transform: translateZ(0);
+    -webkit-overflow-scroll: touch;
     .bottom-warp {
       height: 112px;
       border-top: 1px solid #f0f2f7;
