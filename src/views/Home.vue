@@ -130,6 +130,7 @@ export default {
   background: #fff;
   height: 100%;
   overflow: auto;
+  padding-bottom: 130px;
   .main-warp {
     padding: 24px;
   }

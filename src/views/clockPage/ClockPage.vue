@@ -337,6 +337,7 @@ export default {
     .now-address {
       text-align: center;
       margin-top: 48px;
+      color: #838a9d;
       span {
         display: inline-block;
         font-size: 28px;
@@ -369,9 +370,19 @@ export default {
       font-weight: 600;
     }
     .detail-info {
-      padding: 48px 0 0 132px;
+      padding: 48px 32px 0 32px;
       margin-top: 48px;
-      border-top: 1px solid #f0f2f7;
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 48px;
+        height: 1px;
+        width: 620px;
+        background: #f0f2f7;
+      }
+      // border-top: 1px solid #f0f2f7;
       .box {
         font-size: 28px;
         margin-bottom: 24px;
@@ -383,6 +394,7 @@ export default {
           width: 140px;
           text-align: right;
           color: #838a9d;
+          font-family: PingFangSC-Regular;
           margin-right: 16px;
         }
         span:nth-child(2) {

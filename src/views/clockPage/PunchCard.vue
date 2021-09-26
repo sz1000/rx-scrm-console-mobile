@@ -291,6 +291,17 @@ export default {
     padding: 0 24px 140px;
     margin-top: 48px;
     overflow: hidden;
+    /deep/.van-cell--required {
+      &::before {
+        top: 5px;
+        left: 0;
+        font-size: 40px;
+      }
+    }
+    /deep/.van-radio__icon--checked .van-icon {
+      background-color: #4168f6;
+      border-color: #4168f6;
+    }
     /deep/ .van-cell {
       margin-bottom: 60px;
       padding: 0;
@@ -298,10 +309,6 @@ export default {
       line-height: 80px;
       &::after {
         border-bottom: 0;
-      }
-      .van-cell--required::before {
-        top: 0;
-        left: 0;
       }
       .van-radio__label {
         font-size: 28px;
@@ -348,8 +355,10 @@ export default {
           line-height: 40px;
         }
         .van-field__word-limit {
-          font-size: 28px;
           line-height: 28px;
+          font-family: PingFangSC-Regular;
+          font-size: 28px;
+          color: #c0c4cc;
         }
       }
     }
