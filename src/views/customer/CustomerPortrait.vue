@@ -11,25 +11,29 @@
       <div class="customInfo">
         <div class="iconName">
           <div v-if="imageUser">
-            <img :src="imageUser" alt="" />
+            <img :src="imageUser"
+                 alt="" />
           </div>
-          <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
+          <div class="flag"
+               v-else>{{ name ? name.substr(0, 1) : "" }}</div>
           <div class="nameSex">
             <span>{{ name }}</span>
             <span v-show="nameFrom">{{
               nameFrom == "1" ? "@微信" : `@${item.customerName}`
             }}</span>
-            <img
-              src="../../images/icon_female@2x.png"
-              alt=""
-              v-if="item.gender == '2'"
-            />
-            <img src="../../images/man.png" alt="" v-if="item.gender == '1'" />
+            <img src="../../images/icon_female@2x.png"
+                 alt=""
+                 v-if="item.gender == '2'" />
+            <img src="../../images/man.png"
+                 alt=""
+                 v-if="item.gender == '1'" />
           </div>
         </div>
-        <div class="detailBtn" @click="goToDetail">
+        <div class="detailBtn"
+             @click="goToDetail">
           详情
-          <van-icon name="arrow" color="#4168F6" />
+          <van-icon name="arrow"
+                    color="#4168F6" />
         </div>
       </div>
       <div class="detailInfo">
@@ -79,27 +83,24 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <div class="editButton" @click="showCompany(1)">
+          <div class="editButton"
+               @click="showCompany(1)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
+          <div :class="{ 'over-hidden': !unfold }"
+               ref="textBox">
             <div ref="spanBox">
-              <span
-                v-for="(list, index) in companyTagList"
-                :key="index"
-                class="tagBox"
-                >{{ list.name }}</span
-              >
+              <span v-for="(list, index) in companyTagList"
+                    :key="index"
+                    class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div
-            class="btn"
-            @click="unfold = !unfold"
-            v-show="companyTagList.length > 5"
-          >
+          <div class="btn"
+               @click="unfold = !unfold"
+               v-show="companyTagList.length > 5">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -108,32 +109,29 @@
       <div class="personLabel">
         <div class="t_text">
           <span class="label_tag">个人标签</span>
-          <div class="editButton" @click="showCompany(2)">
+          <div class="editButton"
+               @click="showCompany(2)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+          <div :class="{ 'over-hidden': !isShowPerson }"
+               ref="textBox">
             <div ref="spanBox">
-              <span
-                v-for="(list, index) in personTagList"
-                :key="index"
-                class="tagBox"
-                v-show="list.isChecked"
-                >{{ list.name }}</span
-              >
+              <span v-for="(list, index) in personTagList"
+                    :key="index"
+                    class="tagBox"
+                    v-show="list.isChecked">{{ list.name }}</span>
             </div>
           </div>
-          <div
-            class="btn"
-            @click="isShowPerson = !isShowPerson"
-            v-show="
+          <div class="btn"
+               @click="isShowPerson = !isShowPerson"
+               v-show="
               personTagList.filter((item) => {
                 return item.isChecked == 1;
               }).length > 5
-            "
-          >
+            ">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -142,20 +140,21 @@
       <div class="dynamic">
         <div class="t_text state">
           <span class="label_tag">动态</span>
-          <div class="editButton" @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png" alt="" />
+          <div class="editButton"
+               @click="showCompany(3)">
+            <img src="../../images/icon_repair1@2x.png"
+                 alt="" />
             <span>写跟进</span>
           </div>
         </div>
-        <div class="allText" v-show="timeLineList.length">全部</div>
+        <div class="allText"
+             v-show="timeLineList.length">全部</div>
         <div class="timeLine">
           <el-timeline>
-            <el-timeline-item
-              v-for="(item, index) in timeLineList"
-              :key="index"
-              color="#4168F6"
-              type="danger "
-            >
+            <el-timeline-item v-for="(item, index) in timeLineList"
+                              :key="index"
+                              color="#4168F6"
+                              type="danger ">
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
                 <div class="inLineTwo">{{ item.context }}</div>
@@ -172,55 +171,60 @@
       </div>
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="show" :title="titleName" class="vant_sheet">
+      <van-action-sheet v-model="show"
+                        :lock-scroll='false'
+                        :title="titleName"
+                        @cancel='cancelIcon'
+                        @click-overlay='cancelIcon'
+                        class="vant_sheet">
         <div class="content">
-          <div class="tagWarp" v-if="isShowDialog == '1'">
-            <div class="tagRow" v-for="(item, index) in groupList" :key="index">
+          <div class="tagWarp"
+               v-if="isShowDialog == '1'">
+            <div class="tagRow"
+                 v-for="(item, index) in groupList"
+                 :key="index">
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
-                <span
-                  class="creatTag"
-                  :class="{
+                <span class="creatTag"
+                      :class="{
                     changeTag:
                       highLightArr.findIndex((item) => {
                         return item.tagid == list.tagid;
                       }) > -1,
                   }"
-                  v-for="(list, index) in item.children"
-                  :key="list.id"
-                  v-show="list.name"
-                  @click="selectTag(list, index)"
-                  >{{ list.name }}</span
-                >
+                      v-for="(list, index) in item.children"
+                      :key="list.id"
+                      v-show="list.name"
+                      @click="selectTag(list, index)">{{ list.name }}</span>
               </div>
             </div>
           </div>
 
-          <div class="tagWarp personWarp" v-if="isShowDialog == '2'">
+          <div class="tagWarp personWarp"
+               v-if="isShowDialog == '2'">
             <div class="tagRow">
               <!-- <div class="groupName">{{item.name}}</div> -->
               <div class="tagStyle">
-                <span class="addBtn pointer" @click="addTag">+添加</span>
-                <span class="perchInput" v-if="isShow">
-                  <input
-                    v-model.trim="tagName"
-                    class="addInput"
-                    placeholder="输入后按回车完成"
-                    maxlength="30"
-                    @keyup.enter="handleSearch()"
-                  />
+                <span class="addBtn pointer"
+                      @click="addTag">+添加</span>
+                <span class="perchInput"
+                      v-if="isShow">
+                  <input v-model.trim="tagName"
+                         class="addInput"
+                         placeholder="输入后按回车完成"
+                         maxlength="30"
+                         @keyup.enter="handleSearch()" />
                 </span>
-                <span
-                  class="creatTag"
-                  :class="{ changeTag: list.isChecked }"
-                  v-for="(list, index) in personTagList"
-                  :key="list.id"
-                  v-show="list.name"
-                >
+                <span class="creatTag"
+                      :class="{ changeTag: list.isChecked }"
+                      v-for="(list, index) in personTagList"
+                      :key="list.id"
+                      v-show="list.name">
                   <span @click="selectPersonTag(list, index)">{{
                     list.name
                   }}</span>
-                  <span class="deleteTag" @click="deleteTag(list, index)">
+                  <span class="deleteTag"
+                        @click="deleteTag(list, index)">
                     <van-icon name="cross" />
                   </span>
                 </span>
@@ -228,18 +232,20 @@
             </div>
           </div>
 
-          <div class="writerInput" v-if="isShowDialog == '3'">
-            <van-field
-              v-model="message"
-              type="textarea"
-              maxlength="200"
-              placeholder="记录好跟进，多签单哟~"
-              show-word-limit
-            />
+          <div class="writerInput"
+               v-if="isShowDialog == '3'">
+            <van-field v-model="message"
+                       type="textarea"
+                       maxlength="200"
+                       placeholder="记录好跟进，多签单哟~"
+                       show-word-limit />
           </div>
-          <div class="buttonWarp" v-show="hidshow">
-            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
+          <div class="buttonWarp"
+               v-show="hidshow">
+            <span class="cancel"
+                  @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save"
+                  @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -250,9 +256,9 @@
 </template>
 <script>
 // import wx from 'weixin-js-sdk'
-import BackTop from "@/components/BackTop";
-import { formatDate } from "../../utils/tool";
-import commonFun from "../../utils/commonToken";
+import BackTop from '@/components/BackTop'
+import { formatDate } from '../../utils/tool'
+import commonFun from '../../utils/commonToken'
 export default {
   // mixins: [MyMixin],
   components: {
@@ -261,13 +267,13 @@ export default {
 
   data() {
     return {
-      title: "",
-      name: "",
-      nameFrom: "",
-      customerName: "",
-      imageUser: "",
-      gender: "",
-      email: "",
+      title: '',
+      name: '',
+      nameFrom: '',
+      customerName: '',
+      imageUser: '',
+      gender: '',
+      email: '',
       unfold: false,
       isShowPerson: false,
       tagList: [], //企业标签
@@ -282,190 +288,195 @@ export default {
       timeLineList: [],
       show: false,
       isShowDialog: null,
-      titleName: "",
+      titleName: '',
       highLightArr: [],
       tempList: [],
-      message: "",
-      avatar: "",
+      message: '',
+      avatar: '',
       showInput: null,
       isShow: false,
-      tagName: "",
-      userId: "",
+      tagName: '',
+      userId: '',
       obj: {},
       docmHeight: 0, //默认屏幕高度
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
       loadingShow: true,
-    };
+    }
   },
   created() {
-    commonFun.getWxAppid();
+    commonFun.getWxAppid()
   },
   watch: {},
   mounted() {
     setTimeout(() => {
-      this.getMethod();
-    }, 2000);
+      this.getMethod()
+    }, 2000)
 
     window.onresize = () =>
       (() => {
         this.showHeight =
-          document.getElementsByClassName("vant_sheet ")[0].clientHeight;
+          document.getElementsByClassName('vant_sheet ')[0].clientHeight
         // console.log(this.showHeight, this.docmHeight)
-      })();
+      })()
   },
   methods: {
     formatDate,
     goToDetail() {
       // alert(JSON.stringify(this.item.clueCustomerNo))
       this.$router.push({
-        name: "informationDetail",
+        name: 'informationDetail',
         params: {
           // userid: localStorage.getItem('userId'),
           userid: this.item.clueCustomerNo,
         },
-      });
+      })
     },
     //获取客户详情
     getMethod() {
-      if (!localStorage.getItem("userId")) {
-        commonFun.getWxAppid();
+      if (!localStorage.getItem('userId')) {
+        commonFun.getWxAppid()
       } else {
         this.$toast.loading({
           overlay: true,
-          loadingType: "spinner",
+          loadingType: 'spinner',
           duration: 0,
-        });
+        })
         this.$network
-          .get("/customer-service/m/cluecustomer/getClueCustomerByid", {
+          .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
             // id: v,
-            id: localStorage.getItem("userId"),
+            id: localStorage.getItem('userId'),
           })
           .then((res) => {
             // console.log(res)
-            this.$toast.clear();
-            this.loadingShow = false;
-            this.name = res.data.clueCustomerVO.name;
-            this.nameFrom = res.data.clueCustomerVO.customerType;
-            this.item = res.data.clueCustomerVO;
-            this.imageUser = res.data.clueCustomerVO.avatar;
-            this.timeLineList = res.data.followMessageEntity;
-            this.getTagList();
-            localStorage.removeItem("userId");
-          });
+            this.$toast.clear()
+            this.loadingShow = false
+            this.name = res.data.clueCustomerVO.name
+            this.nameFrom = res.data.clueCustomerVO.customerType
+            this.item = res.data.clueCustomerVO
+            this.imageUser = res.data.clueCustomerVO.avatar
+            this.timeLineList = res.data.followMessageEntity
+            this.getTagList()
+            localStorage.removeItem('userId')
+          })
       }
     },
     getTimeline() {
       // console.log(this.objItem, '------')
       this.$network
-        .get("/customer-service/cluecustomer/getMessage", {
+        .get('/customer-service/cluecustomer/getMessage', {
           cluecustomerno: this.item.clueCustomerNo,
         })
         .then((res) => {
-          this.timeLineList = res.data;
-        });
+          this.timeLineList = res.data
+        })
     },
     getTagList() {
-      this.highLightArr = [];
+      this.highLightArr = []
       this.$network
-        .get("/customer-service/cluecustomer/gettag", {
+        .get('/customer-service/cluecustomer/gettag', {
           clueCustomerNo: this.item.clueCustomerNo,
         })
         .then((res) => {
-          this.companyTagList = res.data.corpTagList;
-          this.groupList = res.data.tagCorpList;
-          this.personTagList = res.data.personTagList;
+          this.companyTagList = res.data.corpTagList
+          this.groupList = res.data.tagCorpList
+          this.personTagList = res.data.personTagList
           let allChildTag = res.data.tagCorpList.map((item) => {
-            return item.children;
-          });
+            return item.children
+          })
           // let childTag = allChildTag.flat()
-          let childTag = [].concat.apply([], allChildTag);
+          let childTag = [].concat.apply([], allChildTag)
           // console.log('---allChildTag---', allChildTag, childTag)
 
           this.companyTagList.forEach((item) => {
             childTag.forEach((chItem, chIndex) => {
               if (item.tagid == chItem.tagid) {
-                this.highLightArr.push(chItem);
+                this.highLightArr.push(chItem)
               }
-            });
+            })
             // console.log('-----列表----', this.highLightArr)
-          });
-        });
+          })
+        })
     },
     showCompany(v) {
-      this.isShowDialog = v;
-      this.show = true;
+      document.getElementById('html').style.overflow = 'hidden'
+      this.isShowDialog = v
+      this.show = true
       if (v == 1) {
-        this.titleName = "企业标签";
+        this.titleName = '企业标签'
       } else if (v == 2) {
-        this.titleName = "个人标签";
+        this.titleName = '个人标签'
       } else if (v == 3) {
-        this.titleName = "写跟进";
-        this.message = "";
-        setTimeout(() => {
-          this.docmHeight =
-            document.getElementsByClassName("vant_sheet ")[0].clientHeight;
-          console.log(this.docmHeight);
-        }, 200);
+        this.titleName = '写跟进'
+        this.message = ''
+        // setTimeout(() => {
+        //   this.docmHeight =
+        //     document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        //   console.log(this.docmHeight)
+        // }, 200)
       }
     },
     addTag(item, index) {
-      this.tagName = "";
-      this.isShow = !this.isShow;
+      this.tagName = ''
+      this.isShow = !this.isShow
     },
     handleSearch() {
       // console.log(this.tagName)
-      if (this.tagName !== "") {
+      if (this.tagName !== '') {
         this.$network
-          .post("/customer-service/cluecustomer/addtag", {
+          .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
             clueCustomerNo: this.item.clueCustomerNo,
           })
           .then((res) => {
             if (res.result) {
-              this.personTagList = res.data;
+              this.personTagList = res.data
             } else {
               this.$message({
-                type: "error",
-                message: res.msg || "添加失败",
-              });
+                type: 'error',
+                message: res.msg || '添加失败',
+              })
             }
-          });
+          })
       }
-      this.showInput = null;
-      this.isShow = false;
+      this.showInput = null
+      this.isShow = false
     },
     selectTag(list, index) {
       var result = this.highLightArr.findIndex((item) => {
-        return item.tagid == list.tagid;
-      });
+        return item.tagid == list.tagid
+      })
       if (result > -1) {
         // console.log(111111111111)
         this.highLightArr.forEach((item, index) => {
           if (item.tagid == list.tagid) {
-            this.highLightArr.splice(index, 1);
+            this.highLightArr.splice(index, 1)
           }
-        });
+        })
       } else {
-        this.highLightArr.push(list);
+        this.highLightArr.push(list)
       }
       // console.log(this.highLightArr)
     },
     selectPersonTag(list, index) {
-      console.log(list);
+      console.log(list)
       if (list.isChecked == 1) {
-        list.isChecked = 0;
+        list.isChecked = 0
       } else {
-        list.isChecked = 1;
+        list.isChecked = 1
       }
     },
+    cancelIcon() {
+      document.getElementById('html').style.overflow = 'auto'
+    },
     closeDialog(v) {
-      this.show = false;
+      this.show = false
+      document.getElementById('html').style.overflow = 'auto'
       if (v == 1) {
-        this.getTagList();
+        this.getTagList()
       } else if (v == 2) {
       } else if (v == 3) {
-        this.message = "";
+        this.message = ''
       }
     },
     saveDialog(v) {
@@ -478,72 +489,75 @@ export default {
           )
           .then((res) => {
             if (res.result) {
-              this.show = false;
-              this.getTagList();
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
+              this.getTagList()
             } else {
               this.message({
-                type: "error",
-                message: "添加失败",
-              });
+                type: 'error',
+                message: '添加失败',
+              })
             }
-          });
+          })
       } else if (v == 2) {
         this.$network
-          .post("/customer-service/cluecustomer/updPertag", this.personTagList)
+          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
           .then((res) => {
             if (res.result) {
-              this.show = false;
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
               this.$message({
-                type: "success",
-                message: "修改成功",
-              });
+                type: 'success',
+                message: '修改成功',
+              })
             }
-          });
+          })
       } else if (v == 3) {
         this.$network
-          .post("/customer-service/cluecustomer/addMessage", {
+          .post('/customer-service/cluecustomer/addMessage', {
             clueCustomerNo: this.item.clueCustomerNo,
             context: this.message,
           })
           .then((res) => {
             if (res.result) {
-              this.show = false;
-              this.getTimeline();
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
+              this.getTimeline()
               // this.getMethod()
               this.$message({
-                type: "success",
-                message: "修改成功",
-              });
+                type: 'success',
+                message: '修改成功',
+              })
             }
-          });
+          })
       }
     },
     deleteTag(v, i) {
       // console.log(v)
       this.$dialog
         .confirm({
-          title: "温馨提示",
-          message: "是否确认删除",
-          className: "deleteBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+          title: '温馨提示',
+          message: '是否确认删除',
+          className: 'deleteBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {
           this.$network
-            .post("/customer-service/cluecustomer/deltag", v)
+            .post('/customer-service/cluecustomer/deltag', v)
             .then((res) => {
               if (res.result) {
-                this.personTagList = res.data;
+                this.personTagList = res.data
               }
-            });
+            })
         })
         .catch(() => {
           // on cancel
-        });
+        })
     },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .CustomerPortrait {
@@ -692,7 +706,7 @@ export default {
           position: relative;
           padding-left: 10px;
           &::before {
-            content: "";
+            content: '';
             width: 8px;
             height: 28px;
             background: #4168f6;
@@ -752,7 +766,7 @@ export default {
           position: relative;
           padding-left: 10px;
           &::before {
-            content: "";
+            content: '';
             width: 8px;
             height: 28px;
             background: #4168f6;
