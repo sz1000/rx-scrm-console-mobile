@@ -179,7 +179,7 @@
               </el-form-item>
               <el-form-item label="渠道欢迎语:">
                 <!-- <span class="channel">{{ detailForm.welText }}</span> -->
-                <div style="line-height: 22px; margin-top: 10px">
+                <div class="leng_hength">
                   {{ detailForm.welText }}
                 </div>
               </el-form-item>
@@ -644,6 +644,10 @@ export default {
             height: 80px;
             word-break: break-all;
             line-height: 80px;
+            .leng_hength {
+              line-height: 40px;
+              margin-top: 20px;
+            }
             .el-input__inner {
               height: 80px;
               border-radius: 8px;

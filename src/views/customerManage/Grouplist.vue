@@ -100,7 +100,7 @@ export default {
       this.$network
         .get("/customer-service/group/list", {
           page: 1,
-          limit: this.pageSize,
+          // limit: this.pageSize,
           name: this.inputValue,
           owmer: "",
           createTimeSta: "",
