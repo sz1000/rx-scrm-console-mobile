@@ -127,7 +127,6 @@ export default {
 <style lang='less' scoped>
 // .HomeWarp {
 .settinWarp {
-  position: relative;
   background: #fff;
   height: 100%;
   box-sizing: border-box;
@@ -233,12 +232,11 @@ export default {
   }
 }
 .btm-box {
-  position: absolute;
+  position: fixed;
   bottom: 0;
-  left: 0;
+  // left: 0;
   transform: translateZ(0);
-  -webkit-overflow-scroll: touch;
-  // width: 100%;
+  -webkit-transform: translateZ(0);
   width: 750px;
   .bottom-warp {
     border-top: 1px solid #f0f2f7;
