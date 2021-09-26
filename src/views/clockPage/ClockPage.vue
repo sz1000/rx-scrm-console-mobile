@@ -264,6 +264,11 @@ export default {
         })
     },
     getAddress(val) {
+      this.$toast.loading({
+        overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
       this.$network
         .get('/user-service/punckClock/getTengXunMap', {
           lng: val.longitude,
@@ -272,6 +277,7 @@ export default {
           // lat: '31.310884',
         })
         .then((res) => {
+          this.$toast.clear()
           this.addressName = res.data
         })
     },
