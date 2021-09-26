@@ -186,12 +186,13 @@ export default {
     },
     addCodeSuccess(v, p) {
       let obj = JSON.parse(localStorage.getItem('addObj'))
+
       let params = {
         customerType: Number(obj.radio),
         phone: obj.phone,
         customerPlace: obj.address,
         content: obj.remark,
-        customerName: obj.client || obj.customerVal.split('@')[1],
+        customerName: obj.client || obj.name.split('@')[1],
         splicingName: obj.customerVal || obj.client,
         clueCustomerNo: obj.clueCustomerNo,
         punchPlace: this.addressName,
