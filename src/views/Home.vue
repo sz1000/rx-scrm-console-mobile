@@ -133,6 +133,7 @@ export default {
   overflow: hidden;
   padding-bottom: 130px;
   .main-warp {
+    -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
     padding: 24px 24px 140px;
