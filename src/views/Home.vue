@@ -127,12 +127,21 @@ export default {
 <style lang='less' scoped>
 // .HomeWarp {
 .settinWarp {
+  position: relative;
   background: #fff;
   height: 100%;
-  overflow: auto;
+  box-sizing: border-box;
+  overflow: hidden;
   padding-bottom: 130px;
   .main-warp {
-    padding: 24px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 24px 24px 140px;
+    overflow-y: scroll;
+    scrollbar-width: 0;
+    &::-webkit-scrollbar {
+      width: 0;
+    }
   }
   .customAccont {
     position: relative;
@@ -224,8 +233,11 @@ export default {
   }
 }
 .btm-box {
-  position: fixed;
+  position: absolute;
   bottom: 0;
+  left: 0;
+  transform: translateZ(0);
+  -webkit-overflow-scroll: touch;
   // width: 100%;
   width: 750px;
   .bottom-warp {
