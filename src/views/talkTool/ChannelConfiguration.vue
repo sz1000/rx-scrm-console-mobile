@@ -760,7 +760,4 @@ export default {
 /deep/ .van-list__finished-text {
   font-size: 24px;
 }
-.deleteBtn {
-  padding-bottom: 10px;
-}
 </style>
