@@ -358,7 +358,8 @@ export default {
   .btm-box {
     position: fixed;
     bottom: 0;
-    width: 100%;
+    // width: 100%;
+    width: 750px;
     height: 112px;
     background: #fff;
     .bottom-warp {
@@ -390,6 +391,9 @@ export default {
 }
 /deep/.van-popup {
   border-radius: 16px 16px 0 0;
+  width: 750px;
+  left: 50% !important;
+  transform: translate(-50%);
   .van-picker {
     .van-picker__toolbar {
       height: 88px;
