@@ -70,7 +70,6 @@
                    maxlength="200"
                    placeholder="请输入"
                    show-word-limit />
-
         <van-button class="punch"
                     native-type="submit">去打卡</van-button>
       </van-form>
