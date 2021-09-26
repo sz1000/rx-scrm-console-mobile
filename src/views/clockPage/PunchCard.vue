@@ -176,7 +176,7 @@ export default {
       //   })
       // } else {
       // }
-      // this.$router.push('clockPage')
+      this.$router.push('clockPage')
       localStorage.setItem(
         'addObj',
         JSON.stringify({
