@@ -305,7 +305,7 @@ export default {
     }
   },
   created() {
-    // commonFun.getWxAppid();
+    commonFun.getWxAppid()
   },
   watch: {},
   mounted() {
