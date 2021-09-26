@@ -647,6 +647,7 @@ export default {
             .leng_hength {
               line-height: 40px;
               margin-top: 20px;
+              font-size: 24px;
             }
             .el-input__inner {
               height: 80px;
