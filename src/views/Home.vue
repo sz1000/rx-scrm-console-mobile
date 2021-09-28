@@ -357,24 +357,21 @@ export default {
     }
   }
   .btnRouter {
-    padding: 0 67px;
+    // padding: 0 35px;
     box-sizing: border-box;
     .rowRouter {
       display: flex;
       margin-bottom: 32px;
-      // justify-content: space-between;
     }
     .commonBtn {
-      margin-right: 40px;
       font-size: 28px;
       font-weight: 600;
       color: #3c4353;
       text-align: center;
+      width: 175px;
 
       span {
         display: inline-block;
-        // margin-left: -12px;
-        min-width: 112px;
       }
       img {
         width: 88px;
