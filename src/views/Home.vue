@@ -61,14 +61,14 @@
             <div class="commonBtn">
               <img src="../images/qunhm.png"
                    alt="" />
-              <span>群活码</span>
+              <span class="nomaltext">群活码</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
               <img src="../images/liuzi.png"
                    alt="" />
-              <span>留资表单</span>
+              <span class="nomaltext">留资表单</span>
             </div>
           </router-link>
         </div>
@@ -77,28 +77,28 @@
             <div class="commonBtn">
               <img src="../images/znsk.png"
                    alt="" />
-              <span>智能搜客</span>
+              <span class="nomaltext">智能搜客</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
               <img src="../images/xstc.png"
                    alt="" />
-              <span>线索探查</span>
+              <span class="nomaltext">线索探查</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
               <img src="../images/ditu.png"
                    alt="" />
-              <span>地图获客</span>
+              <span class="nomaltext">地图获客</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
               <img src="../images/yjlq.png"
                    alt="" />
-              <span>一键拉群</span>
+              <span class="nomaltext">一键拉群</span>
             </div>
           </router-link>
         </div>
@@ -107,14 +107,14 @@
             <div class="commonBtn">
               <img src="../images/kehuqf.png"
                    alt="" />
-              <span>客户群发</span>
+              <span class="nomaltext">客户群发</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
-              <img src="../images/kehuqf.png"
+              <img src="../images/khqqf.png"
                    alt="" />
-              <span>客户群群发</span>
+              <span class="nomaltext">客户群群发</span>
             </div>
           </router-link>
         </div>
@@ -147,7 +147,7 @@
             <div class="commonBtn">
               <img src="../images/lskh.png"
                    alt="" />
-              <span>流失客户</span>
+              <span class="nomaltext">流失客户</span>
             </div>
           </router-link>
         </div>
@@ -157,7 +157,7 @@
         <div class="rowRouter">
           <router-link to="/punchCard">
             <div class="commonBtn">
-              <img src="../images/xiansuo.png"
+              <img src="../images/wcdk.png"
                    alt="" />
               <span>外出打卡</span>
             </div>
@@ -166,21 +166,21 @@
             <div class="commonBtn">
               <img src="../images/baifnag.png"
                    alt="" />
-              <span>拜访计划</span>
+              <span class="nomaltext">拜访计划</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
               <img src="../images/daiban.png"
                    alt="" />
-              <span>待办事项</span>
+              <span class="nomaltext">待办事项</span>
             </div>
           </router-link>
           <router-link to="">
             <div class="commonBtn">
               <img src="../images/wdbb.png"
                    alt="" />
-              <span>我的报表</span>
+              <span class="nomaltext">我的报表</span>
             </div>
           </router-link>
         </div>
@@ -283,6 +283,7 @@ export default {
       span:nth-child(1) {
         font-size: 32px;
         color: #3c4353;
+        font-weight: 600;
         line-height: 45px;
       }
       span:nth-child(2) {
@@ -365,11 +366,13 @@ export default {
     }
     .commonBtn {
       font-size: 28px;
-      font-weight: 600;
+      font-weight: 500;
       color: #3c4353;
       text-align: center;
       width: 175px;
-
+      .nomaltext {
+        color: #838a9d;
+      }
       span {
         display: inline-block;
       }
