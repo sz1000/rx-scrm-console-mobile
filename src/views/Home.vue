@@ -58,14 +58,16 @@
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/qunhm.png"
                    alt="" />
               <span class="nomaltext">群活码</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/liuzi.png"
                    alt="" />
               <span class="nomaltext">留资表单</span>
@@ -74,28 +76,32 @@
         </div>
         <div class="rowRouter">
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/znsk.png"
                    alt="" />
               <span class="nomaltext">智能搜客</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/xstc.png"
                    alt="" />
               <span class="nomaltext">线索探查</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/ditu.png"
                    alt="" />
               <span class="nomaltext">地图获客</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/yjlq.png"
                    alt="" />
               <span class="nomaltext">一键拉群</span>
@@ -104,14 +110,16 @@
         </div>
         <div class="rowRouter">
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/kehuqf.png"
                    alt="" />
               <span class="nomaltext">客户群发</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/khqqf.png"
                    alt="" />
               <span class="nomaltext">客户群群发</span>
@@ -144,7 +152,8 @@
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/lskh.png"
                    alt="" />
               <span class="nomaltext">流失客户</span>
@@ -163,21 +172,24 @@
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/baifnag.png"
                    alt="" />
               <span class="nomaltext">拜访计划</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/daiban.png"
                    alt="" />
               <span class="nomaltext">待办事项</span>
             </div>
           </router-link>
           <router-link to="">
-            <div class="commonBtn">
+            <div class="commonBtn"
+                 @click="showMsg">
               <img src="../images/wdbb.png"
                    alt="" />
               <span class="nomaltext">我的报表</span>
@@ -205,7 +217,7 @@
 </template>
 <script>
 import CommonHome from '../utils/CommonHome'
-
+import { Notify } from 'vant'
 export default {
   components: {},
   data() {
@@ -240,6 +252,14 @@ export default {
     // this.$toast.clear()
   },
   methods: {
+    showMsg() {
+      Notify({
+        message: '功能即将上线，请耐心等待~',
+        type: 'success',
+        duration: 1000,
+        className: 'msgTitle',
+      })
+    },
     goToCard() {
       this.$router.push('/punchCard')
     },
@@ -253,7 +273,6 @@ export default {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
-  // padding-bottom: 130px;
   .main-warp {
     -webkit-overflow-scrolling: touch;
     height: 100%;
@@ -269,7 +288,7 @@ export default {
     width: 702px;
     height: 138px;
     background: rgba(65, 104, 246, 0.02);
-    border: 2px solid #4168f6;
+    border: 2px solid #d9dae4;
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
