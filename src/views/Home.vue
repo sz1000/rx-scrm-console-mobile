@@ -2,7 +2,25 @@
   <div class="settinWarp">
     <div class="main-warp">
       <div class="customAccont">客户统计</div>
-      <div class="cardContent">
+      <div class="statiStical">
+        <div class="numResult afterLine">
+          <span>{{ clues }}</span>
+          <span>我的线索</span>
+        </div>
+        <div class="numResult afterLine">
+          <span>{{ cluSee }}</span>
+          <span>线索公海</span>
+        </div>
+        <div class="numResult afterLine">
+          <span>{{ customer }}</span>
+          <span>我的客户</span>
+        </div>
+        <div class="numResult">
+          <span>{{ customerSee }}</span>
+          <span>客户公海</span>
+        </div>
+      </div>
+      <!-- <div class="cardContent">
         <div class="box card1">
           <span>{{ clues }}</span>
           <span>我的线索</span>
@@ -21,50 +39,154 @@
           <span>{{ customerSee }}</span>
           <span>客户公海</span>
         </div>
-      </div>
-      <div class="customAccont tool">拓客工具</div>
+      </div> -->
+      <div class="customAccont tool">引流获客</div>
       <div class="btnRouter">
-        <router-link to="/talkTool/enterpriseCode">
-          <div class="commonBtn">
-            <img src="../images/huoma.png"
-                 alt="" />
-            <span>渠道活码</span>
-          </div>
-        </router-link>
-        <router-link to="/talkTool/channelConfiguration">
-          <div class="commonBtn">
-            <img src="../images/qudao.png"
-                 alt="" />
-            <span>渠道配置</span>
-          </div>
-        </router-link>
+        <div class="rowRouter">
+          <router-link to="/talkTool/enterpriseCode">
+            <div class="commonBtn">
+              <img src="../images/huoma.png"
+                   alt="" />
+              <span>获客活码</span>
+            </div>
+          </router-link>
+          <router-link to="/talkTool/channelConfiguration">
+            <div class="commonBtn">
+              <img src="../images/qudao.png"
+                   alt="" />
+              <span>渠道配置</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/qunhm.png"
+                   alt="" />
+              <span>群活码</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/liuzi.png"
+                   alt="" />
+              <span>留资表单</span>
+            </div>
+          </router-link>
+        </div>
+        <div class="rowRouter">
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/znsk.png"
+                   alt="" />
+              <span>智能搜客</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/xstc.png"
+                   alt="" />
+              <span>线索探查</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/ditu.png"
+                   alt="" />
+              <span>地图获客</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/yjlq.png"
+                   alt="" />
+              <span>一键拉群</span>
+            </div>
+          </router-link>
+        </div>
+        <div class="rowRouter">
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/kehuqf.png"
+                   alt="" />
+              <span>客户群发</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/kehuqf.png"
+                   alt="" />
+              <span>客户群群发</span>
+            </div>
+          </router-link>
+        </div>
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
-        <router-link to="/customerManage/clues">
-          <div class="commonBtn">
-            <img src="../images/xiansuo.png"
-                 alt="" />
-            <span>线索</span>
-          </div>
-        </router-link>
-        <router-link to="/customerManage/myCustomer">
-          <div class="commonBtn">
-            <img src="../images/kehu.png"
-                 alt="" />
-            <span>客户</span>
-          </div>
-        </router-link>
-        <router-link to="/customerManage/grouplist">
-          <div class="commonBtn">
-            <img src="../images/grouplist.png"
-                 alt="" />
-            <span>群列表</span>
-          </div>
-        </router-link>
+        <div class="rowRouter">
+          <router-link to="/customerManage/clues">
+            <div class="commonBtn">
+              <img src="../images/xiansuo.png"
+                   alt="" />
+              <span>线索</span>
+            </div>
+          </router-link>
+          <router-link to="/customerManage/myCustomer">
+            <div class="commonBtn">
+              <img src="../images/kehu.png"
+                   alt="" />
+              <span>客户</span>
+            </div>
+          </router-link>
+          <router-link to="/customerManage/grouplist">
+            <div class="commonBtn">
+              <img src="../images/grouplist.png"
+                   alt="" />
+              <span>群列表</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/lskh.png"
+                   alt="" />
+              <span>流失客户</span>
+            </div>
+          </router-link>
+        </div>
+      </div>
+      <div class="customAccont manage">办公协同</div>
+      <div class="btnRouter custom">
+        <div class="rowRouter">
+          <router-link to="/punchCard">
+            <div class="commonBtn">
+              <img src="../images/xiansuo.png"
+                   alt="" />
+              <span>外出打卡</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/baifnag.png"
+                   alt="" />
+              <span>拜访计划</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/daiban.png"
+                   alt="" />
+              <span>待办事项</span>
+            </div>
+          </router-link>
+          <router-link to="">
+            <div class="commonBtn">
+              <img src="../images/wdbb.png"
+                   alt="" />
+              <span>我的报表</span>
+            </div>
+          </router-link>
+        </div>
       </div>
     </div>
-    <div class="btm-box">
+    <!-- <div class="btm-box">
       <div class="bottom-warp">
         <div class="routerbtn"
              @click="goToCard">
@@ -78,7 +200,7 @@
           <span class="textname">运营工具</span>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -90,10 +212,10 @@ export default {
     return {
       userId: '',
       token: '',
-      clues: '',
-      cluSee: '',
-      customer: '',
-      customerSee: '',
+      clues: '0',
+      cluSee: '0',
+      customer: '0',
+      customerSee: '0',
     }
   },
   created() {
@@ -131,16 +253,54 @@ export default {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
-  padding-bottom: 130px;
+  // padding-bottom: 130px;
   .main-warp {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    padding: 24px 24px 140px;
+    padding: 24px 24px;
     overflow-y: scroll;
     scrollbar-width: 0;
     &::-webkit-scrollbar {
       width: 0;
+    }
+  }
+  .statiStical {
+    width: 702px;
+    height: 138px;
+    background: rgba(65, 104, 246, 0.02);
+    border: 2px solid #4168f6;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-sizing: border-box;
+    .numResult {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      span:nth-child(1) {
+        font-size: 32px;
+        color: #3c4353;
+        line-height: 45px;
+      }
+      span:nth-child(2) {
+        font-size: 24px;
+        color: #838a9d;
+      }
+    }
+    .afterLine {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        height: 60px;
+        width: 2px;
+        background: #f0f2f7;
+        top: 39px;
+        left: 130px;
+      }
     }
   }
   .customAccont {
@@ -197,11 +357,15 @@ export default {
     }
   }
   .btnRouter {
-    display: flex;
-    padding-left: 67px;
+    padding: 0 67px;
+    box-sizing: border-box;
+    .rowRouter {
+      display: flex;
+      margin-bottom: 32px;
+      // justify-content: space-between;
+    }
     .commonBtn {
-      // width: 112px;
-      margin-right: 88px;
+      margin-right: 40px;
       font-size: 28px;
       font-weight: 600;
       color: #3c4353;
@@ -209,17 +373,18 @@ export default {
 
       span {
         display: inline-block;
-        margin-left: -12px;
+        // margin-left: -12px;
+        min-width: 112px;
       }
       img {
         width: 88px;
         height: 88px;
-        margin-bottom: 16px;
+        margin: 0 auto 16px auto;
       }
     }
   }
   .tool {
-    margin-top: 10px;
+    margin-top: 48px;
   }
   .manage {
     margin-top: 32px;
