@@ -60,7 +60,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/qunhm.png"
+              <img src="../images/qhm2.png"
                    alt="" />
               <span class="nomaltext">群活码</span>
             </div>
@@ -68,7 +68,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/liuzi.png"
+              <img src="../images/lzbd.png"
                    alt="" />
               <span class="nomaltext">留资表单</span>
             </div>
@@ -78,7 +78,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/znsk.png"
+              <img src="../images/znsk2.png"
                    alt="" />
               <span class="nomaltext">智能搜客</span>
             </div>
@@ -86,7 +86,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/xstc.png"
+              <img src="../images/xstc2.png"
                    alt="" />
               <span class="nomaltext">线索探查</span>
             </div>
@@ -94,7 +94,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/ditu.png"
+              <img src="../images/dthk.png"
                    alt="" />
               <span class="nomaltext">地图获客</span>
             </div>
@@ -102,7 +102,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/yjlq.png"
+              <img src="../images/yjlq2.png"
                    alt="" />
               <span class="nomaltext">一键拉群</span>
             </div>
@@ -112,7 +112,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/kehuqf.png"
+              <img src="../images/khqf.png"
                    alt="" />
               <span class="nomaltext">客户群发</span>
             </div>
@@ -120,7 +120,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/khqqf.png"
+              <img src="../images/khqqf2.png"
                    alt="" />
               <span class="nomaltext">客户群群发</span>
             </div>
@@ -154,7 +154,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/lskh.png"
+              <img src="../images/lskh2.png"
                    alt="" />
               <span class="nomaltext">流失客户</span>
             </div>
@@ -174,7 +174,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/baifnag.png"
+              <img src="../images/bfjh.png"
                    alt="" />
               <span class="nomaltext">拜访计划</span>
             </div>
@@ -182,7 +182,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/daiban.png"
+              <img src="../images/dbsx.png"
                    alt="" />
               <span class="nomaltext">待办事项</span>
             </div>
@@ -190,7 +190,7 @@
           <router-link to="">
             <div class="commonBtn"
                  @click="showMsg">
-              <img src="../images/wdbb.png"
+              <img src="../images/wdbb2.png"
                    alt="" />
               <span class="nomaltext">我的报表</span>
             </div>
@@ -258,6 +258,7 @@ export default {
         type: 'success',
         duration: 1000,
         className: 'msgTitle',
+        background: '#52BD94',
       })
     },
     goToCard() {
@@ -288,7 +289,7 @@ export default {
     width: 702px;
     height: 138px;
     background: rgba(65, 104, 246, 0.02);
-    border: 2px solid #d9dae4;
+    border: 2px solid #f0f2f7;
     border-radius: 4px;
     display: flex;
     justify-content: space-between;
@@ -390,7 +391,7 @@ export default {
       text-align: center;
       width: 175px;
       .nomaltext {
-        color: #838a9d;
+        color: #c0c4cc;
       }
       span {
         display: inline-block;
