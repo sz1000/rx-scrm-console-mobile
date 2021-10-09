@@ -186,7 +186,6 @@ export default {
     },
     addCodeSuccess(v, p) {
       let obj = JSON.parse(localStorage.getItem('addObj'))
-
       let params = {
         customerType: Number(obj.radio),
         phone: obj.phone,
@@ -274,8 +273,6 @@ export default {
         .get('/user-service/punckClock/getTengXunMap', {
           lng: val.longitude,
           lat: val.latitude,
-          // lng: '121.501088',
-          // lat: '31.310884',
         })
         .then((res) => {
           this.$toast.clear()
