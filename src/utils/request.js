@@ -6,13 +6,13 @@ let BASE_URL = ''
 if (location.hostname == 'localhost') {
     // BASE_URL = 'http://172.10.7.114:8099/' //袁
     // BASE_URL = 'http://172.10.7.200:8099/' //刘
-    BASE_URL = 'https://test-api.jizhouhudong.com' //开发
-} else if (location.hostname == 'dev-h5.jizhouhudong.com') {
-    BASE_URL = 'https://dev-api.jizhouhudong.com' //开发
-} else if (location.hostname == 'test-h5.jizhouhudong.com') {
-    BASE_URL = 'https://test-api.jizhouhudong.com' //测试
+    BASE_URL = 'https://test-api.jzcrm.com' //开发
+} else if (location.hostname == 'dev-h5.jzcrm.com') {
+    BASE_URL = 'https://dev-api.jzcrm.com' //开发
+} else if (location.hostname == 'test-h5.jzcrm.com') {
+    BASE_URL = 'https://test-api.jzcrm.com' //测试
 } else {
-    BASE_URL = 'https://api.jizhouhudong.com' //生产
+    BASE_URL = 'https://api.jzcrm.com' //生产
 }
 let instance = axios.create({
         baseURL: BASE_URL,
