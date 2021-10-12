@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">客户群发</span>
+      <span class="textTitle">客户群群发</span>
     </div>
     <div class="warp_box">
       <!-- 群发设置 -->
@@ -24,8 +24,8 @@
               ></el-input>
             </el-form-item>
             <!-- 选择员工 -->
-            <el-form-item label="选择员工 :" prop="staffs">
-              <el-select
+            <el-form-item label="选择群主 :" prop="staffs">
+              <!-- <el-select
                 v-model="baseForm.staffs"
                 style="width: 100%"
                 multiple
@@ -39,10 +39,26 @@
                   v-for="item in staffsList"
                   :key="item.id"
                 ></el-option>
+              </el-select> -->
+              <el-select
+                v-model="baseForm.staffs"
+                style="width: 100%"
+                multiple
+                placeholder="选择群主 （可多选）"
+                @change="staffsListChange"
+              >
+                <!-- <el-option label="区域一" value="shanghai"></el-option> -->
+                <el-option
+                  v-for="item in groupList"
+                  :key="item.id"
+                  :label="item.owmerName"
+                  :value="item.chatId"
+                >
+                </el-option>
               </el-select>
             </el-form-item>
             <!-- 选择客户 -->
-            <el-form-item label="选择客户 :" prop="selectCusType">
+            <!-- <el-form-item label="选择客户 :" prop="selectCusType">
               <el-radio-group
                 v-model="baseForm.selectCusType"
                 @change="selecusChange"
@@ -50,9 +66,9 @@
                 <el-radio :label="2">全部客户</el-radio>
                 <el-radio :label="1">筛选客户</el-radio>
               </el-radio-group>
-            </el-form-item>
+            </el-form-item> -->
             <!-- 筛选客户 -->
-            <template v-if="baseForm.selectCusType == 1">
+            <!-- <template v-if="baseForm.selectCusType == 1">
               <div class="filterCus">
                 <el-form-item label="性别 :" prop="cusSex">
                   <el-radio-group v-model="baseForm.cusSex" @change="sexChange">
@@ -124,11 +140,11 @@
                   </div>
                 </el-form-item>
               </div>
-            </template>
+            </template> -->
             <!-- 客户预计数量 -->
-            <el-form-item label="">
+            <!-- <el-form-item label="">
               预计发送客户数量：{{ estimateCusNum }}
-            </el-form-item>
+            </el-form-item> -->
             <!-- 发送规则 -->
             <el-form-item label="发送规则 :" prop="sendRule">
               <el-radio-group v-model="baseForm.sendRule">
@@ -189,7 +205,7 @@
         >
         </el-input>
         <!-- 附件 -->
-        <div class="appendix-list">
+        <div class="appendix-list" style="display: none">
           <div
             class="item marB-24"
             v-for="(item, index) in appendixList"
@@ -246,14 +262,14 @@
           </div>
         </div>
         <!-- 添加素材 -->
-        <div class="appendix-add-warp">
+        <!-- <div class="appendix-add-warp">
           <button class="addAppendix-button" @click="addAppendix">
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
           <span class="add-tips" style="margin-left: 24px"
             >（最多可添加9个附件）</span
           >
-        </div>
+        </div> -->
         <!-- 通知成员 -->
         <span class="sendRequest" @click="sendRequest">通知成员发送</span>
       </div>
@@ -300,7 +316,7 @@
             <div
               class="label-item"
               :class="[signItm.checked ? 'active' : '']"
-              @click="clickSign(index, signIdx)"
+              @click="clickSign(index, signIdx, signItm.tagid)"
               v-for="(signItm, signIdx) in item.children"
               :key="`${index} - ${signIdx}`"
             >
@@ -445,7 +461,9 @@ export default {
   },
   methods: {
     // 返回
-    goBack() {},
+    goBack() {
+      this.$router.go(-1);
+    },
     // 选择日期时间公共方法
     selectDateTime(type) {
       this.activeChoose = type;
@@ -548,8 +566,20 @@ export default {
       this.baseForm.includeCus.splice(index, 1);
     },
     // 点击标签
-    clickSign(index, subindex) {
-      // console.log(index, subindex, "======");
+    clickSign(index, subindex, tagid) {
+      // console.log(tagid, "======");
+      // this.baseForm.includeCus.push(tagid);
+      // this.namelabutArr.forEach((item) => {
+      //   this.highLightArr.forEach((items) => {
+      //     if (item.tagid == items.tagid) {
+      //       this.highLightArr.splice(index, 1);
+      //     }
+      //   });
+      // });
+      // if (tagid == tagid) {
+      //
+      // }
+
       const cusSignList = this.deepClone(this.cusSignList);
       let checked = cusSignList[index].children[subindex].checked;
       if (checked) {
@@ -568,24 +598,21 @@ export default {
           zitem.checked && checkedSign.push(zitem);
         });
       });
-      console.log(checkedSign);
-      // checkedSign.forEach((item) => {
-      //   this.childTag.forEach((chItem, chIndex) => {
-      //     if (item.tagid == chItem.tagid) {
-      //       this.tagidList.push(chItem);
+      // console.log(checkedSign);
+      checkedSign.forEach((item) => {
+        this.highLightArr.push(item.tagid);
+      });
+      // this.namelabutArr.forEach((item) => {
+      //   this.highLightArr.forEach((items) => {
+      //     if (item.tagid == items.tagid) {
+      //       this.highLightArr.splice(index, 1);
       //     }
       //   });
-      // console.log(item.tagid);
-      // if (item.tagid == item.tagid) {
-      //   this.tagidList.push(item.tagid);
-      //   // this.baseForm.includeCus.push(item.atgid);
-      //   // this.highLightArr.push([item.tagid]);
-      // }
       // });
-      // console.log(this.tagidList.push(...new Set(this.tagidList)));
-      // let listtagid = [];
-      // listtagid = this.tagidList.push(...new Set(this.tagidList));
-      console.log(this.tagidList, "-------------------oooo");
+      // var nwr = this.highLightArr;
+      let newList = [];
+      newList.push(new Set(this.highLightArr));
+      console.log(newList, "-------------------oooo");
       this.baseForm.includeCus = checkedSign;
       this.chooseCusSign = false;
       // this.getTagList();
@@ -599,13 +626,13 @@ export default {
         if (valid) {
           let params = {
             taskName: this.baseForm.taskName,
-            massType: 1,
+            massType: 2,
             massContent: this.sendMsg,
             userList: this.baseForm.staffs,
             gender: this.baseForm.cusSex,
             addStartTime: this.baseForm.cusAddBeginTime,
             addEndTime: this.baseForm.cusAddEndTime,
-            groupList: this.baseForm.chatGroup || [],
+            groupList: this.baseForm.staffs || [],
             lableList: this.customerlistdata || [],
             sendType: this.baseForm.sendRule,
             sendTime: this.baseForm.sendDate + " " + this.baseForm.sendTime,
@@ -670,6 +697,7 @@ export default {
         });
         let childTag = [].concat.apply([], allChildTag);
         console.log(childTag);
+        this.namelabutArr = [].concat.apply([], allChildTag);
         console.log("-----列表----", this.baseForm.includeCus);
         this.baseForm.includeCus.forEach((item) => {
           console.log(item);
@@ -726,6 +754,18 @@ export default {
       console.log(value, "-----------选择群聊获取chatid");
       this.baseForm.chatGroup = value;
       this.Screeningcustomer();
+    },
+    // 获取选择群发员工接口
+    chooseCustomerMass() {
+      this.$network
+        .get("/customer-service/cluecustomerMass/chooseGroupSend", {
+          page: 1,
+          limit: 20,
+        })
+        .then((res) => {
+          console.log(res.data);
+          this.groupList = res.data;
+        });
     },
     //筛选客户接口
     Screeningcustomer() {

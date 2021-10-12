@@ -95,15 +95,15 @@
           </router-link>
         </div>
         <div class="rowRouter">
-          <router-link to="">
-            <div class="commonBtn" @click="showMsg">
-              <img src="../images/khqf.png" alt="" />
+          <router-link to="/talkTool/customerGroup">
+            <div class="commonBtn">
+              <img src="../images/qunfa.png" alt="" />
               <span class="nomaltext">客户群发</span>
             </div>
           </router-link>
-          <router-link to="">
-            <div class="commonBtn" @click="showMsg">
-              <img src="../images/khqqf2.png" alt="" />
+          <router-link to="/talkTool/CustomergroupPlaye">
+            <div class="commonBtn">
+              <img src="../images/qunqnfa.png" alt="" />
               <span class="nomaltext">客户群群发</span>
             </div>
           </router-link>

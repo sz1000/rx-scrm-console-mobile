@@ -12,7 +12,9 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-import CustomerGroup from "../views/talkTool/Customergroup.vue"
+import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
+import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
 import ClockPage from '../views/clockPage/ClockPage.vue'
@@ -166,6 +168,14 @@ const routes = [{
                     bodyClass: 'CustomerGroup',
                 },
                 component: CustomerGroup,
+            },
+            //客户群群发
+            {
+                path: 'CustomergroupPlaye',
+                meta: {
+                    bodyClass: 'CustomergroupPlaye',
+                },
+                component: CustomergroupPlaye,
             },
         ],
     },
