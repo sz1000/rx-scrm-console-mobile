@@ -1,0 +1,317 @@
+<template>
+    <div class="material-template">
+        <ul class="header-nav">
+            <li @click="changeNav(0)" :class="{active: type == 0}">种草文章</li>
+            <li @click="changeNav(1)" :class="{active: type == 1}">销售文件</li>
+            <li @click="changeNav(2)" :class="{active: type == 2}">营销海报</li>
+        </ul>
+        <search :type="type"></search>
+        <ul class="list-box">
+            <li class="item-box" v-if="type == 0">
+                <van-list
+                    v-model="articleListLoading"
+                    :immediate-check="false"
+                    :finished="articleListFinished"
+                    finished-text="没有更多了"
+                    @load="onLoad"
+                    >
+                    <div class="article-item item" v-for="i in articleList" :key="i.articleId">
+                        <div class="left"><img src="../../images/relay.png" alt=""></div>
+                        <div class="right">
+                            <img class="img" :src="i.cover" alt="">
+                            <div class="des">
+                                <h3 class="one-txt-cut">{{i.title}}</h3>
+                                <p class="two-line" v-html="i.contentAbstract"></p>
+                            </div>
+                        </div>
+                    </div>
+                </van-list>
+            </li>
+            <li class="item-box" v-if="type == 1">
+                <van-list
+                    v-model="saleListLoading"
+                    :immediate-check="false"
+                    :finished="saleListFinished"
+                    finished-text="没有更多了"
+                    @load="onLoad"
+                    >
+                    <div class="file-item item" v-for="i in saleList" :key="i.documentId">
+                        <div class="left"><img src="../../images/relay.png" alt=""></div>
+                        <div class="right">
+                            <img class="img" :src="i.cover" alt="">
+                            <div class="des">
+                                <h3 class="one-txt-cut">{{i.name}}</h3>
+                                <p class="two-line" v-html="i.documentUrl"></p>
+                            </div>
+                        </div>
+                    </div>
+                </van-list>
+            </li>
+            <li class="item-box poster" v-if="type == 2">
+                <van-list
+                    v-model="posterListLoading"
+                    :immediate-check="false"
+                    :finished="posterListFinished"
+                    finished-text="没有更多了"
+                    @load="onLoad"
+                    >
+                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId">
+                        <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
+                        <div class="bottom">
+                            <span class="one-txt-cut">{{i.posterName}}</span>
+                            <div><img src="../../images/relay2.png" alt=""></div>
+                        </div>
+                    </div>
+                </van-list>
+            </li>
+        </ul>
+    </div>
+</template>
+<script>
+import { GetCrop, ArticleList, SaleDocumentList, PosterList } from "../../config/api"
+
+import Search from '../../components/MaterialTemplate/search'
+
+export default {
+    name: 'materialTemplate',
+    data() {
+        return {
+            type: 0,
+            corpId: null,
+
+            articleList: [],
+            totalArticle: 0,
+            articleListPage: 1,
+            articleListLoading: false,
+            articleListFinished: false,
+
+            saleList: [],
+            totalSale: 0,
+            saleListPage: 1,
+            saleListLoading: false,
+            saleListFinished: false,
+
+            posterList: [],
+            totalPoster: 0,
+            posterListPage: 1,
+            posterListLoading: false,
+            posterListFinished: false,
+        }
+    },
+    provide() {
+        return {
+            checkTable: this.checkTable
+        }
+    },
+    created() {
+        this.getCorpId().then(() => this.getList())
+    },
+    methods: {
+        changeNav(type) {
+            this.type = type
+        },
+        getCorpId() {
+            return new Promise((resolve, reject) => {
+                GetCrop().then(res => {
+                    const {code, data} = res
+                    
+                    if (code === 'success' && data) {
+                        this.corpId = data.corpId
+                        resolve()
+                    } else {
+                        reject()
+                    }
+                }).catch(reject)
+            })
+        },
+        onLoad() {
+            this.getList()
+        },
+        getList(title) {
+            let ApiOpts = ArticleList
+            
+            let pageIndex = 1
+
+            if (this.type == 0) {
+                ApiOpts = ArticleList
+                pageIndex = this.articleListPage
+                this.articleListLoading = true
+            } else if (this.type == 1) {
+                ApiOpts = SaleDocumentList
+                pageIndex = this.saleListPage
+                this.saleListLoading = true
+            } else if (this.type == 2) {
+                ApiOpts = PosterList
+                pageIndex = this.posterListPage
+                this.posterListLoading = true
+            }
+
+            let params = {
+                pageIndex,
+                pageSize: 10,
+                title,
+                corpId: this.corpId
+            }
+
+            ApiOpts(params).then(res => {
+                const { code, data, msg } = res
+
+                if (code === 'success') {
+                    if (this.type == 0) {
+                        this.articleListLoading = false
+                        this.articleList = this.articleList.concat(data.records)
+                        this.articleListPage += 1
+                        this.articleListFinished = this.articleList.length >= data.total
+                    } else if (this.type == 1) {
+                        this.saleListLoading = false
+                        this.saleList = this.saleList.concat(data.records)
+                        this.saleListPage += 1
+                        this.saleListFinished = this.saleList.length >= data.total
+                    } else if (this.type == 2) {
+                        this.posterListLoading = false
+                        this.posterList = this.posterList.concat(data.records)
+                        this.posterListPage += 1
+                        this.posterListFinished = this.posterList.length >= data.total
+                    }
+                } else {
+                    this.$toast(msg)
+                }
+            })
+        },
+        // 查询
+        checkTable(data) {
+            if (this.type == 0) {
+                this.articleListPage = 1
+            } else if (this.type == 1) {
+                this.saleListPage = 1
+            } else if (this.type == 2) {
+                this.posterListPage = 1
+            }
+            this.getList(data)
+        },
+    },
+    components: {
+        Search
+    }
+}
+</script>
+<style lang="less" scoped>
+.material-template {
+    min-height: 100vh;
+    background-color: #fff;
+    .header-nav {
+        display: flex;
+        width: 100%;
+        height: 100px;
+        border-bottom: 1px solid #F0F2F7;
+        li {
+            flex: 1;
+            height: 100%;
+            line-height: 100px;
+            text-align: center;
+        }
+        .active {
+            color: #4168F6;
+            border-bottom: 4px solid #4168F6;
+        }
+    }
+    .list-box {
+        padding-bottom: 132px;
+        .item-box {
+            .item {
+                padding: 24px;
+            }
+            .article-item, .file-item {
+                display: flex;
+                align-items: center;
+                .left {
+                    width: 48px;
+                    height: 48px;
+                    overflow: hidden;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .right {
+                    display: flex;
+                    max-width: 90%;
+                    margin-left: 24px;
+                    .img {
+                        width: 130px;
+                        height: 130px;
+                        margin-left: 20px;
+                        border-radius: 8px;
+                    }
+                    .des {
+                        display: flex;
+                        justify-content: space-between;
+                        flex-direction: column;
+                        max-width: 90%;
+                        margin-left: 20px;
+                        h3 {
+                            font-size: 28px;
+                            color: #3C4353;
+                        }
+                        p {
+                            word-break: break-all;
+                            font-size: 28px;
+                            color: #838A9D;
+                        }
+                    }
+                }
+            }
+            .poster-item {
+                display: inline-block;
+                width: 339px;
+                vertical-align: middle;
+                .top {
+                    width: 339px;
+                    height: 339px;
+                    border-radius: 16px;
+                    background-color: #F6F7F9;
+                    overflow: hidden;
+                    position: relative;
+                    img {
+                        width: auto;
+                        height: auto;
+                        max-width: 100%;
+                        max-height: 100%;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                    }
+                }
+                .bottom {
+                    display: flex;
+                    justify-content: space-between;
+                    height: 40px;
+                    margin-top: 16px;                  
+                    span {
+                        max-width: 90%;
+                        font-size: 28px;
+                        color: #3C4353;
+                    }
+                    div {
+                        width: 24px;
+                        height: 100%;
+                        img {
+                            width: 100%;
+                            height: 24px;
+                            margin: 8px auto;
+                        }
+                    }
+                }
+            }
+        }
+        .poster {
+            padding: 24px 0;
+            .item {
+                padding: 0;
+                margin: 0 0 24px 24px;
+            }
+        }
+    }
+}
+</style>
