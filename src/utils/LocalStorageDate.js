@@ -25,6 +25,8 @@ export function getStoreValue(keyName, defaultVal = '') {
             router.push('/groupportrait')
         } else if (window.location.pathname.indexOf('punchCard') > -1) {
             router.push('/punchCard')
+        } else if (window.location.pathname.indexOf('materialTemplate') > -1) {
+            router.push('/materialTemplate')
         } else {
             router.push('/home')
         }
@@ -49,6 +51,8 @@ export function getStoreValue(keyName, defaultVal = '') {
                 router.push('/groupportrait')
             } else if (window.location.pathname.indexOf('punchCard') > -1) {
                 router.push('/punchCard')
+            } else if (window.location.pathname.indexOf('materialTemplate') > -1) {
+                router.push('/materialTemplate')
             } else {
                 router.push('/home')
             }
