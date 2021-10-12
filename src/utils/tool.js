@@ -83,3 +83,26 @@ export function formatDate(dateTime, fmt) {
 function padLeftZero(str) {
     return ('00' + str).substr(str.length)
 }
+
+export function isWeiXin() {
+    let ua = window.navigator.userAgent.toLowerCase()
+    return ua.match(/MicroMessenger/i) == 'micromessenger'
+}
+
+export function getCode(wxurl) {
+    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50f34e90927ce260&redirect_uri=${wxurl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+}
+
+export function parseQueryString(url) {
+    let reg_url = /^[^\?]+\?([\w\W]+)$/,
+        reg_para = /([^&=]+)=([\w\W]*?)(&|$)/g, //g is very important
+        arr_url = reg_url.exec(url),
+        ret = {};
+    if (arr_url && arr_url[1]) {
+        let str_para = arr_url[1], result;
+        while ((result = reg_para.exec(str_para)) != null) {
+            ret[result[1]] = result[2];
+        }
+    }
+    return ret;
+}

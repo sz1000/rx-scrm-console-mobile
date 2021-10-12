@@ -235,6 +235,18 @@ input {
   -webkit-box-orient: vertical;
 }
 
+.txtCut (@line) {
+  display: -webkit-box;
+  -webkit-line-clamp: @line;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+}
+
+.two-line {
+  .txtCut(2)
+}
+
 /* 移动端点击a链接出现蓝色背景问题解决 */
 a:link,
 a:active,

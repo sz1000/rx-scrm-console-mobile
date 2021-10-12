@@ -37,6 +37,9 @@ import Grouplist from '../views/customerManage/Grouplist.vue'
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
 
+// 素材模板h5分享页面
+import MaterialTemplate from '../views/MaterialTemplate/share'
+
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -260,6 +263,12 @@ const routes = [{
     //营销互动
     {
         path: '',
+    },
+    // 素材模板h5分享页面
+    {
+        path: '/materialTemplate',
+        name: 'materialTemplate',
+        component: MaterialTemplate,
     },
 ]
 
