@@ -180,6 +180,13 @@ export default {
         },
         // 查询
         checkTable(data) {
+            if (this.type == 0) {
+                this.articleListPage = 1
+            } else if (this.type == 1) {
+                this.saleListPage = 1
+            } else if (this.type == 2) {
+                this.posterListPage = 1
+            }
             this.getList(data)
         },
     },
