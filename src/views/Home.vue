@@ -40,6 +40,24 @@
             <span>渠道配置</span>
           </div>
         </router-link>
+        <router-link
+          to="/talkTool/customerGroup"
+          v-show="menulist.includes('客户群发')"
+        >
+          <div class="commonBtn">
+            <img src="../images/qunfa.png" alt="" />
+            <span>客户群发</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/talkTool/CustomergroupPlaye"
+          v-show="menulist.includes('客户群群发')"
+        >
+          <div class="commonBtn">
+            <img src="../images/qunqnfa.png" alt="" />
+            <span>客户群群发</span>
+          </div>
+        </router-link>
         <router-link to="">
           <div class="commonBtn" @click="showMsg">
             <img src="../images/qhm2.png" alt="" />
@@ -74,24 +92,6 @@
           <div class="commonBtn" @click="showMsg">
             <img src="../images/yjlq2.png" alt="" />
             <span class="nomaltext">一键拉群</span>
-          </div>
-        </router-link>
-        <router-link
-          to="/talkTool/customerGroup"
-          v-show="menulist.includes('客户群发')"
-        >
-          <div class="commonBtn">
-            <img src="../images/qunfa.png" alt="" />
-            <span class="nomaltext">客户群发</span>
-          </div>
-        </router-link>
-        <router-link
-          to="/talkTool/CustomergroupPlaye"
-          v-show="menulist.includes('客户群群发')"
-        >
-          <div class="commonBtn">
-            <img src="../images/qunqnfa.png" alt="" />
-            <span class="nomaltext">客户群群发</span>
           </div>
         </router-link>
       </div>
@@ -195,7 +195,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    CommonHome.getWxToken();
+    // CommonHome.getWxToken();
     this.getUserName();
   },
   mounted() {
