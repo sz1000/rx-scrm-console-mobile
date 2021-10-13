@@ -534,6 +534,9 @@ export default {
     chatId(){
       return this.$store.getters.chatId
     },
+    userId(){
+      return localStorage.getItem('userId')
+    },
   },
   created() {
     commonFun.getWxAppid()
@@ -547,14 +550,15 @@ export default {
   },
   methods: {
     getCustomerByid(){  //获取客户详情
-      let id = localStorage.getItem('userId')
       //  || 312
-      if (!id) {
+      if (!this.userId) {
+        console.log('no userId getWxAppid')
         commonFun.getWxAppid()
       }else {
-        m_cluecustomer_getClueCustomerByid(id).then(res => {
+        m_cluecustomer_getClueCustomerByid(this.userId).then(res => {
           if(res.result){
             let data = res.data.clueCustomerVO.id
+            localStorage.removeItem('userId')
             this.getPersonalSopTip(data)
           }
           // this.getPersonalSopTip(1)
@@ -1094,6 +1098,11 @@ export default {
         data: data,
         command: command,
       }
+    },
+  },
+  watch: {
+    userId(val){
+      console.log('userId：',val)
     },
   },
   filters: {
