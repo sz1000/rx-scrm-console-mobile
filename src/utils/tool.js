@@ -1,3 +1,5 @@
+import { Getticket } from "../config/api"
+
 // 防抖
 export function _debounce(fn, delay) {
     var delay = delay || 200
@@ -89,10 +91,12 @@ export function isWeiXin() {
     return ua.match(/MicroMessenger/i) == 'micromessenger'
 }
 
+// 微信弹窗授权
 export function getCode(wxurl) {
     window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50f34e90927ce260&redirect_uri=${wxurl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
 }
 
+// 获取链接问号后面参数对象
 export function parseQueryString(url) {
     let reg_url = /^[^\?]+\?([\w\W]+)$/,
         reg_para = /([^&=]+)=([\w\W]*?)(&|$)/g, //g is very important
@@ -105,4 +109,53 @@ export function parseQueryString(url) {
         }
     }
     return ret;
+}
+
+// 分享消息到当前会话
+export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, fileId) {
+    Getticket(location.href).then(res => {
+        wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [ "sendChatMessage", "invoke", "agentConfig", "checkJsApi" ],
+        })
+        wx.ready(function() {
+            wx.invoke( "agentConfig", {
+                    corpid: res.data.corpId,
+                    agentid: res.data.agent_id + "",
+                    timestamp: res.data.agent_config_data.timestamp,
+                    nonceStr: res.data.agent_config_data.noncestr,
+                    signature: res.data.agent_config_data.signature,
+                    jsApiList: ["sendChatMessage", "getContext", "invoke"],
+                },
+                function(res) {
+                    wx.invoke( "sendChatMessage", {
+                            msgtype, //消息类型，必填
+                            enterChat, //为true时表示发送完成之后顺便进入会话，仅移动端3.1.10及以上版本支持该字段
+                            text: {
+                                content, //文本内容
+                            },
+                            image: {
+                                mediaid: imageId, //图片的素材id
+                            },
+                            video: {
+                                mediaid: videoId, //视频的素材id
+                            },
+                            file: {
+                               mediaid: fileId, //文件的素材id
+                            },
+                        }, function (res) {
+                            if (res.err_msg == "sendChatMessage:ok") {
+                                //发送成功
+                            }
+                        }
+                    )
+                }
+            )
+        })
+    })
 }

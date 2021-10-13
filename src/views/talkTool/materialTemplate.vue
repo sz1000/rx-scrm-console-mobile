@@ -16,7 +16,7 @@
                     @load="onLoad"
                     >
                     <div class="article-item item" v-for="i in articleList" :key="i.articleId">
-                        <div class="left"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('text', false, `https://test-h5.jzcrm.com/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover" alt="">
                             <div class="des">
@@ -36,7 +36,7 @@
                     @load="onLoad"
                     >
                     <div class="file-item item" v-for="i in saleList" :key="i.documentId">
-                        <div class="left"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('text', false, `https://test-h5.jzcrm.com/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover" alt="">
                             <div class="des">
@@ -59,7 +59,7 @@
                         <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
                         <div class="bottom">
                             <span class="one-txt-cut">{{i.posterName}}</span>
-                            <div><img src="../../images/relay2.png" alt=""></div>
+                            <div @click="sendChatMessage('image', false, '', i.posterId)"><img src="../../images/relay2.png" alt=""></div>
                         </div>
                     </div>
                 </van-list>
@@ -69,6 +69,7 @@
 </template>
 <script>
 import { GetCrop, ArticleList, SaleDocumentList, PosterList } from "../../config/api"
+import { sendChatMessage } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
 
@@ -78,6 +79,7 @@ export default {
         return {
             type: 0,
             corpId: null,
+            userNo: null,
 
             articleList: [],
             totalArticle: 0,
@@ -105,6 +107,8 @@ export default {
     },
     created() {
         this.getCorpId().then(() => this.getList())
+        console.log("UserNo:::", JSON.parse(localStorage.getItem("token")))
+        this.userNo = JSON.parse(localStorage.getItem("token")).userNo
     },
     methods: {
         changeNav(type) {
@@ -159,16 +163,25 @@ export default {
                 if (code === 'success') {
                     if (this.type == 0) {
                         this.articleListLoading = false
+                        if (this.articleListPage == 1) {
+                            this.articleList = []
+                        }
                         this.articleList = this.articleList.concat(data.records)
                         this.articleListPage += 1
                         this.articleListFinished = this.articleList.length >= data.total
                     } else if (this.type == 1) {
                         this.saleListLoading = false
+                        if (this.saleListPage == 1) {
+                            this.saleList = []
+                        }
                         this.saleList = this.saleList.concat(data.records)
                         this.saleListPage += 1
                         this.saleListFinished = this.saleList.length >= data.total
                     } else if (this.type == 2) {
                         this.posterListLoading = false
+                        if (this.posterListPage == 1) {
+                            this.posterList = []
+                        }
                         this.posterList = this.posterList.concat(data.records)
                         this.posterListPage += 1
                         this.posterListFinished = this.posterList.length >= data.total
@@ -189,6 +202,7 @@ export default {
             }
             this.getList(data)
         },
+        sendChatMessage
     },
     components: {
         Search
