@@ -7,7 +7,7 @@
                 <li class="company one-txt-cut">{{ userData.departments }}</li>
             </ul>
             <div class="right" @click="showWechat">
-                <img src="../../images/wechat.png" alt="">
+                <img src="../../images/icon_qiwei.png" alt="">
                 <span>加微信</span>
             </div>
         </div>
