@@ -59,7 +59,7 @@
                         <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
                         <div class="bottom">
                             <span class="one-txt-cut">{{i.posterName}}</span>
-                            <div @click="sendChatMessage('image', false, '', i.posterId)"><img src="../../images/relay2.png" alt=""></div>
+                            <div @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay2.png" alt=""></div>
                         </div>
                     </div>
                 </van-list>
