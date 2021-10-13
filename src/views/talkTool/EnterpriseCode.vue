@@ -19,9 +19,16 @@
               v-show="showAll !== 'employee'"
               @click="tabClick(2)">全部活码</span>
       </div>
-
       <span class="addBtn"
-            @click="addCode">
+            @click="addCode"
+            v-show="(type == 1 && mylist.some(item=>item.enName =='add' ))">
+        <img src="../../images/icon_add@2x.png"
+             alt="" />
+        新增
+      </span>
+      <span class="addBtn"
+            @click="addCode"
+            v-show="(type == 2 && alllist.some(item=>item.enName =='add' ))">
         <img src="../../images/icon_add@2x.png"
              alt="" />
         新增
@@ -51,12 +58,29 @@
               <span>活码名称:</span>
               <span>{{ item.name }}</span>
             </div>
-            <div class="editBtn">
-              <span @click="editBtn(item)">
+            <div class="editBtn"
+                 v-show="type==1">
+              <span @click="editBtn(item)"
+                    v-show="mylist.some(item=>item.enName =='edit' )">
+                <van-icon name="
+                    edit" />
+                编辑
+              </span>
+              <span @click="deleteBtn(item)"
+                    v-show="mylist.some(item=>item.enName =='delete' )">
+                <van-icon name="delete-o" />
+                删除
+              </span>
+            </div>
+            <div class="editBtn"
+                 v-show="type==2">
+              <span @click="editBtn(item)"
+                    v-show="alllist.some(item=>item.enName =='edit')">
                 <van-icon name="edit" />
                 编辑
               </span>
-              <span @click="deleteBtn(item)">
+              <span @click="deleteBtn(item)"
+                    v-show="alllist.some(item=>item.enName =='delete')">
                 <van-icon name="delete-o" />
                 删除
               </span>
@@ -319,7 +343,7 @@
       </van-action-sheet>
     </div>
   </div>
-</template>
+</template> 
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
 import MyMixin from '../../mixins/permissionsList'
@@ -358,10 +382,11 @@ export default {
       pageSize: 10, //每页请求的数量
       total: 0, //总共的数据条数
       overlay: true,
-
       docmHeight: 0, //默认屏幕高度
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
+      mylist: [],
+      alllist: [],
     }
   },
   watch: {
@@ -379,6 +404,14 @@ export default {
     },
   },
   mounted() {
+    // console.log('--this.expandedKeys--', this.expandedKeys, this.type)
+    for (var i in this.expandedKeys) {
+      if (this.expandedKeys[i].enName == 'myLivecode') {
+        this.mylist = this.expandedKeys[i].childrenList
+      } else {
+        this.alllist = this.expandedKeys[i].childrenList
+      }
+    }
     window.onresize = () =>
       (() => {
         this.showHeight =

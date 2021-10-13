@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     chatId: sessionStorage.getItem('chatId'),
+    userId: '',
   },
   getters: {
     chatId: state => state.chatId,
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     setChatId(state, data) {
       sessionStorage.setItem('chatId', data)
       state.chatId = data
+    },
+    userId(state, val) {
+      state.userId = val
     },
   },
   actions: {
