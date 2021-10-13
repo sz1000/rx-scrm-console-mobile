@@ -213,7 +213,11 @@
             </div>
             <!-- 图片 -->
             <template v-if="item.appendixType === '图片'">
-              <van-uploader v-model="item.picList" :max-count="1" />
+              <van-uploader
+                v-model="item.picList"
+                :max-count="1"
+                :after-read="afterRead"
+              />
               <div class="picTips marB-24">
                 建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
               </div>
@@ -300,7 +304,7 @@
             <div
               class="label-item"
               :class="[signItm.checked ? 'active' : '']"
-              @click="clickSign(index, signIdx)"
+              @click="clickSign(index, signIdx, signItm.tagid)"
               v-for="(signItm, signIdx) in item.children"
               :key="`${index} - ${signIdx}`"
             >
@@ -363,24 +367,33 @@ export default {
       },
       estimateCusNum: 0, // 预计客户数量
       staffsList: [
-        {
-          key: "张三",
-          value: "张三",
-        },
-        {
-          key: "张三1",
-          value: "张三1",
-        },
-        {
-          key: "张三2",
-          value: "张三2",
-        },
+        // {
+        //   key: "张三",
+        //   value: "张三",
+        // },
+        // {
+        //   key: "张三1",
+        //   value: "张三1",
+        // },
+        // {
+        //   key: "张三2",
+        //   value: "张三2",
+        // },
       ], // 员工列表
+      listImg: [],
+      urlList: [],
       chatGroupList: [],
+      listImgData: {
+        url: "",
+        objectname: "",
+      },
+
       tagidList: [],
       sendMsg: "",
       appendixList: [
         {
+          url: "",
+          objectname: "",
           appendixType: "图片",
           picList: [],
           href: "",
@@ -444,8 +457,45 @@ export default {
     this.chooseCustomerMass(); //选择员工接口
   },
   methods: {
+    afterRead(file) {
+      console.log(file, "------------");
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("type", "qunfa");
+      formData.append("filetype", "image");
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      this.$network
+        .post("/common-service/oss/uploadfileparam", formData, config)
+        .then((res) => {
+          console.log(res, "------------图片");
+          this.listImgData.url = res.data.url;
+          this.listImgData.objectname = res.data.objectname;
+          console.log(this.listImgData, "-------11");
+          // let dataList = res.data;
+          // this.listImgData.forEach((item) => {
+          //   console.log(item.url);
+          // });
+          // let list = this.listImgData.map((item) => {
+          //   // console.log(item, "------item");
+          //   return {
+          //     url: item.url,
+          //     Objectname: item.objectname,
+          //   };
+
+          // });
+
+          // console.log(list, "----222--------");
+        });
+      // console.log(this.listImg, "----222--------");
+    },
     // 返回
-    goBack() {},
+    goBack() {
+      this.$router.go(-1);
+    },
     // 选择日期时间公共方法
     selectDateTime(type) {
       this.activeChoose = type;
@@ -543,13 +593,21 @@ export default {
       this.chooseCusSign = true;
     },
     // 删除用户标签
-    delCustomSign(item, index) {
-      console.log(item.tagid);
-      this.baseForm.includeCus.splice(index, 1);
+    delCustomSign(items, index) {
+      console.log(items.tagid);
+      // if(item.tagid)
+      // this.baseForm.includeCus.splice(index, 1);
+      this.highLightArr.forEach((item) => {
+        console.log(item, "----------");
+        if (item == items.tagid) {
+          this.baseForm.includeCus.splice(index, 1);
+          this.highLightArr.splice(index, 1);
+        }
+      });
+      console.log(this.highLightArr, "-------------");
     },
     // 点击标签
-    clickSign(index, subindex) {
-      // console.log(index, subindex, "======");
+    clickSign(index, subindex, tagid) {
       const cusSignList = this.deepClone(this.cusSignList);
       let checked = cusSignList[index].children[subindex].checked;
       if (checked) {
@@ -568,33 +626,44 @@ export default {
           zitem.checked && checkedSign.push(zitem);
         });
       });
-      console.log(checkedSign);
-      // checkedSign.forEach((item) => {
-      //   this.childTag.forEach((chItem, chIndex) => {
-      //     if (item.tagid == chItem.tagid) {
-      //       this.tagidList.push(chItem);
+      this.highLightArr = [];
+      checkedSign.forEach((item, index) => {
+        // this.highLightArr.push(item.tagid);
+        console.log(item.tagid);
+        // if (item.tagid != item.tagid) {
+
+        this.highLightArr.push(item.tagid);
+        // }
+      });
+      // this.namelabutArr.forEach((item) => {
+      //   this.highLightArr.forEach((items) => {
+      //     if (item.tagid == items.tagid) {
+      //       this.highLightArr.splice(index, 1);
       //     }
       //   });
-      // console.log(item.tagid);
-      // if (item.tagid == item.tagid) {
-      //   this.tagidList.push(item.tagid);
-      //   // this.baseForm.includeCus.push(item.atgid);
-      //   // this.highLightArr.push([item.tagid]);
-      // }
       // });
-      // console.log(this.tagidList.push(...new Set(this.tagidList)));
-      // let listtagid = [];
-      // listtagid = this.tagidList.push(...new Set(this.tagidList));
-      console.log(this.tagidList, "-------------------oooo");
+      // var nwr = this.highLightArr;
+      // let newList = [];
+      // newList.push(new Set(this.highLightArr));
+      console.log(checkedSign, "---------");
+      console.log(this.highLightArr, "-------------------oooo");
       this.baseForm.includeCus = checkedSign;
       this.chooseCusSign = false;
       // this.getTagList();
     },
     // 通知
     sendRequest() {
-      // console.log("sendMsg----->", this.sendMsg);
-      // console.log("baseForm------>", this.baseForm);
-      // console.log("appendixList------>", this.appendixList);
+      console.log("sendMsg----->", this.sendMsg);
+      console.log("baseForm------>", this.baseForm);
+      console.log("appendixList------>", this.appendixList);
+      // this.appendixList.forEach(item =>{
+      //   console.log(item.href)
+      // })
+      this.urlList = [];
+      this.appendixList.forEach((item) => {
+        this.urlList.push(item.href);
+      });
+      console.log(this.urlList, "-------------this.urlList");
       this.$refs["form"].validate((valid) => {
         if (valid) {
           let params = {
@@ -605,15 +674,13 @@ export default {
             gender: this.baseForm.cusSex,
             addStartTime: this.baseForm.cusAddBeginTime,
             addEndTime: this.baseForm.cusAddEndTime,
-            groupList: this.baseForm.chatGroup || [],
+            groupList: this.highLightArr, //this.baseForm.chatGroup || [],
             lableList: this.customerlistdata || [],
             sendType: this.baseForm.sendRule,
             sendTime: this.baseForm.sendDate + " " + this.baseForm.sendTime,
-            urlList: this.baseForm.staffs, //this.urlList,
+            urlList: this.urlList,
             allCustomer: this.baseForm.selectCusType,
-            fileList: [
-              // "https://img-blog.csdnimg.cn/20200708144550577.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtYml0aW9uMDExMTIz,size_16,color_FFFFFF,t_70#pic_center",
-            ],
+            fileList: [this.listImgData], //this.listImg,
             customerList: this.clueCustomerLists,
           };
 
@@ -670,6 +737,7 @@ export default {
         });
         let childTag = [].concat.apply([], allChildTag);
         console.log(childTag);
+        this.namelabutArr = [].concat.apply([], allChildTag);
         console.log("-----列表----", this.baseForm.includeCus);
         this.baseForm.includeCus.forEach((item) => {
           console.log(item);
@@ -691,7 +759,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          this.staffsList = res.data.list.records;
+          this.staffsList = res.data.list;
         });
     },
     // 选择所在群聊接口

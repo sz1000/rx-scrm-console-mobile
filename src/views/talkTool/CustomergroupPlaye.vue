@@ -205,7 +205,7 @@
         >
         </el-input>
         <!-- 附件 -->
-        <div class="appendix-list" style="display: none">
+        <div class="appendix-list">
           <div
             class="item marB-24"
             v-for="(item, index) in appendixList"
@@ -229,7 +229,11 @@
             </div>
             <!-- 图片 -->
             <template v-if="item.appendixType === '图片'">
-              <van-uploader v-model="item.picList" :max-count="1" />
+              <van-uploader
+                v-model="item.picList"
+                :max-count="1"
+                :after-read="afterRead.bind(null, { index: index, data: item })"
+              />
               <div class="picTips marB-24">
                 建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
               </div>
@@ -262,14 +266,14 @@
           </div>
         </div>
         <!-- 添加素材 -->
-        <!-- <div class="appendix-add-warp">
+        <div class="appendix-add-warp">
           <button class="addAppendix-button" @click="addAppendix">
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
           <span class="add-tips" style="margin-left: 24px"
             >（最多可添加9个附件）</span
           >
-        </div> -->
+        </div>
         <!-- 通知成员 -->
         <span class="sendRequest" @click="sendRequest">通知成员发送</span>
       </div>
@@ -379,24 +383,28 @@ export default {
       },
       estimateCusNum: 0, // 预计客户数量
       staffsList: [
-        {
-          key: "张三",
-          value: "张三",
-        },
-        {
-          key: "张三1",
-          value: "张三1",
-        },
-        {
-          key: "张三2",
-          value: "张三2",
-        },
+        // {
+        //   key: "张三",
+        //   value: "张三",
+        // },
+        // {
+        //   key: "张三1",
+        //   value: "张三1",
+        // },
+        // {
+        //   key: "张三2",
+        //   value: "张三2",
+        // },
       ], // 员工列表
+      urlList: [],
+      groupList: [],
       chatGroupList: [],
       tagidList: [],
       sendMsg: "",
       appendixList: [
         {
+          url: "",
+          objectname: "",
           appendixType: "图片",
           picList: [],
           href: "",
@@ -410,6 +418,11 @@ export default {
       sendDateTime: "", // 日期时间需要的值
       chooseCusSign: false, // 选择客户标签
       tagidList: [],
+      arrImgList: [],
+      listImgData: {
+        url: "",
+        objectname: "",
+      },
       highLightArr: [],
       namelabutArr: [],
       activeIndex: 0,
@@ -460,6 +473,27 @@ export default {
     this.chooseCustomerMass(); //选择员工接口
   },
   methods: {
+    afterRead(obj, file) {
+      console.log(file, "------------");
+      console.log(obj, "------------obj");
+      let formData = new FormData();
+      formData.append("file", file.file);
+      formData.append("type", "qunfa");
+      formData.append("filetype", "image");
+      let config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      this.$network
+        .post("/common-service/oss/uploadfileparam", formData, config)
+        .then((res) => {
+          console.log(res, "------------图片");
+          obj.data.url = res.data.url;
+          obj.data.objectname = res.data.objectname;
+        });
+      // console.log(this.listImg, "----222--------");
+    },
     // 返回
     goBack() {
       this.$router.go(-1);
@@ -619,9 +653,22 @@ export default {
     },
     // 通知
     sendRequest() {
-      // console.log("sendMsg----->", this.sendMsg);
-      // console.log("baseForm------>", this.baseForm);
-      // console.log("appendixList------>", this.appendixList);
+      console.log("sendMsg----->", this.sendMsg);
+      console.log("baseForm------>", this.baseForm);
+      console.log("appendixList------>", this.appendixList);
+      let list = this.appendixList.map((item) => {
+        return {
+          url: item.url,
+          Objectname: item.objectname,
+        };
+      });
+      // this.appendixList.forEach(item =>{
+      //   console.log(item.href)
+      // })
+      this.urlList = [];
+      this.appendixList.forEach((item) => {
+        this.urlList.push(item.href);
+      });
       this.$refs["form"].validate((valid) => {
         if (valid) {
           let params = {
@@ -636,11 +683,9 @@ export default {
             lableList: this.customerlistdata || [],
             sendType: this.baseForm.sendRule,
             sendTime: this.baseForm.sendDate + " " + this.baseForm.sendTime,
-            urlList: this.baseForm.staffs, //this.urlList,
+            urlList: this.urlList, //this.urlList,
             allCustomer: this.baseForm.selectCusType,
-            fileList: [
-              // "https://img-blog.csdnimg.cn/20200708144550577.JPG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FtYml0aW9uMDExMTIz,size_16,color_FFFFFF,t_70#pic_center",
-            ],
+            fileList: list,
             customerList: this.clueCustomerLists,
           };
 
@@ -719,36 +764,36 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          this.staffsList = res.data.list.records;
+          this.staffsList = res.data.list;
         });
     },
     // 选择所在群聊接口
     staffsListChange(value) {
       console.log(value);
       this.baseForm.staffs = value;
-      this.groupStaffset();
+      // this.groupStaffset();
     },
-    groupStaffset(value) {
-      // let groutList = this.grouprst;
-      // if (value == false) {
-      this.$network
-        .post(
-          `/customer-service/cluecustomerMass/chooseCustomerGroup`,
-          // groutList
-          {
-            // params: {
-            page: 1,
-            limit: 20,
-            userList: this.baseForm.staffs,
-            // },
-          }
-        )
-        .then((res) => {
-          console.log(res.data.groupList);
-          this.chatGroupList = res.data.groupList;
-        });
-      // }
-    },
+    // groupStaffset(value) {
+    //   // let groutList = this.grouprst;
+    //   // if (value == false) {
+    //   this.$network
+    //     .post(
+    //       `/customer-service/cluecustomerMass/chooseCustomerGroup`,
+    //       // groutList
+    //       {
+    //         // params: {
+    //         page: 1,
+    //         limit: 20,
+    //         userList: this.baseForm.staffs,
+    //         // },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       console.log(res.data.groupList);
+    //       this.chatGroupList = res.data.groupList;
+    //     });
+    //   // }
+    // },
     // 选择群聊获取chatid
     chatGroupListChange(value) {
       console.log(value, "-----------选择群聊获取chatid");
