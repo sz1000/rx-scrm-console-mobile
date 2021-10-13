@@ -8,7 +8,7 @@
             </ul>
             <div class="right" @click="showWechat">
                 <img src="../../images/icon_qiwei.png" alt="">
-                <span>加微信</span>
+                <span>加企业微信</span>
             </div>
         </div>
 
@@ -162,7 +162,7 @@ export default {
             }
             .center {
                 display: inline-block;
-                max-width: 68%;
+                max-width: 60%;
                 vertical-align: middle;
                 .name {
                     color: #3C4353;
@@ -175,7 +175,7 @@ export default {
                 }
             }
             .right {
-                width: 72px;
+                width: 130px;
                 text-align: center;
                 position: absolute;
                 right: 27px;
