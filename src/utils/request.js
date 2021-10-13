@@ -17,7 +17,7 @@ if (location.hostname == 'localhost') {
     addVconsole()
 } else if (location.hostname == 'test-h5.jzcrm.com') {
     BASE_URL = 'https://test-api.jzcrm.com' //测试
-        // addVconsole()
+    addVconsole()
 } else {
     BASE_URL = 'https://api.jzcrm.com' //生产
 }

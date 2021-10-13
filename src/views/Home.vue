@@ -24,7 +24,7 @@
       <div class="btnRouter">
         <router-link
           to="/talkTool/enterpriseCode"
-          v-show="menulist.includes('获客活码')"
+          v-show="menulist.includes('livecode')"
         >
           <div class="commonBtn">
             <img src="../images/huoma.png" alt="" />
@@ -33,7 +33,7 @@
         </router-link>
         <router-link
           to="/talkTool/channelConfiguration"
-          v-show="menulist.includes('渠道配置')"
+          v-show="menulist.includes('channle')"
         >
           <div class="commonBtn">
             <img src="../images/qudao.png" alt="" />
@@ -42,7 +42,7 @@
         </router-link>
         <router-link
           to="/talkTool/customerGroup"
-          v-show="menulist.includes('客户群发')"
+          v-show="menulist.includes('customerSend')"
         >
           <div class="commonBtn">
             <img src="../images/qunfa.png" alt="" />
@@ -51,7 +51,7 @@
         </router-link>
         <router-link
           to="/talkTool/CustomergroupPlaye"
-          v-show="menulist.includes('客户群群发')"
+          v-show="menulist.includes('groupSend')"
         >
           <div class="commonBtn">
             <img src="../images/qunqnfa.png" alt="" />
@@ -99,7 +99,7 @@
       <div class="btnRouter custom">
         <router-link
           to="/customerManage/clues"
-          v-show="menulist.includes('线索')"
+          v-show="menulist.includes('clew')"
         >
           <div class="commonBtn">
             <img src="../images/xiansuo.png" alt="" />
@@ -108,7 +108,7 @@
         </router-link>
         <router-link
           to="/customerManage/myCustomer"
-          v-show="menulist.includes('客户')"
+          v-show="menulist.includes('customer')"
         >
           <div class="commonBtn">
             <img src="../images/kehu.png" alt="" />
@@ -117,7 +117,7 @@
         </router-link>
         <router-link
           to="/customerManage/grouplist"
-          v-show="menulist.includes('群列表')"
+          v-show="menulist.includes('group')"
         >
           <div class="commonBtn">
             <img src="../images/grouplist.png" alt="" />
@@ -133,7 +133,7 @@
       </div>
       <div class="customAccont manage">办公协同</div>
       <div class="btnRouter custom">
-        <router-link to="/punchCard" v-show="menulist.includes('外出打卡')">
+        <router-link to="/punchCard" v-show="menulist.includes('punchCode')">
           <div class="commonBtn">
             <img src="../images/wcdk.png" alt="" />
             <span>外出打卡</span>
@@ -196,7 +196,6 @@ export default {
       loadingType: "spinner",
     });
     CommonHome.getWxToken();
-    this.getUserName();
   },
   mounted() {
     setTimeout(() => {
@@ -208,6 +207,7 @@ export default {
           this.customer = res.data.myCustomer;
           this.customerSee = res.data.derCustomer;
         });
+      this.getUserName();
     }, 2000);
   },
   methods: {
@@ -229,7 +229,7 @@ export default {
             "permissionsList",
             JSON.stringify(tempMenuList)
           );
-          this.menulist = tempMenuList.map((item) => item.title);
+          this.menulist = tempMenuList.map((item) => item.enName);
           // console.log(this.menulist)
         });
     },

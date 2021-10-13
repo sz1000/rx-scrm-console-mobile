@@ -1,5 +1,6 @@
 import Network from './request'
 import router from '../router/index'
+import store from '../store'
 import {
     setStoreValue,
     getStoreValue,
@@ -7,11 +8,6 @@ import {
 } from '../utils/LocalStorageDate'
 
 const getWxAppid = function() {
-        // let token = localStorage.getItem('token')
-        // alert(token)
-        // if (token == '' || (!token && typeof token != 'undefined')) {
-        //     alert('132123123')
-        //     alert(window.location.href)
         let authCode
         if (window.location.href.indexOf('?') > -1) {
             let href = window.location.href.split('?')[1]
@@ -136,6 +132,7 @@ function getAgent(res) {
                             // alert(JSON.stringify(res))
                             // alert(JSON.stringify(res.userId))
                             localStorage.setItem('userId', res.userId)
+                                // this.$store.commit('userId', res.userId)
                                 // alert(JSON.stringify(that.obj))
                                 // that.getMethod()
                         } else {
@@ -150,6 +147,7 @@ function getAgent(res) {
 
                             // localStorage.setItem('chatId', res.chatId)
                             sessionStorage.setItem('chatId', res.chatId)
+                            store.commit('chatId',res.chatId)
                         } else {
                             //错误处理
                         }

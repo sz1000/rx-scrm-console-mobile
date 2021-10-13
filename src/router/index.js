@@ -33,6 +33,8 @@ import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
+// 群 SOP 设置 
+import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
 //错误页
@@ -113,6 +115,15 @@ const routes = [{
             bodyClass: 'groupportrait',
         },
         component: Groupportrait,
+    },
+    //群SOP 设置
+    {
+        path: '/settingSop',
+        name: 'settingSop',
+        meta: {
+            bodyClass: 'settingSop',
+        },
+        component: SettingSop,
     },
 
     //打卡
