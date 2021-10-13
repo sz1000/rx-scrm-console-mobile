@@ -41,7 +41,7 @@
                             <img class="img" :src="i.cover" alt="">
                             <div class="des">
                                 <h3 class="one-txt-cut">{{i.name}}</h3>
-                                <p class="two-line" v-html="i.documentUrl"></p>
+                                <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
 </template>
 <script>
 import { GetCrop, ArticleList, SaleDocumentList, PosterList } from "../../config/api"
-import { sendChatMessage } from '../../utils/tool'
+import { sendChatMessage, byteConvert } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
 
@@ -107,8 +107,9 @@ export default {
     },
     created() {
         this.getCorpId().then(() => this.getList())
-        console.log("UserNo:::", JSON.parse(localStorage.getItem("token")))
-        this.userNo = JSON.parse(localStorage.getItem("token")).userNo
+        let userNo = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token")).userNo
+
+        this.userNo = userNo ? userNo : null
     },
     methods: {
         changeNav(type) {
@@ -202,7 +203,8 @@ export default {
             }
             this.getList(data)
         },
-        sendChatMessage
+        sendChatMessage,
+        byteConvert
     },
     components: {
         Search
@@ -269,7 +271,7 @@ export default {
                         }
                         p {
                             word-break: break-all;
-                            font-size: 28px;
+                            font-size: 24px;
                             color: #838A9D;
                         }
                     }

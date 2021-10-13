@@ -111,6 +111,30 @@ export function parseQueryString(url) {
     return ret;
 }
 
+// 文件大小单位转换
+export function byteConvert(bytes){ 
+    if(isNaN(bytes)) {
+        return
+    }
+    let symbols = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    let exp = Math.floor(Math.log(bytes)/Math.log(2)) // 获取以2为底的bytes的对数（向下取整）
+
+    if (exp < 1) {
+        exp = 0
+    }
+    let i = Math.floor(exp/10)
+
+    bytes = bytes/Math.pow(2, 10*i)
+
+    // 取两位小数
+    if(bytes.toString().length > bytes.toFixed(2).toString().length) {
+        bytes = bytes.toFixed(2)
+    }
+
+    return bytes + '' + symbols[i]
+}
+
 // 分享消息到当前会话
 export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, fileId) {
     Getticket(location.href).then(res => {
