@@ -27,6 +27,8 @@ export function getStoreValue(keyName, defaultVal = '') {
             router.push('/punchCard')
         } else if (window.location.pathname.indexOf('materialTemplate') > -1) {
             router.push('/materialTemplate')
+        } else if (window.location.pathname.indexOf('404') > -1) {
+            router.push('/404')
         } else {
             router.push('/home')
         }
@@ -53,6 +55,8 @@ export function getStoreValue(keyName, defaultVal = '') {
                 router.push('/punchCard')
             } else if (window.location.pathname.indexOf('materialTemplate') > -1) {
                 router.push('/materialTemplate')
+            } else if (window.location.pathname.indexOf('404') > -1) {
+                router.push('/404')
             } else {
                 router.push('/home')
             }
