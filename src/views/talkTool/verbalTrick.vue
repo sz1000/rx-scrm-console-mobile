@@ -535,7 +535,7 @@ export default {
       return this.$store.getters.chatId
     },
     userId(){
-      return localStorage.getItem('userId')
+      return this.$store.getters.userId
     },
   },
   created() {
@@ -550,7 +550,7 @@ export default {
   },
   methods: {
     getCustomerByid(){  //获取客户详情
-      //  || 312
+      console.log('come userId',this.userId)
       if (!this.userId) {
         console.log('no userId getWxAppid')
         commonFun.getWxAppid()
@@ -577,6 +577,7 @@ export default {
       })
     },
     getPersonalSopTip(id) {   //个人sop提醒
+      console.log('come personal sop list')
       sop_prompt_personal(id).then((res) => {
         if (res.result) {
           let list = res.data

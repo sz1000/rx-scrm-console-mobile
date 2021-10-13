@@ -6,17 +6,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     chatId: sessionStorage.getItem('chatId'),
-    userId: '',
+    userId: localStorage.getItem('userId'),
   },
   getters: {
     chatId: state => state.chatId,
+    userId: state => state.userId,
   },
   mutations: {
     setChatId(state, data) {
       sessionStorage.setItem('chatId', data)
       state.chatId = data
     },
-    userId(state, val) {
+    setUserId(state, val) {
+      localStorage.setItem('userId', data)
       state.userId = val
     },
   },
