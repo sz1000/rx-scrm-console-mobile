@@ -1,5 +1,6 @@
 import Network from './request'
 import router from '../router/index'
+import store from '../store'
 import {
     setStoreValue,
     getStoreValue,
@@ -150,6 +151,7 @@ function getAgent(res) {
 
                             // localStorage.setItem('chatId', res.chatId)
                             sessionStorage.setItem('chatId', res.chatId)
+                            store.commit('chatId',res.chatId)
                         } else {
                             //错误处理
                         }

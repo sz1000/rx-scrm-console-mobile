@@ -36,6 +36,25 @@
         </div> -->
       </div>
     </div>
+    <!-- 群sop -->
+    <div class="sop_box" v-if="isOwmer">
+      <div class="sop_top">
+        <div class="sop_title">群SOP</div>
+        <div class="setting_btn" @click="settingSopFun">设置</div>
+      </div>
+      <div class="sop_list">
+        <div class="sop_li" v-for="item in sopList" :key="item.id">
+          <div class="item">
+            <div class="label">SOP名称：</div>
+            <div class="val">{{item.ruleName}}</div>
+          </div>
+          <div class="item">
+            <div class="label">推送规则：</div>
+            <div class="val">{{item.promptRule ? '周期推送' : '定时推送'}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 列表 -->
     <div>
       <van-list
@@ -95,6 +114,7 @@
 <script>
 import { formatDate } from "../../utils/tool.js";
 import commonFun from "../../utils/commonToken";
+import { sop_groupSopList } from '@/api/sop'
 export default {
   data() {
     return {
@@ -121,6 +141,10 @@ export default {
       },
       // 群用户列表
       dataList: [],
+
+      sopList: [],  //群 sop 列表
+      groupId: '',
+      isOwmer: false,   //是否群主
     };
   },
   created() {
@@ -146,11 +170,28 @@ export default {
       // console.log(this.pageInfo.page++);
       this.getList();
     },
+    getSopList(){ //获取sop规则列表
+      sop_groupSopList(this.groupId).then(res => {
+        if(res.result){
+          let list = res.data
+          this.sopList = list
+        }
+      })
+    },
+    settingSopFun(){  //设置sop规则
+      this.$router.push({
+        path: '/settingSop',
+        query: {
+          id: this.groupId
+        },
+      })
+    },
     getGroupDetail() {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
           // chatId: this.$route.query.id,
           // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
+          // chatId: "wrY-gRDAAA36v0CIMKDBwkiUSuOkZqJQ",
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
           // chatId: localStorage.getItem("chatId"),
@@ -160,7 +201,15 @@ export default {
           if (res.result) {
             this.show = false;
             // this.finished = true;
+            this.groupId = res.data.id
+            if(res.data.owmer == res.data.userId){
+              console.log('我是群主')
+              this.isOwmer = true
+              this.getSopList()
+            }
           }
+          // this.getSopList()   //本地调试用
+          // this.show = false;  //画页面用 2021/10/11
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
           this.datatTite.owmerName = res.data.owmerName;
@@ -256,6 +305,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+@main: #4168F6;
+@white: #fff;
+@fontMain: #3C4353;
+@fontSub2: #838A9D;
+@bdColor: #D9DAE4;
+@dashedColor: #F0F2F7;
 /deep/.van-overlay {
   // background-color: rgba(0, 0, 0, 0.3);
 }
@@ -272,6 +327,92 @@ export default {
 .warp-portrait {
   /* padding: 24px; */
   /* background: #838a9d; */
+  .sop_box{
+    width: 100%;
+    min-height: 120px;
+    background: @white;
+    margin-top: 24px;
+    padding-top: 24px;
+    .sop_top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      .sop_title{
+        font-size: 28px;
+        line-height: 40px;
+        font-weight: bold;
+        color: @fontMain;
+        padding-left: 20px;
+        position: relative;
+        &::before{
+          content: '';
+          width: 8px;
+          height: 28px;
+          background: @main;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+      .setting_btn{
+        width: 124px;
+        height: 68px;
+        font-size: 28px;
+        line-height: 66px;
+        border: 1px solid @bdColor;
+        border-radius: 8px;
+        color: @fontSub2;
+        padding-left: 52px;
+        position: relative;
+        cursor: pointer;
+        &::before{
+          content: '';
+          width: 32px;
+          height: 32px;
+          background: url('../../assets/images/icon_setting.png') no-repeat;
+          background-size: 100%;
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+    .sop_list{
+      width: 100%;
+      .sop_li{
+        width: 100%;
+        position: relative;
+        border-bottom: 1px dashed @dashedColor;
+        padding: 24px;
+        display: flex;
+        &:last-child{
+          border: none;
+        }
+        .item{
+          width: calc(50% - 30px);
+          display: flex;
+          font-size: 28px;
+          line-height: 40px;
+          &:last-child{
+            margin-left: 12px;
+          }
+          .label{
+            color: @fontSub2;
+            white-space: nowrap;
+          }
+          .val{
+            color: @fontMain;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+        }
+      }
+    }
+  }
 }
 .portrait-box {
   padding: 24px;
