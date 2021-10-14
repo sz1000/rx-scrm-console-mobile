@@ -16,7 +16,7 @@
                     @load="onLoad"
                     >
                     <div class="article-item item" v-for="i in articleList" :key="i.articleId">
-                        <div class="left" @click="sendChatMessage('text', false, `${location.origin}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover" alt="">
                             <div class="des">
@@ -36,7 +36,7 @@
                     @load="onLoad"
                     >
                     <div class="file-item item" v-for="i in saleList" :key="i.documentId">
-                        <div class="left" @click="sendChatMessage('text', false, `${location.origin}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover" alt="">
                             <div class="des">
@@ -98,6 +98,8 @@ export default {
             posterListPage: 1,
             posterListLoading: false,
             posterListFinished: false,
+
+            originUrl: location.origin
         }
     },
     provide() {
