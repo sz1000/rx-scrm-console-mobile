@@ -137,7 +137,7 @@ export function byteConvert(bytes){
 
 // 分享消息到当前会话
 export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, fileId) {
-    Getticket(location.href).then(res => {
+    Getticket({url: location.href}).then(res => {
         wx.config({
             beta: true,
             debug: false,

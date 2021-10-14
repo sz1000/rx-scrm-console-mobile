@@ -4,7 +4,7 @@ const userServiceApi = '/user-service'
 const wechatServiceApi = '/wechat-service'
 const materialServiceApi = '/material-service'
 
-export const Getticket = data => { return http.get(`${userServiceApi}/m/user/getticket?url=${data}`)} // url获取授权信息
+export const Getticket = data => { return http.get(`${userServiceApi}/m/user/getticket?`, data)} // url获取授权信息
 export const GetCrop = () => { return http.get(`${userServiceApi}/Corp/getCrop`)} // 企业详情
 export const UsersInfo = data => { return http.get(`${userServiceApi}/user/getUser/${data}/info`)} // 员工信息详情
 
