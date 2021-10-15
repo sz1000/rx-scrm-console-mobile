@@ -145,25 +145,27 @@ export default {
             
             let pageIndex = 1
 
+            let params = {
+                pageIndex,
+                pageSize: 10,
+                corpId: this.corpId
+            }
+
             if (this.type == 0) {
+                params.title = title
                 ApiOpts = ArticleList
                 pageIndex = this.articleListPage
                 this.articleListLoading = true
             } else if (this.type == 1) {
+                params.name = title
                 ApiOpts = SaleDocumentList
                 pageIndex = this.saleListPage
                 this.saleListLoading = true
             } else if (this.type == 2) {
+                params.name = title
                 ApiOpts = PosterList
                 pageIndex = this.posterListPage
                 this.posterListLoading = true
-            }
-
-            let params = {
-                pageIndex,
-                pageSize: 10,
-                title,
-                corpId: this.corpId
             }
 
             ApiOpts(params).then(res => {

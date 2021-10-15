@@ -22,7 +22,7 @@
         </template>
 
         <template v-if="materialType == 2">
-            <!-- <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe> -->
+            <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
@@ -31,7 +31,7 @@
 <script>
 import { OffiAccount, UsersInfo, MaterialOperation, ArticleDetail, SaleDocumentDetail } from "../../config/api"
 
-import { isWeiXin, getCode, formatDate } from "../../utils/tool"
+import { isWeiXin, getCode, formatDate, wxShare, byteConvert } from "../../utils/tool"
 
 import WechatQrcode from "../../components/MaterialTemplate/wechatQrcode"
 
@@ -115,13 +115,29 @@ export default {
                 const { code, data, msg } = res
                 if (code === 'success') {
                     this.formData = data
-                    if (this.materialType == 2) {
-                        window.open('/pdf/web/viewer.html?file=' + data.documentUrl); //path是文件的全路径地址
-                    }
+                    this.doWxShare()
                 } else {
                     this.$toast(msg)
                 }
             })
+        },
+        doWxShare() {
+            let shareTitle = '', url = window.location.href, imgUrl = '', desc = ''
+
+            if (this.materialType == 1) {
+                let {title, cover, contentAbstract} = this.formData
+
+                shareTitle = title
+                imgUrl = cover ? cover : require('../../images/default_article.png')
+                desc = contentAbstract
+            } else if (this.materialType == 2) {
+                let {name, cover, fileSize} = this.formData
+
+                shareTitle = name
+                imgUrl = cover ? cover : require('../../images/default_pdf.png')
+                desc = fileSize ? byteConvert(fileSize) : ''
+            }
+            wxShare(shareTitle, url, imgUrl, desc)
         },
         formatDate,
         showWechat() {
