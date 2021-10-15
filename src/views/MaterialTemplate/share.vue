@@ -31,7 +31,7 @@
 <script>
 import { OffiAccount, UsersInfo, MaterialOperation, ArticleDetail, SaleDocumentDetail } from "../../config/api"
 
-import { isWeiXin, getCode, formatDate, parseQueryString } from "../../utils/tool"
+import { isWeiXin, getCode, formatDate } from "../../utils/tool"
 
 import WechatQrcode from "../../components/MaterialTemplate/wechatQrcode"
 
@@ -44,22 +44,15 @@ export default {
             openId: '',
             materialId: '',
             materialType: '',
-            userNo: '',
-            hrefLocation: ''
+            userNo: ''
         }
     },
-    beforeRouteEnter(to, from, next) {
-        sessionStorage.setItem("MATERIALTEMPLATE_HREF", window.location.href)
-        next()
-    },
     created() {
-        this.hrefLocation = sessionStorage.getItem("MATERIALTEMPLATE_HREF")
-
         if (isWeiXin()) {
             // 微信授权
             this.wechatLoad()
         }
-        const { materialId, type, userNo } = parseQueryString(this.hrefLocation)
+        const { materialId, type, userNo } = this.$route.query
 
         this.materialId = materialId
         this.materialType = type
@@ -72,7 +65,7 @@ export default {
         wechatLoad(){
             let { code } = this.$route.query
             if(!code) {
-                getCode(encodeURIComponent(this.hrefLocation))
+                getCode(encodeURIComponent(window.location.href))
             } else {
                 this.offiAccount(code)
             }

@@ -20,8 +20,10 @@
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_article.png')" alt="">
                             <div class="des">
-                                <h3 class="one-txt-cut">{{i.title}}</h3>
-                                <p class="two-line" v-html="i.contentAbstract"></p>
+                                <div>
+                                    <h3 class="one-txt-cut">{{i.title}}</h3>
+                                    <p class="two-line" v-html="i.contentAbstract"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -40,8 +42,10 @@
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_pdf.png')" alt="">
                             <div class="des">
-                                <h3 class="one-txt-cut">{{i.name}}</h3>
-                                <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                <div>
+                                    <h3 class="one-txt-cut">{{i.name}}</h3>
+                                    <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,7 +85,10 @@ export default {
             corpId: null,
             userNo: null,
 
-            articleList: [],
+            articleList: [
+                {"articleId": 17,     "title": "吱吱吱吱吱吱吱吱吱吱吱吱吱吱吱",     "author": "",     "isTimeShow": true,     "pushTime": 1633449600000,     "content": "<p>啊啊啊啊啊啊啊啊啊啊啊</p >",     "cover": "",     "contentAbstract": "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊",     "sendCount": 0,     "openCount": 1,     "shareCount": 0,     "createTime": 1634120643000,     "createUserId": "3F0E479680CC463C8EE62BDB93B87E7B",     "createUserName": "赵春艳",     "updateTime": 1634120760000,     "updateUserId": "3F0E479680CC463C8EE62BDB93B87E7B",     "visitorsCount": 1,     "deleted": false,     "corpId": "ww16d21df03bd67804"},
+                {"articleId": 17,     "title": "吱吱吱吱吱吱吱吱吱吱吱吱吱吱吱",     "author": "",     "isTimeShow": true,     "pushTime": 1633449600000,     "content": "<p>啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</p >",     "cover": "",     "contentAbstract": "",     "sendCount": 0,     "openCount": 1,     "shareCount": 0,     "createTime": 1634120643000,     "createUserId": "3F0E479680CC463C8EE62BDB93B87E7B",     "createUserName": "赵春艳",     "updateTime": 1634120760000,     "updateUserId": "3F0E479680CC463C8EE62BDB93B87E7B",     "visitorsCount": 1,     "deleted": false,     "corpId": "ww16d21df03bd67804"},
+            ],
             totalArticle: 0,
             articleListPage: 1,
             articleListLoading: false,
@@ -116,6 +123,7 @@ export default {
     methods: {
         changeNav(type) {
             this.type = type
+            this.getList()
         },
         getCorpId() {
             return new Promise((resolve, reject) => {
@@ -252,29 +260,36 @@ export default {
                     }
                 }
                 .right {
-                    display: flex;
                     max-width: 90%;
                     margin-left: 24px;
                     .img {
+                        display: inline-block;
                         width: 130px;
                         height: 130px;
                         margin-left: 20px;
                         border-radius: 8px;
+                        vertical-align: middle;
                     }
                     .des {
-                        display: flex;
-                        justify-content: space-between;
-                        flex-direction: column;
-                        max-width: 90%;
+                        display: inline-block;
+                        height: 130px;
+                        max-width: 72%;
                         margin-left: 20px;
-                        h3 {
-                            font-size: 28px;
-                            color: #3C4353;
-                        }
-                        p {
-                            word-break: break-all;
-                            font-size: 24px;
-                            color: #838A9D;
+                        vertical-align: middle;
+                        div {
+                            display: flex;
+                            height: 100%;
+                            justify-content: space-between;
+                            flex-direction: column;
+                            h3 {
+                                font-size: 28px;
+                                color: #3C4353;
+                            }
+                            p {
+                                word-break: break-all;
+                                font-size: 24px;
+                                color: #838A9D;
+                            }
                         }
                     }
                 }
