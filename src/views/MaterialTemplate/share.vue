@@ -22,7 +22,7 @@
         </template>
 
         <template v-if="materialType == 2">
-            <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
+            <!-- <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe> -->
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
@@ -115,6 +115,9 @@ export default {
                 const { code, data, msg } = res
                 if (code === 'success') {
                     this.formData = data
+                    if (this.materialType == 2) {
+                        window.open('/pdf/web/viewer.html?file=' + data.documentUrl); //path是文件的全路径地址
+                    }
                 } else {
                     this.$toast(msg)
                 }
