@@ -26,7 +26,7 @@ export function getStoreValue(keyName, defaultVal = '') {
         } else if (window.location.pathname.indexOf('punchCard') > -1) {
             router.push('/punchCard')
         } else if (window.location.pathname.indexOf('materialTemplate') > -1) {
-            router.push('/materialTemplate')
+            router.push(`/materialTemplate?${window.location.search}`)
         } else if (window.location.pathname.indexOf('404') > -1) {
             router.push('/404')
         } else {
@@ -54,7 +54,7 @@ export function getStoreValue(keyName, defaultVal = '') {
             } else if (window.location.pathname.indexOf('punchCard') > -1) {
                 router.push('/punchCard')
             } else if (window.location.pathname.indexOf('materialTemplate') > -1) {
-                router.push('/materialTemplate')
+                router.push(`/materialTemplate?${window.location.search}`)
             } else if (window.location.pathname.indexOf('404') > -1) {
                 router.push('/404')
             } else {
