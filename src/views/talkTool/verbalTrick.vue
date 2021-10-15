@@ -383,17 +383,13 @@
     <material-template v-else></material-template>
     <!-- 底部导航 -->
     <div class="footer-nav">
-      <div class="item"
-           @click="showTemplate = 1">
-        <img :src="showTemplate | getHuashuImg"
-             alt="">
-        <span>话术</span>
+      <div class="item" @click="showTemplate = 1">
+        <img :src="showTemplate | getHuashuImg" alt="">
+        <span>话术库</span>
       </div>
-      <div class="item"
-           @click="showTemplate = 2">
-        <img :src="showTemplate | getMaterialImg"
-             alt="">
-        <span>素材</span>
+      <div class="item" @click="showTemplate = 2">
+        <img :src="showTemplate | getMaterialImg" alt="">
+        <span>内容素材</span>
       </div>
     </div>
     <!-- SOP 提醒 -->
