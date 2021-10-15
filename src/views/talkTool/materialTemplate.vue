@@ -16,12 +16,14 @@
                     @load="onLoad"
                     >
                     <div class="article-item item" v-for="i in articleList" :key="i.articleId">
-                        <div class="left" @click="sendChatMessage('text', false, `https://test-h5.jzcrm.com/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
-                            <img class="img" :src="i.cover" alt="">
+                            <img class="img" :src="i.cover ? i.cover : require('../../images/default_article.png')" alt="">
                             <div class="des">
-                                <h3 class="one-txt-cut">{{i.title}}</h3>
-                                <p class="two-line" v-html="i.contentAbstract"></p>
+                                <div>
+                                    <h3 class="one-txt-cut">{{i.title}}</h3>
+                                    <p class="two-line" v-html="i.contentAbstract"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -36,12 +38,14 @@
                     @load="onLoad"
                     >
                     <div class="file-item item" v-for="i in saleList" :key="i.documentId">
-                        <div class="left" @click="sendChatMessage('text', false, `https://test-h5.jzcrm.com/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
-                            <img class="img" :src="i.cover" alt="">
+                            <img class="img" :src="i.cover ? i.cover : require('../../images/default_pdf.png')" alt="">
                             <div class="des">
-                                <h3 class="one-txt-cut">{{i.name}}</h3>
-                                <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                <div>
+                                    <h3 class="one-txt-cut">{{i.name}}</h3>
+                                    <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,6 +102,8 @@ export default {
             posterListPage: 1,
             posterListLoading: false,
             posterListFinished: false,
+
+            originUrl: location.origin
         }
     },
     provide() {
@@ -114,6 +120,8 @@ export default {
     methods: {
         changeNav(type) {
             this.type = type
+            this.initPage(this.type)
+            this.getList()
         },
         getCorpId() {
             return new Promise((resolve, reject) => {
@@ -137,25 +145,27 @@ export default {
             
             let pageIndex = 1
 
+            let params = {
+                pageIndex,
+                pageSize: 10,
+                corpId: this.corpId
+            }
+
             if (this.type == 0) {
+                params.title = title
                 ApiOpts = ArticleList
                 pageIndex = this.articleListPage
                 this.articleListLoading = true
             } else if (this.type == 1) {
+                params.name = title
                 ApiOpts = SaleDocumentList
                 pageIndex = this.saleListPage
                 this.saleListLoading = true
             } else if (this.type == 2) {
+                params.name = title
                 ApiOpts = PosterList
                 pageIndex = this.posterListPage
                 this.posterListLoading = true
-            }
-
-            let params = {
-                pageIndex,
-                pageSize: 10,
-                title,
-                corpId: this.corpId
             }
 
             ApiOpts(params).then(res => {
@@ -194,14 +204,17 @@ export default {
         },
         // 查询
         checkTable(data) {
-            if (this.type == 0) {
+            this.initPage(this.type)
+            this.getList(data)
+        },
+        initPage(type) {
+            if (type == 0) {
                 this.articleListPage = 1
-            } else if (this.type == 1) {
+            } else if (type == 1) {
                 this.saleListPage = 1
-            } else if (this.type == 2) {
+            } else if (type == 2) {
                 this.posterListPage = 1
             }
-            this.getList(data)
         },
         sendChatMessage,
         byteConvert
@@ -250,29 +263,36 @@ export default {
                     }
                 }
                 .right {
-                    display: flex;
                     max-width: 90%;
                     margin-left: 24px;
                     .img {
+                        display: inline-block;
                         width: 130px;
                         height: 130px;
                         margin-left: 20px;
                         border-radius: 8px;
+                        vertical-align: middle;
                     }
                     .des {
-                        display: flex;
-                        justify-content: space-between;
-                        flex-direction: column;
-                        max-width: 90%;
+                        display: inline-block;
+                        height: 130px;
+                        max-width: 72%;
                         margin-left: 20px;
-                        h3 {
-                            font-size: 28px;
-                            color: #3C4353;
-                        }
-                        p {
-                            word-break: break-all;
-                            font-size: 24px;
-                            color: #838A9D;
+                        vertical-align: middle;
+                        div {
+                            display: flex;
+                            height: 100%;
+                            justify-content: space-between;
+                            flex-direction: column;
+                            h3 {
+                                font-size: 28px;
+                                color: #3C4353;
+                            }
+                            p {
+                                word-break: break-all;
+                                font-size: 24px;
+                                color: #838A9D;
+                            }
                         }
                     }
                 }
