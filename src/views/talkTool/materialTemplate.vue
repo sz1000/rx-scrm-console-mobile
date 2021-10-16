@@ -100,7 +100,7 @@ export default {
             posterList: [],
             totalPoster: 0,
             posterListPage: 1,
-            posterListLoading: true,
+            posterListLoading: false,
             posterListFinished: false,
 
             originUrl: location.origin
@@ -138,33 +138,33 @@ export default {
             })
         },
         onLoad() {
+            if (this.type == 0 && this.articleListPage <= 1 || this.type == 1 && this.saleListPage <= 1 || this.type == 2 && this.posterListPage <= 1) {
+                return
+            }
             this.getList()
         },
         getList(title) {
             let ApiOpts = ArticleList
-            
-            let pageIndex = 1
 
             let params = {
-                pageIndex,
                 pageSize: 10,
                 corpId: this.corpId
             }
 
             if (this.type == 0) {
                 params.title = title
+                params.pageIndex = this.articleListPage
                 ApiOpts = ArticleList
-                pageIndex = this.articleListPage
                 this.articleListLoading = true
             } else if (this.type == 1) {
                 params.name = title
+                params.pageIndex = this.saleListPage
                 ApiOpts = SaleDocumentList
-                pageIndex = this.saleListPage
                 this.saleListLoading = true
             } else if (this.type == 2) {
                 params.name = title
+                params.pageIndex = this.posterListPage
                 ApiOpts = PosterList
-                pageIndex = this.posterListPage
                 this.posterListLoading = true
             }
 
