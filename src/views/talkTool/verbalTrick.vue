@@ -533,18 +533,25 @@ export default {
     userId(){
       return this.$store.getters.userId
     },
+    entry(){
+      return this.$store.getters.entry
+    },
   },
   created() {
     commonFun.getWxAppid()
   },
   mounted() {
     setTimeout(() => {
-      this.verbaltrickList()
+      this.getData()
       this.getCustomerByid();
       this.getGroupDetail();
+      this.verbaltrickList()
     }, 2000)
   },
   methods: {
+    getData(){
+      console.log('entry',this.entry)
+    },
     getCustomerByid(){  //获取客户详情
       console.log('come userId',this.userId)
       if (!this.userId) {
@@ -554,7 +561,6 @@ export default {
         m_cluecustomer_getClueCustomerByid(this.userId).then(res => {
           if(res.result){
             let data = res.data.clueCustomerVO.id
-            localStorage.removeItem('userId')
             this.getPersonalSopTip(data)
           }
           // this.getPersonalSopTip(1)

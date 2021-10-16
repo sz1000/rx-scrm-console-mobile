@@ -156,7 +156,10 @@ function getAgent(res) {
                 wx.invoke('getContext', {}, function(res) {
                     // alert(JSON.stringify(res))
                     // alert(JSON.stringify(res.entry))
-                    if (res.err_msg == 'getContext:ok') {} else {
+                    if (res.err_msg == 'getContext:ok') {
+                        let entry  = res.entry ; //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
+                        store.commit('setEntry', entry)
+                    } else {
                         //错误处理
                     }
                 })
