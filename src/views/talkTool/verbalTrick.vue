@@ -1318,11 +1318,19 @@ export default {
               line-height: 40px;
               font-size: 28px;
               color: @fontSub2;
+              word-break: break-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .share_link {
               line-height: 40px;
               font-size: 28px;
               color: #c0c4cc;
+              word-break: break-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .img_row {
               width: 100%;
