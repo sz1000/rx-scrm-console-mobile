@@ -414,16 +414,16 @@ export default {
       tagidList: [],
       sendMsg: "",
       appendixList: [
-        {
-          url: "",
-          objectname: "",
-          appendixType: "图片",
-          picList: [],
-          href: "",
-          hrefTitle: "",
-          hrefDesc: "",
-          hrefPic: [],
-        },
+        // {
+        //   url: "",
+        //   objectname: "",
+        //   appendixType: "图片",
+        //   picList: [],
+        //   href: "",
+        //   hrefTitle: "",
+        //   hrefDesc: "",
+        //   hrefPic: [],
+        // },
       ], // 素材列表
 
       chooseDateTime: false, // 选择日期、时间
@@ -740,10 +740,8 @@ export default {
               console.log(res);
               if (res.result) {
                 this.$router.push({ path: "/home" });
+                Notify({ type: "success", message: "新增成功" });
               }
-              Toast({
-                message: res.msg,
-              });
             });
         } else {
           console.log("error submit!!");
@@ -1020,7 +1018,8 @@ export default {
     .textTitle {
       flex: 1;
       display: inline-block;
-      padding-left: 150px;
+      padding-left: 135px !important;
+      // text-align: center;
     }
   }
   .choose-cus-popup {
