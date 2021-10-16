@@ -18,8 +18,11 @@
             <el-form-item label="任务名称 :" prop="taskName">
               <el-input
                 v-model="baseForm.taskName"
-                maxlength="10"
+                maxlength="30"
                 placeholder="请输入任务名称"
+                :onkeyup="
+                  (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
+                "
                 show-word-limit
               ></el-input>
             </el-form-item>
@@ -266,7 +269,7 @@
           </div>
         </div>
         <!-- 添加素材 -->
-        <div class="appendix-add-warp">
+        <div class="appendix-add-warp" v-if="this.appendixList.length < 9">
           <button class="addAppendix-button" @click="addAppendix">
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
@@ -696,6 +699,9 @@ export default {
             )
             .then((res) => {
               console.log(res);
+              Toast({
+                message: res.msg,
+              });
             });
         } else {
           console.log("error submit!!");

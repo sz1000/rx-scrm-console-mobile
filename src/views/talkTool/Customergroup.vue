@@ -15,21 +15,25 @@
         <div class="form">
           <el-form ref="form" :rules="rules" :model="baseForm">
             <!-- 任务名称 -->
-            <el-form-item label="任务名称 :" prop="taskName">
+            <el-form-item label="任务名称:" prop="taskName">
               <el-input
+                class="taskName"
                 v-model="baseForm.taskName"
-                maxlength="10"
+                maxlength="30"
                 placeholder="请输入任务名称"
                 show-word-limit
+                :onkeyup="
+                  (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
+                "
               ></el-input>
             </el-form-item>
             <!-- 选择员工 -->
-            <el-form-item label="选择员工 :" prop="staffs">
+            <el-form-item label="选择员工:" prop="staffs">
               <el-select
                 v-model="baseForm.staffs"
+                v-loadmore="loadMore"
                 style="width: 100%"
                 multiple
-                collapse-tags
                 placeholder="请选择群发员工（可多选）"
                 @change="staffsListChange"
               >
@@ -42,7 +46,7 @@
               </el-select>
             </el-form-item>
             <!-- 选择客户 -->
-            <el-form-item label="选择客户 :" prop="selectCusType">
+            <el-form-item label="选择客户:" prop="selectCusType">
               <el-radio-group
                 v-model="baseForm.selectCusType"
                 @change="selecusChange"
@@ -54,7 +58,7 @@
             <!-- 筛选客户 -->
             <template v-if="baseForm.selectCusType == 1">
               <div class="filterCus">
-                <el-form-item label="性别 :" prop="cusSex">
+                <el-form-item label="性别:" prop="cusSex">
                   <el-radio-group v-model="baseForm.cusSex" @change="sexChange">
                     <el-radio :label="null">全部</el-radio>
                     <el-radio :label="1">男</el-radio>
@@ -62,7 +66,7 @@
                     <el-radio :label="0">未知</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="添加时间 :" prop="cusAddTime">
+                <el-form-item label="添加时间:" prop="cusAddTime">
                   <div style="display: flex">
                     <div @click="selectCusDateTime('Begin')">
                       <el-input
@@ -86,19 +90,20 @@
                     </div>
                   </div>
                 </el-form-item>
-                <el-form-item label="选择群聊 :" prop="chatGroup">
+                <el-form-item label="选择群聊:" prop="chatGroup">
                   <el-select
                     multiple
                     v-model="baseForm.chatGroup"
                     style="width: 100%"
                     placeholder="请选择群聊"
                     @change="chatGroupListChange"
+                    v-loadmore="loadMoreGroup"
                   >
                     <el-option
-                      :key="item.id"
+                      :key="index"
                       :label="item.name"
                       :value="item.chatId"
-                      v-for="item in chatGroupList"
+                      v-for="(item, index) in chatGroupList"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -218,6 +223,7 @@
                 :max-count="1"
                 :after-read="afterRead.bind(null, { index: index, data: item })"
               />
+              <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
               <div class="picTips marB-24">
                 建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
               </div>
@@ -250,7 +256,7 @@
           </div>
         </div>
         <!-- 添加素材 -->
-        <div class="appendix-add-warp">
+        <div class="appendix-add-warp" v-if="this.appendixList.length < 9">
           <button class="addAppendix-button" @click="addAppendix">
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
@@ -322,6 +328,7 @@
   </div>
 </template>
 <script>
+import { Toast } from "vant";
 import { formatDate } from "../../utils/tool.js";
 export default {
   data() {
@@ -336,6 +343,10 @@ export default {
       }
     };
     return {
+      yuangongPage: 1,
+      yuangongLimit: 10,
+      qunliaoPage: 1,
+      qunliaoLimit: 10,
       baseForm: {
         // 群发设置表单
         taskName: "",
@@ -459,6 +470,20 @@ export default {
     this.chooseCustomerMass(); //选择员工接口
   },
   methods: {
+    afterRead(event) {
+      console.log(event);
+    },
+    loadMore() {
+      this.yuangongPage++;
+      this.chooseCustomerMass();
+      // this.yuangongPage++;
+      // this.chooseCustomerMass();
+    },
+    loadMoreGroup() {
+      console.log("+++");
+      this.qunliaoPage++;
+      this.groupStaffset();
+    },
     afterRead(obj, file) {
       console.log(file, "------------");
       console.log(obj, "------------obj");
@@ -691,6 +716,12 @@ export default {
             )
             .then((res) => {
               console.log(res);
+              if (res.result) {
+                this.$router.push({ path: "/home" });
+              }
+              Toast({
+                message: res.msg,
+              });
             });
         } else {
           console.log("error submit!!");
@@ -754,12 +785,19 @@ export default {
     chooseCustomerMass() {
       this.$network
         .get("/customer-service/cluecustomerMass/chooseCustomerMass", {
-          page: 1,
-          limit: 20,
+          page: this.yuangongPage,
+          limit: this.yuangongLimit,
         })
         .then((res) => {
-          console.log(res);
-          this.staffsList = res.data.list;
+          if (res.data.list == []) {
+          } else {
+            let tempList = res.data.list;
+            let cent = this.staffsList.concat(tempList);
+            console.log(cent, "-------");
+            this.staffsList = cent;
+          }
+          // console.log(res);
+          // this.staffsList = res.data.list;
         });
     },
     // 选择所在群聊接口
@@ -777,15 +815,22 @@ export default {
           // groutList
           {
             // params: {
-            page: 1,
-            limit: 20,
+            page: this.qunliaoPage,
+            limit: this.qunliaoLimit,
             userList: this.baseForm.staffs,
             // },
           }
         )
         .then((res) => {
           console.log(res.data.groupList);
-          this.chatGroupList = res.data.groupList;
+          if (res.data.groupList == []) {
+          } else {
+            let tempList = res.data.groupList;
+            let cent = this.chatGroupList.concat(tempList);
+            console.log(cent);
+            this.chatGroupList = cent;
+          }
+          // this.chatGroupList = res.data.groupList;
         });
       // }
     },
@@ -842,6 +887,24 @@ export default {
 };
 </script>
 <style lang="less">
+.updataimg {
+  position: absolute;
+  bottom: 80px;
+  font-size: 28px;
+  color: #4168f6;
+}
+/deep/.el-form-item__content {
+  .taskName {
+    border: 1px solid red !important;
+
+    border-radius: 4px;
+    /deep/.el-input__inner {
+      border: 1px solid none !important;
+      border-radius: 4px;
+    }
+  }
+}
+
 .el-select-dropdown.selectCus {
   display: none !important;
 }
@@ -1184,22 +1247,34 @@ export default {
             .van-uploader__upload-icon {
               font-size: 36px;
             }
+
             .van-uploader__preview-delete {
               width: 28px;
               height: 28px;
+              height: 28px;
               border: 2px solid #d9dae4;
-              border-radius: 50%;
+              // border-radius: 100%;
               top: -14px;
               right: -14px;
               background-color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              //               align-items: content;
+              //               justify-content: center;
+              // background-image: url("../../images/dele.png");
+              // background-size: contain;
+              // background-repeat: no-repeat;
             }
-            .van-icon-cross:before {
-              font-size: 34px;
-              position: relative;
-              right: -2px;
-              top: -2px;
-              color: #d9dae4;
-            }
+            //
+            // .van-icon-cross:before {
+            //   font-size: 34px;
+            //   position: relative;
+            //   right: -2px;
+            //   top: -2px;
+            //   color: #d9dae4;
+            // }
           }
           .picTips {
             margin-top: 24px;
