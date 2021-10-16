@@ -51,7 +51,7 @@ function getWxCofig(v) {
         if (res.result) {
             // this.token = res.data.accessToken
             // this.appid = res.data.corpId
-            // localStorage.setItem('token', res.data.accessToken)
+            localStorage.setItem('token', res.data.accessToken)
             setStoreValue(
                 'token',
                 res.data.accessToken,
@@ -131,8 +131,8 @@ function getAgent(res) {
                             // that.userId = res.userId //返回当前外部联系人userId
                             // alert(JSON.stringify(res))
                             // alert(JSON.stringify(res.userId))
-                            // localStorage.setItem('userId', res.userId)
-                            store.commit('setUserId',res.chatId)
+                            localStorage.setItem('userId', res.userId)
+                            store.commit('setUserId', res.userId)
                                 // this.$store.commit('userId', res.userId)
                                 // alert(JSON.stringify(that.obj))
                                 // that.getMethod()
@@ -145,10 +145,9 @@ function getAgent(res) {
                         // alert(("群id"+ res.chatId))
                         if (res.err_msg == 'getCurExternalChat:ok') {
                             // chatId = res.chatId //返回当前客户群的群聊ID
-
                             // localStorage.setItem('chatId', res.chatId)
-                            // sessionStorage.setItem('chatId', res.chatId)
-                            store.commit('setChatId',res.chatId)
+                            sessionStorage.setItem('chatId', res.chatId)
+                            store.commit('setChatId', res.chatId)
                         } else {
                             //错误处理
                         }
