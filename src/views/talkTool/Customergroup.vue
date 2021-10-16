@@ -942,17 +942,17 @@ export default {
 //   }
 // }
 
-// .taskNameselect {
-// .el-input__inner {
-//   border: 1px solid #5e5f61 !important;
-// }
-// }
+.taskNameselect {
+  .el-input__inner {
+    border: 1px solid #5e5f61 !important;
+  }
+}
 
-// .taskName {
-// .el-input__inner {
-//   border: 1px solid #5e5f61;
-// }
-// }
+.taskName {
+  .el-input__inner {
+    border: 1px solid #5e5f61;
+  }
+}
 .el-select {
   .el-tag--small {
     height: 50px;
