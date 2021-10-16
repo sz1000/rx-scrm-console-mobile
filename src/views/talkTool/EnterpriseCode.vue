@@ -29,6 +29,10 @@
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
+      <!-- <span class="addBtn" @click="addCode">
+        <img src="../../images/icon_add@2x.png" alt="" />
+        新增
+      </span> -->
       <span
         class="addBtn"
         @click="addCode"

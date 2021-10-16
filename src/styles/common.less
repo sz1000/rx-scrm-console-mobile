@@ -362,7 +362,24 @@ a:hover {
   font-size: 28px;
   .commonVant()
 }
+.el-form-item__error {
+  font-size: 28px !important;
+  // color: #4168f6 !important;
+}
 
+.tamedata {
+  /deep/ .el-form-item__content {
+    .el-input {
+      .el-input__suffix {
+        .el-input__suffix-inner {
+         .el-input__icon {
+  font-size: 28px !important;
+}
+        }
+      }
+    }
+  }
+}
 .giveUpBtn {
   width: 702px;
   height: 326px;

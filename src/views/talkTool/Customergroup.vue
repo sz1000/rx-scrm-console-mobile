@@ -66,7 +66,11 @@
                     <el-radio :label="0">未知</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="添加时间:" prop="cusAddTime">
+                <el-form-item
+                  label="添加时间:"
+                  class="tamedata"
+                  prop="cusAddTime"
+                >
                   <div style="display: flex">
                     <div @click="selectCusDateTime('Begin')">
                       <el-input
@@ -221,6 +225,8 @@
               <van-uploader
                 v-model="item.picList"
                 :max-count="1"
+                :max-size="2 * 1024 * 1024"
+                @oversize="onOversize"
                 :after-read="afterRead.bind(null, { index: index, data: item })"
               />
               <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
@@ -265,12 +271,13 @@
           >
         </div>
         <!-- 通知成员 -->
-        <span class="sendRequest" @click="sendRequest">通知成员发送</span>
+        <div class="sendRequest" @click="sendRequest">通知成员发送</div>
       </div>
     </div>
     <!-- 日期、时间选择框 -->
     <van-popup v-model="chooseDateTime" position="bottom">
       <van-datetime-picker
+        :min-date="minDate"
         @cancel="chooseDateTime = false"
         v-model="sendDateTime"
         :type="activeChoose"
@@ -278,9 +285,11 @@
         :title="activeChoose === 'date' ? '选择年月日' : '选择时间'"
       />
     </van-popup>
+
     <!-- 用户添加起止时间 -->
     <van-popup v-model="chooseCusAddDate" position="bottom">
       <van-datetime-picker
+        :min-date="minDate"
         @cancel="chooseCusAddDate = false"
         v-model="cusAddTime"
         type="date"
@@ -343,6 +352,7 @@ export default {
       }
     };
     return {
+      minDate: new Date(),
       yuangongPage: 1,
       yuangongLimit: 10,
       qunliaoPage: 1,
@@ -470,6 +480,10 @@ export default {
     this.chooseCustomerMass(); //选择员工接口
   },
   methods: {
+    onOversize(file) {
+      console.log(file);
+      Toast("文件大小不能超过 2M");
+    },
     afterRead(event) {
       console.log(event);
     },
@@ -623,6 +637,7 @@ export default {
           this.highLightArr.splice(index, 1);
         }
       });
+      this.Screeningcustomer();
       console.log(this.highLightArr, "-------------");
     },
     // 点击标签
@@ -667,8 +682,10 @@ export default {
       console.log(checkedSign, "---------");
       console.log(this.highLightArr, "-------------------oooo");
       this.baseForm.includeCus = checkedSign;
+
       this.chooseCusSign = false;
       // this.getTagList();
+      this.Screeningcustomer();
     },
     // 通知
     sendRequest() {
@@ -699,8 +716,8 @@ export default {
             gender: this.baseForm.cusSex,
             addStartTime: this.baseForm.cusAddBeginTime,
             addEndTime: this.baseForm.cusAddEndTime,
-            groupList: this.highLightArr, //this.baseForm.chatGroup || [],
-            lableList: this.customerlistdata || [],
+            groupList: this.baseForm.chatGroup || [],
+            lableList: this.highLightArr, //this.customerlistdata || [],
             sendType: this.baseForm.sendRule,
             sendTime: this.baseForm.sendDate + " " + this.baseForm.sendTime,
             urlList: this.urlList,
@@ -849,7 +866,7 @@ export default {
           addStarTime: this.baseForm.cusAddBeginTime,
           addEndTime: this.baseForm.cusAddEndTime,
           groupList: this.baseForm.chatGroup || [],
-          lableList: this.customerlistdata || [],
+          lableList: this.highLightArr, //this.customerlistdata || [],
         })
         .then((res) => {
           console.log(res);
@@ -859,11 +876,17 @@ export default {
     },
     // 选择客户
     selecusChange(value) {
+      // if(baseForm.selectCusType )
       console.log(value);
-      if ((value = 1)) {
+      if (value == 1) {
         this.Screeningcustomer();
       } else {
-        this.Screeningcustomer();
+        (this.baseForm.cusSex = ""), //性别
+          (this.baseForm.cusAddBeginTime = ""),
+          (this.baseForm.cusAddEndTime = "");
+        (this.baseForm.chatGroup = []),
+          (this.customerlistdata = []),
+          this.Screeningcustomer();
       }
     },
     // 性别
@@ -887,6 +910,15 @@ export default {
 };
 </script>
 <style lang="less">
+.el-select {
+  .el-tag--small {
+    height: 50px;
+    line-height: 50px;
+  }
+  .el-tag {
+    font-size: 28px;
+  }
+}
 .updataimg {
   position: absolute;
   bottom: 80px;
@@ -1026,7 +1058,7 @@ export default {
             margin-right: 16px;
             &.active {
               background: #4168f6;
-              border: none;
+              border: 1px solid !important;
               color: #fff;
             }
           }
@@ -1268,13 +1300,13 @@ export default {
               // background-repeat: no-repeat;
             }
             //
-            // .van-icon-cross:before {
-            //   font-size: 34px;
-            //   position: relative;
-            //   right: -2px;
-            //   top: -2px;
-            //   color: #d9dae4;
-            // }
+            .van-icon-cross:before {
+              font-size: 34px;
+              position: relative;
+              right: -6px !important;
+              top: -6px !important;
+              color: #d9dae4;
+            }
           }
           .picTips {
             margin-top: 24px;
@@ -1315,6 +1347,7 @@ export default {
       }
       .sendRequest {
         height: 80px;
+        width: 702px;
         background: #4168f6;
         border-radius: 8px;
         line-height: 80px;
@@ -1323,6 +1356,11 @@ export default {
         font-size: 28px;
         color: #ffffff;
         display: block;
+        // margin: 0 auto;
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translate(-50%);
       }
     }
   }
