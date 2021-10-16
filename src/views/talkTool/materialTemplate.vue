@@ -88,19 +88,19 @@ export default {
             articleList: [],
             totalArticle: 0,
             articleListPage: 1,
-            articleListLoading: true,
+            articleListLoading: false,
             articleListFinished: false,
 
             saleList: [],
             totalSale: 0,
             saleListPage: 1,
-            saleListLoading: true,
+            saleListLoading: false,
             saleListFinished: false,
 
             posterList: [],
             totalPoster: 0,
             posterListPage: 1,
-            posterListLoading: true,
+            posterListLoading: false,
             posterListFinished: false,
 
             originUrl: location.origin
@@ -138,6 +138,13 @@ export default {
             })
         },
         onLoad() {
+            if (this.type == 0) {
+                this.articleListPage += 1
+            } else if (this.type == 1) {
+                this.saleListPage += 1
+            } else if (this.type == 2) {
+                this.posterListPage += 1
+            }
             this.getList()
         },
         getList(title) {
@@ -178,7 +185,6 @@ export default {
                             this.articleList = []
                         }
                         this.articleList = this.articleList.concat(data.records)
-                        this.articleListPage += 1
                         this.articleListFinished = this.articleList.length >= data.total
                     } else if (this.type == 1) {
                         this.saleListLoading = false
@@ -186,7 +192,6 @@ export default {
                             this.saleList = []
                         }
                         this.saleList = this.saleList.concat(data.records)
-                        this.saleListPage += 1
                         this.saleListFinished = this.saleList.length >= data.total
                     } else if (this.type == 2) {
                         this.posterListLoading = false
@@ -194,7 +199,6 @@ export default {
                             this.posterList = []
                         }
                         this.posterList = this.posterList.concat(data.records)
-                        this.posterListPage += 1
                         this.posterListFinished = this.posterList.length >= data.total
                     }
                 } else {
