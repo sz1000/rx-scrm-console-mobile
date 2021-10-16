@@ -15,8 +15,8 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="article-item item" v-for="i in articleList" :key="i.articleId">
-                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                    <div class="article-item item" v-for="i in articleList" :key="i.articleId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)">
+                        <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_article.png')" alt="">
                             <div class="des">
@@ -37,8 +37,8 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId">
-                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)">
+                        <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_pdf.png')" alt="">
                             <div class="des">
@@ -59,11 +59,11 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId">
+                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId" @click="sendChatMessage('image', false, '', i.mediaId)">
                         <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
                         <div class="bottom">
                             <span class="one-txt-cut">{{i.posterName}}</span>
-                            <div @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay2.png" alt=""></div>
+                            <div><img src="../../images/relay2.png" alt=""></div>
                         </div>
                     </div>
                 </van-list>
