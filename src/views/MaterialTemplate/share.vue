@@ -92,9 +92,11 @@ export default {
             }
 
             MaterialOperation(params).then(res => {
-                setTimeout(() => {
-                    this.materialOperation(params)
-                }, 5000)
+                if (res && res.code == 'success') {
+                    setTimeout(() => {
+                        this.materialOperation(params)
+                    }, 5000)
+                }
             })
         },
         getUsersInfo() {
