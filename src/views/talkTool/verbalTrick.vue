@@ -32,20 +32,11 @@
         </div> -->
         <!-- sop提醒  -->
         <div class="sop_wrap">
-          <div class="sop_notice" v-if="personalTipList && personalTipList.length > 0">
+          <div class="sop_notice" v-if="popupList && popupList.length > 0">
             <img class="icon" src="../../images/bell.png" alt="" />
-            <div class="label">[个人SOP]</div>
-            <div class="val">{{personalTipList.length}}条消息待发送</div>
-            <div class="r_box" @click="showPopup('personal')">
-              <span class="btn">查看</span>
-              <img class="s_icon" src="@/assets/images/icon_down.png" alt="" />
-            </div>
-          </div>
-          <div class="sop_notice" v-if="groupTipList && groupTipList.length > 0">
-            <img class="icon" src="../../images/bell.png" alt="" />
-            <div class="label">[群SOP]</div>
-            <div class="val">{{groupTipList.length}}条消息待发送</div>
-            <div class="r_box" @click="showPopup('group')">
+            <div class="label">{{sopType}}</div>
+            <div class="val">{{popupList.length}}条消息待发送</div>
+            <div class="r_box" @click="showPopup">
               <span class="btn">查看</span>
               <img class="s_icon" src="@/assets/images/icon_down.png" alt="" />
             </div>
@@ -395,7 +386,7 @@
     <!-- SOP 提醒 -->
     <van-popup position="bottom" round closeable v-model="show">
       <div class="popup_wrap">
-        <div class="popup_header">{{popupType}}</div>
+        <div class="popup_header">{{entry == 'single_chat_tools' ? '个人SOP提醒' : '群SOP提醒'}}</div>
         <div class="popup_content">
           <div class="list_wrap">
             <div class="list" v-for="(item, index) in popupList" :key="index">
@@ -409,6 +400,7 @@
                     src="@/assets/images/icon_share.png"
                     @click="firstShare(el,'sop')"
                     alt=""
+                    v-preventReClick
                   />
                   <div class="s_val" v-if="!el.url">
                     <div class="des">{{el.content}}</div>
@@ -520,9 +512,7 @@ export default {
       },
 
       show: false,
-      personalTipList: [],  //个人sop提醒列表
-      groupTipList: [],     //群sop提醒列表
-      popupList: [],        //popup 弹窗提醒数据
+      popupList: [],        //popup sop 提醒数据
       popupType: '个人SOP提醒',        //popup弹窗类型
     }
   },
@@ -535,6 +525,13 @@ export default {
     },
     entry(){
       return this.$store.getters.entry
+    },
+    sopType(){
+      let str = '[个人SOP]'
+      if(this.entry == 'group_chat_tools'){
+        str = '[群SOP]'
+      }
+      return str
     },
   },
   created() {
@@ -586,7 +583,7 @@ export default {
       sop_prompt_personal(id).then((res) => {
         if (res.result) {
           let list = res.data
-          this.personalTipList = list
+          this.popupList = list
         }
       });
     },
@@ -594,18 +591,11 @@ export default {
       sop_prompt_group(id).then(res => {
         if (res.result) {
           let list = res.data
-          this.groupTipList = list
+          this.popupList = list
         }
       })
     },
-    showPopup(type) {   //sop提醒弹窗
-      if(type == 'personal'){
-        this.popupList = this.personalTipList
-        this.popupType = '个人SOP提醒'
-      }else {
-        this.popupList = this.groupTipList
-        this.popupType = '群SOP提醒'
-      }
+    showPopup() {   //sop提醒弹窗
       this.show = true;
     },
     getTipNum(val){
@@ -924,6 +914,7 @@ export default {
                 if(v.weChatMediaId){
                   _data = {
                     msgtype: 'image', //消息类型，必填
+                    enterChat: false,
                     image: {
                       mediaid: v.weChatMediaId, //图片的素材id
                     },
@@ -931,6 +922,7 @@ export default {
                 }else {
                   _data = {
                     msgtype: 'text', //消息类型，必填
+                    enterChat: false,
                     text: {
                       content: v.value, //文本内容
                     },
@@ -958,6 +950,7 @@ export default {
       sopSendDetail_tag(id).then(res => {
         if(res.result){
           console.log('sop 发送标记成功')
+          this.getData()
         }
       })
     },
@@ -1354,6 +1347,10 @@ export default {
                   font-size: 28px;
                   color: @fontMain;
                   margin-bottom: 12px;
+                  word-break: break-all;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
                 }
                 .size {
                   height: 32px;
