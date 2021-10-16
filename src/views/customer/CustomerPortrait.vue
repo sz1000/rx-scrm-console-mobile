@@ -336,32 +336,32 @@ export default {
     },
     //获取客户详情
     getMethod() {
-      // if (!localStorage.getItem('userId')) {
-      //   commonFun.getWxAppid()
-      // } else {
-      this.$toast.loading({
-        overlay: true,
-        loadingType: 'spinner',
-        duration: 0,
-      })
-      this.$network
-        .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-          // id: v,
-          id: localStorage.getItem('userId'),
+      if (!localStorage.getItem('userId')) {
+        commonFun.getWxAppid()
+      } else {
+        this.$toast.loading({
+          overlay: true,
+          loadingType: 'spinner',
+          duration: 0,
         })
-        .then((res) => {
-          // console.log(res)
-          this.$toast.clear()
-          this.loadingShow = false
-          this.name = res.data.clueCustomerVO.name
-          this.nameFrom = res.data.clueCustomerVO.customerType
-          this.item = res.data.clueCustomerVO
-          this.imageUser = res.data.clueCustomerVO.avatar
-          this.timeLineList = res.data.followMessageEntity
-          this.getTagList()
-          localStorage.removeItem('userId')
-        })
-      // }
+        this.$network
+          .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+            // id: v,
+            id: localStorage.getItem('userId'),
+          })
+          .then((res) => {
+            // console.log(res)
+            this.$toast.clear()
+            this.loadingShow = false
+            this.name = res.data.clueCustomerVO.name
+            this.nameFrom = res.data.clueCustomerVO.customerType
+            this.item = res.data.clueCustomerVO
+            this.imageUser = res.data.clueCustomerVO.avatar
+            this.timeLineList = res.data.followMessageEntity
+            this.getTagList()
+            localStorage.removeItem('userId')
+          })
+      }
     },
     getTimeline() {
       // console.log(this.objItem, '------')

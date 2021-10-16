@@ -103,6 +103,7 @@ export default {
             allSopList: [], //所有sop规则列表
             search: {
                 ruleName: '',
+                enableStatus: 1,
             },
             groupId: this.$route.query.id,      //群id
         }

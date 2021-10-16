@@ -47,6 +47,18 @@ export default {
         border-radius: 8px;
         border: 1px solid #D9DAE4;
     }
+    input::-webkit-input-placeholder {
+        color: #C0C4CC; 
+    } 
+    input:-moz-placeholder {
+        color: #C0C4CC; 
+    } 
+    input::-moz-placeholder {
+        color: #C0C4CC; 
+    } 
+    input:-ms-input-placeholder {
+        color: #C0C4CC; 
+    }
     span {
         width: 104px;
         height: 80px;

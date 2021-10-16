@@ -1,9 +1,9 @@
 <template>
     <div class="material-template">
         <ul class="header-nav">
-            <li @click="changeNav(0)" :class="{active: type == 0}">种草文章</li>
-            <li @click="changeNav(1)" :class="{active: type == 1}">销售文件</li>
-            <li @click="changeNav(2)" :class="{active: type == 2}">营销海报</li>
+            <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
+            <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
+            <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
         </ul>
         <search :type="type"></search>
         <ul class="list-box">
@@ -15,8 +15,8 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="article-item item" v-for="i in articleList" :key="i.articleId">
-                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                    <div class="article-item item" v-for="i in articleList" :key="i.articleId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)">
+                        <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_article.png')" alt="">
                             <div class="des">
@@ -37,8 +37,8 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId">
-                        <div class="left" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)"><img src="../../images/relay.png" alt=""></div>
+                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)">
+                        <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_pdf.png')" alt="">
                             <div class="des">
@@ -59,11 +59,11 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId">
+                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId" @click="sendChatMessage('image', false, '', i.mediaId)">
                         <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
                         <div class="bottom">
                             <span class="one-txt-cut">{{i.posterName}}</span>
-                            <div @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay2.png" alt=""></div>
+                            <div><img src="../../images/relay2.png" alt=""></div>
                         </div>
                     </div>
                 </van-list>
@@ -238,15 +238,28 @@ export default {
             height: 100%;
             line-height: 100px;
             text-align: center;
+            span {
+                display: block;
+                width: 112px;
+                height: 100%;
+                margin: 0 auto;
+                color: #838A9D;
+            }
         }
         .active {
-            color: #4168F6;
-            border-bottom: 4px solid #4168F6;
+            span {
+                color: #4168F6;
+                border-bottom: 4px solid #4168F6;
+            }
         }
     }
     .list-box {
         padding-bottom: 132px;
         .item-box {
+            /deep/ .van-list__finished-text {
+                font-size: 24px;
+                color: #C0C4CC;
+            }
             .item {
                 padding: 24px;
             }

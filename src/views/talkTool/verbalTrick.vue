@@ -385,11 +385,11 @@
     <div class="footer-nav">
       <div class="item" @click="showTemplate = 1">
         <img :src="showTemplate | getHuashuImg" alt="">
-        <span>话术库</span>
+        <span :class="{active: showTemplate = 1}">话术库</span>
       </div>
       <div class="item" @click="showTemplate = 2">
         <img :src="showTemplate | getMaterialImg" alt="">
-        <span>内容素材</span>
+        <span :class="{active: showTemplate = 2}">内容素材</span>
       </div>
     </div>
     <!-- SOP 提醒 -->
@@ -533,6 +533,9 @@ export default {
     userId(){
       return this.$store.getters.userId
     },
+    entry(){
+      return this.$store.getters.entry
+    },
   },
   created() {
     commonFun.getWxAppid()
@@ -540,25 +543,31 @@ export default {
   mounted() {
     setTimeout(() => {
       this.verbaltrickList()
-      this.getCustomerByid();
-      this.getGroupDetail();
+      this.getData()
     }, 2000)
   },
   methods: {
+    getData(){
+      console.log('entry',this.entry)
+      if(this.entry == 'group_chat_tools'){
+        this.getGroupDetail();
+      }else if(this.entry == 'single_chat_tools'){
+        this.getCustomerByid();
+      }
+    },
     getCustomerByid(){  //获取客户详情
       console.log('come userId',this.userId)
-      if (!this.userId) {
-        console.log('no userId getWxAppid')
-        commonFun.getWxAppid()
-      }else {
+      if(this.userId){
         m_cluecustomer_getClueCustomerByid(this.userId).then(res => {
           if(res.result){
             let data = res.data.clueCustomerVO.id
-            localStorage.removeItem('userId')
             this.getPersonalSopTip(data)
           }
           // this.getPersonalSopTip(1)
         })
+      }else {
+        console.log('no userId getWxAppid')
+        commonFun.getWxAppid()
       }
     },
     getGroupDetail(){   //获取群详情
@@ -1160,6 +1169,9 @@ export default {
         font-size: 20px;
         color: #a2a5b4;
       }
+    }
+    .active {
+      color: #4168F6;
     }
   }
 }
