@@ -740,7 +740,7 @@ export default {
               console.log(res);
               if (res.result) {
                 this.$router.push({ path: "/home" });
-                Notify({ type: "success", message: "新增成功" });
+                Notify({ type: "success", message: res.msg });
               }
             });
         } else {
