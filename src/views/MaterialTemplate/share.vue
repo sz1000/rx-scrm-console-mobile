@@ -44,7 +44,7 @@ export default {
         return {
             userData: null,
             formData: {},
-            openId: '',
+            unionId: '',
             materialId: '',
             materialType: '',
             userNo: ''
@@ -77,7 +77,7 @@ export default {
             OffiAccount(wechatCode).then(res => {
                 const { code, data } = res
                 if (code === 'success') {
-                    this.openId = data
+                    this.unionId = data
                     this.materialOperation()
                 }
             })
@@ -87,7 +87,7 @@ export default {
                 materialId: this.materialId,
                 model: {
                     materialType: this.materialType,
-                    openId: this.openId
+                    unionId: this.unionId
                 }
             }
 
