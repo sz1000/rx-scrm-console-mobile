@@ -112,7 +112,7 @@ export default {
         }
     },
     created() {
-        // this.getCorpId().then(() => this.getList())
+        this.getCorpId().then(() => this.getList())
         let userNo = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token")).userNo
 
         this.userNo = userNo ? userNo : null
