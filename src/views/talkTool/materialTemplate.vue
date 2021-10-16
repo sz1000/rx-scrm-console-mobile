@@ -88,19 +88,19 @@ export default {
             articleList: [],
             totalArticle: 0,
             articleListPage: 1,
-            articleListLoading: false,
+            articleListLoading: true,
             articleListFinished: false,
 
             saleList: [],
             totalSale: 0,
             saleListPage: 1,
-            saleListLoading: false,
+            saleListLoading: true,
             saleListFinished: false,
 
             posterList: [],
             totalPoster: 0,
             posterListPage: 1,
-            posterListLoading: false,
+            posterListLoading: true,
             posterListFinished: false,
 
             originUrl: location.origin
