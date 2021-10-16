@@ -385,11 +385,11 @@
     <div class="footer-nav">
       <div class="item" @click="showTemplate = 1">
         <img :src="showTemplate | getHuashuImg" alt="">
-        <span :class="{active: showTemplate = 1}">话术库</span>
+        <span :class="{'nav-active': showTemplate = 1}">话术库</span>
       </div>
       <div class="item" @click="showTemplate = 2">
         <img :src="showTemplate | getMaterialImg" alt="">
-        <span :class="{active: showTemplate = 2}">内容素材</span>
+        <span :class="{'nav-active': showTemplate = 2}">内容素材</span>
       </div>
     </div>
     <!-- SOP 提醒 -->
@@ -1170,7 +1170,7 @@ export default {
         color: #a2a5b4;
       }
     }
-    .active {
+    .nav-active {
       color: #4168F6;
     }
   }
