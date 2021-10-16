@@ -1,9 +1,9 @@
 <template>
     <div class="material-template">
         <ul class="header-nav">
-            <li @click="changeNav(0)" :class="{active: type == 0}">种草文章</li>
-            <li @click="changeNav(1)" :class="{active: type == 1}">销售文件</li>
-            <li @click="changeNav(2)" :class="{active: type == 2}">营销海报</li>
+            <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
+            <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
+            <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
         </ul>
         <search :type="type"></search>
         <ul class="list-box">
@@ -238,15 +238,28 @@ export default {
             height: 100%;
             line-height: 100px;
             text-align: center;
+            span {
+                display: block;
+                width: 112px;
+                height: 100%;
+                margin: 0 auto;
+                color: #838A9D;
+            }
         }
         .active {
-            color: #4168F6;
-            border-bottom: 4px solid #4168F6;
+            span {
+                color: #4168F6;
+                border-bottom: 4px solid #4168F6;
+            }
         }
     }
     .list-box {
         padding-bottom: 132px;
         .item-box {
+            /deep/ .van-list__finished-text {
+                font-size: 24px;
+                color: #C0C4CC;
+            }
             .item {
                 padding: 24px;
             }

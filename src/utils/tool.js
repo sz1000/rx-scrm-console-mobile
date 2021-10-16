@@ -1,5 +1,5 @@
 import { Getticket, GetSignature } from "../config/api"
-import { Toast } from 'vant'
+import { Message } from 'element-ui'
 
 // 防抖
 export function _debounce(fn, delay) {
@@ -176,7 +176,7 @@ export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, f
                         }, function (res) {
                             if (res.err_msg == "sendChatMessage:ok") {
                                 //发送成功
-                                Toast("发送成功")
+                                Message.success("发送成功")
                             }
                         }
                     )

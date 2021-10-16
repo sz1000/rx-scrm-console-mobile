@@ -21,8 +21,11 @@
             <p class="content" v-html="formData.content"></p>
         </template>
 
-        <template v-if="materialType == 2">
-            <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
+        <template v-if="materialType == 2 && formData.imageRelList">
+            <div v-if="formData.imageRelList && formData.imageRelList.length" class="file-img-box">
+                <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
+            </div>
+            <iframe v-else class="file-box" :src="formData.imageRelList.imageUrl" width="100%" height="auto"></iframe>
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
@@ -235,6 +238,15 @@ export default {
         .file-box {
             min-height: 100vh;
             border: none;
+        }
+        .file-img-box {
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+            .item {
+                width: 100%;
+                height: auto;
+            }
         }
     }
 </style>
