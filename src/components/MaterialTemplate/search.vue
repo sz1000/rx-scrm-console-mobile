@@ -1,6 +1,6 @@
 <template>
     <div class="search">
-        <input type="text" v-model="searchText" :placeholder="type | getText">
+        <div class="text"><input type="text" v-model="searchText" :placeholder="type | getText"></div>
         <span @click="checkTable(searchText)">查询</span>
     </div>
 </template>
@@ -40,13 +40,20 @@ export default {
 .search {
     display: flex;
     padding: 24px;
-    input {
+    .text {
         width: 582px;
         height: 80px;
         padding: 0 24px;
         border-radius: 8px;
-        border: 1px solid #D9DAE4;
-        font-size: 28px;
+        border: 2px solid #D9DAE4;
+        input {
+            width: 100%;
+            height: 60px;
+            margin: 10px 0;
+            border: none;
+            background-color: transparent;
+            font-size: 28px;
+        }
     }
     input::-webkit-input-placeholder {
         color: #C0C4CC; 
