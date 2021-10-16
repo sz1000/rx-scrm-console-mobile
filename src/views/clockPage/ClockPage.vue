@@ -1,16 +1,12 @@
 <template>
   <div class="card-warp">
     <div class="title-area">外出打卡</div>
-    <div class="backUp"
-         @click="returnPage"
-         v-show="prepare">
+    <div class="backUp" @click="returnPage" v-show="prepare">
       <van-icon name="arrow-left" />
       <span>上一步</span>
     </div>
-    <div class="main-click"
-         v-show="prepare">
-      <div class="click_round"
-           @click="clickCard">
+    <div class="main-click" v-show="prepare">
+      <div class="click_round" @click="clickCard">
         <span> 打卡</span>
         <span>{{nowDate}}</span>
       </div>
@@ -19,16 +15,13 @@
         <span>{{addressName}}</span>
         <!-- <span>{{addressDetail}}</span> -->
       </div>
-      <div class="updateAddress"
-           @click="fnUpdate">
+      <div class="updateAddress" @click="fnUpdate">
         刷新地址
       </div>
     </div>
-    <div class="success-main"
-         v-show="!prepare">
+    <div class="success-main" v-show="!prepare">
       <div class="icon-success">
-        <img src="../../images/success-img.png"
-             alt="">
+        <img src="../../images/success-img.png" alt="">
       </div>
       <div class="text-success">打卡成功</div>
       <div class="detail-info">
