@@ -186,6 +186,16 @@
         </div>
       </div>
     </div> -->
+    <van-overlay :show="show">
+      <div class="wrapper"
+           @click.stop>
+        <div class="dialogImg"
+             align="center">
+          <img src="../images/secreteig.png"
+               alt="">
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 <script>
@@ -202,6 +212,7 @@ export default {
       customer: '0',
       customerSee: '0',
       menulist: [],
+      show: false,
     }
   },
   created() {
@@ -239,6 +250,7 @@ export default {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
         .then((res) => {
+          this.show = !res.data.haveSecret
           let tempMenuList = res.data.userEntity.permissionList
           sessionStorage.setItem(
             'permissionsList',
@@ -261,6 +273,7 @@ export default {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
   .main-warp {
     -webkit-overflow-scrolling: touch;
     height: 100%;
@@ -270,6 +283,12 @@ export default {
     scrollbar-width: 0;
     &::-webkit-scrollbar {
       width: 0;
+    }
+  }
+  .dialogImg {
+    margin-top: 20%;
+    img {
+      width: 702px;
     }
   }
   .statiStical {
