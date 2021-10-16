@@ -30,6 +30,7 @@
             <!-- 选择员工 -->
             <el-form-item label="选择员工:" prop="staffs">
               <el-select
+                class="taskNameselect"
                 v-model="baseForm.staffs"
                 v-loadmore="loadMore"
                 style="width: 100%"
@@ -152,7 +153,7 @@
               prop="sendDateTime"
             >
               <div style="display: flex">
-                <div @click="selectDateTime('date')">
+                <div @click="selectDateTime('date')" class="dataTimecss">
                   <el-input
                     placeholder="请选择日期"
                     class="marR-24 selectDate"
@@ -910,6 +911,42 @@ export default {
 };
 </script>
 <style lang="less">
+.dataTimecss {
+  .el-input__suffix {
+    line-height: 82px;
+    .el-input__suffix-inner {
+      font-size: 30px;
+      // line-height: 20px;
+      margin-right: 50px;
+      // display: inline-block;
+      // line-height: 82px;
+    }
+  }
+}
+// .tamedata {
+//   /deep/.el-form-item__content {
+//     .el-input {
+//       .el-input__suffix {
+//         font-size: 16px !important;
+//         .el-input__suffix-inner {
+//           font-size: 16px !important;
+//         }
+//       }
+//     }
+//   }
+// }
+
+// .taskNameselect {
+.el-input__inner {
+  border: 1px solid #5e5f61 !important;
+}
+// }
+
+// .taskName {
+.el-input__inner {
+  border: 1px solid #5e5f61;
+}
+// }
 .el-select {
   .el-tag--small {
     height: 50px;
