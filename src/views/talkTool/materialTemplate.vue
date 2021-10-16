@@ -240,10 +240,11 @@ export default {
             text-align: center;
             span {
                 display: block;
-                width: 112px;
+                width: 150px;
                 height: 100%;
                 margin: 0 auto;
                 color: #838A9D;
+                font-size: 28px;
             }
         }
         .active {
