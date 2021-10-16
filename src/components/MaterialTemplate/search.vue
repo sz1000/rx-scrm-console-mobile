@@ -46,6 +46,7 @@ export default {
         padding: 0 24px;
         border-radius: 8px;
         border: 1px solid #D9DAE4;
+        font-size: 28px;
     }
     input::-webkit-input-placeholder {
         color: #C0C4CC; 
@@ -67,6 +68,7 @@ export default {
         border-radius: 8px;
         background-color: #4168F6;
         color: #fff;
+        font-size: 28px;
         text-align: center;
     }
 }

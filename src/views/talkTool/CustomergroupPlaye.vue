@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">客户群群发</span>
+      <span class="textTitle">新增客户群群发</span>
     </div>
     <div class="warp_box">
       <!-- 群发设置 -->
@@ -17,6 +17,7 @@
             <!-- 任务名称 -->
             <el-form-item label="任务名称 :" prop="taskName">
               <el-input
+                class="taskName"
                 v-model="baseForm.taskName"
                 maxlength="30"
                 placeholder="请输入任务名称"
@@ -286,6 +287,7 @@
     <!-- 日期、时间选择框 -->
     <van-popup v-model="chooseDateTime" position="bottom">
       <van-datetime-picker
+        :min-date="minDate"
         @cancel="chooseDateTime = false"
         v-model="sendDateTime"
         :type="activeChoose"
@@ -343,6 +345,7 @@
   </div>
 </template>
 <script>
+import { Toast } from "vant";
 import { formatDate } from "../../utils/tool.js";
 export default {
   data() {
@@ -357,6 +360,7 @@ export default {
       }
     };
     return {
+      minDate: new Date(),
       baseForm: {
         // 群发设置表单
         taskName: "",
@@ -679,6 +683,9 @@ export default {
         this.urlList.push(item.href);
       });
       this.$refs["form"].validate((valid) => {
+        // if (this.appendixList.length >= 1) {
+        //   Toast("请上传素材内容");
+        // } else {
         if (valid) {
           let params = {
             taskName: this.baseForm.taskName,
@@ -704,7 +711,9 @@ export default {
               params
             )
             .then((res) => {
-              console.log(res);
+              if (res.result) {
+                this.$router.push({ path: "/home" });
+              }
               Toast({
                 message: res.msg,
               });
@@ -712,6 +721,7 @@ export default {
         } else {
           console.log("error submit!!");
           return false;
+          // }
         }
       });
     },
@@ -871,6 +881,13 @@ export default {
 };
 </script>
 <style lang="less">
+.taskName {
+  /deep/.el-input__inner {
+    border: 1px solid none !important;
+    border-radius: 4px;
+    padding-right: 1000px !important;
+  }
+}
 .el-select {
   .el-tag--small {
     height: 50px;
@@ -1092,7 +1109,7 @@ export default {
       border-radius: 8px;
     }
     .el-form-item {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       .el-form-item__label {
         line-height: 80px;
         font-size: 28px;

@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">客户群发</span>
+      <span class="textTitle">新增客户群发</span>
     </div>
     <div class="warp_box">
       <!-- 群发设置 -->
@@ -339,6 +339,7 @@
 </template>
 <script>
 import { Toast } from "vant";
+import { Notify } from "vant";
 import { formatDate } from "../../utils/tool.js";
 export default {
   data() {
@@ -708,6 +709,9 @@ export default {
       });
       console.log(this.urlList, "-------------this.urlList");
       this.$refs["form"].validate((valid) => {
+        // if (this.appendixList.length >= 1) {
+        //   Toast("请上传素材内容");
+        // } else {
         if (valid) {
           let params = {
             taskName: this.baseForm.taskName,
@@ -745,6 +749,7 @@ export default {
           console.log("error submit!!");
           return false;
         }
+        // }
       });
     },
     deepClone(o) {
@@ -863,7 +868,7 @@ export default {
       this.$network
         .post("/customer-service/cluecustomerMass/customerScreen", {
           userList: this.baseForm.staffs,
-          gender: this.baseForm.cusSex || "", //性别
+          gender: this.baseForm.cusSex, //性别
           addStarTime: this.baseForm.cusAddBeginTime,
           addEndTime: this.baseForm.cusAddEndTime,
           groupList: this.baseForm.chatGroup || [],
@@ -892,16 +897,17 @@ export default {
     },
     // 性别
     sexChange(value) {
-      console.log(value);
-      if (value == null) {
-        this.Screeningcustomer();
-      } else if (value == 0) {
-        this.Screeningcustomer();
-      } else if (value == 1) {
-        this.Screeningcustomer();
-      } else if (value == 2) {
-        this.Screeningcustomer();
-      }
+      console.log(value, "------性别");
+      this.baseForm.cusSex = value;
+      // if (value == null) {
+      this.Screeningcustomer();
+      // } else if (value == 0) {
+      //   this.Screeningcustomer();
+      // } else if (value == 1) {
+      //   this.Screeningcustomer();
+      // } else if (value == 2) {
+      //   this.Screeningcustomer();
+      // }
     },
     //时间
     cusAddBeginTimeChange(value) {
@@ -937,15 +943,15 @@ export default {
 // }
 
 // .taskNameselect {
-.el-input__inner {
-  border: 1px solid #5e5f61 !important;
-}
+// .el-input__inner {
+//   border: 1px solid #5e5f61 !important;
+// }
 // }
 
 // .taskName {
-.el-input__inner {
-  border: 1px solid #5e5f61;
-}
+// .el-input__inner {
+//   border: 1px solid #5e5f61;
+// }
 // }
 .el-select {
   .el-tag--small {
@@ -961,17 +967,6 @@ export default {
   bottom: 80px;
   font-size: 28px;
   color: #4168f6;
-}
-/deep/.el-form-item__content {
-  .taskName {
-    border: 1px solid red !important;
-
-    border-radius: 4px;
-    /deep/.el-input__inner {
-      border: 1px solid none !important;
-      border-radius: 4px;
-    }
-  }
 }
 
 .el-select-dropdown.selectCus {
@@ -1185,7 +1180,7 @@ export default {
       border-radius: 8px;
     }
     .el-form-item {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       .el-form-item__label {
         line-height: 80px;
         font-size: 28px;

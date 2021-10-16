@@ -21,11 +21,11 @@
             <p class="content" v-html="formData.content"></p>
         </template>
 
-        <template v-if="materialType == 2 && formData.imageRelList">
+        <template v-if="materialType == 2">
             <div v-if="formData.imageRelList && formData.imageRelList.length" class="file-img-box">
                 <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
             </div>
-            <iframe v-else class="file-box" :src="formData.imageRelList.imageUrl" width="100%" height="auto"></iframe>
+            <iframe v-else class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
