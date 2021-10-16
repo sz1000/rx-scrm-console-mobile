@@ -16,13 +16,16 @@
             <h2 class="title">{{formData.title}}</h2>
             <div v-if="formData.author || formData.pushTime" class="info">
                 <span class="author">{{formData.author}}</span>
-                <span class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
+                <span v-if="formData.isTimeShow" class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
             </div>
             <p class="content" v-html="formData.content"></p>
         </template>
 
         <template v-if="materialType == 2">
-            <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
+            <div v-if="formData.imageRelList && formData.imageRelList.length" class="file-img-box">
+                <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
+            </div>
+            <iframe v-else class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
@@ -41,7 +44,7 @@ export default {
         return {
             userData: null,
             formData: {},
-            openId: '',
+            unionId: '',
             materialId: '',
             materialType: '',
             userNo: ''
@@ -74,7 +77,7 @@ export default {
             OffiAccount(wechatCode).then(res => {
                 const { code, data } = res
                 if (code === 'success') {
-                    this.openId = data
+                    this.unionId = data
                     this.materialOperation()
                 }
             })
@@ -84,14 +87,16 @@ export default {
                 materialId: this.materialId,
                 model: {
                     materialType: this.materialType,
-                    openId: this.openId
+                    unionId: this.unionId
                 }
             }
 
             MaterialOperation(params).then(res => {
-                setTimeout(() => {
-                    this.materialOperation(params)
-                }, 5000)
+                if (res && res.code == 'success') {
+                    setTimeout(() => {
+                        this.materialOperation(params)
+                    }, 5000)
+                }
             })
         },
         getUsersInfo() {
@@ -235,6 +240,15 @@ export default {
         .file-box {
             min-height: 100vh;
             border: none;
+        }
+        .file-img-box {
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+            .item {
+                width: 100%;
+                height: auto;
+            }
         }
     }
 </style>

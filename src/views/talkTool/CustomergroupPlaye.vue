@@ -234,6 +234,8 @@
             <template v-if="item.appendixType === '图片'">
               <van-uploader
                 v-model="item.picList"
+                @oversize="onOversize"
+                :max-size="2 * 1024 * 1024"
                 :max-count="1"
                 :after-read="afterRead.bind(null, { index: index, data: item })"
               />
@@ -476,6 +478,10 @@ export default {
     this.chooseCustomerMass(); //选择员工接口
   },
   methods: {
+    onOversize(file) {
+      console.log(file);
+      Toast("文件大小不能超过 2M");
+    },
     afterRead(obj, file) {
       console.log(file, "------------");
       console.log(obj, "------------obj");
@@ -865,6 +871,15 @@ export default {
 };
 </script>
 <style lang="less">
+.el-select {
+  .el-tag--small {
+    height: 50px;
+    line-height: 50px;
+  }
+  .el-tag {
+    font-size: 28px;
+  }
+}
 .el-select-dropdown.selectCus {
   display: none !important;
 }
@@ -1040,6 +1055,7 @@ export default {
         line-height: 28px;
       }
       .el-radio__input {
+        line-height: 2;
         .el-radio__inner {
           width: 28px;
           height: 28px;
@@ -1271,6 +1287,10 @@ export default {
         font-size: 28px;
         color: #ffffff;
         display: block;
+        position: fixed;
+        left: 50%;
+        bottom: 20px;
+        transform: translate(-50%);
       }
     }
   }
