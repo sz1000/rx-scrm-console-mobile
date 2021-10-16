@@ -244,6 +244,7 @@ export default {
                 height: 100%;
                 margin: 0 auto;
                 color: #838A9D;
+                font-size: 28px;
             }
         }
         .active {
