@@ -17,7 +17,6 @@
             <!-- 任务名称 -->
             <el-form-item label="任务名称:" prop="taskName">
               <el-input
-                class="taskName"
                 v-model="baseForm.taskName"
                 maxlength="30"
                 placeholder="请输入任务名称"
@@ -111,6 +110,27 @@
                       v-for="(item, index) in chatGroupList"
                     ></el-option>
                   </el-select>
+                </el-form-item>
+                <el-form-item label="客户标签:" prop="includeCus">
+                  <div
+                    class="select-custom-sign-wrap el-icon-arrow-up"
+                    @click="clickCus"
+                  >
+                    <template v-if="baseForm.includeCus.length > 0">
+                      <div
+                        class="item"
+                        v-for="(item, index) in baseForm.includeCus"
+                        :key="`${item.name}-${index}`"
+                      >
+                        {{ item.name }}
+                        <i
+                          class="el-icon-close"
+                          @click.stop="delCustomSign(item, index)"
+                        ></i>
+                      </div>
+                    </template>
+                    <template v-else> 请按照标签筛选客户 </template>
+                  </div>
                 </el-form-item>
                 <el-form-item label="客户标签:" prop="includeCus">
                   <div
@@ -942,17 +962,17 @@ export default {
 //   }
 // }
 
-.taskNameselect {
-  .el-input__inner {
-    border: 1px solid #5e5f61 !important;
-  }
-}
+// .taskNameselect {
+//   .el-input__inner {
+//     border: 1px solid #5e5f61 !important;
+//   }
+// }
 
-.taskName {
-  .el-input__inner {
-    border: 1px solid #5e5f61;
-  }
-}
+// .taskName {
+//   .el-input__inner {
+//     border: 1px solid #5e5f61;
+//   }
+// }
 .el-select {
   .el-tag--small {
     height: 50px;
@@ -1401,7 +1421,7 @@ export default {
     min-height: 80px;
     box-sizing: border-box;
     background: #ffffff;
-    border: 1px solid #d9dae4;
+    border: 1px solid #d9dae4 !important;
     color: #c0c4cc;
     border-radius: 5px;
     padding: 10px 30px 10px 15px;
