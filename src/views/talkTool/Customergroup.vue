@@ -111,27 +111,7 @@
                     ></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="客户标签:" prop="includeCus">
-                  <div
-                    class="select-custom-sign-wrap el-icon-arrow-up"
-                    @click="clickCus"
-                  >
-                    <template v-if="baseForm.includeCus.length > 0">
-                      <div
-                        class="item"
-                        v-for="(item, index) in baseForm.includeCus"
-                        :key="`${item.name}-${index}`"
-                      >
-                        {{ item.name }}
-                        <i
-                          class="el-icon-close"
-                          @click.stop="delCustomSign(item, index)"
-                        ></i>
-                      </div>
-                    </template>
-                    <template v-else> 请按照标签筛选客户 </template>
-                  </div>
-                </el-form-item>
+
                 <el-form-item label="客户标签:" prop="includeCus">
                   <div
                     class="select-custom-sign-wrap el-icon-arrow-up"
@@ -1421,7 +1401,7 @@ export default {
     min-height: 80px;
     box-sizing: border-box;
     background: #ffffff;
-    border: 1px solid #d9dae4 !important;
+    border: 2px solid #d9dae4 !important;
     color: #c0c4cc;
     border-radius: 5px;
     padding: 10px 30px 10px 15px;

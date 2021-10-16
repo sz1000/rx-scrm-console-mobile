@@ -15,9 +15,9 @@
         <div class="form">
           <el-form ref="form" :rules="rules" :model="baseForm">
             <!-- 任务名称 -->
+
             <el-form-item label="任务名称 :" prop="taskName">
               <el-input
-                class="taskName"
                 v-model="baseForm.taskName"
                 maxlength="30"
                 placeholder="请输入任务名称"
@@ -27,21 +27,7 @@
                 show-word-limit
               ></el-input>
             </el-form-item>
-            <el-form-item label="任务名称 :" prop="taskName">
-              <el-input
-                class="taskName"
-                v-model="baseForm.taskName"
-                maxlength="30"
-                placeholder="请输入任务名称11"
-                :onkeyup="
-                  (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
-                "
-                show-word-limit
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="活动名称22">
-              <el-input v-model="baseForm.taskName"></el-input>
-            </el-form-item>
+
             <!-- 选择员工 -->
             <el-form-item label="选择群主 :" prop="staffs">
               <!-- <el-select
