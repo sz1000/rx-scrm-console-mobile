@@ -6,8 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     chatId: sessionStorage.getItem('chatId'),
-    userId: localStorage.getItem('userId'),
-    entry: '',  //进入H5页面的入口环境
+    userId: sessionStorage.getItem('userId'),
+    entry: sessionStorage.getItem('entry'),  //进入H5页面的入口环境
   },
   getters: {
     chatId: state => state.chatId,
@@ -19,13 +19,13 @@ export default new Vuex.Store({
       sessionStorage.setItem('chatId', data)
       state.chatId = data
     },
-    setUserId(state, val) {
-      localStorage.setItem('userId', data)
-      state.userId = val
+    setUserId(state, data) {
+      sessionStorage.setItem('userId', data)
+      state.userId = data
     },
-    setEntry(state, val) {
-      localStorage.setItem('entry', data)
-      state.entry = val
+    setEntry(state, data) {
+      sessionStorage.setItem('entry', data)
+      state.entry = data
     },
   },
   actions: {

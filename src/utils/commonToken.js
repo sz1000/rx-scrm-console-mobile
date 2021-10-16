@@ -146,7 +146,7 @@ function getAgent(res) {
                         if (res.err_msg == 'getCurExternalChat:ok') {
                             // chatId = res.chatId //返回当前客户群的群聊ID
                             // localStorage.setItem('chatId', res.chatId)
-                            sessionStorage.setItem('chatId', res.chatId)
+                            // sessionStorage.setItem('chatId', res.chatId)
                             store.commit('setChatId', res.chatId)
                         } else {
                             //错误处理

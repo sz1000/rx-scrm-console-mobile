@@ -542,22 +542,22 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.getData()
-      this.getCustomerByid();
-      this.getGroupDetail();
       this.verbaltrickList()
+      this.getData()
     }, 2000)
   },
   methods: {
     getData(){
       console.log('entry',this.entry)
+      if(this.entry == 'group_chat_tools'){
+        this.getGroupDetail();
+      }else if(this.entry == 'single_chat_tools'){
+        this.getCustomerByid();
+      }
     },
     getCustomerByid(){  //获取客户详情
       console.log('come userId',this.userId)
-      if (!this.userId) {
-        console.log('no userId getWxAppid')
-        commonFun.getWxAppid()
-      }else {
+      if(this.userId){
         m_cluecustomer_getClueCustomerByid(this.userId).then(res => {
           if(res.result){
             let data = res.data.clueCustomerVO.id
@@ -565,6 +565,9 @@ export default {
           }
           // this.getPersonalSopTip(1)
         })
+      }else {
+        console.log('no userId getWxAppid')
+        commonFun.getWxAppid()
       }
     },
     getGroupDetail(){   //获取群详情
