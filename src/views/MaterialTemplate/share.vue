@@ -16,7 +16,7 @@
             <h2 class="title">{{formData.title}}</h2>
             <div v-if="formData.author || formData.pushTime" class="info">
                 <span class="author">{{formData.author}}</span>
-                <span class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
+                <span v-if="formData.isTimeShow" class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
             </div>
             <p class="content" v-html="formData.content"></p>
         </template>
