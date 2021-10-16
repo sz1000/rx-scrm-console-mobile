@@ -112,7 +112,7 @@ export default {
         }
     },
     created() {
-        this.getCorpId().then(() => this.getList())
+        // this.getCorpId().then(() => this.getList())
         let userNo = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token")).userNo
 
         this.userNo = userNo ? userNo : null
@@ -240,7 +240,7 @@ export default {
             text-align: center;
             span {
                 display: block;
-                width: 112px;
+                width: 150px;
                 height: 100%;
                 margin: 0 auto;
                 color: #838A9D;
