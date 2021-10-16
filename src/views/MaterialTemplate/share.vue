@@ -31,7 +31,7 @@
 <script>
 import { OffiAccount, UsersInfo, MaterialOperation, ArticleDetail, SaleDocumentDetail } from "../../config/api"
 
-import { isWeiXin, getCode, formatDate, parseQueryString } from "../../utils/tool"
+import { isWeiXin, getCode, formatDate, wxShare, byteConvert } from "../../utils/tool"
 
 import WechatQrcode from "../../components/MaterialTemplate/wechatQrcode"
 
@@ -44,22 +44,15 @@ export default {
             openId: '',
             materialId: '',
             materialType: '',
-            userNo: '',
-            hrefLocation: ''
+            userNo: ''
         }
     },
-    beforeRouteEnter(to, from, next) {
-        sessionStorage.setItem("MATERIALTEMPLATE_HREF", window.location.href)
-        next()
-    },
     created() {
-        this.hrefLocation = sessionStorage.getItem("MATERIALTEMPLATE_HREF")
-
         if (isWeiXin()) {
             // 微信授权
             this.wechatLoad()
         }
-        const { materialId, type, userNo } = parseQueryString(this.hrefLocation)
+        const { materialId, type, userNo } = this.$route.query
 
         this.materialId = materialId
         this.materialType = type
@@ -72,7 +65,7 @@ export default {
         wechatLoad(){
             let { code } = this.$route.query
             if(!code) {
-                getCode(encodeURIComponent(this.hrefLocation))
+                getCode(encodeURIComponent(window.location.href))
             } else {
                 this.offiAccount(code)
             }
@@ -122,10 +115,29 @@ export default {
                 const { code, data, msg } = res
                 if (code === 'success') {
                     this.formData = data
+                    this.doWxShare()
                 } else {
                     this.$toast(msg)
                 }
             })
+        },
+        doWxShare() {
+            let shareTitle = '', url = window.location.href, imgUrl = '', desc = ''
+
+            if (this.materialType == 1) {
+                let {title, cover, contentAbstract} = this.formData
+
+                shareTitle = title
+                imgUrl = cover && cover.length ? cover : 'https://test-h5.jzcrm.com/img/20211015204009.png'
+                desc = contentAbstract
+            } else if (this.materialType == 2) {
+                let {name, cover, fileSize} = this.formData
+
+                shareTitle = name
+                imgUrl = cover && cover.length ? cover : 'https://test-h5.jzcrm.com/img/20211015204018.png'
+                desc = fileSize ? byteConvert(fileSize) : ''
+            }
+            wxShare(shareTitle, url, imgUrl, desc)
         },
         formatDate,
         showWechat() {
