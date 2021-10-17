@@ -211,6 +211,7 @@ export default {
         }
         .title {
             margin: 0 0 28px;
+            word-break: break-all;
             font-size: 44px;
         }
         .info {
