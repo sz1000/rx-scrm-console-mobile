@@ -233,9 +233,9 @@ export default {
             word-break: break-all;
             font-size: 30px;
             img {
-                width: auto;
-                height: auto;
-                max-width: 100%;
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
             }
         }
         .file-box {
