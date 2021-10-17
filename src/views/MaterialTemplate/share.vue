@@ -253,3 +253,14 @@ export default {
         }
     }
 </style>
+<style lang="less">
+    .material-template {
+        .content {
+            img {
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+        }
+    }
+</style>
