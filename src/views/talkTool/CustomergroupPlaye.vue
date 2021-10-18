@@ -19,12 +19,10 @@
             <el-form-item label="任务名称 :" prop="taskName">
               <el-input
                 v-model="baseForm.taskName"
-                maxlength="30"
                 placeholder="请输入任务名称"
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
-                show-word-limit
               ></el-input>
             </el-form-item>
 
@@ -278,7 +276,8 @@
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
           <span class="add-tips" style="margin-left: 24px"
-            >（最多可添加9个附件）</span
+            >（最多可添加<span>{{ this.appendixList.length }}</span
+            >/9个附件）</span
           >
         </div>
         <!-- 通知成员 -->
