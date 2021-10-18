@@ -133,13 +133,13 @@ export default {
                 let {title, cover, contentAbstract} = this.formData
 
                 shareTitle = title
-                imgUrl = cover && cover.length ? cover : 'https://test-h5.jzcrm.com/img/20211015204009.png'
+                imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_article.png'
                 desc = contentAbstract
             } else if (this.materialType == 2) {
                 let {name, cover, fileSize} = this.formData
 
                 shareTitle = name
-                imgUrl = cover && cover.length ? cover : 'https://test-h5.jzcrm.com/img/20211015204018.png'
+                imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'
                 desc = fileSize ? byteConvert(fileSize) : ''
             }
             wxShare(shareTitle, url, imgUrl, desc)
@@ -211,6 +211,7 @@ export default {
         }
         .title {
             margin: 0 0 28px;
+            word-break: break-all;
             font-size: 44px;
         }
         .info {
@@ -232,9 +233,9 @@ export default {
             word-break: break-all;
             font-size: 30px;
             img {
-                width: auto;
-                height: auto;
-                max-width: 100%;
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
             }
         }
         .file-box {
@@ -248,6 +249,17 @@ export default {
             .item {
                 width: 100%;
                 height: auto;
+            }
+        }
+    }
+</style>
+<style lang="less">
+    .material-template {
+        .content {
+            img {
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
             }
         }
     }
