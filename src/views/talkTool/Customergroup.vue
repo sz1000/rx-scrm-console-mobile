@@ -741,6 +741,8 @@ export default {
               if (res.result) {
                 this.$router.push({ path: "/home" });
                 Notify({ type: "success", message: res.msg });
+              } else {
+                Notify({ type: "danger", message: res.msg });
               }
             });
         } else {

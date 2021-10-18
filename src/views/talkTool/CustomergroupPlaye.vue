@@ -718,6 +718,8 @@ export default {
                 Notify({ type: "success", message: res.msg });
 
                 // Toast("添加成功");
+              } else {
+                Notify({ type: "danger", message: res.msg });
               }
             });
         } else {
