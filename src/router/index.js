@@ -14,6 +14,7 @@ import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
 import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码
 
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
@@ -190,6 +191,14 @@ const routes = [{
                     bodyClass: 'CustomergroupPlaye',
                 },
                 component: CustomergroupPlaye,
+            },
+            //群活码
+            {
+                path: 'groupCodeList',
+                meta: {
+                    bodyClass: 'GroupCodeList',
+                },
+                component: GroupCodeList,
             },
         ],
     },
