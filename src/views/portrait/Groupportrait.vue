@@ -12,12 +12,8 @@
             <span>({{ datatTite.usersum }})</span>
           </p>
           <p class="portrait_message">
-            <span class="grom_name"
-              >群主：{{ datatTite.owmerName || "暂无" }}</span
-            >
-            <span class="ml24 in_block"
-              >建群时间 ：{{ datatTite.createTime || "暂无" }}</span
-            >
+            <span class="grom_name">群主：{{ datatTite.owmerName || "暂无" }}</span>
+            <span class="ml24 in_block">建群时间 ：{{ datatTite.createTime || "暂无" }}</span>
           </p>
         </div>
       </div>
@@ -57,19 +53,10 @@
     </div>
     <!-- 列表 -->
     <div>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <ul>
           <!--  -->
-          <li
-            class="lsits list-warp"
-            v-for="(item, index) in dataList"
-            :key="index"
-          >
+          <li class="lsits list-warp" v-for="(item, index) in dataList" :key="index">
             <div class="flex">
               <div class="portrait_img">
                 <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
@@ -80,9 +67,7 @@
               <div>
                 <p class="portrait_tite">
                   {{ item.name }}
-                  <span class="firm" v-if="item.customerType == 2"
-                    >@{{ item.corpName }}</span
-                  >
+                  <span class="firm" v-if="item.customerType == 2">@{{ item.corpName }}</span>
                   <span class="weix" v-if="item.customerType == 1">@微信</span>
                 </p>
                 <p class="portrait_message">
@@ -109,11 +94,19 @@
     <van-overlay :show="show">
       <van-loading class="loding" type="spinner" color="#fff" size="24" />
     </van-overlay>
+    <!-- 是否填写Secret -->
+    <van-overlay :show="showSecret">
+      <div class="wrapper" @click.stop>
+        <div class="dialogImg" align="center">
+          <img src="../../images/secreteig.png" alt="" />
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>         
 <script>
-import { formatDate } from "../../utils/tool.js";
-import commonFun from "../../utils/commonToken";
+import { formatDate } from '../../utils/tool.js'
+import commonFun from '../../utils/commonToken'
 import { sop_groupSopList } from '@/api/sop'
 export default {
   data() {
@@ -123,16 +116,16 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      chatId: "",
+      chatId: '',
       // 群信息
       datatTite: {
-        name: "",
-        usersum: "",
-        createTime: "",
-        owmerName: "",
-        usersum: "",
-        leavesum: "",
-        joinsum: "",
+        name: '',
+        usersum: '',
+        createTime: '',
+        owmerName: '',
+        usersum: '',
+        leavesum: '',
+        joinsum: '',
         total: 0, //总共的数据条数
       },
       pageInfo: {
@@ -142,67 +135,78 @@ export default {
       // 群用户列表
       dataList: [],
 
-      sopList: [],  //群 sop 列表
+      sopList: [], //群 sop 列表
       groupId: '',
-      isOwmer: false,   //是否群主
-    };
+      isOwmer: false, //是否群主
+      showSecret: false,
+    }
   },
   created() {
     // alert(localStorage.getItem("chatId"), "获取chatid");
-    commonFun.getWxAppid();
+    commonFun.getWxAppid()
     // this.getGroupDetail();
     // this.getList();
   },
   mounted() {
     setTimeout(() => {
-      this.pageInfo.page = 1;
+      this.pageInfo.page = 1
       // console.log(this.$route.query.id + "----id--");
-      this.getGroupDetail();
-      this.getList();
+      this.getGroupDetail()
+      this.getList()
+      this.getUserName()
       // alert(JSON.stringify(localStorage.getItem("chatId")));
-    }, 3000);
+    }, 3000)
   },
   methods: {
-    onLoad() {
-      console.log("屏幕滚动");
-
-      this.pageInfo.page += 1;
-      // console.log(this.pageInfo.page++);
-      this.getList();
+    getUserName() {
+      this.$network
+        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
+        .then((res) => {
+          this.showSecret = !res.data.haveSecret
+        })
     },
-    getSopList(){ //获取sop规则列表
-      sop_groupSopList(this.groupId).then(res => {
-        if(res.result){
+    onLoad() {
+      console.log('屏幕滚动')
+
+      this.pageInfo.page += 1
+      // console.log(this.pageInfo.page++);
+      this.getList()
+    },
+    getSopList() {
+      //获取sop规则列表
+      sop_groupSopList(this.groupId).then((res) => {
+        if (res.result) {
           let list = res.data
           this.sopList = list
         }
       })
     },
-    settingSopFun(){  //设置sop规则
+    settingSopFun() {
+      //设置sop规则
       this.$router.push({
         path: '/settingSop',
         query: {
-          id: this.groupId
+          id: this.groupId,
         },
       })
     },
     getGroupDetail() {
       this.$network
-        .get("/customer-service/group/getGroupDetail", {
+        .get('/customer-service/group/getGroupDetail', {
           // chatId: this.$route.query.id,
           // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
           // chatId: "wrY-gRDAAA36v0CIMKDBwkiUSuOkZqJQ",
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
           // chatId: localStorage.getItem("chatId"),
-          chatId: sessionStorage.getItem("chatId"),
+          chatId: sessionStorage.getItem('chatId'),
         })
         .then((res) => {
           if (res.result) {
-            this.show = false;
+            this.show = false
             // this.finished = true;
             this.groupId = res.data.id
-            if(res.data.owmer == res.data.userId){
+            if (res.data.owmer == res.data.userId) {
               console.log('我是群主')
               this.isOwmer = true
               this.getSopList()
@@ -210,63 +214,63 @@ export default {
           }
           // this.getSopList()   //本地调试用
           // this.show = false;  //画页面用 2021/10/11
-          this.datatTite.name = res.data.name;
-          this.datatTite.usersum = res.data.usersum;
-          this.datatTite.owmerName = res.data.owmerName;
+          this.datatTite.name = res.data.name
+          this.datatTite.usersum = res.data.usersum
+          this.datatTite.owmerName = res.data.owmerName
           this.datatTite.createTime = formatDate(
             res.data.createTime,
-            "yyyy-MM-dd hh:mm:ss"
-          );
-          this.datatTite.joinsum = res.data.joinsum;
-          this.datatTite.leavesum = res.data.leavesum;
-        });
+            'yyyy-MM-dd hh:mm:ss'
+          )
+          this.datatTite.joinsum = res.data.joinsum
+          this.datatTite.leavesum = res.data.leavesum
+        })
     },
     getList() {
       this.$network
-        .get("/customer-service/group/getGroupUserPage", {
+        .get('/customer-service/group/getGroupUserPage', {
           // chatId: this.$route.query.id,
           // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
           // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
           // chatId: localStorage.getItem("chatId"),
-          chatId: sessionStorage.getItem("chatId"),
+          chatId: sessionStorage.getItem('chatId'),
           ...this.pageInfo,
         })
         .then((res) => {
-          let tempList = res.data.data.records; //请求返回当页的列表
-          this.loading = false;
-          this.total = res.data.data.total;
+          let tempList = res.data.data.records //请求返回当页的列表
+          this.loading = false
+          this.total = res.data.data.total
           if (tempList == null || tempList.length === 0) {
             // 加载结束
-            this.finished = true;
-            return;
+            this.finished = true
+            return
           }
 
           tempList.forEach((item) => {
             item.joinTime = item.joinTime
-              ? formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss")
-              : "-";
-            item.type = item.type == "1" ? "企业成员" : "外部联系人";
-            if (item.joinScene == "1") {
-              item.joinScene = "直接邀请入群";
-            } else if (item.joinScene == "2") {
-              item.joinScene = "通过邀请链接入群";
+              ? formatDate(item.joinTime, 'yyyy-MM-dd hh:mm:ss')
+              : '-'
+            item.type = item.type == '1' ? '企业成员' : '外部联系人'
+            if (item.joinScene == '1') {
+              item.joinScene = '直接邀请入群'
+            } else if (item.joinScene == '2') {
+              item.joinScene = '通过邀请链接入群'
             } else {
-              item.joinScene = "通过扫描群二维码入群";
+              item.joinScene = '通过扫描群二维码入群'
             }
-            item.showName = item.showName ? item.showName : item.name;
-            console.log(item.id);
-          });
+            item.showName = item.showName ? item.showName : item.name
+            console.log(item.id)
+          })
           // 将新数据与老数据进行合并
-          let newSetArr = this.dataList.concat(tempList);
+          let newSetArr = this.dataList.concat(tempList)
           // this.dataList = this.dataList.concat(tempList);
-          this.dataList = this.unique(newSetArr);
+          this.dataList = this.unique(newSetArr)
           // this.dataList = tempList;
-          console.log(this.dataList);
+          console.log(this.dataList)
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
-            this.finished = true;
+            this.finished = true
           }
           // this.dataList = tempList;
           // this.total = res.data.data.total;
@@ -282,7 +286,7 @@ export default {
           //   } else {
           //     // this.onLoad();
           //   }
-        });
+        })
     },
     // onRefresh() {
     //   // 清空列表数据
@@ -290,8 +294,8 @@ export default {
     // },
     // 去重一次
     unique(arr) {
-      const res = new Map();
-      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
   },
   // mounted() {
@@ -302,15 +306,15 @@ export default {
   //   console.log("beforeDestroy");
   //   localStorage.removeItem("chatId");
   // },
-};
+}
 </script>
 <style lang="less" scoped>
-@main: #4168F6;
+@main: #4168f6;
 @white: #fff;
-@fontMain: #3C4353;
-@fontSub2: #838A9D;
-@bdColor: #D9DAE4;
-@dashedColor: #F0F2F7;
+@fontMain: #3c4353;
+@fontSub2: #838a9d;
+@bdColor: #d9dae4;
+@dashedColor: #f0f2f7;
 /deep/.van-overlay {
   // background-color: rgba(0, 0, 0, 0.3);
 }
@@ -327,25 +331,25 @@ export default {
 .warp-portrait {
   /* padding: 24px; */
   /* background: #838a9d; */
-  .sop_box{
+  .sop_box {
     width: 100%;
     min-height: 120px;
     background: @white;
     margin-top: 24px;
     padding-top: 24px;
-    .sop_top{
+    .sop_top {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      .sop_title{
+      .sop_title {
         font-size: 28px;
         line-height: 40px;
         font-weight: bold;
         color: @fontMain;
         padding-left: 20px;
         position: relative;
-        &::before{
+        &::before {
           content: '';
           width: 8px;
           height: 28px;
@@ -356,7 +360,7 @@ export default {
           transform: translateY(-50%);
         }
       }
-      .setting_btn{
+      .setting_btn {
         width: 124px;
         height: 68px;
         font-size: 28px;
@@ -367,7 +371,7 @@ export default {
         padding-left: 52px;
         position: relative;
         cursor: pointer;
-        &::before{
+        &::before {
           content: '';
           width: 32px;
           height: 32px;
@@ -380,30 +384,30 @@ export default {
         }
       }
     }
-    .sop_list{
+    .sop_list {
       width: 100%;
-      .sop_li{
+      .sop_li {
         width: 100%;
         position: relative;
         border-bottom: 1px dashed @dashedColor;
         padding: 24px;
         display: flex;
-        &:last-child{
+        &:last-child {
           border: none;
         }
-        .item{
+        .item {
           width: calc(50% - 30px);
           display: flex;
           font-size: 28px;
           line-height: 40px;
-          &:last-child{
+          &:last-child {
             margin-left: 12px;
           }
-          .label{
+          .label {
             color: @fontSub2;
             white-space: nowrap;
           }
-          .val{
+          .val {
             color: @fontMain;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -533,5 +537,11 @@ export default {
 }
 .in_block {
   display: inline-block;
+}
+.dialogImg {
+  margin-top: 20%;
+  img {
+    width: 702px;
+  }
 }
 </style>
