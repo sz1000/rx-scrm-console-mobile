@@ -197,7 +197,7 @@
         </div>
       </van-action-sheet>
     </div>
-    <van-overlay :show="show">
+    <van-overlay :show="showSecret">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
           <img src="../../images/secreteig.png" alt="" />
@@ -258,7 +258,7 @@ export default {
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
       loadingShow: true,
-      show: false,
+      showSecret: false,
     }
   },
   created() {
@@ -294,7 +294,7 @@ export default {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
         .then((res) => {
-          this.show = !res.data.haveSecret
+          this.showSecret = !res.data.haveSecret
         })
     },
     //获取客户详情
