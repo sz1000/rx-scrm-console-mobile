@@ -200,7 +200,7 @@
     <van-overlay :show="show">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
-          <img src="../images/secreteig.png" alt="" />
+          <img src="../../images/secreteig.png" alt="" />
         </div>
       </div>
     </van-overlay>
