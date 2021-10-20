@@ -11,29 +11,21 @@
       <div class="customInfo">
         <div class="iconName">
           <div v-if="imageUser">
-            <img :src="imageUser"
-                 alt="" />
+            <img :src="imageUser" alt="" />
           </div>
-          <div class="flag"
-               v-else>{{ name ? name.substr(0, 1) : "" }}</div>
+          <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
           <div class="nameSex">
             <span>{{ name }}</span>
             <span v-show="nameFrom">{{
               nameFrom == "1" ? "@微信" : `@${item.customerName}`
             }}</span>
-            <img src="../../images/icon_female@2x.png"
-                 alt=""
-                 v-if="item.gender == '2'" />
-            <img src="../../images/man.png"
-                 alt=""
-                 v-if="item.gender == '1'" />
+            <img src="../../images/icon_female@2x.png" alt="" v-if="item.gender == '2'" />
+            <img src="../../images/man.png" alt="" v-if="item.gender == '1'" />
           </div>
         </div>
-        <div class="detailBtn"
-             @click="goToDetail">
+        <div class="detailBtn" @click="goToDetail">
           详情
-          <van-icon name="arrow"
-                    color="#4168F6" />
+          <van-icon name="arrow" color="#4168F6" />
         </div>
       </div>
       <div class="detailInfo">
@@ -83,24 +75,19 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
-          <div class="editButton"
-               @click="showCompany(1)">
+          <div class="editButton" @click="showCompany(1)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }"
-               ref="textBox">
+          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in companyTagList"
-                    :key="index"
+              <span v-for="(list, index) in companyTagList" :key="index"
                     class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn"
-               @click="unfold = !unfold"
-               v-show="companyTagList.length > 5">
+          <div class="btn" @click="unfold = !unfold" v-show="companyTagList.length > 5">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -109,25 +96,19 @@
       <div class="personLabel">
         <div class="t_text">
           <span class="label_tag">个人标签</span>
-          <div class="editButton"
-               @click="showCompany(2)">
+          <div class="editButton" @click="showCompany(2)">
             <i class="el-icon-edit"></i>
             编辑
           </div>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }"
-               ref="textBox">
+          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in personTagList"
-                    :key="index"
-                    class="tagBox"
+              <span v-for="(list, index) in personTagList" :key="index" class="tagBox"
                     v-show="list.isChecked">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn"
-               @click="isShowPerson = !isShowPerson"
-               v-show="
+          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="
               personTagList.filter((item) => {
                 return item.isChecked == 1;
               }).length > 5
@@ -140,20 +121,15 @@
       <div class="dynamic">
         <div class="t_text state">
           <span class="label_tag">动态</span>
-          <div class="editButton"
-               @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png"
-                 alt="" />
+          <div class="editButton" @click="showCompany(3)">
+            <img src="../../images/icon_repair1@2x.png" alt="" />
             <span>写跟进</span>
           </div>
         </div>
-        <div class="allText"
-             v-show="timeLineList.length">全部</div>
+        <div class="allText" v-show="timeLineList.length">全部</div>
         <div class="timeLine">
           <el-timeline>
-            <el-timeline-item v-for="(item, index) in timeLineList"
-                              :key="index"
-                              color="#4168F6"
+            <el-timeline-item v-for="(item, index) in timeLineList" :key="index" color="#4168F6"
                               type="danger ">
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
@@ -171,85 +147,63 @@
       </div>
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :lock-scroll="false"
-                        :title="titleName"
-                        @cancel="cancelIcon"
-                        @click-overlay="cancelIcon"
-                        class="vant_sheet">
+      <van-action-sheet v-model="show" :lock-scroll="false" :title="titleName" @cancel="cancelIcon"
+                        @click-overlay="cancelIcon" class="vant_sheet">
         <div class="content">
-          <div class="tagWarp"
-               v-if="isShowDialog == '1'">
-            <div class="tagRow"
-                 v-for="(item, index) in groupList"
-                 :key="index">
+          <div class="tagWarp" v-if="isShowDialog == '1'">
+            <div class="tagRow" v-for="(item, index) in groupList" :key="index">
               <div class="groupName">{{ item.name }}</div>
               <div class="tagStyle">
-                <span class="creatTag"
-                      :class="{
+                <span class="creatTag" :class="{
                     changeTag:
                       highLightArr.findIndex((item) => {
                         return item.tagid == list.tagid;
                       }) > -1,
-                  }"
-                      v-for="(list, index) in item.children"
-                      :key="list.id"
-                      v-show="list.name"
+                  }" v-for="(list, index) in item.children" :key="list.id" v-show="list.name"
                       @click="selectTag(list, index)">{{ list.name }}</span>
               </div>
             </div>
           </div>
 
-          <div class="tagWarp personWarp"
-               v-if="isShowDialog == '2'">
+          <div class="tagWarp personWarp" v-if="isShowDialog == '2'">
             <div class="tagRow">
               <!-- <div class="groupName">{{item.name}}</div> -->
               <div class="tagStyle">
-                <span class="addBtn pointer"
-                      @click="addTag">+添加</span>
-                <span class="perchInput"
-                      v-if="isShow">
-                  <input v-model.trim="tagName"
-                         class="addInput"
-                         placeholder="输入后按回车完成"
-                         maxlength="30"
-                         @keyup.enter="handleSearch()" />
+                <span class="addBtn pointer" @click="addTag">+添加</span>
+                <span class="perchInput" v-if="isShow">
+                  <input v-model.trim="tagName" class="addInput" placeholder="输入后按回车完成"
+                         maxlength="30" @keyup.enter="handleSearch()" />
                 </span>
-                <span class="creatTag"
-                      :class="{ changeTag: list.isChecked }"
-                      v-for="(list, index) in personTagList"
-                      :key="list.id"
-                      v-show="list.name">
+                <span class="creatTag" :class="{ changeTag: list.isChecked }"
+                      v-for="(list, index) in personTagList" :key="list.id" v-show="list.name">
                   <span @click="selectPersonTag(list, index)">{{
                     list.name
                   }}</span>
-                  <span class="deleteTag"
-                        @click="deleteTag(list, index)">
+                  <span class="deleteTag" @click="deleteTag(list, index)">
                     <van-icon name="cross" />
                   </span>
                 </span>
               </div>
             </div>
           </div>
-
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
+          <div class="writerInput" v-if="isShowDialog == '3'">
+            <van-field v-model="message" type="textarea" maxlength="200" placeholder="记录好跟进，多签单哟~"
                        show-word-limit />
           </div>
-          <div class="buttonWarp"
-               v-show="hidshow">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
+          <div class="buttonWarp" v-show="hidshow">
+            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
     </div>
+    <van-overlay :show="show">
+      <div class="wrapper" @click.stop>
+        <div class="dialogImg" align="center">
+          <img src="../images/secreteig.png" alt="" />
+        </div>
+      </div>
+    </van-overlay>
     <!-- <BackTop></BackTop> -->
   </div>
   <!-- </div> -->
@@ -304,6 +258,7 @@ export default {
       showHeight: 0, //实时屏幕高度
       hidshow: true, //显示或者隐藏footer,
       loadingShow: true,
+      show: false,
     }
   },
   created() {
@@ -313,6 +268,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.getMethod()
+      this.getUserName()
     }, 2000)
 
     window.onresize = () =>
@@ -333,6 +289,13 @@ export default {
           userid: this.item.clueCustomerNo,
         },
       })
+    },
+    getUserName() {
+      this.$network
+        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
+        .then((res) => {
+          this.show = !res.data.haveSecret
+        })
     },
     //获取客户详情
     getMethod() {
@@ -1016,5 +979,11 @@ export default {
 .state {
   min-height: 292px;
   align-items: flex-start !important;
+}
+.dialogImg {
+  margin-top: 20%;
+  img {
+    width: 702px;
+  }
 }
 </style>
