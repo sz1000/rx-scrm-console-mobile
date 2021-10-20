@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">客户群群发</span>
+      <span class="textTitle">新增客户群群发</span>
     </div>
     <div class="warp_box">
       <!-- 群发设置 -->
@@ -15,17 +15,17 @@
         <div class="form">
           <el-form ref="form" :rules="rules" :model="baseForm">
             <!-- 任务名称 -->
+
             <el-form-item label="任务名称 :" prop="taskName">
               <el-input
                 v-model="baseForm.taskName"
-                maxlength="30"
                 placeholder="请输入任务名称"
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
-                show-word-limit
               ></el-input>
             </el-form-item>
+
             <!-- 选择员工 -->
             <el-form-item label="选择群主 :" prop="staffs">
               <!-- <el-select
@@ -276,7 +276,8 @@
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
           <span class="add-tips" style="margin-left: 24px"
-            >（最多可添加9个附件）</span
+            >（最多可添加<span>{{ this.appendixList.length }}</span
+            >/9个附件）</span
           >
         </div>
         <!-- 通知成员 -->
@@ -286,6 +287,7 @@
     <!-- 日期、时间选择框 -->
     <van-popup v-model="chooseDateTime" position="bottom">
       <van-datetime-picker
+        :min-date="minDate"
         @cancel="chooseDateTime = false"
         v-model="sendDateTime"
         :type="activeChoose"
@@ -343,6 +345,8 @@
   </div>
 </template>
 <script>
+import { Toast } from "vant";
+import { Notify } from "vant";
 import { formatDate } from "../../utils/tool.js";
 export default {
   data() {
@@ -357,6 +361,7 @@ export default {
       }
     };
     return {
+      minDate: new Date(),
       baseForm: {
         // 群发设置表单
         taskName: "",
@@ -407,16 +412,16 @@ export default {
       tagidList: [],
       sendMsg: "",
       appendixList: [
-        {
-          url: "",
-          objectname: "",
-          appendixType: "图片",
-          picList: [],
-          href: "",
-          hrefTitle: "",
-          hrefDesc: "",
-          hrefPic: [],
-        },
+        // {
+        //   url: "",
+        //   objectname: "",
+        //   appendixType: "图片",
+        //   picList: [],
+        //   href: "",
+        //   hrefTitle: "",
+        //   hrefDesc: "",
+        //   hrefPic: [],
+        // },
       ], // 素材列表
       chooseDateTime: false, // 选择日期、时间
       activeChoose: "date", // date || time 当前点击的日期或者时间输入框
@@ -679,6 +684,9 @@ export default {
         this.urlList.push(item.href);
       });
       this.$refs["form"].validate((valid) => {
+        // if (this.appendixList.length >= 1) {
+        //   Toast("请上传素材内容");
+        // } else {
         if (valid) {
           let params = {
             taskName: this.baseForm.taskName,
@@ -704,14 +712,19 @@ export default {
               params
             )
             .then((res) => {
-              console.log(res);
-              Toast({
-                message: res.msg,
-              });
+              if (res.result) {
+                this.$router.push({ path: "/home" });
+                Notify({ type: "success", message: res.msg });
+
+                // Toast("添加成功");
+              } else {
+                Notify({ type: "danger", message: res.msg });
+              }
             });
         } else {
           console.log("error submit!!");
           return false;
+          // }
         }
       });
     },
@@ -871,6 +884,13 @@ export default {
 };
 </script>
 <style lang="less">
+.taskName {
+  /deep/.el-input__inner {
+    border: 1px solid none !important;
+    border-radius: 4px;
+    padding-right: 1000px !important;
+  }
+}
 .el-select {
   .el-tag--small {
     height: 50px;
@@ -931,7 +951,8 @@ export default {
     .textTitle {
       flex: 1;
       display: inline-block;
-      padding-left: 150px;
+      padding-left: 135px !important;
+      // padding-left: 150px;
     }
   }
   .choose-cus-popup {
@@ -1092,7 +1113,7 @@ export default {
       border-radius: 8px;
     }
     .el-form-item {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       .el-form-item__label {
         line-height: 80px;
         font-size: 28px;

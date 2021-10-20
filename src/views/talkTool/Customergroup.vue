@@ -6,7 +6,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">客户群发</span>
+      <span class="textTitle">新增客户群发</span>
     </div>
     <div class="warp_box">
       <!-- 群发设置 -->
@@ -17,11 +17,8 @@
             <!-- 任务名称 -->
             <el-form-item label="任务名称:" prop="taskName">
               <el-input
-                class="taskName"
                 v-model="baseForm.taskName"
-                maxlength="30"
                 placeholder="请输入任务名称"
-                show-word-limit
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
@@ -112,6 +109,7 @@
                     ></el-option>
                   </el-select>
                 </el-form-item>
+
                 <el-form-item label="客户标签:" prop="includeCus">
                   <div
                     class="select-custom-sign-wrap el-icon-arrow-up"
@@ -268,7 +266,8 @@
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
           <span class="add-tips" style="margin-left: 24px"
-            >（最多可添加9个附件）</span
+            >（最多可添加<span>{{ this.appendixList.length }}</span
+            >/9个附件）</span
           >
         </div>
         <!-- 通知成员 -->
@@ -339,6 +338,7 @@
 </template>
 <script>
 import { Toast } from "vant";
+import { Notify } from "vant";
 import { formatDate } from "../../utils/tool.js";
 export default {
   data() {
@@ -413,16 +413,16 @@ export default {
       tagidList: [],
       sendMsg: "",
       appendixList: [
-        {
-          url: "",
-          objectname: "",
-          appendixType: "图片",
-          picList: [],
-          href: "",
-          hrefTitle: "",
-          hrefDesc: "",
-          hrefPic: [],
-        },
+        // {
+        //   url: "",
+        //   objectname: "",
+        //   appendixType: "图片",
+        //   picList: [],
+        //   href: "",
+        //   hrefTitle: "",
+        //   hrefDesc: "",
+        //   hrefPic: [],
+        // },
       ], // 素材列表
 
       chooseDateTime: false, // 选择日期、时间
@@ -708,6 +708,9 @@ export default {
       });
       console.log(this.urlList, "-------------this.urlList");
       this.$refs["form"].validate((valid) => {
+        // if (this.appendixList.length >= 1) {
+        //   Toast("请上传素材内容");
+        // } else {
         if (valid) {
           let params = {
             taskName: this.baseForm.taskName,
@@ -736,15 +739,16 @@ export default {
               console.log(res);
               if (res.result) {
                 this.$router.push({ path: "/home" });
+                Notify({ type: "success", message: res.msg });
+              } else {
+                Notify({ type: "danger", message: res.msg });
               }
-              Toast({
-                message: res.msg,
-              });
             });
         } else {
           console.log("error submit!!");
           return false;
         }
+        // }
       });
     },
     deepClone(o) {
@@ -863,7 +867,7 @@ export default {
       this.$network
         .post("/customer-service/cluecustomerMass/customerScreen", {
           userList: this.baseForm.staffs,
-          gender: this.baseForm.cusSex || "", //性别
+          gender: this.baseForm.cusSex, //性别
           addStarTime: this.baseForm.cusAddBeginTime,
           addEndTime: this.baseForm.cusAddEndTime,
           groupList: this.baseForm.chatGroup || [],
@@ -892,16 +896,17 @@ export default {
     },
     // 性别
     sexChange(value) {
-      console.log(value);
-      if (value == null) {
-        this.Screeningcustomer();
-      } else if (value == 0) {
-        this.Screeningcustomer();
-      } else if (value == 1) {
-        this.Screeningcustomer();
-      } else if (value == 2) {
-        this.Screeningcustomer();
-      }
+      console.log(value, "------性别");
+      this.baseForm.cusSex = value;
+      // if (value == null) {
+      this.Screeningcustomer();
+      // } else if (value == 0) {
+      //   this.Screeningcustomer();
+      // } else if (value == 1) {
+      //   this.Screeningcustomer();
+      // } else if (value == 2) {
+      //   this.Screeningcustomer();
+      // }
     },
     //时间
     cusAddBeginTimeChange(value) {
@@ -937,16 +942,17 @@ export default {
 // }
 
 // .taskNameselect {
-.el-input__inner {
-  border: 1px solid #5e5f61 !important;
-}
+//   .el-input__inner {
+//     border: 1px solid #5e5f61 !important;
+//   }
 // }
 
 // .taskName {
-.el-input__inner {
-  border: 1px solid #5e5f61;
-}
+//   .el-input__inner {
+//     border: 1px solid #5e5f61;
+//   }
 // }
+
 .el-select {
   .el-tag--small {
     height: 50px;
@@ -961,17 +967,6 @@ export default {
   bottom: 80px;
   font-size: 28px;
   color: #4168f6;
-}
-/deep/.el-form-item__content {
-  .taskName {
-    border: 1px solid red !important;
-
-    border-radius: 4px;
-    /deep/.el-input__inner {
-      border: 1px solid none !important;
-      border-radius: 4px;
-    }
-  }
 }
 
 .el-select-dropdown.selectCus {
@@ -1025,7 +1020,8 @@ export default {
     .textTitle {
       flex: 1;
       display: inline-block;
-      padding-left: 150px;
+      padding-left: 135px !important;
+      // text-align: center;
     }
   }
   .choose-cus-popup {
@@ -1185,7 +1181,7 @@ export default {
       border-radius: 8px;
     }
     .el-form-item {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       .el-form-item__label {
         line-height: 80px;
         font-size: 28px;
@@ -1406,7 +1402,7 @@ export default {
     min-height: 80px;
     box-sizing: border-box;
     background: #ffffff;
-    border: 1px solid #d9dae4;
+    border: 2px solid #d9dae4 !important;
     color: #c0c4cc;
     border-radius: 5px;
     padding: 10px 30px 10px 15px;

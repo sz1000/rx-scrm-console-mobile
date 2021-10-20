@@ -23,6 +23,25 @@ body {
 
 }
 
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color: #C0C4CC;
+  font-weight: normal;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: #C0C4CC;
+  font-weight: normal;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #C0C4CC;
+  font-weight: normal;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #C0C4CC;
+  font-weight: normal;
+}
 // html::-webkit-scrollbar,
 // body::-webkit-scrollbar {
 //   width: 0px;
@@ -343,11 +362,11 @@ a:hover {
 
 .deleteBtn {
   width: 702px;
-  height: 244px;
+  // height: 300px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #eeeeee;
-  padding-bottom: 10px;
+  // padding-bottom: 10px;
   font-size: 28px;
   padding-bottom: 20px;
   .commonVant()
@@ -362,23 +381,7 @@ a:hover {
   font-size: 28px;
   .commonVant()
 }
-.el-form-item__error {
-  font-size: 28px !important;
-  // color: #4168f6 !important;
-}
-// /deep/.el-input__suffix-inner{
-//   font-size: 16px !important;
-// }
-// .tamedata{
-//   /deep/.el-form-item__content{
-//     .el-input{
-//       .el-input__suffix{
-//         font-size: 16px !important;
-        
-//       }
-//     }
-//   }
-// }
+
 .giveUpBtn {
   width: 702px;
   height: 326px;
