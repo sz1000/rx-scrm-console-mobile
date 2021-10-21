@@ -150,7 +150,6 @@ export default {
     methods: {
         onLoad(){
             console.log('load')
-            this.search.page++
             this.getList()
         },
         navClickFun(id){
@@ -162,12 +161,14 @@ export default {
                 if(res.result){
                     let list = res.data.iPage.records,
                     total = res.data.iPage.total
+                    this.loading = false
                     if(this.search.page == 1){
                         this.list = []
                     }
+                    this.search.page++
                     this.list = this.list.concat(list)
                     this.total = total
-                    if(this.search.limit * this.search.page > this.total){
+                    if(this.list.length >= total){
                         this.finished = true
                     }
                 }
@@ -222,6 +223,7 @@ export default {
         },
         searchFun(){
             this.search.page = 1
+            this.finished = false
             this.getList()
         },
     },
