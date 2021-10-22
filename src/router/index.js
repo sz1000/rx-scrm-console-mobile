@@ -14,7 +14,11 @@ import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
 import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+
 import LableDataGroup from "../views/talkTool/lableDataGroup.vue"//客户群群发
+
+import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码列表
+import GroupCodeAdd from "../views/talkTool/groupCode/add.vue"    //群活码列表
 
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
@@ -194,6 +198,7 @@ const routes = [{
                 },
                 component: CustomergroupPlaye,
             },
+
             //一建拉群
             {
                 path: 'lableDataGroup',
@@ -201,6 +206,24 @@ const routes = [{
                     bodyClass: 'lableDataGroup',
                 },
                 component: LableDataGroup,
+
+            },
+            //群活码 list
+            {
+                path: 'groupCodeList',
+                meta: {
+                    bodyClass: 'GroupCodeList',
+                },
+                component: GroupCodeList,
+            },
+            //群活码 add
+            {
+                path: 'groupCodeAdd',
+                meta: {
+                    bodyClass: 'GroupCodeAdd',
+                },
+                component: GroupCodeAdd,
+
             },
         ],
     },
