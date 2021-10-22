@@ -1,4 +1,4 @@
-import Network from './request'
+import {http} from './request'
 import router from '../router/index'
 import {
     setStoreValue,
@@ -20,7 +20,7 @@ const getWxToken = function() {
     if (!authCode) {
         // alert('-----没有authCode-----')
         // alert(JSON.stringify(window.location.pathname))
-        Network.get('/user-service/m/user/getappid', {
+        http.get('/user-service/m/user/getappid', {
             redirect_uri: window.location.pathname,
         }).then((res) => {
             // alert(JSON.stringify(res))
@@ -37,7 +37,7 @@ const getWxToken = function() {
 }
 
 function getWxCofig(v) {
-    Network.get('/user-service/m/user/getloguser', {
+    http.get('/user-service/m/user/getloguser', {
         code: v,
         url: location.href,
     }).then((res) => {
