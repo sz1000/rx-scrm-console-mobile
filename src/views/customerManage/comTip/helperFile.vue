@@ -28,7 +28,7 @@
             <div class="right">
               <div class="rowStyle">
                 <span>线索来源:</span>
-                <span>{{ item.permission }}</span>
+                <span>{{ item.source }}</span>
               </div>
               <div class="rowStyle">
                 <span class="label">最近沟通:</span>
@@ -140,7 +140,7 @@ export default {
     		permission:'2'
     	},
     	showB:false,
-    	show:true,
+    	show:false,
       yiList:[],
       bumenList:[],
       heperList:[],
@@ -579,10 +579,16 @@ export default {
 }
 .Clues {
 }
+
+
 /deep/.el-button--primary:focus, .el-button--primary:hover {
     background: #FFFFFF;
     border-color: #D9DAE4;
     color: #838A9D;
+}
+/deep/ .el-message-box{
+		width: 760px;
+		height: 300px;
 }
 .delBtn,.addBtn{
 					color: #838a9d;
@@ -595,6 +601,7 @@ export default {
           right: 150px;
           top: 0;
           background: #FFFFFF;
+          font-size: 30px;
 }
 .addBtn {
 	right: 5px;
