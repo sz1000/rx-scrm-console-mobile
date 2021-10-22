@@ -313,7 +313,7 @@
 			    		</div>
 				    	<el-upload
 							  	class="upload-demo"
-							  :action="`${BASE_URL}customer-service/cluecustomeraccessory/upload`"
+							  :action="`${BASE_URL}/customer-service/cluecustomeraccessory/upload`"
 							  :headers="headers"
 			  				:data="fileData"
 							  :on-remove="delList"
@@ -444,7 +444,7 @@ export default {
       disabled: true,
     	fileList:[],
     	BASE_URL,
-    	sanTab:'协助人',
+    	sanTab:'线索动态',
     	activeName:'2',
       item: {},
       name: '',
@@ -604,6 +604,18 @@ export default {
 			beforeRemove(file, fileList) {
 				console.log(file, fileList)
         return this.$confirm(`确定移除 ${ file.name }？`);
+        
+        /*this.$dialog
+        .confirm({
+          title: '删除警告',
+          message:
+            `确定移除 ${ file.name }？`,
+          className: 'giveUpBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
+        })*/
+        
      },
     /*附件下载*/
     
@@ -991,6 +1003,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/.el-upload-list__item-name{
+	margin-top: 20px;
+	font-size: 35px;
+	line-height: 35px;
+}
 .DetailCules {
 }
 .culeDeatil {
@@ -1519,9 +1536,13 @@ export default {
     }
   }
 }
+/deep/.el-upload-list__item .el-icon-upload-success,/deep/.el-upload-list__item .el-icon-close{
+	font-size: 40px;
+}
 /deep/.el-tabs__item{
 	height: 88px;
 	line-height: 88px;
+	font-size: 35px;
 }
 /deep/.van-tabs__line{
 	    background-color: #FFFFFF;
@@ -1534,6 +1555,7 @@ export default {
     flex: inherit;
     line-height: 50px;
     margin-bottom:70px;
+    font-size: 30px;
 }
 /deep/ .el-upload-list__item .el-icon-close-tip{
 	color: #fafbff00;
@@ -1572,21 +1594,34 @@ export default {
           right: 5px;
           top: 0;
           background: #FFFFFF;
+          font-size: 30px;
 }
 /deep/.el-button--primary:focus, .el-button--primary:hover {
     background: #FFFFFF;
     border-color: #D9DAE4;
     color: #838A9D;
 }
-/deep/.el-message-box__content{
+
+/deep/.el-tabs__content{
+	overflow: visible;
+}
+</style>
+<style>
+.el-message-box__content{
 	font-size: 30px !important;
 }
-/deep/.el-message-box{
+.el-message-box{
 	  width: 600px !important;
     height: 200px !important;
     font-size: 48px !important;
+    position: relative;
 }
-/deep/.el-tabs__content{
-	overflow: visible;
+.el-message-box__btns{
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
+}
+.el-button--mini, .el-button--small{
+	font-size: 76px;
 }
 </style>
