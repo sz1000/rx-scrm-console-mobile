@@ -16,7 +16,7 @@
               >群主：{{ datatTite.owmerName || "暂无" }}</span
             >
             <span class="ml24 in_block"
-              >建群时间 ：{{ datatTite.createTime || "暂无" }}</span
+              >共{{ datatTite.createTime || "0" }} 位群成员</span
             >
           </p>
         </div>
@@ -36,8 +36,10 @@
         </div> -->
       </div>
     </div>
+    <!-- 群标签 -->
+
     <!-- 群sop -->
-    <div class="sop_box" v-if="isOwmer">
+    <div class="sop_box">
       <div class="sop_top">
         <div class="sop_title">群SOP</div>
         <div class="setting_btn" @click="settingSopFun">设置</div>
@@ -58,54 +60,118 @@
       </div>
     </div>
     <!-- 列表 -->
+
     <div>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
-        <ul>
-          <!--  -->
-          <li
-            class="lsits list-warp"
-            v-for="(item, index) in dataList"
-            :key="index"
-          >
-            <div class="flex">
-              <div class="portrait_img">
-                <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
-                <div class="flag" v-if="item.avatar == ''">
-                  {{ item.name.substr(0, 1) }}
+      <div class="tabBtn flex">
+        <div @click="myclue(1)">
+          <div :class="{ active: tabClick == 1 }" class="mycule">群动态</div>
+          <!-- <p :class="{ activeline: tabClick == 1 }"></p> -->
+        </div>
+        <div @click="myclue(2)">
+          <div :class="{ active: tabClick == 2 }" class="mycule">群内成员</div>
+          <!-- <p :class="{ activeline: tabClick == 2 }"></p> -->
+        </div>
+      </div>
+      <div v-if="tabClick == 1">
+        <!-- <div class="allText">全部</div> -->
+        <div class="timeLine">
+          <el-timeline>
+            <el-timeline-item color="#4168F6" type="danger ">
+              <div class="recordBox">
+                <div class="descTxt">{{ groupName.owmerName }}</div>
+                <div class="inLineTwo">
+                  {{ groupName.owmerName }}:创建了群聊
+                </div>
+                <div class="inLine">
+                  <div class="inLineEnd">操作人：{{ groupName.name }}</div>
+                  <span class="time_right">
+                    {{
+                      formatDate(groupName.createTime, "yyyy-MM-dd hh:mm:ss")
+                    }}</span
+                  >
                 </div>
               </div>
-              <div>
-                <p class="portrait_tite">
-                  {{ item.name }}
-                  <span class="firm" v-if="item.customerType == 2"
-                    >@{{ item.corpName }}</span
+            </el-timeline-item>
+          </el-timeline>
+          <el-timeline>
+            <el-timeline-item
+              v-for="(item, index) in groupNameList"
+              :key="index"
+              color="#4168F6"
+              type="danger "
+            >
+              <div class="recordBox">
+                <div class="descTxt">加入群聊</div>
+                <div class="inLineTwo">
+                  {{ item.name }}通过
+                  <span v-if="item.joinScene == 1">直接邀请入群</span>
+                  <span v-if="item.joinScene == 2">邀请链接入群</span>
+                  <span v-if="item.joinScene != 1 && item.joinScene != 2"
+                    >扫描群二维码入群</span
+                  >方式加入了群聊
+                </div>
+                <div class="inLine">
+                  <div class="inLineEnd">操作人：{{ item.invitorName }}</div>
+                  <span class="time_right">
+                    {{ formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss") }}</span
                   >
-                  <span class="weix" v-if="item.customerType == 1">@微信</span>
+                </div>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+      </div>
+      <div v-if="tabClick == 2">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
+          <ul>
+            <!--  -->
+            <li
+              class="lsits list-warp"
+              v-for="(item, index) in dataList"
+              :key="index"
+            >
+              <div class="flex">
+                <div class="portrait_img">
+                  <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
+                  <div class="flag" v-if="item.avatar == ''">
+                    {{ item.name.substr(0, 1) }}
+                  </div>
+                </div>
+                <div>
+                  <p class="portrait_tite">
+                    {{ item.name }}
+                    <span class="firm" v-if="item.customerType == 2"
+                      >@{{ item.corpName }}</span
+                    >
+                    <span class="weix" v-if="item.customerType == 1"
+                      >@微信</span
+                    >
+                  </p>
+                  <p class="portrait_message">
+                    {{ item.type }}
+                  </p>
+                </div>
+              </div>
+              <div class="list-box">
+                <p class="list_tite">
+                  入群时间：<span class="num">{{ item.joinTime }}</span>
                 </p>
-                <p class="portrait_message">
-                  {{ item.type }}
+                <p class="list_tite">
+                  入群方式： <span class="num">{{ item.joinScene }}</span>
+                </p>
+                <p class="list_tite">
+                  邀请员工： <span class="num">{{ item.invitorName }}</span>
                 </p>
               </div>
-            </div>
-            <div class="list-box">
-              <p class="list_tite">
-                入群时间：<span class="num">{{ item.joinTime }}</span>
-              </p>
-              <p class="list_tite">
-                入群方式： <span class="num">{{ item.joinScene }}</span>
-              </p>
-              <p class="list_tite">
-                邀请员工： <span class="num">{{ item.invitorName }}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </van-list>
+            </li>
+          </ul>
+        </van-list>
+      </div>
     </div>
     <!-- <p class="no_more">没有更多</p> -->
     <van-overlay :show="show">
@@ -115,11 +181,14 @@
 </template>         
 <script>
 import { formatDate } from "../../utils/tool.js";
-import commonFun from "../../utils/commonToken";
+
 import { sop_groupSopList } from "@/api/sop";
 export default {
   data() {
     return {
+      groupNameList: [],
+      groupName: {},
+      tabClick: 1,
       channelList: [],
       show: true,
       loading: false,
@@ -149,27 +218,22 @@ export default {
       isOwmer: false, //是否群主
     };
   },
-  created() {
-    // alert(localStorage.getItem("chatId"), "获取chatid");
-    commonFun.getWxAppid();
-    // this.getGroupDetail();
-    // this.getList();
-  },
+  created() {},
   mounted() {
     setTimeout(() => {
       this.pageInfo.page = 1;
-      // console.log(this.$route.query.id + "----id--");
+      this.getGroupDetailtop();
       this.getGroupDetail();
       this.getList();
-      // alert(JSON.stringify(localStorage.getItem("chatId")));
     }, 3000);
   },
   methods: {
+    formatDate,
     onLoad() {
       console.log("屏幕滚动");
 
       this.pageInfo.page += 1;
-      // console.log(this.pageInfo.page++);
+
       this.getList();
     },
     getSopList() {
@@ -193,13 +257,7 @@ export default {
     getGroupDetail() {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
-          // chatId: this.$route.query.id,
-          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
-          // chatId: "wrY-gRDAAA36v0CIMKDBwkiUSuOkZqJQ",
-          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
-          // chatId: localStorage.getItem("chatId"),
-          chatId: sessionStorage.getItem("chatId"),
+          chatId: this.$route.query.id,
         })
         .then((res) => {
           if (res.result) {
@@ -212,7 +270,7 @@ export default {
               this.getSopList();
             }
           }
-          // this.getSopList()   //本地调试用
+          this.getSopList(); //本地调试用
           // this.show = false;  //画页面用 2021/10/11
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
@@ -225,16 +283,21 @@ export default {
           this.datatTite.leavesum = res.data.leavesum;
         });
     },
+    getGroupDetailtop() {
+      this.$network
+        .get("/customer-service/group/getGroupTodayDetail", {
+          chatId: this.$route.query.id,
+        })
+        .then((res) => {
+          this.groupName = res.data.group;
+          this.groupNameList = res.data.groupUserEntityList;
+          console.log(res.data.group, "---------");
+        });
+    },
     getList() {
       this.$network
         .get("/customer-service/group/getGroupUserPage", {
-          // chatId: this.$route.query.id,
-          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
-          // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
-          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
-          // chatId: localStorage.getItem("chatId"),
-          chatId: sessionStorage.getItem("chatId"),
+          chatId: this.$route.query.id,
           ...this.pageInfo,
         })
         .then((res) => {
@@ -272,20 +335,6 @@ export default {
           if (this.dataList.length >= this.total) {
             this.finished = true;
           }
-          // this.dataList = tempList;
-          // this.total = res.data.data.total;
-          // let lengrod = res.data.data.records;
-          // let newSetArr = this.channelList.concat(lengrod);
-
-          // this.channelList = this.unique(newSetArr);
-
-          // console.log(this.channelList);
-          // if (lengrod == null || lengrod.length === 0)
-          //   if (this.channelList.length >= this.total) {
-          //     this.finished = true;
-          //   } else {
-          //     // this.onLoad();
-          //   }
         });
     },
     // onRefresh() {
@@ -297,15 +346,15 @@ export default {
       const res = new Map();
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
+    myclue(v) {
+      console.log(v);
+      this.tabClick = v;
+      //   this.cardList = [];
+      //   this.page = 1;
+      //   this.inputValue = "";
+      //   this.getData();
+    },
   },
-  // mounted() {
-  //   console.log("mounted");
-  //   localStorage.removeItem("chatId");
-  // },
-  // beforeDestroy() {
-  //   console.log("beforeDestroy");
-  //   localStorage.removeItem("chatId");
-  // },
 };
 </script>
 <style lang="less" scoped>
@@ -321,6 +370,12 @@ export default {
 /deep/ .van-loading {
   // top: 50%;
   // left: 50%;
+}
+.doing {
+  width: 24px;
+  height: 24px;
+  background: #4168f6;
+  border-radius: 50%;
 }
 .loding {
   top: 50%;
@@ -383,6 +438,29 @@ export default {
           transform: translateY(-50%);
         }
       }
+      .redact_btn {
+        width: 124px;
+        height: 68px;
+        font-size: 28px;
+        line-height: 66px;
+        border: 1px solid @bdColor;
+        border-radius: 8px;
+        color: @fontSub2;
+        padding-left: 52px;
+        position: relative;
+        cursor: pointer;
+        &::before {
+          content: "";
+          width: 32px;
+          height: 32px;
+          background: url("../../assets/images/icon_setting.png") no-repeat;
+          background-size: 100%;
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
     }
     .sop_list {
       width: 100%;
@@ -417,7 +495,96 @@ export default {
       }
     }
   }
+  .tabBtn {
+    justify-content: space-around;
+    margin-top: 20px;
+    height: 87px;
+    line-height: 87px;
+    background: #fff;
+    border-bottom: 0.013333rem solid #f0f2f7;
+
+    .mycule {
+      // margin-right: 32px;
+      font-size: 28px;
+      color: #838a9d;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+    .active {
+      //   width: 112px;
+      //   text-align: center;
+      color: #4168f6;
+      position: relative;
+      font-size: 28px;
+      letter-spacing: 0;
+      font-weight: 500;
+
+      &::after {
+        content: "";
+        width: 112px;
+        height: 4px;
+        background: #4168f6;
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translate(-50%);
+      }
+    }
+  }
+  .allText {
+    color: #4168f6;
+    margin-bottom: 16px;
+  }
+  .timeLine {
+    padding: 30px 24px 0;
+    background: #fff;
+    .el-timeline {
+      padding-left: 0 !important;
+    }
+    .recordBox {
+      // width: 676px;
+      min-height: 180px;
+      background: rgba(65, 104, 246, 0.06);
+      border-radius: 8px;
+      color: #3c4353;
+      padding: 16px;
+      font-size: 28px;
+      .inLine {
+        display: flex;
+        justify-content: space-between;
+        .time_right {
+          font-size: 28px;
+          color: #838a9d;
+        }
+        img {
+          width: 10px;
+          height: 10px;
+        }
+      }
+      .inLineTwo {
+        margin-bottom: 16px;
+        display: inline-block;
+        word-break: normal;
+        word-break: break-all;
+        word-break: keep-all;
+        word-break: break-word;
+        // display: -webkit-box;
+        // -webkit-box-orient: vertical;
+        // -webkit-line-clamp: 2;
+        // overflow: hidden;
+      }
+      .inLineEnd {
+        text-align: right;
+      }
+      .descTxt {
+        font-weight: 600;
+        color: #3c4353;
+        margin-bottom: 16px;
+      }
+    }
+  }
 }
+
 .portrait-box {
   padding: 24px;
   background: #fff;
@@ -482,11 +649,11 @@ export default {
   margin-bottom: 16px;
 }
 .list-warp {
-  margin-top: 24px;
+  margin-bottom: 24px;
   // height: 1000px;
 }
 .lsits {
-  padding: 24px;
+  padding: 34px;
   background: #fff;
 }
 .no_more {

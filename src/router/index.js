@@ -14,6 +14,7 @@ import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
 import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+import LableDataGroup from "../views/talkTool/lableDataGroup.vue"//客户群群发
 
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
@@ -37,6 +38,8 @@ import Groupportrait from '../views/portrait/Groupportrait'
 import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
+// 群列表
+import GroupListDetails from '../views/customerManage/groupListDetails.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
@@ -191,6 +194,14 @@ const routes = [{
                 },
                 component: CustomergroupPlaye,
             },
+            //一建拉群
+            {
+                path: 'lableDataGroup',
+                meta: {
+                    bodyClass: 'lableDataGroup',
+                },
+                component: LableDataGroup,
+            },
         ],
     },
     //客户管理
@@ -232,6 +243,15 @@ const routes = [{
                     bodyClass: 'grouplist',
                 },
                 component: Grouplist,
+            },
+            // 群列表详情
+            {
+                path: 'groupListDetails',
+                name: 'groupListDetails',
+                meta: {
+                    bodyClass: 'groupListDetails',
+                },
+                component: GroupListDetails,
             },
 
             // 客户画像

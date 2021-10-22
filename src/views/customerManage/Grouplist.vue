@@ -173,12 +173,12 @@ export default {
     // },
     //获取群id跳转
     clickChatid(id) {
-      // console.log(id);
-      // this.$router.push({ path: "/groupportrait", query: { id: id } });
+      console.log(id);
+      this.$router.push({ path: "./groupListDetails", query: { id: id } });
       // this.$router.push({
-      //   name: "groupportrait",
+      //   name: "groupListDetails",
       //   params: {
-      //     name: "groupportrait",
+      //     name: "groupListDetails",
       //     id: id,
       //   },
       // });

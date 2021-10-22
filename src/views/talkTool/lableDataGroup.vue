@@ -1,17 +1,17 @@
 
 <template>
   <div class="microCode group-setting-warp" v-loading="loading">
-    <div class="headerTitle">
+    <div class="headerTitleList">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">新增客户群发</span>
+      <span class="textTitle">新增标签建群</span>
     </div>
     <div class="warp_box">
       <!-- 群发设置 -->
       <div class="group-setting">
-        <div class="title">群发设置</div>
+        <div class="title">标签建群</div>
         <div class="form">
           <el-form ref="form" :rules="rules" :model="baseForm">
             <!-- 任务名称 -->
@@ -92,23 +92,6 @@
                     </div>
                   </div>
                 </el-form-item>
-                <el-form-item label="选择群聊:" prop="chatGroup">
-                  <el-select
-                    multiple
-                    v-model="baseForm.chatGroup"
-                    style="width: 100%"
-                    placeholder="请选择群聊"
-                    @change="chatGroupListChange"
-                    v-loadmore="loadMoreGroup"
-                  >
-                    <el-option
-                      :key="index"
-                      :label="item.name"
-                      :value="item.chatId"
-                      v-for="(item, index) in chatGroupList"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
 
                 <el-form-item label="客户标签:" prop="includeCus">
                   <div
@@ -137,13 +120,7 @@
             <el-form-item label="">
               预计发送客户数量：{{ estimateCusNum }}
             </el-form-item>
-            <!-- 发送规则 -->
-            <el-form-item label="发送规则 :" prop="sendRule">
-              <el-radio-group v-model="baseForm.sendRule">
-                <el-radio :label="1">立即发送</el-radio>
-                <el-radio :label="2">定时发送</el-radio>
-              </el-radio-group>
-            </el-form-item>
+
             <!-- 设定时间 -->
             <el-form-item
               v-if="baseForm.sendRule == 2"
@@ -176,7 +153,7 @@
         </div>
       </div>
       <!-- 群发消息 -->
-      <div class="group-content">
+      <div class="group-content miassContent">
         <div class="title">群发消息</div>
         <div class="tips">
           <span>注意：</span>
@@ -186,92 +163,92 @@
           >
         </div>
         <!-- 群发内容 -->
-        <div class="txt-28 marB-24">群发内容：</div>
-        <el-input
-          class="marB-24"
-          type="textarea"
-          placeholder="请输入群发内容"
-          v-model="sendMsg"
-          maxlength="500"
-          show-word-limit
+        <el-form
+          :model="FormData"
+          :rules="rulesCenter"
+          ref="form1"
+          class="centerListTime"
         >
-        </el-input>
+          <el-form-item label="入群引导语:" prop="sendMsg">
+            <el-input
+              class="marB-24"
+              type="textarea"
+              placeholder="请输入入群引导语"
+              v-model="FormData.sendMsg"
+              maxlength="300"
+              show-word-limit
+            >
+            </el-input>
+          </el-form-item>
+        </el-form>
         <!-- 附件 -->
         <div class="appendix-list">
           <div
-            class="item marB-24"
             v-for="(item, index) in appendixList"
             :key="index"
+            style="display: flex"
           >
-            <!-- 删除素材 -->
-            <div class="delItem" @click="delItem(index)">
-              <i class="el-icon-delete"></i>
+            <div class="qrcode">
+              二维码<span>{{ index + 1 }}:</span>
             </div>
-            <!-- 选择素材类型 -->
-            <div class="appendixType">
-              <span class="_t txt-28"> 选择素材类型 </span>
-              <el-radio-group
-                class="radio"
-                @change="appendixChange(index, $event)"
-                v-model="item.appendixType"
-              >
-                <el-radio label="图片"></el-radio>
-                <el-radio label="链接"></el-radio>
-              </el-radio-group>
-            </div>
-            <!-- 图片 -->
-            <template v-if="item.appendixType === '图片'">
-              <van-uploader
-                v-model="item.picList"
-                :max-count="1"
-                :max-size="2 * 1024 * 1024"
-                @oversize="onOversize"
-                :after-read="afterRead.bind(null, { index: index, data: item })"
-              />
-              <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
-              <div class="picTips marB-24">
-                建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
+            <div class="item marB-24 itemLablewarp">
+              <!-- 删除素材 -->
+              <div class="delItem" @click="delItem(index, item)">
+                <i class="el-icon-delete"></i>
               </div>
-            </template>
-            <!-- 链接 -->
-            <template v-if="item.appendixType === '链接'">
-              <el-input
-                class="marB-24"
-                v-model="item.href"
-                placeholder="链接地址请以http或https开头"
-              ></el-input>
-              <!-- <el-form ref="form" :model="item">
-                <el-form-item label="链接标题 :">
-                  <el-input
-                    v-model="item.hrefTitle"
-                    placeholder="请输入链接标题"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接摘要 :">
-                  <el-input
-                    v-model="item.hrefDesc"
-                    placeholder="请输入链接摘要"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接封面 :">
-                  <van-uploader v-model="item.hrefPic" :max-count="1" />
-                </el-form-item>
-              </el-form> -->
-            </template>
+
+              <template>
+                <van-uploader
+                  v-model="item.picList"
+                  :max-count="1"
+                  :max-size="2 * 1024 * 1024"
+                  @oversize="onOversize"
+                  :after-read="
+                    afterRead.bind(null, { index: index, data: item })
+                  "
+                />
+                <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
+                <div class="marB-24 picTipsyo">
+                  当前可加用户<span class="picTipsnum">{{ groupUserNum }}</span
+                  >人
+                </div>
+                <div class="selsctWarpList">
+                  <el-select
+                    v-model="item.labelTime"
+                    placeholder="请选择"
+                    @change="labelGroupList"
+                  >
+                    <el-option
+                      v-for="item in labelListTimeData"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.chatId"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
         <!-- 添加素材 -->
-        <div class="appendix-add-warp" v-if="this.appendixList.length < 9">
-          <button class="addAppendix-button" @click="addAppendix">
-            <i class="el-icon-circle-plus-outline"></i> 新增素材内容
-          </button>
-          <span class="add-tips" style="margin-left: 24px"
-            >（最多可添加<span>{{ this.appendixList.length }}</span
-            >/9个附件）</span
-          >
+        <div>
+          <div class="appendix-add-warp butaddWarp">
+            <button class="addAppendix-button NewAddList" @click="addAppendix">
+              <i class="el-icon-circle-plus-outline"></i> 新增素材内容
+            </button>
+          </div>
+          <p class="client_send">
+            实际发送客户数量:
+            <span class="sends_num">{{ fleltDatanum }}</span>
+            <span class="colordata">（已在群聊中的客户将不会收到邀请）</span>
+          </p>
         </div>
+
         <!-- 通知成员 -->
-        <div class="sendRequest" @click="sendRequest">通知成员发送</div>
+        <div class="sendRequest warpButtonSend" @click="sendRequest">
+          通知成员发送
+        </div>
       </div>
     </div>
     <!-- 日期、时间选择框 -->
@@ -353,8 +330,12 @@ export default {
       }
     };
     return {
-      minDate: new Date(),
-      loading: false,
+      FormData: {
+        sendMsg: "",
+      },
+      dataGroup: [],
+      labelListTimeData: [],
+      minDate: new Date(2021, 0, 1),
       yuangongPage: 1,
       yuangongLimit: 10,
       qunliaoPage: 1,
@@ -367,13 +348,14 @@ export default {
         sendRule: "",
         sendDate: "", // formatDate(new Date().getTime(), "yyyy-MM-dd"),
         sendTime: "", //formatDate(new Date().getTime(), "hh:mm"),
-        cusSex: "",
+        cusSex: null,
         chatGroup: "",
         includeCus: [],
         cusAddBeginTime: "", // formatDate(new Date().getTime(), "yyyy-MM-dd"),
         cusAddEndTime: "", //formatDate(new Date().getTime(), "yyyy-MM-dd"),
       },
       tagidList: [],
+      loading: false,
       rules: {
         // 表单规则
         taskName: [
@@ -387,6 +369,11 @@ export default {
           { required: true, message: "请选择发送规则", trigger: "change" },
         ],
         sendDateTime: [{ validator: validateSendDateTime, trigger: "change" }],
+      },
+      rulesCenter: {
+        sendMsg: [
+          { required: true, message: "请输入群引导语", trigger: "blur" },
+        ],
       },
       estimateCusNum: 0, // 预计客户数量
       staffsList: [
@@ -425,7 +412,7 @@ export default {
         //   hrefPic: [],
         // },
       ], // 素材列表
-
+      groupUserNum: 0,
       chooseDateTime: false, // 选择日期、时间
       activeChoose: "date", // date || time 当前点击的日期或者时间输入框
       sendDateTime: "", // 日期时间需要的值
@@ -439,6 +426,10 @@ export default {
       customerstagList: [],
       childTag: [],
       clueCustomerLists: [],
+      clueCustomerListsTo: [],
+      listAll: [],
+      fleltDatanum: 0,
+      groupListDataCopy: [],
       cusSignList: [
         // 客户标签列表
         {
@@ -480,8 +471,36 @@ export default {
   created() {
     this.getTagList(); //标签接口
     this.chooseCustomerMass(); //选择员工接口
+    this.getGroupInfoList();
   },
   methods: {
+    getGroupInfoList() {
+      this.$network
+        .get("/customer-service/tagEstablishGroup/chooseTagGroupSend")
+        .then((res) => {
+          this.labelListTimeData = res.data;
+          this.groupListDataCopy = res.data;
+          console.log(res);
+        });
+    },
+    tagFilterCustomers() {
+      this.$network
+        .post("/customer-service/tagEstablishGroup/tagFilterCustomers", {
+          clueCustomerList: this.clueCustomerLists,
+          groupList: this.listAll,
+        })
+        .then((res) => {
+          if (res.result) {
+            console.log(res);
+            this.clueCustomerListTo = res.data.clueCustomerList;
+            this.fleltDatanum = res.data.estimateNum;
+          } else {
+            Toast("预计发送客户数量不可为空");
+          }
+          // this.$set(this.fleltDatanum, "showDisabled", true);
+        });
+    },
+
     onOversize(file) {
       console.log(file);
       Toast("文件大小不能超过 2M");
@@ -495,18 +514,18 @@ export default {
       // this.yuangongPage++;
       // this.chooseCustomerMass();
     },
-    loadMoreGroup() {
-      console.log("+++");
-      this.qunliaoPage++;
-      this.groupStaffset();
-    },
+    // loadMoreGroup() {
+    //   console.log("+++");
+    //   this.qunliaoPage++;
+    //   // this.groupStaffset();
+    // },
     afterRead(obj, file) {
       this.loading = true;
       console.log(file, "------------");
       console.log(obj, "------------obj");
       let formData = new FormData();
       formData.append("file", file.file);
-      formData.append("type", "qunfa");
+      formData.append("type", "sop");
       formData.append("filetype", "image");
       let config = {
         headers: {
@@ -521,6 +540,8 @@ export default {
             console.log(res, "------------图片");
             obj.data.url = res.data.url;
             obj.data.objectname = res.data.objectname;
+          } else {
+            Toast("上传失败");
           }
 
           // this.listImgData.url = res.data.url;
@@ -534,6 +555,29 @@ export default {
     // 返回
     goBack() {
       this.$router.go(-1);
+    },
+
+    labelGroupList(value) {
+      console.log(value);
+
+      // console.log(this.labelListTimeData, "------");
+      this.listAll.push(value);
+      this.tagFilterCustomers();
+      this.labelListTimeData.forEach((item) => {
+        if (item.chatId == value) {
+          console.log(item.groupUserNum, "00000");
+          this.groupUserNum = item.groupUserNum;
+
+          console.log(item);
+        }
+      });
+      let tempList = JSON.parse(JSON.stringify(this.labelListTimeData));
+      tempList.forEach((item, index) => {
+        if (value == item.chatId) {
+          tempList.splice(index, 1);
+        }
+      });
+      this.labelListTimeData = tempList;
     },
     // 选择日期时间公共方法
     selectDateTime(type) {
@@ -610,7 +654,12 @@ export default {
       this.$set(this, "appendixList", appendixList);
     },
     // 删除某素材
-    delItem(index) {
+    delItem(index, item) {
+      this.groupListDataCopy.forEach((val) => {
+        if (val.chatId == item.labelTime) {
+          this.labelListTimeData.push(val);
+        }
+      });
       this.appendixList.splice(index, 1);
     },
     // 添加素材
@@ -625,6 +674,7 @@ export default {
         hrefTitle: "",
         hrefDesc: "",
         hrefPic: [],
+        labelTime: "",
       });
     },
     // 点击客户标签打开弹窗
@@ -702,7 +752,12 @@ export default {
         return {
           url: item.url,
           Objectname: item.objectname,
+          chatId: item.labelTime,
         };
+      });
+      this.dataGroup = [];
+      let templist = this.appendixList.forEach((item) => {
+        this.dataGroup.push(item.labelTime);
       });
       // this.appendixList.forEach(item =>{
       //   console.log(item.href)
@@ -713,47 +768,63 @@ export default {
       });
       console.log(this.urlList, "-------------this.urlList");
       this.$refs["form"].validate((valid) => {
-        // if (this.appendixList.length >= 1) {
-        //   Toast("请上传素材内容");
-        // } else {
-        if (valid) {
-          let params = {
-            taskName: this.baseForm.taskName,
-            massType: 1,
-            massContent: this.sendMsg,
-            userList: this.baseForm.staffs,
-            gender: this.baseForm.cusSex,
-            addStartTime: this.baseForm.cusAddBeginTime,
-            addEndTime: this.baseForm.cusAddEndTime,
-            groupList: this.baseForm.chatGroup || [],
-            lableList: this.highLightArr, //this.customerlistdata || [],
-            sendType: this.baseForm.sendRule,
-            sendTime: this.baseForm.sendDate + " " + this.baseForm.sendTime,
-            urlList: this.urlList,
-            allCustomer: this.baseForm.selectCusType,
-            fileList: list, //[this.listImgData], //this.listImg,
-            customerList: this.clueCustomerLists,
-          };
-
-          this.$network
-            .post(
-              "/customer-service/cluecustomerMass/addCustomerScreen",
-              params
-            )
-            .then((res) => {
-              console.log(res);
-              if (res.result) {
-                this.$router.push({ path: "/home" });
-                Notify({ type: "success", message: res.msg });
-              } else {
-                Notify({ type: "danger", message: res.msg });
-              }
+        this.$refs["form1"].validate((valid1) => {
+          if (this.fleltDatanum == 0) {
+            this.$confirm("当前选择客户为空,请检查客户筛选条件", "提示", {
+              confirmButtonText: "确定",
+              customClass: "clueConfirmClassLable",
+              type: "warning",
+            }).then(() => {
+              this.$message({
+                type: "error",
+                message: "请重新删选",
+              });
             });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-        // }
+          } else {
+            if (valid && valid1) {
+              let params = {
+                taskName: this.baseForm.taskName,
+                massType: "",
+                massContent: this.FormData.sendMsg,
+                userList: this.baseForm.staffs,
+                gender: this.baseForm.cusSex,
+                addStartTime: this.baseForm.cusAddBeginTime,
+                addEndTime: this.baseForm.cusAddEndTime,
+                groupList: this.dataGroup || [],
+                lableList: this.highLightArr, //this.customerlistdata || [],
+                sendType: this.baseForm.sendRule,
+                sendTime: this.baseForm.sendDate + " " + this.baseForm.sendTime,
+                urlList: [],
+                allCustomer: this.baseForm.selectCusType,
+                fileList: list, //[this.listImgData], //this.listImg,
+                customerList: this.clueCustomerListTo, //this.clueCustomerLists,
+              };
+
+              this.$network
+                .post(
+                  "/customer-service/tagEstablishGroup/addTagCustomerScreen",
+                  params
+                )
+                .then((res) => {
+                  console.log(res);
+                  if (res.result) {
+                    this.$router.push({ path: "/home" });
+                    Notify({ type: "success", message: res.msg });
+                  } else {
+                    Notify({ type: "danger", message: res.msg });
+                  }
+                });
+            } else {
+              console.log("error submit!!");
+              return false;
+            }
+          }
+          // if (this.appendixList.length >= 1) {
+          //   Toast("请上传素材内容");
+          // } else {
+
+          // }
+        });
       });
     },
     deepClone(o) {
@@ -811,7 +882,7 @@ export default {
     // 获取选择群发员工接口
     chooseCustomerMass() {
       this.$network
-        .get("/customer-service/cluecustomerMass/chooseCustomerMass", {
+        .get("/customer-service/tagEstablishGroup/chooseTagCustomerMass", {
           page: this.yuangongPage,
           limit: this.yuangongLimit,
         })
@@ -831,36 +902,36 @@ export default {
     staffsListChange(value) {
       console.log(value);
       this.baseForm.staffs = value;
-      this.groupStaffset();
+      // this.groupStaffset();
     },
-    groupStaffset(value) {
-      // let groutList = this.grouprst;
-      // if (value == false) {
-      this.$network
-        .post(
-          `/customer-service/cluecustomerMass/chooseCustomerGroup`,
-          // groutList
-          {
-            // params: {
-            page: this.qunliaoPage,
-            limit: this.qunliaoLimit,
-            userList: this.baseForm.staffs,
-            // },
-          }
-        )
-        .then((res) => {
-          console.log(res.data.groupList);
-          if (res.data.groupList == []) {
-          } else {
-            let tempList = res.data.groupList;
-            let cent = this.chatGroupList.concat(tempList);
-            console.log(cent);
-            this.chatGroupList = cent;
-          }
-          // this.chatGroupList = res.data.groupList;
-        });
-      // }
-    },
+    // groupStaffset(value) {
+    //   // let groutList = this.grouprst;
+    //   // if (value == false) {
+    //   this.$network
+    //     .post(
+    //       `/customer-service/cluecustomerMass/chooseCustomerGroup`,
+    //       // groutList
+    //       {
+    //         // params: {
+    //         page: this.qunliaoPage,
+    //         limit: this.qunliaoLimit,
+    //         userList: this.baseForm.staffs,
+    //         // },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       console.log(res.data.groupList);
+    //       if (res.data.groupList == []) {
+    //       } else {
+    //         let tempList = res.data.groupList;
+    //         let cent = this.chatGroupList.concat(tempList);
+    //         console.log(cent);
+    //         this.chatGroupList = cent;
+    //       }
+    //       // this.chatGroupList = res.data.groupList;
+    //     });
+    //   // }
+    // },
     // 选择群聊获取chatid
     chatGroupListChange(value) {
       console.log(value, "-----------选择群聊获取chatid");
@@ -870,7 +941,7 @@ export default {
     //筛选客户接口
     Screeningcustomer() {
       this.$network
-        .post("/customer-service/cluecustomerMass/customerScreen", {
+        .post("/customer-service/tagEstablishGroup/tagCustomerScreen", {
           userList: this.baseForm.staffs,
           gender: this.baseForm.cusSex, //性别
           addStarTime: this.baseForm.cusAddBeginTime,
@@ -879,9 +950,13 @@ export default {
           lableList: this.highLightArr, //this.customerlistdata || [],
         })
         .then((res) => {
-          console.log(res);
-          this.clueCustomerLists = res.data.clueCustomerList;
-          this.estimateCusNum = res.data.estimateNum;
+          if (res.result) {
+            console.log(res);
+            this.clueCustomerLists = res.data.clueCustomerList;
+            this.estimateCusNum = res.data.estimateNum;
+          } else {
+            Toast("请选择员工");
+          }
         });
     },
     // 选择客户
@@ -891,8 +966,7 @@ export default {
       if (value == 1) {
         this.Screeningcustomer();
       } else {
-        (this.baseForm.cusSex = ""), //性别
-          (this.baseForm.cusAddBeginTime = ""),
+        (this.baseForm.cusAddBeginTime = ""),
           (this.baseForm.cusAddEndTime = "");
         (this.baseForm.chatGroup = []),
           (this.customerlistdata = []),
@@ -921,18 +995,80 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.dataTimecss {
-  .el-input__suffix {
-    line-height: 82px;
-    .el-input__suffix-inner {
-      font-size: 30px;
-      // line-height: 20px;
-      margin-right: 50px;
-      // display: inline-block;
-      // line-height: 82px;
-    }
-  }
+.butaddWarp {
+  margin-bottom: 50px !important;
 }
+.picTipsnum {
+  display: inline-block;
+  font-size: 28px;
+  color: #3c4353;
+  letter-spacing: 0;
+  line-height: 40px;
+  font-weight: 400;
+  margin: 0 5px;
+}
+.picTipsyo {
+  font-size: 28px;
+  color: #838a9d;
+  letter-spacing: 0;
+  line-height: 40px;
+  font-weight: 400;
+  margin-top: 20px;
+}
+.qrcode {
+  margin-left: 60px;
+  margin-right: 20px;
+  font-size: 28px;
+  color: #3c4353;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.itemLablewarp {
+  width: 510px;
+  padding: 30px 20px 0 !important;
+}
+.selsctWarpList {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  width: 200px;
+}
+.warpButtonSend {
+  width: 702px;
+}
+.NewAddList {
+  margin-left: 180px;
+}
+.client_send {
+  font-size: 14px;
+  color: #3c4353;
+  letter-spacing: 0;
+  font-weight: 400;
+  padding-bottom: 160px;
+}
+.sends_num {
+  font-size: 14px;
+  color: #4168f6;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.colordata {
+  font-size: 14px;
+  color: #c0c4cc;
+}
+
+// .dataTimecss {
+//   .el-input__suffix {
+//     line-height: 82px;
+//     .el-input__suffix-inner {
+//       font-size: 30px;
+//       // line-height: 20px;
+//       margin-right: 50px;
+//       // display: inline-block;
+//       // line-height: 82px;
+//     }
+//   }
+// }
 // .tamedata {
 //   /deep/.el-form-item__content {
 //     .el-input {
@@ -957,6 +1093,20 @@ export default {
 //     border: 1px solid #5e5f61;
 //   }
 // }
+.centerListTime {
+  /deep/ .el-form-item {
+    .el-form-item__label {
+      // margin-left: 60px;
+    }
+    .el-form-item__content {
+      width: 520px;
+      margin-left: 180px !important;
+      .el-input__count {
+        bottom: -80px;
+      }
+    }
+  }
+}
 
 .el-select {
   .el-tag--small {
@@ -1003,7 +1153,7 @@ export default {
   .marR-24 {
     margin-right: 24px;
   }
-  .headerTitle {
+  .headerTitleList {
     background: #fff;
     padding: 0 24px;
     font-weight: 600;
@@ -1014,6 +1164,7 @@ export default {
     color: #3c4353;
     border-top: 1px solid #f0f2f7;
     border-bottom: 1px solid #f0f2f7;
+
     .backPage {
       width: 150px;
       .van-icon {
@@ -1028,418 +1179,421 @@ export default {
       padding-left: 135px !important;
       // text-align: center;
     }
-  }
-  .choose-cus-popup {
-    border-radius: 16px 16px 0 0;
-    ._top {
-      display: flex;
-      align-items: center;
-      box-sizing: border-box;
-      padding: 0 24px;
-      justify-content: space-between;
-      height: 88px;
-      background: #fafbff;
+
+    .choose-cus-popup {
       border-radius: 16px 16px 0 0;
-      line-height: 88px;
-      text-align: center;
-      font-size: 28px;
-      color: #3c4353;
-      letter-spacing: 0;
-      text-align: center;
-      font-weight: 500;
-      position: relative;
-      border-bottom: 1px solid #f0f2f7;
-      .fill {
-        width: 30px;
-        height: 30px;
+      ._top {
         display: flex;
         align-items: center;
-        font-size: 32px;
-      }
-    }
-    ._center {
-      box-sizing: border-box;
-      padding: 24px;
-      min-height: 740px;
-      ._item {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 12px;
-        .group-title {
-          height: 68px;
-          line-height: 68px;
-          width: 112px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 28px;
-          color: #3c4353;
-          font-weight: 500;
-          margin-right: 32px;
-        }
-        .group-label {
-          flex: 1;
-          display: flex;
-          flex-wrap: wrap;
-          .label-item {
-            box-sizing: border-box;
-            margin-bottom: 16px;
-            height: 68px;
-            background: #fafbff;
-            border: 1px solid #d9dae4;
-            border-radius: 8px;
-            line-height: 68px;
-            padding: 0 16px;
-            font-size: 28px;
-            color: #838a9d;
-            font-weight: 400;
-            margin-right: 16px;
-            &.active {
-              background: #4168f6;
-              border: 1px solid !important;
-              color: #fff;
-            }
-          }
-        }
-      }
-    }
-    ._bottom {
-      padding: 0 24px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      ._button {
-        width: calc((100% - 24px) / 2);
-        height: 80px;
         box-sizing: border-box;
-        line-height: 80px;
-        font-size: 28px;
+        padding: 0 24px;
+        justify-content: space-between;
+        height: 88px;
+        background: #fafbff;
+        border-radius: 16px 16px 0 0;
+        line-height: 88px;
         text-align: center;
-        border-radius: 8px;
-        font-weight: 400;
-        &.cancel {
-          border: 1px solid #4168f6;
-          color: #4168f6;
-        }
-        &.save {
-          color: #fff;
-          background: #4168f6;
-        }
-      }
-    }
-  }
-  .van-picker__toolbar {
-    height: 88px;
-    .van-picker__cancel,
-    .van-picker__confirm,
-    .van-picker__title {
-      font-size: 28px;
-    }
-    .van-picker__title {
-      line-height: 88px;
-      height: 88px;
-    }
-  }
-  .warp_box {
-    height: 100%;
-    background: #fff;
-    box-sizing: border-box;
-    padding: 24px 12px;
-    .el-radio-group {
-      .el-radio {
-        line-height: 28px;
-      }
-      .el-radio__input {
-        .el-radio__inner {
-          width: 28px;
-          height: 28px;
-          &::after {
-            width: 10px;
-            height: 10px;
-          }
-        }
-      }
-      .el-radio__label {
-        font-size: 28px;
-      }
-    }
-    .el-input__inner,
-    .el-radio-button__inner,
-    .el-radio-group {
-      height: 80px;
-      line-height: 80px;
-      font-size: 28px;
-      &.el-input__inner .el-input__suffix {
-        .el-input__count {
-          font-size: 28px !important;
-          color: #c0c4cc;
-        }
-      }
-    }
-    .filterCus {
-      padding: 24px 0;
-      padding-right: 12px;
-      margin-bottom: 30px;
-      box-sizing: border-box;
-      border: 1px solid #d9dae4;
-      background-color: #fafbff;
-      border-radius: 8px;
-    }
-    .el-form-item {
-      margin-bottom: 40px;
-      .el-form-item__label {
-        line-height: 80px;
-        font-size: 28px;
-        width: 155px;
-        white-space: nowrap;
-      }
-      .el-form-item__content {
-        margin-left: 155px;
-        font-size: 28px;
-        .el-select__tags {
-          .el-tag--small {
-            height: 48px;
-            padding: 0 16px;
-            line-height: 48px;
-            background-color: #fafbff;
-            border-color: #d9dae4;
-          }
-          .el-tag {
-            &:first-child {
-              margin-left: 16px;
-            }
-          }
-          .el-tag .el-icon-close {
-            width: 28px;
-            height: 28px;
-            background: transparent;
-            &::before {
-              color: #c0c4cc;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
-        }
-      }
-      .selectDate {
-        width: 307px;
-      }
-    }
-    .group-setting,
-    .group-content {
-      .title {
-        padding-left: 20px;
-        position: relative;
-        height: 40px;
-        font-family: PingFangSC-Medium !important;
         font-size: 28px;
         color: #3c4353;
         letter-spacing: 0;
+        text-align: center;
         font-weight: 500;
-        line-height: 40px;
-        &::before {
-          content: "";
-          display: block;
-          width: 8px;
-          height: 28px;
-          background-color: #4168f6;
-          left: 0;
-          top: 50%;
-          margin-top: -14px;
-          position: absolute;
+        position: relative;
+        border-bottom: 1px solid #f0f2f7;
+        .fill {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          font-size: 32px;
         }
       }
-    }
-    .group-setting {
-      .title {
-        margin-bottom: 24px;
-      }
-    }
-    .group-content {
-      .title {
-        margin-bottom: 12px;
-      }
-      .tips {
-        padding-left: 20px;
+      ._center {
         box-sizing: border-box;
-        display: flex;
-        margin-bottom: 24px;
-        span {
-          display: block;
-          font-size: 24px;
-          color: #c0c4cc;
-          letter-spacing: 0;
-          font-weight: 400;
-          line-height: 32px;
-          &:first-child {
+        padding: 24px;
+        min-height: 740px;
+        ._item {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 12px;
+          .group-title {
+            height: 68px;
+            line-height: 68px;
+            width: 112px;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
+            font-size: 28px;
+            color: #3c4353;
+            font-weight: 500;
+            margin-right: 32px;
+          }
+          .group-label {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            .label-item {
+              box-sizing: border-box;
+              margin-bottom: 16px;
+              height: 68px;
+              background: #fafbff;
+              border: 1px solid #d9dae4;
+              border-radius: 8px;
+              line-height: 68px;
+              padding: 0 16px;
+              font-size: 28px;
+              color: #838a9d;
+              font-weight: 400;
+              margin-right: 16px;
+              &.active {
+                background: #4168f6;
+                border: 1px solid !important;
+                color: #fff;
+              }
+            }
           }
         }
       }
-      .el-textarea__inner {
-        padding: 24px;
-        font-size: 28px;
-        line-height: 30px;
-        min-height: 400px !important;
-      }
-      .appendix-list {
-        .item {
-          padding: 0 24px;
+      ._bottom {
+        padding: 0 24px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        ._button {
+          width: calc((100% - 24px) / 2);
+          height: 80px;
           box-sizing: border-box;
+          line-height: 80px;
+          font-size: 28px;
+          text-align: center;
           border-radius: 8px;
-          border: 1px solid #d9dae4;
-          position: relative;
-          .appendixType {
-            display: flex;
-            align-items: center;
-            ._t {
-              margin-right: 24px;
+          font-weight: 400;
+          &.cancel {
+            border: 1px solid #4168f6;
+            color: #4168f6;
+          }
+          &.save {
+            color: #fff;
+            background: #4168f6;
+          }
+        }
+      }
+    }
+    .van-picker__toolbar {
+      height: 88px;
+      .van-picker__cancel,
+      .van-picker__confirm,
+      .van-picker__title {
+        font-size: 28px;
+      }
+      .van-picker__title {
+        line-height: 88px;
+        height: 88px;
+      }
+    }
+    .warp_box {
+      height: 100%;
+      background: #fff;
+      box-sizing: border-box;
+      padding: 24px 12px;
+      .el-radio-group {
+        .el-radio {
+          line-height: 28px;
+        }
+        .el-radio__input {
+          .el-radio__inner {
+            width: 28px;
+            height: 28px;
+            &::after {
+              width: 10px;
+              height: 10px;
             }
           }
-          .delItem {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            font-size: 32px;
+        }
+        .el-radio__label {
+          font-size: 28px;
+        }
+      }
+      .el-input__inner,
+      .el-radio-button__inner,
+      .el-radio-group {
+        height: 80px;
+        line-height: 80px;
+        font-size: 28px;
+        &.el-input__inner .el-input__suffix {
+          .el-input__count {
+            font-size: 28px !important;
+            color: #c0c4cc;
           }
-          .van-uploader {
-            .van-uploader__upload,
-            .van-uploader__preview {
-              margin: 0 24px 0 0;
+        }
+      }
+      .filterCus {
+        padding: 24px 0;
+        padding-right: 12px;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+        border: 1px solid #d9dae4;
+        background-color: #fafbff;
+        border-radius: 8px;
+      }
+      .el-form-item {
+        margin-bottom: 40px;
+        /deep/ .el-form-item__label {
+          line-height: 80px;
+          font-size: 28px;
+          width: 155px;
+          white-space: nowrap;
+        }
+        .el-form-item__content {
+          margin-left: 155px;
+          font-size: 28px;
+          .el-select__tags {
+            .el-tag--small {
+              height: 48px;
+              padding: 0 16px;
+              line-height: 48px;
+              background-color: #fafbff;
+              border-color: #d9dae4;
             }
-            .van-uploader__upload,
-            .van-uploader__preview .van-uploader__preview-image {
-              width: 182px;
-              height: 182px;
+            .el-tag {
+              &:first-child {
+                margin-left: 16px;
+              }
             }
-            .van-uploader__upload-icon {
-              font-size: 36px;
-            }
-
-            .van-uploader__preview-delete {
+            .el-tag .el-icon-close {
               width: 28px;
               height: 28px;
-              height: 28px;
-              border: 2px solid #d9dae4;
-              // border-radius: 100%;
-              top: -14px;
-              right: -14px;
-              background-color: #fff;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              //               align-items: content;
-              //               justify-content: center;
-              // background-image: url("../../images/dele.png");
-              // background-size: contain;
-              // background-repeat: no-repeat;
-            }
-            //
-            .van-icon-cross:before {
-              font-size: 34px;
-              position: relative;
-              right: -6px !important;
-              top: -6px !important;
-              color: #d9dae4;
+              background: transparent;
+              &::before {
+                color: #c0c4cc;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
             }
           }
-          .picTips {
-            margin-top: 24px;
+        }
+        .selectDate {
+          width: 307px;
+        }
+      }
+      .group-setting,
+      .group-content {
+        .title {
+          padding-left: 20px;
+          position: relative;
+          height: 40px;
+          font-family: PingFangSC-Medium !important;
+          font-size: 28px;
+          color: #3c4353;
+          letter-spacing: 0;
+          font-weight: 500;
+          line-height: 40px;
+          &::before {
+            content: "";
+            display: block;
+            width: 8px;
+            height: 28px;
+            background-color: #4168f6;
+            left: 0;
+            top: 50%;
+            margin-top: -14px;
+            position: absolute;
+          }
+        }
+      }
+      .group-setting {
+        .title {
+          margin-bottom: 24px;
+        }
+      }
+      .group-content {
+        .title {
+          margin-bottom: 12px;
+        }
+        .tips {
+          padding-left: 20px;
+          box-sizing: border-box;
+          display: flex;
+          margin-bottom: 24px;
+          span {
+            display: block;
             font-size: 24px;
             color: #c0c4cc;
             letter-spacing: 0;
             font-weight: 400;
+            line-height: 32px;
+            &:first-child {
+              white-space: nowrap;
+            }
           }
         }
-      }
-      .appendix-add-warp {
-        margin-bottom: 103px;
-        display: flex;
-        align-items: center;
-        .addAppendix-button {
-          padding: 0 24px;
-          box-sizing: border-box;
-          height: 68px;
-          background: rgba(65, 104, 246, 0.04);
-          border: 1px solid #4168f6;
-          border-radius: 8px;
-          line-height: 68px;
+        .el-textarea__inner {
+          padding: 24px;
+          font-size: 28px;
+          line-height: 30px;
+          min-height: 400px !important;
+          width: 530px !important;
+          margin-left: 20px;
+        }
+        .appendix-list {
+          .item {
+            padding: 0 24px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #d9dae4;
+            position: relative;
+            .appendixType {
+              display: flex;
+              align-items: center;
+              ._t {
+                margin-right: 24px;
+              }
+            }
+            .delItem {
+              position: absolute;
+              top: 24px;
+              right: 24px;
+              font-size: 32px;
+            }
+            .van-uploader {
+              .van-uploader__upload,
+              .van-uploader__preview {
+                margin: 0 24px 0 0;
+              }
+              .van-uploader__upload,
+              .van-uploader__preview .van-uploader__preview-image {
+                width: 182px;
+                height: 182px;
+              }
+              .van-uploader__upload-icon {
+                font-size: 36px;
+              }
+
+              .van-uploader__preview-delete {
+                width: 28px;
+                height: 28px;
+                height: 28px;
+                border: 2px solid #d9dae4;
+                // border-radius: 100%;
+                top: -14px;
+                right: -14px;
+                background-color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                //               align-items: content;
+                //               justify-content: center;
+                // background-image: url("../../images/dele.png");
+                // background-size: contain;
+                // background-repeat: no-repeat;
+              }
+              //
+              .van-icon-cross:before {
+                font-size: 34px;
+                position: relative;
+                right: -6px !important;
+                top: -6px !important;
+                color: #d9dae4;
+              }
+            }
+
+            .picTips {
+              margin-top: 24px;
+              font-size: 24px;
+              color: #c0c4cc;
+              letter-spacing: 0;
+              font-weight: 400;
+            }
+          }
+        }
+        .appendix-add-warp {
+          display: flex;
+          align-items: center;
+          .addAppendix-button {
+            padding: 0 24px;
+            box-sizing: border-box;
+            height: 68px;
+            background: rgba(65, 104, 246, 0.04);
+            border: 1px solid #4168f6;
+            border-radius: 8px;
+            line-height: 68px;
+            font-size: 28px;
+            color: #4168f6;
+            letter-spacing: 0;
+            font-weight: 400;
+          }
+          .add-tips {
+            font-size: 28px;
+            color: #c0c4cc;
+          }
+        }
+        .el-button {
+          padding: 14px 24px;
           font-size: 28px;
           color: #4168f6;
-          letter-spacing: 0;
-          font-weight: 400;
+          border-color: #4168f6;
         }
-        .add-tips {
+        .sendRequest {
+          height: 80px;
+          width: 702px;
+          background: #4168f6;
+          border-radius: 8px;
+          line-height: 80px;
+          text-align: center;
+          border-radius: 8px;
           font-size: 28px;
-          color: #c0c4cc;
+          color: #ffffff;
+          display: block;
+          // margin: 0 auto;
+          position: fixed;
+          left: 50%;
+          bottom: 20px;
+          transform: translate(-50%);
         }
       }
-      .el-button {
-        padding: 14px 24px;
-        font-size: 28px;
-        color: #4168f6;
-        border-color: #4168f6;
-      }
-      .sendRequest {
-        height: 80px;
-        width: 702px;
-        background: #4168f6;
-        border-radius: 8px;
-        line-height: 80px;
-        text-align: center;
-        border-radius: 8px;
-        font-size: 28px;
-        color: #ffffff;
-        display: block;
-        // margin: 0 auto;
-        position: fixed;
-        left: 50%;
-        bottom: 20px;
-        transform: translate(-50%);
-      }
     }
-  }
-  .select-custom-sign-wrap {
-    width: 100%;
-    min-height: 80px;
-    box-sizing: border-box;
-    background: #ffffff;
-    border: 2px solid #d9dae4 !important;
-    color: #c0c4cc;
-    border-radius: 5px;
-    padding: 10px 30px 10px 15px;
-    position: relative;
-    display: flex !important;
-    align-items: center;
-    flex-wrap: wrap;
-    .item {
-      padding: 8px 16px;
-      background: #fafbff;
-      height: 48px;
+    .select-custom-sign-wrap {
+      width: 100%;
+      min-height: 80px;
       box-sizing: border-box;
-      border: 1px solid #d9dae4;
-      border-radius: 8px;
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      color: #838a9d;
-      line-height: 32px;
-      font-weight: 400;
-      margin-right: 8px;
-      .el-icon-close {
-        margin-left: 9px;
-      }
-    }
-    &::before {
-      content: "\e6e1";
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translateY(-50%) rotateZ(180deg);
-      font-size: 12px;
+      background: #ffffff;
+      border: 2px solid #d9dae4 !important;
       color: #c0c4cc;
+      border-radius: 5px;
+      padding: 10px 30px 10px 15px;
+      position: relative;
+      display: flex !important;
+      align-items: center;
+      flex-wrap: wrap;
+      .item {
+        padding: 8px 16px;
+        background: #fafbff;
+        height: 48px;
+        box-sizing: border-box;
+        border: 1px solid #d9dae4;
+        border-radius: 8px;
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #838a9d;
+        line-height: 32px;
+        font-weight: 400;
+        margin-right: 8px;
+        .el-icon-close {
+          margin-left: 9px;
+        }
+      }
+      &::before {
+        content: "\e6e1";
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%) rotateZ(180deg);
+        font-size: 12px;
+        color: #c0c4cc;
+      }
     }
   }
 }
