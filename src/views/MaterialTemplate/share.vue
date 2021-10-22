@@ -7,8 +7,8 @@
                 <li class="company one-txt-cut">{{ userData.departments }}</li>
             </ul>
             <div class="right" @click="showWechat">
-                <img src="../../images/wechat.png" alt="">
-                <span>加微信</span>
+                <img src="../../images/icon_qiwei.png" alt="">
+                <span>加企业微信</span>
             </div>
         </div>
 
@@ -16,13 +16,16 @@
             <h2 class="title">{{formData.title}}</h2>
             <div v-if="formData.author || formData.pushTime" class="info">
                 <span class="author">{{formData.author}}</span>
-                <span class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
+                <span v-if="formData.isTimeShow" class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
             </div>
             <p class="content" v-html="formData.content"></p>
         </template>
 
         <template v-if="materialType == 2">
-            <iframe class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
+            <div v-if="formData.imageRelList && formData.imageRelList.length" class="file-img-box">
+                <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
+            </div>
+            <iframe v-else class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe>
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
@@ -31,7 +34,7 @@
 <script>
 import { OffiAccount, UsersInfo, MaterialOperation, ArticleDetail, SaleDocumentDetail } from "../../config/api"
 
-import { isWeiXin, getCode, formatDate, parseQueryString } from "../../utils/tool"
+import { isWeiXin, getCode, formatDate, wxShare, byteConvert } from "../../utils/tool"
 
 import WechatQrcode from "../../components/MaterialTemplate/wechatQrcode"
 
@@ -41,25 +44,18 @@ export default {
         return {
             userData: null,
             formData: {},
-            openId: '',
+            unionId: '',
             materialId: '',
             materialType: '',
-            userNo: '',
-            hrefLocation: ''
+            userNo: ''
         }
     },
-    beforeRouteEnter(to, from, next) {
-        sessionStorage.setItem("MATERIALTEMPLATE_HREF", window.location.href)
-        next()
-    },
     created() {
-        this.hrefLocation = sessionStorage.getItem("MATERIALTEMPLATE_HREF")
-
         if (isWeiXin()) {
             // 微信授权
             this.wechatLoad()
         }
-        const { materialId, type, userNo } = parseQueryString(this.hrefLocation)
+        const { materialId, type, userNo } = this.$route.query
 
         this.materialId = materialId
         this.materialType = type
@@ -72,7 +68,7 @@ export default {
         wechatLoad(){
             let { code } = this.$route.query
             if(!code) {
-                getCode(encodeURIComponent(this.hrefLocation))
+                getCode(encodeURIComponent(window.location.href))
             } else {
                 this.offiAccount(code)
             }
@@ -81,7 +77,7 @@ export default {
             OffiAccount(wechatCode).then(res => {
                 const { code, data } = res
                 if (code === 'success') {
-                    this.openId = data
+                    this.unionId = data
                     this.materialOperation()
                 }
             })
@@ -91,14 +87,16 @@ export default {
                 materialId: this.materialId,
                 model: {
                     materialType: this.materialType,
-                    openId: this.openId
+                    unionId: this.unionId
                 }
             }
 
             MaterialOperation(params).then(res => {
-                setTimeout(() => {
-                    this.materialOperation(params)
-                }, 5000)
+                if (res && res.code == 'success') {
+                    setTimeout(() => {
+                        this.materialOperation(params)
+                    }, 5000)
+                }
             })
         },
         getUsersInfo() {
@@ -122,10 +120,29 @@ export default {
                 const { code, data, msg } = res
                 if (code === 'success') {
                     this.formData = data
+                    this.doWxShare()
                 } else {
                     this.$toast(msg)
                 }
             })
+        },
+        doWxShare() {
+            let shareTitle = '', url = window.location.href, imgUrl = '', desc = ''
+
+            if (this.materialType == 1) {
+                let {title, cover, contentAbstract} = this.formData
+
+                shareTitle = title
+                imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_article.png'
+                desc = contentAbstract
+            } else if (this.materialType == 2) {
+                let {name, cover, fileSize} = this.formData
+
+                shareTitle = name
+                imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'
+                desc = fileSize ? byteConvert(fileSize) : ''
+            }
+            wxShare(shareTitle, url, imgUrl, desc)
         },
         formatDate,
         showWechat() {
@@ -162,7 +179,7 @@ export default {
             }
             .center {
                 display: inline-block;
-                max-width: 68%;
+                max-width: 60%;
                 vertical-align: middle;
                 .name {
                     color: #3C4353;
@@ -175,7 +192,7 @@ export default {
                 }
             }
             .right {
-                width: 72px;
+                width: 130px;
                 text-align: center;
                 position: absolute;
                 right: 27px;
@@ -194,6 +211,7 @@ export default {
         }
         .title {
             margin: 0 0 28px;
+            word-break: break-all;
             font-size: 44px;
         }
         .info {
@@ -215,14 +233,34 @@ export default {
             word-break: break-all;
             font-size: 30px;
             img {
-                width: auto;
-                height: auto;
-                max-width: 100%;
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
             }
         }
         .file-box {
             min-height: 100vh;
             border: none;
+        }
+        .file-img-box {
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+            .item {
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+</style>
+<style lang="less">
+    .material-template {
+        .content {
+            img {
+                width: auto !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
         }
     }
 </style>

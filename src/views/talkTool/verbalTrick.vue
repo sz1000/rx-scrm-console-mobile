@@ -30,20 +30,27 @@
             </div>
           </div>
         </div> -->
+        <!-- sop提醒  -->
+        <div class="sop_wrap">
+          <div class="sop_notice" v-if="popupList && popupList.length > 0">
+            <img class="icon" src="../../images/bell.png" alt="" />
+            <div class="label">{{sopType}}</div>
+            <div class="val">{{popupList.length}}条消息待发送</div>
+            <div class="r_box" @click="showPopup">
+              <span class="btn">查看</span>
+              <img class="s_icon" src="@/assets/images/icon_down.png" alt="" />
+            </div>
+          </div>
+        </div>
         <!-- tabMenu -->
         <div class="top-message">
-          <img src="../../images/bell.png"
-              alt="" />
+          <img src="../../images/bell.png" alt="" />
           <span>如需新增话术请至电脑端修改</span>
         </div>
         <div class="tabMenu">
           <div class="tabBtn">
-            <span :class="{ active: tabClick == 1 }"
-                  class="mycule"
-                  @click="myclue(1)">个人话术</span>
-            <span :class="{ active: tabClick == 2 }"
-                  class="mycule"
-                  @click="myclue(2)">公共话术</span>
+            <span :class="{ active: tabClick == 1 }" class="mycule" @click="myclue(1)">个人话术</span>
+            <span :class="{ active: tabClick == 2 }" class="mycule" @click="myclue(2)">公共话术</span>
           </div>
           <!-- <span class="addBtn" @click="newaddClick">
             <img src="../../images/icon_add@2x.png" alt="" />
@@ -61,26 +68,18 @@
         </div> -->
         <!-- 添加分组-->
         <div class="newgrouping">
-          <img class="newgrp-img"
-              src="../../images/iconadd.png"
-              alt="" />
-          <span class="add-grp"
-                @click="addGroups(tabClick)">添加分组</span>
+          <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
+          <span class="add-grp" @click="addGroups(tabClick)">添加分组</span>
         </div>
         <!-- 列表 -->
         <ul class="tree-box">
           <!-- 最外层 一级 -->
-          <li v-for="(parent, index) in treeData"
-              :key="index"
-              class="all-group">
+          <li v-for="(parent, index) in treeData" :key="index" class="all-group">
             <div class="tree-header">
               <div class="header-left">
-                <i class="el-icon-caret-right"
-                  v-show="!parent.isOpen"></i>
-                <i class="el-icon-caret-bottom"
-                  v-show="parent.isOpen"></i>
-                <span class="header-name"
-                      @click="groupNameList(parent, index)">{{
+                <i class="el-icon-caret-right" v-show="!parent.isOpen"></i>
+                <i class="el-icon-caret-bottom" v-show="parent.isOpen"></i>
+                <span class="header-name" @click="groupNameList(parent, index)">{{
                   parent.name
                 }}</span>
               </div>
@@ -97,39 +96,30 @@
             </ul>
           </div> -->
             </div>
-            <div class="tree-body"
-                v-show="parent.isOpen">
+            <div class="tree-body" v-show="parent.isOpen">
               <!-- 第二级 -->
               <ul class="child-box">
-                <li v-for="(child, childidx) in parent.children"
-                    :key="childidx">
+                <li v-for="(child, childidx) in parent.children" :key="childidx">
                   <div class="tree-header">
                     <div class="header-left child-title">
-                      <i class="el-icon-caret-right"
-                        v-show="!child.isOpen"></i>
-                      <i class="el-icon-caret-bottom"
-                        v-show="child.isOpen"></i>
+                      <i class="el-icon-caret-right" v-show="!child.isOpen"></i>
+                      <i class="el-icon-caret-bottom" v-show="child.isOpen"></i>
                       <span class="header-name"
                             @click="groupNameList(child, index)">{{ child.name }}</span>
                     </div>
-                    <div class="header-r"
-                        v-show="moreSet == child.id">
+                    <div class="header-r" v-show="moreSet == child.id">
                       <div @click="moreDot(child)">
-                        <img style="width: 28px; height: 28px"
-                            src="../../images/icon_more@2x.png"
-                            alt="" />
+                        <img style="width: 28px; height: 28px" src="../../images/icon_more@2x.png"
+                             alt="" />
                       </div>
-                      <ul class="listAlat-box"
-                          v-if="listTite">
+                      <ul class="listAlat-box" v-if="listTite">
                         <li @click="rechristen(child)">重命名</li>
                         <li @click="openDelete(child)">删除</li>
                       </ul>
                     </div>
                   </div>
                   <ul v-show="child.isOpen">
-                    <li v-for="(oneitem, oneidx) in child.items"
-                        :key="oneidx"
-                        class="word-box">
+                    <li v-for="(oneitem, oneidx) in child.items" :key="oneidx" class="word-box">
                       <div class="group-box">
                         <!-- <img class="group_img"
                             src="../../images/group.png"
@@ -138,14 +128,11 @@
                         <span class="word-title">{{ oneitem.title }}</span>
                       </div>
                       <div class="word-list">
-                        <div v-for="(list, lidx) in oneitem.contentList"
-                            :key="lidx"
-                            class="slot-box">
+                        <div v-for="(list, lidx) in oneitem.contentList" :key="lidx"
+                             class="slot-box">
                           <div class="text_img">
-                            <img class="share_img"
-                                src="../../images/share_two@2x.png"
-                                alt=""
-                                @click="firstShare(list)" />
+                            <img class="share_img" src="../../images/share_two@2x.png" alt=""
+                                 @click="firstShare(list)" />
 
                             <div class="text-value">
                               {{ list.value }}
@@ -155,41 +142,32 @@
                       </div>
                     </li>
                   </ul>
-                  <div class="tree-body"
-                      v-show="child.isOpen">
+                  <div class="tree-body" v-show="child.isOpen">
                     <!-- 第三级 -->
                     <ul class="child-box">
-                      <li v-for="(grandson, grandindex) in child.children"
-                          :key="grandindex"
+                      <li v-for="(grandson, grandindex) in child.children" :key="grandindex"
                           class="word-box">
                         <div class="tree-header">
                           <div class="header-left three-title">
-                            <i class="el-icon-caret-right"
-                              v-show="!grandson.isOpen"></i>
-                            <i class="el-icon-caret-bottom"
-                              v-show="grandson.isOpen"></i>
+                            <i class="el-icon-caret-right" v-show="!grandson.isOpen"></i>
+                            <i class="el-icon-caret-bottom" v-show="grandson.isOpen"></i>
                             <span class="header-name"
                                   @click="groupNameList(grandson, index)">{{ grandson.name }}</span>
                           </div>
-                          <div class="header-r"
-                              v-show="moreSet == grandson.id">
+                          <div class="header-r" v-show="moreSet == grandson.id">
                             <div @click="moreDot(grandson)">
                               <img style="width: 28px; height: 28px"
-                                  src="../../images/icon_more@2x.png"
-                                  alt="" />
+                                   src="../../images/icon_more@2x.png" alt="" />
                             </div>
-                            <ul class="listAlat-box"
-                                v-if="listTite">
+                            <ul class="listAlat-box" v-if="listTite">
                               <li @click="rechristen(grandson)">重命名</li>
                               <li @click="openDelete(grandson)">删除</li>
                             </ul>
                           </div>
                         </div>
-                        <div class="tree-body"
-                            v-show="grandson.isOpen">
+                        <div class="tree-body" v-show="grandson.isOpen">
                           <ul>
-                            <li v-for="(grandword, grandidx) in grandson.items"
-                                :key="grandidx"
+                            <li v-for="(grandword, grandidx) in grandson.items" :key="grandidx"
                                 class="word-box">
                               <div class="group-box">
                                 <!-- <img class="group_img"
@@ -201,14 +179,11 @@
                                 }}</span>
                               </div>
                               <div class="word-list">
-                                <div v-for="(list, lidx) in grandword.contentList"
-                                    :key="lidx"
-                                    class="slot-box">
+                                <div v-for="(list, lidx) in grandword.contentList" :key="lidx"
+                                     class="slot-box">
                                   <div class="text_img">
-                                    <img class="share_img"
-                                        src="../../images/share_two@2x.png"
-                                        alt=""
-                                        @click="firstShare(list)" />
+                                    <img class="share_img" src="../../images/share_two@2x.png"
+                                         alt="" @click="firstShare(list)" />
 
                                     <div class="text-value">
                                       {{ list.value }}
@@ -229,64 +204,46 @@
         </ul>
       </div>
       <!-- 新建分组 -->
-      <van-action-sheet v-model="newshow"
-                        title="新建分组">
+      <van-action-sheet v-model="newshow" title="新建分组">
         <div class="content">
           <div class="codeDetail">
             <div class="select-Tree">
               <span class="groupname"><span style="color: red">*</span> 上级分组:</span>
-              <SelectTree :options="optionSelect"
-                          v-model="value"
-                          :multiple="false"
-                          :searchable="false"
-                          placeholder="请选择分组"
-                          :normalizer="normalizer"
+              <SelectTree :options="optionSelect" v-model="value" :multiple="false"
+                          :searchable="false" placeholder="请选择分组" :normalizer="normalizer"
                           @select="changeSelect">
-                <label slot="option-label"
-                      slot-scope="{ node }"
-                      class="labelClassName">
-                  <img src="../../images/wenjian.png"
-                      alt=""
-                      style="width: 14px; height: 12px" />
+                <label slot="option-label" slot-scope="{ node }" class="labelClassName">
+                  <img src="../../images/wenjian.png" alt="" style="width: 14px; height: 12px" />
                   <span class="nodeName">{{ node.label }}</span>
                 </label>
               </SelectTree>
             </div>
             <div class="input_text">
               <span class="groupname"><span style="color: red">*</span> 分组名称:</span>
-              <el-input v-model="groupingName"
-                        placeholder="请输入内容"
-                        maxlength="20"
-                        show-word-limit></el-input>
+              <el-input v-model="groupingName" placeholder="请输入内容" maxlength="20" show-word-limit>
+              </el-input>
             </div>
             <div class="buttonWarp">
-              <span class="cancel"
-                    @click="cancel">取消</span>
-              <span class="save"
-                    @click="saveBut">保存</span>
+              <span class="cancel" @click="cancel">取消</span>
+              <span class="save" @click="saveBut">保存</span>
             </div>
           </div>
         </div>
       </van-action-sheet>
       <!-- 重命名 -->
-      <van-action-sheet v-model="rename"
-                        title="重命名">
+      <van-action-sheet v-model="rename" title="重命名">
         <div class="content">
           <div class="codeDetail">
             <div class="select-Tree"></div>
             <div class="input_text">
               <span class="groupname"><span style="color: red">*</span> 重命名:</span>
 
-              <el-input v-model="wordTitle"
-                        placeholder="请输入内容"
-                        maxlength="20"
-                        show-word-limit></el-input>
+              <el-input v-model="wordTitle" placeholder="请输入内容" maxlength="20" show-word-limit>
+              </el-input>
             </div>
             <div class="buttonWarp">
-              <span class="cancel"
-                    @click="cancel">取消</span>
-              <span class="save"
-                    @click="saveName">保存</span>
+              <span class="cancel" @click="cancel">取消</span>
+              <span class="save" @click="saveName">保存</span>
             </div>
           </div>
         </div>
@@ -295,8 +252,7 @@
       <!-- 删除 -->
       <!-- <van-popup v-model="deleteCenter">内容</van-popup> -->
       <!-- Sop弹框 -->
-      <van-action-sheet v-model="sopPopup"
-                        title="个人SOP提醒">
+      <van-action-sheet v-model="sopPopup" title="个人SOP提醒">
         <div class="content">
           <div class="codeDetail">
             <div class="sop-box">
@@ -307,23 +263,20 @@
               </div>
               <div class="sop-text">
                 <div class="text_img">
-                  <img style="width: 24px; height: 24px"
-                      src="../../images/icon_add@2x.png"
-                      alt="" />
+                  <img style="width: 24px; height: 24px" src="../../images/icon_add@2x.png"
+                       alt="" />
                 </div>
                 <div class="sop_title">~</div>
               </div>
               <div class="sop-text">
                 <div class="text_img">
-                  <img style="width: 24px; height: 24px"
-                      src="../../images/icon_add@2x.png"
-                      alt="" />
+                  <img style="width: 24px; height: 24px" src="../../images/icon_add@2x.png"
+                       alt="" />
                 </div>
                 <div class="sop_warp">
                   <div class="sop_imgWarp">
                     <div class="img-up">
-                      <img src="../../images/iconadd.png"
-                          alt="" />
+                      <img src="../../images/iconadd.png" alt="" />
                     </div>
                     <div class="center_img">
                       <p class="img_text">图片副本.png</p>
@@ -334,15 +287,13 @@
               </div>
               <div class="sop-text">
                 <div class="text_img">
-                  <img style="width: 24px; height: 24px"
-                      src="../../images/icon_add@2x.png"
-                      alt="" />
+                  <img style="width: 24px; height: 24px" src="../../images/icon_add@2x.png"
+                       alt="" />
                 </div>
                 <div class="sop_warp">
                   <div class="sop_imgWarp">
                     <div class="img-up">
-                      <img src="../../images/iconadd.png"
-                          alt="" />
+                      <img src="../../images/iconadd.png" alt="" />
                     </div>
                     <div class="center_img">
                       <p class="img_text">图片副本.png</p>
@@ -364,13 +315,59 @@
     <div class="footer-nav">
       <div class="item" @click="showTemplate = 1">
         <img :src="showTemplate | getHuashuImg" alt="">
-        <span>话术</span>
+        <span :class="{active: showTemplate == 1}">话术库</span>
       </div>
       <div class="item" @click="showTemplate = 2">
         <img :src="showTemplate | getMaterialImg" alt="">
-        <span>素材</span>
+        <span :class="{active: showTemplate == 2}">内容素材</span>
       </div>
     </div>
+    <!-- SOP 提醒 -->
+    <van-popup position="bottom" round closeable v-model="show">
+      <div class="popup_wrap">
+        <div class="popup_header">{{entry == 'single_chat_tools' ? '个人SOP提醒' : '群SOP提醒'}}</div>
+        <div class="popup_content">
+          <div class="list_wrap">
+            <div class="list" v-for="(item, index) in popupList" :key="index">
+              <div class="line_title">
+                [{{item.promptTime}}] 给客户发送以下<i>{{getTipNum(item.promptList)}}</i>条消息
+              </div>
+              <div class="pup_share_wrap">
+                <div class="share_box" v-for="(el,i) in item.promptList" :key="i">
+                  <img class="s_icon" src="@/assets/images/icon_share.png"
+                       @click="firstShare(el,'sop')" alt="" v-preventReClick />
+                  <div class="s_val" v-if="!el.url">
+                    <div class="des">{{el.content}}</div>
+                  </div>
+                  <div class="s_val" v-if="el.fileName">
+                    <div class="img_row">
+                      <div class="img_box">
+                        <img :src="el.url" alt="">
+                      </div>
+                      <div class="info_r">
+                        <div class="name">{{el.fileName}}</div>
+                        <div class="size">{{el.fileSize}}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="s_val" v-if="el.url && !el.fileName">
+                    <div class="share_link">{{el.url}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
+    <!-- 是否填写Secret -->
+    <van-overlay :show="showSecret">
+      <div class="wrapper" @click.stop>
+        <div class="dialogImg" align="center">
+          <img src="../../images/secreteig.png" alt="" />
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 <script>
@@ -378,6 +375,13 @@ import SelectTree from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import commonFun from '../../utils/commonToken'
 import { _throttle } from '../../utils/tool'
+import {
+  sop_prompt_personal,
+  m_cluecustomer_getClueCustomerByid,
+  sop_prompt_group,
+  group_getGroupDetail,
+  sopSendDetail_tag,
+} from '@/api/sop'
 
 import MaterialTemplate from './materialTemplate'
 export default {
@@ -454,7 +458,30 @@ export default {
         children: 'children',
         label: 'label',
       },
+
+      show: false,
+      popupList: [], //popup sop 提醒数据
+      popupType: '个人SOP提醒', //popup弹窗类型
+      showSecret: false,
     }
+  },
+  computed: {
+    chatId() {
+      return this.$store.getters.chatId
+    },
+    userId() {
+      return this.$store.getters.userId
+    },
+    entry() {
+      return this.$store.getters.entry
+    },
+    sopType() {
+      let str = '[个人SOP]'
+      if (this.entry == 'group_chat_tools') {
+        str = '[群SOP]'
+      }
+      return str
+    },
   },
   created() {
     commonFun.getWxAppid()
@@ -462,9 +489,84 @@ export default {
   mounted() {
     setTimeout(() => {
       this.verbaltrickList()
+      this.getData()
+      this.getUserName()
     }, 2000)
   },
   methods: {
+    getUserName() {
+      this.$network
+        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
+        .then((res) => {
+          this.showSecret = !res.data.haveSecret
+        })
+    },
+    getData() {
+      console.log('entry', this.entry)
+      if (this.entry == 'group_chat_tools') {
+        this.getGroupDetail()
+      } else if (this.entry == 'single_chat_tools') {
+        this.getCustomerByid()
+      }
+    },
+    getCustomerByid() {
+      //获取客户详情
+      console.log('come userId', this.userId)
+      if (this.userId) {
+        m_cluecustomer_getClueCustomerByid(this.userId).then((res) => {
+          if (res.result) {
+            let data = res.data.clueCustomerVO.id
+            this.getPersonalSopTip(data)
+          }
+          // this.getPersonalSopTip(1)
+        })
+      } else {
+        console.log('no userId getWxAppid')
+        commonFun.getWxAppid()
+      }
+    },
+    getGroupDetail() {
+      //获取群详情
+      let chatId = sessionStorage.getItem('chatId')
+      console.log('chatId session', chatId)
+      console.log('chatId store', this.chatId)
+      group_getGroupDetail(chatId).then((res) => {
+        if (res.result) {
+          this.getGroupSopTip(res.data.id)
+        }
+        // this.getPersonalSopTip(37)
+      })
+    },
+    getPersonalSopTip(id) {
+      //个人sop提醒
+      console.log('come personal sop list')
+      sop_prompt_personal(id).then((res) => {
+        if (res.result) {
+          let list = res.data
+          this.popupList = list
+        }
+      })
+    },
+    getGroupSopTip(id) {
+      //群sop提醒
+      sop_prompt_group(id).then((res) => {
+        if (res.result) {
+          let list = res.data
+          this.popupList = list
+        }
+      })
+    },
+    showPopup() {
+      //sop提醒弹窗
+      this.show = true
+    },
+    getTipNum(val) {
+      let num = 1
+      if (val && val.length > 0) {
+        num = val.length
+      }
+      return num
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -723,9 +825,20 @@ export default {
         })
     },
     //分享子列表
-    firstShare(v) {
+    firstShare(v, type) {
       // console.log('分享话术----', v)
       // alert(JSON.parse(JSON.stringify(v)))
+      if (!v.value) {
+        //sop分享用
+        v.value = v.content
+        if (v.url) {
+          if (v.fileName) {
+            v.value = v.weChatMediaId
+          } else {
+            v.value = v.url
+          }
+        }
+      }
       this.$network
         .get('/user-service/m/user/getticket', {
           url: location.href,
@@ -760,25 +873,47 @@ export default {
               },
               function (res) {
                 // alert('进入invoke')
-                wx.invoke(
-                  'sendChatMessage',
-                  {
+                let _data = null
+                if (v.weChatMediaId) {
+                  _data = {
+                    msgtype: 'image', //消息类型，必填
+                    enterChat: false,
+                    image: {
+                      mediaid: v.weChatMediaId, //图片的素材id
+                    },
+                  }
+                } else {
+                  _data = {
                     msgtype: 'text', //消息类型，必填
+                    enterChat: false,
                     text: {
                       content: v.value, //文本内容
                     },
-                  },
-                  function (res) {
-                    if (res.err_msg == 'sendChatMessage:ok') {
-                      // alert('发送成功')
-                      //发送成功
+                  }
+                }
+                wx.invoke('sendChatMessage', _data, function (res) {
+                  if (res.err_msg == 'sendChatMessage:ok') {
+                    // alert('发送成功')
+                    //发送成功
+                    if (type == 'sop') {
+                      //sop规则发送记录标记发送状态
+                      that.sopSendTag(v.sopSendDetailId)
                     }
                   }
-                )
+                })
               }
             )
           })
         })
+    },
+    sopSendTag(id) {
+      //sop规则发送记录标记发送状态
+      sopSendDetail_tag(id).then((res) => {
+        if (res.result) {
+          console.log('sop 发送标记成功')
+          this.getData()
+        }
+      })
     },
     // 点击删除
     // deleteverbal() {
@@ -925,32 +1060,45 @@ export default {
       }
     },
   },
+  watch: {
+    userId(val) {
+      console.log('userId：', val)
+    },
+  },
   filters: {
     getHuashuImg(type) {
       switch (type) {
         case 1:
           return require('../../images/icon_huashu_active.png')
-          break;
+          break
         case 2:
           return require('../../images/icon_huashu.png')
-          break;
+          break
       }
     },
     getMaterialImg(type) {
       switch (type) {
         case 1:
           return require('../../images/icon_material.png')
-          break;
+          break
         case 2:
           return require('../../images/icon_material_active.png')
-          break;
+          break
       }
     },
-  }
+  },
 }
 </script>
 
 <style scoped lang="less">
+@main: #4168f6;
+@white: #fff;
+@fontMain: #3c4353;
+@fontSub2: #838a9d;
+@bdColor: #d9dae4;
+@dashedColor: #f0f2f7;
+@headerBg: #fafbff;
+@checkBg: #f4f6fe;
 .main-content {
   height: 100%;
   .footer-nav {
@@ -963,23 +1111,256 @@ export default {
     bottom: 0;
     left: 0;
     .item {
-        flex: 1;
-        font-size: 0;
-        text-align: center;
-        img {
-            width: 40px;
-            height: 40px;
-            margin: 16px auto 10px;
-        }
-        span {
-            font-size: 20px;
-            color: #A2A5B4;
-        }
+      flex: 1;
+      font-size: 0;
+      text-align: center;
+      img {
+        width: 40px;
+        height: 40px;
+        margin: 16px auto 10px;
+      }
+      span {
+        font-size: 20px;
+        color: #a2a5b4;
+      }
+      .active {
+        color: #4168f6;
+      }
     }
   }
 }
 .tetx {
   font-size: 50px;
+}
+
+/* sop 提醒 */
+.sop_wrap {
+  padding: 0 24px;
+}
+.sop_notice {
+  width: 100%;
+  height: 68px;
+  border: 1px solid @main;
+  background: rgba(@main, 0.04);
+  padding: 14px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  position: relative;
+  .icon {
+    width: 24px;
+    height: 29px;
+    margin-right: 16px;
+  }
+  .label {
+    font-size: 28px;
+    line-height: 40px;
+    color: @fontMain;
+    margin-right: 16px;
+  }
+  .val {
+    font-size: 28px;
+    line-height: 40px;
+    color: @fontSub2;
+  }
+  .r_box {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    .btn {
+      font-size: 24px;
+      line-height: 32px;
+      color: @fontSub2;
+      margin-right: 8px;
+    }
+    .s_icon {
+      width: 21px;
+      height: 13px;
+    }
+  }
+}
+/deep/ .van-popup__close-icon--top-right {
+  right: 24px;
+  top: 32px;
+}
+/* sop 提醒弹窗 */
+.popup_wrap {
+  width: 100%;
+  min-height: 50vh;
+  max-height: 80vh;
+  height: 60vh;
+  background: @white;
+  position: relative;
+  padding-top: 88px;
+
+  .popup_header {
+    width: 100%;
+    height: 88px;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 88px;
+    text-align: center;
+    background: @headerBg;
+    // position: relative;
+    border-bottom: 1px solid @dashedColor;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .popup_content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 24px;
+    overflow-y: scroll;
+    .list_wrap {
+      width: 100%;
+      .list {
+        width: 100%;
+        min-height: 200px;
+        background: @dashedColor;
+        border: 1px solid @bdColor;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        padding: 24px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        .line_title {
+          font-size: 28px;
+          line-height: 40px;
+          color: @fontMain;
+          padding-left: 20px;
+          position: relative;
+          margin-bottom: 24px;
+          &::before {
+            content: '';
+            width: 8px;
+            height: 28px;
+            background: @main;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+          i {
+            font-style: normal;
+            color: @main;
+          }
+        }
+        .pup_share_wrap {
+          width: 100%;
+          .share_box {
+            width: 100%;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            &:last-child {
+              margin-bottom: 0;
+            }
+            .s_icon {
+              width: 26px;
+              height: 26px;
+              margin-right: 24px;
+            }
+            .s_val {
+              width: calc(100% - 50px);
+              min-height: 88px;
+              background: @white;
+              border: 1px solid @bdColor;
+              border-radius: 8px;
+              padding: 24px;
+            }
+            .des {
+              line-height: 40px;
+              font-size: 28px;
+              color: @fontSub2;
+              word-break: break-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .share_link {
+              line-height: 40px;
+              font-size: 28px;
+              color: #c0c4cc;
+              word-break: break-all;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .img_row {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              .img_box {
+                width: 112px;
+                height: 112px;
+                background: rgba(@main, 0.04);
+                border-radius: 4px;
+                overflow: hidden;
+                margin-right: 24px;
+                img {
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+              .info_r {
+                width: calc(100% - 136px);
+                .name {
+                  line-height: 40px;
+                  font-size: 28px;
+                  color: @fontMain;
+                  margin-bottom: 12px;
+                  word-break: break-all;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+                .size {
+                  height: 32px;
+                  font-size: 24px;
+                  color: #c0c4cc;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .popup_footer {
+    width: 100%;
+    height: 128px;
+    background: @white;
+    padding: 24px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      .btn {
+        width: calc(50% - 12px);
+        height: 80px;
+        line-height: 78px;
+        font-size: 24px;
+        border: 1px solid @main;
+        color: @main;
+        border-radius: 8px;
+        text-align: center;
+        &.main {
+          border-color: @main;
+          background: @main;
+          color: @white;
+        }
+      }
+    }
+  }
 }
 
 .tree-box {
@@ -1643,5 +2024,11 @@ export default {
 .center_img {
   line-height: 50px;
   margin-left: 16px;
+}
+.dialogImg {
+  margin-top: 20%;
+  img {
+    width: 702px;
+  }
 }
 </style>

@@ -9,7 +9,11 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">全部渠道</div>
-      <span class="addBtn" @click="addChannel">
+      <span
+        class="addBtn"
+        @click="addChannel"
+        v-show="expandedKeys.some((item) => item.enName == 'add')"
+      >
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
@@ -37,11 +41,17 @@
             <span>{{ item.name }}</span>
           </div>
           <div class="editBtn">
-            <span @click="editBtn(item)">
+            <span
+              @click="editBtn(item)"
+              v-show="expandedKeys.some((item) => item.enName == 'edit')"
+            >
               <van-icon name="edit" />
               编辑
             </span>
-            <span @click="deleteBtn(item)">
+            <span
+              @click="deleteBtn(item)"
+              v-show="expandedKeys.some((item) => item.enName == 'delete')"
+            >
               <van-icon name="delete-o" />
               删除
             </span>
@@ -192,8 +202,9 @@
 </template>
 <script>
 import { formatDate, _throttle } from "../../utils/tool";
-
+import MyMixin from "../../mixins/permissionsList";
 export default {
+  mixins: [MyMixin],
   data() {
     return {
       inputValue: "",
@@ -281,7 +292,6 @@ export default {
           let newSetArr = this.channelList.concat(rows);
           // let newSetArr = rows.concat(this.channelList)
           this.channelList = this.unique(newSetArr);
-          console.log("--------", this.channelList);
           if (this.channelList.length >= this.total) {
             this.finished = true;
           } else {

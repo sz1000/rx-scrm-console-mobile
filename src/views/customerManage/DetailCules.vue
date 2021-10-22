@@ -29,19 +29,22 @@
     </div>
     <div class="btnWarp">
       <div class="btnBox"
-           @click="transCustom">
+           @click="transCustom"
+           v-show="btnList.some(item=>item.enName == 'turn')">
         <img src="../../images/icon_change@2x.png"
              alt="" />
         <span>转客户</span>
       </div>
       <div class="btnBox"
-           @click="changeUser">
+           @click="changeUser"
+           v-show="btnList.some(item=>item.enName == 'change')">
         <img src="../../images/icon_change2@2x.png"
              alt="" />
         <span>变更所属人</span>
       </div>
       <div class="btnBox"
-           @click="giveUp()">
+           @click="giveUp()"
+           v-show="btnList.some(item=>item.enName == 'giveup')">
         <img src="../../images/icon_clear@2x.png"
              alt="" />
         <span>放弃</span>
@@ -60,23 +63,27 @@
             <el-input v-model="basicInfo.name"
                       maxlength="15"
                       placeholder="请输入"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="手机号:">
             <el-input v-model="basicInfo.phone"
                       maxlength="11"
                       placeholder="请输入"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="微信号:">
             <el-input v-model="basicInfo.weixin"
                       placeholder="请输入"
                       maxlength="20"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
             <el-select v-model="basicInfo.gender"
                        placeholder="请选择"
+                       :disabled='disabled'
                        @change="changeGender">
               <el-option label="未知"
                          value="0"></el-option>
@@ -90,18 +97,21 @@
             <el-input v-model="basicInfo.position"
                       placeholder="请输入"
                       maxlength="20"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="公司名称">
             <el-input v-model="basicInfo.cropFullName"
                       placeholder="请输入"
                       maxlength="100"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="所属行业">
             <el-cascader size="large"
                          :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
                          :options="optionsCreat"
+                         :disabled='disabled'
                          v-model="basicInfo.industry"
                          @change="handleChange">
             </el-cascader>
@@ -109,6 +119,7 @@
           <el-form-item label="线索来源">
             <el-select v-model="basicInfo.source"
                        placeholder="请选择"
+                       :disabled='disabled'
                        @change="changeSource">
               <el-option v-for="item in optionSource"
                          :key="item.value"
@@ -121,12 +132,14 @@
             <el-input v-model="basicInfo.email"
                       placeholder="请输入"
                       maxlength="60"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="地址">
             <el-input v-model="basicInfo.address"
                       maxlength="100"
                       placeholder="请输入"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="备注"
@@ -134,6 +147,7 @@
             <el-input v-model="basicInfo.remark"
                       maxlength="200"
                       placeholder="请输入文字(不得超过200个字符)"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="描述"
@@ -141,6 +155,7 @@
             <el-input v-model="basicInfo.describe"
                       maxlength="100"
                       placeholder="请输入"
+                      :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
         </el-form>
@@ -223,108 +238,44 @@
           </div>
         </div>
       </div>
-      
-      
-      	<el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
-			    <el-tab-pane label="线索动态" class="tabli" name="线索动态">
-			    			<div class="dynamic">
-						        <div class="t_text">
-						          <span class="label_tag">线索动态</span>
-						          <div class="editButton"
-						               @click="showCompany(3)">
-						            <img src="../../images/icon_repair1@2x.png"
-						                 alt="" />
-						            <span>写跟进</span>
-						          </div>
-						        </div>
-						        
-						        <!--<div class="allText">全部</div>-->
-						        
-						        <van-tabs v-model="activeName"
-						        	title-active-color="#4168F6"
-						        	title-inactive-color="#3C4353"
-						        	@change="changeTimeLine"
-						        	>
-										  <van-tab title="全部" name="3">
-										 
-										  </van-tab>
-										  <van-tab title="线索动态" name="2">
-										  	
-										  </van-tab>
-										  <van-tab title="跟进记录" name="1">
-										  
-										  </van-tab>
-										</van-tabs>
-						        
-						        <div class="timeLine">
-						          <el-timeline>
-						            <el-timeline-item v-for="(item, index) in timeLineList"
-						                              :key="index"
-						                              color="#4168F6"
-						                              type="danger ">
-						              <div class="recordBox">
-						                <div class="descTxt">{{ item.title }}</div>
-						                <div class="inLineTwo">{{ item.context }}</div>
-						                <div class="inLine">
-						                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
-						                  <span class="time_right">
-						                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
-						                  </span>
-						                </div>
-						              </div>
-						            </el-timeline-item>
-						          </el-timeline>
-						        </div>
-						        
-						      </div>
-			    </el-tab-pane>
-			    <el-tab-pane label="协助人" style="height: 300px;padding-bottom: 100px;" name="协助人">
-			    	<div class="personLabel">
-			        <div class="t_text">
-			          <span class="label_tag">协助人</span>
-			          <div class="editButton"
-			               @click="showCompany(2)">
-			            <i class="el-icon-edit"></i>
-			            编辑
-			          </div>
-			        </div>
-			        <HelperFile></HelperFile>
-			      </div>
-			    </el-tab-pane>
-			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
-			    		<div class="titleBox">
-			    			<span class="blueDiv">
-			    				
-			    			</span>
-			    			<span class="titleFujian">附件</span>
-			    		</div>
-				    	<el-upload
-							  	class="upload-demo"
-							  :action="`${BASE_URL}/customer-service/cluecustomeraccessory/upload`"
-							  :headers="headers"
-			  				:data="fileData"
-							  :on-remove="delList"
-							  :before-remove="beforeRemove"
-							  :before-upload="BeforeUpload"
-							  :multiple="false"
-							  :limit="20"
-							  :file-list="fileList"
-							  :on-success="onSuccess"
-							  :on-error="onError">
-							  <el-button class="upBtn" size="small" type="primary"><i class="el-icon-upload"></i>&nbsp;上传</el-button>
-							</el-upload>
-			    </el-tab-pane>
-			  </el-tabs>
-      
+      <div class="dynamic">
+        <div class="t_text">
+          <span class="label_tag">动态</span>
+          <div class="editButton"
+               @click="showCompany(3)"
+               v-show="btnList.some(item=>item.enName == 'write')">
+            <img src="../../images/icon_repair1@2x.png"
+                 alt="" />
+            <span>写跟进</span>
+          </div>
+        </div>
+        <div class="allText">全部</div>
+        <div class="timeLine">
+          <el-timeline>
+            <el-timeline-item v-for="(item, index) in timeLineList"
+                              :key="index"
+                              color="#4168F6"
+                              type="danger ">
+              <div class="recordBox">
+                <div class="descTxt">{{ item.title }}</div>
+                <div class="inLineTwo">{{ item.context }}</div>
+                <div class="inLine">
+                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
+                  <span class="time_right">
+                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
+                  </span>
+                </div>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+      </div>
     </div>
-    
-    
-    
     <div class="bottom_model">
       <van-action-sheet v-model="show"
-                        :lock-scroll='false'
-                        @cancel='cancelIcon'
-                        @click-overlay='cancelIcon'
+                        :lock-scroll="false"
+                        @cancel="cancelIcon"
+                        @click-overlay="cancelIcon"
                         :title="titleName">
         <div class="content">
           <div class="tagWarp"
@@ -421,18 +372,10 @@
 </template>
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
-import { BASE_URL } from '../../utils/request'
-import  HelperFile  from "./comTip/helperFile";
 export default {
-	components: {
-    HelperFile,
-  },
   data() {
     return {
-    	fileList:[],
-    	BASE_URL,
-    	sanTab:'线索动态',
-    	activeName:'2',
+      disabled: true,
       item: {},
       name: '',
       imageUser: '',
@@ -496,21 +439,12 @@ export default {
       type: '',
       tagName: '',
       nowUser: '',
+      cluecustomerNo: '',
       objItem: JSON.parse(localStorage.getItem('detail')),
       userNo: '',
       options: [],
-      clueCustomerNo: '',
-    	fileData:{
-    	},
+      btnList: [],
     }
-  },
-  computed: {
-            headers(){
-                return {
-                    "Accept": "application/json",
-                    "token": localStorage.getItem('token')
-                }
-            }
   },
   created() {
     let tempObj = JSON.parse(localStorage.getItem('detail'))
@@ -520,105 +454,13 @@ export default {
     this.getDetailForm()
   },
   mounted() {
-  	this.getDownList()
+    this.btnList = JSON.parse(this.$route.query.mylist)
+    this.disabled = !this.btnList.some((item) => item.enName == 'edit')
+    // console.log('----querylist--', this.btnList)
   },
   methods: {
     formatDate,
     formatDate,
-    
-    /*附件下载*/
-    delList(file, fileList){
-    	console.log(file, fileList)
-	  		console.log("删除")
-	  		let _this = this
-	  		let obj = `clueCustomerNo=${_this.objItem.clueCustomerNo}&id=${file.id}`
-	  	//表单传参，需要如上转译。 
-	  	
-	      this.$network
-	        .post('/customer-service/cluecustomeraccessory/delupload',obj)
-	        .then((res) => {
-	          console.log(res)
-	          this.$message({
-	            type: 'success',
-	            message: res.msg,
-	          })
-	          //this.$set(this.fileList)
-	        //_this.getDownList()
-	        })
-	  	},
-	  	getDownList(){
-	  		let _this = this
-	  		let params = {
-	        clueCustomerNo: this.objItem.clueCustomerNo,
-	      }
-	      this.$network
-	        .get('/customer-service/cluecustomeraccessory/getList', params)
-	        .then((res) => {
-	          console.log(res)
-	          let upLA = res.data //所有附件
-	       		_this.fileList = upLA
-	       		console.log(_this.fileList)
-	        })
-	  	},
-			BeforeUpload(file) {
-			  		console.log(file.name)
-        		if (file.size / 1024 / 1024 >= 20) {
-                    this.$message.error("上传文件格式为pdf, 大小不能超过20MB!");
-                    return false
-                }
-        		this.fileData.clueCustomerNo = this.objItem.clueCustomerNo
-            this.fileData.filetype = file.name.substring(file.name.lastIndexOf(".") + 1)
-			},
-			onSuccess(response, file, fileList){
-	 
-	     		this.$message({
-	                type: 'success',
-	                message: '上传成功!',
-	              })
-				//this.getDownList()
-			},
-			onError(err, file, fileList){
-				console.log(err)
-				this.$message({
-	        type: 'success',
-	        message: '上传失败!',
-	      })
-			},
-			beforeRemove(file, fileList) {
-				console.log(file, fileList)
-        return this.$confirm(`确定移除 ${ file.name }？`);
-        
-        /*this.$dialog
-        .confirm({
-          title: '删除警告',
-          message:
-            `确定移除 ${ file.name }？`,
-          className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })*/
-        
-     },
-    /*附件下载*/
-    
-    changeTimeLine(name){
-    	console.log(name)
-    	console.log(typeof name)
-    	switch (Number(name))
-				{
-				    case 1:
-				    this.getTimeline(1) 
-				    break;
-				    case 2:
-				    this.getTimeline(2) 
-				    break;
-				    case 3:
-				    this.getTimeline(3) 
-				    break;
-				    default:
-				}
-    },
     changeInput(val) {
       // console.log(val)
       this.update()
@@ -641,15 +483,12 @@ export default {
       // console.log(val, this.basicInfo)
       this.update()
     },
-    getTimeline(name) {
-      console.log(name)
-	      let obj = {
-	        clueCustomerNo: this.objItem.clueCustomerNo,
-	        punckStatus: name,
-	      }
-      
+    getTimeline() {
+      // console.log(this.objItem, '------')
       this.$network
-        .get('/customer-service/clueCustomerFollowUser/selectFollowMsgList', obj)
+        .get('/customer-service/cluecustomer/getMessage', {
+          cluecustomerno: this.objItem.clueCustomerNo,
+        })
         .then((res) => {
           this.timeLineList = res.data
         })
@@ -796,7 +635,7 @@ export default {
         return item.tagid == list.tagid
       })
       if (result > -1) {
-        // console.log(111111111111)
+        console.log(result, '111111111111')
         this.highLightArr.forEach((item, index) => {
           if (item.tagid == list.tagid) {
             this.highLightArr.splice(index, 1)
@@ -986,11 +825,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-/deep/.el-upload-list__item-name{
-	margin-top: 20px;
-	font-size: 35px;
-	line-height: 35px;
-}
 .DetailCules {
 }
 .culeDeatil {
@@ -1294,7 +1128,6 @@ export default {
         margin-bottom: 16px;
       }
       .timeLine {
-      	margin-top: 60px;
         .el-timeline {
           padding-left: 0 !important;
         }
@@ -1518,93 +1351,5 @@ export default {
       }
     }
   }
-}
-/deep/.el-upload-list__item .el-icon-upload-success,/deep/.el-upload-list__item .el-icon-close{
-	font-size: 40px;
-}
-/deep/.el-tabs__item{
-	height: 88px;
-	line-height: 88px;
-	font-size: 35px;
-}
-/deep/.van-tabs__line{
-	    background-color: #FFFFFF;
-}
-/deep/.van-tab{
-		display: initial;
-		margin-right: 32px;
-		-webkit-box-flex: inherit;
-    -webkit-flex: inherit;
-    flex: inherit;
-    line-height: 50px;
-    margin-bottom:70px;
-    font-size: 30px;
-}
-/deep/ .el-upload-list__item .el-icon-close-tip{
-	color: #fafbff00;
-}
-/deep/ .el-upload-list__item{
-	font-size: 28px;
-	height: 40px;
-	line-height: 40px;
-}
-.titleBox{
-	width: 80px;
-	height: 40px;
-	font-size: 28px;
-	color: #3C4353;
-	letter-spacing: 0;
-	font-weight: bold;
-	line-height: 40px;
-	margin-bottom: 10px;
-	margin-top: 36px;
-}
-.blueDiv{
-	width: 8px;
-	height: 25px;
-	background: #4168F6;
-	margin-right: 12px;
-	display: inline-block;
-}
-/deep/.upBtn{
-					color: #838a9d;
-          width: 124px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          position: absolute;
-          right: 5px;
-          top: 0;
-          background: #FFFFFF;
-          font-size: 30px;
-}
-/deep/.el-button--primary:focus, .el-button--primary:hover {
-    background: #FFFFFF;
-    border-color: #D9DAE4;
-    color: #838A9D;
-}
-
-/deep/.el-tabs__content{
-	overflow: visible;
-}
-</style>
-<style>
-.el-message-box__content{
-	font-size: 30px !important;
-}
-.el-message-box{
-	  width: 600px !important;
-    height: 200px !important;
-    font-size: 48px !important;
-    position: relative;
-}
-.el-message-box__btns{
-	position: absolute;
-	bottom: 30px;
-	right: 30px;
-}
-.el-button--mini, .el-button--small{
-	font-size: 76px;
 }
 </style>

@@ -1,3 +1,6 @@
+import { Getticket, GetSignature } from "../config/api"
+import { Toast } from 'vant'
+
 // 防抖
 export function _debounce(fn, delay) {
     var delay = delay || 200
@@ -89,10 +92,12 @@ export function isWeiXin() {
     return ua.match(/MicroMessenger/i) == 'micromessenger'
 }
 
+// 微信弹窗授权
 export function getCode(wxurl) {
     window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx50f34e90927ce260&redirect_uri=${wxurl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
 }
 
+// 获取链接问号后面参数对象
 export function parseQueryString(url) {
     let reg_url = /^[^\?]+\?([\w\W]+)$/,
         reg_para = /([^&=]+)=([\w\W]*?)(&|$)/g, //g is very important
@@ -105,4 +110,116 @@ export function parseQueryString(url) {
         }
     }
     return ret;
+}
+
+// 文件大小单位转换
+export function byteConvert(bytes){ 
+    if(isNaN(bytes)) {
+        return
+    }
+    let symbols = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+    let exp = Math.floor(Math.log(bytes)/Math.log(2)) // 获取以2为底的bytes的对数（向下取整）
+
+    if (exp < 1) {
+        exp = 0
+    }
+    let i = Math.floor(exp/10)
+
+    bytes = bytes/Math.pow(2, 10*i)
+
+    // 取两位小数
+    if(bytes.toString().length > bytes.toFixed(2).toString().length) {
+        bytes = bytes.toFixed(2)
+    }
+
+    return bytes + '' + symbols[i]
+}
+
+// 分享消息到当前会话
+export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, fileId) {
+    Getticket({url: location.href}).then(res => {
+        wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [ "sendChatMessage", "invoke", "agentConfig", "checkJsApi" ],
+        })
+        wx.ready(function() {
+            wx.invoke( "agentConfig", {
+                    corpid: res.data.corpId,
+                    agentid: res.data.agent_id + "",
+                    timestamp: res.data.agent_config_data.timestamp,
+                    nonceStr: res.data.agent_config_data.noncestr,
+                    signature: res.data.agent_config_data.signature,
+                    jsApiList: ["sendChatMessage", "getContext", "invoke"],
+                },
+                function(res) {
+                    let typeData = null
+                    if (content) {
+                        typeData = { 
+                            msgtype, //消息类型，必填
+                            enterChat, //为true时表示发送完成之后顺便进入会话，仅移动端3.1.10及以上版本支持该字段
+                            text: {
+                                content, //文本内容
+                            }
+                        }
+                    } else if (imageId) {
+                        typeData = { 
+                            msgtype, //消息类型，必填
+                            enterChat, //为true时表示发送完成之后顺便进入会话，仅移动端3.1.10及以上版本支持该字段
+                            image: {
+                                mediaid: imageId, //图片的素材id
+                            },
+                        }
+                    }
+                    wx.invoke( "sendChatMessage", typeData , function (res) {
+                            if (res.err_msg == "sendChatMessage:ok") {
+                                //发送成功
+                                Toast("发送成功")
+                            }
+                        }
+                    )
+                }
+            )
+        })
+    })
+}
+
+export async function wxShare(title, link, imgUrl, desc) {
+    let { appId, timestamp, nonceStr, signature } = await getSignature()
+
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: appId, // 必填，公众号的唯一标识
+        timestamp: timestamp, // 必填，生成签名的时间戳
+        nonceStr: nonceStr, // 必填，生成签名的随机串
+        signature: signature,// 必填，签名
+        jsApiList: ["updateAppMessageShareData", "updateTimelineShareData"] // 必填，需要使用的JS接口列表
+    })
+    wx.ready(function(){
+        wx.updateAppMessageShareData({ 
+            title: title, // 分享标题
+            desc: desc, // 分享描述
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {}
+        })
+        wx.updateTimelineShareData({ 
+            title: title, // 分享标题
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: imgUrl, // 分享图标
+            success: function () {}
+          })
+    })
+}
+
+async function getSignature() {
+    let {code, data} = await GetSignature(encodeURIComponent(window.location.href))
+    if (code == 'success') {
+        return data
+    }
 }

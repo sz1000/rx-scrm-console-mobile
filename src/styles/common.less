@@ -11,12 +11,37 @@ html {
   scrollbar-width: 0;
 }
 
+html.borderbox *, html.borderbox *:before, html.borderbox *:after, * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 body {
   height: 100%;
   width: 100%;
 
 }
 
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color: #C0C4CC;
+  font-weight: normal;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: #C0C4CC;
+  font-weight: normal;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: #C0C4CC;
+  font-weight: normal;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #C0C4CC;
+  font-weight: normal;
+}
 // html::-webkit-scrollbar,
 // body::-webkit-scrollbar {
 //   width: 0px;
@@ -334,14 +359,16 @@ a:hover {
     }
   }
 }
-
+.clueConfirmClassLable {
+  width: 635px !important;
+}
 .deleteBtn {
   width: 702px;
-  height: 244px;
+  // height: 300px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #eeeeee;
-  padding-bottom: 10px;
+  // padding-bottom: 10px;
   font-size: 28px;
   padding-bottom: 20px;
   .commonVant()

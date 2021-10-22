@@ -1,5 +1,6 @@
 import {http} from './request'
 import router from '../router/index'
+import store from '../store'
 import {
     setStoreValue,
     getStoreValue,
@@ -7,11 +8,6 @@ import {
 } from '../utils/LocalStorageDate'
 
 const getWxAppid = function() {
-        // let token = localStorage.getItem('token')
-        // alert(token)
-        // if (token == '' || (!token && typeof token != 'undefined')) {
-        //     alert('132123123')
-        //     alert(window.location.href)
         let authCode
         if (window.location.href.indexOf('?') > -1) {
             let href = window.location.href.split('?')[1]
@@ -55,7 +51,7 @@ function getWxCofig(v) {
         if (res.result) {
             // this.token = res.data.accessToken
             // this.appid = res.data.corpId
-            // localStorage.setItem('token', res.data.accessToken)
+            localStorage.setItem('token', res.data.accessToken)
             setStoreValue(
                 'token',
                 res.data.accessToken,
@@ -136,6 +132,8 @@ function getAgent(res) {
                             // alert(JSON.stringify(res))
                             // alert(JSON.stringify(res.userId))
                             localStorage.setItem('userId', res.userId)
+                            store.commit('setUserId', res.userId)
+                                // this.$store.commit('userId', res.userId)
                                 // alert(JSON.stringify(that.obj))
                                 // that.getMethod()
                         } else {
@@ -147,9 +145,9 @@ function getAgent(res) {
                         // alert(("群id"+ res.chatId))
                         if (res.err_msg == 'getCurExternalChat:ok') {
                             // chatId = res.chatId //返回当前客户群的群聊ID
-
                             // localStorage.setItem('chatId', res.chatId)
-                            sessionStorage.setItem('chatId', res.chatId)
+                            // sessionStorage.setItem('chatId', res.chatId)
+                            store.commit('setChatId', res.chatId)
                         } else {
                             //错误处理
                         }
@@ -158,7 +156,10 @@ function getAgent(res) {
                 wx.invoke('getContext', {}, function(res) {
                     // alert(JSON.stringify(res))
                     // alert(JSON.stringify(res.entry))
-                    if (res.err_msg == 'getContext:ok') {} else {
+                    if (res.err_msg == 'getContext:ok') {
+                        let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
+                        store.commit('setEntry', entry)
+                    } else {
                         //错误处理
                     }
                 })

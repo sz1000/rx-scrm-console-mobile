@@ -3,11 +3,17 @@ module.exports = {
         loaderOptions: {
             css: {},
             postcss: {
+                // plugins: [
+                //     require('postcss-px2rem')({
+                //         remUnit: 75,
+                //     }),
+                // ],
                 plugins: [
-                    require('postcss-px2rem')({
-                        remUnit: 75,
-                    }),
-                ],
+                    require('postcss-px2rem-exclude')({
+                        "remUnit": 75,
+                        "exclude":/node_modules/i //忽略 node_modules 目录下的所有文件
+                    })
+                ]
             },
         },
     },

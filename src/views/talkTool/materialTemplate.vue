@@ -1,9 +1,9 @@
 <template>
     <div class="material-template">
         <ul class="header-nav">
-            <li @click="changeNav(0)" :class="{active: type == 0}">种草文章</li>
-            <li @click="changeNav(1)" :class="{active: type == 1}">销售文件</li>
-            <li @click="changeNav(2)" :class="{active: type == 2}">营销海报</li>
+            <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
+            <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
+            <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
         </ul>
         <search :type="type"></search>
         <ul class="list-box">
@@ -15,13 +15,15 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="article-item item" v-for="i in articleList" :key="i.articleId">
+                    <div class="article-item item" v-for="i in articleList" :key="i.articleId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)">
                         <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
-                            <img class="img" :src="i.cover" alt="">
+                            <img class="img" :src="i.cover ? i.cover : require('../../images/default_article.png')" alt="">
                             <div class="des">
-                                <h3 class="one-txt-cut">{{i.title}}</h3>
-                                <p class="two-line" v-html="i.contentAbstract"></p>
+                                <div>
+                                    <h3 class="one-txt-cut">{{i.title}}</h3>
+                                    <p class="two-line" v-html="i.contentAbstract"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -35,13 +37,15 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId">
+                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)">
                         <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
-                            <img class="img" :src="i.cover" alt="">
+                            <img class="img" :src="i.cover ? i.cover : require('../../images/default_pdf.png')" alt="">
                             <div class="des">
-                                <h3 class="one-txt-cut">{{i.name}}</h3>
-                                <p class="two-line" v-html="i.documentUrl"></p>
+                                <div>
+                                    <h3 class="one-txt-cut">{{i.name}}</h3>
+                                    <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -55,7 +59,7 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId">
+                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId" @click="sendChatMessage('image', false, '', i.mediaId)">
                         <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
                         <div class="bottom">
                             <span class="one-txt-cut">{{i.posterName}}</span>
@@ -69,6 +73,7 @@
 </template>
 <script>
 import { GetCrop, ArticleList, SaleDocumentList, PosterList } from "../../config/api"
+import { sendChatMessage, byteConvert } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
 
@@ -78,17 +83,18 @@ export default {
         return {
             type: 0,
             corpId: null,
+            userNo: null,
 
             articleList: [],
             totalArticle: 0,
             articleListPage: 1,
-            articleListLoading: false,
+            articleListLoading: true,
             articleListFinished: false,
 
             saleList: [],
             totalSale: 0,
             saleListPage: 1,
-            saleListLoading: false,
+            saleListLoading: true,
             saleListFinished: false,
 
             posterList: [],
@@ -96,6 +102,8 @@ export default {
             posterListPage: 1,
             posterListLoading: false,
             posterListFinished: false,
+
+            originUrl: location.origin
         }
     },
     provide() {
@@ -105,10 +113,15 @@ export default {
     },
     created() {
         this.getCorpId().then(() => this.getList())
+        let userNo = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token")).userNo
+
+        this.userNo = userNo ? userNo : null
     },
     methods: {
         changeNav(type) {
             this.type = type
+            this.initPage(this.type)
+            this.getList()
         },
         getCorpId() {
             return new Promise((resolve, reject) => {
@@ -125,32 +138,34 @@ export default {
             })
         },
         onLoad() {
+            if (this.type == 0 && this.articleListPage <= 1 || this.type == 1 && this.saleListPage <= 1 || this.type == 2 && this.posterListPage <= 1) {
+                return
+            }
             this.getList()
         },
         getList(title) {
             let ApiOpts = ArticleList
-            
-            let pageIndex = 1
-
-            if (this.type == 0) {
-                ApiOpts = ArticleList
-                pageIndex = this.articleListPage
-                this.articleListLoading = true
-            } else if (this.type == 1) {
-                ApiOpts = SaleDocumentList
-                pageIndex = this.saleListPage
-                this.saleListLoading = true
-            } else if (this.type == 2) {
-                ApiOpts = PosterList
-                pageIndex = this.posterListPage
-                this.posterListLoading = true
-            }
 
             let params = {
-                pageIndex,
                 pageSize: 10,
-                title,
                 corpId: this.corpId
+            }
+
+            if (this.type == 0) {
+                params.title = title
+                params.pageIndex = this.articleListPage
+                ApiOpts = ArticleList
+                this.articleListLoading = true
+            } else if (this.type == 1) {
+                params.name = title
+                params.pageIndex = this.saleListPage
+                ApiOpts = SaleDocumentList
+                this.saleListLoading = true
+            } else if (this.type == 2) {
+                params.name = title
+                params.pageIndex = this.posterListPage
+                ApiOpts = PosterList
+                this.posterListLoading = true
             }
 
             ApiOpts(params).then(res => {
@@ -159,16 +174,25 @@ export default {
                 if (code === 'success') {
                     if (this.type == 0) {
                         this.articleListLoading = false
+                        if (this.articleListPage == 1) {
+                            this.articleList = []
+                        }
                         this.articleList = this.articleList.concat(data.records)
                         this.articleListPage += 1
                         this.articleListFinished = this.articleList.length >= data.total
                     } else if (this.type == 1) {
                         this.saleListLoading = false
+                        if (this.saleListPage == 1) {
+                            this.saleList = []
+                        }
                         this.saleList = this.saleList.concat(data.records)
                         this.saleListPage += 1
                         this.saleListFinished = this.saleList.length >= data.total
                     } else if (this.type == 2) {
                         this.posterListLoading = false
+                        if (this.posterListPage == 1) {
+                            this.posterList = []
+                        }
                         this.posterList = this.posterList.concat(data.records)
                         this.posterListPage += 1
                         this.posterListFinished = this.posterList.length >= data.total
@@ -180,15 +204,20 @@ export default {
         },
         // 查询
         checkTable(data) {
-            if (this.type == 0) {
-                this.articleListPage = 1
-            } else if (this.type == 1) {
-                this.saleListPage = 1
-            } else if (this.type == 2) {
-                this.posterListPage = 1
-            }
+            this.initPage(this.type)
             this.getList(data)
         },
+        initPage(type) {
+            if (type == 0) {
+                this.articleListPage = 1
+            } else if (type == 1) {
+                this.saleListPage = 1
+            } else if (type == 2) {
+                this.posterListPage = 1
+            }
+        },
+        sendChatMessage,
+        byteConvert
     },
     components: {
         Search
@@ -209,15 +238,29 @@ export default {
             height: 100%;
             line-height: 100px;
             text-align: center;
+            span {
+                display: block;
+                width: 150px;
+                height: 100%;
+                margin: 0 auto;
+                color: #838A9D;
+                font-size: 28px;
+            }
         }
         .active {
-            color: #4168F6;
-            border-bottom: 4px solid #4168F6;
+            span {
+                color: #4168F6;
+                border-bottom: 4px solid #4168F6;
+            }
         }
     }
     .list-box {
         padding-bottom: 132px;
         .item-box {
+            /deep/ .van-list__finished-text {
+                font-size: 24px;
+                color: #C0C4CC;
+            }
             .item {
                 padding: 24px;
             }
@@ -234,29 +277,36 @@ export default {
                     }
                 }
                 .right {
-                    display: flex;
                     max-width: 90%;
                     margin-left: 24px;
                     .img {
+                        display: inline-block;
                         width: 130px;
                         height: 130px;
                         margin-left: 20px;
                         border-radius: 8px;
+                        vertical-align: middle;
                     }
                     .des {
-                        display: flex;
-                        justify-content: space-between;
-                        flex-direction: column;
-                        max-width: 90%;
+                        display: inline-block;
+                        height: 130px;
+                        max-width: 72%;
                         margin-left: 20px;
-                        h3 {
-                            font-size: 28px;
-                            color: #3C4353;
-                        }
-                        p {
-                            word-break: break-all;
-                            font-size: 28px;
-                            color: #838A9D;
+                        vertical-align: middle;
+                        div {
+                            display: flex;
+                            height: 100%;
+                            justify-content: space-between;
+                            flex-direction: column;
+                            h3 {
+                                font-size: 28px;
+                                color: #3C4353;
+                            }
+                            p {
+                                word-break: break-all;
+                                font-size: 24px;
+                                color: #838A9D;
+                            }
                         }
                     }
                 }

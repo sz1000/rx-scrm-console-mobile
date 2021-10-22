@@ -12,7 +12,14 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-import CustomerGroup from "../views/talkTool/Customergroup.vue"
+import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
+import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+
+import LableDataGroup from "../views/talkTool/lableDataGroup.vue"//客户群群发
+
+import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码列表
+import GroupCodeAdd from "../views/talkTool/groupCode/add.vue"    //群活码列表
+
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
 import ClockPage from '../views/clockPage/ClockPage.vue'
@@ -31,8 +38,12 @@ import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
+// 群 SOP 设置 
+import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
+// 群列表
+import GroupListDetails from '../views/customerManage/groupListDetails.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
@@ -112,6 +123,15 @@ const routes = [{
         },
         component: Groupportrait,
     },
+    //群SOP 设置
+    {
+        path: '/settingSop',
+        name: 'settingSop',
+        meta: {
+            bodyClass: 'settingSop',
+        },
+        component: SettingSop,
+    },
 
     //打卡
     {
@@ -170,6 +190,41 @@ const routes = [{
                 },
                 component: CustomerGroup,
             },
+            //客户群群发
+            {
+                path: 'CustomergroupPlaye',
+                meta: {
+                    bodyClass: 'CustomergroupPlaye',
+                },
+                component: CustomergroupPlaye,
+            },
+
+            //一建拉群
+            {
+                path: 'lableDataGroup',
+                meta: {
+                    bodyClass: 'lableDataGroup',
+                },
+                component: LableDataGroup,
+
+            },
+            //群活码 list
+            {
+                path: 'groupCodeList',
+                meta: {
+                    bodyClass: 'GroupCodeList',
+                },
+                component: GroupCodeList,
+            },
+            //群活码 add
+            {
+                path: 'groupCodeAdd',
+                meta: {
+                    bodyClass: 'GroupCodeAdd',
+                },
+                component: GroupCodeAdd,
+
+            },
         ],
     },
     //客户管理
@@ -211,6 +266,15 @@ const routes = [{
                     bodyClass: 'grouplist',
                 },
                 component: Grouplist,
+            },
+            // 群列表详情
+            {
+                path: 'groupListDetails',
+                name: 'groupListDetails',
+                meta: {
+                    bodyClass: 'groupListDetails',
+                },
+                component: GroupListDetails,
             },
 
             // 客户画像

@@ -20,182 +20,143 @@
           <span>客户公海</span>
         </div>
       </div>
-      <!-- <div class="cardContent">
-        <div class="box card1">
-          <span>{{ clues }}</span>
-          <span>我的线索</span>
-        </div>
-        <div class="box card2">
-          <span>{{ cluSee }}</span>
-          <span>线索公海</span>
-        </div>
-      </div>
-      <div class="cardContent">
-        <div class="box card3">
-          <span>{{ customer }}</span>
-          <span>我的客户</span>
-        </div>
-        <div class="box card4">
-          <span>{{ customerSee }}</span>
-          <span>客户公海</span>
-        </div>
-      </div> -->
       <div class="customAccont tool">引流获客</div>
       <div class="btnRouter">
-        <div class="rowRouter">
-          <router-link to="/talkTool/enterpriseCode">
-            <div class="commonBtn">
-              <img src="../images/huoma.png"
-                   alt="" />
-              <span>获客活码</span>
-            </div>
-          </router-link>
-          <router-link to="/talkTool/channelConfiguration">
-            <div class="commonBtn">
-              <img src="../images/qudao.png"
-                   alt="" />
-              <span>渠道配置</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/qhm2.png"
-                   alt="" />
-              <span class="nomaltext">群活码</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/lzbd.png"
-                   alt="" />
-              <span class="nomaltext">留资表单</span>
-            </div>
-          </router-link>
-        </div>
-        <div class="rowRouter">
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/znsk2.png"
-                   alt="" />
-              <span class="nomaltext">智能搜客</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/xstc2.png"
-                   alt="" />
-              <span class="nomaltext">线索探查</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/dthk.png"
-                   alt="" />
-              <span class="nomaltext">地图获客</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/yjlq2.png"
-                   alt="" />
-              <span class="nomaltext">一键拉群</span>
-            </div>
-          </router-link>
-        </div>
-        <div class="rowRouter">
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/khqf.png"
-                   alt="" />
-              <span class="nomaltext">客户群发</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/khqqf2.png"
-                   alt="" />
-              <span class="nomaltext">客户群群发</span>
-            </div>
-          </router-link>
-        </div>
+        <router-link
+          to="/talkTool/enterpriseCode"
+          v-show="menulist.includes('livecode')"
+        >
+          <div class="commonBtn">
+            <img src="../images/huoma.png" alt="" />
+            <span>获客活码</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/talkTool/channelConfiguration"
+          v-show="menulist.includes('channle')"
+        >
+          <div class="commonBtn">
+            <img src="../images/qudao.png" alt="" />
+            <span>渠道配置</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/talkTool/customerGroup"
+          v-show="menulist.includes('customerSend')"
+        >
+          <div class="commonBtn">
+            <img src="../images/qunfa.png" alt="" />
+            <span>客户群发</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/talkTool/CustomergroupPlaye"
+          v-show="menulist.includes('groupSend')"
+        >
+          <div class="commonBtn">
+            <img src="../images/qunqnfa.png" alt="" />
+            <span>客户群群发</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/qhm2.png" alt="" />
+            <span class="nomaltext">群活码</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/lzbd.png" alt="" />
+            <span class="nomaltext">留资表单</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/znsk2.png" alt="" />
+            <span class="nomaltext">智能搜客</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/xstc2.png" alt="" />
+            <span class="nomaltext">线索探查</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/dthk.png" alt="" />
+            <span class="nomaltext">地图获客</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/yjlq2.png" alt="" />
+            <span class="nomaltext">一键拉群</span>
+          </div>
+        </router-link>
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
-        <div class="rowRouter">
-          <router-link to="/customerManage/clues">
-            <div class="commonBtn">
-              <img src="../images/xiansuo.png"
-                   alt="" />
-              <span>线索</span>
-            </div>
-          </router-link>
-          <router-link to="/customerManage/myCustomer">
-            <div class="commonBtn">
-              <img src="../images/kehu.png"
-                   alt="" />
-              <span>客户</span>
-            </div>
-          </router-link>
-          <router-link to="/customerManage/grouplist">
-            <div class="commonBtn">
-              <img src="../images/grouplist.png"
-                   alt="" />
-              <span>群列表</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/lskh2.png"
-                   alt="" />
-              <span class="nomaltext">流失客户</span>
-            </div>
-          </router-link>
-        </div>
+        <router-link
+          to="/customerManage/clues"
+          v-show="menulist.includes('clew')"
+        >
+          <div class="commonBtn">
+            <img src="../images/xiansuo.png" alt="" />
+            <span>线索</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/customerManage/myCustomer"
+          v-show="menulist.includes('customer')"
+        >
+          <div class="commonBtn">
+            <img src="../images/kehu.png" alt="" />
+            <span>客户</span>
+          </div>
+        </router-link>
+        <router-link
+          to="/customerManage/grouplist"
+          v-show="menulist.includes('group')"
+        >
+          <div class="commonBtn">
+            <img src="../images/grouplist.png" alt="" />
+            <span>群列表</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/lskh2.png" alt="" />
+            <span class="nomaltext">流失客户</span>
+          </div>
+        </router-link>
       </div>
       <div class="customAccont manage">办公协同</div>
       <div class="btnRouter custom">
-        <div class="rowRouter">
-          <router-link to="/punchCard">
-            <div class="commonBtn">
-              <img src="../images/wcdk.png"
-                   alt="" />
-              <span>外出打卡</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/bfjh.png"
-                   alt="" />
-              <span class="nomaltext">拜访计划</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/dbsx.png"
-                   alt="" />
-              <span class="nomaltext">待办事项</span>
-            </div>
-          </router-link>
-          <router-link to="">
-            <div class="commonBtn"
-                 @click="showMsg">
-              <img src="../images/wdbb2.png"
-                   alt="" />
-              <span class="nomaltext">我的报表</span>
-            </div>
-          </router-link>
-        </div>
+        <router-link to="/punchCard" v-show="menulist.includes('punchCode')">
+          <div class="commonBtn">
+            <img src="../images/wcdk.png" alt="" />
+            <span>外出打卡</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/bfjh.png" alt="" />
+            <span class="nomaltext">拜访计划</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/dbsx.png" alt="" />
+            <span class="nomaltext">待办事项</span>
+          </div>
+        </router-link>
+        <router-link to="">
+          <div class="commonBtn" @click="showMsg">
+            <img src="../images/wdbb2.png" alt="" />
+            <span class="nomaltext">我的报表</span>
+          </div>
+        </router-link>
       </div>
     </div>
     <!-- <div class="btm-box">
@@ -210,59 +171,82 @@
         </div>
       </div>
     </div> -->
+    <van-overlay :show="show">
+      <div class="wrapper" @click.stop>
+        <div class="dialogImg" align="center">
+          <img src="../images/secreteig.png" alt="" />
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 <script>
-import CommonHome from '../utils/CommonHome'
-import { Notify } from 'vant'
+import CommonHome from "../utils/CommonHome";
+import { Notify } from "vant";
 export default {
   components: {},
   data() {
     return {
-      userId: '',
-      token: '',
-      clues: '0',
-      cluSee: '0',
-      customer: '0',
-      customerSee: '0',
-    }
+      userId: "",
+      token: "",
+      clues: "0",
+      cluSee: "0",
+      customer: "0",
+      customerSee: "0",
+      menulist: [],
+      show: false,
+    };
   },
   created() {
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-      loadingType: 'spinner',
-    })
-   CommonHome.getWxToken()
+      loadingType: "spinner",
+    });
+    // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
       this.$network
-        .get('/customer-service/cluecustomer/homedata')
+        .get("/customer-service/cluecustomer/homedata")
         .then((res) => {
-          this.clues = res.data.myThread
-          this.cluSee = res.data.derThread
-          this.customer = res.data.myCustomer
-          this.customerSee = res.data.derCustomer
-        })
-    }, 2000)
-    // this.$toast.clear()
+          this.clues = res.data.myThread;
+          this.cluSee = res.data.derThread;
+          this.customer = res.data.myCustomer;
+          this.customerSee = res.data.derCustomer;
+        });
+      this.getUserName();
+    }, 2000);
   },
   methods: {
     showMsg() {
       Notify({
-        message: '功能即将上线，请耐心等待~',
-        type: 'success',
+        message: "功能即将上线，请耐心等待~",
+        type: "success",
         duration: 1000,
-        className: 'msgTitle',
-        background: '#52BD94',
-      })
+        className: "msgTitle",
+        background: "#52BD94",
+      });
+    },
+    getUserName() {
+      this.$network
+        .get("/user-service/user/getUserName", { endPoint: "mobile" })
+        .then((res) => {
+          this.show = !res.data.haveSecret;
+          let tempMenuList = res.data.userEntity.permissionList;
+          sessionStorage.setItem(
+            "permissionsList",
+            JSON.stringify(tempMenuList)
+          );
+          this.menulist = tempMenuList.map((item) => item.enName);
+          // console.log(this.menulist)
+        });
     },
     goToCard() {
-      this.$router.push('/punchCard')
+      this.$router.push("/punchCard");
     },
   },
-}
+};
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
@@ -271,6 +255,7 @@ export default {
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
   .main-warp {
     -webkit-overflow-scrolling: touch;
     height: 100%;
@@ -280,6 +265,12 @@ export default {
     scrollbar-width: 0;
     &::-webkit-scrollbar {
       width: 0;
+    }
+  }
+  .dialogImg {
+    margin-top: 20%;
+    img {
+      width: 702px;
     }
   }
   .statiStical {
@@ -311,7 +302,7 @@ export default {
     .afterLine {
       position: relative;
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         height: 60px;
         width: 2px;
@@ -329,7 +320,7 @@ export default {
     padding-left: 20px;
     margin-bottom: 24px;
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 5px;
       left: 0;
@@ -358,31 +349,31 @@ export default {
       }
     }
     .card1 {
-      background: url('../images/three.png') no-repeat;
+      background: url("../images/three.png") no-repeat;
       background-size: contain;
     }
     .card2 {
-      background: url('../images/one.png') no-repeat;
+      background: url("../images/one.png") no-repeat;
       background-size: contain;
     }
     .card3 {
-      background: url('../images/four.png') no-repeat;
+      background: url("../images/four.png") no-repeat;
       background-size: contain;
     }
     .card4 {
-      background: url('../images/two.png') no-repeat;
+      background: url("../images/two.png") no-repeat;
       background-size: contain;
     }
   }
   .btnRouter {
     // padding: 0 35px;
     box-sizing: border-box;
-    .rowRouter {
-      display: flex;
-      margin-bottom: 32px;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
     .commonBtn {
       font-size: 28px;
+      margin-bottom: 20px;
       font-weight: 500;
       color: #3c4353;
       text-align: center;
