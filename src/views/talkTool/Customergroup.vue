@@ -22,6 +22,8 @@
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
+                maxlength="30"
+                show-word-limit
               ></el-input>
             </el-form-item>
             <!-- 选择员工 -->
