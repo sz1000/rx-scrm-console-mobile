@@ -20,7 +20,7 @@ Vue.use(loadmore)
 Vue.use(Vant)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
-Vue.prototype.$network = { http }
+Vue.prototype.$network =  http 
 new Vue({
     router,
     store,
