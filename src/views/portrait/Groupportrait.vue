@@ -142,10 +142,7 @@ export default {
     }
   },
   created() {
-    // alert(localStorage.getItem("chatId"), "获取chatid");
     commonFun.getWxAppid()
-    // this.getGroupDetail();
-    // this.getList();
   },
   mounted() {
     setTimeout(() => {

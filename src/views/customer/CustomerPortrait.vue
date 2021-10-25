@@ -1,12 +1,5 @@
 <template>
-  <!-- <div class="main_warp">
-    <div v-show="loadingShow"
-         class="loadingStyle">
-      <img src="../../images/loading.gif"
-           alt="">
-    </div> -->
-
-  <div class="custom_warp">
+  <div class="custom_warp" v-if="entry == 'single_chat_tools'">
     <div class="topInfo">
       <div class="customInfo">
         <div class="iconName">
@@ -84,7 +77,7 @@
           <div :class="{ 'over-hidden': !unfold }" ref="textBox">
             <div ref="spanBox">
               <span v-for="(list, index) in companyTagList" :key="index"
-                    class="tagBox">{{ list.name }}</span>
+                class="tagBox">{{ list.name }}</span>
             </div>
           </div>
           <div class="btn" @click="unfold = !unfold" v-show="companyTagList.length > 5">
@@ -105,7 +98,7 @@
           <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
             <div ref="spanBox">
               <span v-for="(list, index) in personTagList" :key="index" class="tagBox"
-                    v-show="list.isChecked">{{ list.name }}</span>
+                v-show="list.isChecked">{{ list.name }}</span>
             </div>
           </div>
           <div class="btn" @click="isShowPerson = !isShowPerson" v-show="
@@ -130,7 +123,7 @@
         <div class="timeLine">
           <el-timeline>
             <el-timeline-item v-for="(item, index) in timeLineList" :key="index" color="#4168F6"
-                              type="danger ">
+              type="danger ">
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
                 <div class="inLineTwo">{{ item.context }}</div>
@@ -148,7 +141,7 @@
     </div>
     <div class="bottom_model">
       <van-action-sheet v-model="show" :lock-scroll="false" :title="titleName" @cancel="cancelIcon"
-                        @click-overlay="cancelIcon" class="vant_sheet">
+        @click-overlay="cancelIcon" class="vant_sheet">
         <div class="content">
           <div class="tagWarp" v-if="isShowDialog == '1'">
             <div class="tagRow" v-for="(item, index) in groupList" :key="index">
@@ -160,7 +153,7 @@
                         return item.tagid == list.tagid;
                       }) > -1,
                   }" v-for="(list, index) in item.children" :key="list.id" v-show="list.name"
-                      @click="selectTag(list, index)">{{ list.name }}</span>
+                  @click="selectTag(list, index)">{{ list.name }}</span>
               </div>
             </div>
           </div>
@@ -172,10 +165,10 @@
                 <span class="addBtn pointer" @click="addTag">+添加</span>
                 <span class="perchInput" v-if="isShow">
                   <input v-model.trim="tagName" class="addInput" placeholder="输入后按回车完成"
-                         maxlength="30" @keyup.enter="handleSearch()" />
+                    maxlength="30" @keyup.enter="handleSearch()" />
                 </span>
                 <span class="creatTag" :class="{ changeTag: list.isChecked }"
-                      v-for="(list, index) in personTagList" :key="list.id" v-show="list.name">
+                  v-for="(list, index) in personTagList" :key="list.id" v-show="list.name">
                   <span @click="selectPersonTag(list, index)">{{
                     list.name
                   }}</span>
@@ -188,7 +181,7 @@
           </div>
           <div class="writerInput" v-if="isShowDialog == '3'">
             <van-field v-model="message" type="textarea" maxlength="200" placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
+              show-word-limit />
           </div>
           <div class="buttonWarp" v-show="hidshow">
             <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
@@ -206,6 +199,7 @@
     </van-overlay>
     <!-- <BackTop></BackTop> -->
   </div>
+  <Groupportrait v-else></Groupportrait>
   <!-- </div> -->
 </template>
 <script>
@@ -213,13 +207,18 @@
 import BackTop from '@/components/BackTop'
 import { formatDate } from '../../utils/tool'
 import commonFun from '../../utils/commonToken'
+import Groupportrait from '../portrait/Groupportrait.vue'
 import { mapState } from 'vuex'
 export default {
   components: {
     BackTop,
+    Groupportrait,
   },
   computed: {
     ...mapState(['userId']),
+    entry() {
+      return this.$store.getters.entry
+    },
   },
   data() {
     return {
@@ -309,7 +308,7 @@ export default {
         })
         this.$network
           .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-            // id: v,
+            // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
             id: localStorage.getItem('userId'),
           })
           .then((res) => {
