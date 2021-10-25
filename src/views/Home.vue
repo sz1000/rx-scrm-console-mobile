@@ -22,28 +22,46 @@
       </div>
       <div class="customAccont tool">引流获客</div>
       <div class="btnRouter">
-        <router-link to="/talkTool/enterpriseCode" v-show="menulist.includes('livecode')">
+        <router-link
+          to="/talkTool/enterpriseCode"
+          v-show="menulist.includes('livecode')"
+        >
           <div class="commonBtn">
             <img src="../images/huoma.png" alt="" />
             <span>获客活码</span>
           </div>
         </router-link>
-        <router-link to="/talkTool/channelConfiguration" v-show="menulist.includes('channle')">
+        <router-link
+          to="/talkTool/channelConfiguration"
+          v-show="menulist.includes('channle')"
+        >
           <div class="commonBtn">
             <img src="../images/qudao.png" alt="" />
             <span>渠道配置</span>
           </div>
         </router-link>
-        <router-link to="/talkTool/customerGroup" v-show="menulist.includes('customerSend')">
+        <router-link
+          to="/talkTool/customerGroup"
+          v-show="menulist.includes('customerSend')"
+        >
           <div class="commonBtn">
             <img src="../images/qunfa.png" alt="" />
             <span>客户群发</span>
           </div>
         </router-link>
-        <router-link to="/talkTool/CustomergroupPlaye" v-show="menulist.includes('groupSend')">
+        <router-link
+          to="/talkTool/CustomergroupPlaye"
+          v-show="menulist.includes('groupSend')"
+        >
           <div class="commonBtn">
             <img src="../images/qunqnfa.png" alt="" />
             <span>客户群群发</span>
+          </div>
+        </router-link>
+        <router-link to="talkTool/lableDataGroup">
+          <div class="commonBtn">
+            <img src="../images/yjlqon.png" alt="" />
+            <span>一键拉群</span>
           </div>
         </router-link>
         <router-link to="">
@@ -52,6 +70,7 @@
             <span class="nomaltext">群活码</span>
           </div>
         </router-link>
+
         <router-link to="">
           <div class="commonBtn" @click="showMsg">
             <img src="../images/lzbd.png" alt="" />
@@ -76,28 +95,31 @@
             <span class="nomaltext">地图获客</span>
           </div>
         </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/yjlq2.png" alt="" />
-            <span class="nomaltext">一键拉群</span>
-          </div>
-        </router-link>
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
-        <router-link to="/customerManage/clues" v-show="menulist.includes('clew')">
+        <router-link
+          to="/customerManage/clues"
+          v-show="menulist.includes('clew')"
+        >
           <div class="commonBtn">
             <img src="../images/xiansuo.png" alt="" />
             <span>线索</span>
           </div>
         </router-link>
-        <router-link to="/customerManage/myCustomer" v-show="menulist.includes('customer')">
+        <router-link
+          to="/customerManage/myCustomer"
+          v-show="menulist.includes('customer')"
+        >
           <div class="commonBtn">
             <img src="../images/kehu.png" alt="" />
             <span>客户</span>
           </div>
         </router-link>
-        <router-link to="/customerManage/grouplist" v-show="menulist.includes('group')">
+        <router-link
+          to="/customerManage/grouplist"
+          v-show="menulist.includes('group')"
+        >
           <div class="commonBtn">
             <img src="../images/grouplist.png" alt="" />
             <span>群列表</span>
@@ -160,72 +182,72 @@
   </div>
 </template>
 <script>
-import CommonHome from '../utils/CommonHome'
-import { Notify } from 'vant'
+import CommonHome from "../utils/CommonHome";
+import { Notify } from "vant";
 export default {
   components: {},
   data() {
     return {
-      userId: '',
-      token: '',
-      clues: '0',
-      cluSee: '0',
-      customer: '0',
-      customerSee: '0',
+      userId: "",
+      token: "",
+      clues: "0",
+      cluSee: "0",
+      customer: "0",
+      customerSee: "0",
       menulist: [],
       show: false,
-    }
+    };
   },
   created() {
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-      loadingType: 'spinner',
-    })
-    CommonHome.getWxToken()
+      loadingType: "spinner",
+    });
+    // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
       this.$network
-        .get('/customer-service/cluecustomer/homedata')
+        .get("/customer-service/cluecustomer/homedata")
         .then((res) => {
-          this.clues = res.data.myThread
-          this.cluSee = res.data.derThread
-          this.customer = res.data.myCustomer
-          this.customerSee = res.data.derCustomer
-        })
-      this.getUserName()
-    }, 2000)
+          this.clues = res.data.myThread;
+          this.cluSee = res.data.derThread;
+          this.customer = res.data.myCustomer;
+          this.customerSee = res.data.derCustomer;
+        });
+      this.getUserName();
+    }, 2000);
   },
   methods: {
     showMsg() {
       Notify({
-        message: '功能即将上线，请耐心等待~',
-        type: 'success',
+        message: "功能即将上线，请耐心等待~",
+        type: "success",
         duration: 1000,
-        className: 'msgTitle',
-        background: '#52BD94',
-      })
+        className: "msgTitle",
+        background: "#52BD94",
+      });
     },
     getUserName() {
       this.$network
-        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
+        .get("/user-service/user/getUserName", { endPoint: "mobile" })
         .then((res) => {
-          this.show = !res.data.haveSecret
-          let tempMenuList = res.data.userEntity.permissionList
+          this.show = !res.data.haveSecret;
+          let tempMenuList = res.data.userEntity.permissionList;
           sessionStorage.setItem(
-            'permissionsList',
+            "permissionsList",
             JSON.stringify(tempMenuList)
-          )
-          this.menulist = tempMenuList.map((item) => item.enName)
+          );
+          this.menulist = tempMenuList.map((item) => item.enName);
           // console.log(this.menulist)
-        })
+        });
     },
     goToCard() {
-      this.$router.push('/punchCard')
+      this.$router.push("/punchCard");
     },
   },
-}
+};
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
@@ -281,7 +303,7 @@ export default {
     .afterLine {
       position: relative;
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         height: 60px;
         width: 2px;
@@ -299,7 +321,7 @@ export default {
     padding-left: 20px;
     margin-bottom: 24px;
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 5px;
       left: 0;
@@ -328,19 +350,19 @@ export default {
       }
     }
     .card1 {
-      background: url('../images/three.png') no-repeat;
+      background: url("../images/three.png") no-repeat;
       background-size: contain;
     }
     .card2 {
-      background: url('../images/one.png') no-repeat;
+      background: url("../images/one.png") no-repeat;
       background-size: contain;
     }
     .card3 {
-      background: url('../images/four.png') no-repeat;
+      background: url("../images/four.png") no-repeat;
       background-size: contain;
     }
     .card4 {
-      background: url('../images/two.png') no-repeat;
+      background: url("../images/two.png") no-repeat;
       background-size: contain;
     }
   }

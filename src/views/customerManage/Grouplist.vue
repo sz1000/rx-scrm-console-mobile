@@ -31,7 +31,7 @@
           <li
             v-for="(item, index) in dataList"
             :key="index"
-            @click="clickChatid(item.chatId)"
+            @click="clickChatid(item)"
           >
             <div class="lsits">
               <p class="name_tite">
@@ -173,12 +173,16 @@ export default {
     // },
     //获取群id跳转
     clickChatid(id) {
-      // console.log(id);
-      // this.$router.push({ path: "/groupportrait", query: { id: id } });
+      // console.log(id.chatId);
+      // console.log(id.id);
+      this.$router.push({
+        path: "./groupListDetails",
+        query: { id: id.chatId, grouid: id.id },
+      });
       // this.$router.push({
-      //   name: "groupportrait",
+      //   name: "groupListDetails",
       //   params: {
-      //     name: "groupportrait",
+      //     name: "groupListDetails",
       //     id: id,
       //   },
       // });
