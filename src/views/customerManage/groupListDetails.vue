@@ -215,15 +215,19 @@ export default {
 
       sopList: [], //群 sop 列表
       groupId: "",
+      group: "",
       isOwmer: false, //是否群主
     };
   },
-  created() {},
+  created() {
+    this.group = this.$route.query.grouid;
+  },
   mounted() {
     setTimeout(() => {
       this.pageInfo.page = 1;
       this.getGroupDetailtop();
       this.getGroupDetail();
+
       this.getList();
     }, 3000);
   },
@@ -238,7 +242,7 @@ export default {
     },
     getSopList() {
       //获取sop规则列表
-      sop_groupSopList(this.groupId).then((res) => {
+      sop_groupSopList(this.group).then((res) => {
         if (res.result) {
           let list = res.data;
           this.sopList = list;
@@ -250,7 +254,7 @@ export default {
       this.$router.push({
         path: "/settingSop",
         query: {
-          id: this.groupId,
+          id: this.group,
         },
       });
     },
@@ -270,7 +274,7 @@ export default {
               this.getSopList();
             }
           }
-          this.getSopList(); //本地调试用
+          //   this.getSopList(); //本地调试用
           // this.show = false;  //画页面用 2021/10/11
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;

@@ -58,12 +58,19 @@
             <span>客户群群发</span>
           </div>
         </router-link>
+        <router-link to="talkTool/lableDataGroup">
+          <div class="commonBtn">
+            <img src="../images/yjlqon.png" alt="" />
+            <span>一键拉群</span>
+          </div>
+        </router-link>
         <router-link to="">
           <div class="commonBtn" @click="showMsg">
             <img src="../images/qhm2.png" alt="" />
             <span class="nomaltext">群活码</span>
           </div>
         </router-link>
+
         <router-link to="">
           <div class="commonBtn" @click="showMsg">
             <img src="../images/lzbd.png" alt="" />
@@ -86,12 +93,6 @@
           <div class="commonBtn" @click="showMsg">
             <img src="../images/dthk.png" alt="" />
             <span class="nomaltext">地图获客</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/yjlq2.png" alt="" />
-            <span class="nomaltext">一键拉群</span>
           </div>
         </router-link>
       </div>

@@ -246,8 +246,10 @@
         </div>
 
         <!-- 通知成员 -->
-        <div class="sendRequest warpButtonSend" @click="sendRequest">
-          通知成员发送
+        <div>
+          <div class="sendRequest warpButtonSend" @click="sendRequest">
+            通知成员发送
+          </div>
         </div>
       </div>
     </div>
