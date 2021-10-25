@@ -1,4 +1,4 @@
-import http from '../utils/request'
+import { http } from '../utils/request'
 
 const userServiceApi = '/user-service'
 const wechatServiceApi = '/wechat-service'

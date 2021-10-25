@@ -1,5 +1,5 @@
-import Network from './request'
+import {http} from './request'
 
 export const getToken = (params) => {
-    return Network.get('/user-service/m/user/getloguser', params)
+    return http.get('/user-service/m/user/getloguser', params)
 }
