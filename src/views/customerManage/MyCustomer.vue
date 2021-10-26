@@ -50,68 +50,17 @@
         <div class="topInfo"
              v-for="(item, index) in cardList"
              :key="index">
-          <div class="customInfo">
-            <div class="iconName">
-              <span>客户简称:</span>
-              <span>{{ item.customerName }}</span>
-            </div>
-            <!-- <div class="detailBtn"
-               @click="deleteCard(item,index)">
-            <van-icon name="delete-o" />
-            删除
-          </div> -->
-          </div>
-          <div class="detailInfo"
-               @click="goDetail(item, index)">
-            <div class="left">
-              <div class="rowStyle">
-                <span>公司名称:</span>
-                <span>{{ item.cropFullName }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>所属行业:</span>
-                <span>{{ item.cropSubIndustry }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>联系人员:</span>
-                <span>{{ item.name }}</span>
-              </div>
-            </div>
-            <div class="right">
-              <div class="rowStyle">
-                <span>职务:</span>
-                <span>{{ item.position }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>性别:</span>
-                <span>{{ item.gender }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>邮箱:</span>
-                <span>{{ item.email }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="tjry">
-            <div class="box">
-              <span class="label">添加人员:</span>
-              <span class="value">{{ item.createBy }}</span>
-            </div>
-            <div class="box1">
-              <span class="label">添加时间:</span>
-              <span class="value">{{
-                formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-              }}</span>
-            </div>
-          </div>
+          <customer-item :itemData="item" :index="index"></customer-item>
         </div>
       </van-list>
     </div>
   </div>
 </template>
 <script>
-import { _throttle, formatDate } from '../../utils/tool'
+import { _throttle } from '../../utils/tool'
 import MyMixin from '../../mixins/permissionsList'
+
+import CustomerItem from '../../components/CustomerManage/customerItem'
 export default {
   mixins: [MyMixin],
   data() {
@@ -149,8 +98,12 @@ export default {
     this.page = 1
     this.getListData()
   },
+  provide() {
+    return {
+      goDetail: this.goDetail
+    }
+  },
   methods: {
-    formatDate,
     tabClick(v) {
       this.type = v
       this.page = 1
@@ -253,6 +206,9 @@ export default {
       }
     },
   },
+  components: {
+    CustomerItem
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -363,102 +319,6 @@ export default {
       height: 400px;
       background: #fff;
       padding: 24px;
-      .customInfo {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 88px;
-        border-bottom: 1px solid #f0f2f7;
-        .iconName {
-          // display: flex;
-          font-size: 28px;
-          span:nth-child(1) {
-            color: #838a9d;
-          }
-          span:nth-child(2) {
-            color: #3c4353;
-          }
-        }
-        .detailBtn {
-          font-size: 28px;
-          color: #838a9d;
-          .van-icon {
-            vertical-align: -11%;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .detailInfo {
-        display: flex;
-        margin-top: 21px;
-        .left,
-        .right {
-          width: 50%;
-          .rowStyle {
-            line-height: 40px;
-            font-size: 28px;
-            margin-bottom: 24px;
-            display: flex;
-            span {
-              display: inline-block;
-            }
-            span:nth-child(1) {
-              width: 140px;
-              color: #838a9d;
-              overflow: hidden;
-            }
-            span:nth-child(2) {
-              flex: 1;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-              color: #3c4353;
-              font-weight: 400;
-            }
-          }
-        }
-        .right {
-          margin-left: 19px;
-          .rowStyle {
-            span:nth-child(1) {
-              width: 84px;
-            }
-          }
-        }
-      }
-      .tjry {
-        height: 87px;
-        border-top: 1px solid #f0f2f7;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 28px;
-        span {
-          display: inline-block;
-        }
-        .label {
-          width: 200px;
-          color: #838a9d;
-        }
-        .value {
-          width: 100%;
-          color: #3c4353;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        .box {
-          display: flex;
-          width: 50%;
-        }
-        .box1 {
-          display: flex;
-          width: 50%;
-          line-height: 87px;
-          margin-left: 29px;
-        }
-      }
     }
   }
 }
