@@ -9,9 +9,9 @@ let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
     // BASE_URL = 'http://172.10.7.114:8099/' //袁
-    // BASE_URL = 'http://172.10.7.200:8099/' //刘
+    BASE_URL = 'http://172.10.7.200:8099/' //刘
     // BASE_URL = 'http://172.10.7.170:8099/'  //稳
-    BASE_URL = 'https://dev-api.jzcrm.com' //开发
+    // BASE_URL = 'https://dev-api.jzcrm.com' //开发
         // BASE_URL = 'http://172.10.6.144:8099' // 李泉
     addVconsole()
 } else if (location.hostname == 'dev-h5.jzcrm.com') {

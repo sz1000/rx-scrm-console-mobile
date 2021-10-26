@@ -1042,7 +1042,7 @@ export default {
   margin-left: 180px;
 }
 .client_send {
-  font-size: 14px;
+  font-size: 28px;
   color: #3c4353;
   letter-spacing: 0;
   font-weight: 400;
