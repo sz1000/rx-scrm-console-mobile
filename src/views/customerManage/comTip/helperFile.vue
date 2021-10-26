@@ -1,5 +1,11 @@
 <template>
   <div class="clueWarp">
+  	<div class="titleBox">
+			<span class="blueDiv">
+				
+			</span>
+			<span class="titleFujian">协助人</span>
+		</div>
   	<el-button class="delBtn" size="small" type="primary" @click="delPop">
   		<i class="el-icon-delete"></i><span>删除</span>
   	</el-button>
@@ -8,7 +14,7 @@
   	</el-button>
     <div class="cardWarp">
         <div class="topInfo" v-for="(item, index) in yiList" :key="index">
-          <div class="detailInfo" @click="goDetail(item, index)">
+          <div class="detailInfo">
             <div class="left">
               <div class="rowStyle">
                 <span>员工姓名:</span>
@@ -556,6 +562,7 @@ export default {
   margin: 0 auto;
   color: #4168f6;
   background: #fff;
+  font-size: 30px;
 }
 .save {
   background: #4168f6;
@@ -584,21 +591,23 @@ export default {
           text-align: center;
           position: absolute;
           right: 150px;
-          top: 0;
+        /*  top: 0;*/
           background: #FFFFFF;
           font-size: 30px;
+          top: -12px;
 }
 .addBtn{
 	right: 5px;
 }
 .clueWarp {
+	position: relative;
   height: 100%;
   .cardWarp {
     .topInfo {
       margin-top: 24px;
       /*height: 400px;*/
       background: #fff;
-      padding: 24px 24px 0;
+     /* padding: 24px 24px 0;*/
       .customInfo {
         display: flex;
         justify-content: space-between;
@@ -744,5 +753,24 @@ export default {
 }
 /deep/.addBtn i{
 	right: 14px;
+}
+.titleBox{
+/*	width: 80px;*/
+	height: 40px;
+	font-size: 30px;
+	color: #3C4353;
+	letter-spacing: 0;
+	font-weight: bold;
+	line-height: 40px;
+	margin-bottom: 10px;
+/*	margin-top: 36px;
+	    padding-left: 28px;*/
+}
+.blueDiv{
+	width: 8px;
+	height: 25px;
+	background: #4168F6;
+	margin-right: 12px;
+	display: inline-block;
 }
 </style>

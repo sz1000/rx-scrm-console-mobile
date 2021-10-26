@@ -53,9 +53,17 @@
           </el-timeline>
         </div>
       </div>
-
+      <!-- 协作人 -->
+      <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
+      	<HelperFile></HelperFile>
+      </div>
       <!-- 商机 -->
       <opportunities v-if="contentType == 2" :customerNo="customerData && customerData.clueCustomerNo"></opportunities>
+       <!-- 附件 -->
+      <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
+      	<Fujian></Fujian>
+      </div>
+			
     </div>
 
     <div class="bottom_model">
@@ -135,7 +143,9 @@ import { formatDate, _throttle } from '../../utils/tool'
 
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
-
+import { BASE_URL } from '../../utils/request'
+import  HelperFile  from "./comTip/helperFile";
+import  Fujian  from "./comTip/fujian";
 export default {
   data() {
     return {
@@ -340,7 +350,9 @@ export default {
   },
   components: {
     CustomerItem,
-    Opportunities
+    Opportunities,
+    HelperFile,
+    Fujian,
   }
 }
 </script>
