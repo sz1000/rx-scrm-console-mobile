@@ -1,8 +1,7 @@
 <template>
   <div class="custom-detail">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -15,38 +14,57 @@
 
     <div class="infoContent">
       <ul class="header-nav">
-        <li v-for="(i, index) in navList" :key="i" @click="changeNav(index)" :class="{active: contentType == index}"><span>{{ i }}</span></li>
+        <li
+          v-for="(i, index) in navList"
+          :key="i"
+          @click="changeNav(index)"
+          :class="{ active: contentType == index }"
+        >
+          <span>{{ i }}</span>
+        </li>
       </ul>
 
       <!-- 客户动态 -->
       <div v-if="contentType == 0" class="content-item dynamic">
         <div class="t_text">
           <span class="label_tag">客户动态</span>
-          <div class="editButton"
-               @click="showCompany(3)"
-               v-show="btnList.some(item=>item.enName == 'write')">
-            <img src="../../images/icon_repair1@2x.png"
-                 alt="" />
+          <div
+            class="editButton"
+            @click="showCompany(3)"
+            v-show="btnList.some((item) => item.enName == 'write')"
+          >
+            <img src="../../images/icon_repair1@2x.png" alt="" />
             <span>写跟进</span>
           </div>
         </div>
 
         <ul class="dynamic-nav">
-          <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index}">{{ i }}</li>
+          <li
+            v-for="(i, index) in dynamicNavList"
+            :key="i"
+            @click="changeDynamicNav(index)"
+            :class="{ active: dynamicContentType == index }"
+          >
+            {{ i }}
+          </li>
         </ul>
 
         <div v-if="timeLineList && timeLineList.length" class="timeLine">
           <el-timeline>
-            <el-timeline-item v-for="(item, index) in timeLineList"
-                              :key="index"
-                              color="#4168F6"
-                              type="danger ">
+            <el-timeline-item
+              v-for="(item, index) in timeLineList"
+              :key="index"
+              color="#4168F6"
+              type="danger "
+            >
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
                 <div class="inLineTwo">{{ item.context }}</div>
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                  <span class="time_right">{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
+                  <span class="time_right">{{
+                    formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
+                  }}</span>
                 </div>
               </div>
             </el-timeline-item>
@@ -55,49 +73,56 @@
       </div>
 
       <!-- 商机 -->
-      <opportunities v-if="contentType == 2" :customerNo="customerData && customerData.clueCustomerNo"></opportunities>
+      <opportunities
+        v-if="contentType == 2"
+        :customerNo="customerData && customerData.clueCustomerNo"
+      ></opportunities>
     </div>
 
     <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName"
-                        @cancel="cancelIcon"
-                        @click-overlay="cancelIcon"
-                        :lock-scroll="false">
+      <van-action-sheet
+        v-model="show"
+        :title="titleName"
+        @cancel="cancelIcon"
+        @click-overlay="cancelIcon"
+        :lock-scroll="false"
+      >
         <div class="content">
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
+          <div class="writerInput" v-if="isShowDialog == '3'">
+            <van-field
+              v-model="message"
+              type="textarea"
+              maxlength="200"
+              placeholder="记录好跟进，多签单哟~"
+              show-word-limit
+            />
           </div>
-          <div class="changeUser"
-               v-if="isShowDialog == '4'">
+          <div class="changeUser" v-if="isShowDialog == '4'">
             <div class="nowUser">
               <span>现有所属人:</span>
               <span>{{ nowUser }}</span>
             </div>
             <div class="selectUser">
               <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
+              <el-select
+                v-model="userNo"
+                placeholder="请选择"
+                popper-class="popper-select-class"
+              >
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.userNo"
+                  @change="fnChangeUser"
+                >
                 </el-option>
               </el-select>
             </div>
           </div>
           <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
+            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -111,30 +136,32 @@
              alt="" />
         <span>转客户</span>
       </div> -->
-      <div class="btnBox"
-           @click="changeUser"
-           v-show="btnList.some(item=>item.enName == 'change')">
-        <img src="../../images/icon_change2@2x.png"
-             alt="" />
+      <div
+        class="btnBox"
+        @click="changeUser"
+        v-show="btnList.some((item) => item.enName == 'change')"
+      >
+        <img src="../../images/icon_change2@2x.png" alt="" />
         <span>变更所属人</span>
       </div>
-      <div class="btnBox"
-           @click="giveUp"
-           v-show="btnList.some(item=>item.enName == 'giveup')">
-        <img src="../../images/icon_clear@2x.png"
-             alt="" />
+      <div
+        class="btnBox"
+        @click="giveUp"
+        v-show="btnList.some((item) => item.enName == 'giveup')"
+      >
+        <img src="../../images/icon_clear@2x.png" alt="" />
         <span>放弃</span>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { SelectFollowMsgList } from '../../config/api'
+import { SelectFollowMsgList } from "../../config/api";
 
-import { formatDate, _throttle } from '../../utils/tool'
+import { formatDate, _throttle } from "../../utils/tool";
 
-import CustomerItem from '../../components/CustomerManage/customerItem'
-import Opportunities from '../../components/BusinessOpportunities/opportunities'
+import CustomerItem from "../../components/CustomerManage/customerItem";
+import Opportunities from "../../components/BusinessOpportunities/opportunities";
 
 export default {
   data() {
@@ -142,207 +169,210 @@ export default {
       customerData: {},
       timeLineList: [],
       contentType: 2,
-      navList: [ '客户动态', '协作人', '商机', '附件' ],
+      navList: ["客户动态", "协作人", "商机", "附件"],
       dynamicContentType: 0,
-      dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
+      dynamicNavList: ["全部", "客户动态", "商机动态", "跟进记录"],
       show: false,
       isShowDialog: null,
-      titleName: '',
-      message: '',
+      titleName: "",
+      message: "",
       isShow: false,
-      nowUser: '',
-      userNo: '',
+      nowUser: "",
+      userNo: "",
       options: [],
-      objItem: JSON.parse(localStorage.getItem('customer')),
+      objItem: JSON.parse(localStorage.getItem("customer")),
       btnList: [],
-    }
+    };
   },
   created() {
-    this.customerData = JSON.parse(localStorage.getItem('customer')) || {}
-    this.btnList = JSON.parse(this.$route.query.mylist)
+    this.customerData = JSON.parse(localStorage.getItem("customer")) || {};
+    this.btnList = JSON.parse(this.$route.query.mylist);
   },
   mounted() {
-    this.getTimeline()
+    this.getTimeline();
   },
   provide() {
     return {
-      goDetail: this.goDetail
-    }
+      goDetail: this.goDetail,
+    };
   },
   methods: {
     formatDate,
     getTimeline() {
       this.$network
-        .get('/customer-service/cluecustomer/getMessage', {
+        .get("/customer-service/cluecustomer/getMessage", {
           cluecustomerno: this.objItem.clueCustomerNo,
         })
         .then((res) => {
-          this.timeLineList = res.data
-        })
+          this.timeLineList = res.data;
+        });
     },
 
     // 导航切换
     changeNav(index) {
-      this.contentType = index
+      this.contentType = index;
     },
 
     // 动态导航切换
     changeDynamicNav(index) {
-      this.dynamicContentType = index
+      this.dynamicContentType = index;
 
-      if(index == 0) {
-        this.getTimeline()
-      } else if(index == 1) {
-        this.timeLineList = []
-      } else if(index == 2) {
-        this.selectFollowMsgList(3)
-      } else if(index == 3) {
-        this.selectFollowMsgList(1)
+      if (index == 0) {
+        this.getTimeline();
+      } else if (index == 1) {
+        this.timeLineList = [];
+      } else if (index == 2) {
+        this.selectFollowMsgList(3);
+      } else if (index == 3) {
+        this.selectFollowMsgList(1);
       }
     },
     goBack() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     },
 
     // 去往下层详情页
     goDetail() {
       this.$router.push({
-        path: 'customDeepDetail',
-        query: { type: this.$route.query.type, mylist: JSON.stringify(this.btnList) },
-      })
+        path: "customDeepDetail",
+        query: {
+          type: this.$route.query.type,
+          mylist: JSON.stringify(this.btnList),
+        },
+      });
     },
 
     // 获取商机动态
     async selectFollowMsgList(punckStatus) {
       let params = {
         clueCustomerNo: this.customerData.clueCustomerNo,
-        punckStatus // 1：跟进动态，3：商机动态
-      }
+        punckStatus, // 1：跟进动态，3：商机动态
+      };
 
-      let { code, data } = await SelectFollowMsgList(params)
-      
-      if(code == 'success') {
-        this.timeLineList = data
+      let { code, data } = await SelectFollowMsgList(params);
+
+      if (code == "success") {
+        this.timeLineList = data;
       }
     },
 
     cancelIcon() {
-      document.getElementById('html').style.overflow = 'auto'
+      document.getElementById("html").style.overflow = "auto";
     },
     showCompany(v) {
-      document.getElementById('html').style.overflow = 'hidden'
-      this.isShowDialog = v
-      this.show = true
+      document.getElementById("html").style.overflow = "hidden";
+      this.isShowDialog = v;
+      this.show = true;
       if (v == 3) {
-        this.titleName = '写跟进'
-        this.message = ''
+        this.titleName = "写跟进";
+        this.message = "";
       }
     },
     changeUser() {
-      this.isShowDialog = '4'
-      this.show = true
-      this.titleName = '变更所属人'
+      this.isShowDialog = "4";
+      this.show = true;
+      this.titleName = "变更所属人";
       let params = {
         clueCustomerNo: this.objItem.clueCustomerNo,
-      }
+      };
       this.$network
-        .get('/customer-service/cluecustomer/getuserList', params)
+        .get("/customer-service/cluecustomer/getuserList", params)
         .then((res) => {
-          this.nowUser = res.data.userNo
-          this.options = res.data.list
-        })
+          this.nowUser = res.data.userNo;
+          this.options = res.data.list;
+        });
     },
     giveUp() {
       this.$dialog
         .confirm({
-          title: '放弃警告',
+          title: "放弃警告",
           message:
-            '是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
-          className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
+            "是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。",
+          className: "giveUpBtn",
+          confirmButtonText: "是",
+          cancelButtonText: "否",
+          messageAlign: "left",
         })
         .then(() => {
           this.$network
-            .get('/customer-service/cluecustomer/giveUpType', {
+            .get("/customer-service/cluecustomer/giveUpType", {
               clueCustomerNo: this.objItem.clueCustomerNo,
               type: this.$route.query.type,
             })
             .then((res) => {
               if (res.result) {
-                this.$router.go(-1)
+                this.$router.go(-1);
                 this.$message({
-                  type: 'success',
-                  message: '操作成功',
-                })
+                  type: "success",
+                  message: "操作成功",
+                });
               }
-            })
+            });
         })
-        .catch(() => {})
+        .catch(() => {});
     },
     fnChangeUser(val) {
-      console.log(val)
-      this.userNo = val
+      console.log(val);
+      this.userNo = val;
     },
     closeDialog(v) {
-      this.show = false
-      document.getElementById('html').style.overflow = 'auto'
+      this.show = false;
+      document.getElementById("html").style.overflow = "auto";
       if (v == 3) {
-        this.message = ''
+        this.message = "";
       } else if (v == 4) {
       }
     },
     saveDialog: _throttle(function (v) {
       if (v == 3) {
         this.$network
-          .post('/customer-service/cluecustomer/addMessage', {
+          .post("/customer-service/cluecustomer/addMessage", {
             clueCustomerNo: this.objItem.clueCustomerNo,
             context: this.message,
           })
           .then((res) => {
             if (res.result) {
-              document.getElementById('html').style.overflow = 'auto'
-              this.show = false
-              this.getTimeline()
+              document.getElementById("html").style.overflow = "auto";
+              this.show = false;
+              this.getTimeline();
               this.$message({
-                type: 'success',
-                message: '修改成功',
-              })
+                type: "success",
+                message: "修改成功",
+              });
             }
-          })
+          });
       } else if (v == 4) {
         let params = {
           cluecustomerno: this.objItem.clueCustomerNo,
           user_no: this.userNo,
           oldname: this.nowUser,
-        }
+        };
         this.$network
-          .get('/customer-service/cluecustomer/turnBlon', params)
+          .get("/customer-service/cluecustomer/turnBlon", params)
           .then((res) => {
             if (res.result) {
-              this.show = false
-              this.$router.go(-1)
+              this.show = false;
+              this.$router.go(-1);
               this.$message({
-                type: 'success',
-                message: '编辑成功!',
-              })
+                type: "success",
+                message: "编辑成功!",
+              });
             } else {
-              this.show = false
+              this.show = false;
               this.$message({
-                type: 'error',
+                type: "error",
                 message: res.msg,
-              })
+              });
             }
-          })
+          });
       }
     }, 5000),
   },
   components: {
     CustomerItem,
-    Opportunities
-  }
-}
+    Opportunities,
+  },
+};
 </script>
 <style lang="less" scoped>
 .custom-detail {
@@ -393,7 +423,7 @@ export default {
     display: flex;
     width: 100%;
     background-color: #fff;
-    border-top: 2px solid #F0F2F7;
+    border-top: 2px solid #f0f2f7;
     z-index: 9;
     position: fixed;
     left: 0;
@@ -411,7 +441,7 @@ export default {
       }
       span {
         font-size: 20px;
-        color: #3C4353;
+        color: #3c4353;
       }
     }
   }
@@ -419,31 +449,31 @@ export default {
     margin-top: 24px;
     background: #fff;
     .header-nav {
-        display: flex;
-        width: 100%;
-        height: 100px;
-        margin-bottom: 24px;
-        border-bottom: 1px solid #F0F2F7;
-        li {
-            flex: 1;
-            height: 100%;
-            line-height: 100px;
-            text-align: center;
-            span {
-                display: block;
-                width: 150px;
-                height: 100%;
-                margin: 0 auto;
-                color: #838A9D;
-                font-size: 28px;
-            }
+      display: flex;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f0f2f7;
+      li {
+        flex: 1;
+        height: 100%;
+        line-height: 100px;
+        text-align: center;
+        span {
+          display: block;
+          width: 150px;
+          height: 100%;
+          margin: 0 auto;
+          color: #838a9d;
+          font-size: 28px;
         }
-        .active {
-            span {
-                color: #4168F6;
-                border-bottom: 4px solid #4168F6;
-            }
+      }
+      .active {
+        span {
+          color: #4168f6;
+          border-bottom: 4px solid #4168f6;
         }
+      }
     }
 
     .content-item {
@@ -462,7 +492,7 @@ export default {
           position: relative;
           padding-left: 10px;
           &::before {
-            content: '';
+            content: "";
             width: 8px;
             height: 28px;
             background: #4168f6;
@@ -502,21 +532,21 @@ export default {
           padding: 0 16px;
           vertical-align: middle;
           text-align: center;
-          color: #3C4353;
+          color: #3c4353;
           font-size: 28px;
           position: relative;
           &:not(:first-child)::before {
-            content: '';
+            content: "";
             width: 2px;
             height: 70%;
-            background-color: #F0F2F7;
+            background-color: #f0f2f7;
             position: absolute;
             left: 0;
             top: 15%;
           }
         }
         .active {
-          color: #4168F6;
+          color: #4168f6;
         }
       }
 
@@ -661,7 +691,9 @@ export default {
 </style>
 <style lang="less">
 .customer-data {
-  .customInfo, .detailInfo, .tjry {
+  .customInfo,
+  .detailInfo,
+  .tjry {
     padding: 0 24px;
   }
 }
