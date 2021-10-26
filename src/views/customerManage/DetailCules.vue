@@ -295,11 +295,7 @@
 			    	<div class="personLabel">
 			        <div class="t_text">
 			          <span class="label_tag">协助人</span>
-			          <div class="editButton"
-			               @click="showCompany(2)">
-			            <i class="el-icon-edit"></i>
-			            编辑
-			          </div>
+			          
 			        </div>
 			        <HelperFile></HelperFile>
 			      </div>
@@ -1203,7 +1199,7 @@ export default {
     .companyLabel,
     .personLabel {
       min-height: 292px;
-      font-size: 28px;
+      font-size: 30px;
       border-bottom: 1px solid #f0f2f7;
       margin-bottom: 24px;
       .t_text {
@@ -1218,7 +1214,7 @@ export default {
           &::before {
             content: '';
             width: 8px;
-            height: 28px;
+            height: 30px;
             background: #4168f6;
             position: absolute;
             top: 7px;
@@ -1537,12 +1533,12 @@ export default {
   }
 }
 /deep/.el-upload-list__item .el-icon-upload-success,/deep/.el-upload-list__item .el-icon-close{
-	font-size: 40px;
+	font-size: 30px;
 }
 /deep/.el-tabs__item{
 	height: 88px;
 	line-height: 88px;
-	font-size: 35px;
+	font-size: 30px;
 }
 /deep/.van-tabs__line{
 	    background-color: #FFFFFF;
@@ -1566,9 +1562,9 @@ export default {
 	line-height: 40px;
 }
 .titleBox{
-	width: 80px;
+/*	width: 80px;*/
 	height: 40px;
-	font-size: 28px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: bold;
@@ -1595,6 +1591,14 @@ export default {
           top: 0;
           background: #FFFFFF;
           font-size: 30px;
+}
+/deep/.upBtn span{
+	position: relative;
+	right: 15px;
+}
+/deep/.upBtn i{
+	position: relative;
+	right: 1px;
 }
 /deep/.el-button--primary:focus, .el-button--primary:hover {
     background: #FFFFFF;

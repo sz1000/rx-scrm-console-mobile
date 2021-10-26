@@ -1,10 +1,10 @@
 <template>
   <div class="clueWarp">
   	<el-button class="delBtn" size="small" type="primary" @click="delPop">
-  		<i class="el-icon-delete"></i>&nbsp;删除
+  		<i class="el-icon-delete"></i><span>删除</span>
   	</el-button>
     <el-button class="addBtn" size="small" type="primary" @click="addPop">
-  		<i class="el-icon-circle-plus-outline"></i>&nbsp;添加
+  		<i class="el-icon-circle-plus-outline"></i><span>添加</span>
   	</el-button>
     <div class="cardWarp">
         <div class="topInfo" v-for="(item, index) in yiList" :key="index">
@@ -95,8 +95,8 @@
 								</van-radio-group>
              </div>
              
-             <div class="pleBumen"><span style="color: red;">*</span>请先选择部门:</div>
-             <el-select style="margin-left: 0px;" v-model="vm_depId" placeholder="选择部门" @change="ereBumen(vm_depId)">
+             <div class="pleBumen"><span style="color: red;">*</span>员工部门:</div>
+             <el-select style="margin-left: 0px;" v-model="vm_depId" placeholder="请先选择部门" @change="ereBumen(vm_depId)">
 						    <el-option
 						      v-for="item in bumenList"
 						      :key="item.name"
@@ -104,14 +104,18 @@
 						      :value="item.depId">
 						    </el-option>
 						 </el-select>
-						 <el-select v-if="isHelper" style="margin-top:30px;margin-left: 0px;" v-model="vm_userId" placeholder="选择员工" @change="changeHelper(vm_userId)">
-						    <el-option
-						      v-for="item in heperList"
-						      :key="item.index"
-						      :label="item.name"
-						      :value="item.userId">
-						    </el-option>
-						 </el-select>
+						 <div class="boxTop" style="margin-top: 30px;">
+						 		<div v-if="isHelper" class="pleBumen" style=""><span style="color: red;">*</span>指定员工:</div>
+							 <el-select v-if="isHelper" class="manClass" v-model="vm_userId" placeholder="选择员工" @change="changeHelper(vm_userId)">
+							    <el-option
+							      v-for="item in heperList"
+							      :key="item.index"
+							      :label="item.name"
+							      :value="item.userId">
+							    </el-option>
+							 </el-select>
+						 </div>
+						 
              
              
         <div class="btnBox">
@@ -362,28 +366,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
-/*
-<div class="vanContent">
-<div class="headerTab">
-	<span class="helperTitle">协助人</span>
-	<span class="powerTitle">权限</span>
-</div>
- 						<div class="lrBox">
-          				<div class="leftBox">
-			          				<el-checkbox-group  v-model="checkList" @change="changeRightList" :key="index" class="checkBoxlabelEdit" v-for="(item, index) in yiList">
-							            <el-checkbox @change="checkedChange"
-							                         class="checkClass" :label="item.id">
-							              <span>{{item.name}}</span>
-							            </el-checkbox>
-							          </el-checkbox-group>
-			          	</div>
-			          	<div class="rightBox" >
-			          		<div class="perBox" :key="index" v-for="(item, index) in yiList">
-			          				{{item.permission == 2?"只读":"读写"}}
-			          		</div>
-			          	</div>
-          	</div>*/
 .lrBox{
 	width: 100%;
 }
@@ -403,7 +385,7 @@ export default {
 	width: 100%;
 	height: 40px;
 	line-height: 40px;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: 400;
@@ -414,7 +396,7 @@ export default {
 	height: 40px;
 	line-height: 40px;
 	font-family: PingFangSC-Medium;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: bold;
@@ -437,7 +419,7 @@ export default {
 	width: 100%;
 	height: 40px;
 	line-height: 40px;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: 400;
@@ -446,21 +428,21 @@ export default {
 	/*	display: inline-block;*/
 	}
 	.el-checkbox__inner{
-		width: 40px;
-		height: 40px;
-		font-size: 40px;
+		width: 30px;
+		height: 30px;
+		font-size: 30px;
 	}
 	.el-checkbox__label{
-	font-size: 40px;
+	font-size: 30px;
 	}
 	.el-checkbox__input .el-checkbox__inner::after{
 		width: 12px;
-    height: 30px;
+    height: 20px;
     box-sizing: content-box;
     content: "";
     border-left: 0;
     border-top: 0;
-    left: 50%;
+    left: 46%;
     position: absolute;
     top: 0;
     transform: translateX(-50%) rotate(45deg) scaleY(1);
@@ -476,13 +458,16 @@ export default {
 
 /deep/.el-select>.el-input{
     	height: 80px;
-    	width: 500px;
-    	font-size: 40px;
-    	padding-left: 40px;
+    	width: 547px;
+    	font-size: 30px;
+    	/*padding-left: 15px;*/
     	border-radius: 8px;
+    	margin-left: 17px;
+    	color: #C0C4CC ;
     	.el-select-dropdown .el-select-dropdown__item{
-    		font-size: 40px;
-    		line-height: 50px;
+    		font-size: 30px;
+    		line-height: 30px;
+    		color: #C0C4CC ;
     	}
 }
 /deep/.el-select:hover .el-input__inner{
@@ -490,46 +475,46 @@ export default {
 		    height: 80px;
 		    width: 547px;
 		    border-radius: 8px;
-		    font-size: 40px;
-		    padding-left: 40px;
+		    font-size: 30px;
+		    color: #C0C4CC ;
+		    /*padding-left: 40px;*/
 }
 /deep/.el-input--suffix .el-input__inner{
 				height: 80px;
 		    width: 547px;
 		    border-radius: 8px;
-		    font-size: 40px;
-		    padding-left: 40px;
+		    font-size: 30px;
+		    color: #C0C4CC ;
 }
 
 .topTitle{
 	width: 100%;
 	height: 80px;
 	line-height: 80px;
-	padding-left: 40px;
+	padding-left: 23px;
 	padding-top: 23px;
 }
 .titlePower{
-	width: 200px;
 	height: 80px;
 	font-family: PingFangSC-Regular;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	/*text-align: right;*/
-	font-weight: bold;
+	font-weight: 400;
 	float: left;
 	line-height: 80px;
 }
 /deep/ .powerClass{
-			margin-left: 30px;
+			margin-left: 23px;
 	    width: 400px;
 	    height: 80px;
-	    font-size: 40px;
+	    font-size: 30px;
 	    float: left;
 	    .van-radio{
 	    	float: left;
 	    	.van-radio__icon{
-	    		font-size: 40px;
+	    		font-size: 30px;
 	    	}
 	    }
 }
@@ -540,7 +525,7 @@ export default {
       line-height: 88px;
       background: #fafbff;
       border-radius: 16px 16px 0px 0px;
-      font-size: 28px;
+      font-size: 32px;
       color: #3c4353;
       font-weight: 600;
     }
@@ -603,7 +588,7 @@ export default {
           background: #FFFFFF;
           font-size: 30px;
 }
-.addBtn {
+.addBtn{
 	right: 5px;
 }
 .clueWarp {
@@ -738,11 +723,26 @@ export default {
   }
 }
 .pleBumen{
-	margin-left: 40px;
+	display: inline-block;
+	margin-left: 23px;
 	margin-bottom: 25px;
 	margin-top: 15px;
-	font-size: 40px;
-	font-weight: bold;
+	font-size: 30px;
+	font-weight: 400;
 	color:  #3C4353;
+}
+/deep/.delBtn span, .addBtn span{
+	position: relative;
+    right: 9px;
+}
+.addBtn span{
+	right: 20px;
+}
+/deep/.delBtn i, .addBtn i{
+	position: relative;
+    right: 3px;
+}
+/deep/.addBtn i{
+	right: 14px;
 }
 </style>
