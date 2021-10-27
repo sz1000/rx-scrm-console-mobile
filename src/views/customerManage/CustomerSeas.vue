@@ -30,7 +30,7 @@
         </ul>
 
         <div class="timeLine"
-             v-if="timeLineList.length">
+             v-if="timeLineList && timeLineList.length">
           <el-timeline>
             <el-timeline-item v-for="(item, index) in timeLineList"
                               :key="index"
