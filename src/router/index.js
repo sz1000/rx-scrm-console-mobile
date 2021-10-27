@@ -37,6 +37,8 @@ import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
+import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
+import StageList from '../components/BusinessOpportunities/stageList'
 
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
@@ -328,6 +330,20 @@ const routes = [{
                     bodyClass: 'CustomDeepDetail',
                 },
                 component: CustomDeepDetail,
+            },
+            {
+                path: 'customerDeepSeas',
+                meta: {
+                    bodyClass: 'CustomerDeepSeas',
+                },
+                component: CustomerDeepSeas,
+            },
+            {
+                path: 'stageList',
+                meta: {
+                    bodyClass: 'StageList',
+                },
+                component: StageList,
             },
         ],
     },

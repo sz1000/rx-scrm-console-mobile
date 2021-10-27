@@ -1,7 +1,8 @@
 <template>
   <div class="custom-detail">
     <div class="headerTitle">
-      <div class="backPage" @click="goBack">
+      <div class="backPage"
+          @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -14,39 +15,24 @@
 
     <div class="infoContent">
       <ul class="header-nav">
-        <li
-          v-for="(i, index) in navList"
-          :key="i"
-          @click="changeNav(index)"
-          :class="{ active: contentType == index }"
-        >
-          <span>{{ i }}</span>
-        </li>
+        <li v-for="(i, index) in navList" :key="i" @click="changeNav(index)" :class="{active: contentType == index}"><span>{{ i }}</span></li>
       </ul>
 
       <!-- 客户动态 -->
       <div v-if="contentType == 0" class="content-item dynamic">
         <div class="t_text">
           <span class="label_tag">客户动态</span>
-          <div
-            class="editButton"
-            @click="showCompany(3)"
-            v-show="btnList.some((item) => item.enName == 'write')"
-          >
-            <img src="../../images/icon_repair1@2x.png" alt="" />
+          <div class="editButton"
+               @click="showCompany(3)"
+               v-show="btnList.some(item=>item.enName == 'write')">
+            <img src="../../images/icon_repair1@2x.png"
+                 alt="" />
             <span>写跟进</span>
           </div>
         </div>
 
         <ul class="dynamic-nav">
-          <li
-            v-for="(i, index) in dynamicNavList"
-            :key="i"
-            @click="changeDynamicNav(index)"
-            :class="{ active: dynamicContentType == index }"
-          >
-            {{ i }}
-          </li>
+          <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index}">{{ i }}</li>
         </ul>
 
         <div v-if="timeLineList && timeLineList.length" class="timeLine">
@@ -62,9 +48,7 @@
                 <div class="inLineTwo">{{ item.context }}</div>
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                  <span class="time_right">{{
-                    formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-                  }}</span>
+                  <span class="time_right">{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
                 </div>
               </div>
             </el-timeline-item>
@@ -88,16 +72,16 @@
         :lock-scroll="false"
       >
         <div class="content">
-          <div class="writerInput" v-if="isShowDialog == '3'">
-            <van-field
-              v-model="message"
-              type="textarea"
-              maxlength="200"
-              placeholder="记录好跟进，多签单哟~"
-              show-word-limit
-            />
+          <div class="writerInput"
+               v-if="isShowDialog == '3'">
+            <van-field v-model="message"
+                       type="textarea"
+                       maxlength="200"
+                       placeholder="记录好跟进，多签单哟~"
+                       show-word-limit />
           </div>
-          <div class="changeUser" v-if="isShowDialog == '4'">
+          <div class="changeUser"
+               v-if="isShowDialog == '4'">
             <div class="nowUser">
               <span>现有所属人:</span>
               <span>{{ nowUser }}</span>
@@ -156,45 +140,45 @@
   </div>
 </template>
 <script>
-import { SelectFollowMsgList } from "../../config/api";
+import { SelectFollowMsgList } from '../../config/api'
 
-import { formatDate, _throttle } from "../../utils/tool";
+import { formatDate, _throttle } from '../../utils/tool'
 
-import CustomerItem from "../../components/CustomerManage/customerItem";
-import Opportunities from "../../components/BusinessOpportunities/opportunities";
+import CustomerItem from '../../components/CustomerManage/customerItem'
+import Opportunities from '../../components/BusinessOpportunities/opportunities'
 
 export default {
   data() {
     return {
       customerData: {},
       timeLineList: [],
-      contentType: 2,
-      navList: ["客户动态", "协作人", "商机", "附件"],
+      contentType: 0,
+      navList: [ '客户动态', '协作人', '商机', '附件' ],
       dynamicContentType: 0,
-      dynamicNavList: ["全部", "客户动态", "商机动态", "跟进记录"],
+      dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
       show: false,
       isShowDialog: null,
-      titleName: "",
-      message: "",
+      titleName: '',
+      message: '',
       isShow: false,
-      nowUser: "",
-      userNo: "",
+      nowUser: '',
+      userNo: '',
       options: [],
       objItem: JSON.parse(localStorage.getItem("customer")),
       btnList: [],
-    };
+    }
   },
   created() {
-    this.customerData = JSON.parse(localStorage.getItem("customer")) || {};
-    this.btnList = JSON.parse(this.$route.query.mylist);
+    this.customerData = JSON.parse(localStorage.getItem('customer')) || {}
+    this.btnList = JSON.parse(this.$route.query.mylist)
   },
   mounted() {
-    this.getTimeline();
+    this.getTimeline()
   },
   provide() {
     return {
-      goDetail: this.goDetail,
-    };
+      goDetail: this.goDetail
+    }
   },
   methods: {
     formatDate,
@@ -210,49 +194,43 @@ export default {
 
     // 导航切换
     changeNav(index) {
-      this.contentType = index;
+      this.contentType = index
     },
 
     // 动态导航切换
     changeDynamicNav(index) {
-      this.dynamicContentType = index;
+      this.dynamicContentType = index
 
-      if (index == 0) {
-        this.getTimeline();
-      } else if (index == 1) {
-        this.timeLineList = [];
-      } else if (index == 2) {
-        this.selectFollowMsgList(3);
-      } else if (index == 3) {
-        this.selectFollowMsgList(1);
+      if(index == 0) {
+        this.getTimeline()
+      } else if(index == 1) {
+        this.timeLineList = []
+      } else if(index == 2) {
+        this.selectFollowMsgList(3)
+      } else if(index == 3) {
+        this.selectFollowMsgList(1)
       }
-    },
-    goBack() {
-      this.$router.go(-1);
     },
 
     // 去往下层详情页
     goDetail() {
       this.$router.push({
-        path: "customDeepDetail",
-        query: {
-          type: this.$route.query.type,
-          mylist: JSON.stringify(this.btnList),
-        },
-      });
+        path: 'customDeepDetail',
+        query: { type: this.$route.query.type, mylist: JSON.stringify(this.btnList) },
+      })
     },
 
     // 获取商机动态
     async selectFollowMsgList(punckStatus) {
       let params = {
         clueCustomerNo: this.customerData.clueCustomerNo,
-        punckStatus, // 1：跟进动态，3：商机动态
-      };
+        punckStatus // 1：跟进动态，3：商机动态
+      }
 
-      let { code, data } = await SelectFollowMsgList(params);
-
-      if (code == "success") {
-        this.timeLineList = data;
+      let { code, data } = await SelectFollowMsgList(params)
+      
+      if(code == 'success') {
+        this.timeLineList = data
       }
     },
 
@@ -260,12 +238,12 @@ export default {
       document.getElementById("html").style.overflow = "auto";
     },
     showCompany(v) {
-      document.getElementById("html").style.overflow = "hidden";
-      this.isShowDialog = v;
-      this.show = true;
+      document.getElementById('html').style.overflow = 'hidden'
+      this.isShowDialog = v
+      this.show = true
       if (v == 3) {
-        this.titleName = "写跟进";
-        this.message = "";
+        this.titleName = '写跟进'
+        this.message = ''
       }
     },
     changeUser() {
@@ -307,19 +285,19 @@ export default {
                   message: "操作成功",
                 });
               }
-            });
+            })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     fnChangeUser(val) {
       console.log(val);
       this.userNo = val;
     },
     closeDialog(v) {
-      this.show = false;
-      document.getElementById("html").style.overflow = "auto";
+      this.show = false
+      document.getElementById('html').style.overflow = 'auto'
       if (v == 3) {
-        this.message = "";
+        this.message = ''
       } else if (v == 4) {
       }
     },
@@ -332,9 +310,9 @@ export default {
           })
           .then((res) => {
             if (res.result) {
-              document.getElementById("html").style.overflow = "auto";
-              this.show = false;
-              this.getTimeline();
+              document.getElementById('html').style.overflow = 'auto'
+              this.show = false
+              this.getTimeline()
               this.$message({
                 type: "success",
                 message: "修改成功",
@@ -370,9 +348,9 @@ export default {
   },
   components: {
     CustomerItem,
-    Opportunities,
-  },
-};
+    Opportunities
+  }
+}
 </script>
 <style lang="less" scoped>
 .custom-detail {
@@ -407,23 +385,11 @@ export default {
     padding: 0 0 24px;
     background: #fff;
   }
-  .iconName {
-    display: flex;
-    padding: 24px;
-    background: #fff;
-    font-size: 28px;
-    span:nth-child(1) {
-      color: #838a9d;
-    }
-    span:nth-child(2) {
-      color: #3c4353;
-    }
-  }
   .btnWarp {
     display: flex;
     width: 100%;
     background-color: #fff;
-    border-top: 2px solid #f0f2f7;
+    border-top: 2px solid #F0F2F7;
     z-index: 9;
     position: fixed;
     left: 0;
@@ -441,39 +407,43 @@ export default {
       }
       span {
         font-size: 20px;
-        color: #3c4353;
+        color: #3C4353;
       }
     }
   }
   .infoContent {
     margin-top: 24px;
-    background: #fff;
+    background-color: #fff;
     .header-nav {
-      display: flex;
-      width: 100%;
-      height: 100px;
-      margin-bottom: 24px;
-      border-bottom: 1px solid #f0f2f7;
-      li {
-        flex: 1;
-        height: 100%;
-        line-height: 100px;
-        text-align: center;
-        span {
-          display: block;
-          width: 150px;
-          height: 100%;
-          margin: 0 auto;
-          color: #838a9d;
-          font-size: 28px;
+        display: flex;
+        width: 100%;
+        height: 100px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid #F0F2F7;
+        li {
+            flex: 1;
+            height: 100%;
+            line-height: 100px;
+            text-align: center;
+            span {
+                display: block;
+                width: 150px;
+                height: 100%;
+                margin: 0 auto;
+                color: #838A9D;
+                font-size: 28px;
+            }
         }
-      }
-      .active {
-        span {
-          color: #4168f6;
-          border-bottom: 4px solid #4168f6;
+        .active {
+            span {
+                color: #4168F6;
+                border-bottom: 4px solid #4168F6;
+            }
         }
-      }
+    }
+
+    .content-item {
+      padding: 0 24px 24px;
     }
 
     .content-item {
@@ -532,21 +502,21 @@ export default {
           padding: 0 16px;
           vertical-align: middle;
           text-align: center;
-          color: #3c4353;
+          color: #3C4353;
           font-size: 28px;
           position: relative;
           &:not(:first-child)::before {
-            content: "";
+            content: '';
             width: 2px;
             height: 70%;
-            background-color: #f0f2f7;
+            background-color: #F0F2F7;
             position: absolute;
             left: 0;
             top: 15%;
           }
         }
         .active {
-          color: #4168f6;
+          color: #4168F6;
         }
       }
 
@@ -599,6 +569,7 @@ export default {
       }
     }
   }
+
   .bottom_model {
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);
@@ -691,9 +662,7 @@ export default {
 </style>
 <style lang="less">
 .customer-data {
-  .customInfo,
-  .detailInfo,
-  .tjry {
+  .customInfo, .detailInfo, .tjry {
     padding: 0 24px;
   }
 }
