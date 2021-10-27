@@ -663,6 +663,8 @@ export default {
         }
       });
       this.appendixList.splice(index, 1);
+      // this.tagFilterCustomers();
+      // this.fleltDatanum = 0;
     },
     // 添加素材
     addAppendix() {

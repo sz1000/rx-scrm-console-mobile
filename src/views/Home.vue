@@ -58,13 +58,19 @@
             <span>客户群群发</span>
           </div>
         </router-link>
-        <router-link to="talkTool/lableDataGroup">
+        <router-link
+          to="talkTool/lableDataGroup"
+          v-show="menulist.includes('labelGroup')"
+        >
           <div class="commonBtn">
             <img src="../images/yjlqon.png" alt="" />
             <span>一键拉群</span>
           </div>
         </router-link>
-        <router-link to="talkTool/groupCodeList">
+        <router-link
+          to="talkTool/groupCodeList"
+          v-show="menulist.includes('groupLivecode')"
+        >
           <div class="commonBtn">
             <img src="../images/qhm.png" alt="" />
             <span>群活码</span>
@@ -204,7 +210,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    CommonHome.getWxToken();
+    // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
