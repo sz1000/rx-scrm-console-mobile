@@ -6,28 +6,9 @@
 			    			</span>
 			    			<span class="titleFujian">附件</span>
 			    		</div>
-				    	<el-upload
-							  	class="upload-demo"
-							  :action="`${BASE_URL}/customer-service/cluecustomeraccessory/upload`"
-							  :headers="headers"
-							  :on-remove="delList"
-							  :before-upload="BeforeUpload"
-							  :multiple="false"
-							  :limit="20"
-							  :file-list="eleList"
-							  :on-success="onSuccess"
-							  :on-error="onError">
-							  <el-button class="upBtn" size="small" type="primary"><i class="el-icon-upload"></i>&nbsp;上传</el-button>
-							</el-upload>
-							
-							<div class="listBox" v-for="(item, index) in fileList" :key="index">
-										<div class="listBoxLeft">
-											<span class="listName">{{item.name}}</span>
-										</div>
-										<div class="listBoxRight">
-											<span class="delList" @click="delList(item.id)">删除</span>
-										</div>
-							</div>
+				    	<div class="dataItem" v-for="(item,index) in fileList">
+				    		{{item.name}}
+				    	</div>
   </div>
 </template>
 <script>
@@ -40,7 +21,6 @@ export default {
 			fileData:{
     	},
     	BASE_URL,
-    	eleList:[],
     };
   },
   watch: {
@@ -62,34 +42,24 @@ export default {
   },
   methods: {
 			/*附件下载*/
-    delList(id){
+    delList(file, fileList){
+    	console.log(file, fileList)
+	  		console.log("删除")
 	  		let _this = this
-	  		let obj = `clueCustomerNo=${_this.objItem.clueCustomerNo}&id=${id}`
+	  		let obj = `clueCustomerNo=${_this.objItem.clueCustomerNo}&id=${file.id}`
 	  	//表单传参，需要如上转译。 
 	  	
-	  	Dialog.confirm({
-				  title: '标题',
-				  message: '弹窗内容',
-				})
-				  .then(() => {
-				    this.$network
-				        .post('/customer-service/cluecustomeraccessory/delupload',obj)
-				        .then((res) => {
-				          console.log(res)
-				          this.$message({
-				            type: 'success',
-				            message: res.msg,
-				          })
-				          //this.$set(this.fileList)
-				        _this.getDownList()
-				        })
-				  })
-				  .catch(() => {
-				    // on cancel
-				  });
-	  	
-	  	
-	      
+	      this.$network
+	        .post('/customer-service/cluecustomeraccessory/delupload',obj)
+	        .then((res) => {
+	          console.log(res)
+	          this.$message({
+	            type: 'success',
+	            message: res.msg,
+	          })
+	          //this.$set(this.fileList)
+	        //_this.getDownList()
+	        })
 	  	},
 	  	getDownList(){
 	  		let _this = this
@@ -115,7 +85,7 @@ export default {
             this.fileData.filetype = file.name.substring(file.name.lastIndexOf(".") + 1)
 			},
 			onSuccess(response, file, fileList){
-	 				this.eleList = []
+	 
 	     		this.$message({
 	                type: 'success',
 	                message: '上传成功!',
@@ -131,7 +101,7 @@ export default {
 			},
 			beforeRemove(file, fileList) {
 				console.log(file, fileList)
-        return this.$confirm();
+        return this.$confirm(`确定移除 ${ file.name }？`);
         
         /*this.$dialog
         .confirm({
@@ -150,38 +120,16 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
-
-.listBox{
+.dataItem{
 	width: 100%;
 	height: 40px;
-	font-size: 30px;
+	font-size: 28px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: 400;
 	line-height: 40px;
-	margin-top: 26px;
+	margin-top: 24px;
 }
-.listBoxLeft{
-		height: 40px;
-		float: left;
-		margin-left: 16px;
-		/*width: 130px;*/
-	    overflow: hidden;
-	    white-space: nowrap;
-	    text-overflow: ellipsis;
-	}
-	.listBoxRight{
-/*		width: 110px;*/
-		height: 20px;
-		float: right;
-	}
-	.sessionOpen,.upDown,.delList{
-		margin-right: 8px;
-		cursor:pointer;
-	}
-
-
 .clueWarp {
 	position: relative;
   height: 100%;

@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <ul class="dynamic-nav">
+        <!--<ul class="dynamic-nav">
           <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index}">{{ i }}</li>
         </ul>
 
@@ -51,6 +51,11 @@
               </div>
             </el-timeline-item>
           </el-timeline>
+        </div>-->
+        
+        <!-- 动态 -->
+        <div class="dongtaiBox" style="padding: 0px;" v-if="contentType == 0">
+        	<Tt></Tt>
         </div>
       </div>
       <!-- 协作人 -->
@@ -146,6 +151,7 @@ import Opportunities from '../../components/BusinessOpportunities/opportunities'
 import { BASE_URL } from '../../utils/request'
 import  HelperFile  from "./comTip/helperFile";
 import  Fujian  from "./comTip/fujian";
+import  Tt  from "./comTip/timelineTab";
 export default {
   data() {
     return {
@@ -353,6 +359,7 @@ export default {
     Opportunities,
     HelperFile,
     Fujian,
+    Tt,
   }
 }
 </script>

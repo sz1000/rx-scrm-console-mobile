@@ -512,7 +512,6 @@ export default {
   },
   methods: {
     formatDate,
-    formatDate,
     
     
     changeTimeLine(name){
@@ -527,7 +526,7 @@ export default {
 				    this.getTimeline(2) 
 				    break;
 				    case 3:
-				    this.getTimeline(3) 
+				    this.getTimeline('') 
 				    break;
 				    default:
 				}

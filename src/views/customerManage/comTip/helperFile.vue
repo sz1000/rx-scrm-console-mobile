@@ -102,24 +102,65 @@
              </div>
              
              <div class="pleBumen"><span style="color: red;">*</span>员工部门:</div>
-             <el-select style="margin-left: 0px;" v-model="vm_depId" placeholder="请先选择部门" @change="ereBumen(vm_depId)">
+             <input class="bumenSec" type="text" placeholder="请先选择部门"  :value="bumenName" @click="openBumenPop" />
+            <!-- <select class="bumenSec" style="margin-left: 0px;" v-model="vm_depId" placeholder="请先选择部门" @change="ereBumen(vm_depId)">
+						    <option
+						    	class="bumenOpt"
+						      v-for="item in bumenList"
+						      :key="item.name"
+						      :label="item.name"
+						      :value="item.depId">
+						    </option>
+						 </select>-->
+						 
+						 
+						 <van-action-sheet v-model="bumenPop" title="选择部门">
+							  		<van-picker
+											  title="标题"
+											  show-toolbar
+											  :columns="bumenList"
+											  @confirm="onConfirm"
+											  @cancel="onCancel"
+											  @change="onChange"
+											  value-key="name"
+											/>
+						 </van-action-sheet>
+						 
+						 
+             
+             <!--<el-select style="margin-left: 0px;" v-model="vm_depId" placeholder="请先选择部门" @change="ereBumen(vm_depId)">
 						    <el-option
 						      v-for="item in bumenList"
 						      :key="item.name"
 						      :label="item.name"
 						      :value="item.depId">
 						    </el-option>
-						 </el-select>
+						 </el-select>-->
 						 <div class="boxTop" style="margin-top: 30px;">
 						 		<div v-if="isHelper" class="pleBumen" style=""><span style="color: red;">*</span>指定员工:</div>
-							 <el-select v-if="isHelper" class="manClass" v-model="vm_userId" placeholder="选择员工" @change="changeHelper(vm_userId)">
+						 		
+						 		
+							 <!--<el-select v-if="isHelper" class="manClass" v-model="vm_userId" placeholder="选择员工" @change="changeHelper(vm_userId)">
 							    <el-option
 							      v-for="item in heperList"
 							      :key="item.index"
 							      :label="item.name"
 							      :value="item.userId">
 							    </el-option>
-							 </el-select>
+							 </el-select>-->
+							 			<input v-if="isHelper" class="bumenSec" type="text"  placeholder="选择员工" :value="yuangongName" @click="openYuangongPop" />
+							 			<van-action-sheet v-model="yuangongPop" title="选择员工">
+							  					<van-picker
+															  title="标题"
+															  show-toolbar
+															  :columns="heperList"
+															  @confirm="onConfirmYuangong"
+															  @cancel="onCancelYuangong"
+															  @change="onChangeYuangong"
+															  value-key="name"
+															/>
+										 </van-action-sheet>
+							 
 						 </div>
 						 
              
@@ -141,6 +182,10 @@ import { _throttle, formatDate } from "../../../utils/tool";
 export default {
   data() {
     return {
+    	yuangongName:'',
+    	yuangongPop:false,
+    	bumenName:'',
+    	bumenPop:false,
     	checkList: [],
     	isHelper:false,
     	vm_depId:'',
@@ -172,6 +217,46 @@ export default {
     
   },
   methods: {
+  	openYuangongPop(){
+  		this.yuangongPop = true
+  	},
+  	onConfirmYuangong(value, index) {
+  		this.yuangongName = value.name
+    	let oneList = []
+    	oneList.push(value)
+    	this.oneList = oneList
+    	console.log("changeHelper>>>>",oneList)
+    	
+   			this.yuangongPop = false;
+    },
+    onChangeYuangong(picker, value, index) {
+    	/*console.log(value)
+      console.log(`当前值：${value}, 当前索引：${index}`);*/
+    },
+    onCancelYuangong() {
+    	this.bumenPop = false;
+      console.log('取消');
+    },
+  	openBumenPop(){
+  		this.bumenPop = true;
+  	},
+  	onConfirm(value, index) {
+     // console.log(`当前值：${value}, 当前索引：${index}`);
+      console.log(value)
+       let depId = value.depId
+       this.bumenName = value.name
+   			this.getHelperSerch(depId)
+   			this.isHelper = true
+   			this.bumenPop = false;
+    },
+    onChange(picker, value, index) {
+    	/*console.log(value)
+      console.log(`当前值：${value}, 当前索引：${index}`);*/
+    },
+    onCancel() {
+    	this.bumenPop = false;
+      console.log('取消');
+    },
     formatDate,
     checkedChange() {
 		console.log(this.checkList)
@@ -209,11 +294,11 @@ export default {
     	this.showB = true
     },
     closeDialogAdd(v) {
-      document.getElementById('html').style.overflow = 'auto'
+    /*  document.getElementById('html').style.overflow = 'auto'*/
       this.showB = false
     },
     saveDialogAdd() {
-      document.getElementById('html').style.overflow = 'auto'
+ /*     document.getElementById('html').style.overflow = 'auto'*/
       console.log('this.addObj>>>',this.addObj)
       			this.oneList[0].permission = this.addObj.permission
       let params = {
@@ -245,20 +330,20 @@ export default {
       
     },
     cancelIconAdd() {
-      document.getElementById('html').style.overflow = 'auto'
+    //  document.getElementById('html').style.overflow = 'auto'
       this.showB = false
     },
     cancelIcon() {
-      document.getElementById('html').style.overflow = 'auto'
+     // document.getElementById('html').style.overflow = 'auto'
       this.show = false
     },
     closeDialog(v) {
-      document.getElementById('html').style.overflow = 'auto'
+     // document.getElementById('html').style.overflow = 'auto'
       this.show = false
       // console.log(v)
     },
     saveDialogDel() {
-      document.getElementById('html').style.overflow = 'auto'
+    //  document.getElementById('html').style.overflow = 'auto'
       this.show = false
       // console.log(v)
        console.log('this.checkList>>>',this.checkList)
@@ -461,7 +546,19 @@ export default {
 
 	}
 }
-
+.bumenSec{
+	    height: 80px;
+    	width: 547px;
+    	font-size: 30px;
+    	padding-left: 15px;
+    	border-radius: 8px;
+    	margin-left: 17px;
+    	color: #C0C4CC ;
+    	line-height: 80px;
+    	background: #FFFFFF;
+			border: 1px solid #D9DAE4;
+			border-radius: 8px;
+}
 /deep/.el-select>.el-input{
     	height: 80px;
     	width: 547px;
@@ -772,5 +869,10 @@ export default {
 	background: #4168F6;
 	margin-right: 12px;
 	display: inline-block;
+}
+
+/deep/.van-action-sheet__content{
+		overflow-y: scroll;
+    margin-bottom: 200px;
 }
 </style>
