@@ -129,7 +129,6 @@
   </div>
 </template>
 <script>
-// import { mapState, mapActions } from 'vuex'
 import { SelectFollowMsgList } from '../../config/api'
 
 import { formatDate, _throttle } from '../../utils/tool'
@@ -142,7 +141,7 @@ export default {
     return {
       customerData: {},
       timeLineList: [],
-      contentType: 2,
+      contentType: 0,
       navList: [ '客户动态', '协作人', '商机', '附件' ],
       dynamicContentType: 0,
       dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
@@ -158,13 +157,9 @@ export default {
       btnList: [],
     }
   },
-  // computed: {
-  //   ...mapState(["corpId"])
-  // },
-  async created() {
+  created() {
     this.customerData = JSON.parse(localStorage.getItem('customer')) || {}
     this.btnList = JSON.parse(this.$route.query.mylist)
-    // await this.getCorpId()
   },
   mounted() {
     this.getTimeline()
@@ -175,7 +170,6 @@ export default {
     }
   },
   methods: {
-    // ...mapActions(["getCorpId"]),
     formatDate,
     getTimeline() {
       this.$network
@@ -383,18 +377,6 @@ export default {
     padding: 0 0 24px;
     background: #fff;
   }
-  .iconName {
-    display: flex;
-    padding: 24px;
-    background: #fff;
-    font-size: 28px;
-    span:nth-child(1) {
-      color: #838a9d;
-    }
-    span:nth-child(2) {
-      color: #3c4353;
-    }
-  }
   .btnWarp {
     display: flex;
     width: 100%;
@@ -423,7 +405,7 @@ export default {
   }
   .infoContent {
     margin-top: 24px;
-    background: #fff;
+    background-color: #fff;
     .header-nav {
         display: flex;
         width: 100%;
