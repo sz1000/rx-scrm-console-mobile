@@ -1,19 +1,20 @@
 <template>
-    <div class="delete">
+    <div class="change-stage">
         <van-popup
-            v-model="deleteDialogVisible"
+            v-model="changeStageDialogVisible"
             round
-            class="delete-pop"
+            class="stage-pop"
             closeable
+            :close-on-click-overlay="false"
             @closed="hide">
             <div class="title">温馨提示</div>
             <div class="box">
-                <img src="../../../assets/images/icon_error@2x.png" alt="">
-                <span>是否确认删除？</span>
+                <img src="../../../assets/images/icon_confirm.png" alt="">
+                <span>是否确认更改阶段为“{{ stageData && stageData.stageName }}”？</span>
             </div>
             <div class="btn-wrap">
                 <div class="item close-btn" @click="hide">否</div>
-                <div class="item submit-btn" @click="doDelete(id)">是</div>
+                <div class="item submit-btn" @click="doChange(stageData)">是</div>
             </div>
         </van-popup>
     </div>
@@ -22,25 +23,25 @@
 export default {
     data() {
         return {
-            deleteDialogVisible: false,
-            id: ''
+            changeStageDialogVisible: false,
+            stageData: {}
         }
     },
-    inject: ['doDelete'],
+    inject: ['doChange'],
     methods: {
         show(data) {
-            this.id = data
-            this.deleteDialogVisible = true
+            this.stageData = data
+            this.changeStageDialogVisible = true
         },
         hide() {
-            this.deleteDialogVisible = false
+            this.changeStageDialogVisible = false
         },
     }
 }
 </script>
 <style lang="less" scoped>
-.delete {
-    .delete-pop {
+.change-stage {
+    .stage-pop {
         width: 700px;
         padding: 24px;
         border-radius: 8px;

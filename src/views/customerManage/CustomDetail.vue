@@ -2,7 +2,7 @@
   <div class="custom-detail">
     <div class="headerTitle">
       <div class="backPage"
-           @click="goBack">
+          @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -58,6 +58,30 @@
       <opportunities v-if="contentType == 2" :customerNo="customerData && customerData.clueCustomerNo"></opportunities>
     </div>
 
+    <!-- 底部导航栏 -->
+    <div class="btnWarp">
+      <!-- <div class="btnBox"
+          @click="transCustom">
+        <img src="../../images/icon_change@2x.png"
+            alt="" />
+        <span>转客户</span>
+      </div> -->
+      <div class="btnBox"
+          @click="changeUser"
+          v-show="btnList.some(item=>item.enName == 'change')">
+        <img src="../../images/icon_change2@2x.png"
+            alt="" />
+        <span>变更所属人</span>
+      </div>
+      <div class="btnBox"
+          @click="giveUp"
+          v-show="btnList.some(item=>item.enName == 'giveup')">
+        <img src="../../images/icon_clear@2x.png"
+            alt="" />
+        <span>放弃</span>
+      </div>
+    </div>
+
     <div class="bottom_model">
       <van-action-sheet v-model="show"
                         :title="titleName"
@@ -102,33 +126,10 @@
         </div>
       </van-action-sheet>
     </div>
-
-    <!-- 底部导航栏 -->
-    <div class="btnWarp">
-      <!-- <div class="btnBox"
-           @click="transCustom">
-        <img src="../../images/icon_change@2x.png"
-             alt="" />
-        <span>转客户</span>
-      </div> -->
-      <div class="btnBox"
-           @click="changeUser"
-           v-show="btnList.some(item=>item.enName == 'change')">
-        <img src="../../images/icon_change2@2x.png"
-             alt="" />
-        <span>变更所属人</span>
-      </div>
-      <div class="btnBox"
-           @click="giveUp"
-           v-show="btnList.some(item=>item.enName == 'giveup')">
-        <img src="../../images/icon_clear@2x.png"
-             alt="" />
-        <span>放弃</span>
-      </div>
-    </div>
   </div>
 </template>
 <script>
+// import { mapState, mapActions } from 'vuex'
 import { SelectFollowMsgList } from '../../config/api'
 
 import { formatDate, _throttle } from '../../utils/tool'
@@ -157,9 +158,13 @@ export default {
       btnList: [],
     }
   },
-  created() {
+  // computed: {
+  //   ...mapState(["corpId"])
+  // },
+  async created() {
     this.customerData = JSON.parse(localStorage.getItem('customer')) || {}
     this.btnList = JSON.parse(this.$route.query.mylist)
+    // await this.getCorpId()
   },
   mounted() {
     this.getTimeline()
@@ -170,6 +175,7 @@ export default {
     }
   },
   methods: {
+    // ...mapActions(["getCorpId"]),
     formatDate,
     getTimeline() {
       this.$network
@@ -569,6 +575,7 @@ export default {
       }
     }
   }
+
   .bottom_model {
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);
