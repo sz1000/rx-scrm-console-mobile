@@ -1,8 +1,7 @@
 <template>
   <div class="clueWarp">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -10,114 +9,66 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
-        <span :class="{ active: type == 3 }"
-              class="mycule"
-              @click="tabClick(3)">我的客户</span>
-        <span :class="{ active: type == 4 }"
-              class="mycule"
-              @click="tabClick(4)">客户公海</span>
+        <span :class="{ active: type == 3 }" class="mycule" @click="tabClick(3)"
+          >我的客户</span
+        >
+        <span :class="{ active: type == 4 }" class="mycule" @click="tabClick(4)"
+          >客户公海</span
+        >
       </div>
-      <span class="addBtn"
-            @click="addCules"
-            v-show="(type == 3 && mylist.some(item=>item.enName =='add' ))">
-        <img src="../../images/icon_add@2x.png"
-             alt="" />
+      <span
+        class="addBtn"
+        @click="addCules"
+        v-show="type == 3 && mylist.some((item) => item.enName == 'add')"
+      >
+        <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
-      <span class="addBtn"
-            @click="addCules"
-            v-show="(type == 4 && alllist.some(item=>item.enName =='add' ))">
-        <img src="../../images/icon_add@2x.png"
-             alt="" />
+      <span
+        class="addBtn"
+        @click="addCules"
+        v-show="type == 4 && alllist.some((item) => item.enName == 'add')"
+      >
+        <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
     </div>
     <div class="searchInput">
-      <input type="text"
-             class="input"
-             v-model="inputValue"
-             placeholder="请输入客户简称/公司/手机号" />
-      <span class="searchBtn"
-            @click="inquire">查询</span>
+      <input
+        type="text"
+        class="input"
+        v-model="inputValue"
+        placeholder="请输入客户简称/公司/手机号"
+      />
+      <span class="searchBtn" @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <van-list v-model="loading"
-                :finished="finished"
-                :immediate-check="false"
-                finished-text="没有更多了"
-                @load="onLoad"
-                :offset="20">
-        <div class="topInfo"
-             v-for="(item, index) in cardList"
-             :key="index">
-          <div class="customInfo">
-            <div class="iconName">
-              <span>客户简称:</span>
-              <span>{{ item.customerName }}</span>
-            </div>
-            <!-- <div class="detailBtn"
-               @click="deleteCard(item,index)">
-            <van-icon name="delete-o" />
-            删除
-          </div> -->
-          </div>
-          <div class="detailInfo"
-               @click="goDetail(item, index)">
-            <div class="left">
-              <div class="rowStyle">
-                <span>公司名称:</span>
-                <span>{{ item.cropFullName }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>所属行业:</span>
-                <span>{{ item.cropSubIndustry }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>联系人员:</span>
-                <span>{{ item.name }}</span>
-              </div>
-            </div>
-            <div class="right">
-              <div class="rowStyle">
-                <span>职务:</span>
-                <span>{{ item.position }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>性别:</span>
-                <span>{{ item.gender }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>邮箱:</span>
-                <span>{{ item.email }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="tjry">
-            <div class="box">
-              <span class="label">添加人员:</span>
-              <span class="value">{{ item.createBy }}</span>
-            </div>
-            <div class="box1">
-              <span class="label">添加时间:</span>
-              <span class="value">{{
-                formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-              }}</span>
-            </div>
-          </div>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        :immediate-check="false"
+        finished-text="没有更多了"
+        @load="onLoad"
+        :offset="20"
+      >
+        <div class="topInfo" v-for="(item, index) in cardList" :key="index">
+          <customer-item :itemData="item" :index="index"></customer-item>
         </div>
       </van-list>
     </div>
   </div>
 </template>
 <script>
-import { _throttle, formatDate } from '../../utils/tool'
-import MyMixin from '../../mixins/permissionsList'
+import { _throttle } from "../../utils/tool";
+import MyMixin from "../../mixins/permissionsList";
+
+import CustomerItem from "../../components/CustomerManage/customerItem";
 export default {
   mixins: [MyMixin],
   data() {
     return {
       type: 3,
-      inputValue: '',
+      inputValue: "",
       cardList: [],
       loading: false,
       finished: false,
@@ -126,134 +77,141 @@ export default {
       total: 0, //总共的数据条数
       mylist: [],
       alllist: [],
-    }
+    };
   },
   watch: {
     inputValue(val) {
       // console.log(val)
-      if (val == '') {
-        this.getListData()
+      if (val == "") {
+        this.getListData();
       }
     },
   },
   mounted() {
     for (var i in this.expandedKeys) {
-      if (this.expandedKeys[i].enName == 'myCustomer') {
-        this.mylist = this.expandedKeys[i].childrenList
+      if (this.expandedKeys[i].enName == "myCustomer") {
+        this.mylist = this.expandedKeys[i].childrenList;
       } else {
-        this.alllist = this.expandedKeys[i].childrenList
+        this.alllist = this.expandedKeys[i].childrenList;
       }
     }
   },
   created() {
-    this.page = 1
-    this.getListData()
+    this.page = 1;
+    this.getListData();
+  },
+  provide() {
+    return {
+      goDetail: this.goDetail,
+    };
   },
   methods: {
-    formatDate,
     tabClick(v) {
-      this.type = v
-      this.page = 1
-      this.cardList = []
-      this.inputValue = ''
-      this.getListData()
+      this.type = v;
+      this.page = 1;
+      this.cardList = [];
+      this.inputValue = "";
+      this.getListData();
     },
     onLoad() {
       // console.log('----gundong------')
-      this.page++
-      this.getListData()
+      this.page++;
+      this.getListData();
     },
     getListData() {
       // console.log(this.tabClick)
       this.$toast.loading({
         overlay: true,
-        loadingType: 'spinner',
+        loadingType: "spinner",
         duration: 0,
-      })
+      });
       this.$network
-        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
+        .get("/customer-service/m/cluecustomer/getcluecustomerlist", {
           type: this.type,
           page: this.page,
           limit: this.pageSize,
           allname: this.inputValue,
         })
         .then((res) => {
-          this.$toast.clear()
-          this.total = res.data.iPage.total
-          this.loading = false
-          let rows = res.data.iPage.records //请求返回当页的列表
+          this.$toast.clear();
+          this.total = res.data.iPage.total;
+          this.loading = false;
+          let rows = res.data.iPage.records; //请求返回当页的列表
           if (rows == null || rows.length === 0) {
-            this.finished = true
-            return
+            this.finished = true;
+            return;
           }
-          let newSetArr = this.cardList.concat(rows)
-          this.cardList = this.unique(newSetArr)
+          let newSetArr = this.cardList.concat(rows);
+          this.cardList = this.unique(newSetArr);
           this.cardList.forEach((item) => {
-            if (item.gender == '0' || item.gender == '') {
-              item.gender = '未知'
-            } else if (item.gender == '1') {
-              item.gender = '男'
-            } else if (item.gender == '2') {
-              item.gender = '女'
+            if (item.gender == "0" || item.gender == "") {
+              item.gender = "未知";
+            } else if (item.gender == "1") {
+              item.gender = "男";
+            } else if (item.gender == "2") {
+              item.gender = "女";
             }
-          })
+          });
           if (this.cardList.length >= this.total) {
-            this.finished = true
+            this.finished = true;
           } else {
-            this.onLoad()
+            this.onLoad();
           }
-        })
+        });
     },
     unique(arr) {
-      const res = new Map()
-      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
+      const res = new Map();
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     goBack() {
       // this.$router.go(-1)
-      this.$router.push('/home')
+      this.$router.push("/home");
     },
     addCules() {
       // console.log(this.type)
-      this.$router.push({ path: 'addCustomer', query: { type: this.type } })
+      this.$router.push({ path: "addCustomer", query: { type: this.type } });
     },
     inquire: _throttle(function () {
       // console.log(this.inputValue)
-      this.page = 1
-      this.cardList = []
-      this.getListData()
+      this.page = 1;
+      this.cardList = [];
+      this.getListData();
     }, 2000),
     deleteCard(item, index) {
       this.$dialog
         .confirm({
-          title: '温馨提示',
-          message: '是否确认删除？',
-          className: 'deleteBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
+          title: "温馨提示",
+          message: "是否确认删除？",
+          className: "deleteBtn",
+          confirmButtonText: "是",
+          cancelButtonText: "否",
+          messageAlign: "left",
         })
         .then(() => {})
         .catch(() => {
           // on cancel
-        })
+        });
     },
     goDetail(item, index) {
       // console.log(this.type)
-      localStorage.setItem('customer', JSON.stringify(item))
+      localStorage.setItem("customer", JSON.stringify(item));
       if (this.type == 3) {
         this.$router.push({
-          path: 'customDetail',
+          path: "customDetail",
           query: { type: this.type, mylist: JSON.stringify(this.mylist) },
-        })
+        });
       } else if (this.type == 4) {
         this.$router.push({
-          path: 'customerSeas',
+          path: "customerSeas",
           query: { type: this.type, alllist: JSON.stringify(this.alllist) },
-        })
+        });
       }
     },
   },
-}
+  components: {
+    CustomerItem,
+  },
+};
 </script>
 <style lang="less" scoped>
 .MyCustomer {
@@ -321,7 +279,7 @@ export default {
         color: #4168f6;
         position: relative;
         &::after {
-          content: '';
+          content: "";
           width: 112px;
           height: 4px;
           background: #4168f6;
@@ -363,102 +321,6 @@ export default {
       height: 400px;
       background: #fff;
       padding: 24px;
-      .customInfo {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 88px;
-        border-bottom: 1px solid #f0f2f7;
-        .iconName {
-          // display: flex;
-          font-size: 28px;
-          span:nth-child(1) {
-            color: #838a9d;
-          }
-          span:nth-child(2) {
-            color: #3c4353;
-          }
-        }
-        .detailBtn {
-          font-size: 28px;
-          color: #838a9d;
-          .van-icon {
-            vertical-align: -11%;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .detailInfo {
-        display: flex;
-        margin-top: 21px;
-        .left,
-        .right {
-          width: 50%;
-          .rowStyle {
-            line-height: 40px;
-            font-size: 28px;
-            margin-bottom: 24px;
-            display: flex;
-            span {
-              display: inline-block;
-            }
-            span:nth-child(1) {
-              width: 140px;
-              color: #838a9d;
-              overflow: hidden;
-            }
-            span:nth-child(2) {
-              flex: 1;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-              color: #3c4353;
-              font-weight: 400;
-            }
-          }
-        }
-        .right {
-          margin-left: 19px;
-          .rowStyle {
-            span:nth-child(1) {
-              width: 84px;
-            }
-          }
-        }
-      }
-      .tjry {
-        height: 87px;
-        border-top: 1px solid #f0f2f7;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 28px;
-        span {
-          display: inline-block;
-        }
-        .label {
-          width: 200px;
-          color: #838a9d;
-        }
-        .value {
-          width: 100%;
-          color: #3c4353;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        .box {
-          display: flex;
-          width: 50%;
-        }
-        .box1 {
-          display: flex;
-          width: 50%;
-          line-height: 87px;
-          margin-left: 29px;
-        }
-      }
     }
   }
 }

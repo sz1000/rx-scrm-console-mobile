@@ -131,4 +131,4 @@ methods.forEach((item) => {
             })
     }
 })
-export default http
+export { http, BASE_URL }

@@ -1,4 +1,4 @@
-import Network from './request'
+import {http} from './request'
 import router from '../router/index'
 import store from '../store'
 import {
@@ -20,7 +20,7 @@ const getWxAppid = function() {
         // alert(authCode)
         if (!authCode) {
             // alert('-----authCode-----')
-            Network.get('/user-service/m/user/getappid', {
+            http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
                 // alert(JSON.stringify(res))
@@ -43,7 +43,7 @@ const getWxAppid = function() {
 
 function getWxCofig(v) {
     // alert('getWxCofig---后---')
-    Network.get('/user-service/m/user/getloguser', {
+    http.get('/user-service/m/user/getloguser', {
         code: v,
         url: location.href,
     }).then((res) => {
@@ -81,7 +81,7 @@ function getWxCofig(v) {
 function getTicket() {
     // alert('getTicket-后----')
     // alert(location.href)
-    Network.get('/user-service/m/user/getticket', {
+    http.get('/user-service/m/user/getticket', {
         url: location.href,
     }).then((res) => {
         // alert(JSON.stringify(res))

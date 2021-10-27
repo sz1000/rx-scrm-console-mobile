@@ -36,6 +36,8 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
+
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
 // 群 SOP 设置
@@ -319,6 +321,13 @@ const routes = [{
                     bodyClass: 'CustomerSeas',
                 },
                 component: CustomerSeas,
+            },
+            {
+                path: 'customDeepDetail',
+                meta: {
+                    bodyClass: 'CustomDeepDetail',
+                },
+                component: CustomDeepDetail,
             },
         ],
     },

@@ -52,10 +52,10 @@
             <span>一键拉群</span>
           </div>
         </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/qhm2.png" alt="" />
-            <span class="nomaltext">群活码</span>
+        <router-link to="talkTool/groupCodeList">
+          <div class="commonBtn">
+            <img src="../images/qhm.png" alt="" />
+            <span>群活码</span>
           </div>
         </router-link>
 

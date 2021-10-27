@@ -1,54 +1,12 @@
 <template>
-  <div class="culeDeatil">
+  <div class="custom-deep-deatil">
     <div class="headerTitle">
       <div class="backPage"
            @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">线索详情</span>
-    </div>
-    <div class="iconName">
-      <div v-if="imageUser">
-        <img :src="imageUser"
-             alt="" />
-      </div>
-      <div class="flag"
-           v-else>
-        {{ basicInfo.name ? basicInfo.name.substr(0, 1) : "" }}
-      </div>
-      <div class="nameSex">
-        <span>{{ basicInfo.name }}</span>
-        <img src="../../images/icon_female@2x.png"
-             alt=""
-             v-if="basicInfo.gender == '2'" />
-        <img src="../../images/man.png"
-             alt=""
-             v-if="basicInfo.gender == '1'" />
-      </div>
-    </div>
-    <div class="btnWarp">
-      <div class="btnBox"
-           @click="transCustom"
-           v-show="btnList.some(item=>item.enName == 'turn')">
-        <img src="../../images/icon_change@2x.png"
-             alt="" />
-        <span>转客户</span>
-      </div>
-      <div class="btnBox"
-           @click="changeUser"
-           v-show="btnList.some(item=>item.enName == 'change')">
-        <img src="../../images/icon_change2@2x.png"
-             alt="" />
-        <span>变更所属人</span>
-      </div>
-      <div class="btnBox"
-           @click="giveUp()"
-           v-show="btnList.some(item=>item.enName == 'giveup')">
-        <img src="../../images/icon_clear@2x.png"
-             alt="" />
-        <span>放弃</span>
-      </div>
+      <span class="textTitle">客户详情</span>
     </div>
     <div class="basicInformation">
       <span>
@@ -59,44 +17,42 @@
       <div class="formEdit">
         <el-form ref="form"
                  :model="basicInfo">
-          <el-form-item label="姓名">
-            <el-input v-model="basicInfo.name"
-                      maxlength="15"
+          <el-form-item label="客户简称"
+                        class="nameBorder">
+            <el-input v-model="basicInfo.customerName"
                       placeholder="请输入"
+                      maxlength="30"
                       :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone"
-                      maxlength="11"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin"
-                      placeholder="请输入"
-                      maxlength="20"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender"
+          <el-form-item label="客户来源">
+            <el-select v-model="basicInfo.source"
                        placeholder="请选择"
                        :disabled='disabled'
-                       @change="changeGender">
-              <el-option label="未知"
-                         value="0"></el-option>
-              <el-option label="男"
-                         value="1"></el-option>
-              <el-option label="女"
-                         value="2"></el-option>
+                       @change="changeSource">
+              <el-option v-for="item in optionSource"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.type">
+              </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position"
+          <el-form-item label="客户类型">
+            <el-select v-model="basicInfo.customerType"
+                       placeholder="请选择"
+                       :disabled='disabled'
+                       @change="changeCustom">
+              <el-option v-for="item in customList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.customerType">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="电话">
+            <el-input v-model="basicInfo.mobil"
                       placeholder="请输入"
-                      maxlength="20"
+                      maxlength="13"
                       :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
@@ -111,51 +67,92 @@
             <el-cascader size="large"
                          :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
                          :options="optionsCreat"
-                         :disabled='disabled'
                          v-model="basicInfo.industry"
+                         :disabled='disabled'
                          @change="handleChange">
             </el-cascader>
           </el-form-item>
-          <el-form-item label="线索来源">
-            <el-select v-model="basicInfo.source"
+          <el-form-item label="企业规模">
+            <el-select v-model="basicInfo.cropscale"
                        placeholder="请选择"
                        :disabled='disabled'
-                       @change="changeSource">
-              <el-option v-for="item in optionSource"
+                       @change="scaleChange">
+              <el-option v-for="item in optionsScale"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.type">
+                         :value="item.id">
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="邮箱:">
-            <el-input v-model="basicInfo.email"
-                      placeholder="请输入"
-                      maxlength="60"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="地址">
             <el-input v-model="basicInfo.address"
                       maxlength="100"
-                      placeholder="请输入"
                       :disabled='disabled'
+                      placeholder="请输入"
                       @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="备注"
                         class="textareaInput">
             <el-input v-model="basicInfo.remark"
                       maxlength="200"
-                      placeholder="请输入文字(不得超过200个字符)"
                       :disabled='disabled'
+                      placeholder="请输入文字(不得超过200个字符)"
                       @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="描述"
-                        class="describeBorder">
+          <el-form-item label="描述">
             <el-input v-model="basicInfo.describe"
                       maxlength="100"
-                      placeholder="请输入"
                       :disabled='disabled'
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <div class="custonInfo">
+            <img src="../../images/icon_label.png"
+                 alt="" />
+            <span>联系人信息</span>
+          </div>
+          <el-form-item label="姓名"
+                        class="nameBorder">
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号:">
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择"
+                       @change="changeGender">
+              <el-option label="未知"
+                         value="0"></el-option>
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="职务:">
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱:">
+            <el-input v-model="basicInfo.email"
+                      placeholder="请输入"
+                      maxlength="60"
                       @change="changeInput()"></el-input>
           </el-form-item>
         </el-form>
@@ -201,7 +198,7 @@
           </div>
           <div class="btn"
                @click="unfold = !unfold"
-               v-show="companyTagList.length > 2">
+               v-show="companyTagList.length > 5">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -238,102 +235,13 @@
           </div>
         </div>
       </div>
-      	<el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
-			    <el-tab-pane label="线索动态" class="tabli" name="线索动态">
-			    			<div class="dynamic">
-						        <div class="t_text">
-						          <span class="label_tag">线索动态</span>
-						          <div class="editButton"
-						               @click="showCompany(3)">
-						            <img src="../../images/icon_repair1@2x.png"
-						                 alt="" />
-						            <span>写跟进</span>
-						          </div>
-						        </div>
-						        
-						        <!--<div class="allText">全部</div>-->
-						        
-						        <van-tabs v-model="activeName"
-						        	title-active-color="#4168F6"
-						        	title-inactive-color="#3C4353"
-						        	@change="changeTimeLine"
-						        	>
-										  <van-tab title="全部" name="3">
-										 
-										  </van-tab>
-										  <van-tab title="线索动态" name="2">
-										  	
-										  </van-tab>
-										  <van-tab title="跟进记录" name="1">
-										  
-										  </van-tab>
-										</van-tabs>
-						        
-						        <div class="timeLine">
-						          <el-timeline>
-						            <el-timeline-item v-for="(item, index) in timeLineList"
-						                              :key="index"
-						                              color="#4168F6"
-						                              type="danger ">
-						              <div class="recordBox">
-						                <div class="descTxt">{{ item.title }}</div>
-						                <div class="inLineTwo">{{ item.context }}</div>
-						                <div class="inLine">
-						                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
-						                  <span class="time_right">
-						                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
-						                  </span>
-						                </div>
-						              </div>
-						            </el-timeline-item>
-						          </el-timeline>
-						        </div>
-						        
-						      </div>
-			    </el-tab-pane>
-			    <el-tab-pane label="协助人" style="height: 300px;padding-bottom: 100px;" name="协助人">
-			    	<div class="personLabel">
-			        <div class="t_text">
-			          <span class="label_tag">协助人</span>
-			          
-			        </div>
-			        <HelperFile></HelperFile>
-			      </div>
-			    </el-tab-pane>
-			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
-			    		<div class="titleBox">
-			    			<span class="blueDiv">
-			    				
-			    			</span>
-			    			<span class="titleFujian">附件</span>
-			    		</div>
-				    	<el-upload
-							  	class="upload-demo"
-							  :action="`${BASE_URL}/customer-service/cluecustomeraccessory/upload`"
-							  :headers="headers"
-			  				:data="fileData"
-							  :on-remove="delList"
-							  :before-remove="beforeRemove"
-							  :before-upload="BeforeUpload"
-							  :multiple="false"
-							  :limit="20"
-							  :file-list="fileList"
-							  :on-success="onSuccess"
-							  :on-error="onError">
-							  <el-button class="upBtn" size="small" type="primary"><i class="el-icon-upload"></i>&nbsp;上传</el-button>
-							</el-upload>
-			    </el-tab-pane>
-			  </el-tabs>
     </div>
-    
-    
-    
     <div class="bottom_model">
       <van-action-sheet v-model="show"
-                        :lock-scroll="false"
+                        :title="titleName"
                         @cancel="cancelIcon"
                         @click-overlay="cancelIcon"
-                        :title="titleName">
+                        :lock-scroll="false">
         <div class="content">
           <div class="tagWarp"
                v-if="isShowDialog == '1'">
@@ -377,8 +285,7 @@
                       v-for="(list, index) in personTagList"
                       :key="list.id"
                       v-show="list.name">
-                  <span @click="selectPersonTag(list, index)"
-                        class="textTag">{{
+                  <span @click="selectPersonTag(list, index)">{{
                     list.name
                   }}</span>
                   <span class="deleteTag"
@@ -387,33 +294,6 @@
                   </span>
                 </span>
               </div>
-            </div>
-          </div>
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
-          </div>
-          <div class="changeUser"
-               v-if="isShowDialog == '4'">
-            <div class="nowUser">
-              <span>现有所属人:</span>
-              <span>{{ nowUser }}</span>
-            </div>
-            <div class="selectUser">
-              <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择">
-                <el-option v-for="item in options"
-                           :key="item.userNo"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
-                </el-option>
-              </el-select>
             </div>
           </div>
           <div class="buttonWarp">
@@ -429,32 +309,21 @@
 </template>
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
-import { BASE_URL } from '../../utils/request'
-import  HelperFile  from "./comTip/helperFile";
 export default {
-	components: {
-    HelperFile,
-  },
   data() {
     return {
-      disabled: true,
-    	fileList:[],
-    	BASE_URL,
-    	sanTab:'线索动态',
-    	activeName:'2',
-      item: {},
-      name: '',
-      imageUser: '',
-      userName: '',
       optionSource: [],
       customList: [
         { label: '微信用户', customerType: 1 },
         { label: '企微用户', customerType: 2 },
+        { label: '未知', customerType: 0 },
       ],
 
       optionsCreat: [],
       optionsScale: [],
       basicInfo: {
+        industry: [],
+        customerName: '',
         source: '',
         customerType: '',
         mobil: '',
@@ -485,155 +354,53 @@ export default {
         { name: '前所属人', mapName: 'beBelongBy', value: '' },
         { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
-      fieldIndex: null,
       unfold: false,
       isShowPerson: false,
       companyTagList: [],
       groupList: [],
       personTagList: [],
       tagList: [],
-      groupList: [],
-      timeLineList: [],
       show: false,
       isShowDialog: null,
       titleName: '',
       highLightArr: [],
-      picthList: [],
       message: '',
       showInput: null,
       isShow: false,
-      type: '',
       tagName: '',
       nowUser: '',
-      objItem: JSON.parse(localStorage.getItem('detail')),
       userNo: '',
       options: [],
+      objItem: JSON.parse(localStorage.getItem('customer')),
       btnList: [],
-      clueCustomerNo: '',
-    	fileData:{
-    	},
+      disabled: false,
     }
   },
-  computed: {
-            headers(){
-                return {
-                    "Accept": "application/json",
-                    "token": localStorage.getItem('token')
-                }
-            }
+  watch: {
+    // basicInfo: {
+    //   handler: function (newVal, oldVal) {
+    //     console.log(newVal, oldVal)
+    //     // if(){
+    //     // }
+    //     //可以做些相应的处理
+    //     this.update()
+    //   },
+    //   deep: true,
+    // },
   },
   created() {
-    let tempObj = JSON.parse(localStorage.getItem('detail'))
-    this.imageUser = tempObj.avatar
-    this.getTimeline()
+    this.btnList = JSON.parse(this.$route.query.mylist)
+    this.disabled = !this.btnList.some((item) => item.enName == 'edit')
+    // console.log(this.btnList)
+  },
+  mounted() {
     this.getTagList()
     this.getDetailForm()
   },
-  mounted() {
-    this.btnList = JSON.parse(this.$route.query.mylist)
-    this.disabled = !this.btnList.some((item) => item.enName == 'edit')
-    // console.log('----querylist--', this.btnList)
-  	this.getDownList()
-  },
   methods: {
     formatDate,
-    formatDate,
-    
-    /*附件下载*/
-    delList(file, fileList){
-    	console.log(file, fileList)
-	  		console.log("删除")
-	  		let _this = this
-	  		let obj = `clueCustomerNo=${_this.objItem.clueCustomerNo}&id=${file.id}`
-	  	//表单传参，需要如上转译。 
-	  	
-	      this.$network
-	        .post('/customer-service/cluecustomeraccessory/delupload',obj)
-	        .then((res) => {
-	          console.log(res)
-	          this.$message({
-	            type: 'success',
-	            message: res.msg,
-	          })
-	          //this.$set(this.fileList)
-	        //_this.getDownList()
-	        })
-	  	},
-	  	getDownList(){
-	  		let _this = this
-	  		let params = {
-	        clueCustomerNo: this.objItem.clueCustomerNo,
-	      }
-	      this.$network
-	        .get('/customer-service/cluecustomeraccessory/getList', params)
-	        .then((res) => {
-	          console.log(res)
-	          let upLA = res.data //所有附件
-	       		_this.fileList = upLA
-	       		console.log(_this.fileList)
-	        })
-	  	},
-			BeforeUpload(file) {
-			  		console.log(file.name)
-        		if (file.size / 1024 / 1024 >= 20) {
-                    this.$message.error("上传文件格式为pdf, 大小不能超过20MB!");
-                    return false
-                }
-        		this.fileData.clueCustomerNo = this.objItem.clueCustomerNo
-            this.fileData.filetype = file.name.substring(file.name.lastIndexOf(".") + 1)
-			},
-			onSuccess(response, file, fileList){
-	 
-	     		this.$message({
-	                type: 'success',
-	                message: '上传成功!',
-	              })
-				//this.getDownList()
-			},
-			onError(err, file, fileList){
-				console.log(err)
-				this.$message({
-	        type: 'success',
-	        message: '上传失败!',
-	      })
-			},
-			beforeRemove(file, fileList) {
-				console.log(file, fileList)
-        return this.$confirm(`确定移除 ${ file.name }？`);
-        
-        /*this.$dialog
-        .confirm({
-          title: '删除警告',
-          message:
-            `确定移除 ${ file.name }？`,
-          className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })*/
-        
-     },
-    /*附件下载*/
-    
-    changeTimeLine(name){
-    	console.log(name)
-    	console.log(typeof name)
-    	switch (Number(name))
-				{
-				    case 1:
-				    this.getTimeline(1) 
-				    break;
-				    case 2:
-				    this.getTimeline(2) 
-				    break;
-				    case 3:
-				    this.getTimeline(3) 
-				    break;
-				    default:
-				}
-    },
     changeInput(val) {
-      // console.log(val)
+      console.log(val)
       this.update()
     },
     changeCustom(val) {
@@ -652,20 +419,8 @@ export default {
     },
     scaleChange(val) {
       // console.log(val, this.basicInfo)
+      this.basicInfo.corpScale = val
       this.update()
-    },
-    getTimeline(name) {
-      console.log(name)
-	      let obj = {
-	        clueCustomerNo: this.objItem.clueCustomerNo,
-	        punckStatus: name,
-	      }
-      
-      this.$network
-        .get('/customer-service/clueCustomerFollowUser/selectFollowMsgList', obj)
-        .then((res) => {
-          this.timeLineList = res.data
-        })
     },
     getTagList() {
       this.highLightArr = []
@@ -691,7 +446,7 @@ export default {
                 this.highLightArr.push(chItem)
               }
             })
-            // console.log('-----列表----', this.highLightArr)
+            console.log('-----列表----', this.highLightArr)
           })
         })
     },
@@ -715,7 +470,6 @@ export default {
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
-          // this.name = res.data.clueCustomerEntity.name
           let tempSystem = this.systemList.map((item) => {
             return {
               name: item.name,
@@ -723,14 +477,9 @@ export default {
               mapName: item.mapName,
             }
           })
-          // console.log(tempSystem)
           tempSystem.forEach((item) => {
             if (
-              (item.mapName == 'turnTime' ||
-                item.mapName == 'updateTime' ||
-                item.mapName == 'followTime' ||
-                item.mapName == 'getTime' ||
-                item.mapName == 'createTime') &&
+              item.name.includes('时间') &&
               JSON.stringify(item.value) !== 'null'
             ) {
               item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
@@ -754,16 +503,15 @@ export default {
           ...this.basicInfo,
         })
         .then((res) => {
-          if (res.result) {
-            this.getDetailForm()
-            this.$message({ type: 'success', message: '更新成功' })
-          }
+          this.$message({ type: 'success', message: '更新成功' })
         })
     },
     goBack() {
       this.$router.go(-1)
     },
-
+    cancelIcon() {
+      document.getElementById('html').style.overflow = 'auto'
+    },
     showCompany(v) {
       document.getElementById('html').style.overflow = 'hidden'
       this.isShowDialog = v
@@ -772,9 +520,6 @@ export default {
         this.titleName = '企业标签'
       } else if (v == 2) {
         this.titleName = '个人标签'
-      } else if (v == 3) {
-        this.titleName = '写跟进'
-        this.message = ''
       }
     },
     addTag(item, index) {
@@ -809,7 +554,7 @@ export default {
         return item.tagid == list.tagid
       })
       if (result > -1) {
-        console.log(result, '111111111111')
+        // console.log(111111111111)
         this.highLightArr.forEach((item, index) => {
           if (item.tagid == list.tagid) {
             this.highLightArr.splice(index, 1)
@@ -818,7 +563,7 @@ export default {
       } else {
         this.highLightArr.push(list)
       }
-      // console.log('------选择后----', this.highLightArr)
+      // console.log(this.highLightArr)
     },
     selectPersonTag(list, index) {
       console.log(list)
@@ -852,73 +597,16 @@ export default {
           // on cancel
         })
     },
-    transCustom() {
-      this.$router.push({
-        path: 'turnCustomer',
-        query: {
-          customno: this.objItem.clueCustomerNo,
-          type: this.$route.query.type,
-        },
-      })
-    },
-    changeUser() {
-      this.isShowDialog = '4'
-      this.show = true
-      this.titleName = '变更所属人'
-      let params = {
-        clueCustomerNo: this.objItem.clueCustomerNo,
-      }
-      this.$network
-        .get('/customer-service/cluecustomer/getuserList', params)
-        .then((res) => {
-          this.nowUser = res.data.userNo
-          this.options = res.data.list
-        })
-    },
-    giveUp() {
-      this.$dialog
-        .confirm({
-          title: '放弃警告',
-          message:
-            '是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
-          className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })
-        .then(() => {
-          this.$network
-            .get('/customer-service/cluecustomer/giveUpType', {
-              clueCustomerNo: this.objItem.clueCustomerNo,
-              type: this.$route.query.type,
-            })
-            .then((res) => {
-              if (res.result) {
-                this.$router.go(-1)
-                this.$message({
-                  type: 'success',
-                  message: '操作成功',
-                })
-              }
-            })
-        })
-        .catch(() => {
-          // on cancel
-        })
-    },
-    fnChangeUser(val) {
-      console.log(val)
-    },
-    cancelIcon() {
-      document.getElementById('html').style.overflow = 'auto'
-    },
     closeDialog(v) {
-      document.getElementById('html').style.overflow = 'auto'
       this.show = false
-      // console.log(v)
+      document.getElementById('html').style.overflow = 'auto'
+      if (v == 1) {
+        this.getTagList()
+      } else if (v == 2) {
+      } else if (v == 4) {
+      }
     },
     saveDialog: _throttle(function (v) {
-      // console.log(v)
       if (v == 1) {
         this.$network
           .post(
@@ -927,13 +615,13 @@ export default {
           )
           .then((res) => {
             if (res.result) {
-              this.show = false
               document.getElementById('html').style.overflow = 'auto'
+              this.show = false
               this.getTagList()
             } else {
               this.message({
                 type: 'error',
-                message: res.msg || '添加失败',
+                message: '添加失败',
               })
             }
           })
@@ -942,26 +630,8 @@ export default {
           .post('/customer-service/cluecustomer/updPertag', this.personTagList)
           .then((res) => {
             if (res.result) {
-              this.show = false
-              document.getElementById('html').style.overflow = 'auto'
-              this.$message({
-                type: 'success',
-                message: '修改成功',
-              })
-            }
-          })
-      } else if (v == 3) {
-        this.$network
-          .post('/customer-service/cluecustomer/addMessage', {
-            clueCustomerNo: this.objItem.clueCustomerNo,
-            context: this.message,
-          })
-          .then((res) => {
-            if (res.result) {
               document.getElementById('html').style.overflow = 'auto'
               this.show = false
-              this.getTimeline()
-              this.getDetailForm()
               this.$message({
                 type: 'success',
                 message: '修改成功',
@@ -977,7 +647,6 @@ export default {
         this.$network
           .get('/customer-service/cluecustomer/turnBlon', params)
           .then((res) => {
-            // console.log(res)
             if (res.result) {
               this.show = false
               this.$router.go(-1)
@@ -986,34 +655,27 @@ export default {
                 message: '编辑成功!',
               })
             } else {
+              this.show = false
               this.$message({
                 type: 'error',
-                message: res.msg || '转换失败',
+                message: res.msg,
               })
-              this.show = false
             }
           })
       }
-    }, 2000),
+    }, 5000),
   },
 }
 </script>
 <style lang="less" scoped>
-/deep/.el-upload-list__item-name{
-	margin-top: 20px;
-	font-size: 35px;
-	line-height: 35px;
-}
-.DetailCules {
-}
-.culeDeatil {
+.custom-deep-deatil {
   .headerTitle {
-    background: #fff;
-    padding: 0 24px;
-    font-weight: 600;
     display: flex;
     height: 87px;
     line-height: 87px;
+    padding: 0 24px;
+    background-color: #fff;
+    font-weight: 600;
     font-size: 28px;
     color: #3c4353;
     border-top: 1px solid #f0f2f7;
@@ -1030,44 +692,6 @@ export default {
       flex: 1;
       display: inline-block;
       padding-left: 150px;
-    }
-  }
-  .iconName {
-    display: flex;
-    padding: 24px;
-    background: #fff;
-    img {
-      width: 88px;
-      height: 88px;
-    }
-    .flag {
-      width: 88px;
-      height: 88px;
-      background: #4168f6;
-      border-radius: 12px;
-      text-align: center;
-      line-height: 88px;
-      color: #fff;
-      font-size: 35px;
-    }
-    .nameSex {
-      margin-left: 16px;
-      span:nth-child(1) {
-        font-size: 28px;
-        font-weight: 600;
-      }
-      span:nth-child(2) {
-        font-size: 24px;
-        color: #ffb020;
-      }
-      span {
-        display: inline-block;
-      }
-      img {
-        margin-top: 21px;
-        width: 28px;
-        height: 28px;
-      }
     }
   }
   .btnWarp {
@@ -1130,15 +754,27 @@ export default {
           height: 80px;
         }
       }
+      .custonInfo {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 24px 0;
+        img {
+          width: 28px;
+          height: 28px;
+          vertical-align: -11%;
+          display: inline-block;
+          margin-right: 8px;
+        }
+      }
       /deep/.el-form {
         height: 100%;
         .el-form-item {
           display: flex;
           margin-bottom: 0;
         }
-        .describeBorder {
+        .nameBorder {
           .el-input__inner {
-            border-bottom: 1px solid #d9dae4 !important;
+            border-top: 1px solid #d9dae4 !important;
           }
         }
         .el-form-item__label {
@@ -1152,19 +788,20 @@ export default {
           // padding-left: 24px;
         }
         .el-form-item__content {
+          // width: 562px;
           flex: 1;
           height: 80px;
 
           .el-input__inner {
             height: 80px;
             width: 100%;
+            border-radius: 8px;
             font-size: 28px;
             border: 0;
-            border-top: 1px solid #d9dae4;
             border-right: 1px solid #d9dae4;
+            border-bottom: 1px solid #d9dae4;
             border-radius: 0;
           }
-
           .el-select,
           .el-cascader {
             width: 100%;
@@ -1192,6 +829,9 @@ export default {
       }
     }
   }
+  .basicInformation {
+    padding: 24px 24px 0;
+  }
   .infoContent {
     margin-top: 24px;
     background: #fff;
@@ -1199,7 +839,7 @@ export default {
     .companyLabel,
     .personLabel {
       min-height: 292px;
-      font-size: 30px;
+      font-size: 28px;
       border-bottom: 1px solid #f0f2f7;
       margin-bottom: 24px;
       .t_text {
@@ -1214,7 +854,7 @@ export default {
           &::before {
             content: '';
             width: 8px;
-            height: 30px;
+            height: 28px;
             background: #4168f6;
             position: absolute;
             top: 7px;
@@ -1235,7 +875,7 @@ export default {
         .over-hidden {
           display: -webkit-box;
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
+          -webkit-line-clamp: 2;
           overflow: hidden;
         }
         .btn {
@@ -1256,102 +896,6 @@ export default {
           padding: 14px 16px;
           margin-right: 16px;
           margin-top: 16px;
-        }
-      }
-    }
-    .dynamic {
-      font-size: 28px;
-      .t_text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        .label_tag {
-          font-weight: 600;
-          color: #3c4353;
-          position: relative;
-          padding-left: 10px;
-          &::before {
-            content: '';
-            width: 8px;
-            height: 28px;
-            background: #4168f6;
-            position: absolute;
-            top: 7px;
-            left: -10px;
-          }
-        }
-        .editButton {
-          color: #838a9d;
-          width: 152px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          line-height: 68px;
-          span {
-            display: inline-block;
-          }
-          img {
-            display: inline-block;
-            vertical-align: middle;
-            margin: -10px 10px 0 0;
-            margin-right: 5px;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .allText {
-        color: #4168f6;
-        margin-bottom: 16px;
-      }
-      .timeLine {
-      	margin-top: 60px;
-        .el-timeline {
-          padding-left: 0 !important;
-        }
-        .recordBox {
-          // width: 676px;
-          min-height: 180px;
-          background: rgba(65, 104, 246, 0.06);
-          border-radius: 8px;
-          color: #3c4353;
-          padding: 16px 16px 0;
-          font-size: 28px;
-          .inLine {
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            .time_right {
-              font-size: 28px;
-              color: #838a9d;
-            }
-            img {
-              width: 10px;
-              height: 10px;
-            }
-          }
-          .inLineTwo {
-            margin-bottom: 16px;
-            display: inline-block;
-            word-break: normal;
-            word-break: break-all;
-            word-break: keep-all;
-            word-break: break-word;
-            // display: -webkit-box;
-            // -webkit-box-orient: vertical;
-            // -webkit-line-clamp: 2;
-            // overflow: hidden;
-          }
-          .inLineEnd {
-            text-align: right;
-          }
-          .descTxt {
-            font-weight: 600;
-            color: #3c4353;
-            margin-bottom: 16px;
-          }
         }
       }
     }
@@ -1439,70 +983,20 @@ export default {
           }
           .creatTag {
             padding-right: 0;
-            span {
-              border: none;
-              padding: 0;
-              margin: 0;
-            }
-            .textTag {
+            span:nth-child(1) {
               vertical-align: middle;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
               max-width: 300px;
             }
+            span {
+              border: none;
+              padding: 0;
+              margin: 0;
+            }
             .deleteTag {
               width: 50px;
-              vertical-align: middle;
-            }
-          }
-        }
-      }
-      .writerInput {
-        height: 490px;
-        .van-cell,
-        .van-field,
-        .van-field--min-height {
-          font-size: 28px;
-          height: 400px;
-          background: #ffffff;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          /deep/.van-field__control {
-            height: 350px;
-            padding-top: 10px;
-          }
-        }
-      }
-      .changeUser {
-        height: 490px;
-        font-size: 28px;
-        font-weight: 600;
-        .nowUser {
-          padding-left: 20px;
-          margin-bottom: 28px;
-          span {
-            display: inline-block;
-          }
-          span:nth-child(2) {
-            font-weight: normal;
-            color: #838a9d;
-            margin-left: 15px;
-          }
-        }
-        .selectUser {
-          /deep/.el-select {
-            width: 519px;
-            height: 80px;
-            margin-left: 16px;
-            .el-input,
-            .el-input__inner {
-              width: 519px;
-              height: 80px;
-              border-radius: 8px;
-              font-size: 28px;
-              font-weight: normal;
-              border: 1px solid #d9dae4;
             }
           }
         }
@@ -1531,101 +1025,5 @@ export default {
       }
     }
   }
-}
-/deep/.el-upload-list__item .el-icon-upload-success,/deep/.el-upload-list__item .el-icon-close{
-	font-size: 30px;
-}
-/deep/.el-tabs__item{
-	height: 88px;
-	line-height: 88px;
-	font-size: 30px;
-}
-/deep/.van-tabs__line{
-	    background-color: #FFFFFF;
-}
-/deep/.van-tab{
-		display: initial;
-		margin-right: 32px;
-		-webkit-box-flex: inherit;
-    -webkit-flex: inherit;
-    flex: inherit;
-    line-height: 50px;
-    margin-bottom:70px;
-    font-size: 30px;
-}
-/deep/ .el-upload-list__item .el-icon-close-tip{
-	color: #fafbff00;
-}
-/deep/ .el-upload-list__item{
-	font-size: 28px;
-	height: 40px;
-	line-height: 40px;
-}
-.titleBox{
-/*	width: 80px;*/
-	height: 40px;
-	font-size: 30px;
-	color: #3C4353;
-	letter-spacing: 0;
-	font-weight: bold;
-	line-height: 40px;
-	margin-bottom: 10px;
-	margin-top: 36px;
-}
-.blueDiv{
-	width: 8px;
-	height: 25px;
-	background: #4168F6;
-	margin-right: 12px;
-	display: inline-block;
-}
-/deep/.upBtn{
-					color: #838a9d;
-          width: 124px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          position: absolute;
-          right: 5px;
-          top: 0;
-          background: #FFFFFF;
-          font-size: 30px;
-}
-/deep/.upBtn span{
-	position: relative;
-	right: 15px;
-}
-/deep/.upBtn i{
-	position: relative;
-	right: 1px;
-}
-/deep/.el-button--primary:focus, .el-button--primary:hover {
-    background: #FFFFFF;
-    border-color: #D9DAE4;
-    color: #838A9D;
-}
-
-/deep/.el-tabs__content{
-	overflow: visible;
-}
-</style>
-<style>
-.el-message-box__content{
-	font-size: 30px !important;
-}
-.el-message-box{
-	  width: 600px !important;
-    height: 200px !important;
-    font-size: 48px !important;
-    position: relative;
-}
-.el-message-box__btns{
-	position: absolute;
-	bottom: 30px;
-	right: 30px;
-}
-.el-button--mini, .el-button--small{
-	font-size: 76px;
 }
 </style>
