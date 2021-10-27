@@ -127,6 +127,7 @@ export default {
     for (var i in this.expandedKeys) {
       if (this.expandedKeys[i].enName == 'myClew') {
         this.mylist = this.expandedKeys[i].childrenList
+        console.log('---this.mylist', this.mylist)
       } else {
         this.alllist = this.expandedKeys[i].childrenList
       }
