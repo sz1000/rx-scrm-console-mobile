@@ -199,7 +199,9 @@
     </van-overlay>
     <!-- <BackTop></BackTop> -->
   </div>
-  <Groupportrait v-else></Groupportrait>
+  <div v-else>
+    <Groupportrait></Groupportrait>
+  </div>
   <!-- </div> -->
 </template>
 <script>
@@ -269,7 +271,7 @@ export default {
     setTimeout(() => {
       this.getMethod()
       this.getUserName()
-    }, 2000)
+    }, 3000)
 
     window.onresize = () =>
       (() => {

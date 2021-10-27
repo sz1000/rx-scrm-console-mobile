@@ -261,7 +261,7 @@ export default {
         margin-bottom: 26px;
       }
       .el-form-item__label {
-        width: 170px !important;
+        min-width: 170px !important;
         font-size: 28px;
         line-height: 80px;
       }
