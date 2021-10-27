@@ -105,6 +105,11 @@ export default {
       goDetail: this.goDetail,
     };
   },
+  provide() {
+    return {
+      goDetail: this.goDetail
+    }
+  },
   methods: {
     tabClick(v) {
       this.type = v;

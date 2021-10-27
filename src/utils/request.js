@@ -93,7 +93,7 @@ const errorHandle = (status, other) => {
     }
 }
 
-const methods = ['post', 'get', 'delete']
+const methods = ['post', 'get', 'delete', 'put']
 
 let http = {}
 methods.forEach((item) => {

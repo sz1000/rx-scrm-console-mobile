@@ -139,9 +139,6 @@ function getAgent(res) {
                             // alert(JSON.stringify(res.userId))
                             localStorage.setItem('userId', res.userId)
                             store.commit('setUserId', res.userId)
-                                // this.$store.commit('userId', res.userId)
-                                // alert(JSON.stringify(that.obj))
-                                // that.getMethod()
                         } else {
                             //错误处理
                         }
@@ -150,9 +147,8 @@ function getAgent(res) {
                 wx.invoke('getCurExternalChat', {}, function(res) {
                         // alert(("群id"+ res.chatId))
                         if (res.err_msg == 'getCurExternalChat:ok') {
-                            // chatId = res.chatId //返回当前客户群的群聊ID
                             // localStorage.setItem('chatId', res.chatId)
-                            // sessionStorage.setItem('chatId', res.chatId)
+                            sessionStorage.setItem('chatId', res.chatId)
                             store.commit('setChatId', res.chatId)
                         } else {
                             //错误处理
