@@ -19,7 +19,7 @@
                 <div class="content-item left">
                     <div class="item">
                         <span class="label">当前阶段:</span>
-                        <span class="value one-line" @click="handleStage(i.id)">
+                        <span class="value one-line" @click="handleStage(i)">
                             <span class="ongoing" :class="{success: i.status == 1, lose: i.status == 2, invalid: i.status == 3}">{{ i.status | getStatusText }}</span>
                             <van-icon class="img" name="edit" />
                         </span>
@@ -135,10 +135,12 @@ export default {
         doDelete() {
 
         },
-        handleStage(id) {
+        handleStage(item) {
+            localStorage.setItem("JZSCRM_OPPORTUNITIES_ITEM", JSON.stringify(item))
+
             this.$router.push({
                 path: 'stageList',
-                query: { id, customerNo: this.customerNo },
+                query: { id: item.id, customerNo: this.customerNo },
             })
         },
     },

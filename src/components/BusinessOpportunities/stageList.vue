@@ -33,6 +33,7 @@ export default {
             params: {},
             opportunityId: null,
             customerNo: null,
+            formData: {}, // 被更改阶段的商机对象
         }
     },
     provide() {
@@ -40,15 +41,23 @@ export default {
             doChange: this.doChange,
         }
     },
-    async created() {
-        const { id, customerNo } = this.$route.query
-
-        this.opportunityId = id
-        this.customerNo = customerNo
-        await this.getCorpId()
-        this.opportunitiesStageList(this.getStageListOptions, '', '')
+    created() {
+        this.init()
     },
     methods: {
+        async init() {
+            const { id, customerNo } = this.$route.query
+
+            this.opportunityId = id
+            this.customerNo = customerNo
+            let itemData = localStorage.getItem("JZSCRM_OPPORTUNITIES_ITEM")
+            
+            this.formData = itemData && JSON.parse(itemData) || {}
+            localStorage.removeItem("JZSCRM_OPPORTUNITIES_ITEM")
+
+            await this.getCorpId()
+            this.opportunitiesStageList(this.getStageListOptions, '', '')
+        },
         ...mapActions(["getCorpId"]),
         getStageListOptions(data) {
             this.stageListOptions = data
@@ -57,11 +66,21 @@ export default {
             this.$router.go(-1)
         },
         changeRow(data) {
-            this.$refs.changeStage.show(data)
+            if (data.defaultStatus == '成交') {
+                this.changeStatus(data.sortId, data.defaultStatus)
+            } else {
+                this.$refs.changeStage.show(data)
+            }
+        },
+        changeStatus(v, defaultStatus) {
+            let statusData = {
+                stageId: v,
+                status: defaultStatus
+            }
+
+            this.$refs.confirmResult.show(statusData, this.formData)
         },
         async doChange(data) {
-            console.log("opportunityId111:::", this.opportunityId)
-
             this.params = {
                 id: this.opportunityId,
                 stageNo: data.sortNo
@@ -70,7 +89,9 @@ export default {
 
             if (code == 'success') {
                 this.$toast(msg)
-                this.goBack()
+                setTimeout(() => {
+                    this.goBack()
+                }, 500)
             } else {
                 this.$toast(msg)
             }

@@ -9,65 +9,67 @@
             closeable
             @closed="hide">
             <div class="title">{{ `确定${status}` }}</div>
-            <div class="edit-content">
-                <template v-if="status == '成交'">
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>商机负责人:</span>
-                        </p>
-                        <van-field v-model="form.chargeUserNo" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" />
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>商机金额:</span>
-                        </p>
-                        <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :decimal-length="2" :default-value="0" />
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>成交时间:</span>
-                        </p>
-                        <van-field v-model="form.endTime" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate" />
-                    </div>
-                </template>
-                <template v-if="status == '输单'">
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>输单原因:</span>
-                        </p>
-                        <van-field v-model="form.endReasonId" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span>输单备注:</span>
-                        </p>
-                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
-                    </div>
-                </template>
-                <template v-if="status == '无效'">
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>无效原因:</span>
-                        </p>
-                        <van-field v-model="form.endReasonId" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span>无效备注:</span>
-                        </p>
-                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
-                    </div>
-                </template>
-            </div>
-            <div class="btn-wrap">
-                <div class="item close-btn" @click="hide">取消</div>
-                <div class="item submit-btn" @click="handleSubmit">确定</div>
-            </div>
+            <van-form @submit="handleSubmit">
+                <div class="edit-content">
+                    <template v-if="status == '成交'">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>商机负责人:</span>
+                            </p>
+                            <van-field v-model="form.chargeUserNo" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" />
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>商机金额:</span>
+                            </p>
+                            <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :decimal-length="2" :default-value="0" />
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>成交时间:</span>
+                            </p>
+                            <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate" />
+                        </div>
+                    </template>
+                    <template v-if="status == '输单'">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>输单原因:</span>
+                            </p>
+                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span>输单备注:</span>
+                            </p>
+                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        </div>
+                    </template>
+                    <template v-if="status == '无效'">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>无效原因:</span>
+                            </p>
+                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span>无效备注:</span>
+                            </p>
+                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        </div>
+                    </template>
+                </div>
+                <div class="btn-wrap">
+                    <div class="item close-btn" @click="hide">取消</div>
+                    <div class="item submit-btn" native-type="submit">确定</div>
+                </div>
+            </van-form>
         </van-popup>
 
         <van-popup v-model="selectReasonPopupShow" position="bottom" class="picker-pop">
@@ -99,6 +101,7 @@
 <script>
 import { mapState } from 'vuex'
 import { StageReasonList, ChargeUserInfoList, ModifyOpportunities } from '../../../config/api'
+import { formatDate } from '../../../utils/tool'
 
 export default {
     props: {
@@ -119,6 +122,9 @@ export default {
                 endReasonId: null,
                 endRemarks: null
             },
+            chargeUserName: '',
+            timeShowText: null,
+            reasonText: '',
             selectDatePopupShow: false,
             selectChargerPopupShow: false,
             selectReasonPopupShow: false,
@@ -135,6 +141,7 @@ export default {
             this.stageId = stageId
             this.status = status
             this.form = JSON.parse(JSON.stringify(formData))
+            this.timeShowText = this.form.endTime && formatDate(this.form.endTime, "yyyy-MM-dd") || null
             if (this.status == '成交') {
                 this.chargeUserInfoList()
             } else {
@@ -154,6 +161,9 @@ export default {
                 endReasonId: null,
                 endRemarks: null
             }
+            this.chargeUserName =  ''
+            this.reasonText = ''
+            this.timeShowText = null
         },
         // 获取阶段原因列表
         async stageReasonList() {
@@ -161,6 +171,7 @@ export default {
 
             if (code == 'success') {
                 this.reasonOptions = data
+                this.getReasonText()
             }
         },
         // 获取商机负责人列表
@@ -169,27 +180,48 @@ export default {
 
             if (code == 'success') {
                 this.chargeUserInfoListOptions = data
+                this.getChargerText()
             }
+        },
+        getChargerText() {
+            this.chargeUserInfoListOptions.map(item => {
+                if (item.userNo == this.form.chargeUserNo) {
+                    this.chargeUserName = item.userName
+                }
+            })
+        },
+        getReasonText() {
+            this.reasonOptions.map(item => {
+                if (item.id == this.form.endReasonId) {
+                    this.reasonText = item.content
+                }
+            })
         },
         // 选择负责人
         selectCharger() {
             this.selectChargerPopupShow = true
         },
         // 确认负责人
-        chargerConfirm() {
-            
+        chargerConfirm(v) {
+            console.log("负责人：：：", v)
+            this.form.chargeUserNo = v && v.userNo
+            this.chargeUserName = v && v.userName
+            this.selectChargerPopupShow = false
         },
         // 选择原因
         selectReason() {
-
+            this.selectReasonPopupShow = true
         },
         // 确认原因
-        reasonConfirm() {
-
+        reasonConfirm(v) {
+            this.form.endReasonId = v && v.id
+            this.reasonText = v && v.content 
         },
         // 确认时间
-        dateConfirm() {
-
+        dateConfirm(v) {
+            this.form.endTime = v
+            this.timeShowText = formatDate(v, "yyyy-MM-dd")
+            this.selectDatePopupShow = false
         },
         // 表单提交
         async handleSubmit() {
@@ -208,7 +240,9 @@ export default {
             if (code == 'success') {
                 this.$toast(msg)
                 this.hide()
-                this.goBack()
+                setTimeout(() => {
+                    this.goBack()
+                }, 500)
             } else {
                 this.$toast(msg)
             }

@@ -35,14 +35,14 @@
                             <span class="icon">*</span>
                             <span>跟进阶段:</span>
                         </p>
-                        <van-field v-model="form.stageNo" class="edit-field" placeholder="选择阶段" :readonly="true" @click="selectStage" :rules="[{ required: true }]"/>
+                        <van-field v-model="stageText" class="edit-field" placeholder="选择阶段" :readonly="true" @click="selectStage" :rules="[{ required: true }]"/>
                     </div>
                     <div class="item one-line">
                         <p class="label">
                             <span class="icon">*</span>
                             <span>商机负责人:</span>
                         </p>
-                        <van-field v-model="form.chargeUserNo" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" :rules="[{ required: true }]"/>
+                        <van-field v-model="chargeUserName" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" :rules="[{ required: true }]"/>
                     </div>
                     <div v-if="opportunityStatus == 1" class="item one-line">
                         <p class="label">
@@ -106,6 +106,7 @@
                 ref="stagePicker"
                 show-toolbar
                 :columns="stageListOptions"
+                value-key="stageName"
                 @confirm="stageConfirm"
                 @cancel="selectStagePopupShow = false"
             />
@@ -114,7 +115,8 @@
             <van-picker
                 show-toolbar
                 :columns="chargeUserInfoListOptions"
-                @confirm="stageConfirm"
+                value-key="userName"
+                @confirm="chargerConfirm"
                 @cancel="selectChargerPopupShow = false"
             />
         </van-popup>
@@ -159,6 +161,8 @@ export default {
                 endReasonId: null,
                 endRemarks: ''
             },
+            stageText: '',
+            chargeUserName: '',
             expectTimeShowText: null,
             timeShowText: null,
             selectDateType: 0,
@@ -192,8 +196,7 @@ export default {
                 
                 this.opportunityStatus = status  //0：跟进中；1：成交；2：输单；3：无效
                 this.form = JSON.parse(JSON.stringify(formData))
-                this.expectTimeShowText = this.form.expectEndTime && formatDate(this.form.expectEndTime, "yyyy-MM-dd") || null
-                this.timeShowText = this.form.endTime && formatDate(this.form.endTime, "yyyy-MM-dd") || null
+                this.getText()
                 this.opportunitiesStageList(this.getStageListOptions, false, '')
             } else {
                 this.id = null
@@ -204,6 +207,19 @@ export default {
         },
         getStageListOptions(data) {
             this.stageListOptions = data
+            this.getStageText()
+        },
+        getStageText() {
+            this.stageListOptions.map(item => {
+                if (item.sortNo == this.form.stageNo) {
+                    this.stageText = item.stageName
+                }
+            })
+        },
+        getText() {
+            this.chargeUserName = this.form.chargeUserName
+            this.expectTimeShowText = this.form.expectEndTime && formatDate(this.form.expectEndTime, "yyyy-MM-dd") || null
+            this.timeShowText = this.form.endTime && formatDate(this.form.endTime, "yyyy-MM-dd") || null
         },
         initForm() {
             this.form = {
@@ -218,6 +234,12 @@ export default {
                 endReasonId: null,
                 endRemarks: ''
             }
+            this.stageText = ''
+            this.chargeUserName = ''
+            this.expectTimeShowText = null
+            this.timeShowText = null
+            this.selectDateType = 0
+            this.currentDate = new Date()
         },
         // 获取商机负责人列表
         async chargeUserInfoList() {
@@ -240,6 +262,14 @@ export default {
         selectCharger() {
             this.selectChargerPopupShow = true
         },
+        // 确认负责人
+        chargerConfirm(v) {
+            console.log("负责人：：：", v)
+            this.form.chargeUserNo = v && v.userNo
+            this.form.chargeUserName = v && v.userName
+            this.chargeUserName = v && v.userName
+            this.selectChargerPopupShow = false
+        },
         // 确认时间
         dateConfirm(v) {
             if(this.selectDateType == 0) {
@@ -252,11 +282,11 @@ export default {
             this.selectDatePopupShow = false
         },
         // 确认阶段
-        stageConfirm() {
-            
-        },
-        checkForm() {
-
+        stageConfirm(v) {
+            console.log("阶段：：：", v)
+            this.form.stageNo = v && v.sortNo
+            this.stageText = v && v.stageName
+            this.selectStagePopupShow = false
         },
         // 表单提交
         async handleSubmit() {
@@ -293,7 +323,7 @@ export default {
 <style lang="less" scoped>
 .edit-opportunity {
     .edit-opportunity-form {
-        max-height: 80%;
+        max-height: 90%;
         padding: 0 0 24px;
         overflow-y: auto;
         .title {
