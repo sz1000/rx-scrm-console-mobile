@@ -246,8 +246,8 @@
         </div>
 
         <!-- 通知成员 -->
-        <div>
-          <div class="sendRequest warpButtonSend" @click="sendRequest">
+        <div class="btn-warp">
+          <div class="send-request warpButtonSend" @click="sendRequest">
             通知成员发送
           </div>
         </div>
@@ -527,7 +527,7 @@ export default {
       console.log(obj, "------------obj");
       let formData = new FormData();
       formData.append("file", file.file);
-      formData.append("type", "sop");
+      formData.append("type", "label");
       formData.append("filetype", "image");
       let config = {
         headers: {
@@ -997,6 +997,27 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.btn-warp {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%);
+  background: #fff;
+  width: 100%;
+  padding: 24px;
+  .send-request {
+    height: 80px;
+    width: 702px;
+    background: #4168f6;
+    border-radius: 8px;
+    line-height: 80px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 28px;
+    color: #ffffff;
+    display: block;
+  }
+}
 .butaddWarp {
   margin-bottom: 50px !important;
 }
@@ -1537,23 +1558,6 @@ export default {
           font-size: 28px;
           color: #4168f6;
           border-color: #4168f6;
-        }
-        .sendRequest {
-          height: 80px;
-          width: 702px;
-          background: #4168f6;
-          border-radius: 8px;
-          line-height: 80px;
-          text-align: center;
-          border-radius: 8px;
-          font-size: 28px;
-          color: #ffffff;
-          display: block;
-          // margin: 0 auto;
-          position: fixed;
-          left: 50%;
-          bottom: 20px;
-          transform: translate(-50%);
         }
       }
     }
