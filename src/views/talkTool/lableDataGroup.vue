@@ -668,9 +668,9 @@ export default {
     },
     // 添加素材
     addAppendix() {
-      if (this.appendixList.length >= 9) {
-        return;
-      }
+      // if (this.appendixList.length >= 9) {
+      //   return;
+      // }
       this.appendixList.push({
         appendixType: "图片",
         picList: [],
@@ -681,6 +681,15 @@ export default {
         labelTime: "",
         groupUserNum: 0,
       });
+      let tempList = JSON.parse(JSON.stringify(this.labelListTimeData));
+      this.appendixList.forEach((val) => {
+        tempList.forEach((item, index) => {
+          if (val.labelTime == item.chatId) {
+            tempList.splice(index, 1);
+          }
+        });
+      });
+      this.labelListTimeData = tempList;
     },
     // 点击客户标签打开弹窗
     clickCus() {
@@ -1139,7 +1148,7 @@ export default {
       width: 520px;
       margin-left: 180px !important;
       .el-input__count {
-        bottom: -100px;
+        bottom: -80px;
       }
     }
   }
