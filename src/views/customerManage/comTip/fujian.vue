@@ -33,6 +33,7 @@
 </template>
 <script>
 	import { BASE_URL } from '../../../utils/request.js'
+	import { getStoreValue } from '../../../utils/LocalStorageDate'
 export default {
   data() {
     return {
@@ -51,7 +52,7 @@ export default {
             headers(){
                 return {
                     "Accept": "application/json",
-                    "token": localStorage.getItem('token')
+                    "token": getStoreValue('token')
                 }
             }
   },
@@ -68,9 +69,9 @@ export default {
 	  		let obj = `clueCustomerNo=${_this.objItem.clueCustomerNo}&id=${id}`
 	  	//表单传参，需要如上转译。 
 	  	
-	  	Dialog.confirm({
-				  title: '标题',
-				  message: '弹窗内容',
+	  	this.$dialog.confirm({
+				  title: '',
+				  message: '确认删除吗',
 				})
 				  .then(() => {
 				    this.$network
@@ -82,7 +83,7 @@ export default {
 				            message: res.msg,
 				          })
 				          //this.$set(this.fileList)
-				        _this.getDownList()
+				          this.getDownList()
 				        })
 				  })
 				  .catch(() => {
@@ -121,7 +122,7 @@ export default {
 	                type: 'success',
 	                message: '上传成功!',
 	              })
-				//this.getDownList()
+				this.getDownList()
 			},
 			onError(err, file, fileList){
 				console.log(err)
