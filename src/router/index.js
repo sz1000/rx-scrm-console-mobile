@@ -20,6 +20,8 @@ import CallingMyCard from '../views/talkTool/callingCard/myCard.vue'    //我的
 import CallingPoster from '../views/talkTool/callingCard/poster.vue'    //我的名片 生成海报
 import CallingData from '../views/talkTool/callingCard/lookData.vue'  //我的名片 浏览数据
 
+import LableDataGroup from '../views/talkTool/lableDataGroup.vue' //客户群群发
+
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
 import ClockPage from '../views/clockPage/ClockPage.vue'
@@ -36,12 +38,18 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
+import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
+import StageList from '../components/BusinessOpportunities/stageList'
+
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
-// 群 SOP 设置 
+// 群 SOP 设置
 import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
+// 群列表
+import GroupListDetails from '../views/customerManage/groupListDetails.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
@@ -60,7 +68,7 @@ VueRouter.prototype.push = function push(location) {
 
 const routes = [{
         path: '/',
-        redirect: '/homeTransition',
+        redirect: '/home',
     },
     {
         path: '/test',
@@ -199,6 +207,15 @@ const routes = [{
                 },
                 component: CustomergroupPlaye,
             },
+
+            //一建拉群
+            {
+                path: 'lableDataGroup',
+                meta: {
+                    bodyClass: 'lableDataGroup',
+                },
+                component: LableDataGroup,
+            },
             //群活码 list
             {
                 path: 'groupCodeList',
@@ -281,6 +298,15 @@ const routes = [{
                 },
                 component: Grouplist,
             },
+            // 群列表详情
+            {
+                path: 'groupListDetails',
+                name: 'groupListDetails',
+                meta: {
+                    bodyClass: 'groupListDetails',
+                },
+                component: GroupListDetails,
+            },
 
             // 客户画像
             {
@@ -326,6 +352,27 @@ const routes = [{
                     bodyClass: 'CustomerSeas',
                 },
                 component: CustomerSeas,
+            },
+            {
+                path: 'customDeepDetail',
+                meta: {
+                    bodyClass: 'CustomDeepDetail',
+                },
+                component: CustomDeepDetail,
+            },
+            {
+                path: 'customerDeepSeas',
+                meta: {
+                    bodyClass: 'CustomerDeepSeas',
+                },
+                component: CustomerDeepSeas,
+            },
+            {
+                path: 'stageList',
+                meta: {
+                    bodyClass: 'StageList',
+                },
+                component: StageList,
             },
         ],
     },

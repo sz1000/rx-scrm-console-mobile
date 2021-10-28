@@ -1,17 +1,17 @@
 
 <template>
-  <div class="microCode group-setting-warp" v-loading="loading">
-    <div class="headerTitle">
+  <div class="microCode group-setting-warp">
+    <div class="headerTitleList">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">新增客户群发</span>
+      <span class="textTitle">新增标签建群</span>
     </div>
     <div class="warp_box">
-      <!-- 群发设置 -->
+      <!-- 标签建群 -->
       <div class="group-setting">
-        <div class="title">群发设置</div>
+        <div class="title">标签建群</div>
         <div class="form">
           <el-form ref="form" :rules="rules" :model="baseForm">
             <!-- 任务名称 -->
@@ -22,12 +22,10 @@
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
-                maxlength="30"
-                show-word-limit
               ></el-input>
             </el-form-item>
             <!-- 选择员工 -->
-            <el-form-item label="选择员工:" prop="staffs">
+            <el-form-item label="群发员工:" prop="staffs">
               <el-select
                 class="taskNameselect"
                 v-model="baseForm.staffs"
@@ -46,7 +44,7 @@
               </el-select>
             </el-form-item>
             <!-- 选择客户 -->
-            <el-form-item label="选择客户:" prop="selectCusType">
+            <el-form-item label="群发客户:" prop="selectCusType">
               <el-radio-group
                 v-model="baseForm.selectCusType"
                 @change="selecusChange"
@@ -94,23 +92,6 @@
                     </div>
                   </div>
                 </el-form-item>
-                <el-form-item label="选择群聊:" prop="chatGroup">
-                  <el-select
-                    multiple
-                    v-model="baseForm.chatGroup"
-                    style="width: 100%"
-                    placeholder="请选择群聊"
-                    @change="chatGroupListChange"
-                    v-loadmore="loadMoreGroup"
-                  >
-                    <el-option
-                      :key="index"
-                      :label="item.name"
-                      :value="item.chatId"
-                      v-for="(item, index) in chatGroupList"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
 
                 <el-form-item label="客户标签:" prop="includeCus">
                   <div
@@ -140,12 +121,7 @@
               预计发送客户数量：{{ estimateCusNum }}
             </el-form-item>
             <!-- 发送规则 -->
-            <el-form-item label="发送规则 :" prop="sendRule">
-              <el-radio-group v-model="baseForm.sendRule">
-                <el-radio :label="1">立即发送</el-radio>
-                <el-radio :label="2">定时发送</el-radio>
-              </el-radio-group>
-            </el-form-item>
+
             <!-- 设定时间 -->
             <el-form-item
               v-if="baseForm.sendRule == 2"
@@ -188,78 +164,54 @@
           >
         </div>
         <!-- 群发内容 -->
-        <div class="txt-28 marB-24">群发内容：</div>
-        <el-input
-          class="marB-24"
-          type="textarea"
-          placeholder="请输入群发内容"
-          v-model="sendMsg"
-          maxlength="500"
-          show-word-limit
-        >
-        </el-input>
+        <!-- <div class="txt-28 marB-24">群发内容：</div> -->
+        <el-form :model="FormData" :rules="rulesCenter">
+          <el-form-item label="入群引导语:" prop="sendMsg">
+            <el-input
+              class="marB-24"
+              type="textarea"
+              placeholder="请输入群发内容"
+              v-model="FormData.sendMsg"
+              maxlength="300"
+              show-word-limit
+            >
+            </el-input>
+          </el-form-item>
+        </el-form>
+
         <!-- 附件 -->
         <div class="appendix-list">
           <div
-            class="item marB-24"
+            style="display: flex"
             v-for="(item, index) in appendixList"
             :key="index"
           >
-            <!-- 删除素材 -->
-            <div class="delItem" @click="delItem(index)">
-              <i class="el-icon-delete"></i>
+            <div class="qrcode">
+              二维码<span>{{ index + 1 }}:</span>
             </div>
-            <!-- 选择素材类型 -->
-            <div class="appendixType">
-              <span class="_t txt-28"> 选择素材类型 </span>
-              <el-radio-group
-                class="radio"
-                @change="appendixChange(index, $event)"
-                v-model="item.appendixType"
-              >
-                <el-radio label="图片"></el-radio>
-                <el-radio label="链接"></el-radio>
-              </el-radio-group>
-            </div>
-            <!-- 图片 -->
-            <template v-if="item.appendixType === '图片'">
-              <van-uploader
-                v-model="item.picList"
-                :max-count="1"
-                :max-size="2 * 1024 * 1024"
-                @oversize="onOversize"
-                :after-read="afterRead.bind(null, { index: index, data: item })"
-              />
-              <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
-              <div class="picTips marB-24">
-                建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
+            <div class="item marB-24">
+              <!-- 删除素材 -->
+              <div class="delItem" @click="delItem(index)">
+                <i class="el-icon-delete"></i>
               </div>
-            </template>
-            <!-- 链接 -->
-            <template v-if="item.appendixType === '链接'">
-              <el-input
-                class="marB-24"
-                v-model="item.href"
-                placeholder="链接地址请以http或https开头"
-              ></el-input>
-              <!-- <el-form ref="form" :model="item">
-                <el-form-item label="链接标题 :">
-                  <el-input
-                    v-model="item.hrefTitle"
-                    placeholder="请输入链接标题"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接摘要 :">
-                  <el-input
-                    v-model="item.hrefDesc"
-                    placeholder="请输入链接摘要"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接封面 :">
-                  <van-uploader v-model="item.hrefPic" :max-count="1" />
-                </el-form-item>
-              </el-form> -->
-            </template>
+              <template>
+                <van-uploader
+                  v-model="item.picList"
+                  :max-count="1"
+                  :max-size="2 * 1024 * 1024"
+                  @oversize="onOversize"
+                  :after-read="
+                    afterRead.bind(null, { index: index, data: item })
+                  "
+                />
+                <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
+                <div class="marB-24 picTips">
+                  当前可加用户<span class="picTipsnum">0</span>人
+                </div>
+        
+
+
+            </div>
           </div>
         </div>
         <!-- 添加素材 -->
@@ -267,10 +219,6 @@
           <button class="addAppendix-button" @click="addAppendix">
             <i class="el-icon-circle-plus-outline"></i> 新增素材内容
           </button>
-          <span class="add-tips" style="margin-left: 24px"
-            >（最多可添加<span>{{ this.appendixList.length }}</span
-            >/9个附件）</span
-          >
         </div>
         <!-- 通知成员 -->
         <div class="sendRequest" @click="sendRequest">通知成员发送</div>
@@ -337,7 +285,7 @@
       </div>
     </van-popup>
   </div>
-</template>
+
 <script>
 import { Toast } from "vant";
 import { Notify } from "vant";
@@ -355,8 +303,10 @@ export default {
       }
     };
     return {
+      FormData: {
+        sendMsg: "",
+      },
       minDate: new Date(),
-      loading: false,
       yuangongPage: 1,
       yuangongLimit: 10,
       qunliaoPage: 1,
@@ -389,6 +339,11 @@ export default {
           { required: true, message: "请选择发送规则", trigger: "change" },
         ],
         sendDateTime: [{ validator: validateSendDateTime, trigger: "change" }],
+      },
+      rulesCenter: {
+        sendMsg: [
+          { required: true, message: "请输入群引导语", trigger: "blur" },
+        ],
       },
       estimateCusNum: 0, // 预计客户数量
       staffsList: [
@@ -503,7 +458,6 @@ export default {
       this.groupStaffset();
     },
     afterRead(obj, file) {
-      this.loading = true;
       console.log(file, "------------");
       console.log(obj, "------------obj");
       let formData = new FormData();
@@ -518,12 +472,9 @@ export default {
       this.$network
         .post("/common-service/oss/uploadfileparam", formData, config)
         .then((res) => {
-          if (res.result) {
-            this.loading = false;
-            console.log(res, "------------图片");
-            obj.data.url = res.data.url;
-            obj.data.objectname = res.data.objectname;
-          }
+          console.log(res, "------------图片");
+          obj.data.url = res.data.url;
+          obj.data.objectname = res.data.objectname;
 
           // this.listImgData.url = res.data.url;
           // this.listImgData.objectname = res.data.objectname;
@@ -627,6 +578,7 @@ export default {
         hrefTitle: "",
         hrefDesc: "",
         hrefPic: [],
+        valueoptlist: "",
       });
     },
     // 点击客户标签打开弹窗
@@ -922,7 +874,7 @@ export default {
   },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .dataTimecss {
   .el-input__suffix {
     line-height: 82px;
@@ -1005,7 +957,7 @@ export default {
   .marR-24 {
     margin-right: 24px;
   }
-  .headerTitle {
+  .headerTitleList {
     background: #fff;
     padding: 0 24px;
     font-weight: 600;
@@ -1030,418 +982,439 @@ export default {
       padding-left: 135px !important;
       // text-align: center;
     }
-  }
-  .choose-cus-popup {
-    border-radius: 16px 16px 0 0;
-    ._top {
-      display: flex;
-      align-items: center;
-      box-sizing: border-box;
-      padding: 0 24px;
-      justify-content: space-between;
-      height: 88px;
-      background: #fafbff;
+
+    .choose-cus-popup {
       border-radius: 16px 16px 0 0;
-      line-height: 88px;
-      text-align: center;
-      font-size: 28px;
-      color: #3c4353;
-      letter-spacing: 0;
-      text-align: center;
-      font-weight: 500;
-      position: relative;
-      border-bottom: 1px solid #f0f2f7;
-      .fill {
-        width: 30px;
-        height: 30px;
+      ._top {
         display: flex;
         align-items: center;
-        font-size: 32px;
-      }
-    }
-    ._center {
-      box-sizing: border-box;
-      padding: 24px;
-      min-height: 740px;
-      ._item {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 12px;
-        .group-title {
-          height: 68px;
-          line-height: 68px;
-          width: 112px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 28px;
-          color: #3c4353;
-          font-weight: 500;
-          margin-right: 32px;
-        }
-        .group-label {
-          flex: 1;
-          display: flex;
-          flex-wrap: wrap;
-          .label-item {
-            box-sizing: border-box;
-            margin-bottom: 16px;
-            height: 68px;
-            background: #fafbff;
-            border: 1px solid #d9dae4;
-            border-radius: 8px;
-            line-height: 68px;
-            padding: 0 16px;
-            font-size: 28px;
-            color: #838a9d;
-            font-weight: 400;
-            margin-right: 16px;
-            &.active {
-              background: #4168f6;
-              border: 1px solid !important;
-              color: #fff;
-            }
-          }
-        }
-      }
-    }
-    ._bottom {
-      padding: 0 24px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      ._button {
-        width: calc((100% - 24px) / 2);
-        height: 80px;
         box-sizing: border-box;
-        line-height: 80px;
-        font-size: 28px;
+        padding: 0 24px;
+        justify-content: space-between;
+        height: 88px;
+        background: #fafbff;
+        border-radius: 16px 16px 0 0;
+        line-height: 88px;
         text-align: center;
-        border-radius: 8px;
-        font-weight: 400;
-        &.cancel {
-          border: 1px solid #4168f6;
-          color: #4168f6;
-        }
-        &.save {
-          color: #fff;
-          background: #4168f6;
-        }
-      }
-    }
-  }
-  .van-picker__toolbar {
-    height: 88px;
-    .van-picker__cancel,
-    .van-picker__confirm,
-    .van-picker__title {
-      font-size: 28px;
-    }
-    .van-picker__title {
-      line-height: 88px;
-      height: 88px;
-    }
-  }
-  .warp_box {
-    height: 100%;
-    background: #fff;
-    box-sizing: border-box;
-    padding: 24px 12px;
-    .el-radio-group {
-      .el-radio {
-        line-height: 28px;
-      }
-      .el-radio__input {
-        .el-radio__inner {
-          width: 28px;
-          height: 28px;
-          &::after {
-            width: 10px;
-            height: 10px;
-          }
-        }
-      }
-      .el-radio__label {
-        font-size: 28px;
-      }
-    }
-    .el-input__inner,
-    .el-radio-button__inner,
-    .el-radio-group {
-      height: 80px;
-      line-height: 80px;
-      font-size: 28px;
-      &.el-input__inner .el-input__suffix {
-        .el-input__count {
-          font-size: 28px !important;
-          color: #c0c4cc;
-        }
-      }
-    }
-    .filterCus {
-      padding: 24px 0;
-      padding-right: 12px;
-      margin-bottom: 30px;
-      box-sizing: border-box;
-      border: 1px solid #d9dae4;
-      background-color: #fafbff;
-      border-radius: 8px;
-    }
-    .el-form-item {
-      margin-bottom: 40px;
-      .el-form-item__label {
-        line-height: 80px;
-        font-size: 28px;
-        width: 155px;
-        white-space: nowrap;
-      }
-      .el-form-item__content {
-        margin-left: 155px;
-        font-size: 28px;
-        .el-select__tags {
-          .el-tag--small {
-            height: 48px;
-            padding: 0 16px;
-            line-height: 48px;
-            background-color: #fafbff;
-            border-color: #d9dae4;
-          }
-          .el-tag {
-            &:first-child {
-              margin-left: 16px;
-            }
-          }
-          .el-tag .el-icon-close {
-            width: 28px;
-            height: 28px;
-            background: transparent;
-            &::before {
-              color: #c0c4cc;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
-        }
-      }
-      .selectDate {
-        width: 307px;
-      }
-    }
-    .group-setting,
-    .group-content {
-      .title {
-        padding-left: 20px;
-        position: relative;
-        height: 40px;
-        font-family: PingFangSC-Medium !important;
         font-size: 28px;
         color: #3c4353;
         letter-spacing: 0;
+        text-align: center;
         font-weight: 500;
-        line-height: 40px;
-        &::before {
-          content: "";
-          display: block;
-          width: 8px;
-          height: 28px;
-          background-color: #4168f6;
-          left: 0;
-          top: 50%;
-          margin-top: -14px;
-          position: absolute;
+        position: relative;
+        border-bottom: 1px solid #f0f2f7;
+        .fill {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          font-size: 32px;
         }
       }
-    }
-    .group-setting {
-      .title {
-        margin-bottom: 24px;
-      }
-    }
-    .group-content {
-      .title {
-        margin-bottom: 12px;
-      }
-      .tips {
-        padding-left: 20px;
+      ._center {
         box-sizing: border-box;
-        display: flex;
-        margin-bottom: 24px;
-        span {
-          display: block;
-          font-size: 24px;
-          color: #c0c4cc;
-          letter-spacing: 0;
-          font-weight: 400;
-          line-height: 32px;
-          &:first-child {
+        padding: 24px;
+        min-height: 740px;
+        ._item {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 12px;
+          .group-title {
+            height: 68px;
+            line-height: 68px;
+            width: 112px;
+            overflow: hidden;
+            text-overflow: ellipsis;
             white-space: nowrap;
+            font-size: 28px;
+            color: #3c4353;
+            font-weight: 500;
+            margin-right: 32px;
+          }
+          .group-label {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            .label-item {
+              box-sizing: border-box;
+              margin-bottom: 16px;
+              height: 68px;
+              background: #fafbff;
+              border: 1px solid #d9dae4;
+              border-radius: 8px;
+              line-height: 68px;
+              padding: 0 16px;
+              font-size: 28px;
+              color: #838a9d;
+              font-weight: 400;
+              margin-right: 16px;
+              &.active {
+                background: #4168f6;
+                border: 1px solid !important;
+                color: #fff;
+              }
+            }
           }
         }
       }
-      .el-textarea__inner {
-        padding: 24px;
-        font-size: 28px;
-        line-height: 30px;
-        min-height: 400px !important;
-      }
-      .appendix-list {
-        .item {
-          padding: 0 24px;
+      ._bottom {
+        padding: 0 24px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        ._button {
+          width: calc((100% - 24px) / 2);
+          height: 80px;
           box-sizing: border-box;
+          line-height: 80px;
+          font-size: 28px;
+          text-align: center;
           border-radius: 8px;
-          border: 1px solid #d9dae4;
-          position: relative;
-          .appendixType {
-            display: flex;
-            align-items: center;
-            ._t {
-              margin-right: 24px;
+          font-weight: 400;
+          &.cancel {
+            border: 1px solid #4168f6;
+            color: #4168f6;
+          }
+          &.save {
+            color: #fff;
+            background: #4168f6;
+          }
+        }
+      }
+    }
+    .van-picker__toolbar {
+      height: 88px;
+      .van-picker__cancel,
+      .van-picker__confirm,
+      .van-picker__title {
+        font-size: 28px;
+      }
+      .van-picker__title {
+        line-height: 88px;
+        height: 88px;
+      }
+    }
+    .warp_box {
+      height: 100%;
+      background: #fff;
+      box-sizing: border-box;
+      padding: 24px 12px;
+      .el-radio-group {
+        .el-radio {
+          line-height: 28px;
+        }
+        .el-radio__input {
+          .el-radio__inner {
+            width: 28px;
+            height: 28px;
+            &::after {
+              width: 10px;
+              height: 10px;
             }
           }
-          .delItem {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            font-size: 32px;
+        }
+        .el-radio__label {
+          font-size: 28px;
+        }
+      }
+      .el-input__inner,
+      .el-radio-button__inner,
+      .el-radio-group {
+        height: 80px;
+        line-height: 80px;
+        font-size: 28px;
+        &.el-input__inner .el-input__suffix {
+          .el-input__count {
+            font-size: 28px !important;
+            color: #c0c4cc;
           }
-          .van-uploader {
-            .van-uploader__upload,
-            .van-uploader__preview {
-              margin: 0 24px 0 0;
+        }
+      }
+      .filterCus {
+        padding: 24px 0;
+        padding-right: 12px;
+        margin-bottom: 30px;
+        box-sizing: border-box;
+        border: 1px solid #d9dae4;
+        background-color: #fafbff;
+        border-radius: 8px;
+      }
+      .el-form-item {
+        margin-bottom: 40px;
+        .el-form-item__label {
+          line-height: 80px;
+          font-size: 28px;
+          width: 155px;
+          white-space: nowrap;
+        }
+        .el-form-item__content {
+          margin-left: 155px;
+          font-size: 28px;
+          .el-select__tags {
+            .el-tag--small {
+              height: 48px;
+              padding: 0 16px;
+              line-height: 48px;
+              background-color: #fafbff;
+              border-color: #d9dae4;
             }
-            .van-uploader__upload,
-            .van-uploader__preview .van-uploader__preview-image {
-              width: 182px;
-              height: 182px;
+            .el-tag {
+              &:first-child {
+                margin-left: 16px;
+              }
             }
-            .van-uploader__upload-icon {
-              font-size: 36px;
-            }
-
-            .van-uploader__preview-delete {
+            .el-tag .el-icon-close {
               width: 28px;
               height: 28px;
-              height: 28px;
-              border: 2px solid #d9dae4;
-              // border-radius: 100%;
-              top: -14px;
-              right: -14px;
-              background-color: #fff;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              //               align-items: content;
-              //               justify-content: center;
-              // background-image: url("../../images/dele.png");
-              // background-size: contain;
-              // background-repeat: no-repeat;
-            }
-            //
-            .van-icon-cross:before {
-              font-size: 34px;
-              position: relative;
-              right: -6px !important;
-              top: -6px !important;
-              color: #d9dae4;
+              background: transparent;
+              &::before {
+                color: #c0c4cc;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
             }
           }
-          .picTips {
-            margin-top: 24px;
+        }
+        .selectDate {
+          width: 307px;
+        }
+      }
+      .group-setting,
+      .group-content {
+        .title {
+          padding-left: 20px;
+          position: relative;
+          height: 40px;
+          font-family: PingFangSC-Medium !important;
+          font-size: 28px;
+          color: #3c4353;
+          letter-spacing: 0;
+          font-weight: 500;
+          line-height: 40px;
+          &::before {
+            content: "";
+            display: block;
+            width: 8px;
+            height: 28px;
+            background-color: #4168f6;
+            left: 0;
+            top: 50%;
+            margin-top: -14px;
+            position: absolute;
+          }
+        }
+      }
+      .group-setting {
+        .title {
+          margin-bottom: 24px;
+        }
+      }
+      .group-content {
+        .title {
+          margin-bottom: 12px;
+        }
+        .tips {
+          padding-left: 20px;
+          box-sizing: border-box;
+          display: flex;
+          margin-bottom: 24px;
+          span {
+            display: block;
             font-size: 24px;
             color: #c0c4cc;
             letter-spacing: 0;
             font-weight: 400;
+            line-height: 32px;
+            &:first-child {
+              white-space: nowrap;
+            }
           }
         }
-      }
-      .appendix-add-warp {
-        margin-bottom: 103px;
-        display: flex;
-        align-items: center;
-        .addAppendix-button {
-          padding: 0 24px;
-          box-sizing: border-box;
-          height: 68px;
-          background: rgba(65, 104, 246, 0.04);
-          border: 1px solid #4168f6;
-          border-radius: 8px;
-          line-height: 68px;
+        .el-textarea__inner {
+          padding: 24px;
+          font-size: 28px;
+          line-height: 30px;
+          min-height: 400px !important;
+          width: 530px;
+          margin-left: 20px;
+        }
+        .el-input__count {
+          bottom: -80px;
+        }
+        .appendix-list {
+          .qrcode {
+            margin-left: 80px;
+            margin-right: 20px;
+          }
+          .item {
+            padding: 30px 24px 0;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #d9dae4;
+            position: relative;
+            width: 520px;
+
+            .appendixType {
+              display: flex;
+              align-items: center;
+              ._t {
+                margin-right: 24px;
+              }
+            }
+            .delItem {
+              position: absolute;
+              top: 24px;
+              right: 24px;
+              font-size: 32px;
+            }
+            .van-uploader {
+              .van-uploader__upload,
+              .van-uploader__preview {
+                margin: 0 24px 0 0;
+              }
+              .van-uploader__upload,
+              .van-uploader__preview .van-uploader__preview-image {
+                width: 182px;
+                height: 182px;
+              }
+              .van-uploader__upload-icon {
+                font-size: 36px;
+              }
+
+              .van-uploader__preview-delete {
+                width: 28px;
+                height: 28px;
+                height: 28px;
+                border: 2px solid #d9dae4;
+                // border-radius: 100%;
+                top: -14px;
+                right: -14px;
+                background-color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                //               align-items: content;
+                //               justify-content: center;
+                // background-image: url("../../images/dele.png");
+                // background-size: contain;
+                // background-repeat: no-repeat;
+              }
+              //
+              .van-icon-cross:before {
+                font-size: 34px;
+                position: relative;
+                right: -6px !important;
+                top: -6px !important;
+                color: #d9dae4;
+              }
+            }
+            .picTipsnum {
+              display: inline-block;
+              font-size: 28px;
+              color: #3c4353;
+              letter-spacing: 0;
+              line-height: 40px;
+              font-weight: 400;
+              margin: 0 5px;
+            }
+            .picTips {
+              font-size: 28px;
+              color: #838a9d;
+              letter-spacing: 0;
+              line-height: 40px;
+              font-weight: 400;
+            }
+          }
+        }
+        .appendix-add-warp {
+          margin-bottom: 103px;
+          display: flex;
+          align-items: center;
+          .addAppendix-button {
+            padding: 0 24px;
+            box-sizing: border-box;
+            height: 68px;
+            background: rgba(65, 104, 246, 0.04);
+            border: 1px solid #4168f6;
+            border-radius: 8px;
+            line-height: 68px;
+            font-size: 28px;
+            color: #4168f6;
+            letter-spacing: 0;
+            font-weight: 400;
+          }
+          .add-tips {
+            font-size: 28px;
+            color: #c0c4cc;
+          }
+        }
+        .el-button {
+          padding: 14px 24px;
           font-size: 28px;
           color: #4168f6;
-          letter-spacing: 0;
-          font-weight: 400;
+          border-color: #4168f6;
         }
-        .add-tips {
+        .sendRequest {
+          height: 80px;
+          width: 702px;
+          background: #4168f6;
+          border-radius: 8px;
+          line-height: 80px;
+          text-align: center;
+          border-radius: 8px;
           font-size: 28px;
-          color: #c0c4cc;
+          color: #ffffff;
+          display: block;
+          // margin: 0 auto;
+          position: fixed;
+          left: 50%;
+          bottom: 20px;
+          transform: translate(-50%);
         }
       }
-      .el-button {
-        padding: 14px 24px;
-        font-size: 28px;
-        color: #4168f6;
-        border-color: #4168f6;
-      }
-      .sendRequest {
-        height: 80px;
-        width: 702px;
-        background: #4168f6;
-        border-radius: 8px;
-        line-height: 80px;
-        text-align: center;
-        border-radius: 8px;
-        font-size: 28px;
-        color: #ffffff;
-        display: block;
-        // margin: 0 auto;
-        position: fixed;
-        left: 50%;
-        bottom: 20px;
-        transform: translate(-50%);
-      }
     }
-  }
-  .select-custom-sign-wrap {
-    width: 100%;
-    min-height: 80px;
-    box-sizing: border-box;
-    background: #ffffff;
-    border: 2px solid #d9dae4 !important;
-    color: #c0c4cc;
-    border-radius: 5px;
-    padding: 10px 30px 10px 15px;
-    position: relative;
-    display: flex !important;
-    align-items: center;
-    flex-wrap: wrap;
-    .item {
-      padding: 8px 16px;
-      background: #fafbff;
-      height: 48px;
+    .select-custom-sign-wrap {
+      width: 100%;
+      min-height: 80px;
       box-sizing: border-box;
-      border: 1px solid #d9dae4;
-      border-radius: 8px;
-      font-family: PingFangSC-Regular;
-      font-size: 24px;
-      color: #838a9d;
-      line-height: 32px;
-      font-weight: 400;
-      margin-right: 8px;
-      .el-icon-close {
-        margin-left: 9px;
-      }
-    }
-    &::before {
-      content: "\e6e1";
-      position: absolute;
-      right: 5px;
-      top: 50%;
-      transform: translateY(-50%) rotateZ(180deg);
-      font-size: 12px;
+      background: #ffffff;
+      border: 2px solid #d9dae4 !important;
       color: #c0c4cc;
+      border-radius: 5px;
+      padding: 10px 30px 10px 15px;
+      position: relative;
+      display: flex !important;
+      align-items: center;
+      flex-wrap: wrap;
+      .item {
+        padding: 8px 16px;
+        background: #fafbff;
+        height: 48px;
+        box-sizing: border-box;
+        border: 1px solid #d9dae4;
+        border-radius: 8px;
+        font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #838a9d;
+        line-height: 32px;
+        font-weight: 400;
+        margin-right: 8px;
+        .el-icon-close {
+          margin-left: 9px;
+        }
+      }
+      &::before {
+        content: "\e6e1";
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%) rotateZ(180deg);
+        font-size: 12px;
+        color: #c0c4cc;
+      }
     }
   }
 }

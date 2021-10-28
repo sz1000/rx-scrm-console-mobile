@@ -1,6 +1,6 @@
 
 <template>
-  <div class="microCode group-setting-warp">
+  <div class="microCode group-setting-warp" v-loading="loading">
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
@@ -23,6 +23,8 @@
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
+                maxlength="30"
+                show-word-limit
               ></el-input>
             </el-form-item>
 
@@ -362,6 +364,7 @@ export default {
     };
     return {
       minDate: new Date(),
+      loading: false,
       baseForm: {
         // 群发设置表单
         taskName: "",
@@ -488,6 +491,7 @@ export default {
       Toast("文件大小不能超过 2M");
     },
     afterRead(obj, file) {
+      this.loading = true;
       console.log(file, "------------");
       console.log(obj, "------------obj");
       let formData = new FormData();
@@ -502,9 +506,12 @@ export default {
       this.$network
         .post("/common-service/oss/uploadfileparam", formData, config)
         .then((res) => {
-          console.log(res, "------------图片");
-          obj.data.url = res.data.url;
-          obj.data.objectname = res.data.objectname;
+          if (res.result) {
+            this.loading = false;
+            console.log(res, "------------图片");
+            obj.data.url = res.data.url;
+            obj.data.objectname = res.data.objectname;
+          }
         });
       // console.log(this.listImg, "----222--------");
     },
@@ -1299,6 +1306,7 @@ export default {
         border-color: #4168f6;
       }
       .sendRequest {
+        width: 702px;
         height: 80px;
         background: #4168f6;
         border-radius: 8px;

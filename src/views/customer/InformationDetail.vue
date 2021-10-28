@@ -1,14 +1,7 @@
 <template>
-  <!-- <div class="main_warp">
-    <div v-show="loadingShow"
-         class="loadingStyle">
-      <img src="../../images/loading.gif"
-           alt="">
-    </div> -->
   <div class="detailWarp">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -16,171 +9,99 @@
     </div>
     <div class="iconName">
       <div v-if="imageUser">
-        <img :src="imageUser"
-             alt="" />
+        <img :src="imageUser" alt="" />
       </div>
-      <div class="flag"
-           v-else> {{name ? name.substr(0,1) : ''}}</div>
+      <div class="flag" v-else> {{name ? name.substr(0,1) : ''}}</div>
       <div class="nameSex">
         <span>{{name}}</span>
         <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
-        <img src="../../images/icon_female@2x.png"
-             alt=""
-             v-if="basicInfo.gender=='2'" />
-        <img src="../../images/man.png"
-             alt=""
-             v-if="basicInfo.gender=='1'" />
+        <img src="../../images/icon_female@2x.png" alt="" v-if="basicInfo.gender=='2'" />
+        <img src="../../images/man.png" alt="" v-if="basicInfo.gender=='1'" />
 
       </div>
     </div>
     <div class="basicInformation">
       <span>
-        <img src="../../images/icon_label.png"
-             alt="" />
+        <img src="../../images/icon_label.png" alt="" />
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <el-form ref="form"
-                 :model="basicInfo">
+        <el-form ref="form" :model="basicInfo">
           <el-form-item label="客户简称">
-            <el-input v-model="basicInfo.customerName"
-                      placeholder="请输入"
-                      maxlength="15"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.customerName" placeholder="请输入" maxlength="15" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="客户来源">
-            <el-select v-model="basicInfo.source"
-                       placeholder="请选择"
-                       @change="changeSource">
-              <el-option v-for="item in optionSource"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.type">
+            <el-select v-model="basicInfo.source" placeholder="请选择" @change="changeSource">
+              <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="客户类型">
-            <el-select v-model="basicInfo.customerType"
-                       placeholder="请选择"
-                       @change="changeCustom">
-              <el-option v-for="item in customList"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.customerType">
+            <el-select v-model="basicInfo.customerType" placeholder="请选择" @change="changeCustom">
+              <el-option v-for="item in customList" :key="item.value" :label="item.label" :value="item.customerType">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="电话">
-            <el-input v-model="basicInfo.mobil"
-                      placeholder="请输入"
-                      maxlength="13"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.mobil" placeholder="请输入" maxlength="13" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="公司名称">
-            <el-input v-model="basicInfo.cropFullName"
-                      placeholder="请输入"
-                      maxlength="100"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="所属行业">
-            <el-cascader size="large"
-                         :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
-                         :options="optionsCreat"
-                         v-model="basicInfo.industry"
+            <el-cascader size="large" :props="{ expandTrigger: 'click',value:'id' ,label:'name'}" :options="optionsCreat" v-model="basicInfo.industry"
                          @change="handleChange">
             </el-cascader>
           </el-form-item>
           <el-form-item label="企业规模">
-            <el-select v-model="basicInfo.corpScale"
-                       placeholder="请选择"
-                       @change="scaleChange">
-              <el-option v-for="item in optionsScale"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.id">
+            <el-select v-model="basicInfo.corpScale" placeholder="请选择" @change="scaleChange">
+              <el-option v-for="item in optionsScale" :key="item.value" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="basicInfo.address"
-                      maxlength="100"
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.address" maxlength="100" placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="备注"
-                        class="textareaInput">
-            <el-input v-model="basicInfo.remark"
-                      maxlength="200"
-                      placeholder="请输入文字(不得超过200个字符)"
-                      @change="changeInput()"></el-input>
+          <el-form-item label="备注" class="textareaInput">
+            <el-input v-model="basicInfo.remark" maxlength="200" placeholder="请输入文字(不得超过200个字符)" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="basicInfo.describe"
-                      maxlength="100"
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.describe" maxlength="100" placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="姓名">
-            <el-input v-model="basicInfo.name"
-                      maxlength="15"
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.name" maxlength="15" placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone"
-                      maxlength="11"
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.phone" maxlength="11" placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender"
-                       placeholder="请选择"
-                       @change="changeGender">
-              <el-option label="未知"
-                         value="0"></el-option>
-              <el-option label="男"
-                         value="1"></el-option>
-              <el-option label="女"
-                         value="2"></el-option>
+            <el-select v-model="basicInfo.gender" placeholder="请选择" @change="changeGender">
+              <el-option label="未知" value="0"></el-option>
+              <el-option label="男" value="1"></el-option>
+              <el-option label="女" value="2"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position"
-                      placeholder="请输入"
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.position" placeholder="请输入" maxlength="20" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin"
-                      placeholder="请输入"
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.weixin" placeholder="请输入" maxlength="20" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱:"
-                        class="describeBorder">
-            <el-input v-model="basicInfo.email"
-                      placeholder="请输入"
-                      maxlength="60"
-                      @change="changeInput()"></el-input>
+          <el-form-item label="邮箱:" class="describeBorder">
+            <el-input v-model="basicInfo.email" placeholder="请输入" maxlength="60" @change="changeInput()"></el-input>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <div class="systemInformation ">
       <span>
-        <img src="../../images/icon_label.png"
-             alt="" />
+        <img src="../../images/icon_label.png" alt="" />
       </span>
       <span>系统信息</span>
       <div class="formEdit">
         <van-form v-model="systemList">
-          <van-field v-for="(item,index) in systemList"
-                     label-align='center'
-                     :ref="'barcode'+index"
-                     readonly
-                     :key="index"
-                     v-model="item.value"
+          <van-field v-for="(item,index) in systemList" label-align='center' :ref="'barcode'+index" readonly :key="index" v-model="item.value"
                      :label="item.name">
           </van-field>
         </van-form>
@@ -217,6 +138,7 @@ export default {
         customerType: '',
         mobil: '',
         cropFullName: '',
+        // cropscale: '',
         corpScale: '',
         address: '',
         remark: '',
@@ -275,7 +197,8 @@ export default {
       this.update()
     },
     scaleChange(val) {
-      // console.log(val, this.basicInfo)
+      // console.log(val)
+      this.basicInfo.corpScale = val
       this.update()
     },
     getDetailForm() {
@@ -298,6 +221,7 @@ export default {
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
+          // this.basicInfo.corpScale = res.data.clueCustomerEntity.cropscale
           this.imageUser = res.data.clueCustomerEntity.avatar
           this.name = res.data.clueCustomerEntity.name
           this.nameFrom = res.data.clueCustomerEntity.customerType
@@ -324,7 +248,7 @@ export default {
             }
           })
           this.systemList = tempSystem
-          localStorage.removeItem('userId')
+          // localStorage.removeItem('userId')
         })
     },
     processTree(data) {
@@ -346,6 +270,7 @@ export default {
         })
         .then((res) => {
           this.$message({ type: 'success', message: '更新成功' })
+          // this.getDetailForm()
         })
     },
     goBack() {

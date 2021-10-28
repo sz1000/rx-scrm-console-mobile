@@ -1,5 +1,5 @@
 // const exp = 60 * 60 * 24 * 1000 // 过期时间一天
-import Network from '../utils/request'
+import { http } from '../utils/request'
 import router from '../router/index'
 /**
  * 读取值
