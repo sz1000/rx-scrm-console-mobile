@@ -1093,13 +1093,13 @@ export default {
   padding-bottom: 160px;
 }
 .sends_num {
-  font-size: 14px;
+  font-size: 28px;
   color: #4168f6;
   letter-spacing: 0;
   font-weight: 400;
 }
 .colordata {
-  font-size: 14px;
+  font-size: 28px;
   color: #c0c4cc;
 }
 
