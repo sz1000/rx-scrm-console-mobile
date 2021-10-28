@@ -1,6 +1,6 @@
 <template>
     <div class="detail_wrap">
-        <TopTitle title="新增群活码"></TopTitle>
+        <TopTitle :title="`${id?'编辑':'新增'}群活码`"></TopTitle>
         <div class="detail_content">
             <div class="item">
                 <div class="label"><i>*</i>活码名称：</div>
@@ -24,7 +24,7 @@
                 <div class="label"><i>*</i>拉群方式：</div>
                 <div class="val">
                     <div class="select_box" @click="openPicker('mode')">
-                        <input class="input" v-model="modeName" type="text" placeholder="请选择" disabled>
+                        <input class="input" :class="{'disable':id}" v-model="modeName" type="text" placeholder="请选择" disabled>
                         <img class="icon" src="@/assets/images/icon_select.png" alt="">
                     </div>
                 </div>
@@ -32,10 +32,28 @@
             <div class="item lh40">
                 <div class="label">添加联系人：</div>
                 <div class="val">
-                    <van-switch v-model="detail.switchStatus" size="24" />
+                    <van-switch v-model="detail.switchStatus" :disabled="disabled" size="24" />
                 </div>
             </div>
-            <div class="item">
+            <div class="item" v-if="!detail.switchStatus">
+                <div class="label">群名称设置：</div>
+                <div class="val">
+                    <div class="input_box">
+                        <input class="input" v-model="detail.groupName" maxlength="12" type="text" @input="detail.groupName=detail.groupName.replace(' ','')" placeholder="请输入群名称">
+                        <span class="length">{{detail.groupName.length}}/12</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item" v-if="!detail.switchStatus">
+                <div class="label">入群提示：</div>
+                <div class="val">
+                    <div class="input_box">
+                        <input class="input" v-model="detail.addHint" maxlength="12" type="text" @input="detail.addHint=detail.addHint.replace(' ','')" placeholder="请输入入群提示">
+                        <span class="length">{{detail.addHint.length}}/16</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item" v-if="detail.switchStatus">
                 <div class="label"><i>*</i>使用员工：</div>
                 <div class="val">
                     <div class="select_box" @click="openUserSelect">
@@ -44,7 +62,7 @@
                     </div>
                 </div>
             </div>
-            <div class="item">
+            <div class="item" v-if="detail.switchStatus">
                 <div class="label"><i>*</i>入群引导语：</div>
                 <div class="val">
                     <div class="input_box textarea">
@@ -69,12 +87,12 @@
                                 </div>
                                 <input type="file" class="file" @change="uploadFun($event,'2','png,jpg,jpeg',index)" accept=".png,.jpg,.jpeg">
                             </div>
-                            <div class="select_box" @click="openPicker('group',index)">
+                            <div class="select_box" v-if="detail.switchStatus" @click="openPicker('group',index)">
                                 <input class="input" v-model="item.groupName" type="text" placeholder="选择群聊" disabled>
                                 <img class="icon" src="@/assets/images/icon_select.png" alt="">
                             </div>
                         </div>
-                        <div class="text_box">群上限人数<input v-model="item.groupTotal" @input="item.groupTotal=item.groupTotal.replace(/[^\d]/g,'')" maxlength="3" placeholder="200">人</div>
+                        <div class="text_box">群上限人数<input v-model="item.groupTotal" @change="maxChangeFun(item.groupTotal,index)" @input="item.groupTotal=item.groupTotal.replace(/[^\d]/g,'')" maxlength="3" placeholder="">人</div>
                     </div>
                 </div>
             </div>
@@ -144,6 +162,7 @@ export default {
                 contest: '',
                 switchStatus: true,
                 addBy: null,
+                groupName: '',
                 region: '',
                 chId: '',
                 addHint: '',
@@ -162,6 +181,7 @@ export default {
             nowIndex: '',
             modeName: '',   //拉群方式
             userDialog: false,
+            disabled: true,    //禁用
         }
     },
     computed: {
@@ -184,6 +204,7 @@ export default {
     mounted(){
         if(this.id){
             this.getDetail()
+            this.disabled = true
         }else{
             this.getGroupList()
             this.getSelectList()
@@ -245,6 +266,7 @@ export default {
                     this.addCodeData[this.nowIndex].groupId = e.chatId
                     break;
                 case 'mode':    //拉群方式
+                    this.disabled = e.id == '1' ? true : false
                     this.detail.addBy = e.id
                     this.groupMode.forEach(el => {
                         if(el.id == e.id){
@@ -272,6 +294,7 @@ export default {
             this.userDialog = true
         },
         confirmUserFun(){   //确认员工选择
+            this.selectUser = []
             this.userList.forEach(el => {
                 console.log('asd',el)
                 if(el.checked){
@@ -299,17 +322,17 @@ export default {
                 this.$toast('请选择拉群方式')
                 return false
             }
-            if(this.selectUser.length == 0){
+            if(data.switchStatus && this.selectUser.length == 0){
                 this.$toast('请选择使用员工')
                 return false
             }
-            if(data.contest == ''){
+            if(data.switchStatus && data.contest == ''){
                 this.$toast('请选择入群引导语')
                 return false
             }
             let isEmpty = false
             this.addCodeData.forEach(el => {
-                if(!el.groupAddress || !el.groupId || !el.groupTotal){
+                if(!el.groupAddress || (data.switchStatus && !el.groupId) || !el.groupTotal){
                     isEmpty = true
                 }
             })
@@ -317,6 +340,20 @@ export default {
             if(isEmpty){
                 this.$toast('请完善二维码信息')
                 return false
+            }
+            let domain = ''
+            if (
+                location.hostname == 'dev-console.jzcrm.com' ||
+                location.hostname == 'localhost'
+            ) {
+                domain = 'https://dev-console.jzcrm.com'
+            } else if (location.hostname == 'test-console.jzcrm.com') {
+                domain = 'https://test-console.jzcrm.com'
+            } else {
+                domain = 'https://console.jzcrm.com'
+            }
+            if(!data.switchStatus){
+                data.address = `${domain}/#/transitCode?name=${data.name}`
             }
             console.log('save',_data)
             // return false
@@ -391,6 +428,10 @@ export default {
                     })
                 }
             })
+        },
+        maxChangeFun(num,i){    //MAX 限制
+            // console.log('num',num)
+            this.addCodeData[i].groupTotal = num > 200 ? 200 : num
         },
     },
 }
@@ -560,6 +601,9 @@ export default {
             &:disabled{
                 opacity: 1;
                 background: none;
+            }
+            &.disable:disabled{
+                background: rgba(@fontMain,.01);
             }
         }
         .icon{

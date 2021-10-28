@@ -11,11 +11,9 @@
       <!-- <div class="tabBtn">全部活码</div> -->
       <div class="tabBtn">
         <span :class="{ active: type == 1 }" class="mycule" @click="tabClick(1)">我的活码</span>
-        <span :class="{ active: type == 2 }" class="mycule" v-show="showAll !== 'employee'"
-          @click="tabClick(2)">全部活码</span>
+        <span :class="{ active: type == 2 }" class="mycule" v-show="showAll !== 'employee'" @click="tabClick(2)">全部活码</span>
       </div>
-      <span class="addBtn" @click="addCode"
-        v-show="type == 1 && mylist.some((item) => item.enName == 'add')">
+      <span class="addBtn" @click="addCode" v-show="type == 1 && mylist.some((item) => item.enName == 'add')">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
@@ -23,8 +21,7 @@
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span> -->
-      <span class="addBtn" @click="addCode"
-        v-show="type == 2 && alllist.some((item) => item.enName == 'add')">
+      <span class="addBtn" @click="addCode" v-show="type == 2 && alllist.some((item) => item.enName == 'add')">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
@@ -34,8 +31,7 @@
       <span class="searchBtn" @click="inquire">查询</span>
     </div>
     <div>
-      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"
-        :immediate-check="false" ref="vanlist" :offset="20">
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" :immediate-check="false" ref="vanlist" :offset="20">
         <div class="cardCode" v-for="(item, index) in liveList" :key="index">
           <div class="operationTop">
             <div class="codeName">
@@ -48,8 +44,7 @@
                     edit" />
                 编辑
               </span>
-              <span @click="deleteBtn(item)"
-                v-show="mylist.some((item) => item.enName == 'delete')">
+              <span @click="deleteBtn(item)" v-show="mylist.some((item) => item.enName == 'delete')">
                 <van-icon name="delete-o" />
                 删除
               </span>
@@ -59,8 +54,7 @@
                 <van-icon name="edit" />
                 编辑
               </span>
-              <span @click="deleteBtn(item)"
-                v-show="alllist.some((item) => item.enName == 'delete')">
+              <span @click="deleteBtn(item)" v-show="alllist.some((item) => item.enName == 'delete')">
                 <van-icon name="delete-o" />
                 删除
               </span>
@@ -101,8 +95,7 @@
     </div>
     <div class="bottom_model">
       <div v-if="showAdd">
-        <van-action-sheet v-model="showAdd" :title="titleName" :overlay="overlay" lock-scroll
-          :get-container="getContainer" class="vant_sheet">
+        <van-action-sheet v-model="showAdd" :title="titleName" :overlay="overlay" lock-scroll :get-container="getContainer" class="vant_sheet">
           <div class="content">
             <div class="addForm">
               <el-form ref="form" :model="addForm" label-position="right">
@@ -113,40 +106,33 @@
                       trigger: 'blur',
                     },
                   ]">
-                  <el-input v-model.trim="addForm.name" placeholder="请输入" maxlength="12"
-                    show-word-limit></el-input>
+                  <el-input v-model.trim="addForm.name" placeholder="请输入" maxlength="12" show-word-limit></el-input>
                 </el-form-item>
 
                 <el-form-item label="使用员工:" prop="userArr" :rules="[
                     { required: true, message: '请选择', trigger: 'change' },
                   ]">
-                  <el-select v-model="addForm.userArr" placeholder="请选择使用员工，可多选" multiple
-                    collapse-tags @change="changeUsre" popper-append-to-body clearable
-                    popper-class="popper-select-class">
-                    <el-option v-for="item in usreList" :key="item.value" :label="item.name"
-                      :value="item.userNo">
+                  <el-select v-model="addForm.userArr" placeholder="请选择使用员工，可多选" multiple collapse-tags @change="changeUsre" popper-append-to-body
+                             clearable popper-class="popper-select-class">
+                    <el-option v-for="item in usreList" :key="item.value" :label="item.name" :value="item.userNo">
                     </el-option>
                   </el-select>
                 </el-form-item>
 
                 <el-form-item label="添加设置:">
-                  <el-checkbox v-model="addForm.status" true-label="1" false-label="0"
-                    @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
+                  <el-checkbox v-model="addForm.status" true-label="1" false-label="0" @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
                 </el-form-item>
 
                 <el-form-item label="渠道:" prop="chId" :rules="[
                     { required: true, message: '请选择', trigger: 'change' },
                   ]">
-                  <el-select v-model="addForm.chId" placeholder="请选择" @change="changeChannel"
-                    clearable popper-class="popper-select-class">
-                    <el-option v-for="item in channelList" :key="item.value" :label="item.name"
-                      :value="item.chId">
+                  <el-select v-model="addForm.chId" placeholder="请选择" @change="changeChannel" clearable popper-class="popper-select-class">
+                    <el-option v-for="item in channelList" :key="item.value" :label="item.name" :value="item.chId">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="备注:" class="textareaInput">
-                  <el-input type="textarea" v-model="addForm.remark" placeholder="请输入文字(不得超过200个字符)"
-                    maxlength="200" show-word-limit></el-input>
+                  <el-input type="textarea" v-model="addForm.remark" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
               </el-form>
             </div>
@@ -158,8 +144,7 @@
         </van-action-sheet>
       </div>
       <div v-if="showEdit">
-        <van-action-sheet v-model="showEdit" :title="titleName" :overlay="overlay" lock-scroll
-          :get-container="getContainer" class="vant_sheet">
+        <van-action-sheet v-model="showEdit" :title="titleName" :overlay="overlay" lock-scroll :get-container="getContainer" class="vant_sheet">
           <div class="content">
             <div class="addForm">
               <el-form ref="form" :model="editForm" label-position="right">
@@ -171,39 +156,30 @@
                     formatDate(editForm.createTime, "yyyy-MM-dd hh:mm:ss")
                   }}</span>
                 </el-form-item>
-                <el-form-item label="活码名称:" prop="name"
-                  :rules="[{ required: true, message: '请输入活码名称' }]">
-                  <el-input v-model.trim="editForm.name" placeholder="请输入" maxlength="12"
-                    show-word-limit></el-input>
+                <el-form-item label="活码名称:" prop="name" :rules="[{ required: true, message: '请输入活码名称' }]">
+                  <el-input v-model.trim="editForm.name" placeholder="请输入" maxlength="12" show-word-limit></el-input>
                 </el-form-item>
 
-                <el-form-item label="使用员工:" prop="userArr"
-                  :rules="[{ required: true, message: '请选择' }]">
-                  <el-select v-model="editForm.userArr" placeholder="请选择使用员工，可多选" multiple
-                    collapse-tags @change="changeUsre" popper-append-to-body clearable
-                    popper-class="popper-select-class">
-                    <el-option v-for="item in usreList" :key="item.value" :label="item.name"
-                      :value="item.userNo">
+                <el-form-item label="使用员工:" prop="userArr" :rules="[{ required: true, message: '请选择' }]">
+                  <el-select v-model="editForm.userArr" placeholder="请选择使用员工，可多选" multiple collapse-tags @change="changeUsre" popper-append-to-body
+                             clearable popper-class="popper-select-class">
+                    <el-option v-for="item in usreList" :key="item.value" :label="item.name" :value="item.userNo">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="添加设置:">
-                  <el-checkbox v-model="editForm.status" true-label="1" false-label="0"
-                    @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
+                  <el-checkbox v-model="editForm.status" true-label="1" false-label="0" @change="checkChange">设置添加时无需经过确认自动成为好友</el-checkbox>
                 </el-form-item>
                 <el-form-item label="渠道:" prop="chId" :rules="[
                     { required: true, message: '请选择', trigger: 'change' },
                   ]">
-                  <el-select v-model="editForm.chId" placeholder="请选择" @change="changeChannel"
-                    clearable popper-class="popper-select-class">
-                    <el-option v-for="item in channelList" :key="item.value" :label="item.name"
-                      :value="item.chId">
+                  <el-select v-model="editForm.chId" placeholder="请选择" @change="changeChannel" clearable popper-class="popper-select-class">
+                    <el-option v-for="item in channelList" :key="item.value" :label="item.name" :value="item.chId">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="备注:" class="textareaInput">
-                  <el-input type="textarea" v-model="editForm.remark"
-                    placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit></el-input>
+                  <el-input type="textarea" v-model="editForm.remark" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
               </el-form>
             </div>
@@ -843,11 +819,8 @@ export default {
       // padding: 24px;
       .addForm,
       .codeDetail {
-        // overflow-y: scroll;
         box-sizing: content-box;
-        // height: 800px;
-        // box-sizing: border-box;
-        padding: 24px;
+        padding: 24px 24px 0;
         font-size: 28px;
         font-weight: 500;
         /deep/.el-form {
@@ -894,30 +867,31 @@ export default {
                 font-size: 28px;
               }
             }
-            .el-checkbox {
-              width: 100%;
-              line-height: 80px;
-              .el-checkbox__inner {
-                border: 2px solid #d9dae4;
-                width: 28px;
-                height: 28px;
+            // .el-checkbox {
+            //   width: 100%;
+            //   line-height: 80px;
+            //   .el-checkbox__inner {
+            //     border: 2px solid #d9dae4;
+            //     width: 28px;
+            //     height: 28px;
 
-                &::after {
-                  width: 12px;
-                  height: 12px;
-                }
-              }
-              .el-checkbox__input {
-                vertical-align: -10%;
-              }
-              .el-checkbox__label {
-                line-height: 80px;
-                font-size: 28px;
-              }
-            }
+            //     &::after {
+            //       width: 12px;
+            //       height: 12px;
+            //     }
+            //   }
+            //   .el-checkbox__input {
+            //     vertical-align: -10%;
+            //   }
+            //   .el-checkbox__label {
+            //     line-height: 80px;
+            //     font-size: 28px;
+            //   }
+            // }
           }
           .textareaInput {
             height: 400px;
+            margin-bottom: 0;
             .el-textarea {
               .el-textarea__inner {
                 font-size: 28px;
@@ -965,8 +939,9 @@ export default {
         font-size: 28px;
         width: 100%;
         margin-bottom: 20px;
-        position: fixed;
-        bottom: 2px;
+        margin-top: -40px;
+        // position: fixed;
+        // bottom: 2px;
         // margin-top: 80px;
 
         span {
@@ -993,9 +968,7 @@ export default {
         font-size: 28px;
         width: 100%;
         margin-bottom: 20px;
-        position: fixed;
-        bottom: -250px;
-        // margin-top: 80px;
+        margin-top: -40px;
 
         span {
           display: inline-block;

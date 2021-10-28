@@ -54,6 +54,10 @@
 
       <!-- 商机 -->
       <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
+      
+    	<div class="fujianBox" style="padding: 15px;" v-if="contentType == 2">
+      	<Fujian></Fujian>
+      </div>
     </div>
 
     <!-- 底部导航栏 -->
@@ -110,6 +114,7 @@ import { SelectFollowMsgList } from '../../config/api'
 import { formatDate } from '../../utils/tool'
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
+import  Fujian  from "./comTip/fujian";
 
 export default {
   data() {
@@ -257,7 +262,8 @@ export default {
   },
   components: {
     CustomerItem,
-    Opportunities
+    Opportunities,
+    Fujian
   }
 }
 </script>

@@ -12,13 +12,15 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
-import CustomergroupPlaye from '../views/talkTool/CustomergroupPlaye.vue' //客户群群发
+import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
+import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码列表
+import GroupCodeAdd from "../views/talkTool/groupCode/add.vue"    //群活码列表
+import CallingMyCard from '../views/talkTool/callingCard/myCard.vue'    //我的名片
+import CallingPoster from '../views/talkTool/callingCard/poster.vue'    //我的名片 生成海报
+import CallingData from '../views/talkTool/callingCard/lookData.vue'  //我的名片 浏览数据
 
 import LableDataGroup from '../views/talkTool/lableDataGroup.vue' //客户群群发
-
-import GroupCodeList from '../views/talkTool/groupCode/list.vue' //群活码列表
-import GroupCodeAdd from '../views/talkTool/groupCode/add.vue' //群活码列表
 
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
@@ -54,6 +56,9 @@ import Test from '../views/talkTool/test.vue'
 
 // 素材模板h5分享页面
 import MaterialTemplate from '../views/MaterialTemplate/share'
+
+// 消息通知 互动提醒
+import Notice from '../views/notice/index'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -227,6 +232,30 @@ const routes = [{
                 },
                 component: GroupCodeAdd,
             },
+            //我的名片
+            {
+                path: 'myCard',
+                meta: {
+                    bodyClass: 'CallingMyCard',
+                },
+                component: CallingMyCard,
+            },
+            //生成海报
+            {
+                path: 'poster',
+                meta: {
+                    bodyClass: 'CallingPoster',
+                },
+                component: CallingPoster,
+            },
+            //浏览数据
+            {
+                path: 'lookData',
+                meta: {
+                    bodyClass: 'CallingData',
+                },
+                component: CallingData,
+            },
         ],
     },
     //客户管理
@@ -357,6 +386,12 @@ const routes = [{
         name: 'materialTemplate',
         component: MaterialTemplate,
     },
+    // 消息通知 互动提醒
+    {
+        path: '/notice',
+        name: 'Notice',
+        component: Notice
+    }
 ]
 
 const router = new VueRouter({

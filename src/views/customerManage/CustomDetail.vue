@@ -51,12 +51,12 @@
               </div>
             </el-timeline-item>
           </el-timeline>
-        </div>-->
+        </div>
         
         <!-- 动态 -->
-        <div class="dongtaiBox" style="padding: 0px;" v-if="contentType == 0">
+     <!--   <div class="dongtaiBox" style="padding: 0px;" v-if="contentType == 0">
         	<Tt></Tt>
-        </div>
+        </div>-->
       </div>
       <!-- 协作人 -->
       <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
