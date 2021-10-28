@@ -1,10 +1,13 @@
 import request from '@/utils/requestNew'
 let BASE_Prefix = 'user-service'
 let BASE_GROUP_Prefix = 'customer-service'
-export function livecodegroup_getlist(data) { //群活码列表
+export function livecodegroup_getlist(data,loading = false) { //群活码列表
     return request({
         url: BASE_Prefix + '/livecodegroup/getlist',
         method: 'get',
+        headers: {
+            noLoading: loading
+        },
         params: data
     })
 }
@@ -47,7 +50,7 @@ export function livecodegroup_getselect() { //获取使用员工和渠道列表
 export function group_getGroupInfoList() { //获取群列表
     return request({
         url: BASE_GROUP_Prefix + '/group/getGroupInfoList',
-        method: 'get'
+        method: 'get',
     })
 }
 export function livecodegroup_getByNo(id) { //获取详情
