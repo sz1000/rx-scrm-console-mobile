@@ -1,8 +1,7 @@
 <template>
   <div class="clueWarp">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -10,61 +9,36 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
-        <span :class="{ active: tabClick == 1 }"
-              class="mycule"
-              @click="myclue(1)">我的线索</span>
-        <span :class="{ active: tabClick == 2 }"
-              class="mycule"
-              @click="myclue(2)">线索公海</span>
+        <span :class="{ active: tabClick == 1 }" class="mycule" @click="myclue(1)">我的线索</span>
+        <span :class="{ active: tabClick == 2 }" class="mycule" @click="myclue(2)">线索公海</span>
       </div>
-      <span class="addBtn"
-            @click="addCules"
-            v-show="(tabClick == 1 && mylist.some(item=>item.enName =='add' ))">
-        <img src="../../images/icon_add@2x.png"
-             alt="" />
+      <span class="addBtn" @click="addCules"
+        v-show="(tabClick == 1 && mylist.some(item=>item.enName =='add' ))">
+        <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
-      <span class="addBtn"
-            @click="addCules"
-            v-show="(tabClick == 2 && alllist.some(item=>item.enName =='add' ))">
-        <img src="../../images/icon_add@2x.png"
-             alt="" />
+      <span class="addBtn" @click="addCules"
+        v-show="(tabClick == 2 && alllist.some(item=>item.enName =='add' ))">
+        <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
     </div>
     <div class="searchInput">
-      <input type="text"
-             class="input"
-             v-model="inputValue"
-             placeholder="请输入姓名/公司/手机号" />
-      <span class="searchBtn"
-            @click="inquire">查询</span>
+      <input type="text" class="input" v-model="inputValue" placeholder="请输入姓名/公司/手机号" />
+      <span class="searchBtn" @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <van-list v-model="loading"
-                :finished="finished"
-                :immediate-check="false"
-                finished-text="没有更多了"
-                @load="onLoad"
-                :offset="20">
-        <div class="topInfo"
-             v-for="(item, index) in cardList"
-             :key="index">
+      <van-list v-model="loading" :finished="finished" :immediate-check="false"
+        finished-text="没有更多了" @load="onLoad" :offset="20">
+        <div class="topInfo" v-for="(item, index) in cardList" :key="index">
           <div class="customInfo">
             <div class="iconName">
-              <img :src="item.avatar"
-                   alt=""
-                   v-if="item.avatar" />
-              <div class="flag"
-                   v-else>{{ item.name.substr(0, 1) }}</div>
+              <img :src="item.avatar" alt="" v-if="item.avatar" />
+              <div class="flag" v-else>{{ item.name.substr(0, 1) }}</div>
               <div class="nameSex">
                 <span>{{ item.name }}</span>
-                <img src="../../images/icon_female@2x.png"
-                     alt=""
-                     v-show="item.gender == '2'" />
-                <img src="../../images/man.png"
-                     alt=""
-                     v-show="item.gender == '1'" />
+                <img src="../../images/icon_female@2x.png" alt="" v-show="item.gender == '2'" />
+                <img src="../../images/man.png" alt="" v-show="item.gender == '1'" />
               </div>
             </div>
             <!-- <div class="detailBtn" @click="deleteCard(item, index)">
@@ -72,8 +46,7 @@
             删除
           </div> -->
           </div>
-          <div class="detailInfo"
-               @click="goDetail(item, index)">
+          <div class="detailInfo" @click="goDetail(item, index)">
             <div class="left">
               <div class="rowStyle">
                 <span>邮箱:</span>

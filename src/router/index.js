@@ -12,13 +12,13 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
-import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
+import CustomergroupPlaye from '../views/talkTool/CustomergroupPlaye.vue' //客户群群发
 
-import LableDataGroup from "../views/talkTool/lableDataGroup.vue"//客户群群发
+import LableDataGroup from '../views/talkTool/lableDataGroup.vue' //客户群群发
 
-import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码列表
-import GroupCodeAdd from "../views/talkTool/groupCode/add.vue"    //群活码列表
+import GroupCodeList from '../views/talkTool/groupCode/list.vue' //群活码列表
+import GroupCodeAdd from '../views/talkTool/groupCode/add.vue' //群活码列表
 
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
@@ -37,10 +37,12 @@ import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
+import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
+import StageList from '../components/BusinessOpportunities/stageList'
 
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
-// 群 SOP 设置 
+// 群 SOP 设置
 import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
@@ -61,7 +63,7 @@ VueRouter.prototype.push = function push(location) {
 
 const routes = [{
         path: '/',
-        redirect: '/homeTransition',
+        redirect: '/home',
     },
     {
         path: '/test',
@@ -208,7 +210,6 @@ const routes = [{
                     bodyClass: 'lableDataGroup',
                 },
                 component: LableDataGroup,
-
             },
             //群活码 list
             {
@@ -225,7 +226,6 @@ const routes = [{
                     bodyClass: 'GroupCodeAdd',
                 },
                 component: GroupCodeAdd,
-
             },
         ],
     },
@@ -330,6 +330,20 @@ const routes = [{
                     bodyClass: 'CustomDeepDetail',
                 },
                 component: CustomDeepDetail,
+            },
+            {
+                path: 'customerDeepSeas',
+                meta: {
+                    bodyClass: 'CustomerDeepSeas',
+                },
+                component: CustomerDeepSeas,
+            },
+            {
+                path: 'stageList',
+                meta: {
+                    bodyClass: 'StageList',
+                },
+                component: StageList,
             },
         ],
     },

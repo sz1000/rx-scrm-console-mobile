@@ -2,7 +2,7 @@
   <div class="custom-detail">
     <div class="headerTitle">
       <div class="backPage"
-           @click="goBack">
+          @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <!--<ul class="dynamic-nav">
+        <ul class="dynamic-nav">
           <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index}">{{ i }}</li>
         </ul>
 
@@ -157,7 +157,7 @@ export default {
     return {
       customerData: {},
       timeLineList: [],
-      contentType: 2,
+      contentType: 0,
       navList: [ '客户动态', '协作人', '商机', '附件' ],
       dynamicContentType: 0,
       dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
@@ -396,18 +396,6 @@ export default {
     padding: 0 0 24px;
     background: #fff;
   }
-  .iconName {
-    display: flex;
-    padding: 24px;
-    background: #fff;
-    font-size: 28px;
-    span:nth-child(1) {
-      color: #838a9d;
-    }
-    span:nth-child(2) {
-      color: #3c4353;
-    }
-  }
   .btnWarp {
     display: flex;
     width: 100%;
@@ -436,7 +424,7 @@ export default {
   }
   .infoContent {
     margin-top: 24px;
-    background: #fff;
+    background-color: #fff;
     .header-nav {
         display: flex;
         width: 100%;
@@ -588,6 +576,7 @@ export default {
       }
     }
   }
+
   .bottom_model {
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);

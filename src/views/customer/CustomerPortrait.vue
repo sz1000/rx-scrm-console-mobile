@@ -215,7 +215,7 @@ export default {
     Groupportrait,
   },
   computed: {
-    ...mapState(['userId']),
+    // ...mapState(['userId']),
     entry() {
       return this.$store.getters.entry
     },
@@ -262,6 +262,7 @@ export default {
   },
   created() {
     commonFun.getWxAppid()
+    console.log('entry', this.entry)
   },
   watch: {},
   mounted() {
