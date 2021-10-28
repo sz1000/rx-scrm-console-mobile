@@ -14,6 +14,7 @@
 							  :before-upload="BeforeUpload"
 							  :multiple="false"
 							  :limit="20"
+							  :data="fileData"
 							  :file-list="eleList"
 							  :on-success="onSuccess"
 							  :on-error="onError">
@@ -165,8 +166,8 @@ export default {
 .listBoxLeft{
 		height: 40px;
 		float: left;
-		margin-left: 16px;
-		/*width: 130px;*/
+	/*	margin-left: 16px;*/
+		width: 300px;
 	    overflow: hidden;
 	    white-space: nowrap;
 	    text-overflow: ellipsis;
