@@ -867,27 +867,27 @@ export default {
                 font-size: 28px;
               }
             }
-            .el-checkbox {
-              width: 100%;
-              line-height: 80px;
-              .el-checkbox__inner {
-                border: 2px solid #d9dae4;
-                width: 28px;
-                height: 28px;
+            // .el-checkbox {
+            //   width: 100%;
+            //   line-height: 80px;
+            //   .el-checkbox__inner {
+            //     border: 2px solid #d9dae4;
+            //     width: 28px;
+            //     height: 28px;
 
-                &::after {
-                  width: 12px;
-                  height: 12px;
-                }
-              }
-              .el-checkbox__input {
-                vertical-align: -10%;
-              }
-              .el-checkbox__label {
-                line-height: 80px;
-                font-size: 28px;
-              }
-            }
+            //     &::after {
+            //       width: 12px;
+            //       height: 12px;
+            //     }
+            //   }
+            //   .el-checkbox__input {
+            //     vertical-align: -10%;
+            //   }
+            //   .el-checkbox__label {
+            //     line-height: 80px;
+            //     font-size: 28px;
+            //   }
+            // }
           }
           .textareaInput {
             height: 400px;
