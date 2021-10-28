@@ -968,9 +968,7 @@ export default {
         font-size: 28px;
         width: 100%;
         margin-bottom: 20px;
-        position: fixed;
-        bottom: -250px;
-        // margin-top: 80px;
+        margin-top: -40px;
 
         span {
           display: inline-block;
