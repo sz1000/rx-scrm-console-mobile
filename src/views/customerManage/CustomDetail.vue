@@ -10,7 +10,7 @@
     </div>
 
     <div class="customer-data">
-      <customer-item :type="2" :itemData="customerData"></customer-item>
+      <customer-item :type="2" :itemData="objItem"></customer-item>
     </div>
 
     <div class="infoContent">
@@ -43,7 +43,13 @@
                               type="danger ">
               <div class="recordBox">
                 <div class="descTxt">{{ item.title }}</div>
-                <div class="inLineTwo">{{ item.context }}</div>
+                <div v-if="dynamicContentType == 2" class="inLineTwo">
+                  <p v-for="i in JSON.parse(item.context)" :key="i">
+                    <span>{{ `${Object.keys(JSON.parse(i))[0]}: `}}</span>
+                    <span>{{ Object.values(JSON.parse(i))[0] }}</span>
+                  </p>
+                </div>
+                <div v-else class="inLineTwo">{{ item.context }}</div>
                 <div class="inLine">
                   <div class="inLineEnd">操作人：{{ item.userName }}</div>
                   <span class="time_right">{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
@@ -63,7 +69,7 @@
       	<HelperFile></HelperFile>
       </div>
       <!-- 商机 -->
-      <opportunities v-if="contentType == 2" :customerNo="customerData && customerData.clueCustomerNo"></opportunities>
+      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
        <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
       	<Fujian></Fujian>
@@ -155,7 +161,6 @@ import  Tt  from "./comTip/timelineTab";
 export default {
   data() {
     return {
-      customerData: {},
       timeLineList: [],
       contentType: 0,
       navList: [ '客户动态', '协作人', '商机', '附件' ],
@@ -174,7 +179,6 @@ export default {
     }
   },
   created() {
-    this.customerData = JSON.parse(localStorage.getItem('customer')) || {}
     this.btnList = JSON.parse(this.$route.query.mylist)
   },
   mounted() {
@@ -231,7 +235,7 @@ export default {
     // 获取商机动态
     async selectFollowMsgList(punckStatus) {
       let params = {
-        clueCustomerNo: this.customerData.clueCustomerNo,
+        clueCustomerNo: this.objItem.clueCustomerNo,
         punckStatus // 1：跟进动态，3：商机动态
       }
 
@@ -437,12 +441,12 @@ export default {
             line-height: 100px;
             text-align: center;
             span {
-                display: block;
-                width: 150px;
+                display: inline-block;
                 height: 100%;
                 margin: 0 auto;
                 color: #838A9D;
                 font-size: 28px;
+                font-weight: 600;
             }
         }
         .active {
@@ -537,7 +541,7 @@ export default {
           background: rgba(65, 104, 246, 0.06);
           border-radius: 8px;
           color: #3c4353;
-          padding: 16px 16px 0;
+          padding: 16px;
           font-size: 28px;
           .inLine {
             margin-top: 10px;

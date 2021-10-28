@@ -66,7 +66,7 @@ export default {
             this.$router.go(-1)
         },
         changeRow(data) {
-            if (data.defaultStatus == '成交') {
+            if (data.defaultStatus) {
                 this.changeStatus(data.sortId, data.defaultStatus)
             } else {
                 this.$refs.changeStage.show(data)

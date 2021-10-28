@@ -9,74 +9,72 @@
             closeable
             @closed="hide">
             <div class="title">{{ `确定${status}` }}</div>
-            <van-form @submit="handleSubmit">
-                <div class="edit-content">
-                    <template v-if="status == '成交'">
-                        <div class="item one-line">
-                            <p class="label">
-                                <span class="icon">*</span>
-                                <span>商机负责人:</span>
-                            </p>
-                            <van-field v-model="form.chargeUserNo" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" />
-                        </div>
-                        <div class="item one-line">
-                            <p class="label">
-                                <span class="icon">*</span>
-                                <span>商机金额:</span>
-                            </p>
-                            <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :decimal-length="2" :default-value="0" />
-                        </div>
-                        <div class="item one-line">
-                            <p class="label">
-                                <span class="icon">*</span>
-                                <span>成交时间:</span>
-                            </p>
-                            <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate" />
-                        </div>
-                    </template>
-                    <template v-if="status == '输单'">
-                        <div class="item one-line">
-                            <p class="label">
-                                <span class="icon">*</span>
-                                <span>输单原因:</span>
-                            </p>
-                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
-                        </div>
-                        <div class="item one-line">
-                            <p class="label">
-                                <span>输单备注:</span>
-                            </p>
-                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
-                        </div>
-                    </template>
-                    <template v-if="status == '无效'">
-                        <div class="item one-line">
-                            <p class="label">
-                                <span class="icon">*</span>
-                                <span>无效原因:</span>
-                            </p>
-                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
-                        </div>
-                        <div class="item one-line">
-                            <p class="label">
-                                <span>无效备注:</span>
-                            </p>
-                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
-                        </div>
-                    </template>
-                </div>
-                <div class="btn-wrap">
-                    <div class="item close-btn" @click="hide">取消</div>
-                    <div class="item submit-btn" native-type="submit">确定</div>
-                </div>
-            </van-form>
+            <div class="edit-content">
+                <template v-if="status == '成交'">
+                    <div class="item one-line">
+                        <p class="label">
+                            <span class="icon">*</span>
+                            <span>商机负责人:</span>
+                        </p>
+                        <van-field v-model="chargeUserName" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" />
+                    </div>
+                    <div class="item one-line">
+                        <p class="label">
+                            <span class="icon">*</span>
+                            <span>商机金额:</span>
+                        </p>
+                        <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :decimal-length="2" :default-value="0" />
+                    </div>
+                    <div class="item one-line">
+                        <p class="label">
+                            <span class="icon">*</span>
+                            <span>成交时间:</span>
+                        </p>
+                        <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate" />
+                    </div>
+                </template>
+                <template v-if="status == '输单'">
+                    <div class="item one-line">
+                        <p class="label">
+                            <span class="icon">*</span>
+                            <span>输单原因:</span>
+                        </p>
+                        <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
+                    </div>
+                    <div class="item one-line">
+                        <p class="label">
+                            <span>输单备注:</span>
+                        </p>
+                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                    </div>
+                </template>
+                <template v-if="status == '无效'">
+                    <div class="item one-line">
+                        <p class="label">
+                            <span class="icon">*</span>
+                            <span>无效原因:</span>
+                        </p>
+                        <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
+                    </div>
+                    <div class="item one-line">
+                        <p class="label">
+                            <span>无效备注:</span>
+                        </p>
+                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                    </div>
+                </template>
+            </div>
+            <div class="btn-wrap">
+                <div class="item close-btn" @click="hide">取消</div>
+                <div class="item submit-btn" @click="handleSubmit">确定</div>
+            </div>
         </van-popup>
 
         <van-popup v-model="selectReasonPopupShow" position="bottom" class="picker-pop">
             <van-picker
-                ref="stagePicker"
                 show-toolbar
                 :columns="reasonOptions"
+                value-key="content"
                 @confirm="reasonConfirm"
                 @cancel="selectStagePopupShow = false"
             />
@@ -85,12 +83,14 @@
             <van-picker
                 show-toolbar
                 :columns="chargeUserInfoListOptions"
+                value-key="userName"
                 @confirm="chargerConfirm"
                 @cancel="selectChargerPopupShow = false"
             />
         </van-popup>
         <van-popup v-model="selectDatePopupShow" position="bottom" class="picker-pop">
             <van-datetime-picker
+                v-model="currentDate"
                 type="date"
                 @confirm="dateConfirm"
                 @cancel="selectDatePopupShow = false"
@@ -125,6 +125,7 @@ export default {
             chargeUserName: '',
             timeShowText: null,
             reasonText: '',
+            currentDate: new Date(),
             selectDatePopupShow: false,
             selectChargerPopupShow: false,
             selectReasonPopupShow: false,
@@ -164,6 +165,7 @@ export default {
             this.chargeUserName =  ''
             this.reasonText = ''
             this.timeShowText = null
+            this.currentDate = new Date()
         },
         // 获取阶段原因列表
         async stageReasonList() {
@@ -203,7 +205,6 @@ export default {
         },
         // 确认负责人
         chargerConfirm(v) {
-            console.log("负责人：：：", v)
             this.form.chargeUserNo = v && v.userNo
             this.chargeUserName = v && v.userName
             this.selectChargerPopupShow = false
@@ -215,7 +216,13 @@ export default {
         // 确认原因
         reasonConfirm(v) {
             this.form.endReasonId = v && v.id
-            this.reasonText = v && v.content 
+            this.reasonText = v && v.content
+            this.selectReasonPopupShow = false
+        },
+        // 选择时间
+        selectDate(type) {
+            this.selectDateType = type
+            this.selectDatePopupShow = true
         },
         // 确认时间
         dateConfirm(v) {
@@ -223,8 +230,29 @@ export default {
             this.timeShowText = formatDate(v, "yyyy-MM-dd")
             this.selectDatePopupShow = false
         },
+        // 表单验证
+        checkForm() {
+            const { chargeUserNo, price, endTime, endReasonId } = this.form
+
+            if (!chargeUserNo && this.status == '成交') {
+                this.$toast('请选择商机负责人')
+                return false
+            }
+            if (!endTime && this.status == '成交') {
+                this.$toast('请选择结束时间')
+                return false
+            }
+            if (!endReasonId && (this.status == '输单' || this.status == '无效')) {
+                this.$toast('请选择原因')
+                return false
+            }
+            return true
+        },
         // 表单提交
         async handleSubmit() {
+            if (!this.checkForm()) {
+                return
+            }
             this.form.corpId = this.corpId
             this.form.customerNo = this.customerNo
             this.form.status = this.status == '成交' ? 1 : this.status == '输单' ? 2 : this.status == '无效' ? 3 : 0
