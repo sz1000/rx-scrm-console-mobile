@@ -256,12 +256,7 @@ export default {
         font-size: 28px;
         line-height: 80px;
       }
-      .el-input,
-      .el-select,
-      .el-cascader {
-        border: 1px solid #d9dae4;
-        border-radius: 8px;
-      }
+
       .el-form-item__content {
         // width: 562px;
         flex: 1;
@@ -272,7 +267,7 @@ export default {
           width: 100%;
           border-radius: 8px;
           font-size: 28px;
-          border: 0;
+          // border: 0;
           // border: 1px solid #d9dae4;
         }
         .el-select,
@@ -284,12 +279,12 @@ export default {
       .textareaInput {
         height: 400px;
         .el-textarea {
-          border: 1px solid #d9dae4;
+          // border: 1px solid #d9dae4;
           border-radius: 8px;
           .el-textarea__inner {
             height: 400px;
             font-size: 28px;
-            border: 0;
+            // border: 0;
           }
         }
       }

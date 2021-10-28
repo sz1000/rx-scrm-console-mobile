@@ -201,17 +201,17 @@ export default {
         // width: 562px;
         flex: 1;
         height: 80px;
-        .el-input,
-        .el-select,
-        .el-cascader {
-          border: 1px solid #d9dae4;
-          border-radius: 8px;
-        }
+        // .el-input,
+        // .el-select,
+        // .el-cascader {
+        //   border: 1px solid #d9dae4;
+        //   border-radius: 8px;
+        // }
         .el-input__inner {
           height: 80px;
           border-radius: 8px;
           font-size: 28px;
-          border: 0;
+          // border: 0;
           // border: 1px solid #d9dae4;
         }
         .el-select,
@@ -224,11 +224,11 @@ export default {
       .textareaInput {
         height: 400px;
         .el-textarea {
-          border: 1px solid #d9dae4;
+          // border: 1px solid #d9dae4;
           .el-textarea__inner {
             font-size: 28px;
             height: 400px;
-            border: 0;
+            // border: 0;
             // border: 1px solid #d9dae4;
           }
         }

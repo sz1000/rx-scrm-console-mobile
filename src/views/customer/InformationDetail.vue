@@ -1,10 +1,4 @@
 <template>
-  <!-- <div class="main_warp">
-    <div v-show="loadingShow"
-         class="loadingStyle">
-      <img src="../../images/loading.gif"
-           alt="">
-    </div> -->
   <div class="detailWarp">
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
