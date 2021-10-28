@@ -59,16 +59,16 @@
           </div>
         </router-link>
         <router-link
-          to="talkTool/lableDataGroup"
+          to="/talkTool/lableDataGroup"
           v-show="menulist.includes('labelGroup')"
         >
           <div class="commonBtn">
             <img src="../images/yjlqon.png" alt="" />
-            <span>一键拉群</span>
+            <span>标签建群</span>
           </div>
         </router-link>
         <router-link
-          to="talkTool/groupCodeList"
+          to="/talkTool/groupCodeList"
           v-show="menulist.includes('groupLivecode')"
         >
           <div class="commonBtn">
@@ -210,7 +210,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    // CommonHome.getWxToken();
+    CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {

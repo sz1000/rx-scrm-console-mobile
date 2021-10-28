@@ -16,7 +16,7 @@
               >群主：{{ datatTite.owmerName || "暂无" }}</span
             >
             <span class="ml24 in_block"
-              >共{{ datatTite.createTime || "0" }} 位群成员</span
+              >共 {{ datatTite.usersum || "0" }} 位群成员</span
             >
           </p>
         </div>
@@ -78,12 +78,12 @@
           <el-timeline>
             <el-timeline-item color="#4168F6" type="danger ">
               <div class="recordBox">
-                <div class="descTxt">{{ groupName.owmerName }}</div>
+                <div class="descTxt">创建</div>
                 <div class="inLineTwo">
                   {{ groupName.owmerName }}:创建了群聊
                 </div>
                 <div class="inLine">
-                  <div class="inLineEnd">操作人：{{ groupName.name }}</div>
+                  <div class="inLineEnd">操作人：{{ groupName.owmerName }}</div>
                   <span class="time_right">
                     {{
                       formatDate(groupName.createTime, "yyyy-MM-dd hh:mm:ss")
@@ -578,7 +578,11 @@ export default {
         // overflow: hidden;
       }
       .inLineEnd {
-        text-align: right;
+        // text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 200px;
       }
       .descTxt {
         font-weight: 600;

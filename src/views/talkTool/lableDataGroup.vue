@@ -19,6 +19,8 @@
               <el-input
                 v-model="baseForm.taskName"
                 placeholder="请输入任务名称"
+                show-word-limit
+                maxlength="30"
                 :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 "
@@ -209,14 +211,16 @@
                 />
                 <!-- <span class="updataimg" :click-upload="afterRead">重新上传 </span> -->
                 <div class="marB-24 picTipsyo">
-                  当前可加用户<span class="picTipsnum">{{ groupUserNum }}</span
+                  当前可加用户<span class="picTipsnum">{{
+                    item.groupUserNum
+                  }}</span
                   >人
                 </div>
                 <div class="selsctWarpList">
                   <el-select
                     v-model="item.labelTime"
                     placeholder="请选择"
-                    @change="labelGroupList"
+                    @change="labelGroupList(item)"
                   >
                     <el-option
                       v-for="item in labelListTimeData"
@@ -256,7 +260,6 @@
     <!-- 日期、时间选择框 -->
     <van-popup v-model="chooseDateTime" position="bottom">
       <van-datetime-picker
-        :min-date="minDate"
         @cancel="chooseDateTime = false"
         v-model="sendDateTime"
         :type="activeChoose"
@@ -268,7 +271,7 @@
     <!-- 用户添加起止时间 -->
     <van-popup v-model="chooseCusAddDate" position="bottom">
       <van-datetime-picker
-        :min-date="minDate"
+        :max-date="maxDate"
         @cancel="chooseCusAddDate = false"
         v-model="cusAddTime"
         type="date"
@@ -317,6 +320,7 @@
 </template>
 <script>
 import { Toast } from "vant";
+import { Dialog } from "vant";
 import { Notify } from "vant";
 import { formatDate } from "../../utils/tool.js";
 export default {
@@ -335,9 +339,11 @@ export default {
       FormData: {
         sendMsg: "",
       },
+      maxDate: new Date(),
+      // minDate: new Date(2020, 0, 1),
       dataGroup: [],
       labelListTimeData: [],
-      minDate: new Date(2021, 0, 1),
+      // minDate: new Date(),
       yuangongPage: 1,
       yuangongLimit: 10,
       qunliaoPage: 1,
@@ -561,25 +567,19 @@ export default {
 
     labelGroupList(value) {
       console.log(value);
-
+      let list = this.appendixList.map((item) => item.labelTime);
+      this.listAll = list;
+      // this.listAll = [];
       // console.log(this.labelListTimeData, "------");
-      this.listAll.push(value);
+      // this.listAll.push(value);
       this.tagFilterCustomers();
       this.labelListTimeData.forEach((item) => {
-        if (item.chatId == value) {
-          console.log(item.groupUserNum, "00000");
-          this.groupUserNum = item.groupUserNum;
+        if (item.chatId == value.labelTime) {
+          value.groupUserNum = item.groupUserNum;
 
           console.log(item);
         }
       });
-      let tempList = JSON.parse(JSON.stringify(this.labelListTimeData));
-      tempList.forEach((item, index) => {
-        if (value == item.chatId) {
-          tempList.splice(index, 1);
-        }
-      });
-      this.labelListTimeData = tempList;
     },
     // 选择日期时间公共方法
     selectDateTime(type) {
@@ -679,6 +679,7 @@ export default {
         hrefDesc: "",
         hrefPic: [],
         labelTime: "",
+        groupUserNum: 0,
       });
     },
     // 点击客户标签打开弹窗
@@ -774,15 +775,22 @@ export default {
       this.$refs["form"].validate((valid) => {
         this.$refs["form1"].validate((valid1) => {
           if (this.fleltDatanum == 0) {
-            this.$confirm("当前选择客户为空,请检查客户筛选条件", "提示", {
-              confirmButtonText: "确定",
-              customClass: "clueConfirmClassLable",
-              type: "warning",
+            // this.$confirm("当前全部群可加用户数无法满足筛选条件", "温馨提示", {
+            //   confirmButtonText: "确定",
+            //   customClass: "clueConfirmClassLable",
+            //   showCancelButton: false,
+            //   type: "warning",
+            // }).then(() => {
+            //   this.$message({
+            //     type: "error",
+            //     message: "请重新删选",
+            //   });
+            // });
+            Dialog.alert({
+              title: "温馨提示",
+              message: "当前全部群可加用户数无法满足筛选条件",
             }).then(() => {
-              this.$message({
-                type: "error",
-                message: "请重新删选",
-              });
+              // on close
             });
           } else {
             if (valid && valid1) {
@@ -907,6 +915,10 @@ export default {
       console.log(value);
       this.baseForm.staffs = value;
       // this.groupStaffset();
+      this.Screeningcustomer();
+      if (value.length == 0) {
+        this.estimateCusNum = 0;
+      }
     },
     // groupStaffset(value) {
     //   // let groutList = this.grouprst;
@@ -1127,7 +1139,7 @@ export default {
       width: 520px;
       margin-left: 180px !important;
       .el-input__count {
-        bottom: -80px;
+        bottom: -100px;
       }
     }
   }
