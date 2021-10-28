@@ -514,6 +514,7 @@ export default {
                                 font-size: 24px;
                                 line-height: 32px;
                                 color: @fontSub2;
+                                white-space: nowrap;
                             }
                         }
                     }
