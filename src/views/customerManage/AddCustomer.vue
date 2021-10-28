@@ -13,24 +13,18 @@
         <span>客户信息</span>
       </div>
       <el-form ref="form" :model="formObj" label-position='right'>
-        <el-form-item label="客户简称:" prop="customerName"
-          :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
+        <el-form-item label="客户简称:" prop="customerName" :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.customerName" placeholder="请输入" maxlength="30"></el-input>
         </el-form-item>
-        <el-form-item label="客户来源:" prop="source"
-          :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
+        <el-form-item label="客户来源:" prop="source" :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
           <el-select v-model="formObj.source" placeholder="请选择" @change="changeSource" clearable>
-            <el-option v-for="item in optionSource" :key="item.value" :label="item.name"
-              :value="item.type">
+            <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="客户类型:" prop="customerType"
-          :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
-          <el-select v-model="formObj.customerType" placeholder="请选择" @change="changeCustom"
-            clearable>
-            <el-option v-for="item in customList" :key="item.value" :label="item.label"
-              :value="item.customerType">
+        <el-form-item label="客户类型:" prop="customerType" :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
+          <el-select v-model="formObj.customerType" placeholder="请选择" @change="changeCustom" clearable>
+            <el-option v-for="item in customList" :key="item.value" :label="item.label" :value="item.customerType">
             </el-option>
           </el-select>
         </el-form-item>
@@ -41,14 +35,13 @@
           <el-input v-model="formObj.cropFullName" placeholder="请输入" maxlength="100"></el-input>
         </el-form-item>
         <el-form-item label="所属行业:">
-          <el-cascader size="large" :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
-            :options="optionsCreat" v-model="formObj.industry" @change="handleChange">
+          <el-cascader size="large" :props="{ expandTrigger: 'click',value:'id' ,label:'name'}" :options="optionsCreat" v-model="formObj.industry"
+                       @change="handleChange">
           </el-cascader>
         </el-form-item>
         <el-form-item label="企业规模:">
           <el-select v-model="formObj.corpScale" placeholder="请选择" @change="scaleChange" clearable>
-            <el-option v-for="item in optionsScale" :key="item.value" :label="item.name"
-              :value="item.id">
+            <el-option v-for="item in optionsScale" :key="item.value" :label="item.name" :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -56,15 +49,13 @@
           <el-input v-model="formObj.address" maxlength="100" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="备注:" class="textareaInput">
-          <el-input type="textarea" v-model="formObj.remark" maxlength="200"
-            placeholder="请输入文字(不得超过200个字符)" show-word-limit></el-input>
+          <el-input type="textarea" v-model="formObj.remark" maxlength="200" placeholder="请输入文字(不得超过200个字符)" show-word-limit></el-input>
         </el-form-item>
         <div class="custonInfo">
           <img src="../../images/icon_label.png" alt="">
           <span>联系人信息</span>
         </div>
-        <el-form-item label="姓名:" prop="name"
-          :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
+        <el-form-item label="姓名:" prop="name" :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.name" maxlength="15" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="手机号:">
@@ -265,6 +256,12 @@ export default {
         font-size: 28px;
         line-height: 80px;
       }
+      .el-input,
+      .el-select,
+      .el-cascader {
+        border: 1px solid #d9dae4;
+        border-radius: 8px;
+      }
       .el-form-item__content {
         // width: 562px;
         flex: 1;
@@ -276,7 +273,7 @@ export default {
           border-radius: 8px;
           font-size: 28px;
           border: 0;
-          border: 1px solid #d9dae4;
+          // border: 1px solid #d9dae4;
         }
         .el-select,
         .el-cascader {
@@ -287,11 +284,12 @@ export default {
       .textareaInput {
         height: 400px;
         .el-textarea {
+          border: 1px solid #d9dae4;
+          border-radius: 8px;
           .el-textarea__inner {
             height: 400px;
             font-size: 28px;
             border: 0;
-            border: 1px solid #d9dae4;
           }
         }
       }

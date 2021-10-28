@@ -33,15 +33,13 @@
           <el-input v-model="formObj.cropFullName" placeholder="请输入" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="所属行业:" class="selectLabel">
-          <el-cascader size="large" :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
-            :options="optionsCreat" v-model="formObj.cropSubIndustry" @change="handleChange">
+          <el-cascader size="large" :props="{ expandTrigger: 'click', value: 'id', label: 'name' }" :options="optionsCreat"
+                       v-model="formObj.cropSubIndustry" @change="handleChange">
           </el-cascader>
         </el-form-item>
         <el-form-item label="线索来源:" class="selectLabel">
-          <el-select v-model="formObj.source" placeholder="请选择线索来源" @change="changeSource"
-            clearable>
-            <el-option v-for="item in optionsSource" :key="item.value" :label="item.name"
-              :value="item.type">
+          <el-select v-model="formObj.source" placeholder="请选择线索来源" @change="changeSource" clearable>
+            <el-option v-for="item in optionsSource" :key="item.value" :label="item.name" :value="item.type">
             </el-option>
           </el-select>
         </el-form-item>
@@ -52,8 +50,7 @@
           <el-input v-model="formObj.address" maxlength="100" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="备注:" class="textareaInput">
-          <el-input type="textarea" v-model="formObj.remark" maxlength="200"
-            placeholder="请输入文字(不得超过200个字符)" show-word-limit></el-input>
+          <el-input type="textarea" v-model="formObj.remark" maxlength="200" placeholder="请输入文字(不得超过200个字符)" show-word-limit></el-input>
         </el-form-item>
         <el-form-item class="submitBtn">
           <el-button type="primary" v-preventReClick @click="onSubmit('form')">提交</el-button>
@@ -204,14 +201,18 @@ export default {
         // width: 562px;
         flex: 1;
         height: 80px;
-        // border: 1px solid #d9dae4;
-
+        .el-input,
+        .el-select,
+        .el-cascader {
+          border: 1px solid #d9dae4;
+          border-radius: 8px;
+        }
         .el-input__inner {
           height: 80px;
           border-radius: 8px;
           font-size: 28px;
           border: 0;
-          border: 1px solid #d9dae4;
+          // border: 1px solid #d9dae4;
         }
         .el-select,
         .el-cascader {
@@ -223,11 +224,12 @@ export default {
       .textareaInput {
         height: 400px;
         .el-textarea {
+          border: 1px solid #d9dae4;
           .el-textarea__inner {
             font-size: 28px;
             height: 400px;
             border: 0;
-            border: 1px solid #d9dae4;
+            // border: 1px solid #d9dae4;
           }
         }
       }
