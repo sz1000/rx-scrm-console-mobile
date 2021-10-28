@@ -10,7 +10,7 @@
     </div>
 
     <div class="customer-data">
-      <customer-item :type="2" :itemData="customerData"></customer-item>
+      <customer-item :type="2" :itemData="objItem"></customer-item>
     </div>
 
     <div class="infoContent">
@@ -57,10 +57,7 @@
       </div>
 
       <!-- 商机 -->
-      <opportunities
-        v-if="contentType == 2"
-        :customerNo="customerData && customerData.clueCustomerNo"
-      ></opportunities>
+      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
     </div>
 
     <div class="bottom_model">
@@ -150,7 +147,6 @@ import Opportunities from '../../components/BusinessOpportunities/opportunities'
 export default {
   data() {
     return {
-      customerData: {},
       timeLineList: [],
       contentType: 0,
       navList: [ '客户动态', '协作人', '商机', '附件' ],
@@ -169,7 +165,6 @@ export default {
     }
   },
   created() {
-    this.customerData = JSON.parse(localStorage.getItem('customer')) || {}
     this.btnList = JSON.parse(this.$route.query.mylist)
   },
   mounted() {
@@ -223,7 +218,7 @@ export default {
     // 获取商机动态
     async selectFollowMsgList(punckStatus) {
       let params = {
-        clueCustomerNo: this.customerData.clueCustomerNo,
+        clueCustomerNo: this.objItem.clueCustomerNo,
         punckStatus // 1：跟进动态，3：商机动态
       }
 
