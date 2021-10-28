@@ -12,13 +12,11 @@
         <span :class="{ active: tabClick == 1 }" class="mycule" @click="myclue(1)">我的线索</span>
         <span :class="{ active: tabClick == 2 }" class="mycule" @click="myclue(2)">线索公海</span>
       </div>
-      <span class="addBtn" @click="addCules"
-        v-show="(tabClick == 1 && mylist.some(item=>item.enName =='add' ))">
+      <span class="addBtn" @click="addCules" v-show="(tabClick == 1 && mylist.some(item=>item.enName =='add' ))">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
-      <span class="addBtn" @click="addCules"
-        v-show="(tabClick == 2 && alllist.some(item=>item.enName =='add' ))">
+      <span class="addBtn" @click="addCules" v-show="(tabClick == 2 && alllist.some(item=>item.enName =='add' ))">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
@@ -28,8 +26,7 @@
       <span class="searchBtn" @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <van-list v-model="loading" :finished="finished" :immediate-check="false"
-        finished-text="没有更多了" @load="onLoad" :offset="20">
+      <van-list v-model="loading" :finished="finished" :immediate-check="false" finished-text="没有更多了" @load="onLoad" :offset="20">
         <div class="topInfo" v-for="(item, index) in cardList" :key="index">
           <div class="customInfo">
             <div class="iconName">
@@ -127,6 +124,7 @@ export default {
     for (var i in this.expandedKeys) {
       if (this.expandedKeys[i].enName == 'myClew') {
         this.mylist = this.expandedKeys[i].childrenList
+        console.log('---this.mylist', this.mylist)
       } else {
         this.alllist = this.expandedKeys[i].childrenList
       }

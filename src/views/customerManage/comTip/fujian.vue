@@ -33,6 +33,7 @@
 </template>
 <script>
 	import { BASE_URL } from '../../../utils/request.js'
+	import { getStoreValue } from '../../../utils/LocalStorageDate'
 export default {
   data() {
     return {
@@ -51,7 +52,7 @@ export default {
             headers(){
                 return {
                     "Accept": "application/json",
-                    "token": localStorage.getItem('token')
+                    "token": getStoreValue('token')
                 }
             }
   },
