@@ -195,8 +195,30 @@
           </div>
         </div>
       </div>
-      <div class="dynamic">
-        <div class="t_text">
+
+      	
+      	<el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
+			    <el-tab-pane label="线索动态" class="tabli" name="线索动态">
+						       <div class="titleBox">
+						    			<span class="blueDiv">
+						    				
+						    			</span>
+						    			<span class="titleFujian">线索动态</span>
+						    		</div>
+						       <!-- 动态 -->
+					        <div class="dongtaiBox" style="padding: 0px;">
+					        	<Tt></Tt>
+					        </div>
+	
+			    </el-tab-pane>
+			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
+			    		<div class="fujianBox" style="padding: 15px;">
+				      	<FujianMini></FujianMini>
+				      </div>
+			    </el-tab-pane>
+			  </el-tabs>
+      	
+<!--        <div class="t_text">
           <span class="label_tag">动态</span>
         </div>
         <div class="allText">全部</div>
@@ -218,8 +240,7 @@
               </div>
             </el-timeline-item>
           </el-timeline>
-        </div>
-      </div>
+        </div>-->
     </div>
     <div class="bottom_model">
       <van-action-sheet v-model="show"
@@ -253,9 +274,16 @@
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
+import  FujianMini  from "./comTip/fujianMini";
+import  Tt  from "./comTip/timelineTab";
 export default {
+	components: {
+    FujianMini,
+    Tt,
+ },
   data() {
     return {
+    	sanTab:'线索动态',
       name: '',
       imageUser: '',
       optionSource: [],
@@ -1022,5 +1050,46 @@ export default {
       }
     }
   }
+}
+
+.t_text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        .label_tag {
+          font-weight: 600;
+          color: #3c4353;
+          position: relative;
+          padding-left: 10px;
+          &::before {
+            content: '';
+            width: 8px;
+            height: 28px;
+            background: #4168f6;
+            position: absolute;
+            top: 7px;
+            left: -10px;
+          }
+        }
+      }
+      
+      .titleBox{
+/*	width: 80px;*/
+	height: 40px;
+	font-size: 30px;
+	color: #3C4353;
+	letter-spacing: 0;
+	font-weight: bold;
+	line-height: 40px;
+	margin-bottom: 10px;
+/*	margin-top: 36px;*/
+}
+.blueDiv{
+	width: 8px;
+	height: 25px;
+	background: #4168F6;
+	margin-right: 12px;
+	display: inline-block;
 }
 </style>
