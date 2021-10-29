@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import HomeTransition from '../views/HomeTransition.vue'
+import WriteCode from '../views/writeCodeInfo/WriteCode.vue' // pc邀请二维码页面
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
@@ -91,6 +92,12 @@ const routes = [{
         path: '/404',
         name: '404',
         component: NoPermissions,
+    },
+    //邀请二维码填写信息
+    {
+        path: '/writeCodeInfo',
+        name: 'writeCodeInfo',
+        component: WriteCode,
     },
 
     // 客户画像
