@@ -1316,6 +1316,7 @@ export default {
         font-size: 28px;
         color: #ffffff;
         display: block;
+        cursor: default;
         position: fixed;
         left: 50%;
         bottom: 20px;

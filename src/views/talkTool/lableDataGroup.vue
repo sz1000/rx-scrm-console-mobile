@@ -1039,6 +1039,8 @@ export default {
     font-size: 28px;
     color: #ffffff;
     display: block;
+    margin: 0 auto;
+    cursor: default;
   }
 }
 .butaddWarp {
