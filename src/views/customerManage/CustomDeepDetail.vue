@@ -1,47 +1,12 @@
 <template>
-  <div class="culeDeatil">
+  <div class="custom-deep-deatil">
     <div class="headerTitle">
       <div class="backPage"
            @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">线索详情</span>
-    </div>
-    <div class="iconName">
-      <div v-if="imageUser">
-        <img :src="imageUser"
-             alt="" />
-      </div>
-      <div class="flag"
-           v-else>
-        {{ basicInfo.name ? basicInfo.name.substr(0, 1) : "" }}
-      </div>
-      <div class="nameSex">
-        <span>{{ basicInfo.name }}</span>
-        <img src="../../images/icon_female@2x.png"
-             alt=""
-             v-if="basicInfo.gender == '2'" />
-        <img src="../../images/man.png"
-             alt=""
-             v-if="basicInfo.gender == '1'" />
-      </div>
-    </div>
-    <div class="btnWarp">
-      <div class="btnBox"
-           @click="getReceive"
-           v-show="btnList.some(item=>item.enName == 'get')">
-        <img src="../../images/icon_like@2x.png"
-             alt="" />
-        <span>领取</span>
-      </div>
-      <div class="btnBox"
-           @click="distribution"
-           v-show="btnList.some(item=>item.enName == 'allot')">
-        <img src="../../images/icon_share@2x.png"
-             alt="" />
-        <span>分配</span>
-      </div>
+      <span class="textTitle">客户详情</span>
     </div>
     <div class="basicInformation">
       <span>
@@ -52,65 +17,15 @@
       <div class="formEdit">
         <el-form ref="form"
                  :model="basicInfo">
-          <el-form-item label="姓名"
+          <el-form-item label="客户简称"
                         class="nameBorder">
-            <el-input :disabled='disabled'
-                      v-model="basicInfo.name"
-                      maxlength="15"
+            <el-input v-model="basicInfo.customerName"
                       placeholder="请输入"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone"
-                      maxlength="11"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="changeGender">
-              <el-option label="未知"
-                         value="0"></el-option>
-              <el-option label="男"
-                         value="1"></el-option>
-              <el-option label="女"
-                         value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="公司名称">
-            <el-input v-model="basicInfo.cropFullName"
-                      placeholder="请输入"
-                      maxlength="100"
+                      maxlength="30"
                       :disabled='disabled'
                       @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="所属行业">
-            <el-cascader size="large"
-                         :disabled='disabled'
-                         :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
-                         :options="optionsCreat"
-                         v-model="basicInfo.industry"
-                         @change="handleChange">
-            </el-cascader>
-          </el-form-item>
-          <el-form-item label="线索来源">
+          <el-form-item label="客户来源">
             <el-select v-model="basicInfo.source"
                        placeholder="请选择"
                        :disabled='disabled'
@@ -122,12 +37,52 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="邮箱:">
-            <el-input v-model="basicInfo.email"
+          <el-form-item label="客户类型">
+            <el-select v-model="basicInfo.customerType"
+                       placeholder="请选择"
+                       :disabled='disabled'
+                       @change="changeCustom">
+              <el-option v-for="item in customList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.customerType">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="电话">
+            <el-input v-model="basicInfo.mobil"
                       placeholder="请输入"
-                      maxlength="60"
+                      maxlength="13"
                       :disabled='disabled'
                       @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="公司名称">
+            <el-input v-model="basicInfo.cropFullName"
+                      placeholder="请输入"
+                      maxlength="100"
+                      :disabled='disabled'
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large"
+                         :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
+                         :options="optionsCreat"
+                         v-model="basicInfo.industry"
+                         :disabled='disabled'
+                         @change="handleChange">
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="企业规模">
+            <el-select v-model="basicInfo.cropscale"
+                       placeholder="请选择"
+                       :disabled='disabled'
+                       @change="scaleChange">
+              <el-option v-for="item in optionsScale"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="地址">
             <el-input v-model="basicInfo.address"
@@ -149,6 +104,55 @@
                       maxlength="100"
                       :disabled='disabled'
                       placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <div class="custonInfo">
+            <img src="../../images/icon_label.png"
+                 alt="" />
+            <span>联系人信息</span>
+          </div>
+          <el-form-item label="姓名"
+                        class="nameBorder">
+            <el-input v-model="basicInfo.name"
+                      maxlength="15"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号:">
+            <el-input v-model="basicInfo.phone"
+                      maxlength="11"
+                      placeholder="请输入"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="性别:">
+            <el-select v-model="basicInfo.gender"
+                       placeholder="请选择"
+                       @change="changeGender">
+              <el-option label="未知"
+                         value="0"></el-option>
+              <el-option label="男"
+                         value="1"></el-option>
+              <el-option label="女"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="职务:">
+            <el-input v-model="basicInfo.position"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="微信号:">
+            <el-input v-model="basicInfo.weixin"
+                      placeholder="请输入"
+                      maxlength="20"
+                      @change="changeInput()"></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱:">
+            <el-input v-model="basicInfo.email"
+                      placeholder="请输入"
+                      maxlength="60"
                       @change="changeInput()"></el-input>
           </el-form-item>
         </el-form>
@@ -177,88 +181,119 @@
       <div class="companyLabel">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
+          <div class="editButton"
+               @click="showCompany(1)">
+            <i class="el-icon-edit"></i>
+            编辑
+          </div>
         </div>
         <div class="b_content">
           <div :class="{ 'over-hidden': !unfold }"
                ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in tagList"
+              <span v-for="(list, index) in companyTagList"
                     :key="index"
                     class="tagBox">{{ list.name }}</span>
             </div>
           </div>
           <div class="btn"
                @click="unfold = !unfold"
-               v-if="tagList.length > 8">
+               v-show="companyTagList.length > 5">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
         </div>
       </div>
-
-      	
-      	<el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
-			    <el-tab-pane label="线索动态" class="tabli" name="线索动态">
-						       <div class="titleBox">
-						    			<span class="blueDiv">
-						    				
-						    			</span>
-						    			<span class="titleFujian">线索动态</span>
-						    		</div>
-						       <!-- 动态 -->
-					        <div class="dongtaiBox" style="padding: 0px;">
-					        	<Tt></Tt>
-					        </div>
-	
-			    </el-tab-pane>
-			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
-			    		<div class="fujianBox" style="padding: 15px;">
-				      	<FujianMini></FujianMini>
-				      </div>
-			    </el-tab-pane>
-			  </el-tabs>
-      	
-<!--        <div class="t_text">
-          <span class="label_tag">动态</span>
+      <div class="personLabel">
+        <div class="t_text">
+          <span class="label_tag">个人标签</span>
+          <div class="editButton"
+               @click="showCompany(2)">
+            <i class="el-icon-edit"></i>
+            编辑
+          </div>
         </div>
-        <div class="allText">全部</div>
-        <div class="timeLine">
-          <el-timeline>
-            <el-timeline-item v-for="(item, index) in timeLineList"
-                              :key="index"
-                              color="#4168F6"
-                              type="danger ">
-              <div class="recordBox">
-                <div class="descTxt">{{ item.title }}</div>
-                <div class="inLineTwo">{{ item.context }}</div>
-                <div class="inLine">
-                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                  <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
-                  </span>
-                </div>
-              </div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>-->
+        <div class="b_content">
+          <div :class="{ 'over-hidden': !isShowPerson }"
+               ref="textBox">
+            <div ref="spanBox">
+              <span v-for="(list, index) in personTagList"
+                    :key="index"
+                    class="tagBox"
+                    v-show="list.isChecked">{{ list.name }}</span>
+            </div>
+          </div>
+          <div class="btn"
+               @click="isShowPerson = !isShowPerson"
+               v-show="
+              personTagList.filter((item) => {
+                return item.isChecked == 1;
+              }).length > 5
+            ">
+            {{ isShowPerson ? "收起" : "展开" }}
+            <van-icon name="arrow-down" />
+          </div>
+        </div>
+      </div>
     </div>
     <div class="bottom_model">
       <van-action-sheet v-model="show"
-                        :title="titleName">
+                        :title="titleName"
+                        @cancel="cancelIcon"
+                        @click-overlay="cancelIcon"
+                        :lock-scroll="false">
         <div class="content">
-          <div class="changeUser">
-            <div class="selectUser">
-              <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
-                </el-option>
-              </el-select>
+          <div class="tagWarp"
+               v-if="isShowDialog == '1'">
+            <div class="tagRow"
+                 v-for="(item, index) in groupList"
+                 :key="index">
+              <div class="groupName">{{ item.name }}</div>
+              <div class="tagStyle">
+                <span class="creatTag"
+                      :class="{
+                    changeTag:
+                      highLightArr.findIndex((item) => {
+                        return item.tagid == list.tagid;
+                      }) > -1,
+                  }"
+                      v-for="(list, index) in item.children"
+                      :key="list.id"
+                      v-show="list.name"
+                      @click="selectTag(list, index)">{{ list.name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tagWarp personWarp"
+               v-if="isShowDialog == '2'">
+            <div class="tagRow">
+              <!-- <div class="groupName">{{item.name}}</div> -->
+              <div class="tagStyle">
+                <span class="addBtn pointer"
+                      @click="addTag">+添加</span>
+                <span class="perchInput"
+                      v-if="isShow">
+                  <input v-model.trim="tagName"
+                         class="addInput"
+                         placeholder="输入后按回车完成"
+                         maxlength="30"
+                         @keyup.enter="handleSearch()" />
+                </span>
+                <span class="creatTag"
+                      :class="{ changeTag: list.isChecked }"
+                      v-for="(list, index) in personTagList"
+                      :key="list.id"
+                      v-show="list.name">
+                  <span @click="selectPersonTag(list, index)">{{
+                    list.name
+                  }}</span>
+                  <span class="deleteTag"
+                        @click="deleteTag(list, index)">
+                    <van-icon name="cross" />
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="buttonWarp">
@@ -273,23 +308,15 @@
   </div>
 </template>
 <script>
-import { formatDate } from '../../utils/tool'
-import  FujianMini  from "./comTip/fujianMini";
-import  Tt  from "./comTip/timelineTab";
+import { formatDate, _throttle } from '../../utils/tool'
 export default {
-	components: {
-    FujianMini,
-    Tt,
- },
   data() {
     return {
-    	sanTab:'线索动态',
-      name: '',
-      imageUser: '',
       optionSource: [],
       customList: [
         { label: '微信用户', customerType: 1 },
         { label: '企微用户', customerType: 2 },
+        { label: '未知', customerType: 0 },
       ],
 
       optionsCreat: [],
@@ -327,18 +354,16 @@ export default {
         { name: '前所属人', mapName: 'beBelongBy', value: '' },
         { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
-      fieldIndex: null,
       unfold: false,
       isShowPerson: false,
-      tagList: [],
+      companyTagList: [],
       groupList: [],
-      personList: [],
-      timeLineList: [],
+      personTagList: [],
+      tagList: [],
       show: false,
       isShowDialog: null,
       titleName: '',
       highLightArr: [],
-      tempList: [],
       message: '',
       showInput: null,
       isShow: false,
@@ -346,26 +371,36 @@ export default {
       nowUser: '',
       userNo: '',
       options: [],
-      objItem: JSON.parse(localStorage.getItem('detail')),
-      disabled: false,
+      objItem: JSON.parse(localStorage.getItem('customer')),
       btnList: [],
+      disabled: false,
     }
   },
+  watch: {
+    // basicInfo: {
+    //   handler: function (newVal, oldVal) {
+    //     console.log(newVal, oldVal)
+    //     // if(){
+    //     // }
+    //     //可以做些相应的处理
+    //     this.update()
+    //   },
+    //   deep: true,
+    // },
+  },
   created() {
-    let tempObj = JSON.parse(localStorage.getItem('detail'))
-    this.imageUser = tempObj.avatar
-    this.btnList = JSON.parse(this.$route.query.alllist)
+    this.btnList = JSON.parse(this.$route.query.mylist)
     this.disabled = !this.btnList.some((item) => item.enName == 'edit')
-    console.log('----querylist--', this.btnList)
+    // console.log(this.btnList)
   },
   mounted() {
-    this.getTimeline()
     this.getTagList()
     this.getDetailForm()
   },
   methods: {
     formatDate,
     changeInput(val) {
+      console.log(val)
       this.update()
     },
     changeCustom(val) {
@@ -384,25 +419,35 @@ export default {
     },
     scaleChange(val) {
       // console.log(val, this.basicInfo)
+      this.basicInfo.corpScale = val
       this.update()
     },
-    getTimeline() {
-      // console.log(this.objItem, '------')
-      this.$network
-        .get('/customer-service/cluecustomer/getMessage', {
-          cluecustomerno: this.objItem.clueCustomerNo,
-        })
-        .then((res) => {
-          this.timeLineList = res.data
-        })
-    },
     getTagList() {
+      this.highLightArr = []
       this.$network
         .get('/customer-service/cluecustomer/gettag', {
           clueCustomerNo: this.objItem.clueCustomerNo,
         })
         .then((res) => {
-          this.tagList = res.data.corpTagList
+          this.companyTagList = res.data.corpTagList
+          this.groupList = res.data.tagCorpList
+          this.personTagList = res.data.personTagList
+
+          let allChildTag = res.data.tagCorpList.map((item) => {
+            return item.children
+          })
+          // let childTag = allChildTag.flat()
+          let childTag = [].concat.apply([], allChildTag)
+          // console.log('---allChildTag---', allChildTag, childTag)
+
+          this.companyTagList.forEach((item) => {
+            childTag.forEach((chItem, chIndex) => {
+              if (item.tagid == chItem.tagid) {
+                this.highLightArr.push(chItem)
+              }
+            })
+            console.log('-----列表----', this.highLightArr)
+          })
         })
     },
     processTree(data) {
@@ -464,88 +509,173 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-    distribution() {
-      // this.isShowDialog = '4'
-      this.show = true
-      this.titleName = '分配线索'
-      this.$network
-        .get('/customer-service/cluecustomer/getuserList', {
-          clueCustomerNo: this.objItem.clueCustomerNo,
-        })
-        .then((res) => {
-          this.options = res.data.list
-        })
+    cancelIcon() {
+      document.getElementById('html').style.overflow = 'auto'
     },
-    getReceive() {
-      // this.$router.push('turnCustomer')
+    showCompany(v) {
+      document.getElementById('html').style.overflow = 'hidden'
+      this.isShowDialog = v
+      this.show = true
+      if (v == 1) {
+        this.titleName = '企业标签'
+      } else if (v == 2) {
+        this.titleName = '个人标签'
+      }
+    },
+    addTag(item, index) {
+      this.tagName = ''
+      this.isShow = !this.isShow
+    },
+    handleSearch() {
+      console.log(this.tagName)
+      if (this.tagName !== '') {
+        this.$network
+          .post('/customer-service/cluecustomer/addtag', {
+            name: this.tagName,
+            clueCustomerNo: this.objItem.clueCustomerNo,
+          })
+          .then((res) => {
+            if (res.result) {
+              this.personTagList = res.data
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.msg || '添加失败',
+              })
+            }
+          })
+      }
+      this.showInput = null
+      this.isShow = false
+    },
+    selectTag(list, index) {
+      // console.log(list)
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid
+      })
+      if (result > -1) {
+        // console.log(111111111111)
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1)
+          }
+        })
+      } else {
+        this.highLightArr.push(list)
+      }
+      // console.log(this.highLightArr)
+    },
+    selectPersonTag(list, index) {
+      console.log(list)
+      if (list.isChecked == 1) {
+        list.isChecked = 0
+      } else {
+        list.isChecked = 1
+      }
+    },
+    deleteTag(v, i) {
+      // console.log(v)
       this.$dialog
         .confirm({
-          title: '领取提示',
-          message: '是否确认领取所选择的线索？\n确认申领该条资源吗？',
-          className: 'giveUpBtn',
+          title: '温馨提示',
+          message: '是否确认删除',
+          className: 'deleteBtn',
           confirmButtonText: '是',
           cancelButtonText: '否',
           messageAlign: 'left',
         })
         .then(() => {
           this.$network
-            .get('/customer-service/cluecustomer/getclue', {
-              clueCustomerNo: this.objItem.clueCustomerNo,
-              type: this.$route.query.type,
-            })
+            .post('/customer-service/cluecustomer/deltag', v)
             .then((res) => {
-              this.$message({ type: 'success', message: '领取成功' })
-              this.$router.go(-1)
+              if (res.result) {
+                this.personTagList = res.data
+              }
             })
         })
         .catch(() => {
           // on cancel
         })
     },
-    changeUser() {
-      // this.isShowDialog = '4'
-      this.show = true
-      this.titleName = '分配线索'
-    },
-    fnChangeUser(val) {
-      console.log(val)
-    },
     closeDialog(v) {
       this.show = false
-      console.log(v)
+      document.getElementById('html').style.overflow = 'auto'
+      if (v == 1) {
+        this.getTagList()
+      } else if (v == 2) {
+      } else if (v == 4) {
+      }
     },
-    saveDialog(v) {
-      this.show = false
-      // console.log(v)
-      this.$network
-        .get('/customer-service/cluecustomer/turnBlon', {
+    saveDialog: _throttle(function (v) {
+      if (v == 1) {
+        this.$network
+          .post(
+            `/customer-service/cluecustomer/updCorptag/${this.objItem.clueCustomerNo}`,
+            this.highLightArr
+          )
+          .then((res) => {
+            if (res.result) {
+              document.getElementById('html').style.overflow = 'auto'
+              this.show = false
+              this.getTagList()
+            } else {
+              this.message({
+                type: 'error',
+                message: '添加失败',
+              })
+            }
+          })
+      } else if (v == 2) {
+        this.$network
+          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
+          .then((res) => {
+            if (res.result) {
+              document.getElementById('html').style.overflow = 'auto'
+              this.show = false
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
+          })
+      } else if (v == 4) {
+        let params = {
           cluecustomerno: this.objItem.clueCustomerNo,
           user_no: this.userNo,
-        })
-        .then((res) => {
-          // console.log(res)
-          if (res.result) {
-            this.$message({ type: 'success', message: '分配成功' })
-            this.$router.go(-1)
-          } else {
-            this.$message({ type: 'success', message: res.data.msg })
-          }
-        })
-    },
+          oldname: this.nowUser,
+        }
+        this.$network
+          .get('/customer-service/cluecustomer/turnBlon', params)
+          .then((res) => {
+            if (res.result) {
+              this.show = false
+              this.$router.go(-1)
+              this.$message({
+                type: 'success',
+                message: '编辑成功!',
+              })
+            } else {
+              this.show = false
+              this.$message({
+                type: 'error',
+                message: res.msg,
+              })
+            }
+          })
+      }
+    }, 5000),
   },
 }
 </script>
 <style lang="less" scoped>
-.CluesSeas {
-}
-.culeDeatil {
+.custom-deep-deatil {
   .headerTitle {
-    background: #fff;
-    padding: 0 24px;
-    font-weight: 600;
     display: flex;
     height: 87px;
     line-height: 87px;
+    padding: 0 24px;
+    background-color: #fff;
+    font-weight: 600;
     font-size: 28px;
     color: #3c4353;
     border-top: 1px solid #f0f2f7;
@@ -562,40 +692,6 @@ export default {
       flex: 1;
       display: inline-block;
       padding-left: 150px;
-    }
-  }
-  .iconName {
-    display: flex;
-    padding: 24px;
-    background: #fff;
-    .flag {
-      width: 88px;
-      height: 88px;
-      background: #4168f6;
-      border-radius: 12px;
-      text-align: center;
-      line-height: 88px;
-      color: #fff;
-      font-size: 35px;
-    }
-    .nameSex {
-      margin-left: 16px;
-      span:nth-child(1) {
-        font-size: 28px;
-        font-weight: 600;
-      }
-      span:nth-child(2) {
-        font-size: 24px;
-        color: #ffb020;
-      }
-      span {
-        display: inline-block;
-      }
-      img {
-        margin-top: 21px;
-        width: 28px;
-        height: 28px;
-      }
     }
   }
   .btnWarp {
@@ -658,6 +754,18 @@ export default {
           height: 80px;
         }
       }
+      .custonInfo {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 24px 0;
+        img {
+          width: 28px;
+          height: 28px;
+          vertical-align: -11%;
+          display: inline-block;
+          margin-right: 8px;
+        }
+      }
       /deep/.el-form {
         height: 100%;
         .el-form-item {
@@ -677,6 +785,7 @@ export default {
           border: 1px solid #f0f2f7;
           line-height: 80px;
           text-align: center;
+          // padding-left: 24px;
         }
         .el-form-item__content {
           // width: 562px;
@@ -719,6 +828,9 @@ export default {
         }
       }
     }
+  }
+  .basicInformation {
+    padding: 24px 24px 0;
   }
   .infoContent {
     margin-top: 24px;
@@ -784,101 +896,6 @@ export default {
           padding: 14px 16px;
           margin-right: 16px;
           margin-top: 16px;
-        }
-      }
-    }
-    .dynamic {
-      font-size: 28px;
-      .t_text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        .label_tag {
-          font-weight: 600;
-          color: #3c4353;
-          position: relative;
-          padding-left: 10px;
-          &::before {
-            content: '';
-            width: 8px;
-            height: 28px;
-            background: #4168f6;
-            position: absolute;
-            top: 7px;
-            left: -10px;
-          }
-        }
-        .editButton {
-          color: #838a9d;
-          width: 152px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          line-height: 68px;
-          span {
-            display: inline-block;
-          }
-          img {
-            display: inline-block;
-            vertical-align: middle;
-            margin: -10px 10px 0 0;
-            margin-right: 5px;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .allText {
-        color: #4168f6;
-        margin-bottom: 16px;
-      }
-      .timeLine {
-        .el-timeline {
-          padding-left: 0 !important;
-        }
-        .recordBox {
-          // width: 676px;
-          min-height: 180px;
-          background: rgba(65, 104, 246, 0.06);
-          border-radius: 8px;
-          color: #3c4353;
-          padding: 16px 16px 0;
-          font-size: 28px;
-          .inLine {
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            .time_right {
-              font-size: 28px;
-              color: #838a9d;
-            }
-            img {
-              width: 10px;
-              height: 10px;
-            }
-          }
-          .inLineTwo {
-            margin-bottom: 16px;
-            display: inline-block;
-            word-break: normal;
-            word-break: break-all;
-            word-break: keep-all;
-            word-break: break-word;
-            // display: -webkit-box;
-            // -webkit-box-orient: vertical;
-            // -webkit-line-clamp: 2;
-            // overflow: hidden;
-          }
-          .inLineEnd {
-            text-align: right;
-          }
-          .descTxt {
-            font-weight: 600;
-            color: #3c4353;
-            margin-bottom: 16px;
-          }
         }
       }
     }
@@ -966,6 +983,13 @@ export default {
           }
           .creatTag {
             padding-right: 0;
+            span:nth-child(1) {
+              vertical-align: middle;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 300px;
+            }
             span {
               border: none;
               padding: 0;
@@ -973,55 +997,6 @@ export default {
             }
             .deleteTag {
               width: 50px;
-            }
-          }
-        }
-      }
-      .writerInput {
-        height: 490px;
-        .van-cell,
-        .van-field,
-        .van-field--min-height {
-          font-size: 28px;
-          height: 400px;
-          background: #ffffff;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          /deep/.van-field__control {
-            height: 350px;
-            padding-top: 10px;
-          }
-        }
-      }
-      .changeUser {
-        height: 490px;
-        font-size: 28px;
-        font-weight: 600;
-        .nowUser {
-          padding-left: 20px;
-          margin-bottom: 28px;
-          span {
-            display: inline-block;
-          }
-          span:nth-child(2) {
-            font-weight: normal;
-            color: #838a9d;
-            margin-left: 15px;
-          }
-        }
-        .selectUser {
-          /deep/.el-select {
-            width: 519px;
-            height: 80px;
-            margin-left: 16px;
-            .el-input,
-            .el-input__inner {
-              width: 519px;
-              height: 80px;
-              border-radius: 8px;
-              font-size: 28px;
-              font-weight: normal;
-              border: 1px solid #d9dae4;
             }
           }
         }
@@ -1050,46 +1025,5 @@ export default {
       }
     }
   }
-}
-
-.t_text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        .label_tag {
-          font-weight: 600;
-          color: #3c4353;
-          position: relative;
-          padding-left: 10px;
-          &::before {
-            content: '';
-            width: 8px;
-            height: 28px;
-            background: #4168f6;
-            position: absolute;
-            top: 7px;
-            left: -10px;
-          }
-        }
-      }
-      
-      .titleBox{
-/*	width: 80px;*/
-	height: 40px;
-	font-size: 30px;
-	color: #3C4353;
-	letter-spacing: 0;
-	font-weight: bold;
-	line-height: 40px;
-	margin-bottom: 10px;
-/*	margin-top: 36px;*/
-}
-.blueDiv{
-	width: 8px;
-	height: 25px;
-	background: #4168F6;
-	margin-right: 12px;
-	display: inline-block;
 }
 </style>

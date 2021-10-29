@@ -1,14 +1,20 @@
 <template>
   <div class="clueWarp">
+  	<div class="titleBox">
+			<span class="blueDiv">
+				
+			</span>
+			<span class="titleFujian">协助人</span>
+		</div>
   	<el-button class="delBtn" size="small" type="primary" @click="delPop">
-  		<i class="el-icon-delete"></i>&nbsp;删除
+  		<i class="el-icon-delete"></i><span>删除</span>
   	</el-button>
     <el-button class="addBtn" size="small" type="primary" @click="addPop">
-  		<i class="el-icon-circle-plus-outline"></i>&nbsp;添加
+  		<i class="el-icon-circle-plus-outline"></i><span>添加</span>
   	</el-button>
     <div class="cardWarp">
         <div class="topInfo" v-for="(item, index) in yiList" :key="index">
-          <div class="detailInfo" @click="goDetail(item, index)">
+          <div class="detailInfo">
             <div class="left">
               <div class="rowStyle">
                 <span>员工姓名:</span>
@@ -95,23 +101,68 @@
 								</van-radio-group>
              </div>
              
-             <div class="pleBumen"><span style="color: red;">*</span>请先选择部门:</div>
-             <el-select style="margin-left: 0px;" v-model="vm_depId" placeholder="选择部门" @change="ereBumen(vm_depId)">
+             <div class="pleBumen"><span style="color: red;">*</span>员工部门:</div>
+             <input class="bumenSec" type="text" placeholder="请先选择部门"  :value="bumenName" @click="openBumenPop" />
+            <!-- <select class="bumenSec" style="margin-left: 0px;" v-model="vm_depId" placeholder="请先选择部门" @change="ereBumen(vm_depId)">
+						    <option
+						    	class="bumenOpt"
+						      v-for="item in bumenList"
+						      :key="item.name"
+						      :label="item.name"
+						      :value="item.depId">
+						    </option>
+						 </select>-->
+						 
+						 
+						 <van-action-sheet v-model="bumenPop" title="选择部门">
+							  		<van-picker
+											  title="标题"
+											  show-toolbar
+											  :columns="bumenList"
+											  @confirm="onConfirm"
+											  @cancel="onCancel"
+											  @change="onChange"
+											  value-key="name"
+											/>
+						 </van-action-sheet>
+						 
+						 
+             
+             <!--<el-select style="margin-left: 0px;" v-model="vm_depId" placeholder="请先选择部门" @change="ereBumen(vm_depId)">
 						    <el-option
 						      v-for="item in bumenList"
 						      :key="item.name"
 						      :label="item.name"
 						      :value="item.depId">
 						    </el-option>
-						 </el-select>
-						 <el-select v-if="isHelper" style="margin-top:30px;margin-left: 0px;" v-model="vm_userId" placeholder="选择员工" @change="changeHelper(vm_userId)">
-						    <el-option
-						      v-for="item in heperList"
-						      :key="item.index"
-						      :label="item.name"
-						      :value="item.userId">
-						    </el-option>
-						 </el-select>
+						 </el-select>-->
+						 <div class="boxTop" style="margin-top: 30px;">
+						 		<div v-if="isHelper" class="pleBumen" style=""><span style="color: red;">*</span>指定员工:</div>
+						 		
+						 		
+							 <!--<el-select v-if="isHelper" class="manClass" v-model="vm_userId" placeholder="选择员工" @change="changeHelper(vm_userId)">
+							    <el-option
+							      v-for="item in heperList"
+							      :key="item.index"
+							      :label="item.name"
+							      :value="item.userId">
+							    </el-option>
+							 </el-select>-->
+							 			<input v-if="isHelper" class="bumenSec" type="text"  placeholder="选择员工" :value="yuangongName" @click="openYuangongPop" />
+							 			<van-action-sheet v-model="yuangongPop" title="选择员工">
+							  					<van-picker
+															  title="标题"
+															  show-toolbar
+															  :columns="heperList"
+															  @confirm="onConfirmYuangong"
+															  @cancel="onCancelYuangong"
+															  @change="onChangeYuangong"
+															  value-key="name"
+															/>
+										 </van-action-sheet>
+							 
+						 </div>
+						 
              
              
         <div class="btnBox">
@@ -131,6 +182,10 @@ import { _throttle, formatDate } from "../../../utils/tool";
 export default {
   data() {
     return {
+    	yuangongName:'',
+    	yuangongPop:false,
+    	bumenName:'',
+    	bumenPop:false,
     	checkList: [],
     	isHelper:false,
     	vm_depId:'',
@@ -162,6 +217,46 @@ export default {
     
   },
   methods: {
+  	openYuangongPop(){
+  		this.yuangongPop = true
+  	},
+  	onConfirmYuangong(value, index) {
+  		this.yuangongName = value.name
+    	let oneList = []
+    	oneList.push(value)
+    	this.oneList = oneList
+    	console.log("changeHelper>>>>",oneList)
+    	
+   			this.yuangongPop = false;
+    },
+    onChangeYuangong(picker, value, index) {
+    	/*console.log(value)
+      console.log(`当前值：${value}, 当前索引：${index}`);*/
+    },
+    onCancelYuangong() {
+    	this.bumenPop = false;
+      console.log('取消');
+    },
+  	openBumenPop(){
+  		this.bumenPop = true;
+  	},
+  	onConfirm(value, index) {
+     // console.log(`当前值：${value}, 当前索引：${index}`);
+      console.log(value)
+       let depId = value.depId
+       this.bumenName = value.name
+   			this.getHelperSerch(depId)
+   			this.isHelper = true
+   			this.bumenPop = false;
+    },
+    onChange(picker, value, index) {
+    	/*console.log(value)
+      console.log(`当前值：${value}, 当前索引：${index}`);*/
+    },
+    onCancel() {
+    	this.bumenPop = false;
+      console.log('取消');
+    },
     formatDate,
     checkedChange() {
 		console.log(this.checkList)
@@ -199,11 +294,11 @@ export default {
     	this.showB = true
     },
     closeDialogAdd(v) {
-      document.getElementById('html').style.overflow = 'auto'
+    /*  document.getElementById('html').style.overflow = 'auto'*/
       this.showB = false
     },
     saveDialogAdd() {
-      document.getElementById('html').style.overflow = 'auto'
+ /*     document.getElementById('html').style.overflow = 'auto'*/
       console.log('this.addObj>>>',this.addObj)
       			this.oneList[0].permission = this.addObj.permission
       let params = {
@@ -235,20 +330,20 @@ export default {
       
     },
     cancelIconAdd() {
-      document.getElementById('html').style.overflow = 'auto'
+    //  document.getElementById('html').style.overflow = 'auto'
       this.showB = false
     },
     cancelIcon() {
-      document.getElementById('html').style.overflow = 'auto'
+     // document.getElementById('html').style.overflow = 'auto'
       this.show = false
     },
     closeDialog(v) {
-      document.getElementById('html').style.overflow = 'auto'
+     // document.getElementById('html').style.overflow = 'auto'
       this.show = false
       // console.log(v)
     },
     saveDialogDel() {
-      document.getElementById('html').style.overflow = 'auto'
+    //  document.getElementById('html').style.overflow = 'auto'
       this.show = false
       // console.log(v)
        console.log('this.checkList>>>',this.checkList)
@@ -362,28 +457,6 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
-/*
-<div class="vanContent">
-<div class="headerTab">
-	<span class="helperTitle">协助人</span>
-	<span class="powerTitle">权限</span>
-</div>
- 						<div class="lrBox">
-          				<div class="leftBox">
-			          				<el-checkbox-group  v-model="checkList" @change="changeRightList" :key="index" class="checkBoxlabelEdit" v-for="(item, index) in yiList">
-							            <el-checkbox @change="checkedChange"
-							                         class="checkClass" :label="item.id">
-							              <span>{{item.name}}</span>
-							            </el-checkbox>
-							          </el-checkbox-group>
-			          	</div>
-			          	<div class="rightBox" >
-			          		<div class="perBox" :key="index" v-for="(item, index) in yiList">
-			          				{{item.permission == 2?"只读":"读写"}}
-			          		</div>
-			          	</div>
-          	</div>*/
 .lrBox{
 	width: 100%;
 }
@@ -403,7 +476,7 @@ export default {
 	width: 100%;
 	height: 40px;
 	line-height: 40px;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: 400;
@@ -414,7 +487,7 @@ export default {
 	height: 40px;
 	line-height: 40px;
 	font-family: PingFangSC-Medium;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: bold;
@@ -437,7 +510,7 @@ export default {
 	width: 100%;
 	height: 40px;
 	line-height: 40px;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	font-weight: 400;
@@ -446,21 +519,21 @@ export default {
 	/*	display: inline-block;*/
 	}
 	.el-checkbox__inner{
-		width: 40px;
-		height: 40px;
-		font-size: 40px;
+		width: 30px;
+		height: 30px;
+		font-size: 30px;
 	}
 	.el-checkbox__label{
-	font-size: 40px;
+	font-size: 30px;
 	}
 	.el-checkbox__input .el-checkbox__inner::after{
 		width: 12px;
-    height: 30px;
+    height: 20px;
     box-sizing: content-box;
     content: "";
     border-left: 0;
     border-top: 0;
-    left: 50%;
+    left: 46%;
     position: absolute;
     top: 0;
     transform: translateX(-50%) rotate(45deg) scaleY(1);
@@ -473,16 +546,31 @@ export default {
 
 	}
 }
-
+.bumenSec{
+	    height: 80px;
+    	width: 547px;
+    	font-size: 30px;
+    	padding-left: 15px;
+    	border-radius: 8px;
+    	margin-left: 17px;
+    	color: #C0C4CC ;
+    	line-height: 80px;
+    	background: #FFFFFF;
+			border: 1px solid #D9DAE4;
+			border-radius: 8px;
+}
 /deep/.el-select>.el-input{
     	height: 80px;
-    	width: 500px;
-    	font-size: 40px;
-    	padding-left: 40px;
+    	width: 547px;
+    	font-size: 30px;
+    	/*padding-left: 15px;*/
     	border-radius: 8px;
+    	margin-left: 17px;
+    	color: #C0C4CC ;
     	.el-select-dropdown .el-select-dropdown__item{
-    		font-size: 40px;
-    		line-height: 50px;
+    		font-size: 30px;
+    		line-height: 30px;
+    		color: #C0C4CC ;
     	}
 }
 /deep/.el-select:hover .el-input__inner{
@@ -490,46 +578,46 @@ export default {
 		    height: 80px;
 		    width: 547px;
 		    border-radius: 8px;
-		    font-size: 40px;
-		    padding-left: 40px;
+		    font-size: 30px;
+		    color: #C0C4CC ;
+		    /*padding-left: 40px;*/
 }
 /deep/.el-input--suffix .el-input__inner{
 				height: 80px;
 		    width: 547px;
 		    border-radius: 8px;
-		    font-size: 40px;
-		    padding-left: 40px;
+		    font-size: 30px;
+		    color: #C0C4CC ;
 }
 
 .topTitle{
 	width: 100%;
 	height: 80px;
 	line-height: 80px;
-	padding-left: 40px;
+	padding-left: 23px;
 	padding-top: 23px;
 }
 .titlePower{
-	width: 200px;
 	height: 80px;
 	font-family: PingFangSC-Regular;
-	font-size: 40px;
+	font-size: 30px;
 	color: #3C4353;
 	letter-spacing: 0;
 	/*text-align: right;*/
-	font-weight: bold;
+	font-weight: 400;
 	float: left;
 	line-height: 80px;
 }
 /deep/ .powerClass{
-			margin-left: 30px;
+			margin-left: 23px;
 	    width: 400px;
 	    height: 80px;
-	    font-size: 40px;
+	    font-size: 30px;
 	    float: left;
 	    .van-radio{
 	    	float: left;
 	    	.van-radio__icon{
-	    		font-size: 40px;
+	    		font-size: 30px;
 	    	}
 	    }
 }
@@ -540,7 +628,7 @@ export default {
       line-height: 88px;
       background: #fafbff;
       border-radius: 16px 16px 0px 0px;
-      font-size: 28px;
+      font-size: 32px;
       color: #3c4353;
       font-weight: 600;
     }
@@ -571,6 +659,7 @@ export default {
   margin: 0 auto;
   color: #4168f6;
   background: #fff;
+  font-size: 30px;
 }
 .save {
   background: #4168f6;
@@ -599,21 +688,23 @@ export default {
           text-align: center;
           position: absolute;
           right: 150px;
-          top: 0;
+        /*  top: 0;*/
           background: #FFFFFF;
           font-size: 30px;
+          top: -12px;
 }
-.addBtn {
+.addBtn{
 	right: 5px;
 }
 .clueWarp {
+	position: relative;
   height: 100%;
   .cardWarp {
     .topInfo {
       margin-top: 24px;
       /*height: 400px;*/
       background: #fff;
-      padding: 24px 24px 0;
+     /* padding: 24px 24px 0;*/
       .customInfo {
         display: flex;
         justify-content: space-between;
@@ -738,11 +829,50 @@ export default {
   }
 }
 .pleBumen{
-	margin-left: 40px;
+	display: inline-block;
+	margin-left: 23px;
 	margin-bottom: 25px;
 	margin-top: 15px;
-	font-size: 40px;
-	font-weight: bold;
+	font-size: 30px;
+	font-weight: 400;
 	color:  #3C4353;
+}
+/deep/.delBtn span, .addBtn span{
+	position: relative;
+    right: 9px;
+}
+.addBtn span{
+	right: 20px;
+}
+/deep/.delBtn i, .addBtn i{
+	position: relative;
+    right: 3px;
+}
+/deep/.addBtn i{
+	right: 14px;
+}
+.titleBox{
+/*	width: 80px;*/
+	height: 40px;
+	font-size: 30px;
+	color: #3C4353;
+	letter-spacing: 0;
+	font-weight: bold;
+	line-height: 40px;
+	margin-bottom: 10px;
+/*	margin-top: 36px;
+	    padding-left: 28px;*/
+}
+.blueDiv{
+	width: 8px;
+	height: 25px;
+	background: #4168F6;
+	margin-right: 12px;
+	display: inline-block;
+}
+
+/deep/.van-action-sheet__content{
+		overflow-y: scroll;
+    margin-bottom: 200px;
 }
 </style>

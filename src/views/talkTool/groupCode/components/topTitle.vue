@@ -1,7 +1,8 @@
 <template>
-    <div class="top_nav" @click="$router.go(-1)">
-        <div class="black_btn">返回</div>
+    <div class="top_nav">
+        <div class="black_btn" @click="$router.go(-1)">返回</div>
         <div class="title">{{title}}</div>
+        <slot></slot>
     </div>
 </template>
 
@@ -27,10 +28,11 @@ export default {
     border-bottom: 1px solid @dashedColor;
     position: relative;
     text-align: center;
+    font-size: 28px;
+    line-height: 40px;
+    color: @fontMain;
+    font-weight: bold;
     .black_btn{
-        font-size: 28px;
-        line-height: 40px;
-        color: @fontMain;
         position: absolute;
         left: 24px;
         top: 50%;
@@ -46,9 +48,6 @@ export default {
         }
     }
     .title{
-        font-size: 28px;
-        line-height: 40px;
-        color: @fontMain;
         display: inline-block;
     }
 }

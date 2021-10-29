@@ -12,13 +12,15 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
-import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
+import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
+import CustomergroupPlaye from '../views/talkTool/CustomergroupPlaye.vue' //客户群群发
+import GroupCodeList from '../views/talkTool/groupCode/list.vue' //群活码列表
+import GroupCodeAdd from '../views/talkTool/groupCode/add.vue' //群活码列表
+import CallingMyCard from '../views/talkTool/callingCard/myCard.vue' //我的名片
+import CallingPoster from '../views/talkTool/callingCard/poster.vue' //我的名片 生成海报
+import CallingData from '../views/talkTool/callingCard/lookData.vue' //我的名片 浏览数据
 
-import LableDataGroup from "../views/talkTool/lableDataGroup.vue"//客户群群发
-
-import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码列表
-import GroupCodeAdd from "../views/talkTool/groupCode/add.vue"    //群活码列表
+import LableDataGroup from '../views/talkTool/lableDataGroup.vue' //客户群群发
 
 //打卡
 import PunchCard from '../views/clockPage/PunchCard.vue'
@@ -36,9 +38,13 @@ import MyCustomer from '../views/customerManage/MyCustomer.vue'
 import AddCustomer from '../views/customerManage/AddCustomer.vue'
 import CustomDetail from '../views/customerManage/CustomDetail.vue'
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
+import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
+import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
+import StageList from '../components/BusinessOpportunities/stageList'
+
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
-// 群 SOP 设置 
+// 群 SOP 设置
 import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
@@ -51,6 +57,9 @@ import Test from '../views/talkTool/test.vue'
 // 素材模板h5分享页面
 import MaterialTemplate from '../views/MaterialTemplate/share'
 
+// 消息通知 互动提醒
+import Notice from '../views/notice/index'
+
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -59,7 +68,7 @@ VueRouter.prototype.push = function push(location) {
 
 const routes = [{
         path: '/',
-        redirect: '/homeTransition',
+        redirect: '/home',
     },
     {
         path: '/test',
@@ -206,7 +215,6 @@ const routes = [{
                     bodyClass: 'lableDataGroup',
                 },
                 component: LableDataGroup,
-
             },
             //群活码 list
             {
@@ -223,7 +231,30 @@ const routes = [{
                     bodyClass: 'GroupCodeAdd',
                 },
                 component: GroupCodeAdd,
-
+            },
+            //我的名片
+            {
+                path: 'myCard',
+                meta: {
+                    bodyClass: 'CallingMyCard',
+                },
+                component: CallingMyCard,
+            },
+            //生成海报
+            {
+                path: 'poster',
+                meta: {
+                    bodyClass: 'CallingPoster',
+                },
+                component: CallingPoster,
+            },
+            //浏览数据
+            {
+                path: 'lookData',
+                meta: {
+                    bodyClass: 'CallingData',
+                },
+                component: CallingData,
             },
         ],
     },
@@ -322,6 +353,27 @@ const routes = [{
                 },
                 component: CustomerSeas,
             },
+            {
+                path: 'customDeepDetail',
+                meta: {
+                    bodyClass: 'CustomDeepDetail',
+                },
+                component: CustomDeepDetail,
+            },
+            {
+                path: 'customerDeepSeas',
+                meta: {
+                    bodyClass: 'CustomerDeepSeas',
+                },
+                component: CustomerDeepSeas,
+            },
+            {
+                path: 'stageList',
+                meta: {
+                    bodyClass: 'StageList',
+                },
+                component: StageList,
+            },
         ],
     },
     //营销互动
@@ -333,6 +385,12 @@ const routes = [{
         path: '/materialTemplate',
         name: 'materialTemplate',
         component: MaterialTemplate,
+    },
+    // 消息通知 互动提醒
+    {
+        path: '/notice',
+        name: 'Notice',
+        component: Notice,
     },
 ]
 

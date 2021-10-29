@@ -239,6 +239,9 @@ export default {
       this.$network
         .get("/user-service/user/getUserName", { endPoint: "mobile" })
         .then((res) => {
+          if (res.code == "error_corp_forbid") {
+            this.show = true;
+          }
           this.show = !res.data.haveSecret;
           let tempMenuList = res.data.userEntity.permissionList;
           sessionStorage.setItem(

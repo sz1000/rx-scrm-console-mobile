@@ -13,7 +13,8 @@ import 'vant/lib/index.css'
 import './styles/common.less'
 import preventReClick from './utils/directive.js' //防多次点击，重复提交
 import loadmore from './utils/directive.js' //下拉框滚动加载
-import  http  from './utils/request'
+import  { http }  from './utils/request'
+
 
 Vue.use(preventReClick)
 Vue.use(loadmore)

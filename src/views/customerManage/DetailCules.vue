@@ -181,7 +181,7 @@
       </div>
     </div>
     <div class="infoContent">
-      <div class="companyLabel">
+      <div class="companyLabel" style="padding: 12px 12px 0;">
         <div class="t_text">
           <span class="label_tag">企业标签</span>
           <div class="editButton"
@@ -207,7 +207,7 @@
           </div>
         </div>
       </div>
-      <div class="personLabel">
+      <div class="personLabel" style="padding: 12px 12px 0;">
         <div class="t_text">
           <span class="label_tag">个人标签</span>
           <div class="editButton"
@@ -238,39 +238,78 @@
           </div>
         </div>
       </div>
-      <div class="dynamic">
-        <div class="t_text">
-          <span class="label_tag">动态</span>
-          <div class="editButton"
-               @click="showCompany(3)"
-               v-show="btnList.some(item=>item.enName == 'write')">
-            <img src="../../images/icon_repair1@2x.png"
-                 alt="" />
-            <span>写跟进</span>
-          </div>
-        </div>
-        <div class="allText">全部</div>
-        <div class="timeLine">
-          <el-timeline>
-            <el-timeline-item v-for="(item, index) in timeLineList"
-                              :key="index"
-                              color="#4168F6"
-                              type="danger ">
-              <div class="recordBox">
-                <div class="descTxt">{{ item.title }}</div>
-                <div class="inLineTwo">{{ item.context }}</div>
-                <div class="inLine">
-                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                  <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
-                  </span>
-                </div>
-              </div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
-      </div>
+      	<el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
+			    <el-tab-pane label="线索动态" class="tabli" name="线索动态">
+			    			<div class="dynamic">
+						        <div class="t_text">
+						          <span class="label_tag">线索动态</span>
+						          <div class="editButton"
+						               @click="showCompany(3)">
+						            <img src="../../images/icon_repair1@2x.png"
+						                 alt="" />
+						            <span>写跟进</span>
+						          </div>
+						        </div>
+						        
+						        <!--<div class="allText">全部</div>-->
+						        
+						        <van-tabs v-model="activeName"
+						        	title-active-color="#4168F6"
+						        	title-inactive-color="#3C4353"
+						        	@change="changeTimeLine"
+						        	>
+										  <van-tab title="全部" name="3">
+										 
+										  </van-tab>
+										  <van-tab title="线索动态" name="2">
+										  	
+										  </van-tab>
+										  <van-tab title="跟进记录" name="1">
+										  
+										  </van-tab>
+										</van-tabs>
+						        
+						        <div class="timeLine">
+						          <el-timeline>
+						            <el-timeline-item v-for="(item, index) in timeLineList"
+						                              :key="index"
+						                              color="#4168F6"
+						                              type="danger ">
+						              <div class="recordBox">
+						                <div class="descTxt">{{ item.title }}</div>
+						                <div class="inLineTwo">{{ item.context }}</div>
+						                <div class="inLine">
+						                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
+						                  <span class="time_right">
+						                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
+						                  </span>
+						                </div>
+						              </div>
+						            </el-timeline-item>
+						          </el-timeline>
+						        </div>
+						        
+						      </div>
+			    </el-tab-pane>
+			    <el-tab-pane label="协助人" style="height: 300px;padding-bottom: 100px;" name="协助人">
+			    	<!--<div class="personLabel">
+			        <div class="t_text">
+			          <span class="label_tag">协助人</span>
+			          
+			        </div>-->
+			        <HelperFile></HelperFile>
+			      <!--</div>-->
+			    </el-tab-pane>
+			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
+			    		<div class="fujianBox" style="padding: 15px;">
+				      	<Fujian></Fujian>
+				      </div>
+			    </el-tab-pane>
+			  </el-tabs>
     </div>
+    
+    
+    
     <div class="bottom_model">
       <van-action-sheet v-model="show"
                         :lock-scroll="false"
@@ -372,10 +411,21 @@
 </template>
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
+import { BASE_URL } from '../../utils/request'
+import  HelperFile  from "./comTip/helperFile";
+import  Fujian  from "./comTip/fujian";
 export default {
+	components: {
+    HelperFile,
+    Fujian,
+  },
   data() {
     return {
       disabled: true,
+    	fileList:[],
+    	BASE_URL,
+    	sanTab:'线索动态',
+    	activeName:'2',
       item: {},
       name: '',
       imageUser: '',
@@ -439,12 +489,14 @@ export default {
       type: '',
       tagName: '',
       nowUser: '',
-      cluecustomerNo: '',
       objItem: JSON.parse(localStorage.getItem('detail')),
       userNo: '',
       options: [],
       btnList: [],
+      clueCustomerNo: '',
     }
+  },
+  computed: {
   },
   created() {
     let tempObj = JSON.parse(localStorage.getItem('detail'))
@@ -460,7 +512,25 @@ export default {
   },
   methods: {
     formatDate,
-    formatDate,
+    
+    
+    changeTimeLine(name){
+    	console.log(name)
+    	console.log(typeof name)
+    	switch (Number(name))
+				{
+				    case 1:
+				    this.getTimeline(1) 
+				    break;
+				    case 2:
+				    this.getTimeline(2) 
+				    break;
+				    case 3:
+				    this.getTimeline('') 
+				    break;
+				    default:
+				}
+    },
     changeInput(val) {
       // console.log(val)
       this.update()
@@ -483,12 +553,15 @@ export default {
       // console.log(val, this.basicInfo)
       this.update()
     },
-    getTimeline() {
-      // console.log(this.objItem, '------')
+    getTimeline(name) {
+      console.log(name)
+	      let obj = {
+	        clueCustomerNo: this.objItem.clueCustomerNo,
+	        punckStatus: name,
+	      }
+      
       this.$network
-        .get('/customer-service/cluecustomer/getMessage', {
-          cluecustomerno: this.objItem.clueCustomerNo,
-        })
+        .get('/customer-service/clueCustomerFollowUser/selectFollowMsgList', obj)
         .then((res) => {
           this.timeLineList = res.data
         })
@@ -825,6 +898,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+
 .DetailCules {
 }
 .culeDeatil {
@@ -1016,17 +1090,19 @@ export default {
   .infoContent {
     margin-top: 24px;
     background: #fff;
-    padding: 24px 24px 0;
+    padding:  24px 0;
+   /* padding: 24px 24px 0;*/
     .companyLabel,
     .personLabel {
       min-height: 292px;
-      font-size: 28px;
+      font-size: 30px;
       border-bottom: 1px solid #f0f2f7;
       margin-bottom: 24px;
       .t_text {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-left: 24px;
         .label_tag {
           font-weight: 600;
           color: #3c4353;
@@ -1035,7 +1111,7 @@ export default {
           &::before {
             content: '';
             width: 8px;
-            height: 28px;
+            height: 30px;
             background: #4168f6;
             position: absolute;
             top: 7px;
@@ -1128,6 +1204,7 @@ export default {
         margin-bottom: 16px;
       }
       .timeLine {
+      	margin-top: 60px;
         .el-timeline {
           padding-left: 0 !important;
         }
@@ -1351,5 +1428,75 @@ export default {
       }
     }
   }
+}
+/deep/.el-upload-list__item .el-icon-upload-success,/deep/.el-upload-list__item .el-icon-close{
+	font-size: 30px;
+}
+/deep/.el-tabs__item{
+	height: 88px;
+	line-height: 88px;
+	font-size: 30px;
+}
+/deep/.van-tabs__line{
+	    background-color: #FFFFFF;
+}
+/deep/.van-tab{
+		display: initial;
+		margin-right: 32px;
+		-webkit-box-flex: inherit;
+    -webkit-flex: inherit;
+    flex: inherit;
+    line-height: 50px;
+    margin-bottom:70px;
+    font-size: 30px;
+}
+
+.titleBox{
+/*	width: 80px;*/
+	height: 40px;
+	font-size: 30px;
+	color: #3C4353;
+	letter-spacing: 0;
+	font-weight: bold;
+	line-height: 40px;
+	margin-bottom: 10px;
+/*	margin-top: 36px;*/
+}
+.blueDiv{
+	width: 8px;
+	height: 25px;
+	background: #4168F6;
+	margin-right: 12px;
+	display: inline-block;
+}
+
+/deep/.el-button--primary:focus, .el-button--primary:hover {
+    background: #FFFFFF;
+    border-color: #D9DAE4;
+    color: #838A9D;
+}
+
+/deep/.el-tabs__content{
+	overflow: visible;
+	padding: 24px;
+}
+</style>
+<style>
+.el-message-box__content{
+	font-size: 30px !important;
+}
+.el-message-box{
+	  width: 600px !important;
+    height: 200px !important;
+    font-size: 48px !important;
+    position: relative;
+}
+.el-message-box__btns{
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
+}
+.el-button--mini, .el-button--small{
+	font-size: 76px;
 }
 </style>
