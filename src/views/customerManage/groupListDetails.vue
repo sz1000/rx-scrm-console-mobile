@@ -1,5 +1,12 @@
 <template>
   <div class="warp-portrait">
+    <div class="headerTitle">
+      <div class="backPage" @click="goBack">
+        <van-icon name="arrow-left" />
+        返回
+      </div>
+      <span class="textTitle">群列表</span>
+    </div>
     <div class="portrait-box">
       <div class="flex">
         <div class="portrait_img">
@@ -9,7 +16,6 @@
         <div>
           <p class="portrait_tite">
             {{ datatTite.name || "暂无" }}
-            <span>({{ datatTite.usersum }})</span>
           </p>
           <p class="portrait_message">
             <span class="grom_name"
@@ -119,6 +125,7 @@
               </div>
             </el-timeline-item>
           </el-timeline>
+          <p class="text_ta">没有更多了</p>
         </div>
       </div>
       <div v-if="tabClick == 2">
@@ -232,6 +239,9 @@ export default {
     }, 3000);
   },
   methods: {
+    goBack() {
+      this.$router.push("/home");
+    },
     formatDate,
     onLoad() {
       console.log("屏幕滚动");
@@ -375,6 +385,31 @@ export default {
   // top: 50%;
   // left: 50%;
 }
+.headerTitle {
+  background: #fff;
+  padding: 0 24px;
+  font-weight: 600;
+  display: flex;
+  height: 87px;
+  line-height: 87px;
+  font-size: 28px;
+  color: #3c4353;
+  border-top: 1px solid #f0f2f7;
+  border-bottom: 1px solid #f0f2f7;
+  .backPage {
+    width: 150px;
+    .van-icon {
+      vertical-align: -10%;
+      width: 28px;
+      height: 28px;
+    }
+  }
+  .textTitle {
+    flex: 1;
+    display: inline-block;
+    padding-left: 150px;
+  }
+}
 .doing {
   width: 24px;
   height: 24px;
@@ -386,6 +421,13 @@ export default {
   left: 50%;
   transform: translate(-2%, -50%);
   // transform: translate(-50%, -50%);
+}
+.text_ta {
+  font-weight: 400;
+  color: #c0c4cc;
+  font-size: 24px;
+  text-align: center;
+  padding-bottom: 20px;
 }
 .warp-portrait {
   /* padding: 24px; */
