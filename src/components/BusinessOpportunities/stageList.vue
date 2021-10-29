@@ -15,7 +15,7 @@
     <!-- 更改商机阶段 -->
     <change-stage ref="changeStage"></change-stage>
     <!-- 确认结束商机 -->
-    <confirm-result ref="confirmResult" :customerNo="customerNo"></confirm-result>
+    <confirm-result ref="confirmResult" :customerNo="customerNo" :fromType="$route.query.fromType"></confirm-result>
   </div>
 </template>
 <script>

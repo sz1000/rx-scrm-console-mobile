@@ -75,7 +75,7 @@
         </div>
 
         <!-- 新建/编辑商机 -->
-        <edit-opportunity ref="editOpportunity" :customerNo="customerNo"></edit-opportunity>
+        <edit-opportunity ref="editOpportunity" :customerNo="customerNo" :fromType="fromType"></edit-opportunity>
         <!-- 删除 -->
         <delete-dialog ref="deleteDialog"></delete-dialog>
     </div>
@@ -95,6 +95,10 @@ export default {
         customerNo: {
             type: String,
             default: ''
+        },
+        fromType: {
+            type: String,
+            default: '3'
         }
     },
     data() {
@@ -139,7 +143,7 @@ export default {
 
             this.$router.push({
                 path: 'stageList',
-                query: { id: item.id, customerNo: this.customerNo },
+                query: { id: item.id, fromType: this.fromType, customerNo: this.customerNo },
             })
         },
     },

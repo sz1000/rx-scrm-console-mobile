@@ -69,7 +69,7 @@
       	<HelperFile></HelperFile>
       </div>
       <!-- 商机 -->
-      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
+      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo" :fromType="$route.query.type"></opportunities>
        <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
       	<Fujian></Fujian>

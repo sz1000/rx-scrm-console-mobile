@@ -113,7 +113,7 @@
             <van-picker
                 show-toolbar
                 :columns="chargeUserInfoListOptions"
-                value-key="userName"
+                value-key="name"
                 @confirm="chargerConfirm"
                 @cancel="selectChargerPopupShow = false"
             />
@@ -139,7 +139,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { ChargeUserInfoList, StageReasonList, AddOpportunities, ModifyOpportunities } from '../../../config/api'
+import { ChargeUserInfoList, UsersList, StageReasonList, AddOpportunities, ModifyOpportunities } from '../../../config/api'
 
 import { formatDate } from '../../../utils/tool'
 
@@ -149,6 +149,10 @@ export default {
             type: String,
             default: ''
         },
+        fromType: {
+            type: String,
+            default: '3'
+        }
     },
     data() {
         return {
@@ -271,7 +275,17 @@ export default {
         },
         // 获取商机负责人列表
         async chargeUserInfoList() {
-            let { code, data } = await ChargeUserInfoList(this.customerNo)
+            let ApiOpts = null, params = null
+
+            if(this.fromType == '3') {
+                ApiOpts = ChargeUserInfoList
+                params = this.customerNo
+            } else if(this.fromType == '4') {
+                ApiOpts = UsersList
+                params = this.corpId
+            }
+
+            let { code, data } = await ApiOpts(params)
 
             if (code == 'success') {
                 this.chargeUserInfoListOptions = data
@@ -296,8 +310,8 @@ export default {
         // 确认负责人
         chargerConfirm(v) {
             this.form.chargeUserNo = v && v.userNo
-            this.form.chargeUserName = v && v.userName
-            this.chargeUserName = v && v.userName
+            this.form.chargeUserName = v && v.name
+            this.chargeUserName = v && v.name
             this.selectChargerPopupShow = false
         },
         // 确认时间
@@ -359,7 +373,7 @@ export default {
 
             this.form.chargeUserNo && this.chargeUserInfoListOptions && this.chargeUserInfoListOptions.map(item => {
                 if (item.userNo == this.form.chargeUserNo) {
-                    this.form.chargeUserName = item.userName
+                    this.form.chargeUserName = item.name
                 }
             })
 

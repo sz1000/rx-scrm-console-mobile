@@ -53,8 +53,8 @@
       </div>
 
       <!-- 商机 -->
-      <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
-      
+      <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo" :fromType="$route.query.type"></opportunities>
+
     	<div class="fujianBox" style="padding: 15px;" v-if="contentType == 2">
       	<Fujian></Fujian>
       </div>
