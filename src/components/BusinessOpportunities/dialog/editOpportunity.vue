@@ -15,7 +15,7 @@
                         <span class="icon">*</span>
                         <span>商机名称:</span>
                     </p>
-                    <van-field v-model="form.name" clearable class="edit-field" placeholder="请输入"/>
+                    <van-field v-model="form.name" clearable class="edit-field" :maxlength="30" placeholder="请输入"/>
                 </div>
                 <div class="item one-line">
                     <p class="label">
@@ -341,8 +341,8 @@ export default {
         checkForm() {
             const { name, stageNo, chargeUserNo, endTime, endReasonId } = this.form
 
-            if (!name) {
-                this.$toast('请输入商机名称')
+            if (!name || name && name.length < 2 || name && name.length > 30) {
+                this.$toast('请输入2到30个字符的商机名称')
                 return false
             }
             if (!stageNo) {
