@@ -240,6 +240,7 @@ export default {
     text-align: center;
     line-height: 80px;
     margin-left: 16px;
+    cursor: default;
   }
 }
 .name_tite {

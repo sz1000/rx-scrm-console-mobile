@@ -1397,6 +1397,7 @@ export default {
         color: #ffffff;
         display: block;
         // margin: 0 auto;
+        cursor: default;
         position: fixed;
         left: 50%;
         bottom: 20px;
