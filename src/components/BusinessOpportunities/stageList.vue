@@ -15,7 +15,7 @@
     <!-- 更改商机阶段 -->
     <change-stage ref="changeStage"></change-stage>
     <!-- 确认结束商机 -->
-    <confirm-result ref="confirmResult" :customerNo="customerNo"></confirm-result>
+    <confirm-result ref="confirmResult" :customerNo="customerNo" :fromType="$route.query.fromType"></confirm-result>
   </div>
 </template>
 <script>
@@ -66,7 +66,7 @@ export default {
             this.$router.go(-1)
         },
         changeRow(data) {
-            if (data.defaultStatus == '成交') {
+            if (data.defaultStatus) {
                 this.changeStatus(data.sortId, data.defaultStatus)
             } else {
                 this.$refs.changeStage.show(data)

@@ -1099,7 +1099,7 @@ export default {
   font-weight: 400;
 }
 .colordata {
-  font-size: 28px;
+  font-size: 24px;
   color: #c0c4cc;
 }
 
@@ -1147,9 +1147,6 @@ export default {
     .el-form-item__content {
       width: 520px;
       margin-left: 180px !important;
-      .el-input__count {
-        bottom: -80px;
-      }
     }
   }
 }

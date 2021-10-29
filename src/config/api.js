@@ -7,6 +7,7 @@ const customerServiceApi = '/customer-service'
 
 export const Getticket = data => { return http.get(`${userServiceApi}/m/user/getticket`, data)} // url获取授权信息
 export const GetCrop = () => { return http.get(`${userServiceApi}/Corp/getCrop`)} // 企业详情
+export const UsersList = data => { return http.get(`${userServiceApi}/user/getlist/${data}`)} // 企业员工列表
 export const UsersInfo = data => { return http.get(`${userServiceApi}/user/getUser/${data}/info`)} // 员工信息详情
 
 export const OffiAccount = data => { return http.post(`${wechatServiceApi}/offi-account/user/${data}`)} // 添加公众号授权后获取的用户信息

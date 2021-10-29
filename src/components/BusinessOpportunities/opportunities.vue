@@ -74,10 +74,8 @@
             </div>
         </div>
 
-        <!-- 更改商机阶段 -->
-        <!-- <stage-list ref="stageList"></stage-list> -->
         <!-- 新建/编辑商机 -->
-        <edit-opportunity ref="editOpportunity" :customerNo="customerNo"></edit-opportunity>
+        <edit-opportunity ref="editOpportunity" :customerNo="customerNo" :fromType="fromType"></edit-opportunity>
         <!-- 删除 -->
         <delete-dialog ref="deleteDialog"></delete-dialog>
     </div>
@@ -85,6 +83,7 @@
 <script>
 import { mapActions } from 'vuex'
 import opportunityMixin from '../../mixins/opportunity'
+import { DeleteOpportunities } from '../../config/api'
 import { formatDate } from '../../utils/tool'
 
 import EditOpportunity from './dialog/editOpportunity'
@@ -96,6 +95,10 @@ export default {
         customerNo: {
             type: String,
             default: ''
+        },
+        fromType: {
+            type: String,
+            default: '3'
         }
     },
     data() {
@@ -122,25 +125,25 @@ export default {
         handleEdit(data) {
             this.$refs.editOpportunity.show(data)
         },
-        handleChange(i, data) {
-            if (data.defaultStatus == '成交') {
-                // this.changeStatus(data.sortId, i, data.defaultStatus)
-            } else {
-                // this.$refs.changeStage.show(i.id, data)
-            }
-        },
         deleteRow(id) {
             this.$refs.deleteDialog.show(id)
         },
-        doDelete() {
-
+        async doDelete(id) {
+            const {code, msg} = await DeleteOpportunities(id)
+            if (code === 'success') {
+                this.opportunitiesList()
+                this.$toast(msg)
+                this.$refs.deleteDialog.hide()
+            } else {
+                this.$toast(msg)
+            }
         },
         handleStage(item) {
             localStorage.setItem("JZSCRM_OPPORTUNITIES_ITEM", JSON.stringify(item))
 
             this.$router.push({
                 path: 'stageList',
-                query: { id: item.id, customerNo: this.customerNo },
+                query: { id: item.id, fromType: this.fromType, customerNo: this.customerNo },
             })
         },
     },
@@ -197,9 +200,11 @@ export default {
             text-align: center;
             color: #838a9d;
             span {
+                line-height: 68px;
                 font-size: 28px;
             }
             .img {
+                line-height: 68px;
                 margin-right: 8px;
                 font-size: 28px;
             }
@@ -234,7 +239,7 @@ export default {
                         font-size: 28px;
                     }
                     .label {
-                        width: 200px;
+                        width: 216px;
                         margin-right: 16px;
                         color: #838A9D;
                     }

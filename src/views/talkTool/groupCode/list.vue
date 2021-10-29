@@ -7,7 +7,7 @@
                 <div class="add_btn" @click="toFun('add')">新增</div>
             </div>
             <div class="search_box">
-                <input class="search" v-model="search.livename" type="text" placeholder="请输入活码名称" @keyup.enter="getList">
+                <input class="search" v-model="search.livename" type="text" placeholder="请输入活码名称" @keyup.enter="searchFun">
                 <div class="search_btn" @click="searchFun">查询</div>
             </div>
         </div>
@@ -38,12 +38,18 @@
                         </div>
                         <div class="li_val">
                             <div class="code_box">
-                                <div class="img_box">
+                                <div class="img_box" v-if="item.switchStatus">
                                     <img :src="item.address" alt="">
                                 </div>
-                                <div class="look_btn" @click="openDetail(item)">查看二维码</div>
+                                <div class="img_box" :id="'Qrcode' + item.id" v-else>
+                                    <VueQrcode :value="item.address"
+                                        :ref="'Qrcode' + item.id"
+                                        :options="{ width: '100%' }"
+                                        class="qrcode"></VueQrcode>
+                                </div>
+                                <div class="look_btn" @click="sendCode(item)">查看二维码</div>
                             </div>
-                            <div class="info_box">
+                            <div class="info_box" @click="openDetail(item)">
                                 <div class="item">
                                     <div class="label">渠道：</div>
                                     <div class="val">{{item.chName}}</div>
@@ -78,8 +84,13 @@
                     <div class="p_item">
                         <div class="label">活码展示：</div>
                         <div class="val">
-                            <div class="img_box">
+                            <div class="img_box" v-if="detail.switchStatus">
                                 <img :src="detail.address" alt="">
+                            </div>
+                            <div class="img_box" v-else>
+                                <VueQrcode :value="detail.address"
+                                    :ref="'Qrcode' + detail.id"
+                                    class="qrcode"></VueQrcode>
                             </div>
                         </div>
                     </div>
@@ -120,9 +131,10 @@
 <script>
 import  TopTitle  from './components/topTitle.vue'
 import { livecodegroup_getlist,livecodegroup_delete } from '@/api/group'
+import VueQrcode from '@chenfengyuan/vue-qrcode'
 export default {
     components: {
-        TopTitle
+        TopTitle,VueQrcode
     },
     data(){
         return {
@@ -142,9 +154,15 @@ export default {
             detail: {},
             finished: false,
             loading: false,
+            noListLoading: false,
+            dialog_code: false,
+            codeDialogAddress: '',
         }
     },
     mounted(){
+        // this.getList()
+    },
+    created(){
         this.getList()
     },
     methods: {
@@ -157,8 +175,12 @@ export default {
             this.searchFun()
         },
         getList(){  //获取活码列表
-            livecodegroup_getlist(this.search).then(res => {
+            let _self = this
+            livecodegroup_getlist(this.search,this.noListLoading).then(res => {
                 if(res.result){
+                    console.log('getList',this.list,_self.list)
+                    console.log('search.page',this.search.page,_self.search.page)
+                    this.noListLoading = true
                     let list = res.data.iPage.records,
                     total = res.data.iPage.total
                     this.loading = false
@@ -170,6 +192,8 @@ export default {
                     this.total = total
                     if(this.list.length >= total){
                         this.finished = true
+                    }else{
+                        this.finished = false
                     }
                 }
             })
@@ -185,6 +209,7 @@ export default {
                 }
                 livecodegroup_delete(_data).then(res => {
                     if(res.result){
+                        this.search.page--
                         this.getList()
                     }
                 })
@@ -196,6 +221,22 @@ export default {
         openDetail(row){    //详情
             this.detail = row
             this.dialog = true
+        },
+        sendCode(item) {    //查看二维码
+            console.log('item',item)
+            var a = document.createElement("a")
+            a.download = ""
+            if(item.switchStatus){
+                a.href = item.address
+                a.click()
+            }else {
+                let p = 'Qrcode' + item.id
+                let canvas = document.getElementById(p).getElementsByTagName('canvas')
+                a.href = canvas[0].toDataURL('img/png')
+                // console.log(canvas[0].toDataURL('img/png'))
+                // a.download = '二维码'
+                a.click()
+            }
         },
         toFun(type,row){
             let _url = '',_query = null
@@ -223,7 +264,7 @@ export default {
         },
         searchFun(){
             this.search.page = 1
-            this.finished = false
+            this.noListLoading = false
             this.getList()
         },
     },
@@ -404,6 +445,10 @@ export default {
             }
         }
     }
+    .qrcode{
+        width: 100% !important;
+        height: 100% !important;
+    }
     .content{
         width: 100%;
         .list{
@@ -431,7 +476,7 @@ export default {
                             color: @fontSub2;
                             white-space: nowrap;
                         }
-                        .title{
+                        .tit{
                             width: calc(100% - 140px);
                             font-size: 28px;
                             line-height: 40px;
@@ -484,7 +529,6 @@ export default {
                         .img_box{
                             width: 182px;
                             height: 182px;
-                            background: rosybrown;
                             overflow: hidden;
                             margin-bottom: 24px;
                             .img{
