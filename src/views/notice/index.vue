@@ -2,47 +2,113 @@
     <div class="wrap">
         <div class="content">
             <div class="line_title">推送详情</div>
-            <div class="p">[2021-07-02 12:00]  给以下客户联系人发送消息</div>
+            <div class="p" v-if="taskType == 6">客户联系人{{detail.customerContactName}}在 {{detail.customerAddTimeStr}} 阅读了{{detail.materialTitle}}，时长{{detail.customerViewedTimeStr}}</div>
+            <div class="p" v-else>[{{detail.promptTimeStr}}]  给以下客户联系人发送消息</div>
             <div class="item_wrap">
-                <div class="item_title">客户</div>
+                <div class="item_title">{{taskType == 2 ? '客户群' : '客户'}}</div>
                 <div class="item_val">
                     <div class="info_box">
-                        <div class="avatar"></div>
+                        <div class="avatar">{{avatar}}</div>
                         <div class="info">
-                            <div class="name">小鱼儿<i>@微信/企业</i></div>
-                            <div class="time">添加时间：2021-07-02 12:00</div>
+                            <div class="name" v-if="taskType == 6">{{detail.customerCorpName}}<i>{{detail.customerType}}</i></div>
+                            <div class="name" v-else>{{detail.customerContactName}}<i v-if="taskType != 2">{{detail.customerType}}}</i></div>
+                            <div class="time" v-if="taskType == 2">群人数：{{detail.customerGroupPeopleCount}}</div>
+                            <div class="time" v-else>添加时间：{{detail.customerAddTimeStr}}</div>
                         </div>
-                        <div class="btn">跟进</div>
+                        <!-- <div class="btn">跟进</div> -->
                     </div>
                 </div>
             </div>
-            <div class="item_wrap">
+            <div class="item_wrap" v-if="taskType == 6">
+                <div class="item_title">素材内容</div>
+                <div class="item_val">
+                    <div class="file_box">
+                        <div class="img_box">
+                            <img src="@/assets/images/icon_link.png" alt="">
+                        </div>
+                        <div class="val">
+                            <div class="tit">{{detail.materialTitle}}</div>
+                            <div class="sub_tit">{{detail.materialUrl}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item_wrap" v-else>
                 <div class="item_title">推送内容</div>
                 <div class="item_val">
-                    <div class="share_box" v-for="(item,index) in 2" :key="index">
-                        <div class="s_val" v-if="index == 0">
-                            <div class="des">欢迎您加入哈哈哈哈哈哈，一起加油吧~</div>
+                    <div class="share_box" v-for="(el,index) in list" :key="index">
+                        <div class="s_val" v-if="!el.url">
+                            <div class="des">{{el.attachmentName}}</div>
                         </div>
-                        <div class="s_val" v-if="index == 1">
+                        <div class="s_val" v-if="el.fileName">
                             <div class="img_row">
                                 <div class="img_box">
-                                    <!-- <img :src="el.url" alt=""> -->
+                                    <img :src="el.url" alt="">
                                 </div>
                                 <div class="info_r">
-                                    <div class="name">图片的副本.png</div>
-                                    <div class="size">27.35K</div>
+                                    <div class="name">{{el.fileName}}</div>
+                                    <div class="size">{{el.fileSize}}</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="s_val">
+                        <div class="s_val" v-if="el.url && !el.fileName">
                             <div class="share_link">{{el.url}}</div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+import { notice_getNoticeDetail } from '@/api/notice'
+export default {
+    data(){
+        return {
+            id: this.$route.query.noticeId,     // || 114
+            taskType: this.$route.query.taskType,  // || 2  1-个人SOP，2-群SOP，3-客户群发，4-客户群群发，5-数据日报，6-客户浏览素材，7-客户浏览名片
+            detail: {},
+        }
+    },
+    computed: {
+        avatar(){
+            let str = ''
+            switch (this.taskType) {
+                case 2:
+                    str = '群'
+                    break;
+                case 6:
+                    str = this.detail.customerCorpName ? this.detail.customerCorpName.substring(0,1) : ''
+                    break;
+                default:
+                    str = this.detail.customerContactName ? this.detail.customerContactName.substring(0,1) : ''
+                    break;
+            }
+            return str
+        },
+        list(){
+            let list = []
+            if(this.detail.noticeSopDetailContentVO){
+                list = this.detail.noticeSopDetailContentVO
+            }
+            return list
+        },
+    },
+    mounted(){
+        this.getDetail()
+    },
+    methods: {
+        getDetail(){    //获取通知详情
+            notice_getNoticeDetail(this.id).then(res => {
+                if(res.result){
+                    this.detail = res.data
+                }
+            })
+        },
+    },
+}
+</script>
 
 <style lang="less" scoped>
 @import '~@/styles/color.less';
@@ -119,8 +185,13 @@
                     .avatar{
                         width: 88px;
                         height: 88px;
+                        line-height: 88px;
                         border-radius: 8px;
                         background: @main;
+                        text-align: center;
+                        font-size: 36px;
+                        font-weight: bold;
+                        color: @white;
                         margin-right: 16px;
                     }
                     .info{
@@ -222,6 +293,40 @@
                                 color: #c0c4cc;
                             }
                         }
+                    }
+                }
+            }
+            .file_box{
+                width: 100%;
+                display: flex;
+                align-items: center;
+                .img_box{
+                    width: 112px;
+                    height: 112px;
+                    font-size: 0;
+                    margin-right: 16px;
+                    img{
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .val{
+                    width: calc(100% - 128px);
+                    .tit{
+                        color: @fontMain;
+                        font-size: 28px;
+                        line-height: 40px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    .sub_tit{
+                        color: @fontSub2;
+                        font-size: 24px;
+                        line-height: 32px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
                 }
             }
