@@ -1,10 +1,10 @@
 <template>
     <div class="wrap">
         <TopTitle title="我的名片">
-            <span class="look_data" @click="$router.push('/talkTool/lookData')">浏览数据</span>
+            <span class="look_data" v-if="isSetting" @click="$router.push('/talkTool/lookData')">浏览数据</span>
         </TopTitle>
         <div class="content">
-            <div class="card">
+            <div class="card" v-if="isSetting">
                 <img class="bg" src="@/assets/images/card_bg1.png" alt="">
                 <div class="box">
                     <div class="avatar">
@@ -17,12 +17,16 @@
                     <div class="position">{{detail.position}}</div>
                 </div>
             </div>
-            <div class="editor_box">
+            <div class="editor_box" v-if="isSetting">
                 <div class="editor_title" v-if="detail.enterpriseTitle">{{detail.enterpriseTitle}}</div>
                 <div class="editor_des" v-html="detail.enterpriseDescription"></div>
             </div>
+             <!-- 暂未设置信息 -->
+            <div class="no_setting" v-else>
+                <img class="img" src="@/assets/images/card_no_setting.png"/>
+            </div>
         </div>
-        <div class="footer_opera">
+        <div class="footer_opera" v-if="isSetting">
             <div class="item">
                 <div class="icon_btn" @click="show = true">
                     <img class="img" src="@/assets/images/share.png" alt="">
@@ -59,6 +63,7 @@ export default {
         return {
             detail: {},
             show: false,
+            isSetting: true,
         }
     },
     mounted(){
@@ -70,6 +75,11 @@ export default {
                 if(res.result){
                     let data = res.data
                     this.detail = data
+                    if(res.data){
+                        this.isSetting = true
+                    }else {
+                        this.isSetting = false
+                    }
                 }
             })
         },
@@ -138,6 +148,16 @@ export default {
         height: calc(100vh - 200px);
         overflow-y: scroll;
         padding: 32px;
+        .no_setting{
+            width: 100%;
+            display: flex;
+            padding-top: 25vh;
+            justify-content: center;
+            align-items: center;
+            .img{
+                width: 300px;
+            }
+        }
         .card{
             width: 100%;
             height: 200px;

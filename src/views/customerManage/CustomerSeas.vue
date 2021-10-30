@@ -22,8 +22,8 @@
       <dynamic v-if="contentType == 0" ref="dynamic" :comeType="2" :btnList="btnList"></dynamic>
 
       <!-- 商机 -->
-      <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo" :fromType="$route.query.type"></opportunities>
-
+      <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
+      
     	<div class="fujianBox" style="padding: 15px;" v-if="contentType == 2">
       	<Fujian></Fujian>
       </div>
@@ -228,12 +228,14 @@ export default {
   .btnWarp {
     display: flex;
     width: 100%;
+    max-width: 750px;
     background-color: #fff;
     border-top: 2px solid #F0F2F7;
     z-index: 9;
     position: fixed;
-    left: 0;
+    left: 50%;
     bottom: 0;
+    transform: translateX(-50%);
     .btnBox {
       flex: 1;
       height: 112px;

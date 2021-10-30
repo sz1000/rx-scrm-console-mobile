@@ -30,7 +30,7 @@
                     </div>
                     <div class="item">
                         <span class="label">商机金额:</span>
-                        <span class="value one-line">{{ i.price }}</span>
+                        <span class="value one-line">{{ i.price ? handleMoney(i.price) : '' }}</span>
                     </div>
                     <div v-if="i.status == 2" class="item">
                         <span class="label">输单原因:</span>
@@ -84,7 +84,7 @@
 import { mapActions } from 'vuex'
 import opportunityMixin from '../../mixins/opportunity'
 import { DeleteOpportunities } from '../../config/api'
-import { formatDate } from '../../utils/tool'
+import { formatDate, handleMoney } from '../../utils/tool'
 
 import EditOpportunity from './dialog/editOpportunity'
 import deleteDialog from './dialog/delete'
@@ -122,6 +122,7 @@ export default {
     methods: {
         ...mapActions(["getCorpId"]),
         formatDate,
+        handleMoney,
         handleEdit(data) {
             this.$refs.editOpportunity.show(data)
         },
@@ -218,6 +219,8 @@ export default {
             justify-content: space-between;
             margin-bottom: 15px;
             .left {
+                max-width: 80%;
+                word-break: break-all;
                 font-size: 28px;
                 color: #3C4353;
             }

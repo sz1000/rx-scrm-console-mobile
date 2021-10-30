@@ -15,7 +15,7 @@
                 <div class="label"><i>*</i>渠道：</div>
                 <div class="val">
                     <div class="select_box" @click="openPicker('channel')">
-                        <input class="input" v-model="detail.region" type="text" placeholder="请选择" disabled>
+                        <input class="input" v-model="detail.region" type="text" placeholder="请选择" readonly>
                         <img class="icon" src="@/assets/images/icon_select.png" alt="">
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="label"><i>*</i>拉群方式：</div>
                 <div class="val">
                     <div class="select_box" @click="openPicker('mode')">
-                        <input class="input" :class="{'disable':id}" v-model="modeName" type="text" placeholder="请选择" disabled>
+                        <input class="input" :class="{'disable':id}" v-model="modeName" type="text" placeholder="请选择" readonly>
                         <img class="icon" src="@/assets/images/icon_select.png" alt="">
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="label"><i>*</i>使用员工：</div>
                 <div class="val">
                     <div class="select_box" @click="openUserSelect">
-                        <input class="input" v-model="userName" type="text" placeholder="请选择使用员工，可多选" disabled>
+                        <input class="input" v-model="userName" type="text" placeholder="请选择使用员工，可多选" readonly>
                         <img class="icon" src="@/assets/images/icon_select.png" alt="">
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="label"><i>*</i>二维码{{index + 1}}：</div>
                 <div class="val">
                     <div class="upload_wrap">
-                        <img class="delete" v-if="index > 0" @click="deleteFun(index)" src="@/assets/images/icon_delete.png" alt="">
+                        <img class="delete" v-if="addCodeData.length > 1" @click="deleteFun(index)" src="@/assets/images/icon_delete.png" alt="">
                         <div class="flex_center">
                             <div class="upload_box">
                                 <div class="img_box" v-if="item.groupAddress">
@@ -88,7 +88,7 @@
                                 <input type="file" class="file" @change="uploadFun($event,'2','png,jpg,jpeg',index)" accept=".png,.jpg,.jpeg">
                             </div>
                             <div class="select_box" v-if="detail.switchStatus" @click="openPicker('group',index)">
-                                <input class="input" v-model="item.groupName" type="text" placeholder="选择群聊" disabled>
+                                <input class="input" v-model="item.groupName" type="text" placeholder="选择群聊" readonly>
                                 <img class="icon" src="@/assets/images/icon_select.png" alt="">
                             </div>
                         </div>
@@ -439,6 +439,7 @@ export default {
 
 <style lang="less" scoped>
 @import '~@/styles/color.less';
+@import '~@/styles/reset.less';
  .detail_wrap{
     width: 100%;
     background: @white;
@@ -601,6 +602,7 @@ export default {
             &:disabled{
                 opacity: 1;
                 background: none;
+                color: @fontMain;
             }
             &.disable:disabled{
                 background: rgba(@fontMain,.01);

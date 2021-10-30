@@ -19,9 +19,13 @@
                         <div class="descTxt">{{ item.title }}</div>
                         <div v-if="item.punckStatus == 1 && item.title == '编辑' || item.punckStatus == 3" class="inLineTwo">
                             <div v-for="(i, iIndex) in JSON.parse(item.context)" :key="iIndex + i">
-                                <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j" class="item-data" :class="{'history-text': j.substr(0, 2) == '历史'}">
-                                    <span class="keys">{{ j.substr(0, 2) == '历史' ? '(' + j : j }}: </span>
-                                    <span>{{ j.substr(0, 2) == '历史' ? Object.values(i)[jIndex] + ')' : Object.values(i)[jIndex] }}</span>
+                                <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j" v-show="j.substr(0, 2) != '历史'" class="item-data">
+                                    <span class="keys">{{ j }}: </span>
+                                    <span>{{ Object.values(i)[jIndex] }}</span>
+                                </p>
+                                <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j + 1" v-show="j.substr(0, 2) == '历史'" class="item-data history-text">
+                                    <span class="keys">{{ '(' + j }}: </span>
+                                    <span>{{ Object.values(i)[jIndex] + ')' }}</span>
                                 </p>
                             </div>
                         </div>

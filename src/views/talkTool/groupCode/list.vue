@@ -47,7 +47,7 @@
                                         :options="{ width: '100%' }"
                                         class="qrcode"></VueQrcode>
                                 </div>
-                                <div class="look_btn" @click="sendCode(item)">查看二维码</div>
+                                <div class="look_btn" v-if="item.switchStatus" @click="sendCode(item)">查看二维码</div>
                             </div>
                             <div class="info_box" @click="openDetail(item)">
                                 <div class="item">
@@ -66,7 +66,7 @@
                                     <div class="label">创建时间：</div>
                                     <div class="val">{{item.createTime}}</div>
                                 </div>
-                                <div class="item">
+                                <div class="item" v-if="item.userNames">
                                     <div class="label">使用员工：</div>
                                     <div class="val">{{item.userNames}}</div>
                                 </div>
@@ -322,6 +322,7 @@ export default {
                     text-align: right;
                 }
                 .val{
+                    width: calc(100% - 144px);
                     color: @fontMain;
                     .img_box{
                         width: 182px;
@@ -514,6 +515,7 @@ export default {
                                 font-size: 24px;
                                 line-height: 32px;
                                 color: @fontSub2;
+                                white-space: nowrap;
                             }
                         }
                     }

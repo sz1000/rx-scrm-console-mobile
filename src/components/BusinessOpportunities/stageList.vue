@@ -134,10 +134,11 @@ export default {
     }
     .stage-list-box {
         .item {
-            height: 90px;
             line-height: 90px;
+            padding: 0 24px;
             border: 2px solid #F0F2F7;
             text-align: center;
+            word-break: break-all;
             color: #262626;
             font-size: 28px;
         }

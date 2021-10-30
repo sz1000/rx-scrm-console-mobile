@@ -205,6 +205,7 @@ export default {
   border-bottom: 1px solid #f0f2f7;
   .backPage {
     width: 150px;
+    cursor: default;
     .van-icon {
       vertical-align: -10%;
       width: 28px;
