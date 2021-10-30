@@ -229,13 +229,9 @@ export default {
           }
           this.show = !res.data.haveSecret
           let tempMenuList = res.data.userEntity.permissionList
-<<<<<<< HEAD
-          
           let corpId = res.data.userEntity.corpId
           localStorage.setItem( 'corpId' ,corpId)
 
-=======
->>>>>>> a882d7c57a02e0f3ec7e0a0cfd256e593b5c8e3b
           sessionStorage.setItem(
             'permissionsList',
             JSON.stringify(tempMenuList)
