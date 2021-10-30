@@ -152,7 +152,7 @@ import { SelectFollowMsgList } from '../../config/api'
 
 import { formatDate, _throttle } from '../../utils/tool'
 
-import CustomerItem from '../../components/CustomerManage/customerItem'
+import CustomerItem from '../../components/customerManage/customerItem'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
 import { BASE_URL } from '../../utils/request'
 import  HelperFile  from "./comTip/helperFile";

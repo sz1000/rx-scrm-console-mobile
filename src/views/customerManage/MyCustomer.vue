@@ -62,7 +62,7 @@
 import { _throttle } from "../../utils/tool";
 import MyMixin from "../../mixins/permissionsList";
 
-import CustomerItem from "../../components/CustomerManage/customerItem";
+import CustomerItem from "../../components/customerManage/customerItem";
 export default {
   mixins: [MyMixin],
   data() {

@@ -112,7 +112,7 @@
 import { SelectFollowMsgList } from '../../config/api'
 
 import { formatDate } from '../../utils/tool'
-import CustomerItem from '../../components/CustomerManage/customerItem'
+import CustomerItem from '../../components/customerManage/customerItem'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
 import  Fujian  from "./comTip/fujian";
 
