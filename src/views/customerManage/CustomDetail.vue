@@ -19,17 +19,58 @@
       </ul>
 
       <!-- 客户动态 -->
-      <dynamic v-if="contentType == 0" ref="dynamic" :comeType="1" :btnList="btnList"></dynamic>
+      <div v-if="contentType == 0" class="content-item dynamic">
+        <div class="t_text">
+          <span class="label_tag">客户动态</span>
+          <div class="editButton"
+               @click="showCompany(3)"
+               v-show="btnList.some(item=>item.enName == 'write')">
+            <img src="../../images/icon_repair1@2x.png"
+                 alt="" />
+            <span>写跟进</span>
+          </div>
+        </div>
 
+        <ul class="dynamic-nav">
+          <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index}">{{ i }}</li>
+        </ul>
+
+        <div v-if="timeLineList && timeLineList.length" class="timeLine">
+          <el-timeline>
+            <el-timeline-item v-for="(item, index) in timeLineList"
+                              :key="index"
+                              color="#4168F6"
+                              type="danger ">
+              <div class="recordBox">
+                <div class="descTxt">{{ item.title }}</div>
+                <div v-if="dynamicContentType == 2" class="inLineTwo">
+                  <p v-for="i in JSON.parse(item.context)" :key="i">
+                    <span>{{ `${Object.keys(JSON.parse(i))[0]}: `}}</span>
+                    <span>{{ Object.values(JSON.parse(i))[0] }}</span>
+                  </p>
+                </div>
+                <div v-else class="inLineTwo">{{ item.context }}</div>
+                <div class="inLine">
+                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
+                  <span class="time_right">{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
+                </div>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+        
+        <!-- 动态 -->
+     <!--   <div class="dongtaiBox" style="padding: 0px;" v-if="contentType == 0">
+        	<Tt></Tt>
+        </div>-->
+      </div>
       <!-- 协作人 -->
       <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
       	<HelperFile></HelperFile>
       </div>
-
       <!-- 商机 -->
-      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo" :fromType="$route.query.type"></opportunities>
-      
-      <!-- 附件 -->
+      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
+       <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
       	<Fujian></Fujian>
       </div>
@@ -107,11 +148,13 @@
   </div>
 </template>
 <script>
-import { _throttle } from '../../utils/tool'
+import { SelectFollowMsgList } from '../../config/api'
 
-import CustomerItem from '../../components/CustomerManage/customerItem'
-import Dynamic from '../../components/CustomerManage/dynamic'
+import { formatDate, _throttle } from '../../utils/tool'
+
+import CustomerItem from '../../components/customerManage/customerItem'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
+import { BASE_URL } from '../../utils/request'
 import  HelperFile  from "./comTip/helperFile";
 import  Fujian  from "./comTip/fujian";
 import  Tt  from "./comTip/timelineTab";
@@ -121,7 +164,7 @@ export default {
       timeLineList: [],
       contentType: 0,
       navList: [ '客户动态', '协作人', '商机', '附件' ],
-      dynamicContentType: 1,
+      dynamicContentType: 0,
       dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
       show: false,
       isShowDialog: null,
@@ -139,18 +182,43 @@ export default {
     this.btnList = JSON.parse(this.$route.query.mylist)
   },
   mounted() {
-    this.$refs.dynamic.selectFollowMsgList(2)
+    this.getTimeline()
   },
   provide() {
     return {
-      showCompany: this.showCompany,
       goDetail: this.goDetail
     }
   },
   methods: {
+    formatDate,
+    getTimeline() {
+      this.$network
+        .get('/customer-service/cluecustomer/getMessage', {
+          cluecustomerno: this.objItem.clueCustomerNo,
+        })
+        .then((res) => {
+          this.timeLineList = res.data
+        })
+    },
+
     // 导航切换
     changeNav(index) {
       this.contentType = index
+    },
+
+    // 动态导航切换
+    changeDynamicNav(index) {
+      this.dynamicContentType = index
+
+      if(index == 0) {
+        this.getTimeline()
+      } else if(index == 1) {
+        this.timeLineList = []
+      } else if(index == 2) {
+        this.selectFollowMsgList(3)
+      } else if(index == 3) {
+        this.selectFollowMsgList(1)
+      }
     },
     goBack() {
       this.$router.go(-1)
@@ -163,6 +231,21 @@ export default {
         query: { type: this.$route.query.type, mylist: JSON.stringify(this.btnList) },
       })
     },
+
+    // 获取商机动态
+    async selectFollowMsgList(punckStatus) {
+      let params = {
+        clueCustomerNo: this.objItem.clueCustomerNo,
+        punckStatus // 1：跟进动态，3：商机动态
+      }
+
+      let { code, data } = await SelectFollowMsgList(params)
+      
+      if(code == 'success') {
+        this.timeLineList = data
+      }
+    },
+
     cancelIcon() {
       document.getElementById('html').style.overflow = 'auto'
     },
@@ -241,8 +324,7 @@ export default {
             if (res.result) {
               document.getElementById('html').style.overflow = 'auto'
               this.show = false
-              this.$refs.dynamic.dynamicContentType = 3
-              this.$refs.dynamic.selectFollowMsgList(1)
+              this.getTimeline()
               this.$message({
                 type: 'success',
                 message: '修改成功',
@@ -278,7 +360,6 @@ export default {
   },
   components: {
     CustomerItem,
-    Dynamic,
     Opportunities,
     HelperFile,
     Fujian,
@@ -374,6 +455,129 @@ export default {
                 border-bottom: 4px solid #4168F6;
             }
         }
+    }
+
+    .content-item {
+      padding: 0 24px 24px;
+    }
+    .dynamic {
+      font-size: 28px;
+      .t_text {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        .label_tag {
+          font-weight: 600;
+          color: #3c4353;
+          position: relative;
+          padding-left: 10px;
+          &::before {
+            content: '';
+            width: 8px;
+            height: 28px;
+            background: #4168f6;
+            position: absolute;
+            top: 7px;
+            left: -10px;
+          }
+        }
+        .editButton {
+          color: #838a9d;
+          width: 152px;
+          height: 68px;
+          border-radius: 8px;
+          border: 2px solid #d9dae4;
+          text-align: center;
+          line-height: 68px;
+          span {
+            display: inline-block;
+          }
+          img {
+            display: inline-block;
+            vertical-align: middle;
+            margin: -10px 10px 0 0;
+            margin-right: 5px;
+            width: 28px;
+            height: 28px;
+          }
+        }
+      }
+      .dynamic-nav {
+        width: 100%;
+        height: 40px;
+        margin-bottom: 24px;
+        li {
+          display: inline-block;
+          line-height: 40px;
+          padding: 0 16px;
+          vertical-align: middle;
+          text-align: center;
+          color: #3C4353;
+          font-size: 28px;
+          position: relative;
+          &:not(:first-child)::before {
+            content: '';
+            width: 2px;
+            height: 70%;
+            background-color: #F0F2F7;
+            position: absolute;
+            left: 0;
+            top: 15%;
+          }
+        }
+        .active {
+          color: #4168F6;
+        }
+      }
+
+      .timeLine {
+        .el-timeline {
+          padding-left: 0 !important;
+        }
+        .recordBox {
+          // width: 676px;
+          min-height: 180px;
+          background: rgba(65, 104, 246, 0.06);
+          border-radius: 8px;
+          color: #3c4353;
+          padding: 16px;
+          font-size: 28px;
+          .inLine {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            .time_right {
+              font-size: 28px;
+              color: #838a9d;
+            }
+            img {
+              width: 10px;
+              height: 10px;
+            }
+          }
+          .inLineTwo {
+            margin-bottom: 16px;
+            display: inline-block;
+            word-break: normal;
+            word-break: break-all;
+            word-break: keep-all;
+            word-break: break-word;
+            // display: -webkit-box;
+            // -webkit-box-orient: vertical;
+            // -webkit-line-clamp: 2;
+            // overflow: hidden;
+          }
+          .inLineEnd {
+            text-align: right;
+          }
+          .descTxt {
+            font-weight: 600;
+            color: #3c4353;
+            margin-bottom: 16px;
+          }
+        }
+      }
     }
   }
 
