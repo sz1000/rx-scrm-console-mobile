@@ -199,7 +199,7 @@ export default {
       yiList:[],
       bumenList:[],
       heperList:[],
-      objItem:  JSON.parse(localStorage.getItem('customer')),
+      objItem:  JSON.parse(localStorage.getItem('detail')),
       oneList:[]
     };
   },
