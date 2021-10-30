@@ -7,20 +7,22 @@
                     <div class="text">今日访客</div>
                     <div class="num">{{detail.todayViewedCount}}<i>人</i></div>
                 </div>
-                <div class="total">全部访客3680人</div>
+                <div class="total">全部访客{{detail.totalViewedCount}}人</div>
             </div>
         </div>
         <div class="content">
             <div class="list" v-if="total > 0">
-                <div class="li" v-for="(item,index) in 5" :key="index">
-                    <div class="time">2021-10-19 13:24</div>
+                <div class="li" v-for="item in detail.userBusinessCardViewLogVOS" :key="item.id">
+                    <div class="time">{{item.createTime}}</div>
                     <div class="box">
-                        <div class="avatar"></div>
-                        <div class="info">
-                            <div class="name">史莱克</div>
-                            <div class="duration">浏览时长：24分钟</div>
+                        <div class="avatar">
+                            <img class="img" :src="item.customerPortrait" alt="">
                         </div>
-                        <div class="number">13523245556</div>
+                        <div class="info">
+                            <div class="name">{{item.customerName}}</div>
+                            <div class="duration">浏览时长：{{item.customerTiming}}</div>
+                        </div>
+                        <div class="number">{{item.customerPhone}}</div>
                     </div>
                 </div>
             </div>
@@ -41,7 +43,7 @@ export default {
     },
     data(){
         return {
-            total: 0,
+            total: 10,
             detail: {},
         }
     },
@@ -156,9 +158,9 @@ export default {
                         width: 56px;
                         height: 56px;
                         border-radius: 50%;
-                        background: coral;
                         overflow: hidden;
                         margin-right: 24px;
+                        font-size: 0;
                         .img{
                             width: 100%;
                             height: 100%;

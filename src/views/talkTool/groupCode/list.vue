@@ -322,6 +322,7 @@ export default {
                     text-align: right;
                 }
                 .val{
+                    width: calc(100% - 144px);
                     color: @fontMain;
                     .img_box{
                         width: 182px;
@@ -514,6 +515,7 @@ export default {
                                 font-size: 24px;
                                 line-height: 32px;
                                 color: @fontSub2;
+                                white-space: nowrap;
                             }
                         }
                     }

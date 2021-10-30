@@ -1111,13 +1111,16 @@ export default {
       }
     }
     .filterCus {
-      padding: 24px 0;
-      padding-right: 12px;
+      padding: 24px;
+      // padding-right: 12px;
       margin-bottom: 30px;
       box-sizing: border-box;
       border: 1px solid #d9dae4;
       background-color: #fafbff;
       border-radius: 8px;
+      .el-radio {
+        margin-right: 24px;
+      }
     }
     .el-form-item {
       margin-bottom: 40px;
