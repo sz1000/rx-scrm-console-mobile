@@ -59,7 +59,8 @@ import MaterialTemplate from '../views/MaterialTemplate/share'
 
 // 消息通知 互动提醒
 import Notice from '../views/notice/index'
-
+//朋友圈
+import CircleFriend from '../views/circleFriend/CircleFriend.vue'
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -255,6 +256,12 @@ const routes = [{
                     bodyClass: 'CallingData',
                 },
                 component: CallingData,
+            },
+            // 新建朋友圈
+            {
+                path: 'circleFriend',
+                name: 'circleFriend',
+                component: CircleFriend,
             },
         ],
     },
