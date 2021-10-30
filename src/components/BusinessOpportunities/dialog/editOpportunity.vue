@@ -15,13 +15,13 @@
                         <span class="icon">*</span>
                         <span>商机名称:</span>
                     </p>
-                    <van-field v-model="form.name" clearable class="edit-field" placeholder="请输入"/>
+                    <van-field v-model="form.name" clearable class="edit-field" :maxlength="30" placeholder="请输入"/>
                 </div>
                 <div class="item one-line">
                     <p class="label">
                         <span>商机金额:</span>
                     </p>
-                    <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :decimal-length="2" :default-value="0" />
+                    <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :max="99999999999999999999" :decimal-length="2" :default-value="0" />
                 </div>
                 <div class="item one-line">
                     <p class="label">
@@ -113,7 +113,7 @@
             <van-picker
                 show-toolbar
                 :columns="chargeUserInfoListOptions"
-                value-key="userName"
+                value-key="name"
                 @confirm="chargerConfirm"
                 @cancel="selectChargerPopupShow = false"
             />
@@ -139,7 +139,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { ChargeUserInfoList, StageReasonList, AddOpportunities, ModifyOpportunities } from '../../../config/api'
+import { ChargeUserInfoList, UsersList, StageReasonList, AddOpportunities, ModifyOpportunities } from '../../../config/api'
 
 import { formatDate } from '../../../utils/tool'
 
@@ -149,6 +149,10 @@ export default {
             type: String,
             default: ''
         },
+        fromType: {
+            type: String,
+            default: '3'
+        }
     },
     data() {
         return {
@@ -208,7 +212,7 @@ export default {
                 this.form = JSON.parse(JSON.stringify(formData))
                 this.getText()
                 this.stageReasonList()
-                this.opportunitiesStageList(this.getStageListOptions, false, '')
+                this.opportunitiesStageList(this.getStageListOptions, '', '')
             } else {
                 this.id = null
                 this.title = '新建商机'
@@ -271,7 +275,17 @@ export default {
         },
         // 获取商机负责人列表
         async chargeUserInfoList() {
-            let { code, data } = await ChargeUserInfoList(this.customerNo)
+            let ApiOpts = null, params = null
+
+            if(this.fromType == '3') {
+                ApiOpts = ChargeUserInfoList
+                params = this.customerNo
+            } else if(this.fromType == '4') {
+                ApiOpts = UsersList
+                params = this.corpId
+            }
+
+            let { code, data } = await ApiOpts(params)
 
             if (code == 'success') {
                 this.chargeUserInfoListOptions = data
@@ -296,8 +310,8 @@ export default {
         // 确认负责人
         chargerConfirm(v) {
             this.form.chargeUserNo = v && v.userNo
-            this.form.chargeUserName = v && v.userName
-            this.chargeUserName = v && v.userName
+            this.form.chargeUserName = v && v.name
+            this.chargeUserName = v && v.name
             this.selectChargerPopupShow = false
         },
         // 确认时间
@@ -315,6 +329,15 @@ export default {
         stageConfirm(v) {
             this.form.stageNo = v && v.sortNo
             this.stageText = v && v.stageName
+            if (v.defaultStatus == '成交') {
+                this.opportunityStatus = 1
+            } else if (v.defaultStatus == '输单') {
+                this.opportunityStatus = 2
+            } else if (v.defaultStatus == '无效') {
+                this.opportunityStatus = 3
+            } else {
+                this.opportunityStatus = this.id ? 0 : -1
+            }
             this.selectStagePopupShow = false
         },
         // 确认原因
@@ -327,8 +350,8 @@ export default {
         checkForm() {
             const { name, stageNo, chargeUserNo, endTime, endReasonId } = this.form
 
-            if (!name) {
-                this.$toast('请输入商机名称')
+            if (!name || name && name.length < 2 || name && name.length > 30) {
+                this.$toast('请输入2到30个字符的商机名称')
                 return false
             }
             if (!stageNo) {
@@ -359,7 +382,7 @@ export default {
 
             this.form.chargeUserNo && this.chargeUserInfoListOptions && this.chargeUserInfoListOptions.map(item => {
                 if (item.userNo == this.form.chargeUserNo) {
-                    this.form.chargeUserName = item.userName
+                    this.form.chargeUserName = item.name
                 }
             })
 

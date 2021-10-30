@@ -30,7 +30,7 @@
                     </div>
                     <div class="item">
                         <span class="label">商机金额:</span>
-                        <span class="value one-line">{{ i.price }}</span>
+                        <span class="value one-line">{{ i.price ? handleMoney(i.price) : '' }}</span>
                     </div>
                     <div v-if="i.status == 2" class="item">
                         <span class="label">输单原因:</span>
@@ -75,7 +75,7 @@
         </div>
 
         <!-- 新建/编辑商机 -->
-        <edit-opportunity ref="editOpportunity" :customerNo="customerNo"></edit-opportunity>
+        <edit-opportunity ref="editOpportunity" :customerNo="customerNo" :fromType="fromType"></edit-opportunity>
         <!-- 删除 -->
         <delete-dialog ref="deleteDialog"></delete-dialog>
     </div>
@@ -84,7 +84,7 @@
 import { mapActions } from 'vuex'
 import opportunityMixin from '../../mixins/opportunity'
 import { DeleteOpportunities } from '../../config/api'
-import { formatDate } from '../../utils/tool'
+import { formatDate, handleMoney } from '../../utils/tool'
 
 import EditOpportunity from './dialog/editOpportunity'
 import deleteDialog from './dialog/delete'
@@ -95,6 +95,10 @@ export default {
         customerNo: {
             type: String,
             default: ''
+        },
+        fromType: {
+            type: String,
+            default: '3'
         }
     },
     data() {
@@ -118,6 +122,7 @@ export default {
     methods: {
         ...mapActions(["getCorpId"]),
         formatDate,
+        handleMoney,
         handleEdit(data) {
             this.$refs.editOpportunity.show(data)
         },
@@ -139,7 +144,7 @@ export default {
 
             this.$router.push({
                 path: 'stageList',
-                query: { id: item.id, customerNo: this.customerNo },
+                query: { id: item.id, fromType: this.fromType, customerNo: this.customerNo },
             })
         },
     },
@@ -214,6 +219,8 @@ export default {
             justify-content: space-between;
             margin-bottom: 15px;
             .left {
+                max-width: 80%;
+                word-break: break-all;
                 font-size: 28px;
                 color: #3C4353;
             }

@@ -439,6 +439,7 @@ export default {
 
 <style lang="less" scoped>
 @import '~@/styles/color.less';
+@import '~@/styles/reset.less';
  .detail_wrap{
     width: 100%;
     background: @white;

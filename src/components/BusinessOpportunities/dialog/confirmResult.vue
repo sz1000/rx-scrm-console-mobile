@@ -23,7 +23,7 @@
                             <span class="icon">*</span>
                             <span>商机金额:</span>
                         </p>
-                        <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :decimal-length="2" :default-value="0" />
+                        <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :max="99999999999999999999" :decimal-length="2" :default-value="0" />
                     </div>
                     <div class="item one-line">
                         <p class="label">
@@ -83,7 +83,7 @@
             <van-picker
                 show-toolbar
                 :columns="chargeUserInfoListOptions"
-                value-key="userName"
+                value-key="name"
                 @confirm="chargerConfirm"
                 @cancel="selectChargerPopupShow = false"
             />
@@ -100,7 +100,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { StageReasonList, ChargeUserInfoList, ModifyOpportunities } from '../../../config/api'
+import { StageReasonList, ChargeUserInfoList, UsersList, ModifyOpportunities } from '../../../config/api'
 import { formatDate } from '../../../utils/tool'
 
 export default {
@@ -109,6 +109,10 @@ export default {
             type: String,
             default: ''
         },
+        fromType: {
+            type: String,
+            default: '3'
+        }
     },
     data() {
         return {
@@ -178,7 +182,17 @@ export default {
         },
         // 获取商机负责人列表
         async chargeUserInfoList() {
-            let { code, data } = await ChargeUserInfoList(this.customerNo)
+            let ApiOpts = null, params = null
+
+            if(this.fromType == '3') {
+                ApiOpts = ChargeUserInfoList
+                params = this.customerNo
+            } else if(this.fromType == '4') {
+                ApiOpts = UsersList
+                params = this.corpId
+            }
+
+            let { code, data } = await ApiOpts(params)
 
             if (code == 'success') {
                 this.chargeUserInfoListOptions = data
@@ -188,7 +202,7 @@ export default {
         getChargerText() {
             this.chargeUserInfoListOptions.map(item => {
                 if (item.userNo == this.form.chargeUserNo) {
-                    this.chargeUserName = item.userName
+                    this.chargeUserName = item.name
                 }
             })
         },
@@ -206,7 +220,7 @@ export default {
         // 确认负责人
         chargerConfirm(v) {
             this.form.chargeUserNo = v && v.userNo
-            this.chargeUserName = v && v.userName
+            this.chargeUserName = v && v.name
             this.selectChargerPopupShow = false
         },
         // 选择原因
@@ -259,7 +273,7 @@ export default {
 
             this.form.chargeUserNo && this.chargeUserInfoListOptions && this.chargeUserInfoListOptions.map(item => {
                 if (item.userNo == this.form.chargeUserNo) {
-                    this.form.chargeUserName = item.userName
+                    this.form.chargeUserName = item.name
                 }
             })
 

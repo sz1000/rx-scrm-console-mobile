@@ -949,6 +949,7 @@ export default {
     border-bottom: 1px solid #f0f2f7;
     .backPage {
       width: 150px;
+      cursor: default;
       .van-icon {
         vertical-align: -10%;
         width: 28px;
@@ -1111,13 +1112,16 @@ export default {
       }
     }
     .filterCus {
-      padding: 24px 0;
-      padding-right: 12px;
+      padding: 24px;
+      // padding-right: 12px;
       margin-bottom: 30px;
       box-sizing: border-box;
       border: 1px solid #d9dae4;
       background-color: #fafbff;
       border-radius: 8px;
+      .el-radio {
+        margin-right: 24px;
+      }
     }
     .el-form-item {
       margin-bottom: 40px;
@@ -1316,6 +1320,7 @@ export default {
         font-size: 28px;
         color: #ffffff;
         display: block;
+        cursor: default;
         position: fixed;
         left: 50%;
         bottom: 20px;

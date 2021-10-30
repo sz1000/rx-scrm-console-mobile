@@ -12,13 +12,13 @@ import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
 import Added from '../views/talkTool/Added.vue'
-import CustomerGroup from "../views/talkTool/Customergroup.vue"//客户群发
-import CustomergroupPlaye from "../views/talkTool/CustomergroupPlaye.vue"//客户群群发
-import GroupCodeList from "../views/talkTool/groupCode/list.vue"    //群活码列表
-import GroupCodeAdd from "../views/talkTool/groupCode/add.vue"    //群活码列表
-import CallingMyCard from '../views/talkTool/callingCard/myCard.vue'    //我的名片
-import CallingPoster from '../views/talkTool/callingCard/poster.vue'    //我的名片 生成海报
-import CallingData from '../views/talkTool/callingCard/lookData.vue'  //我的名片 浏览数据
+import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
+import CustomergroupPlaye from '../views/talkTool/CustomergroupPlaye.vue' //客户群群发
+import GroupCodeList from '../views/talkTool/groupCode/list.vue' //群活码列表
+import GroupCodeAdd from '../views/talkTool/groupCode/add.vue' //群活码列表
+import CallingMyCard from '../views/talkTool/callingCard/myCard.vue' //我的名片
+import CallingPoster from '../views/talkTool/callingCard/poster.vue' //我的名片 生成海报
+import CallingData from '../views/talkTool/callingCard/lookData.vue' //我的名片 浏览数据
 
 import LableDataGroup from '../views/talkTool/lableDataGroup.vue' //客户群群发
 
@@ -390,8 +390,8 @@ const routes = [{
     {
         path: '/notice',
         name: 'Notice',
-        component: Notice
-    }
+        component: Notice,
+    },
 ]
 
 const router = new VueRouter({
