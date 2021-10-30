@@ -228,12 +228,14 @@ export default {
   .btnWarp {
     display: flex;
     width: 100%;
+    max-width: 750px;
     background-color: #fff;
     border-top: 2px solid #F0F2F7;
     z-index: 9;
     position: fixed;
-    left: 0;
+    left: 50%;
     bottom: 0;
+    transform: translateX(-50%);
     .btnBox {
       flex: 1;
       height: 112px;

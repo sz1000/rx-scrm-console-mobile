@@ -90,22 +90,25 @@ export default {
         height: 88px;
         border-bottom: 1px solid #f0f2f7;
         .iconName {
-          // display: flex;
-          font-size: 28px;
-          span:nth-child(1) {
-            color: #838a9d;
-          }
-          span:nth-child(2) {
-            color: #3c4353;
-          }
+            span {
+                line-height: 88px;
+                font-size: 28px;
+            }
+            span:nth-child(1) {
+                color: #838a9d;
+            }
+            span:nth-child(2) {
+                color: #3c4353;
+            }
         }
         .detailBtn {
-          font-size: 28px;
-          color: #838a9d;
-          .van-icon {
-            width: 28px;
-            height: 28px;
-          }
+            line-height: 88px;
+            font-size: 28px;
+            color: #838a9d;
+            .van-icon {
+                line-height: 88px;
+                font-size: 28px;
+            }
         }
     }
     .detailInfo {
@@ -147,36 +150,36 @@ export default {
     }
     }
     .tjry {
-    height: 87px;
-    border-top: 1px solid #f0f2f7;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 28px;
-    span {
-        display: inline-block;
-    }
-    .label {
-        width: 200px;
-        color: #838a9d;
-    }
-    .value {
-        width: 100%;
-        color: #3c4353;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .box {
+        height: 87px;
+        border-top: 1px solid #f0f2f7;
         display: flex;
-        width: 50%;
-    }
-    .box1 {
-        display: flex;
-        width: 50%;
-        line-height: 87px;
-        margin-left: 29px;
-    }
+        justify-content: space-between;
+        align-items: center;
+        font-size: 28px;
+        span {
+            display: inline-block;
+        }
+        .label {
+            width: 210px;
+            color: #838a9d;
+        }
+        .value {
+            width: 100%;
+            color: #3c4353;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .box {
+            display: flex;
+            width: 50%;
+        }
+        .box1 {
+            display: flex;
+            width: 50%;
+            line-height: 87px;
+            margin-left: 29px;
+        }
     }
 }
 </style>

@@ -136,6 +136,39 @@ export function byteConvert(bytes){
     return bytes + '' + symbols[i]
 }
 
+export function handleMoney(num) {
+    let AmountUnitlist = ["元", "万元", "亿", "兆", '京', '垓', '杼']
+    // 将数字金额转为字符串
+    let strnum = num.toString()
+    // 声明一个变量用于接收金额单位
+    let AmountUnit = ''
+    // 循环遍历单位数组
+    AmountUnitlist.find((item, index) => {
+        let newNum = ''
+        // 判断一下传进来的金额是否包含小数点
+        if (strnum.indexOf('.') !== -1) {
+            // 若有则将小数点前的字符截取出来
+            newNum = strnum.substring(0, strnum.indexOf('.'))
+        } else {
+            // 没有则直接等于原金额
+            newNum = strnum
+        }
+        // 判断一下经过小数点截取后的金额字符长度是否小于5
+        if (newNum.length < 5) {
+            // 若小于5则接收当前单位，并跳出迭代
+            AmountUnit = item
+
+            return true
+        } else {
+            // 若不小于5则将经过小数点截取处理过后的字符除以10000后作为下一轮迭代的初始金额重新判断(每一个单位之间相距4位数，故除以10000)
+            strnum = (newNum * 1 / 10000).toString()
+        }
+    })
+
+    return (strnum * 1).toFixed(2) + AmountUnit
+}
+  
+
 // 分享消息到当前会话
 export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, fileId) {
     Getticket({url: location.href}).then(res => {
