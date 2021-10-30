@@ -45,6 +45,7 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+
             <!-- 选择客户 -->
             <el-form-item label="选择客户:" prop="selectCusType">
               <el-radio-group
@@ -57,7 +58,7 @@
             </el-form-item>
             <!-- 筛选客户 -->
             <template v-if="baseForm.selectCusType == 1">
-              <div class="filterCus">
+              <div class="filterCus warp_radio">
                 <el-form-item label="性别:" prop="cusSex">
                   <el-radio-group v-model="baseForm.cusSex" @change="sexChange">
                     <el-radio :label="null">全部</el-radio>
@@ -75,7 +76,6 @@
                     <div @click="selectCusDateTime('Begin')">
                       <el-input
                         placeholder="请选择日期"
-                        class="marR-24"
                         suffix-icon="el-icon-date"
                         readonly
                         v-model="baseForm.cusAddBeginTime"
@@ -323,6 +323,8 @@ import { Toast } from "vant";
 import { Dialog } from "vant";
 import { Notify } from "vant";
 import { formatDate } from "../../utils/tool.js";
+// import { DatetimePicker } from "mint-ui";
+// Vue.component(DatetimePicker.name, DatetimePicker);
 export default {
   data() {
     var validateSendDateTime = (rule, value, callback) => {
@@ -798,6 +800,7 @@ export default {
             Dialog.alert({
               title: "温馨提示",
               message: "当前全部群可加用户数无法满足筛选条件",
+              confirmButtonColor: "#4168F6",
             }).then(() => {
               // on close
             });
@@ -1046,6 +1049,14 @@ export default {
 .butaddWarp {
   margin-bottom: 50px !important;
 }
+.warp_radio {
+  padding: 24px !important;
+  box-sizing: border-box;
+  .el-radio {
+    margin-right: 24px;
+  }
+}
+
 .picTipsnum {
   display: inline-block;
   font-size: 28px;

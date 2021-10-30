@@ -210,7 +210,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    CommonHome.getWxToken();
+    // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
@@ -270,7 +270,7 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    padding: 24px 24px;
+    padding: 24px 0px 24px 24px;
     overflow-y: scroll;
     scrollbar-width: 0;
     &::-webkit-scrollbar {

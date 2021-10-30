@@ -240,7 +240,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push("/home");
+      this.$router.go(-1);
     },
     formatDate,
     onLoad() {
