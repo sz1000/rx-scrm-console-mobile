@@ -76,7 +76,10 @@
             <span>群活码</span>
           </div>
         </router-link>
-        <router-link to="/talkTool/myCard" v-show="menulist.includes('business')">
+        <router-link
+          to="/talkTool/myCard"
+          v-show="menulist.includes('business')"
+        >
           <div class="commonBtn">
             <img src="../images/card.png" alt="" />
             <span>智能名片</span>
@@ -216,7 +219,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    // CommonHome.getWxToken();
+    CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
