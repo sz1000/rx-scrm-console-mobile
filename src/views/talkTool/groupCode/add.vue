@@ -75,7 +75,7 @@
                 <div class="label"><i>*</i>二维码{{index + 1}}：</div>
                 <div class="val">
                     <div class="upload_wrap">
-                        <img class="delete" v-if="index > 0" @click="deleteFun(index)" src="@/assets/images/icon_delete.png" alt="">
+                        <img class="delete" v-if="addCodeData.length > 1" @click="deleteFun(index)" src="@/assets/images/icon_delete.png" alt="">
                         <div class="flex_center">
                             <div class="upload_box">
                                 <div class="img_box" v-if="item.groupAddress">
@@ -601,6 +601,7 @@ export default {
             &:disabled{
                 opacity: 1;
                 background: none;
+                color: @fontMain;
             }
             &.disable:disabled{
                 background: rgba(@fontMain,.01);
