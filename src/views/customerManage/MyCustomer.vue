@@ -62,7 +62,7 @@
 import { _throttle } from "../../utils/tool";
 import MyMixin from "../../mixins/permissionsList";
 
-import CustomerItem from "../../components/customerManage/customerItem";
+import CustomerItem from "../../components/CustomerManage/customerItem";
 export default {
   mixins: [MyMixin],
   data() {
@@ -104,11 +104,6 @@ export default {
     return {
       goDetail: this.goDetail,
     };
-  },
-  provide() {
-    return {
-      goDetail: this.goDetail
-    }
   },
   methods: {
     tabClick(v) {
