@@ -1017,6 +1017,7 @@ export default {
     border-top: 1px solid #f0f2f7;
     border-bottom: 1px solid #f0f2f7;
     .backPage {
+      cursor: default;
       width: 150px;
       .van-icon {
         vertical-align: -10%;

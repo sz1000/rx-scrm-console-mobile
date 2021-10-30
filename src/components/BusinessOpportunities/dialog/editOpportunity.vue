@@ -212,7 +212,7 @@ export default {
                 this.form = JSON.parse(JSON.stringify(formData))
                 this.getText()
                 this.stageReasonList()
-                this.opportunitiesStageList(this.getStageListOptions, false, '')
+                this.opportunitiesStageList(this.getStageListOptions, '', '')
             } else {
                 this.id = null
                 this.title = '新建商机'
@@ -329,6 +329,15 @@ export default {
         stageConfirm(v) {
             this.form.stageNo = v && v.sortNo
             this.stageText = v && v.stageName
+            if (v.defaultStatus == '成交') {
+                this.opportunityStatus = 1
+            } else if (v.defaultStatus == '输单') {
+                this.opportunityStatus = 2
+            } else if (v.defaultStatus == '无效') {
+                this.opportunityStatus = 3
+            } else {
+                this.opportunityStatus = this.id ? 0 : -1
+            }
             this.selectStagePopupShow = false
         },
         // 确认原因
