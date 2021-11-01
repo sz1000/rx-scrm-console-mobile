@@ -212,7 +212,7 @@
 	
 			    </el-tab-pane>
 			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
-			    		<div class="fujianBox" style="padding: 15px;">
+			    		<div class="fujianBox" style="padding: 0px;">
 				      	<FujianMini></FujianMini>
 				      </div>
 			    </el-tab-pane>

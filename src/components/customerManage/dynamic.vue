@@ -59,6 +59,7 @@ export default {
     },
     data() {
         return {
+            showLoading: false,
             dynamicContentType: 1,
             dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
             timeLineList: [],
@@ -87,6 +88,12 @@ export default {
         },
         // 获取动态
         async selectFollowMsgList(punckStatus) {
+            this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0,
+                loadingType: 'spinner',
+            })
             let params = {
                 clueCustomerNo: this.objItem.clueCustomerNo,
                 punckStatus // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态
@@ -97,6 +104,7 @@ export default {
             if(code == 'success') {
                 this.timeLineList = data
             }
+            this.$toast.clear()
         },
     },
 }

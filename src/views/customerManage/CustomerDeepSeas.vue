@@ -18,14 +18,7 @@
       <div class="formEdit">
         <el-form ref="form"
                  :model="basicInfo">
-          <el-form-item label="客户简称"
-                        class="nameBorder">
-            <el-input v-model="basicInfo.customerName"
-                      placeholder="请输入"
-                      maxlength="30"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
-          </el-form-item>
+            <KehuTip :addChildForm="basicInfo" v-on:getacf="getacf"></KehuTip> 
           <el-form-item label="客户来源">
             <el-select v-model="basicInfo.source"
                        placeholder="请选择"
@@ -57,13 +50,7 @@
                       maxlength="13"
                       @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="公司名称">
-            <el-input v-model="basicInfo.cropFullName"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="100"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
+           <GongsiTip :addChildForm="basicInfo" v-on:getgst="getgst"></GongsiTip>
           <el-form-item label="所属行业">
             <el-cascader size="large"
                          :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
@@ -240,7 +227,13 @@
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
+import KehuTip from './comTip/kehuTip.vue'
+import GongsiTip from './comTip/gongsiTip.vue'
 export default {
+	components: {
+    KehuTip,
+    GongsiTip,
+  },
   data() {
     return {
       optionSource: [],
@@ -318,6 +311,16 @@ export default {
     this.getDetailForm()
   },
   methods: {
+  	getacf(acfValue) {
+        // acfValue就是子组件传过来的值
+        console.log('acfValue--->>',acfValue)
+        this.basicInfo.customerName = acfValue.customerName
+    },
+    getgst(gstValue){
+    	// gstValue就是子组件传过来的值
+        console.log('gstValue--->>',gstValue)
+        this.basicInfo.cropFullName = gstValue.cropFullName
+    },
     formatDate,
     changeInput(val) {
       this.update()

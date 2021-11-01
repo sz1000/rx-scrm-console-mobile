@@ -59,12 +59,6 @@ export default {
 
   },
    computed: {
-            headers(){
-                return {
-                    "Accept": "application/json",
-                    "token": localStorage.getItem('token')
-                }
-            }
   },
   created() {
 
