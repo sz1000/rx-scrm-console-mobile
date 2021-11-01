@@ -28,7 +28,7 @@
       <div class="uploadImg">
         <div class="upload_wrap" v-if="tab == 'image'">
           <div class="upload_row ">
-            <div class="upload_box_list" v-for="(item,index) in lists" :key="index" v-show="lists.length>0">
+            <div class="upload_box_list imgBox" v-for="(item,index) in lists" :key="index" v-show="lists.length>0">
               <div class="img_box">
                 <img :src="item" alt="">
                 <img src="../../images/defriend.png" alt="" class="deleteIcon" @click="fnDeleteImg(item,index)" />
@@ -84,7 +84,8 @@
   </div>
 </template>
 <script>
-import { uploadFile, oss_uploadfileparam } from '../../api/friend'
+import { uploadFile, addFriend } from '../../api/friend'
+import { Notify } from 'vant'
 export default {
   data() {
     return {
@@ -101,7 +102,33 @@ export default {
     goBack() {
       this.$router.push('/home')
     },
-    sendMessage() {},
+    sendMessage() {
+      let imgArr = []
+      if (this.tab == 'image') {
+        imgArr = this.lists
+      } else if (this.tab == 'video') {
+        imgArr = [this.videoUrl]
+      } else {
+        imgArr = [this.inputUrl]
+      }
+      let params = {
+        content: this.textInput,
+        urls: imgArr,
+        msgtype: this.tab,
+      }
+      addFriend(params).then((res) => {
+        if (res.result) {
+          Notify({
+            message: '创建成功',
+            type: 'success',
+            duration: 1000,
+            // className: 'msgTitle',
+            // background: '#52BD94',
+          })
+          this.$router.push('/home')
+        }
+      })
+    },
     fnDeleteImg(v, i) {
       this.lists.splice(i, 1)
     },
@@ -291,6 +318,14 @@ export default {
               opacity: 0;
               cursor: pointer;
             }
+          }
+        }
+        .imgBox {
+          height: 200px !important;
+          width: 200px !important;
+          img {
+            width: 100%;
+            height: 100%;
           }
         }
         .upload_box_list {
