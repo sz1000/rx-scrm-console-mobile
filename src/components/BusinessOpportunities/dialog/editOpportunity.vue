@@ -211,7 +211,7 @@ export default {
                 this.opportunityStatus = status  //0：跟进中；1：成交；2：输单；3：无效
                 this.form = JSON.parse(JSON.stringify(formData))
                 this.getText()
-                this.stageReasonList()
+                this.stageReasonList(this.form.sortId)
                 this.opportunitiesStageList(this.getStageListOptions, '', '')
             } else {
                 this.id = null
@@ -265,8 +265,8 @@ export default {
             this.reasonText = ''
         },
         // 获取阶段原因列表
-        async stageReasonList() {
-            let { code, data } = await StageReasonList(this.form.stageNo)
+        async stageReasonList(sortId) {
+            let { code, data } = await StageReasonList(sortId)
 
             if (code == 'success') {
                 this.reasonOptions = data
@@ -329,6 +329,7 @@ export default {
         stageConfirm(v) {
             this.form.stageNo = v && v.sortNo
             this.stageText = v && v.stageName
+            this.stageReasonList(v.sortId)
             if (v.defaultStatus == '成交') {
                 this.opportunityStatus = 1
             } else if (v.defaultStatus == '输单') {
