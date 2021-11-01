@@ -380,6 +380,7 @@ export default {
             }
             this.form.corpId = this.corpId
             this.form.customerNo = this.customerNo
+            this.form.status = this.opportunityStatus > -1 ? this.opportunityStatus : this.form.status
 
             this.form.chargeUserNo && this.chargeUserInfoListOptions && this.chargeUserInfoListOptions.map(item => {
                 if (item.userNo == this.form.chargeUserNo) {
