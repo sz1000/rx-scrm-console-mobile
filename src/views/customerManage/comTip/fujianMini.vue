@@ -31,7 +31,7 @@ export default {
             headers(){
                 return {
                     "Accept": "application/json",
-                    "token": getStoreValue('token')
+                    "token": BASE_URL.length == 24 ?localStorage.getItem('token'):getStoreValue('token')
                 }
             }
   },

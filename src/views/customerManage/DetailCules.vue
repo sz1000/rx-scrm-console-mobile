@@ -291,17 +291,17 @@
 						        
 						      </div>
 			    </el-tab-pane>
-			    <el-tab-pane label="协助人" style="height: 300px;padding-bottom: 100px;" name="协助人">
+			    <el-tab-pane label="协助人" style="height: 300px;padding-bottom: 100px;overflow-y: scroll;overflow-x: hidden;" name="协助人">
 			    	<!--<div class="personLabel">
 			        <div class="t_text">
 			          <span class="label_tag">协助人</span>
 			          
 			        </div>-->
-			        <HelperFile></HelperFile>
+			        <HelperFileLine></HelperFileLine>
 			      <!--</div>-->
 			    </el-tab-pane>
 			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
-			    		<div class="fujianBox" style="padding: 15px;">
+			    		<div class="fujianBox" style="padding: 0px;">
 				      	<Fujian></Fujian>
 				      </div>
 			    </el-tab-pane>
@@ -412,11 +412,11 @@
 <script>
 import { formatDate, _throttle } from '../../utils/tool'
 import { BASE_URL } from '../../utils/request'
-import  HelperFile  from "./comTip/helperFile";
+import  HelperFileLine  from "./comTip/helperFileLine";
 import  Fujian  from "./comTip/fujian";
 export default {
 	components: {
-    HelperFile,
+    HelperFileLine,
     Fujian,
   },
   data() {

@@ -85,6 +85,12 @@
             <span>智能名片</span>
           </div>
         </router-link>
+        <router-link to="/talkTool/circleFriend">
+          <div class="commonBtn">
+            <img src="../images/friedn.png" alt="" />
+            <span>朋友圈</span>
+          </div>
+        </router-link>
 
         <router-link to="">
           <div class="commonBtn" @click="showMsg">
@@ -253,6 +259,9 @@ export default {
           }
           this.show = !res.data.haveSecret;
           let tempMenuList = res.data.userEntity.permissionList;
+          let corpId = res.data.userEntity.corpId;
+          localStorage.setItem("corpId", corpId);
+
           sessionStorage.setItem(
             "permissionsList",
             JSON.stringify(tempMenuList)

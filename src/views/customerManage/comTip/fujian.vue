@@ -52,15 +52,16 @@ export default {
             headers(){
                 return {
                     "Accept": "application/json",
-                    "token": getStoreValue('token')
-                }
+                   // "token": getStoreValue('token')
+                		 "token":BASE_URL.length == 24 ?localStorage.getItem('token'):getStoreValue('token')
             }
+               }
   },
   created() {
-
+				console.log(BASE_URL.length)
   },
   mounted() {
-  	this.getDownList()
+  		this.getDownList()
   },
   methods: {
 			/*附件下载*/
@@ -149,7 +150,7 @@ export default {
      },
     /*附件下载*/
   },
-};
+}
 </script>
 <style lang="less" scoped>
 

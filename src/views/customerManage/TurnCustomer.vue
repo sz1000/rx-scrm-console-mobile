@@ -17,13 +17,17 @@
       <el-form ref="form"
                :model="formObj"
                label-position='right'>
-        <el-form-item label="客户简称:"
+               
+        <KehuTip :addChildForm="formObj" v-on:getacf="getacf"></KehuTip>     
+       <!-- <el-form-item label="客户简称:"
                       prop="customerName"
                       :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.customerName"
                     placeholder="请输入"
                     maxlength="12"></el-input>
-        </el-form-item>
+        </el-form-item>-->
+        
+        
         <el-form-item label="客户来源:"
                       prop="source"
                       :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
@@ -57,11 +61,12 @@
                     placeholder="请输入"
                     maxlength="11"></el-input>
         </el-form-item>
-        <el-form-item label="公司名称:">
+        <!--<el-form-item label="公司名称:">
           <el-input v-model="formObj.cropFullName"
                     placeholder="请输入"
                     maxlength="100"></el-input>
-        </el-form-item>
+        </el-form-item>-->
+        <GongsiTip :addChildForm="formObj" v-on:getgst="getgst"></GongsiTip>
         <el-form-item label="所属行业:">
           <el-cascader size="large"
                        :props="{ expandTrigger: 'click',value:'id' ,label:'name'}"
@@ -149,7 +154,13 @@
   </div>
 </template>
 <script>
+			import KehuTip from './comTip/kehuTip.vue'
+			import GongsiTip from './comTip/gongsiTip.vue'
 export default {
+	components: {
+    KehuTip,
+    GongsiTip,
+  },
   data() {
     return {
       formObj: {
@@ -183,6 +194,16 @@ export default {
     this.getDataList()
   },
   methods: {
+  	getacf(acfValue) {
+        // acfValue就是子组件传过来的值
+        console.log('acfValue--->>',acfValue)
+        this.formObj.customerName = acfValue.customerName
+    },
+    getgst(gstValue){
+    	// gstValue就是子组件传过来的值
+        console.log('gstValue--->>',gstValue)
+        this.formObj.cropFullName = gstValue.cropFullName
+    },
     getDataList() {
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
