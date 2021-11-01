@@ -23,30 +23,29 @@ html.borderbox *:after,
 body {
   height: 100%;
   width: 100%;
-
 }
 
 ::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
-  color: #C0C4CC;
+  color: #c0c4cc;
   font-weight: normal;
 }
 
 :-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
-  color: #C0C4CC;
+  color: #c0c4cc;
   font-weight: normal;
 }
 
 ::-moz-placeholder {
   /* Mozilla Firefox 19+ */
-  color: #C0C4CC;
+  color: #c0c4cc;
   font-weight: normal;
 }
 
 :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  color: #C0C4CC;
+  color: #c0c4cc;
   font-weight: normal;
 }
 
@@ -112,9 +111,8 @@ section {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
 }
 
-/deep/.el-input[type='text'] {
+/deep/.el-input[type="text"] {
   -webkit-appearance: none;
-
 }
 
 /* 图片自适应 */
@@ -188,8 +186,8 @@ section {
 }
 
 body {
-  color: #3C4353;
-  font-family: 'PingFangSC-Regular, PingFang SC;';
+  color: #3c4353;
+  font-family: "PingFangSC-Regular, PingFang SC;";
   background: #f6f7f9;
 }
 
@@ -222,7 +220,7 @@ strong {
 a {
   text-decoration: none;
   color: #969696;
-  font-family: 'Microsoft YaHei', Tahoma, Arial, sans-serif;
+  font-family: "Microsoft YaHei", Tahoma, Arial, sans-serif;
 }
 
 a:hover {
@@ -241,7 +239,7 @@ h4,
 h5,
 h6 {
   font-size: 100%;
-  font-family: 'Microsoft YaHei';
+  font-family: "Microsoft YaHei";
 }
 
 img {
@@ -249,7 +247,7 @@ img {
 }
 
 input {
-  font-family: 'Microsoft YaHei';
+  font-family: "Microsoft YaHei";
 }
 
 /*单行溢出*/
@@ -277,7 +275,7 @@ input {
 }
 
 .two-line {
-  .txtCut(2)
+  .txtCut(2);
 }
 
 /* 移动端点击a链接出现蓝色背景问题解决 */
@@ -299,17 +297,16 @@ a:hover {
   clear: both;
 }
 
-
 /*组件切换的动画*/
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .5s
+  transition: opacity 0.5s;
 }
 
 /* .fade-leave-active in <2.1.8 */
 .fade-enter,
 .fade-leave-to {
-  opacity: 0
+  opacity: 0;
 }
 
 /*客户管理 放弃、删除弹窗*/
@@ -381,7 +378,7 @@ a:hover {
   // padding-bottom: 10px;
   font-size: 28px;
   padding-bottom: 20px;
-  .commonVant()
+  .commonVant();
 }
 
 .deleteWordBtn {
@@ -391,15 +388,15 @@ a:hover {
   border-radius: 16px;
   border: 1px solid #eeeeee;
   font-size: 28px;
-  .commonVant()
+  .commonVant();
 }
 
 .giveUpBtn {
   width: 702px;
   height: 326px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 16px;
-  border: 1px solid #EEEEEE;
+  border: 1px solid #eeeeee;
 
   .van-dialog__header {
     padding-top: 16px;
@@ -421,18 +418,17 @@ a:hover {
     }
   }
 
-  .commonVant()
+  .commonVant();
 }
 
 /deep/.popper-select-class {
   .el-popper {
     &.el-scrollbar {
-      >.el-scrollbar__bar {
+      > .el-scrollbar__bar {
         opacity: 1 !important;
       }
     }
   }
-
 }
 
 .el-input__count-inner,
@@ -450,3 +446,10 @@ textarea {
   height: 68px;
   font-size: 24px;
 }
+// .detail_wrap {
+//   .van-popup--bottom {
+//     left: 50% !important;
+//     width: 50%;
+//     transform: translate(-50%, 0) !important;
+//   }
+// }
