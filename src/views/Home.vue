@@ -64,7 +64,7 @@
             <span>智能名片</span>
           </div>
         </router-link>
-        <router-link to="/talkTool/circleFriend">
+        <router-link to="/talkTool/circleFriend" v-show="menulist.includes('circle')">
           <div class="commonBtn">
             <img src="../images/friedn.png" alt="" />
             <span>朋友圈</span>
@@ -230,7 +230,7 @@ export default {
           this.show = !res.data.haveSecret
           let tempMenuList = res.data.userEntity.permissionList
           let corpId = res.data.userEntity.corpId
-          localStorage.setItem( 'corpId' ,corpId)
+          localStorage.setItem('corpId', corpId)
 
           sessionStorage.setItem(
             'permissionsList',
@@ -369,6 +369,9 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 32px;
+    a {
+      font-family: PingFangSC-Medium, PingFang SC;
+    }
     .commonBtn {
       font-size: 28px;
       margin-bottom: 20px;
