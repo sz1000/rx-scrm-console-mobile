@@ -22,7 +22,7 @@
       <dynamic v-if="contentType == 0" ref="dynamic" :comeType="1" :btnList="btnList"></dynamic>
 
       <!-- 协作人 -->
-      <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
+      <div class="xiezuoBox" style="padding: 12px;" v-if="contentType == 1">
       	<HelperFile></HelperFile>
       </div>
 
@@ -30,7 +30,7 @@
       <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo" :fromType="$route.query.type"></opportunities>
       
       <!-- 附件 -->
-      <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
+      <div class="fujianBox" style="padding: 12px;" v-if="contentType == 3">
       	<Fujian></Fujian>
       </div>
 			
@@ -150,6 +150,7 @@ export default {
   methods: {
     // 导航切换
     changeNav(index) {
+    	console.log('contentType---->',index)
       this.contentType = index
     },
     goBack() {
@@ -354,7 +355,7 @@ export default {
         display: flex;
         width: 100%;
         height: 100px;
-        margin-bottom: 24px;
+        margin-bottom: 38px;
         border-bottom: 1px solid #F0F2F7;
         li {
             flex: 1;

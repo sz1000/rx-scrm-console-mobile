@@ -614,6 +614,7 @@ export default {
 	line-height: 80px;
 	padding-left: 23px;
 	padding-top: 23px;
+	margin-bottom: 60px;
 }
 .titlePower{
 	height: 80px;
@@ -877,7 +878,7 @@ export default {
 	letter-spacing: 0;
 	font-weight: bold;
 	line-height: 40px;
-	margin-bottom: 10px;
+	margin-bottom: 38px;
 /*	margin-top: 36px;
 	    padding-left: 28px;*/
 }

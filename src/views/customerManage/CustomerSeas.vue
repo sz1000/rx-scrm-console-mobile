@@ -24,7 +24,7 @@
       <!-- 商机 -->
       <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
       
-    	<div class="fujianBox" style="padding: 15px;" v-if="contentType == 2">
+    	<div class="fujianBox" style="padding: 12px;" v-if="contentType == 2">
       	<Fujian></Fujian>
       </div>
     </div>
