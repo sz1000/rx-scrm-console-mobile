@@ -1,12 +1,27 @@
 <template>
     <div class="opportunities">
-        <div class="t_text">
+        <!--<div class="t_text">
           <span class="label_tag">商机</span>
           <div class="editButton" @click="handleEdit">
             <van-icon name="add-o" class="img" />
             <span>添加</span>
           </div>
-        </div>
+        </div>-->
+        <el-button class="addBtn" size="small" type="primary" @click="handleEdit">
+	  		<i class="el-icon-circle-plus-outline"></i><span>添加</span>
+	  	</el-button>
+        <div class="titleBox">
+			<span class="blueDiv">
+				
+			</span>
+			<span class="titleFujian">商机</span>
+		</div>
+		
+		<!--<div class="editButton" @click="handleEdit">
+            <van-icon name="add-o" class="img" />
+            <span>添加</span>
+        </div>-->
+		
         <div v-for="i in opportunitiesListData" :key="i.id" class="opportunities-item">
             <div class="table-title">
                 <h2 class="left">{{ i.name }}</h2>
@@ -171,6 +186,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .opportunities {
+		position: relative;
     padding: 0 24px 24px;
     .t_text {
         display: flex;
@@ -272,5 +288,54 @@ export default {
             }
         }
     }
+}
+.titleBox{
+/*	width: 80px;*/
+	height: 40px;
+	font-size: 30px;
+	color: #3C4353;
+	letter-spacing: 0;
+	font-weight: bold;
+	line-height: 40px;
+	margin-bottom: 38px;
+/*	margin-top: 36px;
+	    padding-left: 28px;*/
+}
+.blueDiv{
+	width: 8px;
+	height: 25px;
+	background: #4168F6;
+	margin-right: 12px;
+	display: inline-block;
+}
+.delBtn,.addBtn{
+		  color: #838a9d;
+          width: 124px;
+          height: 68px;
+          border-radius: 8px;
+          border: 2px solid #d9dae4;
+          text-align: center;
+          position: absolute;
+        /*  top: 0;*/
+          background: #FFFFFF;
+          font-size: 30px;
+          top: 0;
+}
+.addBtn{
+	right: 24px;
+}
+/deep/.delBtn span, .addBtn span{
+	position: relative;
+    right: 9px;
+}
+.addBtn span{
+	right: 20px;
+}
+/deep/.delBtn i, .addBtn i{
+	position: relative;
+    right: 3px;
+}
+/deep/.addBtn i{
+	right: 14px;
 }
 </style>

@@ -41,7 +41,8 @@ import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
 import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
 import StageList from '../components/BusinessOpportunities/stageList'
-
+import CuleFileGo from '../views/customerManage/CuleFileGo.vue'
+import CluesGongHaiGo from '../views/customerManage/CluesGongHaiGo.vue'
 // 群画像
 import Groupportrait from '../views/portrait/Groupportrait'
 // 群 SOP 设置
@@ -373,6 +374,20 @@ const routes = [{
                     bodyClass: 'CustomerDeepSeas',
                 },
                 component: CustomerDeepSeas,
+            },
+            {
+                path: 'CuleFileGo',
+                meta: {
+                    bodyClass: 'CuleFileGo',
+                },
+                component: CuleFileGo,
+            },
+            {
+                path: 'CluesGongHaiGo',
+                meta: {
+                    bodyClass: 'CluesGongHaiGo',
+                },
+                component: CluesGongHaiGo,
             },
             {
                 path: 'stageList',

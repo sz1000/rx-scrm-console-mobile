@@ -18,7 +18,7 @@
 							  :file-list="eleList"
 							  :on-success="onSuccess"
 							  :on-error="onError">
-							  <el-button class="upBtn" size="small" type="primary"><i class="el-icon-upload"></i>&nbsp;上传</el-button>
+							  <el-button class="upBtn" size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
 							</el-upload>
 							
 							<div class="listBox" v-for="(item, index) in fileList" :key="index">
@@ -49,13 +49,13 @@ export default {
 
   },
    computed: {
-            headers(){
-                return {
-                    "Accept": "application/json",
-                   // "token": getStoreValue('token')
-                		 "token":BASE_URL.length == 24 ?localStorage.getItem('token'):getStoreValue('token')
-            }
-               }
+		headers(){
+    return {
+		"Accept": "application/json",
+	  //"token":location.hostname == 'localhost' || location.hostname == 'test-h5.jzcrm.com' ? localStorage.getItem('token'):getStoreValue('token')//连测试或本地时用这个
+		"token":location.hostname == 'localhost'? localStorage.getItem('token'):getStoreValue('token')  //上生产或只连本地时用这个
+    }
+   }
   },
   created() {
 				console.log(BASE_URL.length)
@@ -205,7 +205,7 @@ export default {
 	letter-spacing: 0;
 	font-weight: bold;
 	line-height: 40px;
-	margin-bottom: 10px;
+	margin-bottom: -20px;
 /*	margin-top: 36px;*/
 }
 .blueDiv{

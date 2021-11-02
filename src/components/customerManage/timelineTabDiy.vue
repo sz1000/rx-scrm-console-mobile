@@ -4,8 +4,9 @@
 			<span class="blueDiv">
 				
 			</span>
-			<span class="titleFujian">客户动态</span>
+			<span class="titleFujian">线索动态</span>
 		</div>
+    	
         <div class="t_text">
             <div v-show="comeType == 1 && btnList.some(item=>item.enName == 'write')" class="editButton" @click="showCompany(3)">
                 <img src="../../images/icon_repair1@2x.png" alt="" />
@@ -65,9 +66,9 @@ export default {
     data() {
         return {
             dynamicContentType: 1,
-            dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
+            dynamicNavList: [ '全部', '客户动态', '跟进记录' ],
             timeLineList: [],
-            objItem: JSON.parse(localStorage.getItem('customer')),
+            objItem: JSON.parse(localStorage.getItem('detail')),
         }
     },
     created() {
@@ -84,9 +85,7 @@ export default {
                 this.selectFollowMsgList('')
             } else if(index == 1) { // 客户动态
                 this.selectFollowMsgList(2)
-            } else if(index == 2) { // 商机
-                this.selectFollowMsgList(3)
-            } else if(index == 3) { // 跟进
+            }  else if(index == 2) { // 跟进
                 this.selectFollowMsgList(1)
             }
         },
@@ -108,25 +107,25 @@ export default {
 </script>
 <style lang="less" scoped>
 .content-item {
-    padding: 0 24px 24px;
+/*    padding: 0 24px 24px;*/
 }
 .dynamic {
+	position: relative;
     font-size: 28px;
-    position: relative;
     .t_text {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
-        margin-bottom: 24px;
         position: absolute;
         top: 0;
         right: 0;
+        
         .label_tag {
             font-weight: 600;
             color: #3c4353;
             position: relative;
-            padding-left: 10px;
+         /*   padding-left: 10px;*/
             &::before {
                 content: '';
                 width: 8px;
@@ -145,9 +144,6 @@ export default {
             border: 2px solid #d9dae4;
             text-align: center;
             line-height: 68px;
-            position: absolute;
-            top: 0;
-            right: 24px;
             span {
                 display: inline-block;
             }

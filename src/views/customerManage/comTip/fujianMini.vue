@@ -30,8 +30,8 @@ export default {
    computed: {
             headers(){
                 return {
-                    "Accept": "application/json",
-                    "token": BASE_URL.length == 24 ?localStorage.getItem('token'):getStoreValue('token')
+	  //"token":location.hostname == 'localhost' || location.hostname == 'test-h5.jzcrm.com' ? localStorage.getItem('token'):getStoreValue('token')//连测试或本地时用这个
+		"token":location.hostname == 'localhost'? localStorage.getItem('token'):getStoreValue('token')  //上生产或只连本地时用这个
                 }
             }
   },
