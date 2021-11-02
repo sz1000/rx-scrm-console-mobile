@@ -49,14 +49,14 @@
       </div>
     </div>
     <!-- 分享提示窗 -->
-    <!-- <van-overlay class="dialog_wrap" :show="show">
-            <div class="dialog_box" @click="show = false">
-                <div class="tips">
-                    <div class="text">点击右上角进行分享</div>
-                    <div class="text">知道了</div>
-                </div>
-            </div>
-        </van-overlay> -->
+    <van-overlay class="dialog_wrap" :show="show">
+      <div class="dialog_box" @click="show = false">
+        <div class="tips">
+          <div class="text">点击右上角进行分享</div>
+          <div class="text">知道了</div>
+        </div>
+      </div>
+    </van-overlay>
   </div>
 </template>
 
