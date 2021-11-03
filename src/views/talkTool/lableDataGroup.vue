@@ -1,13 +1,15 @@
 
 <template>
   <div class="microCode group-setting-warp" v-loading="loading">
-    <div class="headerTitleList">
+<div>
+      <div class="headerTitleList ">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
       <span class="textTitle">新增标签建群</span>
     </div>
+</div>
     <div class="warp_box">
       <!-- 群发设置 -->
       <div class="group-setting">
@@ -1220,7 +1222,12 @@ export default {
     color: #3c4353;
     border-top: 1px solid #f0f2f7;
     border-bottom: 1px solid #f0f2f7;
-
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translate(-50%);
     .backPage {
       width: 150px;
       cursor: default;
@@ -1350,6 +1357,7 @@ export default {
     }
     .warp_box {
       height: 100%;
+ 
       background: #fff;
       box-sizing: border-box;
       padding: 24px 12px;
