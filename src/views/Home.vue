@@ -228,7 +228,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    CommonHome.getWxToken();
+   // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
@@ -240,7 +240,7 @@ export default {
           this.customer = res.data.myCustomer;
           this.customerSee = res.data.derCustomer;
         });
-      this.getUserName();
+      //this.getUserName();
     }, 2000);
   },
   methods: {
