@@ -234,8 +234,8 @@ export default {
       console.log(`当前值：${value}, 当前索引：${index}`);*/
     },
     onCancelYuangong() {
-    	this.bumenPop = false;
-      console.log('取消');
+    	this.yuangongPop = false;
+   //   console.log('取消');
     },
   	openBumenPop(){
   		this.bumenPop = true;
@@ -255,7 +255,7 @@ export default {
     },
     onCancel() {
     	this.bumenPop = false;
-      console.log('取消');
+   //   console.log('取消');
     },
     formatDate,
     checkedChange() {

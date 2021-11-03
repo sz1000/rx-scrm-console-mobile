@@ -56,6 +56,18 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="客户阶段:">
+          <el-select v-model="formObj.stage"
+                     placeholder="请选择"
+                     @change="changeCustom"
+                     clearable>
+            <el-option v-for="(item,index) in stageList"
+                       :key="item.index"
+                       :label="item.name"
+                       :value="item.name">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="电话:">
           <el-input v-model="formObj.mobil"
                     placeholder="请输入"
@@ -163,6 +175,7 @@ export default {
   },
   data() {
     return {
+    	stageList:[],
       formObj: {
         customerName: '',
         mobil: '',
@@ -193,7 +206,19 @@ export default {
   created() {
     this.getDataList()
   },
+  mounted(){
+  	//this.optionsDouble()
+  },
   methods: {
+  	/*optionsDouble() {
+      this.$network
+        .post('/customer-service/clueCustomerFollowUser/selectUserDeptList')
+        .then((res) => {
+          console.log(res)
+          this.stageList = res.data.stage
+          console.log(this.stageList)
+        })
+    },*/
   	getacf(acfValue) {
         // acfValue就是子组件传过来的值
         console.log('acfValue--->>',acfValue)
@@ -211,7 +236,7 @@ export default {
         })
         .then((res) => {
           this.formObj = res.data.clueCustomerEntity
-
+					this.stageList = res.data.stageList
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
