@@ -1,4 +1,4 @@
-import { Getticket, GetSignature } from "../config/api"
+import { Getticket, GetSignature } from '../config/api'
 import { Toast } from 'vant'
 
 // 防抖
@@ -55,6 +55,9 @@ export function deepClone(obj) {
 
 // 时间转换
 export function formatDate(dateTime, fmt) {
+    if (typeof dateTime == 'string') {
+        dateTime = dateTime.replace(/-/g, '/')
+    }
     let date = new Date(dateTime)
         // console.log(date, fmt)
     if (/(y+)/.test(fmt)) {
@@ -102,34 +105,35 @@ export function parseQueryString(url) {
     let reg_url = /^[^\?]+\?([\w\W]+)$/,
         reg_para = /([^&=]+)=([\w\W]*?)(&|$)/g, //g is very important
         arr_url = reg_url.exec(url),
-        ret = {};
+        ret = {}
     if (arr_url && arr_url[1]) {
-        let str_para = arr_url[1], result;
+        let str_para = arr_url[1],
+            result
         while ((result = reg_para.exec(str_para)) != null) {
-            ret[result[1]] = result[2];
+            ret[result[1]] = result[2]
         }
     }
-    return ret;
+    return ret
 }
 
 // 文件大小单位转换
-export function byteConvert(bytes){ 
-    if(isNaN(bytes)) {
+export function byteConvert(bytes) {
+    if (isNaN(bytes)) {
         return
     }
     let symbols = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-    let exp = Math.floor(Math.log(bytes)/Math.log(2)) // 获取以2为底的bytes的对数（向下取整）
+    let exp = Math.floor(Math.log(bytes) / Math.log(2)) // 获取以2为底的bytes的对数（向下取整）
 
     if (exp < 1) {
         exp = 0
     }
-    let i = Math.floor(exp/10)
+    let i = Math.floor(exp / 10)
 
-    bytes = bytes/Math.pow(2, 10*i)
+    bytes = bytes / Math.pow(2, 10 * i)
 
     // 取两位小数
-    if(bytes.toString().length > bytes.toFixed(2).toString().length) {
+    if (bytes.toString().length > bytes.toFixed(2).toString().length) {
         bytes = bytes.toFixed(2)
     }
 
@@ -137,15 +141,15 @@ export function byteConvert(bytes){
 }
 
 export function handleMoney(num) {
-    let AmountUnitlist = ["元", "万元", "亿", "兆", '京', '垓', '杼']
-    // 将数字金额转为字符串
+    let AmountUnitlist = ['元', '万元', '亿', '兆', '京', '垓', '杼']
+        // 将数字金额转为字符串
     let strnum = num.toString()
-    // 声明一个变量用于接收金额单位
+        // 声明一个变量用于接收金额单位
     let AmountUnit = ''
-    // 循环遍历单位数组
+        // 循环遍历单位数组
     AmountUnitlist.find((item, index) => {
         let newNum = ''
-        // 判断一下传进来的金额是否包含小数点
+            // 判断一下传进来的金额是否包含小数点
         if (strnum.indexOf('.') !== -1) {
             // 若有则将小数点前的字符截取出来
             newNum = strnum.substring(0, strnum.indexOf('.'))
@@ -161,17 +165,23 @@ export function handleMoney(num) {
             return true
         } else {
             // 若不小于5则将经过小数点截取处理过后的字符除以10000后作为下一轮迭代的初始金额重新判断(每一个单位之间相距4位数，故除以10000)
-            strnum = (newNum * 1 / 10000).toString()
+            strnum = ((newNum * 1) / 10000).toString()
         }
     })
 
     return (strnum * 1).toFixed(2) + AmountUnit
 }
-  
 
 // 分享消息到当前会话
-export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, fileId) {
-    Getticket({url: location.href}).then(res => {
+export function sendChatMessage(
+    msgtype,
+    enterChat,
+    content,
+    imageId,
+    videoId,
+    fileId
+) {
+    Getticket({ url: location.href }).then((res) => {
         wx.config({
             beta: true,
             debug: false,
@@ -179,29 +189,30 @@ export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, f
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
             signature: res.data.signature,
-            jsApiList: [ "sendChatMessage", "invoke", "agentConfig", "checkJsApi" ],
+            jsApiList: ['sendChatMessage', 'invoke', 'agentConfig', 'checkJsApi'],
         })
         wx.ready(function() {
-            wx.invoke( "agentConfig", {
+            wx.invoke(
+                'agentConfig', {
                     corpid: res.data.corpId,
-                    agentid: res.data.agent_id + "",
+                    agentid: res.data.agent_id + '',
                     timestamp: res.data.agent_config_data.timestamp,
                     nonceStr: res.data.agent_config_data.noncestr,
                     signature: res.data.agent_config_data.signature,
-                    jsApiList: ["sendChatMessage", "getContext", "invoke"],
+                    jsApiList: ['sendChatMessage', 'getContext', 'invoke'],
                 },
                 function(res) {
                     let typeData = null
                     if (content) {
-                        typeData = { 
+                        typeData = {
                             msgtype, //消息类型，必填
                             enterChat, //为true时表示发送完成之后顺便进入会话，仅移动端3.1.10及以上版本支持该字段
                             text: {
                                 content, //文本内容
-                            }
+                            },
                         }
                     } else if (imageId) {
-                        typeData = { 
+                        typeData = {
                             msgtype, //消息类型，必填
                             enterChat, //为true时表示发送完成之后顺便进入会话，仅移动端3.1.10及以上版本支持该字段
                             image: {
@@ -209,13 +220,12 @@ export function sendChatMessage(msgtype, enterChat, content, imageId, videoId, f
                             },
                         }
                     }
-                    wx.invoke( "sendChatMessage", typeData , function (res) {
-                            if (res.err_msg == "sendChatMessage:ok") {
-                                //发送成功
-                                Toast("发送成功")
-                            }
+                    wx.invoke('sendChatMessage', typeData, function(res) {
+                        if (res.err_msg == 'sendChatMessage:ok') {
+                            //发送成功
+                            Toast('发送成功')
                         }
-                    )
+                    })
                 }
             )
         })
@@ -230,23 +240,23 @@ export async function wxShare(title, link, imgUrl, desc) {
         appId: appId, // 必填，公众号的唯一标识
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
-        signature: signature,// 必填，签名
-        jsApiList: ["updateAppMessageShareData", "updateTimelineShareData"] // 必填，需要使用的JS接口列表
+        signature: signature, // 必填，签名
+        jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'], // 必填，需要使用的JS接口列表
     })
-    wx.ready(function(){
-        wx.updateAppMessageShareData({ 
+    wx.ready(function() {
+        wx.updateAppMessageShareData({
             title: title, // 分享标题
             desc: desc, // 分享描述
             link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: imgUrl, // 分享图标
-            success: function () {}
+            success: function() {},
         })
-        wx.updateTimelineShareData({ 
+        wx.updateTimelineShareData({
             title: title, // 分享标题
             link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: imgUrl, // 分享图标
-            success: function () {}
-          })
+            success: function() {},
+        })
     })
 }
 
@@ -258,19 +268,21 @@ export async function wxPreviewImage(url, urlList) {
         appId: appId, // 必填，公众号的唯一标识
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
-        signature: signature,// 必填，签名
-        jsApiList: ["previewImage"] // 必填，需要使用的JS接口列表
+        signature: signature, // 必填，签名
+        jsApiList: ['previewImage'], // 必填，需要使用的JS接口列表
     })
-    wx.ready(function(){
-        wx.previewImage({ 
+    wx.ready(function() {
+        wx.previewImage({
             current: url, // 当前显示图片的http链接
-            urls: urlList ? urlList : [url] // 需要预览的图片http链接列表
+            urls: urlList ? urlList : [url], // 需要预览的图片http链接列表
         })
     })
 }
 
 async function getSignature() {
-    let {code, data} = await GetSignature(encodeURIComponent(window.location.href))
+    let { code, data } = await GetSignature(
+        encodeURIComponent(window.location.href)
+    )
     if (code == 'success') {
         return data
     }

@@ -32,22 +32,18 @@
             </van-radio-group>
           </template>
         </van-field>
-        <van-field v-if="radio == 1" required :value="customerVal" name="customerVal" label="对应客户:"
-                   @focus="selectDate" placeholder="请选择" @click="showPicker = true"
-                   right-icon="arrow-down" :rules="[{ required: true, message: '请选择对应客户名称' }]" />
-        <van-field v-if="radio == 2" v-model.trim="client" name="client" required placeholder="请输入"
-                   maxlength="15" label="对应客户:" :rules="[{ required: true, message: '请输入' }]" />
-        <van-field v-model="phone" name="phone" label="手机号码:" @blur="validator" maxlength="11"
-                   placeholder="请输入" />
-        <van-field v-model="address" name="address" label="客户地址:" maxlength="60"
-                   placeholder="请输入" />
-        <van-field class="remark" name="remark" v-model="remark" rows="2" label="备注:"
-                   type="textarea" maxlength="200" placeholder="请输入" show-word-limit />
+        <van-field v-if="radio == 1" required :value="customerVal" name="customerVal" label="对应客户:" @focus="selectDate" placeholder="请选择"
+                   @click="showPicker = true" right-icon="arrow-down" :rules="[{ required: true, message: '请选择对应客户名称' }]" />
+        <van-field v-if="radio == 2" v-model.trim="client" name="client" required placeholder="请输入" maxlength="15" label="对应客户:"
+                   :rules="[{ required: true, message: '请输入' }]" />
+        <van-field v-model="phone" name="phone" label="手机号码:" @blur="validator" maxlength="11" placeholder="请输入" />
+        <van-field v-model="address" name="address" label="客户地址:" maxlength="60" placeholder="请输入" />
+        <van-field class="remark" name="remark" v-model="remark" rows="2" label="备注:" type="textarea" maxlength="200" placeholder="请输入"
+                   show-word-limit />
         <van-button class="punch" native-type="submit">去打卡</van-button>
       </van-form>
       <van-popup v-model="showPicker" position="bottom">
-        <van-picker show-toolbar title="选择客户" value-key="customerName" :columns="columns"
-                    @confirm="onConfirm" @cancel="showPicker = false" />
+        <van-picker show-toolbar title="选择客户" value-key="customerName" :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
       </van-popup>
     </div>
     <!-- <div class="btm-box">
@@ -202,7 +198,15 @@ export default {
   background: #fff;
   height: 100%;
   box-sizing: border-box;
+  padding-top: 87px;
   .headerTitle {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translateX(-50%);
+    cursor: pointer;
     background: #fff;
     padding: 0 24px;
     font-weight: 600;

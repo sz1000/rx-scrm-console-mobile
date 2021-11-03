@@ -91,57 +91,10 @@ export default {
   methods: {
           shareText(v) {
       // console.log('----分享分组----', v)
-      this.$network
-        .get("/user-service/m/user/getticket", {
-          url: location.href,
-        })
-        .then((res) => {
-            console.log(res,"111111")
-          wx.config({
-            beta: true,
-            debug: true,
-            appId: res.data.corpId,
-            timestamp: res.data.timestamp,
-            nonceStr: res.data.nonceStr,
-            signature: res.data.signature,
-            jsApiList: [
-              "invoke",
-              "launchMiniprogram"
-            ],
-          });
-          var that = this;
-          wx.ready(function () {
-            wx.invoke(
-              "agentConfig",
-              {
-                corpid: res.data.corpId,
-                agentid: res.data.agent_id + "",
-                timestamp: res.data.agent_config_data.timestamp,
-                nonceStr: res.data.agent_config_data.noncestr,
-                signature: res.data.agent_config_data.signature,
-                jsApiList: [ "invoke","launchMiniprogram"],
-              },
-              function (res) {
-          console.log(res)
-                wx.invoke('launchMiniprogram', {
-            "appid" : "wxa489138bd9ccd5c8", // 需跳转的小程序appid
-            "path" : "pages/card", // 所需跳转的小程序内页面路径及参数。非必填
-        }, function(res) {
-            console.log(res)
-            if(res.err_msg == "launchMiniprogram:ok") {
-                console.log('res',res)
-                // 正常
-            } else {
-                // 错误处理
-                console.log('err',res)
-            }
-        }
-);
-              }
-              // }
-            );
-          });
-        });
+    var a = document.createElement("a");
+    //   a.download = "";
+    a.href ="https://wxaurl.cn/Llx3uA8Lopb";
+        a.click();
     },
 
     copy() {

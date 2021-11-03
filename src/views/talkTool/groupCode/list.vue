@@ -102,7 +102,7 @@
       </van-list>
     </div>
     <!-- 详情 -->
-    <van-popup position="center" round closeable v-model="dialog">
+    <van-popup position="center" class="van_warp" round closeable v-model="dialog">
       <div class="popup_wrap">
         <div class="popup_header">群活码详情</div>
         <div class="popup_content">
@@ -155,7 +155,7 @@
       </div>
     </van-popup>
     <!-- 弹框 -->
-    <div class="alten_box" v-if="showAlt">
+    <!-- <div class="alten_box" v-if="showAlt">
       <div class="box_warpalt">
         <div class="warp_alt">
           <p class="alter_tite">温馨提示</p>
@@ -166,7 +166,7 @@
           <p class="queding" @click="Addconfirm">确定</p>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -252,38 +252,38 @@ export default {
     deleteFun(row) {
       this.showAlt = true;
       //删除活码
-      //   this.$dialog
-      // .confirm({
-      //   title: "温馨提示",
-      //   message: "是否确认删除",
-      // })
-      // .then(() => {
-      //   console.log("yes");
-      this.nowData = {
+        this.$dialog
+      .confirm({
+        title: "温馨提示",
+        message: "是否确认删除",
+      })
+      .then(() => {
+        console.log("yes");
+      let _data = {
         livecodeNo: row.livecodeNo,
       };
-      //   livecodegroup_delete(_data).then((res) => {
-      //     if (res.result) {
-      //       this.search.page--;
-      //       this.getList();
-      //     }
-      //   });
-      // })
-      // .catch(() => {
-      //   // on cancel
-      //   console.log("cancel");
-      // });
-    },
-    // 确定
-    Addconfirm() {
-      this.showAlt = false;
-      livecodegroup_delete(this.nowData).then((res) => {
-        if (res.result) {
-          this.search.page--;
-          this.getList();
-        }
+        livecodegroup_delete(_data).then((res) => {
+          if (res.result) {
+            this.search.page--;
+            this.getList();
+          }
+        });
+      })
+      .catch(() => {
+        // on cancel
+        console.log("cancel");
       });
     },
+    // 确定
+    // Addconfirm() {
+    //   this.showAlt = false;
+    //   livecodegroup_delete(this.nowData).then((res) => {
+    //     if (res.result) {
+    //       this.search.page--;
+    //       this.getList();
+    //     }
+    //   });
+    // },
     openDetail(row) {
       //详情
       this.detail = row;
@@ -344,6 +344,9 @@ export default {
 @import "~@/styles/color.less";
 
 .list_wrap {
+    .van_warp{
+        overflow: hidden;
+    }
   .alten_box {
     background: rgba(#000, 0.5);
     position: fixed;
@@ -404,7 +407,7 @@ export default {
     width: 702px;
     // min-height: 50vh;
     // max-height: 80vh;
-    height: 60vh;
+    // height: 45vh;
     background: @white;
     position: relative;
     padding-top: 88px;
@@ -428,6 +431,8 @@ export default {
       background: @white;
       padding: 24px;
       position: relative;
+      overflow: auto;
+      height: 45vh;
       .p_item {
         width: 100%;
         font-size: 24px;
