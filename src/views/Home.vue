@@ -22,133 +22,92 @@
       </div>
       <div class="customAccont tool">引流获客</div>
       <div class="btnRouter">
-        <!-- <router-link to="/talkTool/enterpriseCode" v-show="menulist.includes('livecode')">
-        </router-link> -->
         <div class="commonBtn" @click="FnToRouter('/talkTool/enterpriseCode')" v-show="menulist.includes('livecode')">
           <img src="../images/huoma.png" alt="" />
           <span>获客活码</span>
         </div>
-        <!-- <router-link to="/talkTool/channelConfiguration" v-show="menulist.includes('channle')">
-        </router-link> -->
         <div class="commonBtn" @click="FnToRouter('/talkTool/channelConfiguration')" v-show="menulist.includes('channle')">
           <img src="../images/qudao.png" alt="" />
           <span>渠道配置</span>
         </div>
-        <router-link to="/talkTool/customerGroup" v-show="menulist.includes('customerSend')">
-          <div class="commonBtn">
-            <img src="../images/qunfa.png" alt="" />
-            <span>客户群发</span>
-          </div>
-        </router-link>
-        <router-link to="/talkTool/CustomergroupPlaye" v-show="menulist.includes('groupSend')">
-          <div class="commonBtn">
-            <img src="../images/qunqnfa.png" alt="" />
-            <span>客户群群发</span>
-          </div>
-        </router-link>
-        <router-link to="/talkTool/lableDataGroup" v-show="menulist.includes('labelGroup')">
-          <div class="commonBtn">
-            <img src="../images/yjlqon.png" alt="" />
-            <span>标签建群</span>
-          </div>
-        </router-link>
-        <router-link to="/talkTool/groupCodeList" v-show="menulist.includes('groupLivecode')">
-          <div class="commonBtn">
-            <img src="../images/qhm.png" alt="" />
-            <span>群活码</span>
-          </div>
-        </router-link>
-        <router-link to="/talkTool/myCard" v-show="menulist.includes('business')">
-          <div class="commonBtn">
-            <img src="../images/card.png" alt="" />
-            <span>智能名片</span>
-          </div>
-        </router-link>
-        <router-link to="/talkTool/circleFriend" v-show="menulist.includes('circle')">
-          <div class="commonBtn">
-            <img src="../images/friedn.png" alt="" />
-            <span>朋友圈</span>
-          </div>
-        </router-link>
-
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/lzbd.png" alt="" />
-            <span class="nomaltext">留资表单</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/znsk2.png" alt="" />
-            <span class="nomaltext">智能搜客</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/xstc2.png" alt="" />
-            <span class="nomaltext">线索探查</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/dthk.png" alt="" />
-            <span class="nomaltext">地图获客</span>
-          </div>
-        </router-link>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
+          <img src="../images/qunfa.png" alt="" />
+          <span>客户群发</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
+          <img src="../images/qunqnfa.png" alt="" />
+          <span>客户群群发</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
+          <img src="../images/yjlqon.png" alt="" />
+          <span>标签建群</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
+          <img src="../images/qhm.png" alt="" />
+          <span>群活码</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
+          <img src="../images/card.png" alt="" />
+          <span>智能名片</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
+          <img src="../images/friedn.png" alt="" />
+          <span>朋友圈</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/lzbd.png" alt="" />
+          <span class="nomaltext">留资表单</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/znsk2.png" alt="" />
+          <span class="nomaltext">智能搜客</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/xstc2.png" alt="" />
+          <span class="nomaltext">线索探查</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/dthk.png" alt="" />
+          <span class="nomaltext">地图获客</span>
+        </div>
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
-        <router-link to="/customerManage/clues" v-show="menulist.includes('clew')">
-          <div class="commonBtn">
-            <img src="../images/xiansuo.png" alt="" />
-            <span>线索</span>
-          </div>
-        </router-link>
-        <router-link to="/customerManage/myCustomer" v-show="menulist.includes('customer')">
-          <div class="commonBtn">
-            <img src="../images/kehu.png" alt="" />
-            <span>客户</span>
-          </div>
-        </router-link>
-        <router-link to="/customerManage/grouplist" v-show="menulist.includes('group')">
-          <div class="commonBtn">
-            <img src="../images/grouplist.png" alt="" />
-            <span>群列表</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/lskh2.png" alt="" />
-            <span class="nomaltext">流失客户</span>
-          </div>
-        </router-link>
+        <div class="commonBtn" @click="FnToRouter('/customerManage/clues')" v-show="menulist.includes('clew')">
+          <img src="../images/xiansuo.png" alt="" />
+          <span>线索</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/customerManage/myCustomer')" v-show="menulist.includes('customer')">
+          <img src="../images/kehu.png" alt="" />
+          <span>客户</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/customerManage/grouplist')" v-show="menulist.includes('group')">
+          <img src="../images/grouplist.png" alt="" />
+          <span>群列表</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/lskh2.png" alt="" />
+          <span class="nomaltext">流失客户</span>
+        </div>
       </div>
       <div class="customAccont manage">办公协同</div>
       <div class="btnRouter custom">
-        <router-link to="/punchCard" v-show="menulist.includes('punchCode')">
-          <div class="commonBtn">
-            <img src="../images/wcdk.png" alt="" />
-            <span>外出打卡</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/bfjh.png" alt="" />
-            <span class="nomaltext">拜访计划</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/dbsx.png" alt="" />
-            <span class="nomaltext">待办事项</span>
-          </div>
-        </router-link>
-        <router-link to="">
-          <div class="commonBtn" @click="showMsg">
-            <img src="../images/wdbb2.png" alt="" />
-            <span class="nomaltext">我的报表</span>
-          </div>
-        </router-link>
+        <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
+          <img src="../images/wcdk.png" alt="" />
+          <span>外出打卡</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/bfjh.png" alt="" />
+          <span class="nomaltext">拜访计划</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/dbsx.png" alt="" />
+          <span class="nomaltext">待办事项</span>
+        </div>
+        <div class="commonBtn" @click="showMsg">
+          <img src="../images/wdbb2.png" alt="" />
+          <span class="nomaltext">我的报表</span>
+        </div>
       </div>
     </div>
     <!-- <div class="btm-box">
