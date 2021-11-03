@@ -35,17 +35,20 @@
         <div class="content">
           <div class="changeUser">
             <div class="selectUser">
-              <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择员工"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
-                </el-option>
-              </el-select>
+              <div class="pleSs"><span style="color: red;">*</span>指定所属人:</div>
+              <input class="changeSsSec" type="text" readonly="readonly" placeholder="请选择"  :value="helperName" @click="openSsPop" />
+		              
+		              <van-action-sheet v-model="SsPop" title="选择所属人">
+							  		<van-picker
+											  title=""
+											  show-toolbar
+											  :columns="options"
+											  @confirm="onConfirm"
+											  @cancel="onCancel"
+											  @change="onChange"
+											  value-key="name"
+											/>
+						 			</van-action-sheet>
             </div>
           </div>
           <div class="buttonWarp">
@@ -96,6 +99,8 @@ export default {
       options: [],
       objItem: JSON.parse(localStorage.getItem('customer')),
       btnList: [],
+      SsPop:false,
+      helperName:'',
     }
   },
   created() {
@@ -111,6 +116,24 @@ export default {
     }
   },
   methods: {
+  	  	  	openSsPop(){
+  		this.SsPop = true;
+  	},
+  	onConfirm(value, index) {
+     // console.log(`当前值：${value}, 当前索引：${index}`);
+      console.log(value)
+				this.userNo = value.userNo
+       this.helperName = value.name
+   			this.SsPop = false;
+    },
+    onChange(picker, value, index) {
+    	/*console.log(value)
+      console.log(`当前值：${value}, 当前索引：${index}`);*/
+    },
+    onCancel() {
+    	this.SsPop = false;
+      console.log('取消');
+    },
     // 导航切换
     changeNav(index) {
       this.contentType = index
@@ -440,6 +463,28 @@ export default {
       }
     }
   }
+}
+.changeSsSec{
+	    height: 80px;
+    	font-size: 30px;
+    	padding-left: 15px;
+    	border-radius: 8px;
+    	margin-left: 17px;
+    	color: #C0C4CC ;
+    	line-height: 80px;
+    	background: #FFFFFF;
+			border: 1px solid #D9DAE4;
+			border-radius: 8px;
+			font-weight: 300;
+}
+.pleSs{
+	display: inline-block;
+	margin-left: 23px;
+	margin-bottom: 25px;
+	margin-top: 15px;
+	font-size: 30px;
+	font-weight: 400;
+	color:  #3C4353;
 }
 </style>
 <style lang="less">
