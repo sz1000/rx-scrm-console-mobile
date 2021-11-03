@@ -239,7 +239,15 @@ export default {
 }
 .clueWarp {
   height: 100%;
+  padding-top: 87px;
   .headerTitle {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translateX(-50%);
+    cursor: pointer;
     background: #fff;
     padding: 0 24px;
     font-weight: 600;

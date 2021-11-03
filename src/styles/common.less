@@ -185,10 +185,17 @@ section {
   padding: 0;
 }
 
-body {
+body,
+button,
+input,
+select,
+textarea {
   color: #3c4353;
-  font-family: "PingFangSC-Regular, PingFang SC";
   background: #f6f7f9;
+  font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+  font-weight: 400;
+  // line-height: 1; 
+  font-size: inherit;
 }
 
 em,
@@ -314,14 +321,16 @@ a:hover {
   .van-dialog__header {
     text-align: left;
     padding-left: 24px;
+    padding-top: 16px;
     font-size: 28px;
     font-weight: 600;
   }
 
   .van-dialog__message {
-    margin-top: 24px;
+    // margin-top: 24px;
     font-size: 28px;
     line-height: 35px;
+    padding: 24px;
   }
 
   .van-dialog__footer {
@@ -381,26 +390,12 @@ a:hover {
   .commonVant();
 }
 
-.deleteWordBtn {
-  width: 702px;
-  height: 284px;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #eeeeee;
-  font-size: 28px;
-  .commonVant();
-}
-
 .giveUpBtn {
   width: 702px;
   height: 326px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #eeeeee;
-
-  .van-dialog__header {
-    padding-top: 16px;
-  }
 
   .van-dialog__content {
     height: 140px;
@@ -424,7 +419,7 @@ a:hover {
 /deep/.popper-select-class {
   .el-popper {
     &.el-scrollbar {
-      > .el-scrollbar__bar {
+      >.el-scrollbar__bar {
         opacity: 1 !important;
       }
     }
@@ -446,6 +441,7 @@ textarea {
   height: 68px;
   font-size: 24px;
 }
+
 // .detail_wrap {
 //   .van-popup--bottom {
 //     left: 50% !important;

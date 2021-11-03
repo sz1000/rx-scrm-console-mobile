@@ -298,7 +298,15 @@ export default {
 .detailWarp {
   background: #fff;
   padding: 0 24px;
+  padding-top: 87px;
   .headerTitle {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translateX(-50%);
+    cursor: pointer;
     font-weight: 600;
     display: flex;
     height: 87px;

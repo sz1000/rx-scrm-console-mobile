@@ -114,7 +114,7 @@ export default {
         imgArr = [this.inputUrl]
       }
       let params = {
-        content: this.textInput,
+        content: this.textVal,
         urls: imgArr,
         msgtype: this.tab,
       }
@@ -139,43 +139,57 @@ export default {
       let _this = this
       let ve = e
       let file = e.target.files[0]
-      let filesize = e.target.files[0].size
+      let filesize = file.size
       var reader = new FileReader()
       if (filesize / 1024 / 1024 > 10) {
-        _this.$message({
-          type: 'error',
+        // _this.$message({
+        //   type: 'error',
+        //   message: '图片大小不能超过10M',
+        // })
+        Notify({
           message: '图片大小不能超过10M',
+          type: 'danger',
+          duration: 1000,
         })
         return false
       }
-      reader.readAsDataURL(file)
-      reader.onload = function (e) {
-        // console.log(e)
-        let img = new Image()
-        img.src = e.target.result
-        img.onload = function () {
-          let w = this.width
-          let h = this.height
-          if (w > 1080 || h > 1440) {
-            _this.$message({
-              type: 'error',
-              message: '图片像素不能超过1440*1080',
-            })
-            return false
-          } else {
-            //文件上传
-            let formData = new FormData()
-            formData.append('file', ve.target.files[0])
-            formData.append('filetype', fileType)
-            formData.append('type', type)
-            _this.$toast.loading()
-            uploadFile(formData).then((res) => {
-              _this.$toast.clear()
-              _this.lists.push(res.data.url)
-            })
-          }
-        }
-      }
+      let formData = new FormData()
+      formData.append('file', file)
+      formData.append('filetype', fileType)
+      formData.append('type', type)
+      this.$toast.loading()
+      uploadFile(formData).then((res) => {
+        this.$toast.clear()
+        this.lists.push(res.data.url)
+      })
+      // reader.readAsDataURL(file)
+      // reader.onload = function (e) {
+      //   // console.log(e)
+      //   let img = new Image()
+      //   img.src = e.target.result
+      //   img.onload = function () {
+      //     let w = this.width
+      //     let h = this.height
+      //     if (w > 1080 || h > 1440) {
+      //       _this.$message({
+      //         type: 'error',
+      //         message: '图片像素不能超过1440*1080',
+      //       })
+      //       return false
+      //     } else {
+      //       //文件上传
+      //       let formData = new FormData()
+      //       formData.append('file', ve.target.files[0])
+      //       formData.append('filetype', fileType)
+      //       formData.append('type', type)
+      //       _this.$toast.loading()
+      //       uploadFile(formData).then((res) => {
+      //         _this.$toast.clear()
+      //         _this.lists.push(res.data.url)
+      //       })
+      //     }
+      //   }
+      // }
     },
     uploadVideo(e, fileType, type, accept, size) {
       // console.log('---e----', e)
@@ -185,18 +199,28 @@ export default {
       let url = URL.createObjectURL(file)
       let audioElement = new Audio(url)
       if (filesize / 1024 / 1024 > 10) {
-        _this.$message({
-          type: 'error',
+        // _this.$message({
+        //   type: 'error',
+        //   message: '视频大小不能超过10M',
+        // })
+        Notify({
           message: '视频大小不能超过10M',
+          type: 'danger',
+          duration: 1000,
         })
         return false
       }
       audioElement.addEventListener('loadedmetadata', function () {
         let duration = audioElement.duration
         if (duration > 30) {
-          _this.$message({
-            type: 'error',
+          // _this.$message({
+          //   type: 'error',
+          //   message: '视频不能超过30s',
+          // })
+          Notify({
             message: '视频不能超过30s',
+            type: 'danger',
+            duration: 1000,
           })
           return false
         } else {
@@ -220,21 +244,28 @@ export default {
 </script>
 <style lang="less" scoped>
 .friendWarp {
+  padding-top: 87px;
   min-height: 100vh;
   .headerTitle {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translateX(-50%);
+    cursor: pointer;
     background: #fff;
     padding: 0 24px;
     font-weight: 600;
     display: flex;
     height: 87px;
-    // line-height: 87px;
     align-items: center;
     font-size: 28px;
     color: #3c4353;
     border-top: 1px solid #f0f2f7;
     border-bottom: 1px solid #f0f2f7;
     .backPage {
-      width: 150px;
+      // width: 150px;
       .van-icon {
         vertical-align: -10%;
         width: 28px;
@@ -244,7 +275,8 @@ export default {
     .textTitle {
       flex: 1;
       display: inline-block;
-      padding-left: 150px;
+      // padding-left: 150px;
+      text-align: center;
     }
     .send {
       width: 114px;
@@ -257,7 +289,7 @@ export default {
     }
   }
   .explan {
-    width: 100vw;
+    width: 750px;
     padding: 0 32px;
     height: 68px;
     line-height: 68px;
@@ -306,7 +338,7 @@ export default {
         border-radius: 31px;
         border: 2px solid #c0c4cc;
         text-align: center;
-        line-height: 62px;
+        line-height: 60px;
       }
       .active {
         border-color: #4168f6;
@@ -433,7 +465,7 @@ export default {
           }
         }
         .upload_tips {
-          font-size: 14px;
+          font-size: 24px;
           color: #c0c4cc;
           margin-top: 24px;
         }
