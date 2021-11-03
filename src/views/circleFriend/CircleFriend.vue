@@ -5,13 +5,13 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">群列表</span>
+      <span class="textTitle">新建朋友圈</span>
       <div class="send" @click="sendMessage">
         <span>发表</span>
       </div>
     </div>
     <div class="explan" v-show="fnClose">
-      <span>每位客户的朋友圈每个月最多展示4条企业发</span>
+      <span>每位客户的朋友圈每个月最多展示4条企业发表的内容</span>
       <van-icon name="cross" @click="fnClose=false" />
     </div>
     <div class="friendText">
@@ -50,7 +50,7 @@
           <div class="upload_row">
             <div class="upload_box_list" v-if="videoUrl">
               <div class="img_box">
-                <video :src="videoUrl" controls="controls" ref="video" />
+                <video :src="videoUrl" controls="controls" preload='auto' ref="video" />
                 <img src="../../images/defriend.png" alt="" class="deleteIcon" @click="fnDeleteVideo" />
               </div>
             </div>
@@ -85,6 +85,7 @@
 </template>
 <script>
 import { uploadFile, addFriend } from '../../api/friend'
+import { _throttle } from '../../utils/tool'
 import { Notify } from 'vant'
 export default {
   data() {
@@ -102,7 +103,8 @@ export default {
     goBack() {
       this.$router.push('/home')
     },
-    sendMessage() {
+    sendMessage: _throttle(function () {
+      // console.log(11111111)
       let imgArr = []
       if (this.tab == 'image') {
         imgArr = this.lists
@@ -128,7 +130,8 @@ export default {
           this.$router.push('/home')
         }
       })
-    },
+    }, 5000),
+    // sendMessage() {},
     fnDeleteImg(v, i) {
       this.lists.splice(i, 1)
     },
@@ -136,7 +139,15 @@ export default {
       let _this = this
       let ve = e
       let file = e.target.files[0]
+      let filesize = e.target.files[0].size
       var reader = new FileReader()
+      if (filesize / 1024 / 1024 > 10) {
+        _this.$message({
+          type: 'error',
+          message: '图片大小不能超过10M',
+        })
+        return false
+      }
       reader.readAsDataURL(file)
       reader.onload = function (e) {
         // console.log(e)
@@ -148,7 +159,7 @@ export default {
           if (w > 1080 || h > 1440) {
             _this.$message({
               type: 'error',
-              message: '图片大小不能超过1440*1080',
+              message: '图片像素不能超过1440*1080',
             })
             return false
           } else {
@@ -167,10 +178,19 @@ export default {
       }
     },
     uploadVideo(e, fileType, type, accept, size) {
+      // console.log('---e----', e)
       let _this = this
       let file = e.target.files[0]
+      let filesize = e.target.files[0].size
       let url = URL.createObjectURL(file)
       let audioElement = new Audio(url)
+      if (filesize / 1024 / 1024 > 10) {
+        _this.$message({
+          type: 'error',
+          message: '视频大小不能超过10M',
+        })
+        return false
+      }
       audioElement.addEventListener('loadedmetadata', function () {
         let duration = audioElement.duration
         if (duration > 30) {
@@ -284,7 +304,7 @@ export default {
         width: 212px;
         height: 62px;
         border-radius: 31px;
-        border: 1px solid #c0c4cc;
+        border: 2px solid #c0c4cc;
         text-align: center;
         line-height: 62px;
       }
@@ -425,6 +445,9 @@ export default {
         .input_item {
           border: 1px solid #d9dae4;
           padding: 0 16px;
+          input {
+            width: 100%;
+          }
         }
         .input_box {
           width: 100%;
