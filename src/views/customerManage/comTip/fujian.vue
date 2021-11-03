@@ -18,7 +18,7 @@
 							  :file-list="eleList"
 							  :on-success="onSuccess"
 							  :on-error="onError">
-							  <el-button class="upBtn" size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
+							  <el-button class="upBtn" size="small" type="primary"><img class="yunClass" src="../../../assets/images/icon_shangchuan.png" alt="" /><!--<i class="el-icon-upload"></i>-->上传</el-button>
 							</el-upload>
 							
 							<div class="listBox" v-for="(item, index) in fileList" :key="index">
@@ -262,5 +262,10 @@ export default {
 /deep/.el-message-box{
 	    width: 376px!important;
     	height: 134px !important;
+}
+.yunClass{
+	width: 28px;
+	height: 28px;
+	float: left;
 }
 </style>
