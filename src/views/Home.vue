@@ -166,7 +166,7 @@
         </router-link>
         <router-link to="">
           <div class="commonBtn" @click="showMsg">
-            <img src="../images/bfjh.png" alt="" />
+             <img src="../images/bfjh.png" alt="" />
             <span class="nomaltext">拜访计划</span>
           </div>
         </router-link>
@@ -228,7 +228,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    CommonHome.getWxToken();
+    // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
