@@ -228,7 +228,7 @@ export default {
       duration: 1000,
       loadingType: "spinner",
     });
-    CommonHome.getWxToken();
+    // CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
