@@ -980,6 +980,7 @@ export default {
   display: none !important;
 }
 .microCode.group-setting-warp {
+  padding-top: 87px;
   font-family: PingFangSC-Regular !important;
   .el-radio__input.is-checked + .el-radio__label {
     color: #4168f6;
@@ -1016,6 +1017,12 @@ export default {
     color: #3c4353;
     border-top: 1px solid #f0f2f7;
     border-bottom: 1px solid #f0f2f7;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translate(-50%);
     .backPage {
       cursor: default;
       width: 150px;

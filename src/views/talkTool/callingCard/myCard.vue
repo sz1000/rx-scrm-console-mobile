@@ -33,30 +33,37 @@
         <img class="img" src="@/assets/images/card_no_setting.png" />
       </div>
     </div>
-    <!--   :data-clipboard-text="titeActive tag-read" -->
+    <!--    tag-read" -->
     <div class="footer_opera" v-if="isSetting">
       <div class="item">
-        <div class="icon_btn" @click="show = true">
+        <div class="icon_btn  tag-read" :data-clipboard-text="titeActive" @click="copy">
           <img class="img" src="@/assets/images/share.png" alt="" />
           <div class="btn">分享名片</div>
         </div>
       </div>
+  
       <div class="item">
         <div class="icon_btn" @click="$router.push('/talkTool/poster')">
           <img class="img" src="@/assets/images/download.png" alt="" />
           <div class="btn">生成海报</div>
         </div>
       </div>
+          <div class="item">
+        <div class="icon_btn" @click="shareText">
+          <img class="img" src="@/assets/images/share.png" alt="" />
+          <div class="btn">跳转小程序</div>
+        </div>
+      </div>
     </div>
     <!-- 分享提示窗 -->
-    <van-overlay class="dialog_wrap" :show="show">
-      <div class="dialog_box" @click="show = false">
+    <!-- <van-overlay class="dialog_wrap" :show="show">
+      <div class="dialog_box" @click="copy">
         <div class="tips">
           <div class="text">点击右上角进行分享</div>
           <div class="text">知道了</div>
         </div>
       </div>
-    </van-overlay>
+    </van-overlay> -->
   </div>
 </template>
 
@@ -82,30 +89,46 @@ export default {
     this.getDetail();
   },
   methods: {
-    // copy() {
-    //   var clipboard = new Clipboard(".tag-read");
-    //   clipboard.on("success", (e) => {
-    //     // console.log("复制成功");
-    //     Toast("复制成功");
-    //     //  释放内存
-    //     // clipboard.destory();
-    //   });
-    //   clipboard.on("error", (e) => {
-    //     // 不支持复制
-    //     console.log("该浏览器不支持复制");
-    //     Toast("复制失败");
-    //     // 释放内存
-    //     // clipboard.destory();
-    //   });
-    // },
+          shareText(v) {
+      // console.log('----分享分组----', v)
+    var a = document.createElement("a");
+    //   a.download = "";
+    a.href ="https://wxaurl.cn/Llx3uA8Lopb";
+        a.click();
+    },
+
+    copy() {
+      var clipboard = new Clipboard(".tag-read");
+                         if(this.titeActive == ""){
+           Toast("链接为空,复制失败！");
+      }
+      clipboard.on("success", (e) => {
+        // console.log("复制成功");
+        Toast("复制成功");
+        //  释放内存
+        // clipboard.destory();
+      });
+      clipboard.on("error", (e) => {
+        // 不支持复制
+        console.log("该浏览器不支持复制");
+        Toast("复制失败");
+        // 释放内存
+        // clipboard.destory();
+      });
+    },
     getDetail() {
       //获取详情
       userBusinessCard_personalCard().then((res) => {
-        console.log(res);
+        console.log(res,"----");
+    
         if (res.result) {
           let data = res.data;
           this.detail = data;
-          this.titeActive = data.miniProgramUrlLink.replace(/\"/g, "");
+          console.log(data.miniProgramUrlLink,"0000")
+
+   let dataLInk = data.miniProgramUrlLink ? data.miniProgramUrlLink.replace(/\"/g, "") : ''
+              this.titeActive = dataLInk;
+   
           if (res.data) {
             this.isSetting = true;
           } else {
