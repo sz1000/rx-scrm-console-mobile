@@ -69,7 +69,7 @@ export default {
           kehuList = res.data
           
           for(let i = 0;i<kehuList.length;i++){
-			    		kehuList[i].value = kehuList[i].name
+			    		kehuList[i].value = kehuList[i].customerName
 			    }
            this.optKehu  = kehuList
              console.log('this.optKehu=====', this.optKehu)

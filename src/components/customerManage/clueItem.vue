@@ -2,8 +2,8 @@
     <div class="customer-item">
         <div class="customInfo">
             <div class="iconName">
-              <span>客户简称: </span>
-              <span>{{ itemData.customerName }}</span>
+              <span>姓名: </span>
+              <span>{{ itemData.name }}</span>
             </div>
             <!-- <div class="detailBtn"
                @click="deleteCard(item,index)">
@@ -11,7 +11,7 @@
             删除
           </div> -->
           <div v-if="type == 2" class="detailBtn" @click="goDetail(itemData, index)">
-              详情<van-icon name="arrow" />
+              详情<van-icon style="top: 2px;" name="arrow" />
           </div>
         </div>
         <div class="detailInfo" @click="goDetail(itemData, index)">
@@ -31,7 +31,7 @@
             </div>
             <div class="right">
                 <div class="rowStyle">
-                <span>公司名称:</span>
+                <span>手机:</span>
                 <span>{{ itemData.phone }}</span>
                 </div>
                 <div class="rowStyle">
