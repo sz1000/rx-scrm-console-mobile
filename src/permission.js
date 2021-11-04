@@ -1,7 +1,7 @@
 import router from './router'
 import store from '@/store'
 router.beforeEach(async(to, from, next) => {
-    let token = store.getters.token
+    // let token = store.getters.token
     console.log('href', window.location.href, to)
     next()
 })
