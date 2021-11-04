@@ -152,9 +152,9 @@ export default {
     this.$toast.loading({
       overlay: true,
       duration: 1000,
-      loadingType: 'spinner',
-    })
-    CommonHome.getWxToken()
+      loadingType: "spinner",
+    });
+    CommonHome.getWxToken();
   },
   mounted() {
     setTimeout(() => {
