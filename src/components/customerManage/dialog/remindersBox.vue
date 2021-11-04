@@ -77,7 +77,7 @@ export default {
         async getList() {
             let params = {
                 customerNo: this.customerNo,
-                isPublic: this.fromType == 4 ? true : false,
+                isPublic: this.fromType == '4' ? true : false,
                 corpId: this.corpId
             }
 
@@ -160,6 +160,7 @@ export default {
                         img {
                             width: 100%;
                             height: 100%;
+                            margin: 0;
                         }
                     }
                     &:not(:last-child)::after {

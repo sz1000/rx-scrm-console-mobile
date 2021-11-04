@@ -97,7 +97,7 @@
                         <span>来源:</span>
                         <span>{{ itemData.source }}</span>
                     </div>
-                    <div v-if="fromType == 3" class="rowStyle">
+                    <div v-if="fromType == '3'" class="rowStyle">
                         <span>负责人:</span>
                         <span>{{ itemData.uname }}</span>
                     </div>

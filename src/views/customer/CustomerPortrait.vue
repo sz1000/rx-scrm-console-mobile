@@ -123,7 +123,7 @@ export default {
     entry() {
       // return 'single_chat_tools'
       // console.log("this.$store.getters.entry???", this.$store.getters.entry)
-      // return this.$store.getters.entry || sessionStorage.getItem('entry')
+      return this.$store.getters.entry || sessionStorage.getItem('entry')
     },
     userId() {
       // return 'wmY-gRDAAAeWi_4fz3ic79XYqKRG7EZg'
