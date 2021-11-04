@@ -18,7 +18,7 @@
             <div class="avatar">{{ avatar }}</div>
             <div class="info">
               <div class="name">
-                {{ contractName }}<i v-if="taskType != 2">{{ detail.customerType }}}</i>
+                {{ contractName }}<i v-if="taskType != 2">{{ detail.customerType }}</i>
               </div>
               <!-- <div class="name" v-else>
                 {{ detail.customerContactName
