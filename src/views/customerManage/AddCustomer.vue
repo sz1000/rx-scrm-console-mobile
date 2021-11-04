@@ -275,6 +275,8 @@ export default {
         min-width: 170px !important;
         font-size: 28px;
         line-height: 80px;
+        margin: 20px 24px 0 0;
+        padding: 0;
       }
 
       .el-form-item__content {

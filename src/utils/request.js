@@ -38,7 +38,7 @@ instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
             const token = getStoreValue('token') //生产token
-                // const token = localStorage.getItem('token') //本地token
+            //const token = localStorage.getItem('token') //本地token
             if (token) {
                 config.headers.common.token = token
             }

@@ -87,10 +87,7 @@ export default {
 				        .post('/customer-service/cluecustomeraccessory/delupload',obj)
 				        .then((res) => {
 				          console.log(res)
-				          this.$message({
-				            type: 'success',
-				            message: res.msg,
-				          })
+				          this.$toast(res.msg)
 				          //this.$set(this.fileList)
 				          this.getDownList()
 				        })
@@ -127,18 +124,12 @@ export default {
 			},
 			onSuccess(response, file, fileList){
 	 				this.eleList = []
-	     		this.$message({
-	                type: 'success',
-	                message: '上传成功!',
-	              })
+	 				this.$toast('上传成功!')
 				this.getDownList()
 			},
 			onError(err, file, fileList){
 				console.log(err)
-				this.$message({
-	        type: 'success',
-	        message: '上传失败!',
-	      })
+				this.$toast('上传失败!')
 			},
 			beforeRemove(file, fileList) {
 				console.log(file, fileList)
