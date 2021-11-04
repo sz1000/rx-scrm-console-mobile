@@ -10,7 +10,7 @@
     </div>
 
     <div class="customer-data">
-      <customer-item :type="2" :itemData="objItem"></customer-item>
+      <customer-item :type="2" :fromType="'4'" :itemData="objItem"></customer-item>
     </div>
     
     <div class="infoContent">
@@ -120,6 +120,7 @@ export default {
   created() {
     this.btnList = JSON.parse(this.$route.query.alllist)
     this.getCorpId()
+    this.showGuideBox()
   },
   provide() {
     return {
@@ -159,13 +160,13 @@ export default {
       this.$router.go(-1)
     },
 
-    showGuideBox() {
+    showGuideBox(fromType) {
       let isFirstTimeEnter = localStorage.getItem('JZCRM_ISFIRSTTIMEENTER')
 
-      if (!isFirstTimeEnter) {
+      if (!fromType && !isFirstTimeEnter) {
         localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 1)
         this.doShowGuideBox(1)
-      } else if (isFirstTimeEnter && isFirstTimeEnter == 1) {
+      } else if (fromType == 1 && isFirstTimeEnter && isFirstTimeEnter == 1) {
         localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 2)
         this.doShowGuideBox(2)
       }
@@ -340,7 +341,6 @@ export default {
     }
   }
   .customer-data {
-    height: 400px;
     padding: 0 0 24px;
     background: #fff;
   }

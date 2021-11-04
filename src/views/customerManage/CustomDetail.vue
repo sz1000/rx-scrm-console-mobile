@@ -10,7 +10,7 @@
     </div>
 
     <div class="customer-data">
-      <customer-item :type="2" :itemData="objItem"></customer-item>
+      <customer-item :type="2" :fromType="$route.query.type" :itemData="objItem"></customer-item>
     </div>
 
     <div class="infoContent">
@@ -351,7 +351,6 @@ export default {
     }
   }
   .customer-data {
-    height: 400px;
     padding: 0 0 24px;
     background: #fff;
   }

@@ -95,7 +95,7 @@ export default {
   },
   data() {
     return {
-      showPortraitType: 0,
+      showPortraitType: 1,
       title: '',
       name: '',
       nameFrom: '',
@@ -122,7 +122,7 @@ export default {
     // ...mapState(['userId']),
     entry() {
       // return 'single_chat_tools'
-      console.log("this.$store.getters.entry???", this.$store.getters.entry)
+      // console.log("this.$store.getters.entry???", this.$store.getters.entry)
       return this.$store.getters.entry || sessionStorage.getItem('entry')
     },
     userId() {
@@ -166,13 +166,13 @@ export default {
     changeNav(index) {
       this.contentType = index
     },
-    showGuideBox() {
+    showGuideBox(fromType) {
       let isFirstTimeEnter = localStorage.getItem('JZCRM_ISFIRSTTIMEENTER')
 
-      if (!isFirstTimeEnter) {
+      if (!fromType && !isFirstTimeEnter) {
         localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 1)
         this.doShowGuideBox(1)
-      } else if (isFirstTimeEnter && isFirstTimeEnter == 1) {
+      } else if (fromType == 1 && isFirstTimeEnter && isFirstTimeEnter == 1) {
         localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 2)
         this.doShowGuideBox(2)
       }
@@ -361,7 +361,6 @@ export default {
   .infoContent {
     margin-top: 24px;
     background: #fff;
-    padding: 24px 24px 0;
     .header-nav {
         display: flex;
         width: 100%;
