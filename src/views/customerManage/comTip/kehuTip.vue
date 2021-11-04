@@ -1,6 +1,6 @@
 <template>
 	<div class="tipBox">
-		 <el-form-item class="kehuForm" label="客户简称"
+		 <el-form-item class="kehuForm" label="客户简称:"
                       prop='customerName'
                       :rules="[ { required: true, message: '请输入客户简称',trigger: 'blur'}]"
                       >

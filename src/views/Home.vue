@@ -362,6 +362,7 @@ export default {
   }
   .custom {
     .commonBtn {
+      cursor: pointer;
       span {
         margin-left: 5px;
       }
