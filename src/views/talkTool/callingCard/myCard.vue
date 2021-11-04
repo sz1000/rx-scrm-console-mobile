@@ -84,7 +84,7 @@ export default {
       // console.log('----分享分组----', v)
     var a = document.createElement("a");
     //   a.download = "";
-    a.href ="https://wxaurl.cn/Llx3uA8Lopb";
+    a.href =this.detail.miniProgramUrlLink;
         a.click();
     },
 
