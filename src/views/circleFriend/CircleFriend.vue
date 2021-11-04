@@ -40,7 +40,8 @@
                   <div class="icon"></div>
                   <div class="text">添加图片</div>
                 </div>
-                <input class="file" type="file" @change="uploadFun($event,'image','friend','png,jpg,jpeg','10')" accept=".png,.jpg,.jpeg" />
+                <input class="file" type="file" @change="uploadFun($event,'image','friend','png,jpg,jpeg','10')" accept=".png,.jpg,.jpeg"
+                       multiple="multiple" />
               </div>
             </div>
           </div>
@@ -142,15 +143,12 @@ export default {
       let filesize = file.size
       var reader = new FileReader()
       if (filesize / 1024 / 1024 > 10) {
-        // _this.$message({
-        //   type: 'error',
-        //   message: '图片大小不能超过10M',
-        // })
         Notify({
           message: '图片大小不能超过10M',
           type: 'danger',
           duration: 1000,
         })
+        e.target.value = ''
         return false
       }
       let formData = new FormData()
@@ -199,29 +197,23 @@ export default {
       let url = URL.createObjectURL(file)
       let audioElement = new Audio(url)
       if (filesize / 1024 / 1024 > 10) {
-        // _this.$message({
-        //   type: 'error',
-        //   message: '视频大小不能超过10M',
-        // })
         Notify({
           message: '视频大小不能超过10M',
           type: 'danger',
           duration: 1000,
         })
+        e.target.value = ''
         return false
       }
       audioElement.addEventListener('loadedmetadata', function () {
         let duration = audioElement.duration
         if (duration > 30) {
-          // _this.$message({
-          //   type: 'error',
-          //   message: '视频不能超过30s',
-          // })
           Notify({
             message: '视频不能超过30s',
             type: 'danger',
             duration: 1000,
           })
+          e.target.value = ''
           return false
         } else {
           let formData = new FormData()
