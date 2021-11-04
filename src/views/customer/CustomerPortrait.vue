@@ -14,7 +14,7 @@
 
       <!-- 协作人 -->
       <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
-      	<HelperFile></HelperFile>
+      	<HelperFile :isPortrait="1"></HelperFile>
       </div>
 
       <!-- 商机 -->
@@ -22,7 +22,7 @@
       
       <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
-      	<Fujian></Fujian>
+      	<Fujian :isPortrait="1"></Fujian>
       </div>
     </div>
 
@@ -106,7 +106,7 @@ export default {
       sendUserInfo: {},
       timeLineList: [],
       contentType: 0,
-      navList: [ '客户动态', '协作人', '商机', '附件' ],
+      navList: [ '客户动态', '协助人', '商机', '附件' ],
       show: false,
       isShowDialog: null,
       titleName: '',
@@ -121,13 +121,13 @@ export default {
   computed: {
     // ...mapState(['userId']),
     entry() {
-      // return 'single_chat_tools'
+      return 'single_chat_tools'
       // console.log("this.$store.getters.entry???", this.$store.getters.entry)
-      return this.$store.getters.entry || sessionStorage.getItem('entry')
+      // return this.$store.getters.entry || sessionStorage.getItem('entry')
     },
     userId() {
-      // return 'wmY-gRDAAAeWi_4fz3ic79XYqKRG7EZg'
-      return this.$store.getters.userId || sessionStorage.getItem('userId')
+      return 'wmY-gRDAAAeWi_4fz3ic79XYqKRG7EZg'
+      // return this.$store.getters.userId || sessionStorage.getItem('userId')
     },
   },
   watch: {
@@ -141,7 +141,7 @@ export default {
     }
   },
   created() {
-    commonFun.getWxAppid()
+    // commonFun.getWxAppid()
   },
   mounted() {
     window.onresize = () => (() => {
