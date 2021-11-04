@@ -644,7 +644,7 @@ export default {
     }
     .btnBox{
     		position: fixed;
-				bottom: 184px;
+				bottom: 92px;
 				width: 100%;
     }
 .buttonWarp {
@@ -878,6 +878,6 @@ export default {
 
 /deep/.van-action-sheet__content{
 		overflow-y: scroll;
-    margin-bottom: 200px;
+/*    margin-bottom: 200px;*/
 }
 </style>
