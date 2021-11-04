@@ -135,7 +135,7 @@ export default {
     return {
       timeLineList: [],
       contentType: 0,
-      navList: [ '客户动态', '协作人', '商机', '附件' ],
+      navList: [ '客户动态', '协助人', '商机', '附件' ],
       dynamicContentType: 1,
       dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
       show: false,

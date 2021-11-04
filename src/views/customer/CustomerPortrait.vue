@@ -12,9 +12,9 @@
       <!-- 客户动态 -->
       <dynamic v-if="contentType == 0" ref="dynamic" :comeType="1" :isPortrait="1" :sendUserInfo="sendUserInfo" @fillMessage="getPeople"></dynamic>
 
-      <!-- 协作人 -->
+      <!-- 协助人 -->
       <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
-      	<HelperFile></HelperFile>
+      	<HelperFile :isPortrait="1"></HelperFile>
       </div>
 
       <!-- 商机 -->
@@ -22,7 +22,7 @@
       
       <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
-      	<Fujian></Fujian>
+      	<Fujian :isPortrait="1"></Fujian>
       </div>
     </div>
 
@@ -52,14 +52,14 @@
     <!-- 新手引导 -->
     <guide-box ref="guideBox"></guide-box>
 
-    <!-- 协作人消息输入框 -->
+    <!-- 协助人消息输入框 -->
     <message-box v-if="contentType == 0" ref="messageBox"></message-box>
 
-    <!-- 协作人选择弹窗 -->
+    <!-- 协助人选择弹窗 -->
     <reminders-box ref="remindersBox" :customerNo="item && item.clueCustomerNo"></reminders-box>
   </div>
   
-  <div v-else>
+  <div v-else-if="showPortraitType == 2">
     <Groupportrait></Groupportrait>
   </div>
 
@@ -95,7 +95,7 @@ export default {
   },
   data() {
     return {
-      showPortraitType: 1,
+      showPortraitType: 0,
       title: '',
       name: '',
       nameFrom: '',
@@ -106,7 +106,7 @@ export default {
       sendUserInfo: {},
       timeLineList: [],
       contentType: 0,
-      navList: [ '客户动态', '协作人', '商机', '附件' ],
+      navList: [ '客户动态', '协助人', '商机', '附件' ],
       show: false,
       isShowDialog: null,
       titleName: '',
@@ -134,14 +134,14 @@ export default {
     userId(val) {
       console.log("???>>>???", val)
       if(val) {
-        this.getMethod()
+        this.getClueCustomerByid()
       } else {
         commonFun.getWxAppid()
       }
     }
   },
   created() {
-    commonFun.getWxAppid()
+    this.getMethod()
   },
   mounted() {
     window.onresize = () => (() => {
@@ -201,38 +201,41 @@ export default {
         }).catch(reject)
       })
     },
-    //获取客户详情
     getMethod() {
       this.loadingShow = true
-      // if (!this.userId) {
-      //   commonFun.getWxAppid()
-      // } else {
-        this.$toast.loading({
-          overlay: true,
-          loadingType: 'spinner',
-          duration: 0,
-        })
-        this.$network.get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-          // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
-          id: this.userId,
-        }).then((res) => {
-          console.log('entry', this.entry)
-          this.getUserName().then(() => {
-            this.$toast.clear()
-            this.loadingShow = false
-            this.name = res.data.clueCustomerVO.name
-            this.nameFrom = res.data.clueCustomerVO.customerType
-            this.item = res.data.clueCustomerVO
-            this.imageUser = res.data.clueCustomerVO.avatar
-            // this.timeLineList = res.data.followMessageEntity
-            localStorage.removeItem('userId')
+      if (!this.userId) {
+        commonFun.getWxAppid()
+      } else {
+        this.getClueCustomerByid()
+      }
+    },
+    //获取客户详情
+    getClueCustomerByid() {
+      this.$toast.loading({
+        overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
+      this.$network.get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+        // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
+        id: this.userId,
+      }).then((res) => {
+        console.log('entry', this.entry)
+        this.getUserName().then(() => {
+          this.$toast.clear()
+          this.loadingShow = false
+          this.name = res.data.clueCustomerVO.name
+          this.nameFrom = res.data.clueCustomerVO.customerType
+          this.item = res.data.clueCustomerVO
+          this.imageUser = res.data.clueCustomerVO.avatar
+          // this.timeLineList = res.data.followMessageEntity
+          localStorage.removeItem('userId')
 
-            localStorage.setItem("ISPORTRIAT_customer", JSON.stringify(this.item))
+          localStorage.setItem("ISPORTRIAT_customer", JSON.stringify(this.item))
 
-            this.getShowPortraitType()
-          })
+          this.getShowPortraitType()
         })
-      // }
+      })
     },
     getShowPortraitType() {
       if (this.entry && this.entry == 'single_chat_tools') {

@@ -266,7 +266,7 @@ export default {
         color: @white;
         position: absolute;
         right: 32px;
-        top: 64px;
+        top: 28px;
       }
     }
     .editor_box {

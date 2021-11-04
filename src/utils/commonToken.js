@@ -141,6 +141,7 @@ function getAgent(res) {
                             store.commit('setUserId', res.userId)
                         } else {
                             //错误处理
+                            console.log('getCurExternalContact>>>err>>>', res)
                         }
                     })
                     //获取当前客户群ID
@@ -152,6 +153,7 @@ function getAgent(res) {
                             store.commit('setChatId', res.chatId)
                         } else {
                             //错误处理
+                            console.log('getCurExternalChat>>>err>>>', res)
                         }
                     })
                     //判断入口
@@ -163,6 +165,7 @@ function getAgent(res) {
                         store.commit('setEntry', entry)
                     } else {
                         //错误处理
+                        console.log('getContext>>>err>>>', res)
                     }
                 })
             }
