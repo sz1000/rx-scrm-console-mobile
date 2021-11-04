@@ -142,7 +142,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalContact>>>err>>>', res)
-                            location.reload()
+                            location.href = window.location.pathname
                         }
                     })
                     //获取当前客户群ID
@@ -155,7 +155,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalChat>>>err>>>', res)
-                            location.reload()
+                            location.href = window.location.pathname
                         }
                     })
                     //判断入口
@@ -168,7 +168,7 @@ function getAgent(res) {
                     } else {
                         //错误处理
                         console.log('getContext>>>err>>>', res)
-                        location.reload()
+                        location.href = window.location.pathname
                     }
                 })
             }
