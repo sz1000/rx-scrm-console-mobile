@@ -8,10 +8,10 @@ let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
     //  BASE_URL = 'http://172.10.7.239:8099' //葛
-    BASE_URL = 'http://172.10.7.114:8099/' //袁
-        // BASE_URL = 'http://172.10.7.200:8099/' //刘
-        //BASE_URL = 'http://172.10.6.144:8099' // 李泉
-        // BASE_URL = 'https://test-api.jzcrm.com' //测试
+    // BASE_URL = 'http://172.10.7.114:8099/' //袁
+    // BASE_URL = 'http://172.10.7.200:8099/' //刘
+    //BASE_URL = 'http://172.10.6.144:8099' // 李泉
+    BASE_URL = 'https://test-api.jzcrm.com' //测试
         //  BASE_URL = 'https://dev-api.jzcrm.com'//开发
         /* addVconsole()*/
 } else if (location.hostname == 'dev-h5.jzcrm.com') {
@@ -37,8 +37,8 @@ let instance = axios.create({
 instance.interceptors.request.use(
         (config) => {
             // 如果有token 就携带tokon
-            const token = getStoreValue('token') //生产token
-                // const token = localStorage.getItem('token') //本地token
+            // const token = getStoreValue('token') //生产token
+            const token = localStorage.getItem('token') //本地token
             if (token) {
                 config.headers.common.token = token
             }

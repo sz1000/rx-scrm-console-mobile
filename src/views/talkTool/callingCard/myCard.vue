@@ -55,15 +55,6 @@
         </div>
       </div>
     </div>
-    <!-- 分享提示窗 -->
-    <!-- <van-overlay class="dialog_wrap" :show="show">
-      <div class="dialog_box" @click="copy">
-        <div class="tips">
-          <div class="text">点击右上角进行分享</div>
-          <div class="text">知道了</div>
-        </div>
-      </div>
-    </van-overlay> -->
   </div>
 </template>
 
@@ -98,42 +89,40 @@ export default {
     },
 
     copy() {
-      var clipboard = new Clipboard(".tag-read");
-                         if(this.titeActive == ""){
+        var clipboard = new Clipboard(".tag-read");
+        if(this.titeActive == ""){
            Toast("链接为空,复制失败！");
-      }
-      clipboard.on("success", (e) => {
+        }
+        clipboard.on("success", (e) => {
         // console.log("复制成功");
-        Toast("复制成功");
+            Toast("复制成功");
         //  释放内存
         // clipboard.destory();
-      });
-      clipboard.on("error", (e) => {
-        // 不支持复制
-        console.log("该浏览器不支持复制");
-        Toast("复制失败");
-        // 释放内存
-        // clipboard.destory();
-      });
+        });
+        clipboard.on("error", (e) => {
+            // 不支持复制
+            console.log("该浏览器不支持复制");
+            Toast("复制失败");
+            // 释放内存
+            // clipboard.destory();
+        });
     },
     getDetail() {
       //获取详情
       userBusinessCard_personalCard().then((res) => {
-        console.log(res,"----");
-    
         if (res.result) {
-          let data = res.data;
-          this.detail = data;
-          console.log(data.miniProgramUrlLink,"0000")
-
-   let dataLInk = data.miniProgramUrlLink ? data.miniProgramUrlLink.replace(/\"/g, "") : ''
-              this.titeActive = dataLInk;
-   
-          if (res.data) {
-            this.isSetting = true;
-          } else {
+            let data = res.data;
+            this.detail = data;
+            let dataLInk = data && data.miniProgramUrlLink ? data.miniProgramUrlLink.replace(/\"/g, "") : ''
+            this.titeActive = dataLInk;
+            if (res.data) {
+                this.isSetting = true;
+            } else {
+                this.isSetting = false;
+            }
+            console.log(this.isSetting)
+        }else{
             this.isSetting = false;
-          }
         }
       });
     },
@@ -200,7 +189,8 @@ export default {
   .content {
     width: 100%;
     height: calc(100vh - 200px);
-    overflow-y: scroll;
+    // overflow-y: scroll;
+    overflow: auto;
     padding: 32px;
     .no_setting {
       width: 100%;
