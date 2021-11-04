@@ -90,6 +90,7 @@
                         :lock-scroll='false'
                         @cancel='cancelIconAdd'
                         @click-overlay='cancelIconAdd'
+                        :overlay="false"
                         title="添加协助人">
         <div class="vanContent">
 
@@ -114,7 +115,7 @@
 						 </select>-->
 						 
 						 
-						 <van-action-sheet v-model="bumenPop" title="选择部门">
+						 <van-action-sheet v-model="bumenPop" title="选择部门" :overlay="false">
 							  		<van-picker
 											  title=""
 											  show-toolbar
@@ -149,7 +150,7 @@
 							    </el-option>
 							 </el-select>-->
 							 			<input v-if="isHelper" readonly="readonly" class="bumenSec" type="text"  placeholder="选择员工" :value="yuangongName" @click="openYuangongPop" />
-							 			<van-action-sheet v-model="yuangongPop" title="选择员工">
+							 			<van-action-sheet v-model="yuangongPop" title="选择员工" :overlay="false">
 							  					<van-picker
 															  title=""
 															  show-toolbar
@@ -658,7 +659,7 @@ export default {
     }
     .btnBox{
     		position: fixed;
-				bottom: 92px;
+				bottom: 184px;
 				width: 100%;
     }
 .buttonWarp {
@@ -776,7 +777,7 @@ export default {
       }
       .detailInfo {
         display: flex;
-        margin-top: 21px;
+        margin-top: 42px;
         .left,
         .right {
           width: 50%;
