@@ -7,38 +7,55 @@
 			<span class="titleFujian">客户动态</span>
 		</div>
         <div class="t_text">
-            <div v-show="comeType == 1 && btnList.some(item=>item.enName == 'write')" class="editButton" @click="showCompany(3)">
+            <div v-show="comeType == 1 && btnList.some(item=>item.enName == 'write') || isPortrait == 1" class="editButton" @click="showCompany(3)">
                 <img src="../../images/icon_repair1@2x.png" alt="" />
                 <span>写跟进</span>
             </div>
         </div>
 
         <ul class="dynamic-nav">
-            <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index}">{{ i }}</li>
+            <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index, 'red-point': isPortrait == 1 && dynamicContentType == 3 && showRedPoint}">{{ i }}</li>
         </ul>
 
         <div v-if="timeLineList && timeLineList.length" class="timeLine">
             <el-timeline>
                 <el-timeline-item v-for="(item, index) in timeLineList" :key="index" color="#4168F6" type="danger ">
                     <div class="recordBox">
-                        <div class="descTxt">{{ item.title }}</div>
-                        <div v-if="item.punckStatus == 1 && item.title == '编辑' || item.punckStatus == 3" class="inLineTwo">
-                            <div v-for="(i, iIndex) in JSON.parse(item.context)" :key="iIndex + i">
-                                <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j" v-show="j.substr(0, 2) != '历史'" class="item-data">
-                                    <span class="keys">{{ j }}: </span>
-                                    <span>{{ Object.values(i)[jIndex] }}</span>
-                                </p>
-                                <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j + 1" v-show="j.substr(0, 2) == '历史'" class="item-data history-text">
-                                    <span class="keys">{{ '(' + j }}: </span>
-                                    <span>{{ Object.values(i)[jIndex] + ')' }}</span>
-                                </p>
+                        <template v-if="item.punckStatus == 4">
+                            <div class="send-user">
+                                <div class="left" @click="fillMessage(JSON.parse(item.context).sendUserInfo)">
+                                    <img :src="JSON.parse(item.context).sendUserInfo.avatar" alt="">
+                                    <span><span class="name">{{ JSON.parse(item.context).sendUserInfo.userName }}</span><span v-if="sendUserInfo && (sendUserInfo.userNo == JSON.parse(item.context).sendUserInfo.userNo)">(我)</span></span>
+                                </div>
+                                <span class="right">{{ item.createTime }}</span>
                             </div>
-                        </div>
-                        <div v-else class="inLineTwo">{{ item.context }}</div>
-                        <div class="inLine">
-                            <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                            <span class="time_right">{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
-                        </div>
+                            <div class="message-content">
+                                <span v-for="i in JSON.parse(item.context).receiveUserInfo" :key="i.userNo" class="name-box">
+                                    <span @click="fillMessage(i)">@{{ i.userName }}<span v-if="sendUserInfo && (sendUserInfo.userNo == i.userNo)">(我)</span></span>
+                                </span>
+                                {{ JSON.parse(item.context).content }}
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="descTxt">{{ item.title }}</div>
+                            <div v-if="item.punckStatus == 1 && item.title == '编辑' || item.punckStatus == 3" class="inLineTwo">
+                                <div v-for="(i, iIndex) in JSON.parse(item.context)" :key="iIndex + i">
+                                    <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j" v-show="j.substr(0, 2) != '历史'" class="item-data">
+                                        <span class="keys">{{ j }}: </span>
+                                        <span>{{ Object.values(i)[jIndex] }}</span>
+                                    </p>
+                                    <p v-for="(j, jIndex) in Object.keys(i)" :key="jIndex + j + 1" v-show="j.substr(0, 2) == '历史'" class="item-data history-text">
+                                        <span class="keys">{{ '(' + j }}: </span>
+                                        <span>{{ Object.values(i)[jIndex] + ')' }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div v-else class="inLineTwo">{{ item.context }}</div>
+                            <div class="inLine">
+                                <div class="inLineEnd">操作人：{{ item.userName }}</div>
+                                <span class="time_right">{{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}</span>
+                            </div>
+                        </template>
                     </div>
                 </el-timeline-item>
             </el-timeline>
@@ -47,7 +64,7 @@
     </div>
 </template>
 <script>
-import { SelectFollowMsgList } from '../../config/api'
+import { SelectFollowMsgList, UserMessageReceive } from '../../config/api'
 
 import { formatDate } from '../../utils/tool'
 
@@ -59,7 +76,18 @@ export default {
         },
         btnList: {
             type: Array,
-            default: []
+            default() {
+                return []
+            }
+        },
+        isPortrait: {
+            type: Number,
+            default: 0
+        },
+        sendUserInfo: {
+            default() {
+                return {}
+            }
         }
     },
     data() {
@@ -68,14 +96,27 @@ export default {
             dynamicContentType: 1,
             dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
             timeLineList: [],
-            objItem: JSON.parse(localStorage.getItem('customer')),
+            objItem: this.isPortrait == 1 ? JSON.parse(localStorage.getItem('ISPORTRIAT_customer')) : JSON.parse(localStorage.getItem('customer')),
+            showRedPoint: false
         }
     },
     created() {
-        this.comeType == 1 || this.comeType == 2 ? this.dynamicNavList[1] = '客户动态' : '线索动态'
+        this.init()
     },
-    inject: ['showCompany'],
+    inject: ['showCompany', 'showGuideBox'],
     methods: {
+        init() {
+            this.comeType == 1 || this.comeType == 2 ? this.dynamicNavList[1] = '客户动态' : '线索动态'
+
+            if (this.isPortrait == 1) {
+                this.dynamicNavList[3] = '消息通知'
+                this.dynamicContentType = 0
+                this.selectFollowMsgList('')
+                this.userMessageReceive()
+            } else {
+                this.selectFollowMsgList(2)
+            }
+        },
         formatDate,
         // 动态导航切换
         changeDynamicNav(index) {
@@ -87,8 +128,14 @@ export default {
                 this.selectFollowMsgList(2)
             } else if(index == 2) { // 商机
                 this.selectFollowMsgList(3)
-            } else if(index == 3) { // 跟进
-                this.selectFollowMsgList(1)
+            } else if(index == 3) { // 跟进/消息通知
+                if (this.isPortrait == 1) {
+                    this.showGuideBox(1)
+                    this.selectFollowMsgList(4) // 消息通知
+                    this.showRedPoint = false
+                    return
+                }
+                this.selectFollowMsgList(1) // 跟进
             }
         },
         // 获取动态
@@ -100,7 +147,7 @@ export default {
                 loadingType: 'spinner',
             })
             let params = {
-                clueCustomerNo: this.objItem.clueCustomerNo,
+                clueCustomerNo: this.objItem && this.objItem.clueCustomerNo,
                 punckStatus // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态
             }
 
@@ -111,6 +158,18 @@ export default {
             }
             this.$toast.clear()
         },
+        // 是否有新消息
+        async userMessageReceive() {
+            let { code, data } = await UserMessageReceive(this.objItem && this.objItem.clueCustomerNo)
+
+            if (code == 'success') {
+                this.showRedPoint = data
+            }
+        },
+        // @接收人
+        fillMessage(data) {
+            this.$emit('fillMessage', data)
+        }
     },
 }
 </script>
@@ -195,6 +254,19 @@ export default {
         .active {
             color: #4168F6;
         }
+        .red-point {
+            position: relative;
+            &::after {
+                content: '';
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background-color: #D14343;
+                position: absolute;
+                right: 0;
+                top: -4px;
+            }
+        }
     }
 
     .timeLine {
@@ -250,6 +322,53 @@ export default {
                 font-weight: 600;
                 color: #3c4353;
                 margin-bottom: 16px;
+            }
+
+            .send-user {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 8px 4px 21px;
+                .left {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    max-width: 47%;
+                    img {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                    }
+                    span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        font-size: 28px;
+                        color: #3C4353;
+                        span {
+                            display: inline-block;
+                            vertical-align: middle;
+                        }
+                    }
+                    .name {
+                        max-width: 70%;
+                        margin-left: 10px;
+                    }
+                }
+                .right {
+                    font-size: 28px;
+                    color: #838A9D;
+                }
+            }
+            .message-content {
+                word-break: break-all;
+                font-size: 28px;
+                color: #3C4353;
+                .name-box {
+                    span {
+                        color: #4168F6;
+                    }
+                }
             }
         }
     }

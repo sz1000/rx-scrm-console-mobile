@@ -119,11 +119,14 @@ export default {
   created() {
     if (!localStorage.getItem("token")) {
       CommonHome.getWxToken();
+      console.log("获取token")
     }
   },
   mounted() {
     setTimeout(() => {
       this.getDetail();
+       console.log("请求接口")
+ 
     }, 2000);
   },
   methods: {

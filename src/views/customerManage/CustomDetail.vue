@@ -10,7 +10,7 @@
     </div>
 
     <div class="customer-data">
-      <customer-item :type="2" :itemData="objItem"></customer-item>
+      <customer-item :type="2" :fromType="$route.query.type" :itemData="objItem"></customer-item>
     </div>
 
     <div class="infoContent">
@@ -135,7 +135,7 @@ export default {
     return {
       timeLineList: [],
       contentType: 0,
-      navList: [ '客户动态', '协作人', '商机', '附件' ],
+      navList: [ '客户动态', '协助人', '商机', '附件' ],
       dynamicContentType: 1,
       dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
       show: false,
@@ -351,7 +351,6 @@ export default {
     }
   }
   .customer-data {
-    height: 400px;
     padding: 0 0 24px;
     background: #fff;
   }

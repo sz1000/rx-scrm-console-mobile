@@ -36,4 +36,7 @@ export const ChargeUserInfoList = data => { return http.get(`${customerServiceAp
 
 export const SelectFollowMsgList = data => { return http.get(`${customerServiceApi}/clueCustomerFollowUser/selectFollowMsgList?clueCustomerNo=${data.clueCustomerNo}&punckStatus=${data.punckStatus}`)} // 当前客户跟进信息(商机动态)
 
-
+// 协作人&消息通知
+export const MessageNotificatio = data => { return http.post(`${customerServiceApi}/clueCustomerFollowUser/message-notificatio`, data)} // 添加消息通知
+export const ReceiveUser = data => { return http.get(`${customerServiceApi}/clueCustomerFollowUser/receive-user?customerNo=${data.customerNo}&isPublic=${data.isPublic}&corpId=${data.corpId}`)} // 获取接收人信息
+export const UserMessageReceive = data => { return http.get(`${customerServiceApi}/clueCustomerFollowUser/user-message-receive?clueCustomerNo=${data}`)} // 是否有新信息

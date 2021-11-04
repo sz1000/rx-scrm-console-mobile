@@ -234,8 +234,7 @@ export default {
             this.selectReasonPopupShow = false
         },
         // 选择时间
-        selectDate(type) {
-            this.selectDateType = type
+        selectDate() {
             this.selectDatePopupShow = true
         },
         // 确认时间
@@ -262,6 +261,10 @@ export default {
             }
             return true
         },
+        // 处理时间格式为：yyyy-MM-dd HH:mm:ss
+        getSubmitTime(endTime) {
+            this.form.endTime = formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss')
+        }, 
         // 表单提交
         async handleSubmit() {
             if (!this.checkForm()) {
@@ -276,6 +279,8 @@ export default {
                     this.form.chargeUserName = item.name
                 }
             })
+
+            this.getSubmitTime(this.form.endTime)
 
             let { code, msg } = await ModifyOpportunities(this.form)
 

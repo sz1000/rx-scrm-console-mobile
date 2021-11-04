@@ -15,9 +15,7 @@
                 <div class="li" v-for="item in detail.userBusinessCardViewLogVOS" :key="item.id">
                     <div class="time">{{item.createTime}}</div>
                     <div class="box">
-                        <div class="avatar">
-                            <img class="img" :src="item.customerPortrait" alt="">
-                        </div>
+                      
                         <div class="info">
                             <div class="name">{{item.customerName}}</div>
                             <div class="duration">浏览时长：{{item.customerTiming}}</div>

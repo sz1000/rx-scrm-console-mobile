@@ -52,7 +52,7 @@
         :offset="20"
       >
         <div class="topInfo" v-for="(item, index) in cardList" :key="index">
-          <customer-item :itemData="item" :index="index"></customer-item>
+          <customer-item :itemData="item" :fromType="type" :index="index"></customer-item>
         </div>
       </van-list>
     </div>
@@ -318,7 +318,6 @@ export default {
   .cardWarp {
     .topInfo {
       margin-top: 24px;
-      height: 400px;
       background: #fff;
       padding: 24px;
     }

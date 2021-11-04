@@ -10,7 +10,7 @@
     </div>
 
     <div class="customer-data">
-      <customer-item :type="2" :itemData="objItem"></customer-item>
+      <customer-item :type="2" :fromType="'4'" :itemData="objItem"></customer-item>
     </div>
     
     <div class="infoContent">
@@ -78,13 +78,26 @@
         <span>分配</span>
       </div>
     </div>
+
+    <!-- 新手引导 -->
+    <guide-box ref="guideBox"></guide-box>
+
+    <!-- 协作人消息输入框 -->
+    <message-box v-if="contentType == 0" ref="messageBox" :class="{'details-message': btnList.some(item=>item.enName == 'get') || btnList.some(item=>item.enName == 'allot')}"></message-box>
+
+    <!-- 协作人选择弹窗 -->
+    <reminders-box ref="remindersBox" :fromType="'4'" :customerNo="objItem && objItem.clueCustomerNo"></reminders-box>
   </div>
 </template>
 <script>
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Dynamic from '../../components/CustomerManage/dynamic'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
-import  Fujian  from "./comTip/fujian";
+import  Fujian  from "./comTip/fujian"
+import GuideBox from "../../components/CustomerManage/guideBox"
+import MessageBox from "../../components/CustomerManage/messageBox"
+import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
+import { mapActions } from 'vuex'
 
 export default {
   data() {
@@ -101,22 +114,26 @@ export default {
       btnList: [],
       SsPop:false,
       helperName:'',
+      sendUserInfo: {},
     }
   },
   created() {
     this.btnList = JSON.parse(this.$route.query.alllist)
-  },
-  mounted() {
-    this.$refs.dynamic.selectFollowMsgList(2)
+    this.getCorpId()
+    this.showGuideBox()
   },
   provide() {
     return {
       goDetail: this.goDetail,
-      showCompany: null
+      showCompany: null,
+      showGuideBox: this.showGuideBox,
+      showRemindersBox: this.showRemindersBox,
+      messageNotificatio: this.messageNotificatio,
+      getPeople: this.getPeople,
     }
   },
   methods: {
-  	  	  	openSsPop(){
+  	openSsPop(){
   		this.SsPop = true;
   	},
   	onConfirm(value, index) {
@@ -134,12 +151,28 @@ export default {
     	this.SsPop = false;
       console.log('取消');
     },
+    ...mapActions(["getCorpId"]),
     // 导航切换
     changeNav(index) {
       this.contentType = index
     },
     goBack() {
       this.$router.go(-1)
+    },
+
+    showGuideBox(fromType) {
+      let isFirstTimeEnter = localStorage.getItem('JZCRM_ISFIRSTTIMEENTER')
+
+      if (!fromType && !isFirstTimeEnter) {
+        localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 1)
+        this.doShowGuideBox(1)
+      } else if (fromType == 1 && isFirstTimeEnter && isFirstTimeEnter == 1) {
+        localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 2)
+        this.doShowGuideBox(2)
+      }
+    },
+    doShowGuideBox(type) {
+      this.$refs.guideBox.show(type)
     },
 
     // 去往下层详情页
@@ -206,12 +239,76 @@ export default {
           }
         })
     },
+    showRemindersBox() {
+      this.$refs.remindersBox.show()
+    },
+    getPeople(data) {
+      let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
+
+      arr.push(data)
+      this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
+      this.$refs.remindersBox.hide()
+    },
+    resetReceiveUserInfo(arr) {
+      let newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        if (this.noHas(newArr, arr[i].userNo)) {
+          newArr.push(arr[i])
+        }
+      }
+      return newArr
+    },
+    noHas(arr, userNo) {
+      let result = arr.filter((item) =>{
+        return item.userNo == userNo;
+      })
+      return result.length == 0 ? true : false;
+    },
+    checkBeforeSend(receiveUserInfo, message) {
+      if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
+        this.$toast('接收人不能为空')
+        return false
+      } else if (!message) {
+        this.$toast('消息内容不能为空')
+        return false
+      }
+      return true
+    },
+    async messageNotificatio(receiveUserInfo, message) {
+      if (!this.checkBeforeSend(receiveUserInfo, message)) {
+        return
+      }
+      const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
+
+      let params = {
+        content: message,
+        customerNo: this.objItem && this.objItem.clueCustomerNo,
+        receiveUserInfo,
+        sendUserInfo: {
+          avatar,
+          userName: name,
+          userNo
+        }
+      }
+
+      let { code, msg } = await MessageNotificatio(params)
+
+      if (code == 'success') {
+        this.$refs.dynamic.dynamicContentType = 3
+        this.$refs.dynamic.selectFollowMsgList(4)
+        this.$refs.messageBox.initData()
+      }
+      this.$toast(msg)
+    },
   },
   components: {
     CustomerItem,
     Dynamic,
     Opportunities,
-    Fujian
+    Fujian,
+    GuideBox,
+    MessageBox,
+    RemindersBox
   }
 }
 </script>
@@ -244,7 +341,6 @@ export default {
     }
   }
   .customer-data {
-    height: 400px;
     padding: 0 0 24px;
     background: #fff;
   }

@@ -1,178 +1,34 @@
 <template>
-  <div class="custom_warp" v-if="entry == 'single_chat_tools'">
-    <div class="topInfo">
-      <div class="customInfo">
-        <div class="iconName">
-          <div v-if="imageUser">
-            <img :src="imageUser" alt="" />
-          </div>
-          <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
-          <div class="nameSex">
-            <span>{{ name }}</span>
-            <span v-show="nameFrom">{{
-              nameFrom == "1" ? "@微信" : `@${item.customerName}`
-            }}</span>
-            <img src="../../images/icon_female@2x.png" alt="" v-if="item.gender == '2'" />
-            <img src="../../images/man.png" alt="" v-if="item.gender == '1'" />
-          </div>
-        </div>
-        <div class="detailBtn" @click="goToDetail">
-          详情
-          <van-icon name="arrow" color="#4168F6" />
-        </div>
-      </div>
-      <div class="detailInfo">
-        <div class="left">
-          <div class="rowStyle">
-            <span>邮箱:</span>
-            <span>{{ item.email }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>来源:</span>
-            <span>{{ item.source }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>职务:</span>
-            <span>{{ item.position }}</span>
-          </div>
-        </div>
-        <div class="right">
-          <div class="rowStyle">
-            <span>手机号码:</span>
-            <span>{{ item.phone }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>公司名称:</span>
-            <span>{{ item.cropFullName }}</span>
-          </div>
-          <div class="rowStyle">
-            <span>所属行业:</span>
-            <span>{{ item.cropSubIndustry }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="tjry">
-        <div class="box">
-          <span class="label">添加人员:</span>
-          <span class="value">{{ item.createBy }}</span>
-        </div>
-        <div class="box1">
-          <span class="label">添加时间:</span>
-          <span class="value">{{
-            formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-          }}</span>
-        </div>
-      </div>
+  <div class="custom_warp" :class="{'large-padding': contentType == 0}" v-if="showPortraitType == 1">
+    <div class="customer-data">
+      <customer-item :isPortrait="1" :itemData="item" :name="name" :imageUser="imageUser" :nameFrom="nameFrom"></customer-item>
     </div>
+
     <div class="infoContent">
-      <div class="companyLabel">
-        <div class="t_text">
-          <span class="label_tag">企业标签</span>
-          <div class="editButton" @click="showCompany(1)">
-            <i class="el-icon-edit"></i>
-            编辑
-          </div>
-        </div>
-        <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
-            <div ref="spanBox">
-              <span v-for="(list, index) in companyTagList" :key="index" class="tagBox">{{ list.name }}</span>
-            </div>
-          </div>
-          <div class="btn" @click="unfold = !unfold" v-show="companyTagList.length > 5">
-            {{ unfold ? "收起" : "展开" }}
-            <van-icon name="arrow-down" />
-          </div>
-        </div>
+      <ul class="header-nav">
+        <li v-for="(i, index) in navList" :key="i" @click="changeNav(index)" :class="{active: contentType == index}"><span>{{ i }}</span></li>
+      </ul>
+
+      <!-- 客户动态 -->
+      <dynamic v-if="contentType == 0" ref="dynamic" :comeType="1" :isPortrait="1" :sendUserInfo="sendUserInfo" @fillMessage="getPeople"></dynamic>
+
+      <!-- 协助人 -->
+      <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
+      	<HelperFile :isPortrait="1"></HelperFile>
       </div>
-      <div class="personLabel">
-        <div class="t_text">
-          <span class="label_tag">个人标签</span>
-          <div class="editButton" @click="showCompany(2)">
-            <i class="el-icon-edit"></i>
-            编辑
-          </div>
-        </div>
-        <div class="b_content">
-          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
-            <div ref="spanBox">
-              <span v-for="(list, index) in personTagList" :key="index" class="tagBox" v-show="list.isChecked">{{ list.name }}</span>
-            </div>
-          </div>
-          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="
-              personTagList.filter((item) => {
-                return item.isChecked == 1;
-              }).length > 5
-            ">
-            {{ isShowPerson ? "收起" : "展开" }}
-            <van-icon name="arrow-down" />
-          </div>
-        </div>
-      </div>
-      <div class="dynamic">
-        <div class="t_text state">
-          <span class="label_tag">动态</span>
-          <div class="editButton" @click="showCompany(3)">
-            <img src="../../images/icon_repair1@2x.png" alt="" />
-            <span>写跟进</span>
-          </div>
-        </div>
-        <div class="allText" v-show="timeLineList.length">全部</div>
-        <div class="timeLine">
-          <el-timeline>
-            <el-timeline-item v-for="(item, index) in timeLineList" :key="index" color="#4168F6" type="danger ">
-              <div class="recordBox">
-                <div class="descTxt">{{ item.title }}</div>
-                <div class="inLineTwo">{{ item.context }}</div>
-                <div class="inLine">
-                  <div class="inLineEnd">操作人：{{ item.userName }}</div>
-                  <span class="time_right">
-                    {{ formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss") }}
-                  </span>
-                </div>
-              </div>
-            </el-timeline-item>
-          </el-timeline>
-        </div>
+
+      <!-- 商机 -->
+      <opportunities v-if="contentType == 2" :customerNo="item && item.clueCustomerNo" fromType="3"></opportunities>
+      
+      <!-- 附件 -->
+      <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
+      	<Fujian :isPortrait="1"></Fujian>
       </div>
     </div>
+
     <div class="bottom_model">
       <van-action-sheet v-model="show" :lock-scroll="false" :title="titleName" @cancel="cancelIcon" @click-overlay="cancelIcon" class="vant_sheet">
         <div class="content">
-          <div class="tagWarp" v-if="isShowDialog == '1'">
-            <div class="tagRow" v-for="(item, index) in groupList" :key="index">
-              <div class="groupName">{{ item.name }}</div>
-              <div class="tagStyle">
-                <span class="creatTag" :class="{
-                    changeTag:
-                      highLightArr.findIndex((item) => {
-                        return item.tagid == list.tagid;
-                      }) > -1,
-                  }" v-for="(list, index) in item.children" :key="list.id" v-show="list.name" @click="selectTag(list, index)">{{ list.name }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="tagWarp personWarp" v-if="isShowDialog == '2'">
-            <div class="tagRow">
-              <!-- <div class="groupName">{{item.name}}</div> -->
-              <div class="tagStyle">
-                <span class="addBtn pointer" @click="addTag">+添加</span>
-                <span class="perchInput" v-if="isShow">
-                  <input v-model.trim="tagName" class="addInput" placeholder="输入后按回车完成" maxlength="30" @keyup.enter="handleSearch()" />
-                </span>
-                <span class="creatTag" :class="{ changeTag: list.isChecked }" v-for="(list, index) in personTagList" :key="list.id"
-                      v-show="list.name">
-                  <span @click="selectPersonTag(list, index)">{{
-                    list.name
-                  }}</span>
-                  <span class="deleteTag" @click="deleteTag(list, index)">
-                    <van-icon name="cross" />
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
           <div class="writerInput" v-if="isShowDialog == '3'">
             <van-field v-model="message" type="textarea" maxlength="200" placeholder="记录好跟进，多签单哟~" show-word-limit />
           </div>
@@ -183,6 +39,7 @@
         </div>
       </van-action-sheet>
     </div>
+
     <van-overlay :show="showSecret">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
@@ -191,239 +48,210 @@
       </div>
     </van-overlay>
     <!-- <BackTop></BackTop> -->
+
+    <!-- 新手引导 -->
+    <guide-box ref="guideBox"></guide-box>
+
+    <!-- 协助人消息输入框 -->
+    <message-box v-if="contentType == 0" ref="messageBox"></message-box>
+
+    <!-- 协助人选择弹窗 -->
+    <reminders-box ref="remindersBox" :customerNo="item && item.clueCustomerNo"></reminders-box>
   </div>
-  <div v-else>
+  
+  <div v-else-if="showPortraitType == 2">
     <Groupportrait></Groupportrait>
   </div>
-  <!-- </div> -->
+
 </template>
 <script>
+import { MessageNotificatio } from '../../config/api'
 // import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
-import { formatDate } from '../../utils/tool'
 import commonFun from '../../utils/commonToken'
 import Groupportrait from '../portrait/Groupportrait.vue'
+import CustomerItem from '../../components/CustomerManage/customerItem'
+import Dynamic from '../../components/CustomerManage/dynamic'
+import Opportunities from '../../components/BusinessOpportunities/opportunities'
+import HelperFile from "../customerManage/comTip/helperFile"
+import Fujian from "../customerManage/comTip/fujian"
+import GuideBox from "../../components/CustomerManage/guideBox"
+import MessageBox from "../../components/CustomerManage/messageBox"
+import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
 import { mapState } from 'vuex'
+
 export default {
   components: {
     BackTop,
     Groupportrait,
+    CustomerItem,
+    Dynamic,
+    Opportunities,
+    HelperFile,
+    Fujian,
+    GuideBox,
+    MessageBox,
+    RemindersBox
+  },
+  data() {
+    return {
+      showPortraitType: 0,
+      title: '',
+      name: '',
+      nameFrom: '',
+      imageUser: '',
+      item: {
+        createTime: 1609434061,
+      },
+      sendUserInfo: {},
+      timeLineList: [],
+      contentType: 0,
+      navList: [ '客户动态', '协助人', '商机', '附件' ],
+      show: false,
+      isShowDialog: null,
+      titleName: '',
+      message: '',
+      docmHeight: 0, //默认屏幕高度
+      showHeight: 0, //实时屏幕高度
+      hidshow: true, //显示或者隐藏footer,
+      loadingShow: false,
+      showSecret: false,
+    }
   },
   computed: {
     // ...mapState(['userId']),
     entry() {
-      return this.$store.getters.entry
+      // return 'single_chat_tools'
+      // console.log("this.$store.getters.entry???", this.$store.getters.entry)
+      return this.$store.getters.entry || sessionStorage.getItem('entry')
+    },
+    userId() {
+      // return 'wmY-gRDAAAeWi_4fz3ic79XYqKRG7EZg'
+      return this.$store.getters.userId || sessionStorage.getItem('userId')
     },
   },
-  data() {
-    return {
-      title: '',
-      name: '',
-      nameFrom: '',
-      customerName: '',
-      imageUser: '',
-      gender: '',
-      email: '',
-      unfold: false,
-      isShowPerson: false,
-      tagList: [], //企业标签
-      tagpersonList: [],
-      personTagList: [],
-      companyTagList: [],
-      item: {
-        createTime: 1609434061,
-      },
-      groupList: [],
-      personList: [],
-      timeLineList: [],
-      show: false,
-      isShowDialog: null,
-      titleName: '',
-      highLightArr: [],
-      tempList: [],
-      message: '',
-      avatar: '',
-      showInput: null,
-      isShow: false,
-      tagName: '',
-      userId: '',
-      obj: {},
-      docmHeight: 0, //默认屏幕高度
-      showHeight: 0, //实时屏幕高度
-      hidshow: true, //显示或者隐藏footer,
-      loadingShow: true,
-      showSecret: false,
+  watch: {
+    userId(val) {
+      console.log("???>>>???", val)
+      if(val) {
+        this.getClueCustomerByid()
+      } else {
+        commonFun.getWxAppid()
+      }
     }
   },
   created() {
-    commonFun.getWxAppid()
-    console.log('entry', this.entry)
+    this.getMethod()
   },
-  watch: {},
   mounted() {
-    setTimeout(() => {
-      this.getMethod()
-      this.getUserName()
-    }, 3000)
-
-    window.onresize = () =>
-      (() => {
-        this.showHeight =
-          document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        // console.log(this.showHeight, this.docmHeight)
-      })()
+    window.onresize = () => (() => {
+      if (document.getElementsByClassName('vant_sheet ')) {
+        this.showHeight =  document.getElementsByClassName('vant_sheet ')[0].clientHeight
+      }
+      // console.log(this.showHeight, this.docmHeight)
+    })()
+  },
+  provide() {
+    return {
+      goDetail: this.goDetail,
+      showCompany: this.showCompany,
+      showGuideBox: this.showGuideBox,
+      showRemindersBox: this.showRemindersBox,
+      messageNotificatio: this.messageNotificatio,
+      getPeople: this.getPeople,
+    }
   },
   methods: {
-    formatDate,
-    goToDetail() {
-      // alert(JSON.stringify(this.item.clueCustomerNo))
+    // 导航切换
+    changeNav(index) {
+      this.contentType = index
+    },
+    showGuideBox(fromType) {
+      let isFirstTimeEnter = localStorage.getItem('JZCRM_ISFIRSTTIMEENTER')
+
+      if (!fromType && !isFirstTimeEnter) {
+        localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 1)
+        this.doShowGuideBox(1)
+      } else if (fromType == 1 && isFirstTimeEnter && isFirstTimeEnter == 1) {
+        localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 2)
+        this.doShowGuideBox(2)
+      }
+    },
+    doShowGuideBox(type) {
+      this.$refs.guideBox.show(type)
+    },
+    goDetail() {
       this.$router.push({
         name: 'informationDetail',
-        params: {
-          // userid: localStorage.getItem('userId'),
-          userid: this.item.clueCustomerNo,
-        },
+        query: { id: this.item.clueCustomerNo },
       })
     },
     getUserName() {
-      this.$network
-        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
-        .then((res) => {
-          this.showSecret = !res.data.haveSecret
-        })
+      return new Promise((resolve, reject) => {
+        this.$network.get('/user-service/user/getUserName', { endPoint: 'mobile' }).then(res => {
+          let {code, data} = res
+          
+          if (code === 'success' && data) {
+            this.showSecret = !data.haveSecret
+            this.sendUserInfo = data && data.userEntity
+            resolve()
+          } else {
+            reject()
+          }
+        }).catch(reject)
+      })
     },
-    //获取客户详情
     getMethod() {
-      if (!localStorage.getItem('userId')) {
+      this.loadingShow = true
+      if (!this.userId) {
         commonFun.getWxAppid()
       } else {
-        this.$toast.loading({
-          overlay: true,
-          loadingType: 'spinner',
-          duration: 0,
-        })
-        this.$network
-          .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-            // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
-            id: localStorage.getItem('userId'),
-          })
-          .then((res) => {
-            // console.log(res)
-            this.$toast.clear()
-            this.loadingShow = false
-            this.name = res.data.clueCustomerVO.name
-            this.nameFrom = res.data.clueCustomerVO.customerType
-            this.item = res.data.clueCustomerVO
-            this.imageUser = res.data.clueCustomerVO.avatar
-            this.timeLineList = res.data.followMessageEntity
-            this.getTagList()
-            localStorage.removeItem('userId')
-          })
+        this.getClueCustomerByid()
       }
     },
-    getTimeline() {
-      // console.log(this.objItem, '------')
-      this.$network
-        .get('/customer-service/cluecustomer/getMessage', {
-          cluecustomerno: this.item.clueCustomerNo,
-        })
-        .then((res) => {
-          this.timeLineList = res.data
-        })
-    },
-    getTagList() {
-      this.highLightArr = []
-      this.$network
-        .get('/customer-service/cluecustomer/gettag', {
-          clueCustomerNo: this.item.clueCustomerNo,
-        })
-        .then((res) => {
-          this.companyTagList = res.data.corpTagList
-          this.groupList = res.data.tagCorpList
-          this.personTagList = res.data.personTagList
-          let allChildTag = res.data.tagCorpList.map((item) => {
-            return item.children
-          })
-          // let childTag = allChildTag.flat()
-          let childTag = [].concat.apply([], allChildTag)
-          // console.log('---allChildTag---', allChildTag, childTag)
+    //获取客户详情
+    getClueCustomerByid() {
+      this.$toast.loading({
+        overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
+      this.$network.get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+        // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
+        id: this.userId,
+      }).then((res) => {
+        console.log('entry', this.entry)
+        this.getUserName().then(() => {
+          this.$toast.clear()
+          this.loadingShow = false
+          this.name = res.data.clueCustomerVO.name
+          this.nameFrom = res.data.clueCustomerVO.customerType
+          this.item = res.data.clueCustomerVO
+          this.imageUser = res.data.clueCustomerVO.avatar
+          // this.timeLineList = res.data.followMessageEntity
+          localStorage.removeItem('userId')
 
-          this.companyTagList.forEach((item) => {
-            childTag.forEach((chItem, chIndex) => {
-              if (item.tagid == chItem.tagid) {
-                this.highLightArr.push(chItem)
-              }
-            })
-            // console.log('-----列表----', this.highLightArr)
-          })
+          localStorage.setItem("ISPORTRIAT_customer", JSON.stringify(this.item))
+
+          this.getShowPortraitType()
         })
+      })
+    },
+    getShowPortraitType() {
+      if (this.entry && this.entry == 'single_chat_tools') {
+        this.showPortraitType = 1
+        this.showGuideBox()
+      } else if (this.entry && this.entry == 'group_chat_tools'){
+        this.showPortraitType = 2
+      }
     },
     showCompany(v) {
       document.getElementById('html').style.overflow = 'hidden'
       this.isShowDialog = v
       this.show = true
-      if (v == 1) {
-        this.titleName = '企业标签'
-      } else if (v == 2) {
-        this.titleName = '个人标签'
-      } else if (v == 3) {
+      if (v == 3) {
         this.titleName = '写跟进'
         this.message = ''
-        // setTimeout(() => {
-        //   this.docmHeight =
-        //     document.getElementsByClassName('vant_sheet ')[0].clientHeight
-        //   console.log(this.docmHeight)
-        // }, 200)
-      }
-    },
-    addTag(item, index) {
-      this.tagName = ''
-      this.isShow = !this.isShow
-    },
-    handleSearch() {
-      // console.log(this.tagName)
-      if (this.tagName !== '') {
-        this.$network
-          .post('/customer-service/cluecustomer/addtag', {
-            name: this.tagName,
-            clueCustomerNo: this.item.clueCustomerNo,
-          })
-          .then((res) => {
-            if (res.result) {
-              this.personTagList = res.data
-            } else {
-              this.$message({
-                type: 'error',
-                message: res.msg || '添加失败',
-              })
-            }
-          })
-      }
-      this.showInput = null
-      this.isShow = false
-    },
-    selectTag(list, index) {
-      var result = this.highLightArr.findIndex((item) => {
-        return item.tagid == list.tagid
-      })
-      if (result > -1) {
-        // console.log(111111111111)
-        this.highLightArr.forEach((item, index) => {
-          if (item.tagid == list.tagid) {
-            this.highLightArr.splice(index, 1)
-          }
-        })
-      } else {
-        this.highLightArr.push(list)
-      }
-      // console.log(this.highLightArr);
-    },
-    selectPersonTag(list, index) {
-      console.log(list)
-      if (list.isChecked == 1) {
-        list.isChecked = 0
-      } else {
-        list.isChecked = 1
       }
     },
     cancelIcon() {
@@ -432,47 +260,12 @@ export default {
     closeDialog(v) {
       this.show = false
       document.getElementById('html').style.overflow = 'auto'
-      if (v == 1) {
-        this.getTagList()
-      } else if (v == 2) {
-      } else if (v == 3) {
+      if (v == 3) {
         this.message = ''
       }
     },
     saveDialog(v) {
-      if (v == 1) {
-        // console.log(this.highLightArr)
-        this.$network
-          .post(
-            `/customer-service/cluecustomer/updCorptag/${this.item.clueCustomerNo}`,
-            this.highLightArr
-          )
-          .then((res) => {
-            if (res.result) {
-              this.show = false
-              document.getElementById('html').style.overflow = 'auto'
-              this.getTagList()
-            } else {
-              this.message({
-                type: 'error',
-                message: '添加失败',
-              })
-            }
-          })
-      } else if (v == 2) {
-        this.$network
-          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
-          .then((res) => {
-            if (res.result) {
-              this.show = false
-              document.getElementById('html').style.overflow = 'auto'
-              this.$message({
-                type: 'success',
-                message: '修改成功',
-              })
-            }
-          })
-      } else if (v == 3) {
+      if (v == 3) {
         this.$network
           .post('/customer-service/cluecustomer/addMessage', {
             clueCustomerNo: this.item.clueCustomerNo,
@@ -482,7 +275,7 @@ export default {
             if (res.result) {
               this.show = false
               document.getElementById('html').style.overflow = 'auto'
-              this.getTimeline()
+              // this.getTimeline()
               // this.getMethod()
               this.$message({
                 type: 'success',
@@ -492,320 +285,111 @@ export default {
           })
       }
     },
-    deleteTag(v, i) {
-      // console.log(v)
-      this.$dialog
-        .confirm({
-          title: '温馨提示',
-          message: '是否确认删除',
-          className: 'deleteBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })
-        .then(() => {
-          this.$network
-            .post('/customer-service/cluecustomer/deltag', v)
-            .then((res) => {
-              if (res.result) {
-                this.personTagList = res.data
-              }
-            })
-        })
-        .catch(() => {
-          // on cancel
-        })
+    showRemindersBox() {
+      this.$refs.remindersBox.show()
     },
-  },
+    getPeople(data) {
+      let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
+
+      arr.push(data)
+      this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
+      this.$refs.remindersBox.hide()
+    },
+    resetReceiveUserInfo(arr) {
+      let newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        if (this.noHas(newArr, arr[i].userNo)) {
+          newArr.push(arr[i])
+        }
+      }
+      return newArr
+    },
+    noHas(arr, userNo) {
+      let result = arr.filter((item) =>{
+        return item.userNo == userNo;
+      })
+      return result.length == 0 ? true : false;
+    },
+    checkBeforeSend(receiveUserInfo, message) {
+      if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
+        this.$toast('接收人不能为空')
+        return false
+      } else if (!message) {
+        this.$toast('消息内容不能为空')
+        return false
+      }
+      return true
+    },
+    async messageNotificatio(receiveUserInfo, message) {
+      if (!this.checkBeforeSend(receiveUserInfo, message)) {
+        return
+      }
+      const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
+
+      let params = {
+        content: message,
+        customerNo: this.item && this.item.clueCustomerNo,
+        receiveUserInfo,
+        sendUserInfo: {
+          avatar,
+          userName: name,
+          userNo
+        }
+      }
+
+      let { code, msg } = await MessageNotificatio(params)
+
+      if (code == 'success') {
+        this.$refs.dynamic.dynamicContentType = 3
+        this.$refs.dynamic.selectFollowMsgList(4)
+        this.$refs.messageBox.initData()
+      }
+      this.$toast(msg)
+    },
+  }
 }
 </script>
 <style lang="less" scoped>
-.CustomerPortrait {
+.large-padding {
+  padding-bottom: 100px;
 }
 .custom_warp {
-  .topInfo {
+  min-height: 100vh;
+  .customer-data {
     height: 400px;
+    padding: 25px 0 0;
     background: #fff;
-    padding: 25px 24px 0 24px;
-    .customInfo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .iconName {
-        display: flex;
-        .flag {
-          width: 88px;
-          height: 88px;
-          background: #4168f6;
-          border-radius: 12px;
-          text-align: center;
-          line-height: 88px;
-          color: #fff;
-          font-size: 35px;
-        }
-        .nameSex {
-          margin-left: 16px;
-          span:nth-child(1) {
-            font-size: 28px;
-            font-weight: 600;
-          }
-          span:nth-child(2) {
-            font-size: 24px;
-            color: #ffb020;
-          }
-          span {
-            display: inline-block;
-          }
-          img {
-            margin-top: 21px;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .detailBtn {
-        font-size: 28px;
-        color: #4168f6;
-        .van-icon {
-          vertical-align: -11%;
-          width: 28px;
-          height: 28px;
-        }
-      }
-    }
-    .detailInfo {
-      display: flex;
-      margin-top: 21px;
-      .left,
-      .right {
-        width: 50%;
-        .rowStyle {
-          line-height: 40px;
-          font-size: 28px;
-          margin-bottom: 24px;
-          display: flex;
-          span {
-            display: inline-block;
-          }
-          span:nth-child(1) {
-            width: 84px;
-            color: #838a9d;
-            overflow: hidden;
-          }
-          span:nth-child(2) {
-            flex: 1;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            color: #3c4353;
-            font-weight: 400;
-          }
-        }
-      }
-      .right {
-        margin-left: 19px;
-        .rowStyle {
-          span:nth-child(1) {
-            width: 140px;
-          }
-        }
-      }
-    }
-    .tjry {
-      height: 87px;
-      border-top: 1px solid #f0f2f7;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 28px;
-      span {
-        display: inline-block;
-      }
-      .label {
-        width: 200px;
-        color: #838a9d;
-      }
-      .value {
-        width: 100%;
-        color: #3c4353;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .box {
-        display: flex;
-        width: 50%;
-      }
-      .box1 {
-        display: flex;
-        width: 50%;
-        line-height: 87px;
-        margin-left: 29px;
-      }
-    }
   }
 
   .infoContent {
     margin-top: 24px;
     background: #fff;
-    padding: 24px 24px 0;
-    .companyLabel,
-    .personLabel {
-      min-height: 292px;
-      font-size: 28px;
-      border-bottom: 1px solid #f0f2f7;
-      margin-bottom: 24px;
-      .t_text {
+    .header-nav {
         display: flex;
-        justify-content: space-between;
-        // align-items: center;
-        // min-height: 292px;
-        .label_tag {
-          font-weight: 600;
-          color: #3c4353;
-          position: relative;
-          padding-left: 10px;
-          &::before {
-            content: '';
-            width: 8px;
-            height: 28px;
-            background: #4168f6;
-            position: absolute;
-            top: 7px;
-            left: -10px;
-          }
-        }
-        .editButton {
-          color: #838a9d;
-          width: 124px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          line-height: 68px;
-        }
-      }
-      .b_content {
-        .over-hidden {
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
-        }
-        .btn {
-          color: #4168f6;
-          text-align: right;
-          .van-icon {
-            vertical-align: -11%;
-            width: 28px;
-            height: 28px;
-          }
-        }
-        .tagBox {
-          display: inline-block;
-          background: #fafbff;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          color: #838a9d;
-          padding: 14px 16px;
-          margin-right: 16px;
-          margin-top: 16px;
-        }
-      }
-    }
-    .dynamic {
-      font-size: 28px;
-      .t_text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        width: 100%;
+        height: 100px;
         margin-bottom: 24px;
-        .label_tag {
-          font-weight: 600;
-          color: #3c4353;
-          position: relative;
-          padding-left: 10px;
-          &::before {
-            content: '';
-            width: 8px;
-            height: 28px;
-            background: #4168f6;
-            position: absolute;
-            top: 7px;
-            left: -10px;
-          }
-        }
-        .editButton {
-          color: #838a9d;
-          width: 152px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          line-height: 68px;
-          span {
-            display: inline-block;
-          }
-          img {
-            display: inline-block;
-            vertical-align: middle;
-            margin: -10px 10px 0 0;
-            margin-right: 5px;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .allText {
-        color: #4168f6;
-        margin-bottom: 16px;
-      }
-      .timeLine {
-        .el-timeline {
-          padding-left: 0 !important;
-        }
-        .recordBox {
-          // width: 676px;
-          min-height: 180px;
-          background: rgba(65, 104, 246, 0.06);
-          border-radius: 8px;
-          color: #3c4353;
-          padding: 16px;
-          font-size: 28px;
-          .inLine {
-            display: flex;
-            justify-content: space-between;
-            .time_right {
-              font-size: 28px;
-              color: #838a9d;
+        border-bottom: 1px solid #F0F2F7;
+        li {
+            flex: 1;
+            height: 100%;
+            line-height: 100px;
+            text-align: center;
+            span {
+                display: inline-block;
+                height: 100%;
+                margin: 0 auto;
+                color: #838A9D;
+                font-size: 28px;
+                font-weight: 600;
             }
-            img {
-              width: 10px;
-              height: 10px;
-            }
-          }
-          .inLineTwo {
-            margin-bottom: 16px;
-            display: inline-block;
-            word-break: normal;
-            word-break: break-all;
-            word-break: keep-all;
-            word-break: break-word;
-            // display: -webkit-box;
-            // -webkit-box-orient: vertical;
-            // -webkit-line-clamp: 2;
-            // overflow: hidden;
-          }
-          .inLineEnd {
-            text-align: right;
-          }
-          .descTxt {
-            font-weight: 600;
-            color: #3c4353;
-            margin-bottom: 16px;
-          }
         }
-      }
+        .active {
+            span {
+                color: #4168F6;
+                border-bottom: 4px solid #4168F6;
+            }
+        }
     }
   }
   .bottom_model {
@@ -824,91 +408,6 @@ export default {
     .content {
       // height: 845px;
       padding: 24px;
-      .tagWarp {
-        height: 740px;
-        overflow-y: auto;
-        .tagRow {
-          display: flex;
-          min-height: 70px;
-          margin-bottom: 24px;
-          font-size: 28px;
-          span {
-            display: inline-block;
-            color: #838a9d;
-            text-align: center;
-            line-height: 68px;
-            height: 68px;
-            border: 1px solid #d9dae4;
-            margin-right: 16px;
-            padding: 0 16px;
-            border-radius: 4px;
-            margin-bottom: 4px;
-          }
-          .groupName {
-            border: none;
-            width: 112px;
-            line-height: 68px;
-            word-wrap: break-word;
-            word-break: normal;
-            font-weight: 600;
-            margin-right: 16px;
-          }
-          .tagStyle {
-            flex: 1;
-            .perchInput {
-              border: none;
-            }
-            .creatTag {
-              background: #fafbff;
-              margin-bottom: 16px;
-              // vertical-align: middle;
-              // white-space: nowrap;
-              // overflow: hidden;
-              // text-overflow: ellipsis;
-              // max-width: 300px;
-            }
-            .changeTag {
-              background: #4168f6;
-              color: #fff;
-              span {
-                color: #fff;
-              }
-              .van-icon {
-                color: #fff;
-              }
-            }
-          }
-        }
-      }
-      .personWarp {
-        .tagRow {
-          .addInput {
-            width: 256px;
-            height: 68px;
-            border-radius: 8px;
-            border: 2px solid #d9dae4;
-            padding: 0 16px;
-          }
-          .creatTag {
-            padding-right: 0;
-            span:nth-child(1) {
-              vertical-align: middle;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              max-width: 300px;
-            }
-            span {
-              border: none;
-              padding: 0;
-              margin: 0;
-            }
-            .deleteTag {
-              width: 50px;
-            }
-          }
-        }
-      }
       .writerInput {
         height: 490px;
         .van-cell,
