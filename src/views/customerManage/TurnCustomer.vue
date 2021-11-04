@@ -361,11 +361,6 @@ export default {
         display: flex;
         margin-bottom: 35px;
       }
-      .el-form-item__label {
-        width: 155px;
-        font-size: 28px;
-        line-height: 80px;
-      }
       .el-form-item__content {
         width: 562px;
         height: 80px;
@@ -404,4 +399,11 @@ export default {
     }
   }
 }
+      /deep/.el-form-item__label {
+        width: 155px;
+        font-size: 28px;
+        line-height: 80px;
+        margin: 20px 24px 0 0;
+        padding: 0;
+      }
 </style>
