@@ -104,7 +104,7 @@ export default {
         .detailBtn {
             line-height: 88px;
             font-size: 28px;
-            color: #838a9d;
+            color: #4168F6;
             .van-icon {
                 line-height: 88px;
                 font-size: 28px;

@@ -13,7 +13,7 @@
         <span>客户信息</span>
       </div>
       <el-form ref="form" :model="formObj" label-position='right'>
-         <KehuTip :addChildForm="formObj" v-on:getacf="getacf"></KehuTip>  
+        <KehuTip :addChildForm="formObj" v-on:getacf="getacf"></KehuTip>
         <el-form-item label="客户来源:" prop="source" :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
           <el-select v-model="formObj.source" placeholder="请选择" @change="changeSource" clearable>
             <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
@@ -85,7 +85,7 @@
 import KehuTip from './comTip/kehuTip.vue'
 import GongsiTip from './comTip/gongsiTip.vue'
 export default {
-	components: {
+  components: {
     KehuTip,
     GongsiTip,
   },
@@ -123,15 +123,15 @@ export default {
   },
 
   methods: {
-  	getacf(acfValue) {
-        // acfValue就是子组件传过来的值
-        console.log('acfValue--->>',acfValue)
-        this.formObj.customerName = acfValue.customerName
+    getacf(acfValue) {
+      // acfValue就是子组件传过来的值
+      console.log('acfValue--->>', acfValue)
+      this.formObj.customerName = acfValue.customerName
     },
-    getgst(gstValue){
-    	// gstValue就是子组件传过来的值
-        console.log('gstValue--->>',gstValue)
-        this.formObj.cropFullName = gstValue.cropFullName
+    getgst(gstValue) {
+      // gstValue就是子组件传过来的值
+      console.log('gstValue--->>', gstValue)
+      this.formObj.cropFullName = gstValue.cropFullName
     },
     getDataList() {
       this.$network.get('/customer-service/cluecustomer/toadd').then((res) => {
@@ -215,7 +215,15 @@ export default {
 .AddCustomer {
 }
 .customerWarp {
+  padding-top: 87px;
   .headerTitle {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translateX(-50%);
+    cursor: pointer;
     background: #fff;
     padding: 0 24px;
     font-weight: 600;

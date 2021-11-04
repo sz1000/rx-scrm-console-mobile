@@ -18,7 +18,9 @@
 							  :file-list="eleList"
 							  :on-success="onSuccess"
 							  :on-error="onError">
-							  <el-button class="upBtn" size="small" type="primary"><img class="yunClass" src="../../../assets/images/icon_shangchuan.png" alt="" /><!--<i class="el-icon-upload"></i>-->上传</el-button>
+							  <el-button class="upBtn" size="small" type="primary">
+							  	<img class="yunClass" src="../../../assets/images/icon_shangchuan.png" alt="" />
+							  	<span class="upTxt">上传</span></el-button>
 							</el-upload>
 							
 							<div class="listBox" v-for="(item, index) in fileList" :key="index">
@@ -229,8 +231,9 @@ export default {
           font-size: 30px;
 }
 /deep/.upBtn span{
-	position: relative;
-	right: 15px;
+position: relative;
+    bottom: 14px;
+    left: 8px;
 }
 /deep/.upBtn i{
 	position: relative;
@@ -266,6 +269,12 @@ export default {
 .yunClass{
 	width: 28px;
 	height: 28px;
-	float: left;
+/*	float: left;*/
+position: relative;
+    top: 14px;
+    right: 22px;
+}
+.upTxt{
+	display: inline-block;
 }
 </style>

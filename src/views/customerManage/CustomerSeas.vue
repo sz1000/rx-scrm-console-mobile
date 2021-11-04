@@ -35,17 +35,20 @@
         <div class="content">
           <div class="changeUser">
             <div class="selectUser">
-              <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择员工"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
-                </el-option>
-              </el-select>
+              <div class="pleSs"><span style="color: red;">*</span>指定所属人:</div>
+              <input class="changeSsSec" type="text" readonly="readonly" placeholder="请选择"  :value="helperName" @click="openSsPop" />
+		              
+		              <van-action-sheet v-model="SsPop" title="选择所属人">
+							  		<van-picker
+											  title=""
+											  show-toolbar
+											  :columns="options"
+											  @confirm="onConfirm"
+											  @cancel="onCancel"
+											  @change="onChange"
+											  value-key="name"
+											/>
+						 			</van-action-sheet>
             </div>
           </div>
           <div class="buttonWarp">
@@ -75,13 +78,26 @@
         <span>分配</span>
       </div>
     </div>
+
+    <!-- 新手引导 -->
+    <guide-box ref="guideBox"></guide-box>
+
+    <!-- 协作人消息输入框 -->
+    <message-box v-if="contentType == 0" ref="messageBox" :class="{'details-message': btnList.some(item=>item.enName == 'get') || btnList.some(item=>item.enName == 'allot')}"></message-box>
+
+    <!-- 协作人选择弹窗 -->
+    <reminders-box ref="remindersBox" :fromType="'4'" :customerNo="objItem && objItem.clueCustomerNo"></reminders-box>
   </div>
 </template>
 <script>
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Dynamic from '../../components/CustomerManage/dynamic'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
-import  Fujian  from "./comTip/fujian";
+import  Fujian  from "./comTip/fujian"
+import GuideBox from "../../components/CustomerManage/guideBox"
+import MessageBox from "../../components/CustomerManage/messageBox"
+import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
+import { mapActions } from 'vuex'
 
 export default {
   data() {
@@ -96,27 +112,66 @@ export default {
       options: [],
       objItem: JSON.parse(localStorage.getItem('customer')),
       btnList: [],
+      SsPop:false,
+      helperName:'',
+      sendUserInfo: {},
     }
   },
   created() {
     this.btnList = JSON.parse(this.$route.query.alllist)
-  },
-  mounted() {
-    this.$refs.dynamic.selectFollowMsgList(2)
+    this.getCorpId()
   },
   provide() {
     return {
       goDetail: this.goDetail,
-      showCompany: null
+      showCompany: null,
+      showGuideBox: this.showGuideBox,
+      showRemindersBox: this.showRemindersBox,
+      messageNotificatio: this.messageNotificatio,
+      getPeople: this.getPeople,
     }
   },
   methods: {
+  	openSsPop(){
+  		this.SsPop = true;
+  	},
+  	onConfirm(value, index) {
+     // console.log(`当前值：${value}, 当前索引：${index}`);
+      console.log(value)
+				this.userNo = value.userNo
+       this.helperName = value.name
+   			this.SsPop = false;
+    },
+    onChange(picker, value, index) {
+    	/*console.log(value)
+      console.log(`当前值：${value}, 当前索引：${index}`);*/
+    },
+    onCancel() {
+    	this.SsPop = false;
+      console.log('取消');
+    },
+    ...mapActions(["getCorpId"]),
     // 导航切换
     changeNav(index) {
       this.contentType = index
     },
     goBack() {
       this.$router.go(-1)
+    },
+
+    showGuideBox() {
+      let isFirstTimeEnter = localStorage.getItem('JZCRM_ISFIRSTTIMEENTER')
+
+      if (!isFirstTimeEnter) {
+        localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 1)
+        this.doShowGuideBox(1)
+      } else if (isFirstTimeEnter && isFirstTimeEnter == 1) {
+        localStorage.setItem('JZCRM_ISFIRSTTIMEENTER', 2)
+        this.doShowGuideBox(2)
+      }
+    },
+    doShowGuideBox(type) {
+      this.$refs.guideBox.show(type)
     },
 
     // 去往下层详情页
@@ -183,12 +238,76 @@ export default {
           }
         })
     },
+    showRemindersBox() {
+      this.$refs.remindersBox.show()
+    },
+    getPeople(data) {
+      let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
+
+      arr.push(data)
+      this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
+      this.$refs.remindersBox.hide()
+    },
+    resetReceiveUserInfo(arr) {
+      let newArr = []
+      for (let i = 0; i < arr.length; i++) {
+        if (this.noHas(newArr, arr[i].userNo)) {
+          newArr.push(arr[i])
+        }
+      }
+      return newArr
+    },
+    noHas(arr, userNo) {
+      let result = arr.filter((item) =>{
+        return item.userNo == userNo;
+      })
+      return result.length == 0 ? true : false;
+    },
+    checkBeforeSend(receiveUserInfo, message) {
+      if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
+        this.$toast('接收人不能为空')
+        return false
+      } else if (!message) {
+        this.$toast('消息内容不能为空')
+        return false
+      }
+      return true
+    },
+    async messageNotificatio(receiveUserInfo, message) {
+      if (!this.checkBeforeSend(receiveUserInfo, message)) {
+        return
+      }
+      const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
+
+      let params = {
+        content: message,
+        customerNo: this.objItem && this.objItem.clueCustomerNo,
+        receiveUserInfo,
+        sendUserInfo: {
+          avatar,
+          userName: name,
+          userNo
+        }
+      }
+
+      let { code, msg } = await MessageNotificatio(params)
+
+      if (code == 'success') {
+        this.$refs.dynamic.dynamicContentType = 3
+        this.$refs.dynamic.selectFollowMsgList(4)
+        this.$refs.messageBox.initData()
+      }
+      this.$toast(msg)
+    },
   },
   components: {
     CustomerItem,
     Dynamic,
     Opportunities,
-    Fujian
+    Fujian,
+    GuideBox,
+    MessageBox,
+    RemindersBox
   }
 }
 </script>
@@ -440,6 +559,28 @@ export default {
       }
     }
   }
+}
+.changeSsSec{
+	    height: 80px;
+    	font-size: 30px;
+    	padding-left: 15px;
+    	border-radius: 8px;
+    	margin-left: 17px;
+    	color: #C0C4CC ;
+    	line-height: 80px;
+    	background: #FFFFFF;
+			border: 1px solid #D9DAE4;
+			border-radius: 8px;
+			font-weight: 300;
+}
+.pleSs{
+	display: inline-block;
+	margin-left: 23px;
+	margin-bottom: 25px;
+	margin-top: 15px;
+	font-size: 30px;
+	font-weight: 400;
+	color:  #3C4353;
 }
 </style>
 <style lang="less">

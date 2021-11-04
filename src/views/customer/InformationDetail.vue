@@ -7,6 +7,7 @@
       </div>
       <span class="textTitle">客户资料详情</span>
     </div>
+
     <div class="iconName">
       <div v-if="imageUser">
         <img :src="imageUser" alt="" />
@@ -17,9 +18,10 @@
         <span v-show="nameFrom">{{ nameFrom == '1' ? '@微信':`@${basicInfo.customerName}` }}</span>
         <img src="../../images/icon_female@2x.png" alt="" v-if="basicInfo.gender=='2'" />
         <img src="../../images/man.png" alt="" v-if="basicInfo.gender=='1'" />
-
       </div>
     </div>
+
+    <!-- 基本信息 -->
     <div class="basicInformation">
       <span>
         <img src="../../images/icon_label.png" alt="" />
@@ -94,6 +96,8 @@
         </el-form>
       </div>
     </div>
+
+    <!-- 系统信息 -->
     <div class="systemInformation ">
       <span>
         <img src="../../images/icon_label.png" alt="" />
@@ -108,17 +112,108 @@
       </div>
     </div>
 
-  </div>
-  <!-- </div> -->
+    <!-- 标签 -->
+    <div class="infoContent">
+      <div class="companyLabel">
+        <div class="t_text">
+          <span class="label_tag">企业标签</span>
+          <div class="editButton" @click="showCompany(1)">
+            <i class="el-icon-edit"></i>
+            编辑
+          </div>
+        </div>
+        <div class="b_content">
+          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
+            <div ref="spanBox">
+              <span v-for="(list, index) in companyTagList" :key="index" class="tagBox">{{ list.name }}</span>
+            </div>
+          </div>
+          <div class="btn" @click="unfold = !unfold" v-show="companyTagList.length > 5">
+            {{ unfold ? "收起" : "展开" }}
+            <van-icon name="arrow-down" />
+          </div>
+        </div>
+      </div>
+      <div class="personLabel">
+        <div class="t_text">
+          <span class="label_tag">个人标签</span>
+          <div class="editButton" @click="showCompany(2)">
+            <i class="el-icon-edit"></i>
+            编辑
+          </div>
+        </div>
+        <div class="b_content">
+          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+            <div ref="spanBox">
+              <span v-for="(list, index) in personTagList" :key="index" class="tagBox" v-show="list.isChecked">{{ list.name }}</span>
+            </div>
+          </div>
+          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="
+              personTagList.filter((item) => {
+                return item.isChecked == 1;
+              }).length > 5
+            ">
+            {{ isShowPerson ? "收起" : "展开" }}
+            <van-icon name="arrow-down" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="bottom_model">
+      <van-action-sheet v-model="show" :lock-scroll="false" :title="titleName" @cancel="cancelIcon" @click-overlay="cancelIcon" class="vant_sheet">
+        <div class="content">
+          <div class="tagWarp" v-if="isShowDialog == '1'">
+            <div class="tagRow" v-for="(item, index) in groupList" :key="index">
+              <div class="groupName">{{ item.name }}</div>
+              <div class="tagStyle">
+                <span class="creatTag" :class="{
+                    changeTag:
+                      highLightArr.findIndex((item) => {
+                        return item.tagid == list.tagid;
+                      }) > -1,
+                  }" v-for="(list, index) in item.children" :key="list.id" v-show="list.name" @click="selectTag(list, index)">{{ list.name }}</span>
+              </div>
+            </div>
+          </div>
 
+          <div class="tagWarp personWarp" v-if="isShowDialog == '2'">
+            <div class="tagRow">
+              <!-- <div class="groupName">{{item.name}}</div> -->
+              <div class="tagStyle">
+                <span class="addBtn pointer" @click="addTag">+添加</span>
+                <span class="perchInput" v-if="isShow">
+                  <input v-model.trim="tagName" class="addInput" placeholder="输入后按回车完成" maxlength="30" @keyup.enter="handleSearch()" />
+                </span>
+                <span class="creatTag" :class="{ changeTag: list.isChecked }" v-for="(list, index) in personTagList" :key="list.id"
+                      v-show="list.name">
+                  <span @click="selectPersonTag(list, index)">{{
+                    list.name
+                  }}</span>
+                  <span class="deleteTag" @click="deleteTag(list, index)">
+                    <van-icon name="cross" />
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="buttonWarp" v-show="hidshow">
+            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
+          </div>
+        </div>
+      </van-action-sheet>
+    </div>
+  </div>
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
-import { getToken } from '../../utils/getToken'
-import commonFun from '../../utils/commonToken'
+
 export default {
   data() {
     return {
+      clueCustomerNo: null,
       name: '',
       imageUser: '',
       nameFrom: '',
@@ -167,15 +262,28 @@ export default {
       ],
       fieldIndex: null,
       loadingShow: true,
+
+      isShowDialog: null,
+      show: false,
+      titleName: '',
+      highLightArr: [],
+      showInput: null,
+      isShow: false,
+      tagName: '',
+      unfold: false,
+      isShowPerson: false,
+      companyTagList: [],
+      personTagList: [],
+      groupList: [],
+      hidshow: true, //显示或者隐藏footer,
     }
   },
   created() {
-    commonFun.getWxAppid()
-  },
-  mounted() {
-    setTimeout(() => {
-      this.getDetailForm()
-    }, 2000)
+    const { id } = this.$route.query
+    
+    this.clueCustomerNo = id
+    this.getDetailForm()
+    this.getTagList()
   },
   methods: {
     changeInput(val) {
@@ -197,24 +305,17 @@ export default {
       this.update()
     },
     scaleChange(val) {
-      // console.log(val)
       this.basicInfo.corpScale = val
       this.update()
     },
     getDetailForm() {
-      // alert(222222222222222)
       this.$toast.loading({
         // message: '加载中...',
         overlay: true,
         loadingType: 'spinner',
         duration: 0,
       })
-      this.$network
-        .get('/customer-service/cluecustomer/toupdate', {
-          clueCustomerNo: localStorage.getItem('userId'),
-          // clueCustomerNo: this.$route.params.userid,
-        })
-        .then((res) => {
+      this.$network.get('/customer-service/cluecustomer/toupdate', { clueCustomerNo: this.clueCustomerNo }) .then((res) => {
           this.$toast.clear()
           this.loadingShow = false
           this.processTree(res.data.comlist)
@@ -262,16 +363,14 @@ export default {
       })
     },
     update() {
-      this.$network
-        .post('/customer-service/cluecustomer/update', {
-          type: this.$route.query.type,
-          clueCustomerNo: this.$route.query.userid,
-          ...this.basicInfo,
-        })
-        .then((res) => {
-          this.$message({ type: 'success', message: '更新成功' })
-          // this.getDetailForm()
-        })
+      this.$network.post('/customer-service/cluecustomer/update', {
+        type: this.$route.query.type,
+        clueCustomerNo: this.clueCustomerNo,
+        ...this.basicInfo,
+      }).then((res) => {
+        this.$message({ type: 'success', message: '更新成功' })
+        // this.getDetailForm()
+      })
     },
     goBack() {
       this.$router.push('/customerPortrait')
@@ -289,16 +388,161 @@ export default {
     fnFocus(item, index) {
       this.fieldIndex = index
     },
+    getTagList() {
+      this.highLightArr = []
+      this.$network.get('/customer-service/cluecustomer/gettag', { clueCustomerNo: this.clueCustomerNo }).then((res) => {
+          this.companyTagList = res.data.corpTagList
+          this.groupList = res.data.tagCorpList
+          this.personTagList = res.data.personTagList
+          let allChildTag = res.data.tagCorpList.map((item) => {
+            return item.children
+          })
+          // let childTag = allChildTag.flat()
+          let childTag = [].concat.apply([], allChildTag)
+          // console.log('---allChildTag---', allChildTag, childTag)
+
+          this.companyTagList.forEach((item) => {
+            childTag.forEach((chItem, chIndex) => {
+              if (item.tagid == chItem.tagid) {
+                this.highLightArr.push(chItem)
+              }
+            })
+          })
+        })
+    },
+    showCompany(v) {
+      document.getElementById('html').style.overflow = 'hidden'
+      this.isShowDialog = v
+      this.show = true
+      if (v == 1) {
+        this.titleName = '企业标签'
+      } else if (v == 2) {
+        this.titleName = '个人标签'
+      }
+    },
+    addTag(item, index) {
+      this.tagName = ''
+      this.isShow = !this.isShow
+    },
+    handleSearch() {
+      // console.log(this.tagName)
+      if (this.tagName !== '') {
+        this.$network.post('/customer-service/cluecustomer/addtag', {
+            name: this.tagName,
+            clueCustomerNo: this.clueCustomerNo,
+          }).then((res) => {
+            if (res.result) {
+              this.personTagList = res.data
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.msg || '添加失败',
+              })
+            }
+          })
+      }
+      this.showInput = null
+      this.isShow = false
+    },
+    selectTag(list, index) {
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid
+      })
+      if (result > -1) {
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1)
+          }
+        })
+      } else {
+        this.highLightArr.push(list)
+      }
+      // console.log(this.highLightArr);
+    },
+    selectPersonTag(list, index) {
+      console.log(list)
+      if (list.isChecked == 1) {
+        list.isChecked = 0
+      } else {
+        list.isChecked = 1
+      }
+    },
+    cancelIcon() {
+      document.getElementById('html').style.overflow = 'auto'
+    },
+    closeDialog(v) {
+      this.show = false
+      document.getElementById('html').style.overflow = 'auto'
+      if (v == 1) {
+        this.getTagList()
+      } else if (v == 2) {
+      }
+    },
+    saveDialog(v) {
+      if (v == 1) {
+        // console.log(this.highLightArr)
+        this.$network.post(
+            `/customer-service/cluecustomer/updCorptag/${this.clueCustomerNo}`,
+            this.highLightArr
+          ).then((res) => {
+            if (res.result) {
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
+              this.getTagList()
+            } else {
+              this.message({
+                type: 'error',
+                message: '添加失败',
+              })
+            }
+          })
+      } else if (v == 2) {
+        this.$network.post('/customer-service/cluecustomer/updPertag', this.personTagList).then((res) => {
+            if (res.result) {
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
+          })
+      }
+    },
+    deleteTag(v, i) {
+      this.$dialog.confirm({
+        title: '温馨提示',
+        message: '是否确认删除',
+        className: 'deleteBtn',
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        messageAlign: 'left',
+      }).then(() => {
+        this.$network
+          .post('/customer-service/cluecustomer/deltag', v)
+          .then((res) => {
+            if (res.result) {
+              this.personTagList = res.data
+            }
+          })
+      }).catch(() => {})
+    },
   },
 }
 </script>
 <style lang="less" scoped>
-.InformationDetail {
-}
 .detailWarp {
   background: #fff;
   padding: 0 24px;
+  padding-top: 87px;
   .headerTitle {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 10;
+    width: 750px;
+    transform: translateX(-50%);
+    cursor: pointer;
     font-weight: 600;
     display: flex;
     height: 87px;
@@ -447,6 +691,202 @@ export default {
             background: #4168f6;
             border-radius: 8px;
           }
+        }
+      }
+    }
+  }
+
+  .infoContent {
+    margin-top: 24px;
+    background: #fff;
+    padding: 24px 24px 0;
+    .companyLabel,
+    .personLabel {
+      min-height: 292px;
+      font-size: 28px;
+      border-bottom: 1px solid #f0f2f7;
+      margin-bottom: 24px;
+      .t_text {
+        display: flex;
+        justify-content: space-between;
+        // align-items: center;
+        // min-height: 292px;
+        .label_tag {
+          font-weight: 600;
+          color: #3c4353;
+          position: relative;
+          padding-left: 10px;
+          &::before {
+            content: '';
+            width: 8px;
+            height: 28px;
+            background: #4168f6;
+            position: absolute;
+            top: 7px;
+            left: -10px;
+          }
+        }
+        .editButton {
+          color: #838a9d;
+          width: 124px;
+          height: 68px;
+          border-radius: 8px;
+          border: 2px solid #d9dae4;
+          text-align: center;
+          line-height: 68px;
+        }
+      }
+      .b_content {
+        .over-hidden {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+        .btn {
+          color: #4168f6;
+          text-align: right;
+          .van-icon {
+            vertical-align: -11%;
+            width: 28px;
+            height: 28px;
+          }
+        }
+        .tagBox {
+          display: inline-block;
+          background: #fafbff;
+          border-radius: 8px;
+          border: 2px solid #d9dae4;
+          color: #838a9d;
+          padding: 14px 16px;
+          margin-right: 16px;
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+
+  .bottom_model {
+    /deep/.van-overlay {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+    .van-action-sheet__header {
+      height: 88px;
+      line-height: 88px;
+      background: #fafbff;
+      border-radius: 16px 16px 0px 0px;
+      font-size: 28px;
+      color: #3c4353;
+      font-weight: 600;
+    }
+    .content {
+      // height: 845px;
+      padding: 24px;
+      .tagWarp {
+        height: 740px;
+        overflow-y: auto;
+        .tagRow {
+          display: flex;
+          min-height: 70px;
+          margin-bottom: 24px;
+          font-size: 28px;
+          span {
+            display: inline-block;
+            color: #838a9d;
+            text-align: center;
+            line-height: 68px;
+            height: 68px;
+            border: 1px solid #d9dae4;
+            margin-right: 16px;
+            padding: 0 16px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+          }
+          .groupName {
+            border: none;
+            width: 112px;
+            line-height: 68px;
+            word-wrap: break-word;
+            word-break: normal;
+            font-weight: 600;
+            margin-right: 16px;
+          }
+          .tagStyle {
+            flex: 1;
+            .perchInput {
+              border: none;
+            }
+            .creatTag {
+              background: #fafbff;
+              margin-bottom: 16px;
+              // vertical-align: middle;
+              // white-space: nowrap;
+              // overflow: hidden;
+              // text-overflow: ellipsis;
+              // max-width: 300px;
+            }
+            .changeTag {
+              background: #4168f6;
+              color: #fff;
+              span {
+                color: #fff;
+              }
+              .van-icon {
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
+      .personWarp {
+        .tagRow {
+          .addInput {
+            width: 256px;
+            height: 68px;
+            border-radius: 8px;
+            border: 2px solid #d9dae4;
+            padding: 0 16px;
+          }
+          .creatTag {
+            padding-right: 0;
+            span:nth-child(1) {
+              vertical-align: middle;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 300px;
+            }
+            span {
+              border: none;
+              padding: 0;
+              margin: 0;
+            }
+            .deleteTag {
+              width: 50px;
+            }
+          }
+        }
+      }
+      .buttonWarp {
+        display: flex;
+        justify-content: space-between;
+        font-size: 28px;
+        span {
+          display: inline-block;
+          width: 339px;
+          height: 80px;
+          border-radius: 8px;
+          border: 2px solid #4168f6;
+          text-align: center;
+          line-height: 80px;
+        }
+        .cancel {
+          color: #4168f6;
+          background: #fff;
+        }
+        .save {
+          background: #4168f6;
+          color: #fff;
         }
       }
     }
