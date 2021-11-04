@@ -10,7 +10,7 @@
             @closed="hide">
             <div class="title">选择提醒的人</div>
             <div class="content">
-                <van-search v-model="searchText" class="search-box" placeholder="请输入搜索关键词" @input="getList"/>
+                <form action="/"><van-search v-model="searchText" class="search-box" placeholder="请输入搜索关键词" @search="getList" @blur="getList"/></form>
 
                 <van-index-bar :index-list="indexList" highlight-color="#4168f6">
                     <div class="all-people" @click="getPeople(allPeople)">
@@ -35,6 +35,7 @@
 </template>
 <script>
 import { ReceiveUser } from '../../../config/api'
+import { mapState } from 'vuex'
  
 export default {
     props: {
@@ -58,10 +59,14 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapState(["corpId"]),
+    },
     inject: ['getPeople'],
     methods: {
         show() {
             this.getList()
+            this.remindersBoxDialogVisible = true
         },
         hide() {
             this.searchText = ''
@@ -72,13 +77,16 @@ export default {
         async getList() {
             let params = {
                 customerNo: this.customerNo,
-                isPublic: this.fromType == 4 ? true : false
+                isPublic: this.fromType == 4 ? true : false,
+                corpId: this.corpId
             }
 
             let { code, data } = await ReceiveUser(params)
 
             if (code == 'success') {
                 if (!data || data && !data.length) {
+                    this.indexList = []
+                    this.peopleList = []
                     this.$toast('暂无人员信息')
                     return
                 }
@@ -86,7 +94,6 @@ export default {
                 this.peopleList.map(item => {
                     this.indexList.push(item.initials)
                 })
-                this.remindersBoxDialogVisible = true
             }
         }
     }

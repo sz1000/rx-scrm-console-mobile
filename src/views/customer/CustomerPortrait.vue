@@ -95,7 +95,7 @@ export default {
   },
   data() {
     return {
-      showPortraitType: 1,
+      showPortraitType: 0,
       title: '',
       name: '',
       nameFrom: '',

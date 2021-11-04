@@ -97,6 +97,7 @@ import  Fujian  from "./comTip/fujian"
 import GuideBox from "../../components/CustomerManage/guideBox"
 import MessageBox from "../../components/CustomerManage/messageBox"
 import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
+import { mapActions } from 'vuex'
 
 export default {
   data() {
@@ -118,6 +119,7 @@ export default {
   },
   created() {
     this.btnList = JSON.parse(this.$route.query.alllist)
+    this.getCorpId()
   },
   provide() {
     return {
@@ -130,7 +132,7 @@ export default {
     }
   },
   methods: {
-  	  	  	openSsPop(){
+  	openSsPop(){
   		this.SsPop = true;
   	},
   	onConfirm(value, index) {
@@ -148,6 +150,7 @@ export default {
     	this.SsPop = false;
       console.log('取消');
     },
+    ...mapActions(["getCorpId"]),
     // 导航切换
     changeNav(index) {
       this.contentType = index
