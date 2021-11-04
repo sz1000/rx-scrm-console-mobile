@@ -399,8 +399,8 @@ export default {
               width: 32px;
               height: 32px;
               position: absolute;
-              right: -5px;
-              top: -5px;
+              right: 0px;
+              top: 0px;
             }
           }
         }
@@ -479,6 +479,7 @@ export default {
           padding: 0 16px;
           input {
             width: 100%;
+            background: #fff;
           }
         }
         .input_box {
