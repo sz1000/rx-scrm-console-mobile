@@ -112,7 +112,7 @@
             <div class="box1">
                 <span class="label">添加时间:</span>
                 <span class="value">{{
-                formatDate(itemData.createTime, "yyyy-MM-dd hh:mm:ss")
+                formatDate(itemData.createTime, "yyyy-MM-dd")
                 }}</span>
             </div>
         </div>

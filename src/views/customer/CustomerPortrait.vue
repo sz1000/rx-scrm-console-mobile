@@ -134,14 +134,14 @@ export default {
     userId(val) {
       console.log("???>>>???", val)
       if(val) {
-        this.getMethod()
+        this.getClueCustomerByid()
       } else {
         commonFun.getWxAppid()
       }
     }
   },
   created() {
-    commonFun.getWxAppid()
+    this.getMethod()
   },
   mounted() {
     window.onresize = () => (() => {
@@ -201,38 +201,41 @@ export default {
         }).catch(reject)
       })
     },
-    //获取客户详情
     getMethod() {
       this.loadingShow = true
-      // if (!this.userId) {
-      //   commonFun.getWxAppid()
-      // } else {
-        this.$toast.loading({
-          overlay: true,
-          loadingType: 'spinner',
-          duration: 0,
-        })
-        this.$network.get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-          // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
-          id: this.userId,
-        }).then((res) => {
-          console.log('entry', this.entry)
-          this.getUserName().then(() => {
-            this.$toast.clear()
-            this.loadingShow = false
-            this.name = res.data.clueCustomerVO.name
-            this.nameFrom = res.data.clueCustomerVO.customerType
-            this.item = res.data.clueCustomerVO
-            this.imageUser = res.data.clueCustomerVO.avatar
-            // this.timeLineList = res.data.followMessageEntity
-            localStorage.removeItem('userId')
+      if (!this.userId) {
+        commonFun.getWxAppid()
+      } else {
+        this.getClueCustomerByid()
+      }
+    },
+    //获取客户详情
+    getClueCustomerByid() {
+      this.$toast.loading({
+        overlay: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
+      this.$network.get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+        // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
+        id: this.userId,
+      }).then((res) => {
+        console.log('entry', this.entry)
+        this.getUserName().then(() => {
+          this.$toast.clear()
+          this.loadingShow = false
+          this.name = res.data.clueCustomerVO.name
+          this.nameFrom = res.data.clueCustomerVO.customerType
+          this.item = res.data.clueCustomerVO
+          this.imageUser = res.data.clueCustomerVO.avatar
+          // this.timeLineList = res.data.followMessageEntity
+          localStorage.removeItem('userId')
 
-            localStorage.setItem("ISPORTRIAT_customer", JSON.stringify(this.item))
+          localStorage.setItem("ISPORTRIAT_customer", JSON.stringify(this.item))
 
-            this.getShowPortraitType()
-          })
+          this.getShowPortraitType()
         })
-      // }
+      })
     },
     getShowPortraitType() {
       if (this.entry && this.entry == 'single_chat_tools') {
