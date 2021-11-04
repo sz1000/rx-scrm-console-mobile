@@ -12,9 +12,9 @@
       <!-- 客户动态 -->
       <dynamic v-if="contentType == 0" ref="dynamic" :comeType="1" :isPortrait="1" :sendUserInfo="sendUserInfo" @fillMessage="getPeople"></dynamic>
 
-      <!-- 协作人 -->
+      <!-- 协助人 -->
       <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
-      	<HelperFile></HelperFile>
+      	<HelperFile :isPortrait="1"></HelperFile>
       </div>
 
       <!-- 商机 -->
@@ -22,7 +22,7 @@
       
       <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
-      	<Fujian></Fujian>
+      	<Fujian :isPortrait="1"></Fujian>
       </div>
     </div>
 
@@ -52,14 +52,14 @@
     <!-- 新手引导 -->
     <guide-box ref="guideBox"></guide-box>
 
-    <!-- 协作人消息输入框 -->
+    <!-- 协助人消息输入框 -->
     <message-box v-if="contentType == 0" ref="messageBox"></message-box>
 
-    <!-- 协作人选择弹窗 -->
+    <!-- 协助人选择弹窗 -->
     <reminders-box ref="remindersBox" :customerNo="item && item.clueCustomerNo"></reminders-box>
   </div>
   
-  <div v-else>
+  <div v-else-if="showPortraitType == 2">
     <Groupportrait></Groupportrait>
   </div>
 
@@ -95,7 +95,7 @@ export default {
   },
   data() {
     return {
-      showPortraitType: 1,
+      showPortraitType: 0,
       title: '',
       name: '',
       nameFrom: '',
@@ -106,7 +106,7 @@ export default {
       sendUserInfo: {},
       timeLineList: [],
       contentType: 0,
-      navList: [ '客户动态', '协作人', '商机', '附件' ],
+      navList: [ '客户动态', '协助人', '商机', '附件' ],
       show: false,
       isShowDialog: null,
       titleName: '',

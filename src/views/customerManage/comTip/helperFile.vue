@@ -180,6 +180,12 @@
 <script>
 import { _throttle, formatDate } from "../../../utils/tool";
 export default {
+  props: {
+    isPortrait: {
+      type: Number,
+      default: 0
+    },
+  },
   data() {
     return {
     	yuangongName:'',
@@ -199,7 +205,7 @@ export default {
       yiList:[],
       bumenList:[],
       heperList:[],
-      objItem:  JSON.parse(localStorage.getItem('customer')),
+      objItem: this.isPortrait == 1 ? JSON.parse(localStorage.getItem('ISPORTRIAT_customer')) : JSON.parse(localStorage.getItem('customer')),
       oneList:[]
     };
   },

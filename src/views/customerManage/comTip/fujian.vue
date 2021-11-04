@@ -37,9 +37,15 @@
 	import { BASE_URL } from '../../../utils/request.js'
 	import { getStoreValue } from '../../../utils/LocalStorageDate'
 export default {
+	props: {
+		isPortrait: {
+		type: Number,
+		default: 0
+		},
+	},
   data() {
     return {
-      objItem: JSON.parse(localStorage.getItem('detail')),
+      objItem: this.isPortrait == 1 ? JSON.parse(localStorage.getItem('ISPORTRIAT_customer')) : JSON.parse(localStorage.getItem('detail')),
 			fileList:[],
 			fileData:{
     	},
