@@ -112,7 +112,6 @@ export default {
             default: ''
         },
         fromType: {
-            type: String,
             default: '3'
         }
     },

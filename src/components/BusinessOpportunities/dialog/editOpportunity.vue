@@ -150,7 +150,6 @@ export default {
             default: ''
         },
         fromType: {
-            type: String,
             default: '3'
         }
     },
@@ -375,11 +374,8 @@ export default {
         },
         // 处理时间格式为：yyyy-MM-dd HH:mm:ss
         getSubmitTime(expectEndTime, endTime) {
-            if(this.selectDateType == 0) {
-                this.form.expectEndTime = formatDate(new Date(expectEndTime).getTime(), 'yyyy-MM-dd hh:mm:ss')
-            } else if(this.selectDateType == 1 || this.selectDateType == 2) {
-                this.form.endTime = formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss')
-            }
+            this.form.expectEndTime = expectEndTime ? formatDate(new Date(expectEndTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : this.form.expectEndTime
+            this.form.endTime = endTime ? formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : this.form.endTime
         }, 
         // 表单提交
         async handleSubmit() {

@@ -116,7 +116,6 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      chatId: '',
       // 群信息
       datatTite: {
         name: '',
@@ -141,20 +140,39 @@ export default {
       showSecret: false,
     }
   },
-  created() {
-    commonFun.getWxAppid()
+  computed: {
+    chatId() {
+      console.log("this.$store.getters.chatId???", this.$store.getters.chatId)
+      return this.$store.getters.chatId || sessionStorage.getItem('chatId')
+    },
   },
-  mounted() {
-    setTimeout(() => {
+  watch: {
+    chatId(val) {
+      console.log("chat>>>???", val)
+      if(val) {
+        this.init()
+      } else {
+        commonFun.getWxAppid()
+      }
+    }
+  },
+  created() {
+    this.getMethod()
+  },
+  methods: {
+    getMethod() {
+      if (!this.chatId) {
+        commonFun.getWxAppid()
+      } else {
+        this.init()
+      }
+    },
+    init() {
       this.pageInfo.page = 1
-      // console.log(this.$route.query.id + "----id--");
       this.getGroupDetail()
       this.getList()
       this.getUserName()
-      // alert(JSON.stringify(localStorage.getItem("chatId")));
-    }, 3000)
-  },
-  methods: {
+    },
     getUserName() {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
@@ -196,7 +214,7 @@ export default {
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
           // chatId: localStorage.getItem("chatId"),
-          chatId: sessionStorage.getItem('chatId'),
+          chatId: this.chatId,
         })
         .then((res) => {
           if (res.result) {
@@ -231,7 +249,7 @@ export default {
           // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
           // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
           // chatId: localStorage.getItem("chatId"),
-          chatId: sessionStorage.getItem('chatId'),
+          chatId: this.chatId,
           ...this.pageInfo,
         })
         .then((res) => {
