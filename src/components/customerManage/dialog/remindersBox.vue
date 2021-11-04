@@ -13,7 +13,7 @@
                 <form action="/"><van-search v-model="searchText" class="search-box" placeholder="请输入搜索关键词" @search="getList" @blur="getList"/></form>
 
                 <van-index-bar :index-list="indexList" highlight-color="#4168f6">
-                    <div class="all-people" @click="getPeople(allPeople)">
+                    <div v-if="peopleList && peopleList.length" class="all-people" @click="getPeople(allPeople)">
                         <span class="img">
                             <img src="../../../assets/images/icon_peoples.png" alt="">
                         </span>
