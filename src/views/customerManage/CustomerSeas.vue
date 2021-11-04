@@ -561,6 +561,7 @@ export default {
   }
 }
 .changeSsSec{
+			width: 440px;
 	    height: 80px;
     	font-size: 30px;
     	padding-left: 15px;

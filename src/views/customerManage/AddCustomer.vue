@@ -269,12 +269,14 @@ export default {
       height: 100%;
       .el-form-item {
         display: flex;
-        margin-bottom: 26px;
+        margin-bottom: 60px;
       }
       .el-form-item__label {
         min-width: 170px !important;
         font-size: 28px;
         line-height: 80px;
+        margin: 0px 24px 0 0;
+        padding: 0;
       }
 
       .el-form-item__content {

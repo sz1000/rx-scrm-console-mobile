@@ -326,22 +326,13 @@ export default {
 									nameArr.push(this.yiList[i].name)			   
 								}    	
               	if(nameArr.indexOf(name) > -1){
-										   			this.$message({
-							                type: 'error',
-							                message: '请勿重复添加协助人!',
-							             })
+										   			this.$toast('请勿重复添加协助人!')
 										   }else{
-										   			this.$message({
-							                type: 'success',
-							                message: '添加成功!',
-							            })
+										   			this.$toast('添加成功!')
 										   }   			
               	this.getHelperList()
               }else{
-              		this.$message({
-		                type: 'error',
-		                message: '添加失败!',
-		              })
+              	this.$toast('添加失败!')
               }
               
               
@@ -383,17 +374,11 @@ export default {
             .then((res) => {
               console.log(res)
               if(res.code=='success'){
-	              	this.$message({
-		                type: 'success',
-		                message: '删除成功!',
-		              })
+              	this.$toast('删除成功!')
 		              this.getHelperList()
 		              this.show = false
               }else{
-              		this.$message({
-		                type: 'error',
-		                message: '删除失败!',
-		              })
+              	this.$toast('删除失败!')
               }
               
             })
@@ -429,10 +414,8 @@ export default {
         .then((res) => {
           _this.heperList = res.data.user.records
           if (_this.heperList.length == 0) {
-            this.$message({
-              type: 'success',
-              message: '当前部门没有员工',
-            })
+          	this.$toast('当前部门没有员工!')
+          	this.yuangongName = ''
           }
           console.log(_this.heperList)
         })
@@ -782,7 +765,7 @@ export default {
       }
       .detailInfo {
         display: flex;
-        margin-top: 21px;
+        margin-top: 42px;
         .left,
         .right {
           width: 50%;
@@ -898,6 +881,6 @@ export default {
 
 /deep/.van-action-sheet__content{
 		overflow-y: scroll;
-    margin-bottom: 200px;
+   /* margin-bottom: 200px;*/
 }
 </style>

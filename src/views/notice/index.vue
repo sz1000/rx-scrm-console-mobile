@@ -17,13 +17,13 @@
           <div class="info_box">
             <div class="avatar">{{ avatar }}</div>
             <div class="info">
-              <div class="name" v-if="taskType == 6">
-                {{ detail.customerCorpName }}<i>{{ detail.customerType }}</i>
+              <div class="name">
+                {{ contractName }}<i v-if="taskType != 2">{{ detail.customerType }}</i>
               </div>
-              <div class="name" v-else>
+              <!-- <div class="name" v-else>
                 {{ detail.customerContactName
                 }}<i v-if="taskType != 2">{{ detail.customerType }}}</i>
-              </div>
+              </div> -->
               <div class="time" v-if="taskType == 2">
                 群人数：{{ detail.customerGroupPeopleCount }}
               </div>
@@ -115,8 +115,18 @@ export default {
       }
       return list;
     },
+    contractName(){
+        let _str = ''
+        if(this.detail.customerType.indexOf('微信') > -1){
+            _str = this.detail.customerContactName
+        }else {
+            _str = this.detail.customerCorpName
+        }
+        return _str
+    }
   },
   created() {
+      console.log("token",localStorage.getItem("token"))
     if (!localStorage.getItem("token")) {
       CommonHome.getWxToken();
       console.log("获取token")

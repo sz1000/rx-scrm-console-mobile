@@ -43,14 +43,13 @@ export default {
             default: ''
         },
         fromType: {
-            type: String,
             default: '1'
         }
     },
     data() {
         return {
             remindersBoxDialogVisible: false,
-            searchText: null,
+            searchText: '',
             indexList: [],
             peopleList: [],
             allPeople: {
@@ -78,7 +77,8 @@ export default {
             let params = {
                 customerNo: this.customerNo,
                 isPublic: this.fromType == '4' ? true : false,
-                corpId: this.corpId
+                corpId: this.corpId,
+                userName: this.searchText
             }
 
             let { code, data } = await ReceiveUser(params)

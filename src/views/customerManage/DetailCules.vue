@@ -524,8 +524,9 @@ export default {
     	color: #C0C4CC ;
     	line-height: 80px;
     	background: #FFFFFF;
-			border: 1px solid #D9DAE4;
+			border: 2px solid #D9DAE4;
 			border-radius: 8px;
+			width: 440px;
 }
 .pleSs{
 	display: inline-block;

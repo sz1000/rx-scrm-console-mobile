@@ -30,50 +30,6 @@
 			
     </div>
 
-    <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName"
-                        @cancel="cancelIcon"
-                        @click-overlay="cancelIcon"
-                        :lock-scroll="false">
-        <div class="content">
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
-          </div>
-          <div class="changeUser"
-               v-if="isShowDialog == '4'">
-            <div class="nowUser">
-              <span>现有所属人:</span>
-              <span>{{ nowUser }}</span>
-            </div>
-            <div class="selectUser">
-              <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
-                </el-option>
-              </el-select>
-            </div>
-          </div>
-          <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
-          </div>
-        </div>
-      </van-action-sheet>
-    </div>
     
     <div class="bottom_model">
       <van-action-sheet v-model="show"
@@ -237,7 +193,7 @@ export default {
         })
     },
   	distribution() {
-      // this.isShowDialog = '4'
+       this.isShowDialog = '4'
       this.show = true
       this.titleName = '分配线索'
       this.$network
@@ -355,6 +311,7 @@ export default {
       }
     },
     saveDialog: _throttle(function (v) {
+    	console.log(v)
       if (v == 3) {
         this.$network
           .post('/customer-service/cluecustomer/addMessage', {
@@ -600,8 +557,9 @@ export default {
     	color: #C0C4CC ;
     	line-height: 80px;
     	background: #FFFFFF;
-			border: 1px solid #D9DAE4;
+			border: 2px solid #D9DAE4;
 			border-radius: 8px;
+			width: 440px;
 }
 .pleSs{
 	display: inline-block;

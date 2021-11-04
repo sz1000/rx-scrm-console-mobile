@@ -522,6 +522,7 @@ export default {
 			border: 1px solid #D9DAE4;
 			border-radius: 8px;
 			font-weight: 300;
+			width: 440px;
 }
 .pleSs{
 	display: inline-block;

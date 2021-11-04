@@ -1,6 +1,6 @@
 <template>
 	<div class="tipBox">
-		<el-form-item label="公司名称" class="gongsiForm">
+		<el-form-item label="公司名称:" class="gongsiForm">
           <el-input v-model="addChildForm.cropFullName"
                     maxlength="100"
                     @input="remoteMethodGongsi"

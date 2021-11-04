@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="footer_opera">
-      <div class="btn" @click="wxPreviewImage(detail.employeeQrAddress)">
+      <div class="btn" @click="PreviewFun(detail.employeeQrAddress)">
         保存图片
       </div>
     </div>
@@ -35,7 +35,7 @@
 <script>
 import TopTitle from "@/views/talkTool/groupCode/components/topTitle.vue";
 import { userBusinessCard_personalCard } from "@/api/card";
-import { wxPreviewImage } from "@/utils/tool";
+// import { wxPreviewImage } from "@/utils/tool";
 export default {
   components: {
     TopTitle,
@@ -49,7 +49,6 @@ export default {
     this.getDetail();
   },
   methods: {
-    wxPreviewImage,
     getDetail() {
       //获取详情
       userBusinessCard_personalCard().then((res) => {
@@ -58,6 +57,15 @@ export default {
           this.detail = data;
         }
       });
+    },
+    PreviewFun(url){
+        console.log(url)
+         var a = document.createElement("a");
+    //   a.download = "";
+        a.href =url;
+        a.download = url;
+        a.click()
+    //    wxPreviewImage(url)
     },
   },
 };
@@ -137,11 +145,12 @@ export default {
     }
     .code_box {
       width: 100%;
-      height: calc(100vw - 140px);
+    //   height: calc(100vw - 140px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      padding: 30px 0;
       .img_box {
         width: 400px;
         height: 400px;

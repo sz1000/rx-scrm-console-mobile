@@ -197,7 +197,7 @@ export default {
       height: 100%;
       .el-form-item {
         display: flex;
-        margin-bottom: 35px;
+        margin-bottom: 60px;
       }
       .el-form-item__label {
         min-width: 170px !important;
