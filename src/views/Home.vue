@@ -341,6 +341,7 @@ export default {
       color: #3c4353;
       text-align: center;
       width: 175px;
+      cursor: pointer;
       .nomaltext {
         color: #c0c4cc;
       }
