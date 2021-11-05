@@ -7,12 +7,15 @@ import {
     getStoreValue,
     removeStoreValue,
 } from '../utils/LocalStorageDate'
-
+console.log('-------auth--', window.location.href)
+store.commit('setCopy', window.location.href)
 let queryObj = parseQueryString(location),
-    comeFrom = queryObj.comeFrom
-
-
+    comeFrom = queryObj.comeFrom,
+    name = queryObj.name,
+    qywxUrl = encodeURIComponent(window.location.href)
+console.log(queryObj)
 const getWxAppid = function() {
+        console.log("pathname>>>", window.location.pathname)
         let authCode = queryObj.code
             // if (window.location.href.indexOf('?') > -1) {
             //     let href = window.location.href.split('?')[1]
@@ -44,9 +47,7 @@ const getWxAppid = function() {
                     appid: res.data.suiteid,
                     redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
                 }
-                let href2 = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=${state_paras}&scope=snsapi_base#wechat_redirect`;
-                alert(href2 + "href2");
-                window.location.href = href2;
+                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${qywxUrl}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
             })
         } else {
             // alert('----getWxCofig----前')
@@ -76,7 +77,11 @@ function getWxCofig(v) {
                 res.data.expire_time,
                 res.data.userNo
             )
-            getAgent(res)
+            if (comeFrom && comeFrom == 'messageCard') {
+                window.location.href = `${window.location.origin}${window.location.pathname}?comeFrom=${comeFrom}&name=${name}`
+            } else {
+                getAgent(res)
+            }
         } else {
             if (
                 res.code == 'error_busy' ||
@@ -113,7 +118,7 @@ function getAgent(res) {
     // alert(JSON.stringify(res))
     wx.config({
             beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: res.data.corpId, // 必填，企业微信的corpID
             timestamp: res.data.timestamp, // 必填，生成签名的时间戳
             nonceStr: res.data.nonceStr, // 必填，生成签名的随机串

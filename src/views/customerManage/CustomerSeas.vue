@@ -22,7 +22,7 @@
       <dynamic v-if="contentType == 0" ref="dynamic" :comeType="2" :btnList="btnList"></dynamic>
 
       <!-- 商机 -->
-      <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
+      <opportunities v-if="contentType == 1" :fromType="'4'" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
       
     	<div class="fujianBox" style="padding: 12px;" v-if="contentType == 2">
       	<FujianMini></FujianMini>

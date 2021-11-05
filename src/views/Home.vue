@@ -335,7 +335,7 @@ export default {
     flex-wrap: wrap;
     margin-bottom: 32px;
     a {
-      font-family: PingFangSC-Medium, PingFang SC;
+      // font-family: PingFangSC-Medium, PingFang SC;
     }
     .commonBtn {
       font-size: 28px;
