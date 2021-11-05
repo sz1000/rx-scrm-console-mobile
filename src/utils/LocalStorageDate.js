@@ -32,7 +32,11 @@ export function getStoreValue(keyName, defaultVal = '') {
         } else {
             console.log('search:', window.location.search)
             if (window.location.pathname.indexOf('notice') > -1) {
-                router.push(`/notice${window.location.search}`)
+                if (window.location.pathname.indexOf('daily') > -1) {
+                    router.push(`/notice/daily${window.location.search}`)
+                } else {
+                    router.push(`/notice${window.location.search}`)
+                }
             } else {
                 router.push('/home')
             }

@@ -245,11 +245,11 @@ export default {
     },
     created() {
         console.log("token",this.token)
-        if (!this.token) {
+        // if (!this.token) {
         //   CommonHome.getWxToken();
             commonFun.getWxAppid()
             console.log("获取token")
-        }
+        // }
     },
     mounted(){
             setTimeout(() => {
