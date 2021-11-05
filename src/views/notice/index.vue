@@ -140,11 +140,8 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-        if(!this.id){
-            window.location.href =this.copyUrl
-            // this.$router.replace()
+    
                   this.getDetail();
-        }
 
        console.log("请求接口")
  
@@ -152,12 +149,18 @@ export default {
   },
   methods: {
     getDetail() {
+
       //获取通知详情
       console.log(this.$route.query.noticeId,"id")
       notice_getNoticeDetail(this.id).then((res) => {
         if (res.result) {
           this.detail = res.data;
         }
+      }).catch((error)=>{
+  
+            window.location.href =this.copyUrl
+            // this.$router.replace()
+        
       });
     },
   },

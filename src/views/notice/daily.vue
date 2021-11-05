@@ -287,7 +287,11 @@ export default {
             }else if(Number(m)){
                 _str = m + "分" + s + '秒'
             }else{
-                _str = s + '秒'
+                if(Number(s) > 0){
+                    _str = s + '秒'
+                }else{
+                    _str = '0秒'
+                }
             }
             return _str
         }
