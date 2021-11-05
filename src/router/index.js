@@ -419,7 +419,7 @@ const routes = [{
     },
     // 消息通知 互动提醒
     {
-        path: '/daily',
+        path: '/notice/daily',
         name: 'Daily',
         component: Daily,
     },

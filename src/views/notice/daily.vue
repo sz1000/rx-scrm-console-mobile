@@ -168,6 +168,7 @@ export default {
     data(){
         return {
             type: this.$route.query.taskTyp,
+            batchDate: this.$route.query.batchDate,
             businessPopover: false,
             groupPopover: false,
             detail: {
@@ -271,7 +272,7 @@ export default {
         },
         getDetail(){    //获取数据详情
             console.log('_data',Base64.encode(this.userNo),Base64.encode(this.corpId))
-            dataReport_getDataReportDaily(Base64.encode(this.userNo),Base64.encode(this.corpId)).then(res => {
+            dataReport_getDataReportDaily(Base64.encode(this.userNo),Base64.encode(this.corpId),this.batchDate).then(res => {
                 if(res.result){
                     this.detail = res.data
                 }
