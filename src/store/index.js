@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { GetCrop } from "../config/api"
-import { getStoreValue } from '@/utils/LocalStorageDate'
 
 Vue.use(Vuex)
 
@@ -11,7 +10,8 @@ export default new Vuex.Store({
         userId: sessionStorage.getItem('userId'),
         entry: sessionStorage.getItem('entry'), //进入H5页面的入口环境
         corpId: localStorage.getItem('corpId'),
-        token: window.location.hostname == 'localhost' ? localStorage.getItem('token') : getStoreValue('token'),
+        token: localStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         copy: localStorage.getItem('copy'),
     },
     getters: {

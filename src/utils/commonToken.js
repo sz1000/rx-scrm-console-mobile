@@ -10,7 +10,8 @@ import {
 
 let queryObj = parseQueryString(location),
     comeFrom = queryObj.comeFrom
-console.log(queryObj)
+
+
 const getWxAppid = function() {
         let authCode = queryObj.code
             // if (window.location.href.indexOf('?') > -1) {
@@ -24,19 +25,28 @@ const getWxAppid = function() {
             // alert(authCode)
 
         if (!authCode) {
-            // alert('-----authCode-----')
+            alert('-----authCode-----')
+            let state_paras;
+            alert("window.location.href" + window.location.href)
+            alert("window.location.pathname" + window.location.pathname)
+            if (window.location.href.indexOf('notice') > -1) {
+                state_paras = queryObj.taskType + "|" + queryObj.noticeId
+            }
+            alert('-----authCode end-----')
 
             http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
-                alert(JSON.stringify(res), "-------res")
+                alert(JSON.stringify(res) + "-------res")
 
 
                 let params = {
                     appid: res.data.suiteid,
                     redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
                 }
-                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
+                let href2 = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=${state_paras}&scope=snsapi_base#wechat_redirect`;
+                alert(href2 + "href2");
+                window.location.href = href2;
             })
         } else {
             // alert('----getWxCofig----前')
