@@ -1,22 +1,25 @@
 import { http } from './request'
 import router from '../router/index'
 import store from '../store'
+import { parseQueryString } from '../utils/tool'
 import {
     setStoreValue,
     getStoreValue,
     removeStoreValue,
 } from '../utils/LocalStorageDate'
 
+let queryObj = parseQueryString(location), comeFrom = queryObj.comeFrom
+
 const getWxAppid = function() {
-        let authCode
-        if (window.location.href.indexOf('?') > -1) {
-            let href = window.location.href.split('?')[1]
-            let p = href.split('&')[0]
-            authCode = p.split('=')[1]
-        } else {
-            // alert('ppppppp')
-            authCode = ''
-        }
+        let authCode = queryObj.code
+        // if (window.location.href.indexOf('?') > -1) {
+        //     let href = window.location.href.split('?')[1]
+        //     let p = href.split('&')[0]
+        //     authCode = p.split('=')[1]
+        // } else {
+        //     // alert('ppppppp')
+        //     authCode = ''
+        // }
         // alert(authCode)
         if (!authCode) {
             // alert('-----authCode-----')
@@ -142,7 +145,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalContact>>>err>>>', res)
-                            location.href = window.location.pathname
+                            doReload()
                         }
                     })
                     //获取当前客户群ID
@@ -155,7 +158,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalChat>>>err>>>', res)
-                            location.href = window.location.pathname
+                            doReload()
                         }
                     })
                     //判断入口
@@ -168,13 +171,20 @@ function getAgent(res) {
                     } else {
                         //错误处理
                         console.log('getContext>>>err>>>', res)
-                        location.href = window.location.pathname
+                        doReload()
                     }
                 })
             }
         )
     })
 }
+
+function doReload() {
+    if (window.location.pathname == '/customerPortrait') {
+        window.location.href = comeFrom ? `${window.location.origin}${window.location.pathname}?comeFrom=${comeFrom}` : `${window.location.origin}${window.location.pathname}`
+    }
+}
+
 export default {
     getWxAppid,
 }
