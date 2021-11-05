@@ -154,7 +154,10 @@ export default {
       duration: 1000,
       loadingType: 'spinner',
     })
-    CommonHome.getWxToken()
+
+    				if(window.location.hostname != "localhost"){
+            	CommonHome.getWxToken()
+            }
   },
   mounted() {
     setTimeout(() => {
