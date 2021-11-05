@@ -157,7 +157,7 @@ export default {
             localStorage.setItem("JZSCRM_OPPORTUNITIES_ITEM", JSON.stringify(item))
 
             this.$router.push({
-                path: '/stageList',
+                path: '/customerManage/stageList',
                 query: { id: item.id, fromType: this.fromType, customerNo: this.customerNo },
             })
         },

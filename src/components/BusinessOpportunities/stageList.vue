@@ -43,6 +43,7 @@ export default {
     },
     mounted() {
         this.init()
+        console.log(1)
     },
     methods: {
         async init() {
