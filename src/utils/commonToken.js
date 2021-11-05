@@ -23,18 +23,16 @@ const getWxAppid = function() {
         // alert(authCode)
         if (!authCode) {
             // alert('-----authCode-----')
-            http
-                .get('/user-service/m/user/getappid', {
-                    redirect_uri: window.location.pathname,
-                })
-                .then((res) => {
-                    // alert(JSON.stringify(res))
-                    let params = {
-                        appid: res.data.suiteid,
-                        redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
-                    }
-                    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
-                })
+            http.get('/user-service/m/user/getappid', {
+                redirect_uri: window.location.pathname,
+            }).then((res) => {
+                // alert(JSON.stringify(res))
+                let params = {
+                    appid: res.data.suiteid,
+                    redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
+                }
+                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
+            })
         } else {
             // alert('----getWxCofig----前')
             getWxCofig(authCode)
@@ -48,41 +46,39 @@ const getWxAppid = function() {
 
 function getWxCofig(v) {
     // alert('getWxCofig---后---')
-    http
-        .get('/user-service/m/user/getloguser', {
-            code: v,
-            url: location.href,
-        })
-        .then((res) => {
-            // alert(JSON.stringify(res))
-            if (res.result) {
-                // this.token = res.data.accessToken
-                // this.appid = res.data.corpId
-                localStorage.setItem('token', res.data.accessToken)
-                setStoreValue(
-                    'token',
-                    res.data.accessToken,
-                    res.data.expire_time,
-                    res.data.userNo
-                )
-                getAgent(res)
+    http.get('/user-service/m/user/getloguser', {
+        code: v,
+        url: location.href,
+    }).then((res) => {
+        // alert(JSON.stringify(res))
+        if (res.result) {
+            // this.token = res.data.accessToken
+            // this.appid = res.data.corpId
+            localStorage.setItem('token', res.data.accessToken)
+            setStoreValue(
+                'token',
+                res.data.accessToken,
+                res.data.expire_time,
+                res.data.userNo
+            )
+            getAgent(res)
+        } else {
+            if (
+                res.code == 'error_busy' ||
+                res.code == 'error_code' ||
+                res.code == 'error_forbid' ||
+                res.code == 'error_corp_forbid'
+            ) {
+                this.$message({
+                    type: 'error',
+                    message: '系统繁忙,请稍后重试' || res.msg,
+                })
             } else {
-                if (
-                    res.code == 'error_busy' ||
-                    res.code == 'error_code' ||
-                    res.code == 'error_forbid' ||
-                    res.code == 'error_corp_forbid'
-                ) {
-                    this.$message({
-                        type: 'error',
-                        message: '系统繁忙,请稍后重试' || res.msg,
-                    })
-                } else {
-                    router.push('/404')
-                    localStorage.removeItem('token')
-                }
+                router.push('/404')
+                localStorage.removeItem('token')
             }
-        })
+        }
+    })
 }
 
 function getTicket() {

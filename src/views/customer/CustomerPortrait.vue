@@ -138,14 +138,6 @@ export default {
       } else {
         commonFun.getWxAppid()
       }
-    },
-    entry(val) {
-      console.log("entry>>>???", val)
-      if(val && val == 'single_chat_tools') {
-        this.showPortraitType = 1
-      } else if(val && val == 'group_chat_tools') {
-        this.showPortraitType = 2
-      }
     }
   },
   created() {
@@ -247,6 +239,7 @@ export default {
     },
     getShowPortraitType() {
       if (this.entry && this.entry == 'single_chat_tools') {
+        this.showPortraitType = 1
         this.showGuideBox()
         console.log("comeFrom", this.$route.query)
         if (this.$route.query && this.$route.query.comeFrom == 'messageCard') {
@@ -255,6 +248,8 @@ export default {
             this.$refs.dynamic.selectFollowMsgList(4)
           })
         }
+      } else if(this.entry && this.entry == 'group_chat_tools') {
+        this.showPortraitType = 2
       }
     },
     showCompany(v) {
