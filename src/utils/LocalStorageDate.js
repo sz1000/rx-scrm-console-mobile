@@ -33,10 +33,8 @@ export function getStoreValue(keyName, defaultVal = '') {
             if (window.location.pathname.indexOf('notice') > -1) {
                 router.push(`/notice${window.location.search}`)
             } else {
-
-                router.push('../views/notice/index')
+                router.push('/home')
             }
-            router.push('/home')
         }
         return defaultVal
     } else {
