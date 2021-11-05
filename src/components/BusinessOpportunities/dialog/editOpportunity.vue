@@ -334,9 +334,11 @@ export default {
             } else if (v.defaultStatus == '输单') {
                 this.opportunityStatus = 2
                 this.form.endReasonId = null
+                this.reasonText = ''
             } else if (v.defaultStatus == '无效') {
                 this.opportunityStatus = 3
                 this.form.endReasonId = null
+                this.reasonText = ''
             } else {
                 this.opportunityStatus = this.id ? 0 : -1
             }
