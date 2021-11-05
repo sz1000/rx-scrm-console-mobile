@@ -12,6 +12,7 @@ export default new Vuex.Store({
         corpId: localStorage.getItem('corpId'),
         token: localStorage.getItem('token'),
         copy: localStorage.getItem('copy'),
+        userNo: localStorage.getItem('userNo'),
     },
     getters: {
         chatId: state => state.chatId,
@@ -20,6 +21,7 @@ export default new Vuex.Store({
         corpId: state => state.corpId,
         token: state => state.token,
         copy: state => state.copy,
+        userNo: state => state.userNo,
     },
     mutations: {
         setChatId(state, data) {
@@ -37,6 +39,10 @@ export default new Vuex.Store({
         setCopy(state, data) {
             localStorage.setItem('copy', data)
             state.copy = data
+        },
+        setUserNo(state, data) {
+            localStorage.setItem('userNo', data)
+            state.userNo = data
         },
         SET_CORPID(state, val) {
             localStorage.setItem('corpId', val)

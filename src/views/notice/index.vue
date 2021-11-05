@@ -132,11 +132,11 @@ export default {
   },
   created() {
       console.log("token",localStorage.getItem("token"))
-    // if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
     //   CommonHome.getWxToken();
       commonFun.getWxAppid()
       console.log("获取token")
-    // }
+    }
   },
   mounted() {
         setTimeout(() => {

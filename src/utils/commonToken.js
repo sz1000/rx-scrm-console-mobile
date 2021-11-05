@@ -69,12 +69,14 @@ function getWxCofig(v) {
             // this.token = res.data.accessToken
             // this.appid = res.data.corpId
             localStorage.setItem('token', res.data.accessToken)
+            store.commit('setUserNo', res.data.user_no)
             setStoreValue(
                 'token',
                 res.data.accessToken,
                 res.data.expire_time,
                 res.data.userNo
             )
+            console.log('queryObj', queryObj)
             if (comeFrom && comeFrom == 'messageCard') {
                 window.location.href = `${window.location.origin}${window.location.pathname}?comeFrom=${comeFrom}&name=${name}`
             } else {
