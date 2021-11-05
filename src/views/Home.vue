@@ -344,6 +344,7 @@ export default {
       color: #3c4353;
       text-align: center;
       width: 175px;
+      cursor: pointer;
       .nomaltext {
         color: #c0c4cc;
       }
@@ -365,6 +366,7 @@ export default {
   }
   .custom {
     .commonBtn {
+      cursor: pointer;
       span {
         margin-left: 5px;
       }
