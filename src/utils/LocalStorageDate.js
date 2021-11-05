@@ -31,11 +31,7 @@ export function getStoreValue(keyName, defaultVal = '') {
             router.push('/404')
         } else {
             console.log('search:', window.location.search)
-            if (window.location.pathname.indexOf('notice') > -1) {
-                router.push(`/notice${window.location.search}`)
-            } else {
-                router.push('/home')
-            }
+            router.push('/home')
         }
         return defaultVal
     } else {

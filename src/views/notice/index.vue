@@ -139,13 +139,14 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-    
-                  this.getDetail();
-
-       console.log("请求接口")
- 
-    }, 2000);
+    if(!localStorage.getItem("token")){
+        setTimeout(() => {
+           this.getDetail();
+           console.log("请求接口")
+        }, 2000);
+    }else{
+        this.getDetail();
+    }
   },
   methods: {
     getDetail() {
@@ -156,12 +157,7 @@ export default {
         if (res.result) {
           this.detail = res.data;
         }
-      }).catch((error)=>{
-  
-            window.location.href =this.copyUrl
-            // this.$router.replace()
-        
-      });
+      })
     },
   },
 };
