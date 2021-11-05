@@ -59,6 +59,8 @@ import MaterialTemplate from '../views/MaterialTemplate/share'
 
 // 消息通知 互动提醒
 import Notice from '../views/notice/index'
+// 消息通知 日报
+import Daily from '../views/notice/daily'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -391,6 +393,12 @@ const routes = [{
         path: '/notice',
         name: 'Notice',
         component: Notice,
+    },
+    // 消息通知 互动提醒
+    {
+        path: '/daily',
+        name: 'Daily',
+        component: Daily,
     },
 ]
 

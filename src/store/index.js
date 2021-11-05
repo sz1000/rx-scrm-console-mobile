@@ -9,12 +9,15 @@ export default new Vuex.Store({
     chatId: sessionStorage.getItem('chatId'),
     userId: sessionStorage.getItem('userId'),
     entry: sessionStorage.getItem('entry'),  //进入H5页面的入口环境
-    corpId: ''
+    corpId: localStorage.getItem('corpId'),
+    token: localStorage.getItem('token'),
   },
   getters: {
     chatId: state => state.chatId,
     userId: state => state.userId,
     entry: state => state.entry,
+    corpId: state => state.corpId,
+    token: state => state.token,
   },
   mutations: {
     setChatId(state, data) {
@@ -29,9 +32,14 @@ export default new Vuex.Store({
       sessionStorage.setItem('entry', data)
       state.entry = data
     },
+    setToken (state, data) {
+      localStorage.setItem('token', data)
+      state.token = data
+    },
     SET_CORPID (state, val) {
+      localStorage.setItem('corpId', val)
       state.corpId = val
-    }
+    },
   },
   actions: {
     getCorpId ({ commit }) {
