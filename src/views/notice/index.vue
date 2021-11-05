@@ -87,6 +87,7 @@ export default {
       id: this.$route.query.noticeId, // || 114
       taskType: this.$route.query.taskType, // || 2  1-个人SOP，2-群SOP，3-客户群发，4-客户群群发，5-数据日报，6-客户浏览素材，7-客户浏览名片
       detail: {},
+      copeHref:'',
     };
   },
   computed: {
@@ -116,6 +117,9 @@ export default {
       }
       return list;
     },
+    copyUrl(){
+            return this.$store.getters.copy
+        },
     // contractName(){
     //     let _str = ''
     //     if(this.detail.customerType.indexOf('微信') > -1){
@@ -128,7 +132,6 @@ export default {
   },
   created() {
       console.log("token",localStorage.getItem("token"))
-      console.log('----notice---',window.location.herf)
     if (!localStorage.getItem("token")) {
     //   CommonHome.getWxToken();
       commonFun.getWxAppid()
@@ -137,7 +140,12 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.getDetail();
+        if(!this.id){
+            window.location.href =this.copyUrl
+            // this.$router.replace()
+                  this.getDetail();
+        }
+
        console.log("请求接口")
  
     }, 2000);
