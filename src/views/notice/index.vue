@@ -128,6 +128,7 @@ export default {
   },
   created() {
       console.log("token",localStorage.getItem("token"))
+      console.log('----notice---',window.location.herf)
     if (!localStorage.getItem("token")) {
     //   CommonHome.getWxToken();
       commonFun.getWxAppid()
@@ -144,6 +145,7 @@ export default {
   methods: {
     getDetail() {
       //获取通知详情
+      console.log(this.$route.query.noticeId,"id")
       notice_getNoticeDetail(this.id).then((res) => {
         if (res.result) {
           this.detail = res.data;
