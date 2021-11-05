@@ -284,7 +284,7 @@ export default {
     text-align: center;
     height: 48px;
     line-height: 48px;
-    font-family: PingFangSC-Medium;
+    // font-family: PingFangSC-Medium;
     font-size: 34px;
     color: #3c4353;
     font-weight: 500;
@@ -384,7 +384,7 @@ export default {
           width: 140px;
           text-align: right;
           color: #838a9d;
-          font-family: PingFangSC-Regular;
+          // font-family: PingFangSC-Regular;
           margin-right: 16px;
         }
         span:nth-child(2) {

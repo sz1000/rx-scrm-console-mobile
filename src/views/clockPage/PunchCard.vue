@@ -235,7 +235,7 @@ export default {
     text-align: center;
     height: 48px;
     line-height: 48px;
-    font-family: PingFangSC-Medium;
+    // font-family: PingFangSC-Medium;
     font-size: 34px;
     color: #3c4353;
     font-weight: 500;
@@ -311,7 +311,7 @@ export default {
       }
       .van-field__label {
         width: 140px;
-        font-family: PingFangSC-Regular;
+        // font-family: PingFangSC-Regular;
         font-size: 28px;
         color: #3c4353;
         letter-spacing: 0;
@@ -352,7 +352,7 @@ export default {
         }
         .van-field__word-limit {
           line-height: 28px;
-          font-family: PingFangSC-Regular;
+          // font-family: PingFangSC-Regular;
           font-size: 28px;
           color: #c0c4cc;
         }
