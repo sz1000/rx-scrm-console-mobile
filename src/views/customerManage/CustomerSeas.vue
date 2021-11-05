@@ -208,7 +208,7 @@ export default {
     distribution() {
       // this.isShowDialog = '4'
       this.show = true
-      this.titleName = '分配线索'
+      this.titleName = '分配客户'
       this.$network
         .get('/customer-service/cluecustomer/getuserList', {
           clueCustomerNo: this.objItem.clueCustomerNo,

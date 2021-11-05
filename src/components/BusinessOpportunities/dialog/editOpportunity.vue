@@ -333,8 +333,10 @@ export default {
                 this.opportunityStatus = 1
             } else if (v.defaultStatus == '输单') {
                 this.opportunityStatus = 2
+                this.form.endReasonId = null
             } else if (v.defaultStatus == '无效') {
                 this.opportunityStatus = 3
+                this.form.endReasonId = null
             } else {
                 this.opportunityStatus = this.id ? 0 : -1
             }
