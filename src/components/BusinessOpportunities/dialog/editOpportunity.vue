@@ -27,7 +27,7 @@
                     <p class="label">
                         <span>预计成交时间:</span>
                     </p>
-                    <van-field v-model="expectTimeShowText" class="edit-field" placeholder="请选择预计成交时间" :readonly="true" @click="selectDate(0)" />
+                    <van-field v-model="expectTimeShowText" class="edit-field" placeholder="请选择预计成交时间" :readonly="true" @click="selectDate(1)" />
                 </div>
                 <div class="item one-line">
                     <p class="label">
@@ -47,14 +47,14 @@
                     <p class="label">
                         <span>成交时间:</span>
                     </p>
-                    <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate(1)" />
+                    <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate(2)" />
                 </div>
                 <div v-if="opportunityStatus == 2 || opportunityStatus == 3" class="item one-line">
                     <p class="label">
                         <span class="icon">*</span>
                         <span>结束时间:</span>
                     </p>
-                    <van-field v-model="timeShowText" class="edit-field" placeholder="请选择结束时间" :readonly="true" @click="selectDate(2)"/>
+                    <van-field v-model="timeShowText" class="edit-field" placeholder="请选择结束时间" :readonly="true" @click="selectDate(3)"/>
                 </div>
                 <template v-if="opportunityStatus == 2">
                     <div class="item one-line">
@@ -176,6 +176,8 @@ export default {
             expectTimeShowText: null,
             timeShowText: null,
             selectDateType: 0,
+            expactType: 0,
+            endType: 0,
             currentDate: new Date(),
             reasonText: '',
             selectDatePopupShow: false,
@@ -260,6 +262,8 @@ export default {
             this.expectTimeShowText = null
             this.timeShowText = null
             this.selectDateType = 0
+            this.expactType = 0
+            this.endType = 0
             this.currentDate = new Date()
             this.reasonText = ''
         },
@@ -315,10 +319,12 @@ export default {
         },
         // 确认时间
         dateConfirm(v) {
-            if(this.selectDateType == 0) {
+            if(this.selectDateType == 1) {
+                this.expactType = 1
                 this.form.expectEndTime = v
                 this.expectTimeShowText = formatDate(v, "yyyy-MM-dd")
-            } else if(this.selectDateType == 1 || this.selectDateType == 2) {
+            } else if(this.selectDateType == 2 || this.selectDateType == 3) {
+                this.endType = 1
                 this.form.endTime = v
                 this.timeShowText = formatDate(v, "yyyy-MM-dd")
             }
@@ -378,8 +384,8 @@ export default {
         },
         // 处理时间格式为：yyyy-MM-dd HH:mm:ss
         getSubmitTime(expectEndTime, endTime) {
-            this.form.expectEndTime = expectEndTime ? formatDate(new Date(expectEndTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : this.form.expectEndTime
-            this.form.endTime = endTime ? formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : this.form.endTime
+            this.form.expectEndTime = expectEndTime && this.expactType == 1 ? formatDate(new Date(expectEndTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : expectEndTime
+            this.form.endTime = endTime && this.endType == 1 ? formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : endTime
         }, 
         // 表单提交
         async handleSubmit() {
@@ -395,7 +401,7 @@ export default {
                     this.form.chargeUserName = item.name
                 }
             })
-
+            
             const {expectEndTime, endTime} = this.form
 
             this.getSubmitTime(expectEndTime, endTime)
