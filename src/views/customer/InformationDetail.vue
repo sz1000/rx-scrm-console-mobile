@@ -148,18 +148,16 @@
               <span v-for="(list, index) in personTagList" :key="index" class="tagBox" v-show="list.isChecked">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="
-              personTagList.filter((item) => {
+          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="personTagList.filter((item) => {
                 return item.isChecked == 1;
-              }).length > 5
-            ">
+              }).length > 5">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- 弹窗 -->
     <div class="bottom_model">
       <van-action-sheet v-model="show" :lock-scroll="false" :title="titleName" @cancel="cancelIcon" @click-overlay="cancelIcon" class="vant_sheet">
@@ -280,7 +278,8 @@ export default {
   },
   created() {
     const { id } = this.$route.query
-    
+
+    // this.clueCustomerNo = '6D9094692014462DAFBE61CEFE09E882'
     this.clueCustomerNo = id
     this.getDetailForm()
     this.getTagList()
@@ -315,7 +314,11 @@ export default {
         loadingType: 'spinner',
         duration: 0,
       })
-      this.$network.get('/customer-service/cluecustomer/toupdate', { clueCustomerNo: this.clueCustomerNo }) .then((res) => {
+      this.$network
+        .get('/customer-service/cluecustomer/toupdate', {
+          clueCustomerNo: this.clueCustomerNo,
+        })
+        .then((res) => {
           this.$toast.clear()
           this.loadingShow = false
           this.processTree(res.data.comlist)
@@ -363,14 +366,16 @@ export default {
       })
     },
     update() {
-      this.$network.post('/customer-service/cluecustomer/update', {
-        type: this.$route.query.type,
-        clueCustomerNo: this.clueCustomerNo,
-        ...this.basicInfo,
-      }).then((res) => {
-        this.$message({ type: 'success', message: '更新成功' })
-        // this.getDetailForm()
-      })
+      this.$network
+        .post('/customer-service/cluecustomer/update', {
+          type: this.$route.query.type,
+          clueCustomerNo: this.clueCustomerNo,
+          ...this.basicInfo,
+        })
+        .then((res) => {
+          this.$message({ type: 'success', message: '更新成功' })
+          // this.getDetailForm()
+        })
     },
     goBack() {
       this.$router.push('/customerPortrait')
@@ -390,10 +395,14 @@ export default {
     },
     getTagList() {
       this.highLightArr = []
-      this.$network.get('/customer-service/cluecustomer/gettag', { clueCustomerNo: this.clueCustomerNo }).then((res) => {
+      this.$network
+        .get('/customer-service/cluecustomer/gettag', {
+          clueCustomerNo: this.clueCustomerNo,
+        })
+        .then((res) => {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
-          this.personTagList = res.data.personTagList
+          this.personTagList = res.data.personTagList || []
           let allChildTag = res.data.tagCorpList.map((item) => {
             return item.children
           })
@@ -427,10 +436,12 @@ export default {
     handleSearch() {
       // console.log(this.tagName)
       if (this.tagName !== '') {
-        this.$network.post('/customer-service/cluecustomer/addtag', {
+        this.$network
+          .post('/customer-service/cluecustomer/addtag', {
             name: this.tagName,
             clueCustomerNo: this.clueCustomerNo,
-          }).then((res) => {
+          })
+          .then((res) => {
             if (res.result) {
               this.personTagList = res.data
             } else {
@@ -481,10 +492,12 @@ export default {
     saveDialog(v) {
       if (v == 1) {
         // console.log(this.highLightArr)
-        this.$network.post(
+        this.$network
+          .post(
             `/customer-service/cluecustomer/updCorptag/${this.clueCustomerNo}`,
             this.highLightArr
-          ).then((res) => {
+          )
+          .then((res) => {
             if (res.result) {
               this.show = false
               document.getElementById('html').style.overflow = 'auto'
@@ -497,7 +510,9 @@ export default {
             }
           })
       } else if (v == 2) {
-        this.$network.post('/customer-service/cluecustomer/updPertag', this.personTagList).then((res) => {
+        this.$network
+          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
+          .then((res) => {
             if (res.result) {
               this.show = false
               document.getElementById('html').style.overflow = 'auto'
@@ -510,22 +525,25 @@ export default {
       }
     },
     deleteTag(v, i) {
-      this.$dialog.confirm({
-        title: '温馨提示',
-        message: '是否确认删除',
-        className: 'deleteBtn',
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        messageAlign: 'left',
-      }).then(() => {
-        this.$network
-          .post('/customer-service/cluecustomer/deltag', v)
-          .then((res) => {
-            if (res.result) {
-              this.personTagList = res.data
-            }
-          })
-      }).catch(() => {})
+      this.$dialog
+        .confirm({
+          title: '温馨提示',
+          message: '是否确认删除',
+          className: 'deleteBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
+        })
+        .then(() => {
+          this.$network
+            .post('/customer-service/cluecustomer/deltag', v)
+            .then((res) => {
+              if (res.result) {
+                this.personTagList = res.data
+              }
+            })
+        })
+        .catch(() => {})
     },
   },
 }
@@ -540,6 +558,7 @@ export default {
     top: 0;
     left: 50%;
     z-index: 10;
+    background: #fff;
     width: 750px;
     transform: translateX(-50%);
     cursor: pointer;
