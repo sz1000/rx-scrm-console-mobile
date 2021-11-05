@@ -7,8 +7,7 @@ import {
     getStoreValue,
     removeStoreValue,
 } from '../utils/LocalStorageDate'
-console.log('-------auth--', window.location.href)
-store.commit('setCopy', window.location.href)
+
 let queryObj = parseQueryString(location),
     comeFrom = queryObj.comeFrom
 console.log(queryObj)
@@ -30,7 +29,9 @@ const getWxAppid = function() {
             http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
-                // alert(JSON.stringify(res))
+                alert(JSON.stringify(res), "-------res")
+
+
                 let params = {
                     appid: res.data.suiteid,
                     redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),

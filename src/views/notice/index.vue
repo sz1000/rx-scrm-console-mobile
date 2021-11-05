@@ -139,14 +139,10 @@ export default {
     }
   },
   mounted() {
-    if(!localStorage.getItem("token")){
         setTimeout(() => {
            this.getDetail();
            console.log("请求接口")
         }, 2000);
-    }else{
-        this.getDetail();
-    }
   },
   methods: {
     getDetail() {

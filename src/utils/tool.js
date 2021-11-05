@@ -102,6 +102,7 @@ export function getCode(wxurl) {
 
 // 获取链接问号后面参数对象
 export function parseQueryString(url) {
+    alert(url, "url----111")
     let reg_url = /^[^\?]+\?([\w\W]+)$/,
         reg_para = /([^&=]+)=([\w\W]*?)(&|$)/g, //g is very important
         arr_url = reg_url.exec(url),
