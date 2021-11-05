@@ -18,9 +18,9 @@
             <div class="avatar">{{ avatar }}</div>
             <div class="info">
               <div class="name">
-                {{ contractName }}<i v-if="taskType != 2">{{ detail.customerType }}</i>
+                {{ detail.customerContactName }}<i v-if="taskType != 2">@{{ detail.customerCorpName }}</i>
               </div>
-              <!-- <div class="name" v-else>
+              <!-- <div class="name" v-else>contractName
                 {{ detail.customerContactName
                 }}<i v-if="taskType != 2">{{ detail.customerType }}}</i>
               </div> -->
@@ -87,6 +87,7 @@ export default {
       id: this.$route.query.noticeId, // || 114
       taskType: this.$route.query.taskType, // || 2  1-个人SOP，2-群SOP，3-客户群发，4-客户群群发，5-数据日报，6-客户浏览素材，7-客户浏览名片
       detail: {},
+      copeHref:'',
     };
   },
   computed: {
@@ -116,15 +117,18 @@ export default {
       }
       return list;
     },
-    contractName(){
-        let _str = ''
-        if(this.detail.customerType.indexOf('微信') > -1){
-            _str = this.detail.customerContactName
-        }else {
-            _str = this.detail.customerCorpName
-        }
-        return _str
-    }
+    copyUrl(){
+            return this.$store.getters.copy
+        },
+    // contractName(){
+    //     let _str = ''
+    //     if(this.detail.customerType.indexOf('微信') > -1){
+    //         _str = this.detail.customerContactName
+    //     }else {
+    //         _str = this.detail.customerCorpName
+    //     }
+    //     return _str
+    // }
   },
   created() {
       console.log("token",localStorage.getItem("token"))
@@ -136,7 +140,12 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.getDetail();
+        if(!this.id){
+            window.location.href =this.copyUrl
+            // this.$router.replace()
+                  this.getDetail();
+        }
+
        console.log("请求接口")
  
     }, 2000);
@@ -144,6 +153,7 @@ export default {
   methods: {
     getDetail() {
       //获取通知详情
+      console.log(this.$route.query.noticeId,"id")
       notice_getNoticeDetail(this.id).then((res) => {
         if (res.result) {
           this.detail = res.data;

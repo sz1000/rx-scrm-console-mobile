@@ -157,11 +157,13 @@
 <script>
 import { Base64 } from 'js-base64'
 import { formatDate,handleMoney } from '@/utils/tool'
+import commonFun from '../../utils/commonToken'
 import { 
     Corp_getCrop,
     dataReport_getDataReportDaily
 } from '@/api/notice'
 export default {
+
     data(){
         return {
             type: this.$route.query.taskTyp,
@@ -233,8 +235,21 @@ export default {
             return str
         },
     },
+      created() {
+      console.log("token",localStorage.getItem("token"))
+    if (!localStorage.getItem("token")) {
+    //   CommonHome.getWxToken();
+      commonFun.getWxAppid()
+      console.log("获取token")
+    }
+  },
     mounted(){
-        this.getCorpId()
+            setTimeout(() => {
+      this.getCorpId()
+       console.log("请求接口")
+ 
+    }, 2000);
+      
     },
     methods: {
         formatDate,
