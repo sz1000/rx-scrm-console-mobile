@@ -11,7 +11,7 @@ export default new Vuex.Store({
         userId: sessionStorage.getItem('userId'),
         entry: sessionStorage.getItem('entry'), //进入H5页面的入口环境
         corpId: localStorage.getItem('corpId'),
-        token: window.location.hostname == 'localhost' ? localStorage.getItem('token') : getStoreValue('token'),
+        // token: window.location.hostname == 'localhost' ? localStorage.getItem('token') : getStoreValue('token'),
         copy: localStorage.getItem('copy'),
     },
     getters: {

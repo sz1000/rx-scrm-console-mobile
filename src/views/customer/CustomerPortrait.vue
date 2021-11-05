@@ -79,7 +79,7 @@ import GuideBox from "../../components/CustomerManage/guideBox"
 import MessageBox from "../../components/CustomerManage/messageBox"
 import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
 import { mapState } from 'vuex'
-import { setStoreValue } from '../../utils/LocalStorageDate'
+import { getStoreValue } from '../../utils/LocalStorageDate'
 
 export default {
   components: {
@@ -217,16 +217,16 @@ export default {
     getMethod() {
       this.loadingShow = true
 
-      let { comeFrom, type, name } = this.$route.query
+      let { comeFrom, name } = this.$route.query
 
       if (comeFrom == 'messageCard') {
-        let url = window.location.href
+        let token = localStorage.getItem('token')
+
         // 从消息卡片进入之后处理
-        if (type && name) {
-          if (!localStorage.getItem('backupToken')) {
-            localStorage.setItem('backupToken', type)
-            window.location.href = url
-          } else {
+        if (name) {
+          if (!token) {
+            commonFun.getWxAppid()
+          } else if (token) {
             this.$store.commit('setUserId', name)
             this.getClueCustomerByid()
           }
