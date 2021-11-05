@@ -158,6 +158,7 @@
 import { Base64 } from 'js-base64'
 import { formatDate,handleMoney } from '@/utils/tool'
 import commonFun from '../../utils/commonToken'
+import { getStoreValue } from '@/utils/LocalStorageDate'
 import { 
     Corp_getCrop,
     dataReport_getDataReportDaily
@@ -214,14 +215,16 @@ export default {
     },
     computed: {
         token(){
-            return this.$store.getters.token
+            let str = ''
+            if(location.hostname == 'localhost'){
+                str = localStorage.getItem('token')
+            }else {
+                str = getStoreValue('token')
+            }
+            return str
         },
         corpId(){
             return this.$store.getters.corpId
-        },
-        userNo(){
-            let str = this.token.split('|')
-            return this.token ? str[1] : ''
         },
         tipsTitle(){
             let str = ''
@@ -233,6 +236,10 @@ export default {
                 str = '月数据'
             }
             return str
+        },
+        userNo(){
+            let str = this.token.split('|')
+            return this.token ? str[1] : ''
         },
     },
     created() {

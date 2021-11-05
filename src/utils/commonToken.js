@@ -9,10 +9,13 @@ import {
 } from '../utils/LocalStorageDate'
 console.log('-------auth--', window.location.href)
 store.commit('setCopy', window.location.href)
-let queryObj = parseQueryString(location), comeFrom = queryObj.comeFrom, name = queryObj.name, qywxUrl = encodeURIComponent(window.location.href)
+let queryObj = parseQueryString(location),
+    comeFrom = queryObj.comeFrom,
+    name = queryObj.name,
+    qywxUrl = encodeURIComponent(window.location.href)
 console.log(queryObj)
 const getWxAppid = function() {
-    console.log("pathname>>>", window.location.pathname)
+        console.log("pathname>>>", window.location.pathname)
         let authCode = queryObj.code
             // if (window.location.href.indexOf('?') > -1) {
             //     let href = window.location.href.split('?')[1]
@@ -25,12 +28,19 @@ const getWxAppid = function() {
             // alert(authCode)
 
         if (!authCode) {
-            // alert('-----authCode-----')
+
+            let state_paras;
+
+            if (window.location.href.indexOf('notice') > -1) {
+                state_paras = queryObj.taskType + "|" + queryObj.noticeId
+            }
 
             http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
-                // alert(JSON.stringify(res))
+
+
+
                 let params = {
                     appid: res.data.suiteid,
                     redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
