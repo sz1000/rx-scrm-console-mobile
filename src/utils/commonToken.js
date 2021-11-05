@@ -9,6 +9,7 @@ import {
 
 const getWxAppid = function() {
         let authCode
+        console.log(window.location.href, "window.location.href====token页面")
         if (window.location.href.indexOf('?') > -1) {
             let href = window.location.href.split('?')[1]
             let p = href.split('&')[0]
@@ -17,7 +18,7 @@ const getWxAppid = function() {
             // alert('ppppppp')
             authCode = ''
         }
-        // alert(authCode)
+        console.log(authCode, "Token页面")
         if (!authCode) {
             // alert('-----authCode-----')
             http
