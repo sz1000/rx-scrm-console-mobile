@@ -18,9 +18,9 @@
             <div class="avatar">{{ avatar }}</div>
             <div class="info">
               <div class="name">
-                {{ contractName }}<i v-if="taskType != 2">{{ detail.customerType }}</i>
+                {{ detail.customerContactName }}<i v-if="taskType != 2">@{{ detail.customerCorpName }}</i>
               </div>
-              <!-- <div class="name" v-else>
+              <!-- <div class="name" v-else>contractName
                 {{ detail.customerContactName
                 }}<i v-if="taskType != 2">{{ detail.customerType }}}</i>
               </div> -->
@@ -116,15 +116,15 @@ export default {
       }
       return list;
     },
-    contractName(){
-        let _str = ''
-        if(this.detail.customerType.indexOf('微信') > -1){
-            _str = this.detail.customerContactName
-        }else {
-            _str = this.detail.customerCorpName
-        }
-        return _str
-    }
+    // contractName(){
+    //     let _str = ''
+    //     if(this.detail.customerType.indexOf('微信') > -1){
+    //         _str = this.detail.customerContactName
+    //     }else {
+    //         _str = this.detail.customerCorpName
+    //     }
+    //     return _str
+    // }
   },
   created() {
       console.log("token",localStorage.getItem("token"))
