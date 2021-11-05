@@ -10,7 +10,7 @@
             @closed="hide">
             <div class="title">选择提醒的人</div>
             <div class="content">
-                <form action="/"><van-search v-model="searchText" class="search-box" placeholder="请输入搜索关键词" @search="getList" @blur="getList"/></form>
+                <form action="/"><van-search v-model="searchText" class="search-box" placeholder="请输入搜索关键词" @input="doSearch"/></form>
 
                 <van-index-bar :index-list="indexList" highlight-color="#4168f6">
                     <div v-if="peopleList && peopleList.length" class="all-people" @click="getPeople(allPeople)">
@@ -36,6 +36,7 @@
 <script>
 import { ReceiveUser } from '../../../config/api'
 import { mapState } from 'vuex'
+import { _debounce } from '../../../utils/tool'
  
 export default {
     props: {
@@ -73,7 +74,16 @@ export default {
             this.peopleList = []
             this.remindersBoxDialogVisible = false
         },
+        doSearch() {
+            _debounce(this.getList(), 1000)
+        },
         async getList() {
+            this.$toast.loading({
+                overlay: true,
+                loadingType: 'spinner',
+                duration: 0,
+            })
+
             let params = {
                 customerNo: this.customerNo,
                 isPublic: this.fromType == '4' ? true : false,
@@ -83,9 +93,11 @@ export default {
 
             let { code, data } = await ReceiveUser(params)
 
+            this.$toast.clear()
+
             if (code == 'success') {
+                this.indexList = []
                 if (!data || data && !data.length) {
-                    this.indexList = []
                     this.peopleList = []
                     this.$toast('暂无人员信息')
                     return
