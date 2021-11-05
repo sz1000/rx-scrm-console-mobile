@@ -28,19 +28,17 @@ const getWxAppid = function() {
             // alert(authCode)
 
         if (!authCode) {
-            alert('-----authCode-----')
+
             let state_paras;
-            alert("window.location.href" + window.location.href)
-            alert("window.location.pathname" + window.location.pathname)
+
             if (window.location.href.indexOf('notice') > -1) {
                 state_paras = queryObj.taskType + "|" + queryObj.noticeId
             }
-            alert('-----authCode end-----')
 
             http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
-                alert(JSON.stringify(res) + "-------res")
+
 
 
                 let params = {
