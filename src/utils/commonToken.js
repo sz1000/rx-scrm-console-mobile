@@ -8,19 +8,20 @@ import {
     removeStoreValue,
 } from '../utils/LocalStorageDate'
 
-let queryObj = parseQueryString(location), comeFrom = queryObj.comeFrom
+let queryObj = parseQueryString(location),
+    comeFrom = queryObj.comeFrom
 
 const getWxAppid = function() {
         let authCode = queryObj.code
-        // if (window.location.href.indexOf('?') > -1) {
-        //     let href = window.location.href.split('?')[1]
-        //     let p = href.split('&')[0]
-        //     authCode = p.split('=')[1]
-        // } else {
-        //     // alert('ppppppp')
-        //     authCode = ''
-        // }
-        // alert(authCode)
+            // if (window.location.href.indexOf('?') > -1) {
+            //     let href = window.location.href.split('?')[1]
+            //     let p = href.split('&')[0]
+            //     authCode = p.split('=')[1]
+            // } else {
+            //     // alert('ppppppp')
+            //     authCode = ''
+            // }
+            // alert(authCode)
         if (!authCode) {
             // alert('-----authCode-----')
             http.get('/user-service/m/user/getappid', {

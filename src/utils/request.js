@@ -36,14 +36,14 @@ let instance = axios.create({
     // 请求
 instance.interceptors.request.use(
         (config) => {
-    
-        	 let token
-            if(window.location.hostname == "localhost"){
-            	 token = localStorage.getItem('token') //本地token
-            }else{
-            	 token = getStoreValue('token') //生产token
+
+            let token
+            if (window.location.hostname == "localhost") {
+                token = localStorage.getItem('token') //本地token
+            } else {
+                token = getStoreValue('token') //生产token
             }
-            
+
             if (token) {
                 config.headers.common.token = token
             }

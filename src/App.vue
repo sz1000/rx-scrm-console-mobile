@@ -10,6 +10,12 @@
 export default {};
 </script>
 <style lang="less">
+@supports (bottom: env(safe-area-inset-bottom)){
+    #app {
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
 #app {
   padding: 0;
   width: 750px;
