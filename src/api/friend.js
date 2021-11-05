@@ -8,3 +8,6 @@ export const uploadFile = (data) => {
 export const addFriend = (data) => {
     return http.post(`${materialServiceApi}/friendCircle/addFriendCircle`, data)
 }
+export const addFriendStrong = (data) => {
+    return http.post(`${materialServiceApi}/friendCircle/addFriendCircleH5`, data)
+}

@@ -155,9 +155,9 @@ export default {
       loadingType: 'spinner',
     })
 
-    				if(window.location.hostname != "localhost"){
-            	CommonHome.getWxToken()
-            }
+    if (window.location.hostname != 'localhost') {
+      CommonHome.getWxToken()
+    }
   },
   mounted() {
     setTimeout(() => {

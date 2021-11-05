@@ -85,7 +85,7 @@
   </div>
 </template>
 <script>
-import { uploadFile, addFriend } from '../../api/friend'
+import { uploadFile, addFriend, addFriendStrong } from '../../api/friend'
 import { _throttle } from '../../utils/tool'
 import { Notify } from 'vant'
 export default {
@@ -119,7 +119,7 @@ export default {
         urls: imgArr,
         msgtype: this.tab,
       }
-      addFriend(params).then((res) => {
+      addFriendStrong(params).then((res) => {
         if (res.result) {
           Notify({
             message: '创建成功',
@@ -159,6 +159,7 @@ export default {
       uploadFile(formData).then((res) => {
         this.$toast.clear()
         this.lists.push(res.data.url)
+        e.target.value = ''
       })
       // reader.readAsDataURL(file)
       // reader.onload = function (e) {
@@ -224,6 +225,7 @@ export default {
           uploadFile(formData).then((res) => {
             _this.$toast.clear()
             _this.videoUrl = res.data.url
+            e.target.value = ''
           })
         }
       })

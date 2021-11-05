@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">渠道活码</span>
+      <span class="textTitle">获客活码</span>
     </div>
     <div class="tabMenu">
       <!-- <div class="tabBtn">全部活码</div> -->
@@ -373,7 +373,7 @@ export default {
     addCode() {
       this.showAdd = true
       this.addForm.status = '1'
-      this.titleName = '新增企微活码'
+      this.titleName = '新增企业活码'
       // this.$nextTick(() => {
       this.getSelect()
       // })
@@ -398,7 +398,7 @@ export default {
     },
     editBtn(v) {
       // console.log(this.editForm)
-      this.titleName = '编辑企微活码'
+      this.titleName = '编辑企业活码'
       this.showEdit = true
       this.editForm = JSON.parse(JSON.stringify(v))
       this.editForm.status = this.editForm.status.toString()
@@ -430,7 +430,7 @@ export default {
 
     checkDetail(item, index) {
       // console.log(item)
-      this.titleName = '企微活码详情'
+      this.titleName = '企业活码详情'
       this.showDetail = true
       this.detailForm = item
     },

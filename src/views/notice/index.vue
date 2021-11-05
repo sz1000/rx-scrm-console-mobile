@@ -79,7 +79,8 @@
 
 <script>
 import { notice_getNoticeDetail } from "@/api/notice";
-import CommonHome from "../../utils/CommonHome";
+// import CommonHome from "../../utils/CommonHome";
+import commonFun from '../../utils/commonToken'
 export default {
   data() {
     return {
@@ -128,7 +129,8 @@ export default {
   created() {
       console.log("token",localStorage.getItem("token"))
     if (!localStorage.getItem("token")) {
-      CommonHome.getWxToken();
+    //   CommonHome.getWxToken();
+      commonFun.getWxAppid()
       console.log("获取token")
     }
   },
