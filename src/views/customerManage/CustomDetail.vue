@@ -31,7 +31,7 @@
       
       <!-- 附件 -->
       <div class="fujianBox" style="padding: 12px;" v-if="contentType == 3">
-      	<Fujian></Fujian>
+      	<Fujian :isCustomer="2"></Fujian>
       </div>
 			
     </div>

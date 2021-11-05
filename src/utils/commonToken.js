@@ -7,10 +7,11 @@ import {
     getStoreValue,
     removeStoreValue,
 } from '../utils/LocalStorageDate'
-
+console.log('-------auth--', window.location.href)
+store.commit('setCopy', window.location.href)
 let queryObj = parseQueryString(location),
     comeFrom = queryObj.comeFrom
-
+console.log(queryObj)
 const getWxAppid = function() {
         let authCode = queryObj.code
             // if (window.location.href.indexOf('?') > -1) {
@@ -22,8 +23,10 @@ const getWxAppid = function() {
             //     authCode = ''
             // }
             // alert(authCode)
+
         if (!authCode) {
             // alert('-----authCode-----')
+
             http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
@@ -142,7 +145,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalContact>>>err>>>', res)
-                            // doReload()
+                                // doReload()
                         }
                     })
                     //获取当前客户群ID
@@ -155,7 +158,11 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalChat>>>err>>>', res)
-                            // doReload()
+                            setTimeout(function() {
+                                if (!sessionStorage.getItem('userId')) {
+                                    doReload()
+                                }
+                            }, 1000)
                         }
                     })
                     //判断入口
@@ -168,7 +175,7 @@ function getAgent(res) {
                     } else {
                         //错误处理
                         console.log('getContext>>>err>>>', res)
-                        // doReload()
+                            // doReload()
                     }
                 })
             }

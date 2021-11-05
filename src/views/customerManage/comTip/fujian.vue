@@ -42,10 +42,14 @@ export default {
 		type: Number,
 		default: 0
 		},
+		isCustomer:{
+		type: Number,
+		default: 0
+		}
 	},
   data() {
     return {
-      objItem: this.isPortrait == 1 ? JSON.parse(localStorage.getItem('ISPORTRIAT_customer')) : JSON.parse(localStorage.getItem('detail')),
+      objItem: this.isPortrait == 1 ? JSON.parse(localStorage.getItem('ISPORTRIAT_customer')) : this.isCustomer == 2 ? JSON.parse(localStorage.getItem('customer')) : JSON.parse(localStorage.getItem('detail')) ,
 			fileList:[],
 			fileData:{
     	},

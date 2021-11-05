@@ -25,7 +25,7 @@
       <opportunities v-if="contentType == 1" :customerNo="objItem && objItem.clueCustomerNo"></opportunities>
       
     	<div class="fujianBox" style="padding: 12px;" v-if="contentType == 2">
-      	<Fujian></Fujian>
+      	<FujianMini></FujianMini>
       </div>
     </div>
 
@@ -93,7 +93,7 @@
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Dynamic from '../../components/CustomerManage/dynamic'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
-import  Fujian  from "./comTip/fujian"
+import  FujianMini  from "./comTip/fujianMini"
 import GuideBox from "../../components/CustomerManage/guideBox"
 import MessageBox from "../../components/CustomerManage/messageBox"
 import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
@@ -305,7 +305,7 @@ export default {
     CustomerItem,
     Dynamic,
     Opportunities,
-    Fujian,
+    FujianMini,
     GuideBox,
     MessageBox,
     RemindersBox

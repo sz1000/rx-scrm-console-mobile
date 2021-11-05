@@ -79,6 +79,7 @@ import GuideBox from "../../components/CustomerManage/guideBox"
 import MessageBox from "../../components/CustomerManage/messageBox"
 import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
 import { mapState } from 'vuex'
+import { setStoreValue } from '../../utils/LocalStorageDate'
 
 export default {
   components: {
@@ -125,7 +126,6 @@ export default {
     },
     entry() {
       // return 'single_chat_tools'
-      // console.log("this.$store.getters.entry???", this.$store.getters.entry)
       return this.$store.getters.entry || sessionStorage.getItem('entry')
     },
     userId() {
@@ -142,12 +142,16 @@ export default {
     },
     userId(val) {
       console.log("???>>>???", val)
-      if(val) {
-        this.getClueCustomerByid()
-      } else {
-        commonFun.getWxAppid()
+      let { comeFrom } = this.$route.query
+
+      if (!comeFrom || comeFrom && comeFrom != 'messageCard') {
+        if(val) {
+          this.getClueCustomerByid()
+        } else {
+          commonFun.getWxAppid()
+        }
       }
-    }
+    },
   },
   created() {
     this.getMethod()
@@ -212,14 +216,34 @@ export default {
     },
     getMethod() {
       this.loadingShow = true
-      if (!this.userId) {
-        commonFun.getWxAppid()
+
+      let { comeFrom, type, name } = this.$route.query
+
+      if (comeFrom == 'messageCard') {
+        let url = window.location.href
+        // 从消息卡片进入之后处理
+        if (type && name) {
+          if (!localStorage.getItem('backupToken')) {
+            localStorage.setItem('backupToken', type)
+            window.location.href = url
+          } else {
+            this.$store.commit('setUserId', name)
+            this.getClueCustomerByid()
+          }
+        } else {
+          this.$toast('信息有误')
+        }
       } else {
-        this.getClueCustomerByid()
+        if (!this.userId) {
+          commonFun.getWxAppid()
+        } else {
+          this.getClueCustomerByid()
+        }
       }
     },
     //获取客户详情
     getClueCustomerByid() {
+      // let headers = config
       this.$toast.loading({
         overlay: true,
         loadingType: 'spinner',
@@ -247,10 +271,11 @@ export default {
       })
     },
     getShowPortraitType() {
-      if (this.entry && this.entry == 'single_chat_tools') {
+      let { comeFrom } = this.$route.query
+       
+      if (this.entry && this.entry == 'single_chat_tools' || comeFrom == 'messageCard') {
         this.showPortraitType = 1
         this.showGuideBox()
-        console.log("comeFrom", this.$route.query)
         if (this.$route.query && this.$route.query.comeFrom == 'messageCard') {
           this.$nextTick(() => {
             this.$refs.dynamic.dynamicContentType = 3
@@ -293,6 +318,7 @@ export default {
               document.getElementById('html').style.overflow = 'auto'
               // this.getTimeline()
               // this.getMethod()
+              this.$refs.dynamic.selectFollowMsgList(2)
               this.$message({
                 type: 'success',
                 message: '修改成功',
