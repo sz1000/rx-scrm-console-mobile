@@ -170,6 +170,7 @@ export default {
                             line-height: 32px;
                             color: @fontMain;
                             margin-bottom: 16px;
+                            font-family: PingFangSC-Regular, PingFang SC;
                         }
                         .duration{
                             color: @text;
