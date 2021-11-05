@@ -130,7 +130,12 @@ export default {
                 this.selectFollowMsgList(3)
             } else if(index == 3) { // 跟进/消息通知
                 if (this.isPortrait == 1) {
-                    this.showGuideBox(1)
+                	try{
+                		    	console.log('this.showGuideBox(1)---suc----')
+                		this.showGuideBox(1)
+                	}catch(err){
+                		console.log('this.showGuideBox(1)---err---->',err)
+                	}       
                     this.selectFollowMsgList(4) // 消息通知
                     this.showRedPoint = false
                     return
