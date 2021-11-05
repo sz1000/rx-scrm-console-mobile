@@ -146,16 +146,16 @@ export default {
       return this.$store.getters.chatId || sessionStorage.getItem('chatId')
     },
   },
-  watch: {
-    chatId(val) {
-      console.log("chat>>>???", val)
-      if(val) {
-        this.init()
-      } else {
-        commonFun.getWxAppid()
-      }
-    }
-  },
+  // watch: {
+  //   chatId(val) {
+  //     console.log("chat>>>???", val)
+  //     if(val) {
+  //       this.init()
+  //     } else {
+  //       commonFun.getWxAppid()
+  //     }
+  //   }
+  // },
   created() {
     this.getMethod()
   },

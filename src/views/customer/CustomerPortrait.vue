@@ -120,6 +120,11 @@ export default {
   },
   computed: {
     // ...mapState(['userId']),
+    chatId() {
+      // return 'single_chat_tools'
+      // console.log("this.$store.getters.entry???", this.$store.getters.entry)
+      return this.$store.getters.chatId || sessionStorage.getItem('chatId')
+    },
     entry() {
       // return 'single_chat_tools'
       // console.log("this.$store.getters.entry???", this.$store.getters.entry)
@@ -131,6 +136,12 @@ export default {
     },
   },
   watch: {
+    chatId(val) {
+      console.log("chat>>>???", val)
+      if(val) {
+        this.showPortraitType = 2
+      }
+    },
     userId(val) {
       console.log("???>>>???", val)
       if(val) {
