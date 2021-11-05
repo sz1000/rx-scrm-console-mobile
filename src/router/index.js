@@ -62,6 +62,9 @@ import MaterialTemplate from '../views/MaterialTemplate/share'
 import Notice from '../views/notice/index'
 //朋友圈
 import CircleFriend from '../views/circleFriend/CircleFriend.vue'
+// 消息通知 日报
+import Daily from '../views/notice/daily'
+
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -413,6 +416,12 @@ const routes = [{
         path: '/notice',
         name: 'Notice',
         component: Notice,
+    },
+    // 消息通知 互动提醒
+    {
+        path: '/daily',
+        name: 'Daily',
+        component: Daily,
     },
 ]
 
