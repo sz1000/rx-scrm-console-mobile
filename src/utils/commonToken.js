@@ -158,7 +158,11 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalChat>>>err>>>', res)
-                                // doReload()
+                            setTimeout(function() {
+                                if (!sessionStorage.getItem('userId')) {
+                                    doReload()
+                                }
+                            }, 1000)
                         }
                     })
                     //判断入口

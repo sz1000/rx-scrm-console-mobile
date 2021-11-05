@@ -37,10 +37,11 @@ let instance = axios.create({
 instance.interceptors.request.use(
         (config) => {
             let token
+
             if (window.location.hostname == 'localhost') {
-                token = localStorage.getItem('token') //本地token
+                token = localStorage.getItem('token') ? localStorage.getItem('token') : localStorage.getItem('backupToken') //本地token
             } else {
-                token = getStoreValue('token') //生产token
+                token = getStoreValue('token') ? getStoreValue('token') : getStoreValue('backupToken') //生产token
             }
 
             if (token) {
