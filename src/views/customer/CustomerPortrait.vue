@@ -318,7 +318,8 @@ export default {
               document.getElementById('html').style.overflow = 'auto'
               // this.getTimeline()
               // this.getMethod()
-              this.$refs.dynamic.selectFollowMsgList(2)
+              this.$refs.dynamic.dynamicContentType = 0
+              this.$refs.dynamic.selectFollowMsgList('')
               this.$message({
                 type: 'success',
                 message: '修改成功',
