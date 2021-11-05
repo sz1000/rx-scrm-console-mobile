@@ -120,6 +120,9 @@ export default {
   },
   computed: {
     // ...mapState(['userId']),
+    chatId() {
+      return this.$store.getters.chatId || sessionStorage.getItem('chatId')
+    },
     entry() {
       // return 'single_chat_tools'
       // console.log("this.$store.getters.entry???", this.$store.getters.entry)
@@ -131,20 +134,18 @@ export default {
     },
   },
   watch: {
+    chatId(val) {
+      console.log("chat>>>???", val)
+      if(val) {
+        this.showPortraitType = 2
+      }
+    },
     userId(val) {
       console.log("???>>>???", val)
       if(val) {
         this.getClueCustomerByid()
       } else {
         commonFun.getWxAppid()
-      }
-    },
-    entry(val) {
-      console.log("entry>>>???", val)
-      if(val && val == 'single_chat_tools') {
-        this.showPortraitType = 1
-      } else if(val && val == 'group_chat_tools') {
-        this.showPortraitType = 2
       }
     }
   },
@@ -247,6 +248,7 @@ export default {
     },
     getShowPortraitType() {
       if (this.entry && this.entry == 'single_chat_tools') {
+        this.showPortraitType = 1
         this.showGuideBox()
         console.log("comeFrom", this.$route.query)
         if (this.$route.query && this.$route.query.comeFrom == 'messageCard') {
@@ -255,6 +257,8 @@ export default {
             this.$refs.dynamic.selectFollowMsgList(4)
           })
         }
+      } else if(this.entry && this.entry == 'group_chat_tools') {
+        this.showPortraitType = 2
       }
     },
     showCompany(v) {

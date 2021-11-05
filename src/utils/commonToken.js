@@ -8,33 +8,32 @@ import {
     removeStoreValue,
 } from '../utils/LocalStorageDate'
 
-let queryObj = parseQueryString(location), comeFrom = queryObj.comeFrom
+let queryObj = parseQueryString(location),
+    comeFrom = queryObj.comeFrom
 
 const getWxAppid = function() {
         let authCode = queryObj.code
-        // if (window.location.href.indexOf('?') > -1) {
-        //     let href = window.location.href.split('?')[1]
-        //     let p = href.split('&')[0]
-        //     authCode = p.split('=')[1]
-        // } else {
-        //     // alert('ppppppp')
-        //     authCode = ''
-        // }
-        // alert(authCode)
+            // if (window.location.href.indexOf('?') > -1) {
+            //     let href = window.location.href.split('?')[1]
+            //     let p = href.split('&')[0]
+            //     authCode = p.split('=')[1]
+            // } else {
+            //     // alert('ppppppp')
+            //     authCode = ''
+            // }
+            // alert(authCode)
         if (!authCode) {
             // alert('-----authCode-----')
-            http
-                .get('/user-service/m/user/getappid', {
-                    redirect_uri: window.location.pathname,
-                })
-                .then((res) => {
-                    // alert(JSON.stringify(res))
-                    let params = {
-                        appid: res.data.suiteid,
-                        redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
-                    }
-                    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
-                })
+            http.get('/user-service/m/user/getappid', {
+                redirect_uri: window.location.pathname,
+            }).then((res) => {
+                // alert(JSON.stringify(res))
+                let params = {
+                    appid: res.data.suiteid,
+                    redirect_url: encodeURIComponent('https://' + res.data.redirect_uri),
+                }
+                window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appid}&redirect_uri=${params.redirect_url}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
+            })
         } else {
             // alert('----getWxCofig----前')
             getWxCofig(authCode)
@@ -48,41 +47,39 @@ const getWxAppid = function() {
 
 function getWxCofig(v) {
     // alert('getWxCofig---后---')
-    http
-        .get('/user-service/m/user/getloguser', {
-            code: v,
-            url: location.href,
-        })
-        .then((res) => {
-            // alert(JSON.stringify(res))
-            if (res.result) {
-                // this.token = res.data.accessToken
-                // this.appid = res.data.corpId
-                localStorage.setItem('token', res.data.accessToken)
-                setStoreValue(
-                    'token',
-                    res.data.accessToken,
-                    res.data.expire_time,
-                    res.data.userNo
-                )
-                getAgent(res)
+    http.get('/user-service/m/user/getloguser', {
+        code: v,
+        url: location.href,
+    }).then((res) => {
+        // alert(JSON.stringify(res))
+        if (res.result) {
+            // this.token = res.data.accessToken
+            // this.appid = res.data.corpId
+            localStorage.setItem('token', res.data.accessToken)
+            setStoreValue(
+                'token',
+                res.data.accessToken,
+                res.data.expire_time,
+                res.data.userNo
+            )
+            getAgent(res)
+        } else {
+            if (
+                res.code == 'error_busy' ||
+                res.code == 'error_code' ||
+                res.code == 'error_forbid' ||
+                res.code == 'error_corp_forbid'
+            ) {
+                this.$message({
+                    type: 'error',
+                    message: '系统繁忙,请稍后重试' || res.msg,
+                })
             } else {
-                if (
-                    res.code == 'error_busy' ||
-                    res.code == 'error_code' ||
-                    res.code == 'error_forbid' ||
-                    res.code == 'error_corp_forbid'
-                ) {
-                    this.$message({
-                        type: 'error',
-                        message: '系统繁忙,请稍后重试' || res.msg,
-                    })
-                } else {
-                    router.push('/404')
-                    localStorage.removeItem('token')
-                }
+                router.push('/404')
+                localStorage.removeItem('token')
             }
-        })
+        }
+    })
 }
 
 function getTicket() {
@@ -102,7 +99,7 @@ function getAgent(res) {
     // alert(JSON.stringify(res))
     wx.config({
             beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
-            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             appId: res.data.corpId, // 必填，企业微信的corpID
             timestamp: res.data.timestamp, // 必填，生成签名的时间戳
             nonceStr: res.data.nonceStr, // 必填，生成签名的随机串
@@ -145,7 +142,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalContact>>>err>>>', res)
-                            doReload()
+                            // doReload()
                         }
                     })
                     //获取当前客户群ID
@@ -158,7 +155,7 @@ function getAgent(res) {
                         } else {
                             //错误处理
                             console.log('getCurExternalChat>>>err>>>', res)
-                            doReload()
+                            // doReload()
                         }
                     })
                     //判断入口
@@ -171,7 +168,7 @@ function getAgent(res) {
                     } else {
                         //错误处理
                         console.log('getContext>>>err>>>', res)
-                        doReload()
+                        // doReload()
                     }
                 })
             }

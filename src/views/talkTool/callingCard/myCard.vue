@@ -267,6 +267,7 @@ export default {
         font-weight: bold;
         color: @fontMain;
         margin-bottom: 28px;
+        word-break: break-all
       }
       .editor_des {
         width: 100%;

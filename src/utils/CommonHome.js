@@ -1,4 +1,4 @@
-import {http} from './request'
+import { http } from './request'
 import router from '../router/index'
 import {
     setStoreValue,
@@ -7,7 +7,7 @@ import {
 } from '../utils/LocalStorageDate'
 const getWxToken = function() {
     let authCode
-        // alert(window.location.href)
+    console.log(window.location.href, "window.location.href====home页面")
     if (window.location.href.indexOf('?') > -1) {
         let href = window.location.href.split('?')[1]
         let p = href.split('&')[0]
@@ -16,7 +16,7 @@ const getWxToken = function() {
         // alert('ppppppp')
         authCode = ''
     }
-    // alert(authCode)
+    console.log(authCode, "home页面")
     if (!authCode) {
         // alert('-----没有authCode-----')
         // alert(JSON.stringify(window.location.pathname))
