@@ -134,13 +134,13 @@ export default {
 
                 shareTitle = title
                 imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_article.png'
-                desc = contentAbstract
+                desc = contentAbstract ? contentAbstract : title
             } else if (this.materialType == 2) {
                 let {name, cover, fileSize} = this.formData
 
                 shareTitle = name
                 imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'
-                desc = fileSize ? byteConvert(fileSize) : ''
+                desc = fileSize ? byteConvert(fileSize) : name
             }
             wxShare(shareTitle, url, imgUrl, desc)
         },
