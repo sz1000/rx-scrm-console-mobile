@@ -22,9 +22,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .img-box {
+    width: 100%;
+    background: transparent;
     img {
         width: 500px;
         height: 500px;
+        margin: 0 auto;
     }
 }
 </style>
