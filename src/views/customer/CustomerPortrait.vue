@@ -278,8 +278,7 @@ export default {
         this.showGuideBox()
         if (this.$route.query && this.$route.query.comeFrom == 'messageCard') {
           this.$nextTick(() => {
-            this.$refs.dynamic.dynamicContentType = 3
-            this.$refs.dynamic.selectFollowMsgList(4)
+            this.$refs.dynamic.changeDynamicNav(3)
           })
         }
       } else if(this.entry && this.entry == 'group_chat_tools') {
@@ -318,8 +317,7 @@ export default {
               document.getElementById('html').style.overflow = 'auto'
               // this.getTimeline()
               // this.getMethod()
-              this.$refs.dynamic.dynamicContentType = 0
-              this.$refs.dynamic.selectFollowMsgList('')
+              this.$refs.dynamic.changeDynamicNav(0)
               this.$message({
                 type: 'success',
                 message: '修改成功',
@@ -383,8 +381,7 @@ export default {
       let { code, msg } = await MessageNotificatio(params)
 
       if (code == 'success') {
-        this.$refs.dynamic.dynamicContentType = 3
-        this.$refs.dynamic.selectFollowMsgList(4)
+        this.$refs.dynamic.changeDynamicNav(3)
         this.$refs.messageBox.initData()
       }
       this.$toast(msg)
