@@ -1,7 +1,7 @@
 <template>
     <div class="material-template">
         <div v-if="userData" class="user-info">
-            <img class="left" :src="userData.avatar" alt="">
+            <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
             <ul class="center">
                 <li class="name one-txt-cut">{{ userData.name }}</li>
                 <li class="company one-txt-cut">{{ userData.departments }}</li>
