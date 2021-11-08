@@ -261,6 +261,9 @@ export default {
                 height: auto !important;
                 max-width: 100% !important;
             }
+            section {
+                max-width: 100%;
+            }
         }
     }
 </style>
