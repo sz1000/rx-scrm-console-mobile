@@ -15,7 +15,7 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="article-item item" v-for="i in articleList" :key="i.articleId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`)">
+                    <div class="article-item item" v-for="i in articleList" :key="i.articleId" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract, 'imgUrl': i.cover ? i.cover : require('../../images/default_article.png') })">
                         <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_article.png')" alt="">
@@ -37,7 +37,7 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('text', false, `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`)">
+                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : '', 'imgUrl': i.cover ? i.cover : require('../../images/default_pdf.png') })">
                         <div class="left"><img src="../../images/relay.png" alt=""></div>
                         <div class="right">
                             <img class="img" :src="i.cover ? i.cover : require('../../images/default_pdf.png')" alt="">
