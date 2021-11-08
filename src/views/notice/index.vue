@@ -18,7 +18,9 @@
             <div class="avatar">{{ avatar }}</div>
             <div class="info">
               <div class="name">
-                {{ detail.customerContactName }}<i v-if="taskType != 2">@{{ detail.customerCorpName }}</i>
+                {{ detail.customerContactName }}
+                <i v-if="taskType != 2 && !isAltWx">@{{ detail.customerCorpName }}</i>
+                <i v-if="taskType != 2 && isAltWx">{{ detail.customerType }}</i>
               </div>
               <!-- <div class="name" v-else>contractName
                 {{ detail.customerContactName
@@ -118,8 +120,15 @@ export default {
       return list;
     },
     copyUrl(){
-            return this.$store.getters.copy
-        },
+        return this.$store.getters.copy
+    },
+    isAltWx(){
+      let state = false
+      if(this.detail.customerType.indexOf('微信') > -1){
+        state = true
+      }
+      return state
+    },
     // contractName(){
     //     let _str = ''
     //     if(this.detail.customerType.indexOf('微信') > -1){
