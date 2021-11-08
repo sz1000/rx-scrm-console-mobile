@@ -3,20 +3,20 @@
         <div v-if="isPortrait == 1" class="customer-portrait">
             <div class="customInfo">
                 <div class="iconName">
-                <div v-if="imageUser">
-                    <img :src="imageUser" alt="" />
-                </div>
-                <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
-                <div class="nameSex">
-                    <span>{{ name }}</span>
-                    <span v-show="nameFrom">{{ nameFrom == "1" ? "@微信" : `@${itemData.customerName}` }}</span>
-                    <img src="../../images/icon_female@2x.png" alt="" v-if="itemData.gender == '2'" />
-                    <img src="../../images/man.png" alt="" v-if="itemData.gender == '1'" />
-                </div>
+                    <div v-if="imageUser" class="header-img">
+                        <img :src="imageUser" alt="" />
+                    </div>
+                    <div class="flag" v-else>{{ name ? name.substr(0, 1) : "" }}</div>
+                    <div class="nameSex">
+                        <span>{{ name }}</span>
+                        <span v-show="nameFrom">{{ nameFrom == "1" ? "@微信" : `@${itemData.customerName}` }}</span>
+                        <img src="../../images/icon_female@2x.png" alt="" v-if="itemData.gender == '2'" />
+                        <img src="../../images/man.png" alt="" v-if="itemData.gender == '1'" />
+                    </div>
                 </div>
                 <div class="detailBtn" @click="goDetail">
-                详情
-                <van-icon name="arrow" color="#4168F6" />
+                    详情
+                    <van-icon name="arrow" color="#4168F6" />
                 </div>
             </div>
             <div class="detailInfo">
@@ -234,6 +234,16 @@ export default {
             .iconName {
                 display: flex;
                 height: auto;
+                .header-img {
+                    width: 88px;
+                    height: 88px;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
                 .flag {
                     width: 88px;
                     height: 88px;
