@@ -363,7 +363,7 @@ export default {
       let _this = this
       _this.isClick = !_this.isClick
       let params = {
-        cluecustomerNo: this.objItem.clueCustomerNo,
+        cluecustomerno: this.objItem.clueCustomerNo,
         depId: e,
       }
       this.$network
