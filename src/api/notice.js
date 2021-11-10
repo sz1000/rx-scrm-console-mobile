@@ -13,9 +13,9 @@ export function notice_getNoticeDetail(id) { //获取通知详情信息
         method: 'get'
     })
 }
-export function dataReport_getDataReportDaily(id,cid) { //获取日报详情
+export function dataReport_getDataReportDaily(id, cid, date, type = 0) { //获取日报详情
     return request({
-        url: BASE_CUSTOMER_SERCICE + '/dataReport/getDataReportDaily?userNo=' + id + '&corpId=' + cid,
+        url: BASE_CUSTOMER_SERCICE + '/dataReport/getDataReportDaily?userNo=' + id + '&corpId=' + cid + '&datatyp=' + type + '&batchDate=' + date,
         method: 'post'
     })
 }

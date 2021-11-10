@@ -54,7 +54,7 @@
           <img src="../images/friedn.png" alt="" />
           <span>朋友圈</span>
         </div>
-        <div class="commonBtn" @click="showMsg">
+        <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lzbd.png" alt="" />
           <span class="nomaltext">留资表单</span>
         </div>
@@ -69,7 +69,7 @@
         <div class="commonBtn" @click="showMsg">
           <img src="../images/dthk.png" alt="" />
           <span class="nomaltext">地图获客</span>
-        </div>
+        </div> -->
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
@@ -85,10 +85,10 @@
           <img src="../images/grouplist.png" alt="" />
           <span>群列表</span>
         </div>
-        <div class="commonBtn" @click="showMsg">
+        <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lskh2.png" alt="" />
           <span class="nomaltext">流失客户</span>
-        </div>
+        </div> -->
       </div>
       <div class="customAccont manage">办公协同</div>
       <div class="btnRouter custom">
@@ -96,7 +96,7 @@
           <img src="../images/wcdk.png" alt="" />
           <span>外出打卡</span>
         </div>
-        <div class="commonBtn" @click="showMsg">
+        <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/bfjh.png" alt="" />
           <span class="nomaltext">拜访计划</span>
         </div>
@@ -107,7 +107,7 @@
         <div class="commonBtn" @click="showMsg">
           <img src="../images/wdbb2.png" alt="" />
           <span class="nomaltext">我的报表</span>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- <div class="btm-box">
@@ -335,7 +335,7 @@ export default {
     flex-wrap: wrap;
     margin-bottom: 32px;
     a {
-      font-family: PingFangSC-Medium, PingFang SC;
+      // font-family: PingFangSC-Medium, PingFang SC;
     }
     .commonBtn {
       font-size: 28px;

@@ -18,7 +18,7 @@ export function getStoreValue(keyName, defaultVal = '') {
             window.location.pathname.indexOf('customerPortrait') > -1 ||
             window.location.pathname.indexOf('informationDetail') > -1
         ) {
-            router.push('/customerPortrait')
+            router.push(`/customerPortrait?${window.location.search}`)
         } else if (window.location.pathname.indexOf('verbalTrick') > -1) {
             router.push('/talkTool/verbalTrick')
         } else if (window.location.pathname.indexOf('groupportrait') > -1) {
@@ -30,8 +30,13 @@ export function getStoreValue(keyName, defaultVal = '') {
         } else if (window.location.pathname.indexOf('404') > -1) {
             router.push('/404')
         } else {
+            console.log('search:', window.location.search)
             if (window.location.pathname.indexOf('notice') > -1) {
-                router.push(`/notice${window.location.search}`)
+                if (window.location.pathname.indexOf('daily') > -1) {
+                    router.push(`/notice/daily${window.location.search}`)
+                } else {
+                    router.push(`/notice${window.location.search}`)
+                }
             } else {
                 router.push('/home')
             }
@@ -50,7 +55,7 @@ export function getStoreValue(keyName, defaultVal = '') {
                 window.location.pathname.indexOf('customerPortrait') > -1 ||
                 window.location.pathname.indexOf('informationDetail') > -1
             ) {
-                router.push('/customerPortrait')
+                router.push(`/customerPortrait?${window.location.search}`)
             } else if (window.location.pathname.indexOf('verbalTrick') > -1) {
                 router.push('/talkTool/verbalTrick')
             } else if (window.location.pathname.indexOf('groupportrait') > -1) {

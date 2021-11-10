@@ -195,8 +195,19 @@ export default {
       let _this = this
       let file = e.target.files[0]
       let filesize = e.target.files[0].size
+      let filename = e.target.files[0].name
       let url = URL.createObjectURL(file)
       let audioElement = new Audio(url)
+      // console.log('---e----', accept, e, filename)
+      if (filename.indexOf(accept) == -1) {
+        Notify({
+          message: '请上传MP4格式文件',
+          type: 'danger',
+          duration: 1000,
+        })
+        e.target.value = ''
+        return false
+      }
       if (filesize / 1024 / 1024 > 10) {
         Notify({
           message: '视频大小不能超过10M',

@@ -157,14 +157,17 @@
 <script>
 import { Base64 } from 'js-base64'
 import { formatDate,handleMoney } from '@/utils/tool'
+import commonFun from '../../utils/commonToken'
 import { 
     Corp_getCrop,
     dataReport_getDataReportDaily
 } from '@/api/notice'
 export default {
+
     data(){
         return {
             type: this.$route.query.taskTyp,
+            batchDate: this.$route.query.batchDate,
             businessPopover: false,
             groupPopover: false,
             detail: {
@@ -211,15 +214,8 @@ export default {
         }
     },
     computed: {
-        token(){
-            return this.$store.getters.token
-        },
         corpId(){
             return this.$store.getters.corpId
-        },
-        userNo(){
-            let str = this.token.split('|')
-            return this.token ? str[1] : ''
         },
         tipsTitle(){
             let str = ''
@@ -232,9 +228,25 @@ export default {
             }
             return str
         },
+        userNo(){
+            return this.$store.getters.userNo
+        },
+    },
+    created() {
+        console.log("token",this.token)
+        // if (!this.token) {
+        //   CommonHome.getWxToken();
+            commonFun.getWxAppid()
+            console.log("获取token")
+        // }
     },
     mounted(){
-        this.getCorpId()
+            setTimeout(() => {
+      this.getCorpId()
+       console.log("请求接口")
+ 
+    }, 2000);
+      
     },
     methods: {
         formatDate,
@@ -249,7 +261,7 @@ export default {
         },
         getDetail(){    //获取数据详情
             console.log('_data',Base64.encode(this.userNo),Base64.encode(this.corpId))
-            dataReport_getDataReportDaily(Base64.encode(this.userNo),Base64.encode(this.corpId)).then(res => {
+            dataReport_getDataReportDaily(Base64.encode(this.userNo),Base64.encode(this.corpId),this.batchDate).then(res => {
                 if(res.result){
                     this.detail = res.data
                 }
@@ -272,7 +284,11 @@ export default {
             }else if(Number(m)){
                 _str = m + "分" + s + '秒'
             }else{
-                _str = s + '秒'
+                if(Number(s) > 0){
+                    _str = s + '秒'
+                }else{
+                    _str = '0秒'
+                }
             }
             return _str
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <div class="top_nav" @click="$router.go(-1)">
+        <div class="top_nav" @click="blackFun">
             <div class="black_btn">返回</div>
             <div class="title">设置群SOP</div>
         </div>
@@ -113,6 +113,9 @@ export default {
         this.getSopList()
     },
     methods: {
+        blackFun(){
+            this.$router.replace('/groupportrait')
+        },
         getSopList(){ //获取sop规则列表
             sop_groupSopList(this.groupId).then(res => {
                 if(res.result){

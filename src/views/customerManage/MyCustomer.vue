@@ -9,48 +9,24 @@
     </div>
     <div class="tabMenu">
       <div class="tabBtn">
-        <span :class="{ active: type == 3 }" class="mycule" @click="tabClick(3)"
-          >我的客户</span
-        >
-        <span :class="{ active: type == 4 }" class="mycule" @click="tabClick(4)"
-          >客户公海</span
-        >
+        <span :class="{ active: type == 3 }" class="mycule" @click="tabClick(3)">我的客户</span>
+        <span :class="{ active: type == 4 }" class="mycule" @click="tabClick(4)">客户公海</span>
       </div>
-      <span
-        class="addBtn"
-        @click="addCules"
-        v-show="type == 3 && mylist.some((item) => item.enName == 'add')"
-      >
+      <span class="addBtn" @click="addCules" v-show="type == 3 && mylist.some((item) => item.enName == 'add')">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
-      <span
-        class="addBtn"
-        @click="addCules"
-        v-show="type == 4 && alllist.some((item) => item.enName == 'add')"
-      >
+      <span class="addBtn" @click="addCules" v-show="type == 4 && alllist.some((item) => item.enName == 'add')">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
       </span>
     </div>
     <div class="searchInput">
-      <input
-        type="text"
-        class="input"
-        v-model="inputValue"
-        placeholder="请输入客户简称/公司/手机号"
-      />
+      <input type="text" class="input" v-model="inputValue" placeholder="请输入客户简称/公司/手机号" />
       <span class="searchBtn" @click="inquire">查询</span>
     </div>
     <div class="cardWarp">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :immediate-check="false"
-        finished-text="没有更多了"
-        @load="onLoad"
-        :offset="20"
-      >
+      <van-list v-model="loading" :finished="finished" :immediate-check="false" finished-text="没有更多了" @load="onLoad" :offset="20">
         <div class="topInfo" v-for="(item, index) in cardList" :key="index">
           <customer-item :itemData="item" :fromType="type" :index="index"></customer-item>
         </div>
@@ -59,16 +35,16 @@
   </div>
 </template>
 <script>
-import { _throttle } from "../../utils/tool";
-import MyMixin from "../../mixins/permissionsList";
+import { _throttle } from '../../utils/tool'
+import MyMixin from '../../mixins/permissionsList'
 
-import CustomerItem from "../../components/CustomerManage/customerItem";
+import CustomerItem from '../../components/CustomerManage/customerItem'
 export default {
   mixins: [MyMixin],
   data() {
     return {
       type: 3,
-      inputValue: "",
+      inputValue: '',
       cardList: [],
       loading: false,
       finished: false,
@@ -77,141 +53,141 @@ export default {
       total: 0, //总共的数据条数
       mylist: [],
       alllist: [],
-    };
+    }
   },
   watch: {
     inputValue(val) {
       // console.log(val)
-      if (val == "") {
-        this.getListData();
+      if (val == '') {
+        this.getListData()
       }
     },
   },
   mounted() {
     for (var i in this.expandedKeys) {
-      if (this.expandedKeys[i].enName == "myCustomer") {
-        this.mylist = this.expandedKeys[i].childrenList;
+      if (this.expandedKeys[i].enName == 'myCustomer') {
+        this.mylist = this.expandedKeys[i].childrenList
       } else {
-        this.alllist = this.expandedKeys[i].childrenList;
+        this.alllist = this.expandedKeys[i].childrenList
       }
     }
   },
   created() {
-    this.page = 1;
-    this.getListData();
+    this.page = 1
+    this.getListData()
   },
   provide() {
     return {
       goDetail: this.goDetail,
-    };
+    }
   },
   methods: {
     tabClick(v) {
-      this.type = v;
-      this.page = 1;
-      this.cardList = [];
-      this.inputValue = "";
-      this.getListData();
+      this.type = v
+      this.page = 1
+      this.cardList = []
+      this.inputValue = ''
+      this.getListData()
     },
     onLoad() {
       // console.log('----gundong------')
-      this.page++;
-      this.getListData();
+      this.page++
+      this.getListData()
     },
     getListData() {
       // console.log(this.tabClick)
       this.$toast.loading({
         overlay: true,
-        loadingType: "spinner",
+        loadingType: 'spinner',
         duration: 0,
-      });
+      })
       this.$network
-        .get("/customer-service/m/cluecustomer/getcluecustomerlist", {
+        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
           type: this.type,
           page: this.page,
           limit: this.pageSize,
           allname: this.inputValue,
         })
         .then((res) => {
-          this.$toast.clear();
-          this.total = res.data.iPage.total;
-          this.loading = false;
-          let rows = res.data.iPage.records; //请求返回当页的列表
+          this.$toast.clear()
+          this.total = res.data.iPage.total
+          this.loading = false
+          let rows = res.data.iPage.records //请求返回当页的列表
           if (rows == null || rows.length === 0) {
-            this.finished = true;
-            return;
+            this.finished = true
+            return
           }
-          let newSetArr = this.cardList.concat(rows);
-          this.cardList = this.unique(newSetArr);
+          let newSetArr = this.cardList.concat(rows)
+          this.cardList = this.unique(newSetArr)
           this.cardList.forEach((item) => {
-            if (item.gender == "0" || item.gender == "") {
-              item.gender = "未知";
-            } else if (item.gender == "1") {
-              item.gender = "男";
-            } else if (item.gender == "2") {
-              item.gender = "女";
+            if (item.gender == '0' || item.gender == '') {
+              item.gender = '未知'
+            } else if (item.gender == '1') {
+              item.gender = '男'
+            } else if (item.gender == '2') {
+              item.gender = '女'
             }
-          });
+          })
           if (this.cardList.length >= this.total) {
-            this.finished = true;
+            this.finished = true
           } else {
-            this.onLoad();
+            this.onLoad()
           }
-        });
+        })
     },
     unique(arr) {
-      const res = new Map();
-      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
+      const res = new Map()
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
     goBack() {
       // this.$router.go(-1)
-      this.$router.push("/home");
+      this.$router.push('/home')
     },
     addCules() {
       // console.log(this.type)
-      this.$router.push({ path: "addCustomer", query: { type: this.type } });
+      this.$router.push({ path: 'addCustomer', query: { type: this.type } })
     },
     inquire: _throttle(function () {
       // console.log(this.inputValue)
-      this.page = 1;
-      this.cardList = [];
-      this.getListData();
+      this.page = 1
+      this.cardList = []
+      this.getListData()
     }, 2000),
     deleteCard(item, index) {
       this.$dialog
         .confirm({
-          title: "温馨提示",
-          message: "是否确认删除？",
-          className: "deleteBtn",
-          confirmButtonText: "是",
-          cancelButtonText: "否",
-          messageAlign: "left",
+          title: '温馨提示',
+          message: '是否确认删除？',
+          className: 'deleteBtn',
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          messageAlign: 'left',
         })
         .then(() => {})
         .catch(() => {
           // on cancel
-        });
+        })
     },
     goDetail(item, index) {
       // console.log(this.type)
-      localStorage.setItem("customer", JSON.stringify(item));
+      localStorage.setItem('customer', JSON.stringify(item))
       if (this.type == 3) {
         this.$router.push({
-          path: "customDetail",
+          path: 'customDetail',
           query: { type: this.type, mylist: JSON.stringify(this.mylist) },
-        });
+        })
       } else if (this.type == 4) {
         this.$router.push({
-          path: "customerSeas",
+          path: 'customerSeas',
           query: { type: this.type, alllist: JSON.stringify(this.alllist) },
-        });
+        })
       }
     },
   },
   components: {
     CustomerItem,
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .MyCustomer {
@@ -279,7 +255,7 @@ export default {
         color: #4168f6;
         position: relative;
         &::after {
-          content: "";
+          content: '';
           width: 112px;
           height: 4px;
           background: #4168f6;
