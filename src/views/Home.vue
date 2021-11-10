@@ -156,7 +156,7 @@ export default {
     })
 
     if (window.location.hostname != 'localhost') {
-      CommonHome.getWxToken()
+      // CommonHome.getWxToken()
     }
   },
   mounted() {
