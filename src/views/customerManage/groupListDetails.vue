@@ -43,7 +43,7 @@
       <span class="ling"></span>
       <!-- <span class="iconfont icon-shengyin"></span> -->
       <img class="voice_icon" src="../../images/icon_oice.png" alt="" />
-      <span>本群2021年7月开始实行实名制，请更改</span>
+      <span>{{ notice || "暂无内容" }}</span>
     </div>
     <!-- 群标签 -->
     <div class="lable_box">
@@ -51,23 +51,40 @@
         <div class="lable_title">群标签</div>
         <div class="setting_btn" @click="chooseCusSign = true">编辑</div>
       </div>
-      <div class="lable_list">
+      <!-- <div class="lable_list">
         <div class="lable_li">
           <span class="name_item" v-for="item in lableList" :key="item.id">
             {{ item.name }}
             <img
               src="../../assets/images/delte.png"
               alt=""
-              @click="lableDelet(item.id)"
+              @click="lableDelet(item.tagid)"
             />
           </span>
-
         </div>
-         <div class="btn" @click="isShowPerson = !isShowPerson" >
+        <div class="btn" @click="isShowPerson = !isShowPerson" v-show="lableList.length >5">
+          {{ isShowPerson ? "收起" : "展开" }}
+          <van-icon name="arrow-down" />
+        </div>
+      </div> -->
+           <div class="b_content">
+          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+            <div ref="spanBox">
+               <span class="name_item tagBox" v-for="item in lableList" :key="item.id">
+            {{ item.name }}
+            <img
+              src="../../assets/images/delte.png"
+              alt=""
+              @click="lableDelet(item.tagid)"
+            />
+          </span>
+            </div>
+          </div>
+          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="lableList.length >10">
             {{ isShowPerson ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
-      </div>
+        </div>
     </div>
     <!-- 群sop -->
     <div class="sop_box">
@@ -229,10 +246,16 @@
         <div class="_item" v-for="(item, index) in cusSignList" :key="index">
           <div class="group-title">{{ item.name }}</div>
           <div class="group-label">
+            <!--   :class="[signItm.checked ? 'active' : '']" -->
             <div
               class="label-item"
-              :class="[signItm.checked ? 'active' : '']"
-              @click="clickSign(index, signIdx, signItm.tagid)"
+              :class="{
+                active:
+                  highLightArr.findIndex((item) => {
+                    return item.tagid == signItm.tagid;
+                  }) > -1,
+              }"
+              @click="clickSign(signItm, signItm.tagid)"
               v-for="(signItm, signIdx) in item.children"
               :key="`${index} - ${signIdx}`"
             >
@@ -256,8 +279,13 @@ import { sop_groupSopList } from "@/api/sop";
 export default {
   data() {
     return {
+      notice: "",
+      datatupList:[],
       groupNameList: [],
-            isShowPerson: false,
+      group_tagid: [],
+      tagidLis: [],
+      highLightArr: [],
+      isShowPerson: false,
       chooseCusSign: false, // 选择客户标签
       groupName: {},
       tabClick: 1,
@@ -289,31 +317,24 @@ export default {
       groupId: "",
       group: "",
       isOwmer: false, //是否群主
-      lableList: [
-        { name: "张三", id: 1 },
-        { name: "李四李四李四李四李四", id: 2 },
-        { name: "王五", id: 3 },
-        { name: "赵六赵六赵六赵六赵六", id: 4 },
-        { name: "小明", id: 5 },
-        { name: "大明", id: 7 },
-        { name: "小舞", id: 8 },
-        { name: "唐三", id: 9 },
-        { name: "好弹出还大", id: 10 },
-      ],
+      lableList: [],
     };
   },
   created() {
     this.group = this.$route.query.grouid;
     this.getTagList();
+    this.groupList();
   },
   mounted() {
     setTimeout(() => {
       this.pageInfo.page = 1;
       this.getGroupDetailtop();
       this.getGroupDetail();
-
+      // console.log(this.highLightArr, "首次---获取标签内容");
+      //   console.log(this.lableList, "首次---获取标签内容");
       this.getList();
     }, 3000);
+  
   },
   methods: {
     deepClone(o) {
@@ -346,7 +367,7 @@ export default {
     getTagList() {
       this.highLightArr = [];
       this.namelabutArr = [];
-      this.$network.get("/customer-service/tag/list").then((res) => {
+      this.$network.get("/customer-service/grouptag/list").then((res) => {
         console.log("------data-----", res.data);
         this.cusSignList = res.data;
 
@@ -354,37 +375,45 @@ export default {
           return item.children;
         });
         let childTag = [].concat.apply([], allChildTag);
-        console.log(childTag);
+        console.log(childTag, "---");
         this.namelabutArr = [].concat.apply([], allChildTag);
-        // console.log('-----列表----', this.baseForm.includeCus)
-        // this.baseForm.includeCus.forEach((item) => {
-        //   console.log(item)
-        //   childTag.forEach((chItem, chIndex) => {
-        //     if (item.tagid == chItem.tagid) {
-        //       this.highLightArr.push(chItem)
-        //     }
-        //   })
-        //   // console.log("-----列表----", this.highLightArr);
-        // })
+   
       });
     },
-    // 点击标签
-    clickSign(index, subindex, tagid) {
-      const cusSignList = this.deepClone(this.cusSignList);
-      let checked = cusSignList[index].children[subindex].checked;
-      if (checked) {
-        cusSignList[index].children[subindex].checked = false;
+
+    clickSign(list, index) {
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid;
+      });
+      console.log(result);
+      if (result > -1) {
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1);
+          }else{
+            
+          }
+        });
       } else {
-        cusSignList[index].children[subindex].checked = true;
+        this.highLightArr.push(list);
       }
-      this.$set(this, "cusSignList", cusSignList);
+
+      let obj = {};
+
+let peon = this.highLightArr.reduce((cur,next) => {
+    obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
+    return cur;
+},[]) //设置cur默认类型为数组，并且初始值为空的数组
+// console.log(peon);
+this.datatupList = peon
+      // console.log(list);
     },
     goBack() {
       this.$router.go(-1);
     },
     formatDate,
     onLoad() {
-      console.log("屏幕滚动");
+      // console.log("屏幕滚动");
 
       this.pageInfo.page += 1;
 
@@ -392,39 +421,20 @@ export default {
     },
     // 保存客户标签
     saveCus() {
-      let checkedSign = [];
-      this.cusSignList.forEach((item) => {
-        item.children.forEach((zitem) => {
-          // console.log(item.name);
-          zitem.checked && checkedSign.push(zitem);
-        });
-      });
-      this.highLightArr = [];
-      checkedSign.forEach((item, index) => {
-        // this.highLightArr.push(item.tagid);
-        console.log(item.tagid);
-        // if (item.tagid != item.tagid) {
-
-        this.highLightArr.push(item.tagid);
-        // }
-      });
-      // this.namelabutArr.forEach((item) => {
-      //   this.highLightArr.forEach((items) => {
-      //     if (item.tagid == items.tagid) {
-      //       this.highLightArr.splice(index, 1);
-      //     }
-      //   });
-      // });
-      // var nwr = this.highLightArr;
-      // let newList = [];
-      // newList.push(new Set(this.highLightArr));
-      // console.log(checkedSign, '---------')
-      console.log(this.highLightArr, "-------------------oooo");
-      // this.baseForm.includeCus = checkedSign
+          let obj = {};
+      let peon = this.highLightArr.reduce((cur,next) => {
+    obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
+    return cur;
+},[]) //设置cur默认类型为数组，并且初始值为空的数组
+// console.log(peon);
+this.highLightArr = peon
+      
+        //  console.log(this.highLightArr, "点击保存---获取标签内容222");
+  
 
       this.chooseCusSign = false;
-      // this.getTagList();
-      // this.Screeningcustomer()
+   
+      this.groupListadd();
     },
     getSopList() {
       //获取sop规则列表
@@ -444,13 +454,65 @@ export default {
         },
       });
     },
+    // 群标签
+    groupList() {
+      this.$network
+        .get("/customer-service/groupUserTag/list", {
+          chatId: this.$route.query.id,
+        })
+        .then((res) => {
+          // const uniqueSet = new Set(res.data)
+          // const bySet = [...uniqueSet]
+          // console.log(bySet,"-----=[")
+          let obj = {};
+          let peon = res.data.reduce((cur, next) => {
+            obj[next.tagid] ? "" : (obj[next.tagid] = true && cur.push(next));
+            return cur;
+          }, []);
+          this.lableList = peon;
+          this.lableList.forEach((item) => {
+            this.highLightArr.push(item);
+          });
+        
+        });
+    },
+    groupListadd() {
+      this.$network
+        .post("/customer-service/groupUserTag/addGroupTag", {
+          chatId: this.$route.query.id,
+          tagidList: this.highLightArr,
+          // tagidList: this.datatupList,
+          // tagidList: this.lableList,
+        })
+        .then((res) => {
+          if (res.result) {
+            this.groupList();
+          }
+        });
+    },
+
+    // 删除标签
+
     lableDelet(item) {
+
       console.log(item);
-      this.lableList.forEach((items, index) => {
+      this.highLightArr.forEach((items, index) => {
         // console.log(index)
 
-        if (item == items.id) {
-          this.lableList.splice(index, 1);
+        if (item == items.tagid) {
+          this.highLightArr.splice(index, 1);
+          //      console.log(this.highLightArr, "点击删除---获取标签内容222");
+          // console.log(item);
+          this.$network
+            .get("/customer-service/groupUserTag/delete", {
+              tagid: item,
+            })
+            .then((res) => {
+              if (res.result) {
+                this.getTagList();
+                this.groupList();
+              }
+            });
         }
       });
     },
@@ -461,11 +523,12 @@ export default {
         })
         .then((res) => {
           if (res.result) {
+            this.notice = res.data.notice;
             this.show = false;
             // this.finished = true;
             this.groupId = res.data.id;
             if (res.data.owmer == res.data.userId) {
-              console.log("我是群主");
+              // console.log("我是群主");
               this.isOwmer = true;
               this.getSopList();
             }
@@ -491,7 +554,7 @@ export default {
         .then((res) => {
           this.groupName = res.data.group;
           this.groupNameList = res.data.groupUserEntityList;
-          console.log(res.data.group, "---------");
+          // console.log(res.data.group, "---------");
         });
     },
     getList() {
@@ -523,36 +586,28 @@ export default {
               item.joinScene = "通过扫描群二维码入群";
             }
             item.showName = item.showName ? item.showName : item.name;
-            console.log(item.id);
+            // console.log(item.id);
           });
           // 将新数据与老数据进行合并
           let newSetArr = this.dataList.concat(tempList);
           // this.dataList = this.dataList.concat(tempList);
           this.dataList = this.unique(newSetArr);
           // this.dataList = tempList;
-          console.log(this.dataList);
+          // console.log(this.dataList);
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
             this.finished = true;
           }
         });
     },
-    // onRefresh() {
-    //   // 清空列表数据
-    //   console.log("清空列表数据");
-    // },
-    // 去重一次
+
     unique(arr) {
       const res = new Map();
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     myclue(v) {
-      console.log(v);
+      // console.log(v);
       this.tabClick = v;
-      //   this.cardList = [];
-      //   this.page = 1;
-      //   this.inputValue = "";
-      //   this.getData();
     },
   },
 };
@@ -571,6 +626,42 @@ export default {
   // top: 50%;
   // left: 50%;
 }
+      .b_content {
+        .over-hidden {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+        .btn {
+          color: #4168f6;
+          text-align: right;
+          .van-icon {
+            vertical-align: -11%;
+            width: 28px;
+            height: 28px;
+          }
+        }
+        .tagBox {
+          display: inline-block;
+          background: #fafbff;
+          border-radius: 8px;
+          border: 2px solid #d9dae4;
+          color: #838a9d;
+          padding: 14px 16px;
+          margin-right: 16px;
+          margin-top: 16px;
+          position: relative;
+        }
+             img {
+            width: 28px;
+            width: 28px;
+            position: absolute;
+            right: -15px;
+            top: -12px;
+            background: #fff;
+          }
+      }
 .choose-warp-popup {
   border-radius: 16px 16px 0 0;
   ._top {
@@ -603,7 +694,7 @@ export default {
     box-sizing: border-box;
     padding: 24px;
     // min-height: 740px;
-    height: 70%;
+    height: 78%;
     overflow: auto;
     ._item {
       display: flex;
@@ -925,25 +1016,29 @@ export default {
       }
     }
     .lable_list {
-        .btn {
-          color: #4168f6;
-          text-align: right;
-          font-size: 28px;
-          .van-icon {
-            vertical-align: -11%;
-            width: 28px;
-            height: 28px;
-          }
+      .btn {
+        color: #4168f6;
+        text-align: right;
+        font-size: 28px;
+        .van-icon {
+          vertical-align: -11%;
+          width: 28px;
+          height: 28px;
         }
+      }
       .lable_li {
+          // display: -webkit-box;
+          // -webkit-box-orient: vertical;
+          // -webkit-line-clamp: 2;
+          // overflow: hidden;
         display: flex;
-    height: 300px;
-    overflow: hidden;
+        // height: 300px;
+        // overflow: hidden;
         flex-wrap: wrap;
         .name_item {
           margin-right: 16px;
           margin-top: 16px;
-          padding:0 16px;
+          padding: 0 16px;
           height: 68px;
           line-height: 68px;
           background: #fafbff;
