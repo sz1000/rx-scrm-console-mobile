@@ -60,8 +60,10 @@ import MaterialTemplate from '../views/MaterialTemplate/share'
 
 // 消息通知 互动提醒
 import Notice from '../views/notice/index'
+
 //朋友圈
 import CircleFriend from '../views/circleFriend/CircleFriend.vue'
+import MterialPage from '../components/materialDialog/MterialPage.vue'
 // 消息通知 日报
 import Daily from '../views/notice/daily'
 
@@ -266,6 +268,11 @@ const routes = [{
                 path: 'circleFriend',
                 name: 'circleFriend',
                 component: CircleFriend,
+            },
+            {
+                path: 'mterialPage',
+                name: 'mterialPage',
+                component: MterialPage,
             },
         ],
     },

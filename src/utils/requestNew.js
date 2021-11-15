@@ -48,30 +48,33 @@ const service = axios.create({
     //withCredentials: true, // send cookies when cross-domain requests
     //timeout: 30000, // request timeout
 })
-service.interceptors.request.use(config => {
-    // 如果有token 就携带tokon
-    const token = getStoreValue('token') //生产token
-        // const token = localStorage.getItem('token') //本地token
-    if (token) {
-        config.headers.common.token = token
+service.interceptors.request.use(
+    (config) => {
+        // 如果有token 就携带tokon
+        const token = getStoreValue('token') //生产token
+            // const token = localStorage.getItem('token') //本地token
+        if (token) {
+            config.headers.common.token = token
+        }
+        IndicatorHaveLoadCount += 1
+        if (!config.headers['noLoading']) {
+            loadingIndicator = Toast.loading(loadingService)
+            delete config.headers['noLoading']
+        } else {
+            delete config.headers['noLoading']
+        }
+        return config
+    },
+    (error) => {
+        // Indicator.close();
+        if (loadingIndicator) {
+            loadingIndicator.clear()
+        }
+        Promise.reject(error)
     }
-    IndicatorHaveLoadCount += 1
-    if (!config.headers['noLoading']) {
-        loadingIndicator = Toast.loading(loadingService)
-        delete config.headers['noLoading']
-    } else {
-        delete config.headers['noLoading']
-    }
-    return config;
-}, error => {
-    // Indicator.close();
-    if (loadingIndicator) {
-        loadingIndicator.clear()
-    }
-    Promise.reject(error);
-})
+)
 service.interceptors.response.use(
-    response => {
+    (response) => {
         let noMessage = response.config.headers.noMessage || false
         IndicatorHaveLoadCount -= 1
         if (IndicatorHaveLoadCount < 1) {
@@ -81,7 +84,7 @@ service.interceptors.response.use(
             }
         }
         const res = response.data
-        if (!noMessage && res.code != "success") {
+        if (!noMessage && res.code != 'success') {
             if (res.code == 401) {
                 // Toast('请重新登录')
                 setTimeout(function() {
@@ -94,9 +97,9 @@ service.interceptors.response.use(
                 }
             }
         }
-        return res;
+        return res
     },
-    error => {
+    (error) => {
         IndicatorHaveLoadCount -= 1
         if (IndicatorHaveLoadCount < 1) {
             IndicatorHaveLoadCount = 0

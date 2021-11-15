@@ -24,6 +24,7 @@
         <span class="box" :class="tab=='image'? 'active':''" @click="tab = 'image'">图片</span>
         <span class="box" :class="tab=='video'? 'active':''" @click="tab = 'video'">视频</span>
         <span class="box" :class="tab=='link'? 'active':''" @click="tab = 'link'">链接</span>
+        <span class="box" :class="tab=='material'? 'active':''" @click="goToMaterial('material')">素材库</span>
       </div>
       <div class="uploadImg">
         <div class="upload_wrap" v-if="tab == 'image'">
@@ -104,6 +105,10 @@ export default {
     goBack() {
       this.$router.push('/home')
     },
+    goToMaterial(v) {
+      this.tab = v
+      this.$router.push('mterialPage')
+    },
     sendMessage: _throttle(function () {
       // console.log(11111111)
       let imgArr = []
@@ -155,10 +160,12 @@ export default {
       formData.append('file', file)
       formData.append('filetype', fileType)
       formData.append('type', type)
-      this.$toast.loading()
+      this.$toast.loading({ duration: 5000 })
       uploadFile(formData).then((res) => {
-        this.$toast.clear()
-        this.lists.push(res.data.url)
+        if (res.result) {
+          this.lists.push(res.data.url)
+          this.$toast.clear()
+        }
         e.target.value = ''
       })
       // reader.readAsDataURL(file)
@@ -338,7 +345,7 @@ export default {
       font-size: 24px;
       .box {
         display: inline-block;
-        width: 212px;
+        width: 153px;
         height: 62px;
         border-radius: 31px;
         border: 2px solid #c0c4cc;
