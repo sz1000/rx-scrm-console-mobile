@@ -2,7 +2,9 @@
     <div class="wrap">
         <div class="tips_icon">
             <img class="icon" src="@/assets/images/icon_tip.png" alt="">
-            <div class="text">温馨提示：数据统计来自{{formatDate(detail.batchDate,"yyyy/MM/dd")}}全天数据</div>
+            <div class="text" v-if="type == 1 || type == 2">温馨提示：数据统计来自{{formatDate(detail.batchDate,"yyyy/MM/dd")}}全天数据</div>
+            <div class="text" v-if="type == 3 || type == 4">温馨提示：数据统计来自{{formatDate(detail.firstDate,"yyyy/MM/dd")}}-{{formatDate(detail.lastDate,"yyyy/MM/dd")}}当周数据</div>
+            <div class="text" v-if="type == 5 || type == 6">温馨提示：数据统计来自{{formatDate(detail.batchMonth,"yyyy/MM")}}月数据</div>
         </div>
         <div class="item_wrap">
             <div class="tit_box">
@@ -11,22 +13,26 @@
             <div class="total_wrap">
                 <div class="total_box">
                     <div class="total">
-                        <div class="num">{{detail.newCustomerCount}}/{{detail.allCustomerCount}}</div>
-                        <div class="text">今日新增/全部客户</div>
+                        <div class="num">{{detail[typeKey + 'CustomerCount']}}/{{detail.allCustomerCount}}</div>
+                        <!-- <div class="num">{{detail.newCustomerCount || detail.weekCustomerCount}}/{{detail.allCustomerCount}}</div> -->
+                        <div class="text">{{dataTypeName}}新增/全部客户</div>
                     </div>
                     <div class="total">
-                        <div class="num">{{detail.newClueCount}}/{{detail.allClueCount}}</div>
-                        <div class="text">今日新增/全部线索</div>
+                        <div class="num">{{detail[typeKey + 'ClueCount']}}/{{detail.allClueCount}}</div>
+                        <!-- <div class="num">{{detail.newClueCount || detail.weekClueCount}}/{{detail.allClueCount}}</div> -->
+                        <div class="text">{{dataTypeName}}新增/全部线索</div>
                     </div>
                 </div>
                 <div class="total_box">
                     <div class="total">
-                        <div class="num">{{detail.newGroupCount}}/{{detail.allGroupCount}}</div>
-                        <div class="text">今日新增/全部群聊</div>
+                        <div class="num">{{detail[typeKey + 'GroupCount']}}/{{detail.allGroupCount}}</div>
+                        <!-- <div class="num">{{detail.newGroupCount || detail.weekGroupCount}}/{{detail.allGroupCount}}</div> -->
+                        <div class="text">{{dataTypeName}}新增/全部群聊</div>
                     </div>
                     <div class="total">
-                        <div class="num">{{detail.newInGroupCount}}/{{detail.newOutGroupCount}}</div>
-                        <div class="text">今日入群/退群</div>
+                        <div class="num">{{detail[typeKey + 'InGroupCount']}}/{{detail[typeKey + 'OutGroupCount']}}</div>
+                        <!-- <div class="num">{{detail.newInGroupCount || detail.weekInGroupCount}}/{{detail.newOutGroupCount || detail.weekOutGroupCount}}</div> -->
+                        <div class="text">{{dataTypeName}}入群/退群</div>
                     </div>
                 </div>
             </div>
@@ -43,20 +49,23 @@
             </div>
             <div class="item_box">
                 <div class="item">
-                    <div class="label">今日新增/全部商机</div>
-                    <div class="val">{{detail.newBusOppCount}}/{{detail.allBusOppCount}}</div>
+                    <div class="label">{{dataTypeName}}新增/全部商机</div>
+                    <div class="val">{{detail[typeKey + 'BusOppCount']}}/{{detail.allBusOppCount}}</div>
+                    <!-- <div class="val">{{detail.newBusOppCount || detail.weekBusOppCount}}/{{detail.allBusOppCount}}</div> -->
                 </div>
                 <div class="item">
                     <div class="label">正在进行中商机</div>
                     <div class="val">{{detail.followUpBusOppCount}}</div>
                 </div>
                 <div class="item">
-                    <div class="label">今日新增商机金额/总金额</div>
-                    <div class="val">{{handleMoneyFun(detail.newBusOppPrice)}}/{{handleMoneyFun(detail.allBusOppPrice)}}</div>
+                    <div class="label">{{dataTypeName}}新增商机金额/总金额</div>
+                    <div class="val">{{handleMoneyFun(detail[typeKey + 'BusOppPrice'])}}/{{handleMoneyFun(detail.allBusOppPrice)}}</div>
+                    <!-- <div class="val">{{handleMoneyFun(detail.newBusOppPrice) || handleMoneyFun(weekBusOppPrice)}}/{{handleMoneyFun(detail.allBusOppPrice)}}</div> -->
                 </div>
                 <div class="item">
-                    <div class="label">今日输单/失效商机</div>
-                    <div class="val">{{detail.newLostBusOppCount}}/{{detail.newInvalidBusOppCount}}</div>
+                    <div class="label">{{dataTypeName}}输单/失效商机</div>
+                    <div class="val">{{detail[typeKey + 'LostBusOppCount']}}/{{detail[typeKey + 'InvalidBusOppCount']}}</div>
+                    <!-- <div class="val">{{detail.newLostBusOppCount || detail.weekLostBusOppCount}}/{{detail.newInvalidBusOppCount}}</div> -->
                 </div>
             </div>
         </div>
@@ -66,7 +75,7 @@
             </div>
             <div class="item_box">
                 <div class="item">
-                    <div class="label">今日待拜访/已拜访客户</div>
+                    <div class="label">{{dataTypeName}}待拜访/已拜访客户</div>
                     <div class="val">{{detail.prepareVisitCount}}/{{detail.visitedCount}}</div>
                 </div>
                 <div class="item">
@@ -82,8 +91,9 @@
             </div>
             <div class="item_box">
                 <div class="item">
-                    <div class="label">今日朋友圈未发表/已发表次数</div>
-                    <div class="val">{{detail.newWmNotSendCount}}/{{detail.newWmSendCount}}</div>
+                    <div class="label">{{dataTypeName}}朋友圈未发表/已发表次数</div>
+                    <div class="val">{{detail[typeKey + 'WmNotSendCount']}}/{{detail[typeKey + 'WmSendCount']}}</div>
+                    <!-- <div class="val">{{detail.newWmNotSendCount || detail.weekWmNotSendCount}}/{{detail.newWmSendCount || detail.weekWmSendCount}}</div> -->
                 </div>
                 <div class="item">
                     <div class="label">累计发表朋友圈</div>
@@ -134,12 +144,14 @@
             </div>
             <div class="item_box">
                 <div class="item">
-                    <div class="label">今日素材浏览人数/浏览次数</div>
-                    <div class="val">{{detail.newMaterialVisitors}}/{{detail.newMaterialBrowseTimes}}</div>
+                    <div class="label">{{dataTypeName}}素材浏览人数/浏览次数</div>
+                    <div class="val">{{detail[typeKey + 'MaterialVisitors']}}/{{detail[typeKey + 'MaterialBrowseTimes']}}</div>
+                    <!-- <div class="val">{{detail.newMaterialVisitors || detail.weekMaterialVisitors}}/{{detail.newMaterialBrowseTimes || detail.weekMaterialBrowseTimes}}</div> -->
                 </div>
                 <div class="item">
-                    <div class="label">今日素材浏览时长</div>
-                    <div class="val">{{secondToDate(detail.newMaterialBrowseDuration)}}</div>
+                    <div class="label">{{dataTypeName}}素材浏览时长</div>
+                    <div class="val">{{secondToDate(detail[typeKey + 'MaterialBrowseDuration'])}}</div>
+                    <!-- <div class="val">{{secondToDate(detail.newMaterialBrowseDuration) || secondToDate(weekMaterialBrowseDuration)}}</div> -->
                 </div>
                 <div class="item">
                     <div class="label">累计素材浏览总人数/总次数</div>
@@ -160,7 +172,9 @@ import { formatDate,handleMoney } from '@/utils/tool'
 import commonFun from '../../utils/commonToken'
 import { 
     Corp_getCrop,
-    dataReport_getDataReportDaily
+    dataReport_getDataReportDaily,
+    dataReport_getDataReportWeekly,
+    dataReport_getDataReportMonthly
 } from '@/api/notice'
 export default {
 
@@ -168,6 +182,10 @@ export default {
         return {
             type: this.$route.query.taskTyp,
             batchDate: this.$route.query.batchDate,
+            firstDate: this.$route.query.firstDate,
+            lastDate: this.$route.query.lastDate,
+            batchMonth: this.$route.query.batchMonth,
+            id: this.$route.query.id,
             businessPopover: false,
             groupPopover: false,
             detail: {
@@ -217,36 +235,41 @@ export default {
         corpId(){
             return this.$store.getters.corpId
         },
-        tipsTitle(){
-            let str = ''
-            if(this.type == 1){
-                str = '全天数据'
-            }else if(this.type == 2){
-                str = '当周数据'
-            }else {
-                str = '月数据'
-            }
-            return str
-        },
         userNo(){
             return this.$store.getters.userNo
         },
+        dataTypeName(){
+            let obj = {
+                1: '今日',
+                2: '今日',
+                3: '本周',
+                4: '本周',
+                5: '本月',
+                6: '本月',
+            }
+            return obj[this.type]
+        },
+        typeKey(){
+            let obj = {
+                1: 'new',
+                2: 'new',
+                3: 'week',
+                4: 'week',
+                5: 'month',
+                6: 'month',
+            }
+            return obj[this.type]
+        },
     },
     created() {
-        console.log("token",this.token)
-        // if (!this.token) {
-        //   CommonHome.getWxToken();
-            commonFun.getWxAppid()
-            console.log("获取token")
-        // }
+        console.log("token")
+        commonFun.getWxAppid()
     },
     mounted(){
-            setTimeout(() => {
-      this.getCorpId()
-       console.log("请求接口")
- 
-    }, 2000);
-      
+        setTimeout(() => {
+            this.getCorpId()
+            console.log("请求接口")
+        }, 2000);
     },
     methods: {
         formatDate,
@@ -260,12 +283,40 @@ export default {
             })
         },
         getDetail(){    //获取数据详情
-            console.log('_data',Base64.encode(this.userNo),Base64.encode(this.corpId))
-            dataReport_getDataReportDaily(Base64.encode(this.userNo),Base64.encode(this.corpId),this.batchDate).then(res => {
-                if(res.result){
-                    this.detail = res.data
-                }
-            })
+            let _data = {
+                corpId: Base64.encode(this.corpId),
+                userNo: Base64.encode(this.userNo),
+                datatyp: this.type,
+                id: this.id
+            }
+            console.log('_data',_data)
+            if(this.type == 1 || this.type == 2){
+                // 日报
+                _data.batchDate = this.batchDate
+                dataReport_getDataReportDaily(_data).then(res => {
+                    if(res.result){
+                        this.detail = res.data
+                    }
+                })
+            }else if(this.type == 3 || this.type == 4){
+                //周报
+                _data.firstDate = this.firstDate
+                _data.lastDate = this.lastDate
+                dataReport_getDataReportWeekly(_data).then(res => {
+                    if(res.result){
+                        this.detail = res.data
+                    }
+                })
+            }else{
+                //月报
+                _data.batchMonth = this.batchMonth
+                dataReport_getDataReportMonthly(_data).then(res => {
+                    if(res.result){
+                        this.detail = res.data
+                    }
+                })
+            }
+            
         },
         handleMoneyFun(val){
             let str = 0
@@ -291,7 +342,7 @@ export default {
                 }
             }
             return _str
-        }
+        },
     },
     filters: {
         filterNum(val,type){
@@ -372,7 +423,7 @@ export default {
                 position: absolute;
                 top: 50%;
                 left: 0;
-                transform: translateY(-50%);
+                transform: translateY(-46%);
             }
             // &::after{
             //     content: "";
