@@ -23,7 +23,7 @@
                 "></el-input>
             </el-form-item>
             <!-- 选择员工 -->
-            <el-form-item label="选择员工:" prop="staffs">
+            <el-form-item label="群发员工:" prop="staffs">
               <el-select class="taskNameselect" v-model="baseForm.staffs" v-loadmore="loadMore" style="width: 100%" multiple
                          placeholder="请选择群发员工（可多选）" @change="staffsListChange">
                 <el-option :label="item.name" :value="item.userNo" v-for="item in staffsList" :key="item.id"></el-option>
@@ -31,7 +31,7 @@
             </el-form-item>
 
             <!-- 选择客户 -->
-            <el-form-item label="选择客户:" prop="selectCusType">
+            <el-form-item label="群发客户:" prop="selectCusType">
               <el-radio-group v-model="baseForm.selectCusType" @change="selecusChange">
                 <el-radio :label="2">全部客户</el-radio>
                 <el-radio :label="1">筛选客户</el-radio>
