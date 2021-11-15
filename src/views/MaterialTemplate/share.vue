@@ -1,7 +1,7 @@
 <template>
     <div class="material-template">
         <div v-if="userData" class="user-info">
-            <img class="left" :src="userData.avatar" alt="">
+            <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
             <ul class="center">
                 <li class="name one-txt-cut">{{ userData.name }}</li>
                 <li class="company one-txt-cut">{{ userData.departments }}</li>
@@ -134,13 +134,13 @@ export default {
 
                 shareTitle = title
                 imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_article.png'
-                desc = contentAbstract
+                desc = contentAbstract ? contentAbstract : title
             } else if (this.materialType == 2) {
                 let {name, cover, fileSize} = this.formData
 
                 shareTitle = name
                 imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'
-                desc = fileSize ? byteConvert(fileSize) : ''
+                desc = fileSize ? byteConvert(fileSize) : name
             }
             wxShare(shareTitle, url, imgUrl, desc)
         },
@@ -260,6 +260,9 @@ export default {
                 width: auto !important;
                 height: auto !important;
                 max-width: 100% !important;
+            }
+            section {
+                max-width: 100%;
             }
         }
     }

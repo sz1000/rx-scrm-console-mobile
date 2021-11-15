@@ -83,7 +83,8 @@ export default {
         async doChange(data) {
             this.params = {
                 id: this.opportunityId,
-                stageNo: data.sortNo
+                stageNo: data.sortNo,
+                status: 0
             }
             let { code, msg } = await ModifyOpportunitiesStatus(this.params)
 

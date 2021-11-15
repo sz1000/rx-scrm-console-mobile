@@ -36,14 +36,56 @@
           <p class="num">{{ datatTite.joinsum || "0" }}</p>
           <p class="num_tite">今日新增</p>
         </div>
-        <!-- <div>
-          <p class="num">{{ datatTite.leavesum }}</p>
-          <p class="num_tite">今日退群</p>
-        </div> -->
       </div>
     </div>
+    <div class="announcement">
+      <span>群公告</span>
+      <span class="ling"></span>
+      <!-- <span class="iconfont icon-shengyin"></span> -->
+      <img class="voice_icon" src="../../images/icon_oice.png" alt="" />
+      <span>{{ notice || "暂无内容" }}</span>
+    </div>
     <!-- 群标签 -->
-
+    <div class="lable_box">
+      <div class="lable_top">
+        <div class="lable_title">群标签</div>
+        <div class="setting_btn" @click="chooseCusSign = true">编辑</div>
+      </div>
+      <!-- <div class="lable_list">
+        <div class="lable_li">
+          <span class="name_item" v-for="item in lableList" :key="item.id">
+            {{ item.name }}
+            <img
+              src="../../assets/images/delte.png"
+              alt=""
+              @click="lableDelet(item.tagid)"
+            />
+          </span>
+        </div>
+        <div class="btn" @click="isShowPerson = !isShowPerson" v-show="lableList.length >5">
+          {{ isShowPerson ? "收起" : "展开" }}
+          <van-icon name="arrow-down" />
+        </div>
+      </div> -->
+           <div class="b_content">
+          <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+            <div ref="spanBox">
+               <span class="name_item tagBox" v-for="item in lableList" :key="item.id">
+            {{ item.name }}
+            <img
+              src="../../assets/images/delte.png"
+              alt=""
+              @click="lableDelet(item.tagid)"
+            />
+          </span>
+            </div>
+          </div>
+          <div class="btn" @click="isShowPerson = !isShowPerson" v-show="lableList.length >10">
+            {{ isShowPerson ? "收起" : "展开" }}
+            <van-icon name="arrow-down" />
+          </div>
+        </div>
+    </div>
     <!-- 群sop -->
     <div class="sop_box">
       <div class="sop_top">
@@ -184,6 +226,50 @@
     <van-overlay :show="show">
       <van-loading class="loding" type="spinner" color="#fff" size="24" />
     </van-overlay>
+    <!-- 群标签 -->
+    <van-popup
+      v-model="chooseCusSign"
+      round
+      class="choose-warp-popup"
+      position="bottom"
+      :style="{ height: '70%' }"
+    >
+      <div class="_top">
+        <div class="fill"></div>
+        <div>群标签</div>
+        <div class="fill" @click="chooseCusSign = false">
+          <i class="el-icon-close"></i>
+        </div>
+      </div>
+      <!-- 标签组 -->
+      <div class="_center">
+        <div class="_item" v-for="(item, index) in cusSignList" :key="index">
+          <div class="group-title">{{ item.name }}</div>
+          <div class="group-label">
+            <!--   :class="[signItm.checked ? 'active' : '']" -->
+            <div
+              class="label-item"
+              :class="{
+                active:
+                  highLightArr.findIndex((item) => {
+                    return item.tagid == signItm.tagid;
+                  }) > -1,
+              }"
+              @click="clickSign(signItm, signItm.tagid)"
+              v-for="(signItm, signIdx) in item.children"
+              :key="`${index} - ${signIdx}`"
+            >
+              {{ signItm.name }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 底部按钮 -->
+      <div class="_bottom">
+        <div class="_button cancel" @click="chooseCusSign = false">取消</div>
+        <div class="_button save" @click="saveCus">保存</div>
+      </div>
+    </van-popup>
   </div>
 </template>         
 <script>
@@ -193,7 +279,14 @@ import { sop_groupSopList } from "@/api/sop";
 export default {
   data() {
     return {
+      notice: "",
+      datatupList:[],
       groupNameList: [],
+      group_tagid: [],
+      tagidLis: [],
+      highLightArr: [],
+      isShowPerson: false,
+      chooseCusSign: false, // 选择客户标签
       groupName: {},
       tabClick: 1,
       channelList: [],
@@ -219,36 +312,129 @@ export default {
       },
       // 群用户列表
       dataList: [],
-
+      cusSignList: [],
       sopList: [], //群 sop 列表
       groupId: "",
       group: "",
       isOwmer: false, //是否群主
+      lableList: [],
     };
   },
   created() {
     this.group = this.$route.query.grouid;
+    this.getTagList();
+    this.groupList();
   },
   mounted() {
     setTimeout(() => {
       this.pageInfo.page = 1;
       this.getGroupDetailtop();
       this.getGroupDetail();
-
+      // console.log(this.highLightArr, "首次---获取标签内容");
+      //   console.log(this.lableList, "首次---获取标签内容");
       this.getList();
     }, 3000);
+  
   },
   methods: {
+    deepClone(o) {
+      // 判断如果不是引用类型，直接返回数据即可
+      if (
+        typeof o === "string" ||
+        typeof o === "number" ||
+        typeof o === "boolean" ||
+        typeof o === "undefined"
+      ) {
+        return o;
+      } else if (Array.isArray(o)) {
+        // 如果是数组，则定义一个新数组，完成复制后返回
+        // 注意，这里判断数组不能用typeof，因为typeof Array 返回的是object
+        // console.log(typeof []); // --> object
+        var _arr = [];
+        o.forEach((item) => {
+          _arr.push(item);
+        });
+        return _arr;
+      } else if (typeof o === "object") {
+        var _o = {};
+        for (let key in o) {
+          _o[key] = deepClone(o[key]);
+        }
+        return _o;
+      }
+    },
+    //客户标签列表接口
+    getTagList() {
+      this.highLightArr = [];
+      this.namelabutArr = [];
+      this.$network.get("/customer-service/grouptag/list").then((res) => {
+        console.log("------data-----", res.data);
+        this.cusSignList = res.data;
+
+        let allChildTag = res.data.map((item) => {
+          return item.children;
+        });
+        let childTag = [].concat.apply([], allChildTag);
+        console.log(childTag, "---");
+        this.namelabutArr = [].concat.apply([], allChildTag);
+   
+      });
+    },
+
+    clickSign(list, index) {
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid;
+      });
+      console.log(result);
+      if (result > -1) {
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1);
+          }else{
+            
+          }
+        });
+      } else {
+        this.highLightArr.push(list);
+      }
+
+      let obj = {};
+
+let peon = this.highLightArr.reduce((cur,next) => {
+    obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
+    return cur;
+},[]) //设置cur默认类型为数组，并且初始值为空的数组
+// console.log(peon);
+this.datatupList = peon
+      // console.log(list);
+    },
     goBack() {
       this.$router.go(-1);
     },
     formatDate,
     onLoad() {
-      console.log("屏幕滚动");
+      // console.log("屏幕滚动");
 
       this.pageInfo.page += 1;
 
       this.getList();
+    },
+    // 保存客户标签
+    saveCus() {
+          let obj = {};
+      let peon = this.highLightArr.reduce((cur,next) => {
+    obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
+    return cur;
+},[]) //设置cur默认类型为数组，并且初始值为空的数组
+// console.log(peon);
+this.highLightArr = peon
+      
+        //  console.log(this.highLightArr, "点击保存---获取标签内容222");
+  
+
+      this.chooseCusSign = false;
+   
+      this.groupListadd();
     },
     getSopList() {
       //获取sop规则列表
@@ -268,6 +454,68 @@ export default {
         },
       });
     },
+    // 群标签
+    groupList() {
+      this.$network
+        .get("/customer-service/groupUserTag/list", {
+          chatId: this.$route.query.id,
+        })
+        .then((res) => {
+          // const uniqueSet = new Set(res.data)
+          // const bySet = [...uniqueSet]
+          // console.log(bySet,"-----=[")
+          let obj = {};
+          let peon = res.data.reduce((cur, next) => {
+            obj[next.tagid] ? "" : (obj[next.tagid] = true && cur.push(next));
+            return cur;
+          }, []);
+          this.lableList = peon;
+          this.lableList.forEach((item) => {
+            this.highLightArr.push(item);
+          });
+        
+        });
+    },
+    groupListadd() {
+      this.$network
+        .post("/customer-service/groupUserTag/addGroupTag", {
+          chatId: this.$route.query.id,
+          tagidList: this.highLightArr,
+          // tagidList: this.datatupList,
+          // tagidList: this.lableList,
+        })
+        .then((res) => {
+          if (res.result) {
+            this.groupList();
+          }
+        });
+    },
+
+    // 删除标签
+
+    lableDelet(item) {
+
+      console.log(item);
+      this.highLightArr.forEach((items, index) => {
+        // console.log(index)
+
+        if (item == items.tagid) {
+          this.highLightArr.splice(index, 1);
+          //      console.log(this.highLightArr, "点击删除---获取标签内容222");
+          // console.log(item);
+          this.$network
+            .get("/customer-service/groupUserTag/delete", {
+              tagid: item,
+            })
+            .then((res) => {
+              if (res.result) {
+                this.getTagList();
+                this.groupList();
+              }
+            });
+        }
+      });
+    },
     getGroupDetail() {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
@@ -275,11 +523,12 @@ export default {
         })
         .then((res) => {
           if (res.result) {
+            this.notice = res.data.notice;
             this.show = false;
             // this.finished = true;
             this.groupId = res.data.id;
             if (res.data.owmer == res.data.userId) {
-              console.log("我是群主");
+              // console.log("我是群主");
               this.isOwmer = true;
               this.getSopList();
             }
@@ -305,7 +554,7 @@ export default {
         .then((res) => {
           this.groupName = res.data.group;
           this.groupNameList = res.data.groupUserEntityList;
-          console.log(res.data.group, "---------");
+          // console.log(res.data.group, "---------");
         });
     },
     getList() {
@@ -337,36 +586,28 @@ export default {
               item.joinScene = "通过扫描群二维码入群";
             }
             item.showName = item.showName ? item.showName : item.name;
-            console.log(item.id);
+            // console.log(item.id);
           });
           // 将新数据与老数据进行合并
           let newSetArr = this.dataList.concat(tempList);
           // this.dataList = this.dataList.concat(tempList);
           this.dataList = this.unique(newSetArr);
           // this.dataList = tempList;
-          console.log(this.dataList);
+          // console.log(this.dataList);
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
             this.finished = true;
           }
         });
     },
-    // onRefresh() {
-    //   // 清空列表数据
-    //   console.log("清空列表数据");
-    // },
-    // 去重一次
+
     unique(arr) {
       const res = new Map();
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     myclue(v) {
-      console.log(v);
+      // console.log(v);
       this.tabClick = v;
-      //   this.cardList = [];
-      //   this.page = 1;
-      //   this.inputValue = "";
-      //   this.getData();
     },
   },
 };
@@ -384,6 +625,143 @@ export default {
 /deep/ .van-loading {
   // top: 50%;
   // left: 50%;
+}
+      .b_content {
+        .over-hidden {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+        .btn {
+          color: #4168f6;
+          text-align: right;
+          .van-icon {
+            vertical-align: -11%;
+            width: 28px;
+            height: 28px;
+          }
+        }
+        .tagBox {
+          display: inline-block;
+          background: #fafbff;
+          border-radius: 8px;
+          border: 2px solid #d9dae4;
+          color: #838a9d;
+          padding: 14px 16px;
+          margin-right: 16px;
+          margin-top: 16px;
+          position: relative;
+        }
+             img {
+            width: 28px;
+            width: 28px;
+            position: absolute;
+            right: -15px;
+            top: -12px;
+            background: #fff;
+          }
+      }
+.choose-warp-popup {
+  border-radius: 16px 16px 0 0;
+  ._top {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 24px;
+    justify-content: space-between;
+    height: 88px;
+    background: #fafbff;
+    border-radius: 16px 16px 0 0;
+    line-height: 88px;
+    text-align: center;
+    font-size: 28px;
+    color: #3c4353;
+    letter-spacing: 0;
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+    border-bottom: 1px solid #f0f2f7;
+    .fill {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      font-size: 32px;
+    }
+  }
+  ._center {
+    box-sizing: border-box;
+    padding: 24px;
+    // min-height: 740px;
+    height: 78%;
+    overflow: auto;
+    ._item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      .group-title {
+        height: 68px;
+        line-height: 68px;
+        width: 112px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 28px;
+        color: #3c4353;
+        font-weight: 500;
+        margin-right: 32px;
+      }
+      .group-label {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        .label-item {
+          box-sizing: border-box;
+          margin-bottom: 16px;
+          height: 68px;
+          background: #fafbff;
+          border: 1px solid #d9dae4;
+          border-radius: 8px;
+          line-height: 68px;
+          padding: 0 16px;
+          font-size: 28px;
+          color: #838a9d;
+          font-weight: 400;
+          margin-right: 16px;
+          &.active {
+            background: #4168f6;
+            border: 1px solid !important;
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+  ._bottom {
+    padding: 0 24px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ._button {
+      width: calc((100% - 24px) / 2);
+      height: 80px;
+      box-sizing: border-box;
+      line-height: 80px;
+      font-size: 28px;
+      text-align: center;
+      border-radius: 8px;
+      font-weight: 400;
+      &.cancel {
+        border: 1px solid #4168f6;
+        color: #4168f6;
+      }
+      &.save {
+        color: #fff;
+        background: #4168f6;
+      }
+    }
+  }
 }
 .headerTitle {
   background: #fff;
@@ -433,11 +811,29 @@ export default {
 .warp-portrait {
   /* padding: 24px; */
   /* background: #838a9d; */
+  .announcement {
+    display: flex;
+    padding: 12px 0 12px 24px;
+    align-items: center;
+    color: #3c4353;
+    font-size: 24px;
+    .ling {
+      margin: 0 8px;
+      width: 1px;
+      height: 24px;
+      background: #3c4353;
+    }
+    .voice_icon {
+      margin-right: 8px;
+      width: 24px;
+      height: 24px;
+    }
+  }
   .sop_box {
     width: 100%;
     min-height: 120px;
     background: @white;
-    margin-top: 24px;
+    // margin-top: 24px;
     padding-top: 24px;
     .sop_top {
       display: flex;
@@ -537,6 +933,129 @@ export default {
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+          }
+        }
+      }
+    }
+  }
+  .lable_box {
+    width: 100%;
+    min-height: 120px;
+    background: @white;
+    // margin-top: 24px;
+    padding: 24px;
+    margin-bottom: 24px;
+    .lable_top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      // padding: 0 24px;
+      .lable_title {
+        font-size: 28px;
+        line-height: 40px;
+        font-weight: bold;
+        color: @fontMain;
+        padding-left: 20px;
+        position: relative;
+        &::before {
+          content: "";
+          width: 8px;
+          height: 28px;
+          background: @main;
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+      .setting_btn {
+        width: 124px;
+        height: 68px;
+        font-size: 28px;
+        line-height: 66px;
+        border: 1px solid @bdColor;
+        border-radius: 8px;
+        color: @fontSub2;
+        padding-left: 52px;
+        position: relative;
+        cursor: pointer;
+        &::before {
+          content: "";
+          width: 32px;
+          height: 32px;
+          background: url("../../assets/images/edit.png") no-repeat;
+          background-size: 100%;
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+      .redact_btn {
+        width: 124px;
+        height: 68px;
+        font-size: 28px;
+        line-height: 66px;
+        border: 1px solid @bdColor;
+        border-radius: 8px;
+        color: @fontSub2;
+        padding-left: 52px;
+        position: relative;
+        cursor: pointer;
+        &::before {
+          content: "";
+          width: 32px;
+          height: 32px;
+          background: url("../../assets/images/icon_setting.png") no-repeat;
+          background-size: 100%;
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+    .lable_list {
+      .btn {
+        color: #4168f6;
+        text-align: right;
+        font-size: 28px;
+        .van-icon {
+          vertical-align: -11%;
+          width: 28px;
+          height: 28px;
+        }
+      }
+      .lable_li {
+          // display: -webkit-box;
+          // -webkit-box-orient: vertical;
+          // -webkit-line-clamp: 2;
+          // overflow: hidden;
+        display: flex;
+        // height: 300px;
+        // overflow: hidden;
+        flex-wrap: wrap;
+        .name_item {
+          margin-right: 16px;
+          margin-top: 16px;
+          padding: 0 16px;
+          height: 68px;
+          line-height: 68px;
+          background: #fafbff;
+          border-radius: 8px;
+          border: 1px solid #d9dae4;
+          font-weight: 400;
+          color: #838a9d;
+          font-size: 28px;
+          position: relative;
+
+          img {
+            width: 28px;
+            width: 28px;
+            position: absolute;
+            right: -15px;
+            top: -12px;
+            background: #fff;
           }
         }
       }

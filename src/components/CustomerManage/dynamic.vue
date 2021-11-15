@@ -14,7 +14,7 @@
         </div>
 
         <ul class="dynamic-nav">
-            <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index, 'red-point': isPortrait == 1 && dynamicContentType == 3 && showRedPoint}">{{ i }}</li>
+            <li v-for="(i, index) in dynamicNavList" :key="i" @click="changeDynamicNav(index)" :class="{active: dynamicContentType == index, 'red-point': isPortrait == 1 && i == '消息通知' && showRedPoint}">{{ i }}</li>
         </ul>
 
         <div v-if="timeLineList && timeLineList.length" class="timeLine">

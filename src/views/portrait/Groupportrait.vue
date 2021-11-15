@@ -53,7 +53,7 @@
     </div>
     <!-- 列表 -->
     <div>
-      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+      <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <ul>
           <!--  -->
           <li class="lsits list-warp" v-for="(item, index) in dataList" :key="index">
@@ -152,8 +152,10 @@ export default {
   methods: {
     getMethod() {
       if (!this.chatId) {
+        console.log('no chatId')
         commonFun.getWxAppid()
       } else {
+        console.log('init',this.chatId)
         this.init()
       }
     },

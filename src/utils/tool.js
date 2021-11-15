@@ -178,8 +178,6 @@ export function sendChatMessage(
     enterChat,
     content,
     imageId,
-    videoId,
-    fileId
 ) {
     Getticket({ url: location.href }).then((res) => {
         wx.config({
@@ -204,11 +202,16 @@ export function sendChatMessage(
                 function(res) {
                     let typeData = null
                     if (content) {
+                        let { link, title, desc, imgUrl } = content
+
                         typeData = {
                             msgtype, //消息类型，必填
                             enterChat, //为true时表示发送完成之后顺便进入会话，仅移动端3.1.10及以上版本支持该字段
-                            text: {
-                                content, //文本内容
+                            news: {
+                                link, //H5消息页面url 必填
+                                title, //H5消息标题
+                                desc, //H5消息摘要
+                                imgUrl, //H5消息封面图片URL
                             },
                         }
                     } else if (imageId) {

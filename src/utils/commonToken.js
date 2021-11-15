@@ -28,13 +28,7 @@ const getWxAppid = function() {
             // alert(authCode)
 
         if (!authCode) {
-
-            let state_paras;
-
-            if (window.location.href.indexOf('notice') > -1) {
-                state_paras = queryObj.taskType + "|" + queryObj.noticeId
-            }
-
+            console.log('no authCode')
             http.get('/user-service/m/user/getappid', {
                 redirect_uri: window.location.pathname,
             }).then((res) => {
@@ -49,6 +43,7 @@ const getWxAppid = function() {
             })
         } else {
             // alert('----getWxCofig----前')
+            console.log('authCode true=>',authCode)
             getWxCofig(authCode)
         }
     }
@@ -169,7 +164,7 @@ function getAgent(res) {
                         // alert(("群id"+ res.chatId))
                         if (res.err_msg == 'getCurExternalChat:ok') {
                             // localStorage.setItem('chatId', res.chatId)
-                            sessionStorage.setItem('chatId', res.chatId)
+                            // sessionStorage.setItem('chatId', res.chatId)
                             store.commit('setChatId', res.chatId)
                         } else {
                             //错误处理

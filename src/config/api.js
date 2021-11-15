@@ -29,7 +29,7 @@ export const OpportunitiesList = data => { return http.get(`${customerServiceApi
 export const AddOpportunities = data => { return http.post(`${customerServiceApi}/business-opportunities`, data)} // 新增商机
 export const ModifyOpportunities = data => { return http.put(`${customerServiceApi}/business-opportunities`, data)} // 修改商机
 export const DeleteOpportunities = data => { return http.delete(`${customerServiceApi}/business-opportunities/${data}`)} // 删除商机
-export const ModifyOpportunitiesStatus = data => { return http.put(`${customerServiceApi}/business-opportunities/status/${data.id}?stageNo=${data.stageNo}`)} // 修改商机对应阶段
+export const ModifyOpportunitiesStatus = data => { return http.put(`${customerServiceApi}/business-opportunities/status/${data.id}?stageNo=${data.stageNo}&status=${data.status}`)} // 修改商机对应阶段
 export const OpportunitiesStageList = data => { return http.get(`${customerServiceApi}/business-opportunities/stages/${data.corpId}?isEnd=${data.isEnd}&isAdd=${data.isAdd}`)} // 获取商机阶段概要信息
 export const StageReasonList = data => { return http.get(`${customerServiceApi}/business-opportunities/stage-reason/${data}`)} // 获取阶段原因
 export const ChargeUserInfoList = data => { return http.get(`${customerServiceApi}/business-opportunities/charge-user-info/${data}`)} // 获取可选商机负责人
