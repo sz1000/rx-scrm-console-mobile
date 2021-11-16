@@ -147,7 +147,7 @@
         <div>
           <div class="appendix-add-warp butaddWarp">
             <button class="addAppendix-button NewAddList" @click="addAppendix">
-              <i class="el-icon-circle-plus-outline"></i> 新增素材内容
+              <i class="el-icon-circle-plus-outline"></i> 新增企微活码
             </button>
           </div>
           <p class="client_send">
@@ -917,7 +917,7 @@ export default {
   bottom: 0;
   transform: translate(-50%);
   background: #fff;
-  width: 100%;
+  // width: 100%;
   padding: 24px;
   .send-request {
     height: 80px;

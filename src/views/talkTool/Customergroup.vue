@@ -176,13 +176,13 @@
       </div>
     </div>
     <!-- 日期、时间选择框 -->
-    <van-popup v-model="chooseDateTime" position="bottom">
+    <van-popup v-model="chooseDateTime" position="bottom" class="data_warp">
       <van-datetime-picker :min-date="minDate" @cancel="chooseDateTime = false" v-model="sendDateTime" :type="activeChoose" @confirm="confirmDateTime"
                            :title="activeChoose === 'date' ? '选择年月日' : '选择时间'" />
     </van-popup>
 
     <!-- 用户添加起止时间 -->
-    <van-popup v-model="chooseCusAddDate" position="bottom">
+    <van-popup v-model="chooseCusAddDate" position="bottom" class="data_warp">
       <van-datetime-picker :min-date="minDate" @cancel="chooseCusAddDate = false" v-model="cusAddTime" type="date" @confirm="confirmCusAddDate"
                            title="选择年月日" />
     </van-popup>
@@ -801,6 +801,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/.van-popup--bottom{
+  width: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+}
 .dataTimecss {
   .el-input__suffix {
     line-height: 82px;
