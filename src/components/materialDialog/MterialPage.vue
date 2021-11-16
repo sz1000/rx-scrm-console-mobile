@@ -16,8 +16,42 @@
       <input type="text" v-model="searchInput" placeholder="请输入搜索条件" class="inputArea">
       <van-icon name="search" size="28" class="searchIcon" />
     </div>
+    
     <div class="article_warp" v-show="this.tab == 1">
-
+            <p class="tite_list">文章列表</p>
+            <ul>
+              <li class="article_list">
+                   <img src="../../images/ditu.png" alt="" class="article_img">
+                   <span class="artice_text">近期必入的经典这么多！中超赛事！近期必</span>
+                   <van-radio-group v-model="radio">
+                     <van-radio name="1"></van-radio>
+                   </van-radio-group>
+              </li>
+            </ul>
+    </div>
+    <div class="article_warp" v-show="this.tab == 2">
+            <p class="tite_list">文件列表</p>
+            <ul>
+              <li class="article_list">
+                   <img src="../../images/ditu.png" alt="" class="article_img">
+                   <span class="artice_text">近期必入的经典这么多！中超赛事！近期必</span>
+                   <van-radio-group v-model="radio">
+                     <van-radio name="1"></van-radio>
+                   </van-radio-group>
+              </li>
+            </ul>
+    </div>
+    <div class="article_warp" v-show="this.tab == 3">
+            <p class="tite_list">海报列表</p>
+            <ul>
+              <li class="article_list">
+                   <img src="../../images/ditu.png" alt="" class="article_img">
+                   <span class="artice_text">近期必入的经典这么多！中超赛事！近期必</span>
+                   <van-radio-group v-model="radio">
+                     <van-radio name="1"></van-radio>
+                   </van-radio-group>
+              </li>
+            </ul>
     </div>
   </div>
 </template>
@@ -27,6 +61,7 @@ export default {
     return {
       tab: 1,
       searchInput: '',
+      radio:""
     }
   },
   methods: {
@@ -107,6 +142,7 @@ export default {
     }
   }
   .search_input {
+    margin-top: 32px;
     padding: 0 32px;
     position: relative;
     .inputArea {
@@ -122,6 +158,34 @@ export default {
       position: absolute;
       right: 64px;
       top: 10px;
+    }
+  }
+  .article_warp{
+    padding: 0 32px;
+    .tite_list{
+         
+      font-size: 28px;
+      font-weight: 550;
+      color: #3C4353;
+      margin: 34px 0;
+    }
+    .article_list{
+      display: flex;
+      align-items: center;
+    height: 122px;
+    border-bottom: 1px solid #F0F2F7;
+       .article_img{
+         width: 70px;
+         height: 70px;
+         border-radius: 4px;
+       }
+       .artice_text{
+         font-weight: 400;
+        color: #3C4353;
+        font-size: 28px;
+          margin-left: 16px;
+      margin-right: 30px;
+       }
     }
   }
 }
