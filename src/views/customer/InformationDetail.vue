@@ -32,6 +32,9 @@
           <el-form-item label="客户简称">
             <el-input v-model="basicInfo.customerName" placeholder="请输入" maxlength="15" @change="changeInput()"></el-input>
           </el-form-item>
+          <el-form-item label="固定电话">
+            <el-input v-model="basicInfo.mobil" placeholder="请输入" maxlength="13" @change="changeInput()"></el-input>
+          </el-form-item>
           <el-form-item label="客户来源">
             <el-select v-model="basicInfo.source" placeholder="请选择" @change="changeSource">
               <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
@@ -44,16 +47,11 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="basicInfo.mobil" placeholder="请输入" maxlength="13" @change="changeInput()"></el-input>
+          <el-form-item label="客户阶段">
+            <el-input v-model="basicInfo.stage" placeholder="请输入" maxlength="100" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="公司名称">
             <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="所属行业">
-            <el-cascader size="large" :props="{ expandTrigger: 'click',value:'id' ,label:'name'}" :options="optionsCreat" v-model="basicInfo.industry"
-                         @change="handleChange">
-            </el-cascader>
           </el-form-item>
           <el-form-item label="企业规模">
             <el-select v-model="basicInfo.corpScale" placeholder="请选择" @change="scaleChange">
@@ -61,42 +59,56 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large" :props="{ expandTrigger: 'click',value:'id' ,label:'name'}" :options="optionsCreat" v-model="basicInfo.industry"
+                         @change="handleChange">
+            </el-cascader>
+          </el-form-item>
           <el-form-item label="地址">
             <el-input v-model="basicInfo.address" maxlength="100" placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="备注" class="textareaInput">
             <el-input v-model="basicInfo.remark" maxlength="200" placeholder="请输入文字(不得超过200个字符)" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="描述">
-            <el-input v-model="basicInfo.describe" maxlength="100" placeholder="请输入" @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="basicInfo.name" maxlength="15" placeholder="请输入" @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone" maxlength="11" placeholder="请输入" @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender" placeholder="请选择" @change="changeGender">
-              <el-option label="未知" value="0"></el-option>
-              <el-option label="男" value="1"></el-option>
-              <el-option label="女" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position" placeholder="请输入" maxlength="20" @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin" placeholder="请输入" maxlength="20" @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱:" class="describeBorder">
-            <el-input v-model="basicInfo.email" placeholder="请输入" maxlength="60" @change="changeInput()"></el-input>
-          </el-form-item>
         </el-form>
       </div>
     </div>
-
+    <!-- 联系人信息 -->
+    <div class="systemInformation">
+      <span>
+        <img src="../../images/icon_label.png" alt="" />
+      </span>
+      <span>联系人信息</span>
+      <div class="contactInformation">
+        <div class="inputBox">
+          <span>头像</span>
+          <span><img :src="basicInfo.avatar" alt="" v-show="basicInfo.avatar" /></span>
+        </div>
+        <van-cell-group>
+          <van-field label="联系人" v-model="basicInfo.name" label-align="center" readonly />
+          <van-field label="性别" :value="basicInfo.gender == '1' ? '男' : basicInfo.gender == '2' ? '女': '未知'" label-align="center" readonly />
+          <van-field label="手机号" v-model="basicInfo.phone" label-align="center" readonly />
+          <van-field label="微信号" v-model="basicInfo.weixin" label-align="center" readonly />
+          <van-field label="微信昵称" v-model="basicInfo.name" label-align="center" readonly />
+          <van-field label="职务" v-model="basicInfo.position" label-align="center" readonly />
+          <van-field label="邮箱" v-model="basicInfo.email" label-align="center" readonly />
+        </van-cell-group>
+      </div>
+    </div>
+    <!-- 自定义信息 -->
+    <div class="customInformation systemInformation" v-show="customerList.length">
+      <span>
+        <img src="../../images/icon_label.png" alt="" />
+      </span>
+      <span>自定义信息</span>
+      <div class="formEdit">
+        <van-form v-model="customerList">
+          <van-field v-for="(item, index) in customerList" label-align="center" :ref="'barcode' + index" readonly :key="index" v-model="item.value"
+                     :label="item.name">
+          </van-field>
+        </van-form>
+      </div>
+    </div>
     <!-- 系统信息 -->
     <div class="systemInformation ">
       <span>
@@ -111,7 +123,20 @@
         </van-form>
       </div>
     </div>
-
+    <!-- 企微信息 -->
+    <div class="systemInformation microInformation">
+      <span>
+        <img src="../../images/icon_label.png" alt="" />
+      </span>
+      <span>企微信息</span>
+      <div class="formEdit">
+        <van-form v-model="microList">
+          <van-field v-for="(item, index) in microList" label-align="center" :ref="'barcode' + index" readonly :key="index" v-model="item.value"
+                     :label="item.name">
+          </van-field>
+        </van-form>
+      </div>
+    </div>
     <!-- 标签 -->
     <div class="infoContent">
       <div class="companyLabel">
@@ -225,6 +250,7 @@ export default {
       optionsCreat: [],
       optionsScale: [],
       basicInfo: {
+        avatar: '',
         industry: [],
         customerName: '',
         source: '',
@@ -245,19 +271,27 @@ export default {
         cropSubIndustry: '',
         source: '',
         email: '',
+        stage: '',
       },
       systemList: [
         { name: '添加人员', mapName: 'createBy', value: '' },
-        { name: '添加时间', mapName: 'createTime', value: '' },
-        { name: '所属人', mapName: 'uname', value: '' },
-        { name: '领取时间', mapName: 'getTime', value: '' },
-        { name: '最近跟进记录', mapName: 'followRecord', value: '' },
-        { name: '最近跟进时间', mapName: 'followTime', value: '' },
-        { name: '最近修改人', mapName: 'updateBy', value: '' },
-        { name: '最近修改时间', mapName: 'updateTime', value: '' },
-        { name: '前所属人', mapName: 'beBelongBy', value: '' },
+        { name: '添加客户时间', mapName: 'createTime', value: '' },
+        { name: '前负责人', mapName: 'beBelongBy', value: '' },
         { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
+      microList: [
+        { name: '客户简称', mapName: 'customerName', value: '' },
+        { name: '客户来源', mapName: 'source', value: '' },
+        { name: '公司名称', mapName: 'cropFullName', value: '' },
+        { name: '客户类型', mapName: 'customerType', value: '' },
+        { name: '姓名', mapName: 'name', value: '' },
+        { name: '性别', mapName: 'gender', value: '' },
+        { name: '职务', mapName: 'position', value: '' },
+        { name: '添加人员', mapName: 'createBy', value: '' },
+        { name: '添加客户时间', mapName: 'createTime', value: '' },
+        { name: '备注', mapName: 'remark', value: '' },
+      ],
+      customerList: [],
       fieldIndex: null,
       loadingShow: true,
 
@@ -316,6 +350,7 @@ export default {
       })
       this.$network
         .get('/customer-service/cluecustomer/toupdate', {
+          // clueCustomerNo: 'D896DC328E9149C694504B7870137430',
           clueCustomerNo: this.clueCustomerNo,
         })
         .then((res) => {
@@ -352,7 +387,41 @@ export default {
             }
           })
           this.systemList = tempSystem
-          // localStorage.removeItem('userId')
+
+          let tempMicro = this.microList.map((item) => {
+            return {
+              name: item.name,
+              value: this.basicInfo[item.mapName],
+              mapName: item.mapName,
+            }
+          })
+          tempMicro.forEach((item) => {
+            if (
+              item.name.includes('时间') &&
+              JSON.stringify(item.value) !== 'null'
+            ) {
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
+            }
+            if (item.name.includes('性别')) {
+              if (item.value == '1') {
+                item.value = '男'
+              } else if (item.value == '2') {
+                item.value = '女'
+              } else {
+                item.value = '未知'
+              }
+            }
+            if (item.name.includes('客户类型')) {
+              if (item.value == '1') {
+                item.value = '微信用户'
+              } else if (item.value == '2') {
+                item.value = '企微用户'
+              } else {
+                item.value = '未知'
+              }
+            }
+          })
+          this.microList = tempMicro
         })
     },
     processTree(data) {
@@ -714,7 +783,57 @@ export default {
       }
     }
   }
-
+  .contactInformation {
+    padding-bottom: 24px;
+    .inputBox {
+      margin-top: 24px;
+      display: flex;
+      span:nth-child(1) {
+        font-weight: 400;
+        width: 234px;
+        height: 80px;
+        text-align: center;
+        background: #fafbff;
+        border: 1px solid #f0f2f7;
+        border-bottom: 0;
+        line-height: 80px;
+      }
+      span:nth-child(2) {
+        flex: 1;
+        font-weight: 400;
+        display: inline-block;
+        border: 1px solid #f0f2f7;
+        border-bottom: 0;
+        line-height: 80px;
+        padding-left: 24px;
+        padding-top: 10px;
+        img {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+    .van-cell {
+      padding: 0;
+      height: 80px;
+      line-height: 80px;
+      font-size: 28px;
+      border: 1px solid #f0f2f7;
+      &::after {
+        border-bottom: 0;
+      }
+    }
+    /deep/.van-field__label {
+      width: 234px;
+      height: 80px;
+      background: #fafbff;
+      border-right: 1px solid #f0f2f7;
+      line-height: 80px;
+    }
+    .van-field__body {
+      height: 80px;
+    }
+  }
   .infoContent {
     margin-top: 24px;
     background: #fff;
