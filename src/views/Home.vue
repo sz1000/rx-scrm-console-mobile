@@ -134,6 +134,7 @@
 <script>
 import CommonHome from '../utils/CommonHome'
 import { Notify } from 'vant'
+import { cluecustomer_homedata,user_getUserName } from '@/api/home'
 export default {
   components: {},
   data() {
@@ -160,19 +161,28 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.$network
-        .get('/customer-service/cluecustomer/homedata')
-        .then((res) => {
+    // this.$network
+    //   .get('/customer-service/cluecustomer/homedata')
+    //   .then((res) => {
+    //     this.clues = res.data.myThread
+    //     this.cluSee = res.data.derThread
+    //     this.customer = res.data.myCustomer
+    //     this.customerSee = res.data.derCustomer
+    //   })
+    this.getHome()
+    this.getUserName()
+  },
+  methods: {
+    getHome(){
+      cluecustomer_homedata().then(res => {
+        if(res.result){
           this.clues = res.data.myThread
           this.cluSee = res.data.derThread
           this.customer = res.data.myCustomer
           this.customerSee = res.data.derCustomer
-        })
-      this.getUserName()
-    }, 2000)
-  },
-  methods: {
+        }
+      })
+    },
     FnToRouter(path) {
       this.$router.push(path)
     },
@@ -186,6 +196,26 @@ export default {
       })
     },
     getUserName() {
+      user_getUserName().then(res => {
+        if (res.code == 'error_corp_forbid') {
+          this.show = true
+        }
+        this.show = !res.data.haveSecret
+        if(res.result){
+          let tempMenuList = res.data.userEntity.permissionList
+          let corpId = res.data.userEntity.corpId
+          localStorage.setItem('corpId', corpId)
+
+          sessionStorage.setItem(
+            'permissionsList',
+            JSON.stringify(tempMenuList)
+          )
+          this.menulist = tempMenuList.map((item) => item.enName)
+        }
+      })
+      
+    },
+    getSource(){
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
         .then((res) => {
@@ -202,7 +232,6 @@ export default {
             JSON.stringify(tempMenuList)
           )
           this.menulist = tempMenuList.map((item) => item.enName)
-          // console.log(this.menulist)
         })
     },
     goToCard() {
