@@ -1,171 +1,123 @@
 <template>
   <div class="culeDeatil">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
       <span class="textTitle">客户详情</span>
     </div>
-    
+    <!-- 基本信息 -->
     <div class="basicInformation">
       <span>
-        <img src="../../images/icon_label.png"
-             alt="" />
+        <img src="../../images/icon_label.png" alt="" />
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <el-form ref="form"
-                 :model="basicInfo">
-            <KehuTip :addChildForm="basicInfo" v-on:getacf="getacf"></KehuTip> 
+        <el-form ref="form" :model="basicInfo">
+          <KehuTip :addChildForm="basicInfo" v-on:getacf="getacf"></KehuTip>
+          <el-form-item label="固定电话">
+            <el-input v-model="basicInfo.mobil" placeholder="请输入" :disabled='disabled' maxlength="13" @change="changeInput()"></el-input>
+          </el-form-item>
           <el-form-item label="客户来源">
-            <el-select v-model="basicInfo.source"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="changeSource">
-              <el-option v-for="item in optionSource"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.type">
+            <el-select v-model="basicInfo.source" placeholder="请选择" :disabled='disabled' @change="changeSource">
+              <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="客户类型">
-            <el-select v-model="basicInfo.customerType"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="changeCustom">
-              <el-option v-for="item in customList"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.customerType">
+            <el-select v-model="basicInfo.customerType" placeholder="请选择" :disabled='disabled' @change="changeCustom">
+              <el-option v-for="item in customList" :key="item.value" :label="item.label" :value="item.customerType">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="basicInfo.mobil"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="13"
-                      @change="changeInput()"></el-input>
+          <el-form-item label="客户阶段">
+            <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" :disabled='disabled' @change="changeInput()"></el-input>
           </el-form-item>
-           <GongsiTip :addChildForm="basicInfo" v-on:getgst="getgst"></GongsiTip>
-          <el-form-item label="所属行业">
-            <el-cascader size="large"
-                         :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
-                         :options="optionsCreat"
-                         :disabled='disabled'
-                         v-model="basicInfo.industry"
-                         @change="handleChange">
-            </el-cascader>
+          <el-form-item label="公司名称">
+            <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" :disabled='disabled' @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="企业规模">
-            <el-select v-model="basicInfo.cropscale"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="scaleChange">
-              <el-option v-for="item in optionsScale"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.id">
+            <el-select v-model="basicInfo.cropscale" placeholder="请选择" :disabled='disabled' @change="scaleChange">
+              <el-option v-for="item in optionsScale" :key="item.value" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="所属行业">
+            <el-cascader size="large" :props="{ expandTrigger: 'click', value: 'id', label: 'name' }" :options="optionsCreat"
+                         v-model="basicInfo.industry" :disabled='disabled' @change="handleChange">
+            </el-cascader>
+          </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="basicInfo.address"
-                      maxlength="100"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.address" maxlength="100" :disabled='disabled' placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="备注"
-                        class="textareaInput">
-            <el-input v-model="basicInfo.remark"
-                      maxlength="200"
-                      :disabled='disabled'
-                      placeholder="请输入文字(不得超过200个字符)"
-                      @change="changeInput()"></el-input>
+          <el-form-item label="备注" class="textareaInput">
+            <el-input v-model="basicInfo.remark" maxlength="200" :disabled='disabled' placeholder="请输入文字(不得超过200个字符)" @change="changeInput()">
+            </el-input>
           </el-form-item>
-          <el-form-item label="描述">
-            <el-input v-model="basicInfo.describe"
-                      maxlength="100"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <div class="custonInfo">
-            <img src="../../images/icon_label.png"
-                 alt="" />
-            <span>联系人信息</span>
-          </div>
-          <el-form-item label="姓名"
-                        class="nameBorder">
-            <el-input v-model="basicInfo.name"
-                      maxlength="15"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone"
-                      maxlength="11"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="changeGender">
-              <el-option label="未知"
-                         value="0"></el-option>
-              <el-option label="男"
-                         value="1"></el-option>
-              <el-option label="女"
-                         value="2"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱:">
-            <el-input v-model="basicInfo.email"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      maxlength="60"
-                      @change="changeInput()"></el-input>
-          </el-form-item>
+          <!-- <GongsiTip :addChildForm="basicInfo" v-on:getgst="getgst"></GongsiTip> -->
         </el-form>
       </div>
     </div>
+    <!-- 联系人信息 -->
     <div class="systemInformation">
       <span>
-        <img src="../../images/icon_label.png"
-             alt="" />
+        <img src="../../images/icon_label.png" alt="" />
+      </span>
+      <span>联系人信息</span>
+      <div class="contactInformation">
+        <div class="inputBox">
+          <span>头像</span>
+          <span><img :src="basicInfo.avatar" alt="" v-show="basicInfo.avatar" /></span>
+        </div>
+        <van-cell-group>
+          <van-field label="联系人" v-model="basicInfo.name" label-align="center" readonly />
+          <van-field label="性别" :value="basicInfo.gender == '1' ? '男' : basicInfo.gender == '2' ? '女': '未知'" label-align="center" readonly />
+          <van-field label="手机号" v-model="basicInfo.phone" label-align="center" readonly />
+          <van-field label="微信号" v-model="basicInfo.weixin" label-align="center" readonly />
+          <van-field label="微信昵称" v-model="basicInfo.name" label-align="center" readonly />
+          <van-field label="职务" v-model="basicInfo.position" label-align="center" readonly />
+          <van-field label="邮箱" v-model="basicInfo.email" label-align="center" readonly />
+        </van-cell-group>
+      </div>
+    </div>
+    <!-- 自定义信息 -->
+    <div class="customInformation systemInformation" v-show="customerList.length">
+      <span>
+        <img src="../../images/icon_label.png" alt="" />
+      </span>
+      <span>自定义信息</span>
+      <div class="formEdit">
+        <van-form v-model="customerList">
+          <van-field v-for="(item, index) in customerList" label-align="center" :ref="'barcode' + index" readonly :key="index" v-model="item.value"
+                     :label="item.name">
+          </van-field>
+        </van-form>
+      </div>
+    </div>
+    <!-- 系统信息 -->
+    <div class="systemInformation">
+      <span>
+        <img src="../../images/icon_label.png" alt="" />
       </span>
       <span>系统信息</span>
       <div class="formEdit">
         <van-form v-model="systemList">
-          <van-field v-for="(item, index) in systemList"
-                     label-align="center"
-                     :ref="'barcode' + index"
-                     readonly
-                     :key="index"
-                     v-model="item.value"
+          <van-field v-for="(item, index) in systemList" label-align="center" :ref="'barcode' + index" readonly :key="index" v-model="item.value"
+                     :label="item.name">
+          </van-field>
+        </van-form>
+      </div>
+    </div>
+    <!-- 企微信息 -->
+    <div class="systemInformation microInformation">
+      <span>
+        <img src="../../images/icon_label.png" alt="" />
+      </span>
+      <span>企微信息</span>
+      <div class="formEdit">
+        <van-form v-model="microList">
+          <van-field v-for="(item, index) in microList" label-align="center" :ref="'barcode' + index" readonly :key="index" v-model="item.value"
                      :label="item.name">
           </van-field>
         </van-form>
@@ -177,17 +129,12 @@
           <span class="label_tag">企业标签</span>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }"
-               ref="textBox">
+          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in tagList"
-                    :key="index"
-                    class="tagBox">{{ list.name }}</span>
+              <span v-for="(list, index) in tagList" :key="index" class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn"
-               @click="unfold = !unfold"
-               v-show="tagList.length">
+          <div class="btn" @click="unfold = !unfold" v-show="tagList.length">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
@@ -196,29 +143,20 @@
     </div>
 
     <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName">
+      <van-action-sheet v-model="show" :title="titleName">
         <div class="content">
           <div class="changeUser">
             <div class="selectUser">
               <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择员工"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
+              <el-select v-model="userNo" placeholder="请选择员工" popper-class="popper-select-class">
+                <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.userNo" @change="fnChangeUser">
                 </el-option>
               </el-select>
             </div>
           </div>
           <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
+            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -230,7 +168,7 @@ import { formatDate } from '../../utils/tool'
 import KehuTip from './comTip/kehuTip.vue'
 import GongsiTip from './comTip/gongsiTip.vue'
 export default {
-	components: {
+  components: {
     KehuTip,
     GongsiTip,
   },
@@ -246,6 +184,7 @@ export default {
       optionsCreat: [],
       optionsScale: [],
       basicInfo: {
+        avatar: '',
         industry: [],
         customerName: '',
         source: '',
@@ -268,15 +207,22 @@ export default {
       },
       systemList: [
         { name: '添加人员', mapName: 'createBy', value: '' },
-        { name: '添加时间', mapName: 'createTime', value: '' },
-        { name: '所属人', mapName: 'uname', value: '' },
-        { name: '领取时间', mapName: 'getTime', value: '' },
-        { name: '最近跟进记录', mapName: 'followRecord', value: '' },
-        { name: '最近跟进时间', mapName: 'followTime', value: '' },
-        { name: '最近修改人', mapName: 'updateBy', value: '' },
-        { name: '最近修改时间', mapName: 'updateTime', value: '' },
-        { name: '前所属人', mapName: 'beBelongBy', value: '' },
+        { name: '添加客户时间', mapName: 'createTime', value: '' },
+        { name: '前负责人', mapName: 'beBelongBy', value: '' },
         { name: '转换时间', mapName: 'turnTime', value: '' },
+      ],
+      customerList: [],
+      microList: [
+        { name: '客户简称', mapName: 'customerName', value: '' },
+        { name: '客户来源', mapName: 'source', value: '' },
+        { name: '公司名称', mapName: 'cropFullName', value: '' },
+        { name: '客户类型', mapName: 'customerType', value: '' },
+        { name: '姓名', mapName: 'name', value: '' },
+        { name: '性别', mapName: 'gender', value: '' },
+        { name: '职务', mapName: 'position', value: '' },
+        { name: '添加人员', mapName: 'createBy', value: '' },
+        { name: '添加客户时间', mapName: 'createTime', value: '' },
+        { name: '备注', mapName: 'remark', value: '' },
       ],
       unfold: false,
       tagList: [],
@@ -311,15 +257,15 @@ export default {
     this.getDetailForm()
   },
   methods: {
-  	getacf(acfValue) {
-        // acfValue就是子组件传过来的值
-        console.log('acfValue--->>',acfValue)
-        this.basicInfo.customerName = acfValue.customerName
+    getacf(acfValue) {
+      // acfValue就是子组件传过来的值
+      console.log('acfValue--->>', acfValue)
+      this.basicInfo.customerName = acfValue.customerName
     },
-    getgst(gstValue){
-    	// gstValue就是子组件传过来的值
-        console.log('gstValue--->>',gstValue)
-        this.basicInfo.cropFullName = gstValue.cropFullName
+    getgst(gstValue) {
+      // gstValue就是子组件传过来的值
+      console.log('gstValue--->>', gstValue)
+      this.basicInfo.cropFullName = gstValue.cropFullName
     },
     formatDate,
     changeInput(val) {
@@ -387,6 +333,41 @@ export default {
             }
           })
           this.systemList = tempSystem
+
+          let tempMicro = this.microList.map((item) => {
+            return {
+              name: item.name,
+              value: this.basicInfo[item.mapName],
+              mapName: item.mapName,
+            }
+          })
+          tempMicro.forEach((item) => {
+            if (
+              item.name.includes('时间') &&
+              JSON.stringify(item.value) !== 'null'
+            ) {
+              item.value = formatDate(item.value, 'yyyy-MM-dd hh:mm:ss')
+            }
+            if (item.name.includes('性别')) {
+              if (item.value == '1') {
+                item.value = '男'
+              } else if (item.value == '2') {
+                item.value = '女'
+              } else {
+                item.value = '未知'
+              }
+            }
+            if (item.name.includes('客户类型')) {
+              if (item.value == '1') {
+                item.value = '微信用户'
+              } else if (item.value == '2') {
+                item.value = '企微用户'
+              } else {
+                item.value = '未知'
+              }
+            }
+          })
+          this.microList = tempMicro
 
           if (res.data.clueCustomerEntity.cropSubIndustry) {
             let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
@@ -522,7 +503,7 @@ export default {
         }
         .nameBorder {
           .el-input__inner {
-            border-top: 1px solid #d9dae4 !important;
+            // border-top: 1px solid #d9dae4 !important;
           }
         }
         .el-form-item__label {
@@ -545,9 +526,9 @@ export default {
             width: 100%;
             border-radius: 8px;
             font-size: 28px;
-            border: 0;
-            border-right: 1px solid #d9dae4;
-            border-bottom: 1px solid #d9dae4;
+            // border: 0;
+            // border-right: 1px solid #d9dae4;
+            // border-bottom: 1px solid #d9dae4;
             border-radius: 0;
           }
           .el-select,
@@ -577,8 +558,59 @@ export default {
       }
     }
   }
+  .contactInformation {
+    padding-bottom: 24px;
+    .inputBox {
+      margin-top: 24px;
+      display: flex;
+      span:nth-child(1) {
+        font-weight: 400;
+        width: 234px;
+        height: 80px;
+        text-align: center;
+        background: #fafbff;
+        border: 1px solid #f0f2f7;
+        border-bottom: 0;
+        line-height: 80px;
+      }
+      span:nth-child(2) {
+        flex: 1;
+        font-weight: 400;
+        display: inline-block;
+        border: 1px solid #f0f2f7;
+        border-bottom: 0;
+        line-height: 80px;
+        padding-left: 24px;
+        padding-top: 10px;
+        img {
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+    .van-cell {
+      padding: 0;
+      height: 80px;
+      line-height: 80px;
+      font-size: 28px;
+      border: 1px solid #f0f2f7;
+      &::after {
+        border-bottom: 0;
+      }
+    }
+    /deep/.van-field__label {
+      width: 234px;
+      height: 80px;
+      background: #fafbff;
+      border-right: 1px solid #f0f2f7;
+      line-height: 80px;
+    }
+    .van-field__body {
+      height: 80px;
+    }
+  }
   .basicInformation {
-    padding: 24px 24px 0;
+    padding-top: 24px;
   }
   .infoContent {
     margin-top: 24px;

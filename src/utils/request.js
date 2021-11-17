@@ -9,10 +9,10 @@ let BASE_URL = ''
 if (location.hostname == 'localhost') {
     //  BASE_URL = 'http://172.10.7.239:8099' //葛
     // BASE_URL = 'http://172.10.7.114:8099/' //袁
-    BASE_URL = 'http://172.10.7.200:8099/' //刘
-        //BASE_URL = 'http://172.10.6.144:8099' // 李泉
-        // BASE_URL = 'https://test-api.jzcrm.com' //测试
-        //  BASE_URL = 'https://dev-api.jzcrm.com'//开发
+    // BASE_URL = 'http://172.10.7.200:8099/' //刘
+    //BASE_URL = 'http://172.10.6.144:8099' // 李泉
+    BASE_URL = 'https://test-api.jzcrm.com' //测试
+        // BASE_URL = 'https://dev-api.jzcrm.com' //开发
     addVconsole()
 } else if (location.hostname == 'dev-h5.jzcrm.com') {
     BASE_URL = 'https://dev-api.jzcrm.com' //开发
@@ -39,9 +39,13 @@ instance.interceptors.request.use(
             let token
 
             if (window.location.hostname == 'localhost') {
-                token = localStorage.getItem('token') ? localStorage.getItem('token') : localStorage.getItem('backupToken') //本地token
+                token = localStorage.getItem('token') ?
+                    localStorage.getItem('token') :
+                    localStorage.getItem('backupToken') //本地token
             } else {
-                token = getStoreValue('token') ? getStoreValue('token') : getStoreValue('backupToken') //生产token
+                token = getStoreValue('token') ?
+                    getStoreValue('token') :
+                    getStoreValue('backupToken') //生产token
             }
 
             if (token) {
