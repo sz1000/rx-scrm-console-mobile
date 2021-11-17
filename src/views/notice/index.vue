@@ -81,8 +81,6 @@
 
 <script>
 import { notice_getNoticeDetail } from "@/api/notice";
-// import CommonHome from "../../utils/CommonHome";
-import commonFun from '../../utils/commonToken'
 export default {
   data() {
     return {
@@ -139,23 +137,11 @@ export default {
     //     return _str
     // }
   },
-  created() {
-      console.log("token",localStorage.getItem("token"))
-    if (!localStorage.getItem("token")) {
-    //   CommonHome.getWxToken();
-      commonFun.getWxAppid()
-      console.log("获取token")
-    }
-  },
   mounted() {
-        setTimeout(() => {
-           this.getDetail();
-           console.log("请求接口")
-        }, 2000);
+    this.getDetail();
   },
   methods: {
     getDetail() {
-
       //获取通知详情
       console.log(this.$route.query.noticeId,"id")
       notice_getNoticeDetail(this.id).then((res) => {

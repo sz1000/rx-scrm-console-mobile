@@ -11,8 +11,9 @@ export default new Vuex.Store({
         entry: sessionStorage.getItem('entry'), //进入H5页面的入口环境
         corpId: localStorage.getItem('corpId'),
         token: localStorage.getItem('token'),
-        copy: localStorage.getItem('copy'),
+        expireTime: process.env.NODE_ENV === 'development' ? '' : localStorage.getItem('expireTime'),
         userNo: localStorage.getItem('userNo'),
+        wxLogoInfo: JSON.parse(localStorage.getItem('wxLogoInfo')),
     },
     getters: {
         chatId: state => state.chatId,
@@ -20,8 +21,9 @@ export default new Vuex.Store({
         entry: state => state.entry,
         corpId: state => state.corpId,
         token: state => state.token,
-        copy: state => state.copy,
         userNo: state => state.userNo,
+        expireTime: state => state.expireTime,
+        wxLogoInfo: state => state.wxLogoInfo,
     },
     mutations: {
         setChatId(state, data) {
@@ -36,13 +38,21 @@ export default new Vuex.Store({
             sessionStorage.setItem('entry', data)
             state.entry = data
         },
-        setCopy(state, data) {
-            localStorage.setItem('copy', data)
-            state.copy = data
-        },
         setUserNo(state, data) {
             localStorage.setItem('userNo', data)
             state.userNo = data
+        },
+        setExpireTime(state, data){
+            localStorage.setItem('expireTime', data)
+            state.expireTime = data
+        },
+        setToken(state, data) {
+            localStorage.setItem('token', data)
+            state.token = data
+        },
+        setWxLogoInfo(state, data) {
+            localStorage.setItem('wxLogoInfo', JSON.stringify(data))
+            state.wxLogoInfo = data
         },
         SET_CORPID(state, val) {
             localStorage.setItem('corpId', val)
@@ -50,6 +60,17 @@ export default new Vuex.Store({
         },
     },
     actions: {
+        signOut({ commit }, payload) {
+            return new Promise((res, rej) => {
+                commit('setUserId', '')
+                commit('setChatId', '')
+                commit('setToken', '')
+                commit('setUserNo', '')
+                commit('setExpireTime', '')
+                localStorage.removeItem('userId')
+                res(true)
+            })
+        },
         getCorpId({ commit }) {
             return new Promise((resolve, reject) => {
                 GetCrop().then(res => {
