@@ -2,9 +2,9 @@
     <div class="wrap">
         <div class="tips_icon">
             <img class="icon" src="@/assets/images/icon_tip.png" alt="">
-            <div class="text" v-if="type == 1 || type == 2">温馨提示：数据统计来自{{formatDate(detail.batchDate,"yyyy/MM/dd")}}全天数据</div>
-            <div class="text" v-if="type == 3 || type == 4">温馨提示：数据统计来自{{formatDate(detail.firstDate,"yyyy/MM/dd")}}-{{formatDate(detail.lastDate,"yyyy/MM/dd")}}当周数据</div>
-            <div class="text" v-if="type == 5 || type == 6">温馨提示：数据统计来自{{formatDate(detail.batchMonth,"yyyy/MM")}}月数据</div>
+            <div class="text" v-if="type == 1 || type == 2">温馨提示：数据统计来自{{dateTimeFun(detail.batchDate)}}全天数据</div>
+            <div class="text" v-if="type == 3 || type == 4">温馨提示：数据统计来自{{dateTimeFun(detail.firstDate)}}-{{dateTimeFun(detail.lastDate)}}当周数据</div>
+            <div class="text" v-if="type == 5 || type == 6">温馨提示：数据统计来自{{dateTimeFun(detail.batchMonth)}}月数据</div>
         </div>
         <div class="item_wrap">
             <div class="tit_box">
@@ -75,7 +75,7 @@
             </div>
             <div class="item_box">
                 <div class="item">
-                    <div class="label">{{dataTypeName}}待拜访/已拜访客户</div>
+                    <div class="label">{{dataTypeName}}待拜访/{{dataTypeName}}已拜访客户</div>
                     <div class="val">{{detail.prepareVisitCount}}/{{detail.visitedCount}}</div>
                 </div>
                 <div class="item">
@@ -169,7 +169,7 @@
 <script>
 import { Base64 } from 'js-base64'
 import { formatDate,handleMoney } from '@/utils/tool'
-import commonFun from '../../utils/commonToken'
+// import commonFun from '../../utils/commonToken'
 import { 
     Corp_getCrop,
     dataReport_getDataReportDaily,
@@ -249,7 +249,7 @@ export default {
             }
             return obj[this.type]
         },
-        typeKey(){
+        typeKey(){  //日周月 部分 key 前缀
             let obj = {
                 1: 'new',
                 2: 'new',
@@ -263,13 +263,11 @@ export default {
     },
     created() {
         console.log("token")
-        commonFun.getWxAppid()
+        // commonFun.getWxAppid()
     },
     mounted(){
-        setTimeout(() => {
-            this.getCorpId()
-            console.log("请求接口")
-        }, 2000);
+        this.getCorpId()
+        console.log("请求接口")
     },
     methods: {
         formatDate,
@@ -342,6 +340,9 @@ export default {
                 }
             }
             return _str
+        },
+        dateTimeFun(val){
+            return val ? val.replace(/-/g,'/') : ''
         },
     },
     filters: {

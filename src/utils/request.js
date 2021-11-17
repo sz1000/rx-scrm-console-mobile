@@ -13,7 +13,7 @@ if (location.hostname == 'localhost') {
         //BASE_URL = 'http://172.10.6.144:8099' // 李泉
         // BASE_URL = 'https://test-api.jzcrm.com' //测试
         //  BASE_URL = 'https://dev-api.jzcrm.com'//开发
-    addVconsole()
+    // addVconsole()
 } else if (location.hostname == 'dev-h5.jzcrm.com') {
     BASE_URL = 'https://dev-api.jzcrm.com' //开发
     addVconsole()
@@ -36,13 +36,13 @@ let instance = axios.create({
     // 请求
 instance.interceptors.request.use(
         (config) => {
-            let token
+            let token = localStorage.getItem('token')
 
-            if (window.location.hostname == 'localhost') {
-                token = localStorage.getItem('token') ? localStorage.getItem('token') : localStorage.getItem('backupToken') //本地token
-            } else {
-                token = getStoreValue('token') ? getStoreValue('token') : getStoreValue('backupToken') //生产token
-            }
+            // if (window.location.hostname == 'localhost') {
+            //     token = localStorage.getItem('token') ? localStorage.getItem('token') : localStorage.getItem('backupToken') //本地token
+            // } else {
+            //     token = getStoreValue('token') ? getStoreValue('token') : getStoreValue('backupToken') //生产token
+            // }
 
             if (token) {
                 config.headers.common.token = token
