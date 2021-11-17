@@ -38,25 +38,11 @@ instance.interceptors.request.use(
         (config) => {
             let token = localStorage.getItem('token')
 
-            <<
-            << << < HEAD
-            if (window.location.hostname == 'localhost') {
-                token = localStorage.getItem('token') ?
-                    localStorage.getItem('token') :
-                    localStorage.getItem('backupToken') //本地token
-            } else {
-                token = getStoreValue('token') ?
-                    getStoreValue('token') :
-                    getStoreValue('backupToken') //生产token
-            } ===
-            === =
             // if (window.location.hostname == 'localhost') {
             //     token = localStorage.getItem('token') ? localStorage.getItem('token') : localStorage.getItem('backupToken') //本地token
             // } else {
             //     token = getStoreValue('token') ? getStoreValue('token') : getStoreValue('backupToken') //生产token
             // }
-            >>>
-            >>> > 468 ad0d47221da3e85bb266f90588ef4953a7ded
 
             if (token) {
                 config.headers.common.token = token
