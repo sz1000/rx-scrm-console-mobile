@@ -134,6 +134,7 @@ export default {
             selectReasonPopupShow: false,
             chargeUserInfoListOptions: [],
             reasonOptions: [],
+            endType: 0
         }
     },
     computed: {
@@ -169,6 +170,7 @@ export default {
             this.reasonText = ''
             this.timeShowText = null
             this.currentDate = new Date()
+            this.endType = 0
         },
         // 获取阶段原因列表
         async stageReasonList() {
@@ -241,6 +243,7 @@ export default {
             this.form.endTime = v
             this.timeShowText = formatDate(v, "yyyy-MM-dd")
             this.selectDatePopupShow = false
+            this.endType = 1
         },
         // 表单验证
         checkForm() {
@@ -262,7 +265,7 @@ export default {
         },
         // 处理时间格式为：yyyy-MM-dd HH:mm:ss
         getSubmitTime(endTime) {
-            this.form.endTime = formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss')
+            this.form.endTime = endTime && this.endType == 1 ? formatDate(new Date(endTime).getTime(), 'yyyy-MM-dd hh:mm:ss') : endTime
         }, 
         // 表单提交
         async handleSubmit() {
