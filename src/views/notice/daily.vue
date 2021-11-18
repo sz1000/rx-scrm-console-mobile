@@ -168,7 +168,7 @@
 
 <script>
 import { Base64 } from 'js-base64'
-import { formatDate,handleMoney } from '@/utils/tool'
+import { handleMoney } from '@/utils/tool'
 // import commonFun from '../../utils/commonToken'
 import { 
     Corp_getCrop,
@@ -266,13 +266,12 @@ export default {
         // commonFun.getWxAppid()
     },
     mounted(){
-        this.getCorpId()
+        this.getDetail()
         console.log("请求接口")
     },
     methods: {
-        formatDate,
         handleMoney,
-        getCorpId(){     //获取企业信息
+        getCorpId(){     //获取企业信息 （此页已弃用）
             Corp_getCrop().then(res => {
                 if(res.result){
                     this.$store.commit('SET_CORPID', res.data.corpId)

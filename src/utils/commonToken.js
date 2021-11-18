@@ -66,6 +66,7 @@ function getWxCofig(v) {
             store.commit('setUserNo', res.data.user_no)
             store.commit('setToken', res.data.accessToken)
             store.commit('setExpireTime', res.data.expire_time)
+            store.commit('SET_CORPID', res.data.corpId)
             // setStoreValue(
             //     'token',
             //     res.data.accessToken,
