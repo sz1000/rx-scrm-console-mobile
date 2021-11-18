@@ -9,88 +9,90 @@
             closeable
             @closed="hide">
             <div class="title">{{ title }}</div>
-            <div class="edit-content">
-                <div class="item one-line">
-                    <p class="label">
-                        <span class="icon">*</span>
-                        <span>商机名称:</span>
-                    </p>
-                    <van-field v-model="form.name" clearable class="edit-field" :maxlength="30" placeholder="请输入"/>
-                </div>
-                <div class="item one-line">
-                    <p class="label">
-                        <span>商机金额:</span>
-                    </p>
-                    <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :max="99999999999999999999" :decimal-length="2" :default-value="0" />
-                </div>
-                <div class="item one-line">
-                    <p class="label">
-                        <span>预计成交时间:</span>
-                    </p>
-                    <van-field v-model="expectTimeShowText" class="edit-field" placeholder="请选择预计成交时间" :readonly="true" @click="selectDate(1)" />
-                </div>
-                <div class="item one-line">
-                    <p class="label">
-                        <span class="icon">*</span>
-                        <span>跟进阶段:</span>
-                    </p>
-                    <van-field v-model="stageText" class="edit-field" placeholder="选择阶段" :readonly="true" @click="selectStage"/>
-                </div>
-                <div class="item one-line">
-                    <p class="label">
-                        <span class="icon">*</span>
-                        <span>商机负责人:</span>
-                    </p>
-                    <van-field v-model="chargeUserName" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger"/>
-                </div>
-                <div v-if="opportunityStatus == 1" class="item one-line">
-                    <p class="label">
-                        <span>成交时间:</span>
-                    </p>
-                    <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate(2)" />
-                </div>
-                <div v-if="opportunityStatus == 2 || opportunityStatus == 3" class="item one-line">
-                    <p class="label">
-                        <span class="icon">*</span>
-                        <span>结束时间:</span>
-                    </p>
-                    <van-field v-model="timeShowText" class="edit-field" placeholder="请选择结束时间" :readonly="true" @click="selectDate(3)"/>
-                </div>
-                <template v-if="opportunityStatus == 2">
+            <div class="box">
+                <div class="edit-content">
                     <div class="item one-line">
                         <p class="label">
                             <span class="icon">*</span>
-                            <span>输单原因:</span>
+                            <span>商机名称:</span>
                         </p>
-                        <van-field v-model="reasonText" clearable class="edit-field" placeholder="请输入" :readonly="true" @click="selectReason"/>
+                        <van-field v-model="form.name" clearable class="edit-field" :maxlength="30" placeholder="请输入"/>
                     </div>
                     <div class="item one-line">
                         <p class="label">
-                            <span>输单备注:</span>
+                            <span>商机金额:</span>
                         </p>
-                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :max="99999999999999999999" :decimal-length="2" :default-value="0" />
                     </div>
-                </template>
-                <template v-if="opportunityStatus == 3">
+                    <div class="item one-line">
+                        <p class="label">
+                            <span>预计成交时间:</span>
+                        </p>
+                        <van-field v-model="expectTimeShowText" class="edit-field" placeholder="请选择预计成交时间" :readonly="true" @click="selectDate(1)" />
+                    </div>
                     <div class="item one-line">
                         <p class="label">
                             <span class="icon">*</span>
-                            <span>无效原因:</span>
+                            <span>跟进阶段:</span>
                         </p>
-                        <van-field v-model="reasonText" clearable class="edit-field" placeholder="请输入" :readonly="true" @click="selectReason"/>
+                        <van-field v-model="stageText" class="edit-field" placeholder="选择阶段" :readonly="true" @click="selectStage"/>
                     </div>
                     <div class="item one-line">
                         <p class="label">
-                            <span>无效备注:</span>
+                            <span class="icon">*</span>
+                            <span>商机负责人:</span>
                         </p>
-                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        <van-field v-model="chargeUserName" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger"/>
                     </div>
-                </template>
-                <div class="item one-line">
-                    <p class="label">
-                        <span>备注:</span>
-                    </p>
-                    <van-field v-model="form.remarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                    <div v-if="opportunityStatus == 1" class="item one-line">
+                        <p class="label">
+                            <span>成交时间:</span>
+                        </p>
+                        <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate(2)" />
+                    </div>
+                    <div v-if="opportunityStatus == 2 || opportunityStatus == 3" class="item one-line">
+                        <p class="label">
+                            <span class="icon">*</span>
+                            <span>结束时间:</span>
+                        </p>
+                        <van-field v-model="timeShowText" class="edit-field" placeholder="请选择结束时间" :readonly="true" @click="selectDate(3)"/>
+                    </div>
+                    <template v-if="opportunityStatus == 2">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>输单原因:</span>
+                            </p>
+                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请输入" :readonly="true" @click="selectReason"/>
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span>输单备注:</span>
+                            </p>
+                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        </div>
+                    </template>
+                    <template v-if="opportunityStatus == 3">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>无效原因:</span>
+                            </p>
+                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请输入" :readonly="true" @click="selectReason"/>
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span>无效备注:</span>
+                            </p>
+                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        </div>
+                    </template>
+                    <div class="item one-line">
+                        <p class="label">
+                            <span>备注:</span>
+                        </p>
+                        <van-field v-model="form.remarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                    </div>
                 </div>
             </div>
             <div class="btn-wrap">
@@ -213,12 +215,12 @@ export default {
                 this.form = JSON.parse(JSON.stringify(formData))
                 this.getText()
                 this.stageReasonList(this.form.sortId)
-                this.opportunitiesStageList(this.getStageListOptions, '', '')
+                this.opportunitiesStageList(this.getStageListOptions, '')
             } else {
                 this.id = null
                 this.title = '新建商机'
                 this.opportunityStatus = -1 // 新建
-                this.opportunitiesStageList(this.getStageListOptions, false, true)
+                this.opportunitiesStageList(this.getStageListOptions, false)
             }
         },
         getStageListOptions(data) {
@@ -332,7 +334,6 @@ export default {
         },
         // 确认阶段
         stageConfirm(v) {
-            this.form.stageNo = v && v.sortNo
             this.stageText = v && v.stageName
             this.stageReasonList(v.sortId)
             if (v.defaultStatus == '成交') {
@@ -347,6 +348,7 @@ export default {
                 this.reasonText = ''
             } else {
                 this.opportunityStatus = this.id ? 0 : -1
+                this.form.stageNo = v && v.sortNo
             }
             this.selectStagePopupShow = false
         },
@@ -432,7 +434,6 @@ export default {
     .edit-opportunity-form {
         max-height: 90%;
         padding: 0 0 24px;
-        overflow-y: auto;
         .title {
             height: 88px;
             line-height: 88px;
@@ -442,6 +443,11 @@ export default {
             font-size: 28px;
             color: #3c4353;
             font-weight: 600;
+        }
+        .box {
+            max-height: 80vh;
+            padding-bottom: 40px;
+            overflow-y: auto;
         }
         .edit-content {
             padding: 54px 24px 80px;
