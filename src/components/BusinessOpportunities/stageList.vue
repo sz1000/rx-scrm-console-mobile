@@ -56,7 +56,7 @@ export default {
             localStorage.removeItem("JZSCRM_OPPORTUNITIES_ITEM")
             console.log(1)
             await this.getCorpId()
-            this.opportunitiesStageList(this.getStageListOptions, '', '')
+            this.opportunitiesStageList(this.getStageListOptions, '')
         },
         ...mapActions(["getCorpId"]),
         getStageListOptions(data) {

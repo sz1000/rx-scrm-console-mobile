@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="detailBtn" @click="goDetail">
-                    详情
+                    <span>详情</span>
                     <van-icon name="arrow" color="#4168F6" />
                 </div>
             </div>
@@ -62,7 +62,8 @@
                 删除
             </div> -->
             <div v-if="type == 2" class="detailBtn" @click="goDetail(itemData, index)">
-                详情<van-icon name="arrow" />
+                <span>详情</span>
+                <van-icon name="arrow" />
             </div>
             </div>
             <div class="detailInfo" @click="goDetail(itemData, index)">
@@ -180,11 +181,12 @@ export default {
             }
         }
         .detailBtn {
+            display: flex;
+            align-items: center;
             line-height: 88px;
             font-size: 28px;
             color:#4168F6;;
             .van-icon {
-                line-height: 88px;
                 font-size: 28px;
             }
         }
