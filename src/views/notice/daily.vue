@@ -333,7 +333,7 @@ export default {
                 _str = m + "分" + s + '秒'
             }else{
                 if(Number(s) > 0){
-                    _str = s + '秒'
+                    _str = Number(s) + '秒'
                 }else{
                     _str = '0秒'
                 }
@@ -390,6 +390,7 @@ export default {
             width: 100%;
             padding: 26px 32px;
             display: flex;
+            font-size: 0;
             align-items: center;
             position: relative;
             &::after{
@@ -423,7 +424,8 @@ export default {
                 position: absolute;
                 top: 50%;
                 left: 0;
-                transform: translateY(-46%);
+                // transform: translateY(-50%);
+                margin-top: -15px;
             }
             // &::after{
             //     content: "";

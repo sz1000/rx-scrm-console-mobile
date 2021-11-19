@@ -234,61 +234,6 @@
           </div>
         </div>
       </van-action-sheet>
-
-      <!-- 删除 -->
-      <!-- <van-popup v-model="deleteCenter">内容</van-popup> -->
-      <!-- Sop弹框 -->
-      <van-action-sheet v-model="sopPopup" title="个人SOP提醒">
-        <div class="content">
-          <div class="codeDetail">
-            <div class="sop-box">
-              <div class="sop-newsText">
-                <span class="line-border"></span>
-                <span class="sop-time"> [2021-07-02 12:00] </span>
-                给客户发送以下 <span class="sop-num"> 4 </span>消息
-              </div>
-              <div class="sop-text">
-                <div class="text_img">
-                  <img style="width: 24px; height: 24px" src="../../images/icon_add@2x.png" alt="" />
-                </div>
-                <div class="sop_title">~</div>
-              </div>
-              <div class="sop-text">
-                <div class="text_img">
-                  <img style="width: 24px; height: 24px" src="../../images/icon_add@2x.png" alt="" />
-                </div>
-                <div class="sop_warp">
-                  <div class="sop_imgWarp">
-                    <div class="img-up">
-                      <img src="../../images/iconadd.png" alt="" />
-                    </div>
-                    <div class="center_img">
-                      <p class="img_text">图片副本.png</p>
-                      <p class="img_size">29/9K</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="sop-text">
-                <div class="text_img">
-                  <img style="width: 24px; height: 24px" src="../../images/icon_add@2x.png" alt="" />
-                </div>
-                <div class="sop_warp">
-                  <div class="sop_imgWarp">
-                    <div class="img-up">
-                      <img src="../../images/iconadd.png" alt="" />
-                    </div>
-                    <div class="center_img">
-                      <p class="img_text">图片副本.png</p>
-                      <p class="img_size">29/9K</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </van-action-sheet>
       <!-- <Details /> -->
     </template>
 
@@ -315,7 +260,7 @@
           <div class="list_wrap">
             <div class="list" v-for="(item, index) in popupList" :key="index">
               <div class="line_title">
-                [{{ item.promptTime }}] 给客户发送以下<i>{{
+                [{{ formatDate(item.promptTime,'yyyy-MM-dd hh:mm') }}] 给客户发送以下<i>{{
                   getTipNum(item.promptList)
                 }}</i>条消息
               </div>
@@ -360,7 +305,7 @@
 import SelectTree from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import commonFun from '../../utils/commonToken'
-import { _throttle } from '../../utils/tool'
+import { _throttle,formatDate } from '../../utils/tool'
 import {
   sop_prompt_personal,
   m_cluecustomer_getClueCustomerByid,
@@ -380,7 +325,6 @@ export default {
     return {
       showTemplate: 1, // 1: 话术，2: 素材
 
-      sopPopup: false,
       isOpen: true,
       dotlist: false, //控制小点显示
       groupingName: '', //输入分组名称
@@ -480,6 +424,7 @@ export default {
     }, 2000)
   },
   methods: {
+    formatDate,
     getUserName() {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
@@ -489,6 +434,7 @@ export default {
     },
     getData() {
       console.log('entry', this.entry)
+      // this.getGroupDetail()
       if (this.entry == 'group_chat_tools') {
         this.getGroupDetail()
       } else if (this.entry == 'single_chat_tools') {
