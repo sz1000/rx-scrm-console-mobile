@@ -4,19 +4,19 @@ import { Toast } from 'vant'
 import { getStoreValue, setStoreValue } from '../utils/LocalStorageDate'
 import Vue from 'vue'
 import VConsole from 'vconsole'
-const stateUselessList = ["error_token_null","error_token_expired","error_token_empty"]
+const stateUselessList = ["error_token_null", "error_token_expired", "error_token_empty"]
 
 let BASE_URL = ''
     // console.log(location.hostname)
 if (location.hostname == 'localhost') {
-    // BASE_URL = 'http://172.10.7.114:8099/' //袁
-    // BASE_URL = 'http://172.10.7.200:8099/' //刘
-    // BASE_URL = 'http://172.10.7.170:8099/' //稳
-    // BASE_URL = 'http://172.10.7.239:8099' //葛
-    // BASE_URL = 'http://172.10.6.144:8099' // 李泉
-    BASE_URL = 'https://test-api.jzcrm.com' //测试
-    // BASE_URL = 'https://dev-api.jzcrm.com' //开发
-    // addVconsole()
+    BASE_URL = 'http://172.10.7.114:8099/' //袁
+        // BASE_URL = 'http://172.10.7.200:8099/' //刘
+        // BASE_URL = 'http://172.10.7.170:8099/' //稳
+        // BASE_URL = 'http://172.10.7.239:8099' //葛
+        // BASE_URL = 'http://172.10.6.144:8099' // 李泉
+        // BASE_URL = 'https://test-api.jzcrm.com' //测试
+        // BASE_URL = 'https://dev-api.jzcrm.com' //开发
+        // addVconsole()
 } else if (location.hostname == 'dev-h5.jzcrm.com') {
     BASE_URL = 'https://dev-api.jzcrm.com' //开发
     addVconsole()
@@ -53,11 +53,11 @@ service.interceptors.request.use(
     (config) => {
         // 如果有token 就携带tokon
         var token = localStorage.getItem('token')
-        // if(process.env.NODE_ENV === 'development'){
-        //     token = localStorage.getItem('token') //本地token
-        // }else {
-        //     token = getStoreValue('token') //生产token
-        // }
+            // if(process.env.NODE_ENV === 'development'){
+            //     token = localStorage.getItem('token') //本地token
+            // }else {
+            //     token = getStoreValue('token') //生产token
+            // }
         if (token) {
             config.headers.common.token = token
         }
@@ -92,8 +92,8 @@ service.interceptors.response.use(
         if (!noMessage && res.code != 'success') {
             if (stateUselessList.indexOf(res.code) > -1) {
                 // Toast('请重新登录')
-                console.log('token无效',process.env.NODE_ENV)
-                if(process.env.NODE_ENV === 'production'){
+                console.log('token无效', process.env.NODE_ENV)
+                if (process.env.NODE_ENV === 'production') {
                     store.dispatch('signOut').then(() => {
                         window.location.reload()
                     })

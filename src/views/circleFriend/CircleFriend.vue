@@ -69,10 +69,41 @@
           <div class="upload_tips" v-if="!videoUrl">上传视频最大支持10M</div>
         </div>
         <div class="link_wrap" v-if="tab == 'link'">
-          <div class="input_item">
+          <!-- <div class="input_item">
             <input v-model="inputUrl" @input="inputUrl=inputUrl.replace(/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]|[^\S+$]/g,'')"
                    placeholder="链接地址请以http或https开头" />
-          </div>
+          </div> -->
+      
+             <!-- <template > -->
+                <el-form ref="form" :model="linkhref">
+              <el-input class="marB-24" v-model="linkhref.href" placeholder="链接地址请以http或https开头"></el-input>
+             
+                <el-form-item label="链接标题 :">
+                  <el-input
+                    v-model="linkhref.hrefTitle"
+                    placeholder="请输入链接标题"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="链接摘要 :">
+                  <el-input
+                    v-model="linkhref.hrefDesc"
+                    placeholder="请输入链接摘要"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="链接封面 :" >
+                 <div class="cover_warp">
+                   <!-- <div class="up">重新上传</div> -->
+                     <!-- <input class="file" type="file" @change="uploadFun($event,'image','friend','png,jpg,jpeg','10')" accept=".png,.jpg,.jpeg"
+                       multiple="multiple" />  -->
+                       <van-uploader v-model="linkhref.hrefPic" :deletable="false"	:after-read="afterRead" :max-count="1" >
+                         <!-- <div class="resetUpload">重新上传</div> -->
+                         </van-uploader>              
+                   <img src="../../assets/images/delte.png" alt="" class="delte_icon" @click="deletClick">
+                  
+                 </div>
+                </el-form-item>
+              </el-form>
+            <!-- </template> -->
         </div>
         <div class="botText">
           <div class="look">
@@ -99,11 +130,45 @@ export default {
       videoUrl: '',
       url: '',
       inputUrl: '',
+       linkhref:{
+          href:"",
+          hrefTitle:"",
+          hrefDesc:"",
+          hrefPic:[]
+       }
+    
     }
   },
   methods: {
+       afterRead(obj, file) {
+      
+      console.log(file, '------------')
+      console.log(obj, '------------obj')
+      let formData = new FormData()
+      formData.append('file', obj.file)
+      formData.append('type', 'qunfa')
+      formData.append('filetype', 'image')
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      this.$network
+        .post('/common-service/oss/uploadfileparam', formData, config)
+        .then((res) => {
+          if (res.result) {
+          
+            console.log(res, '------------图片')
+      
+          }
+        })
+      // console.log(this.listImg, "----222--------");
+    },
     goBack() {
       this.$router.push('/home')
+    },
+    deletClick(){
+       this.linkhref.hrefPic =[]
     },
     goToMaterial(v) {
       this.tab = v
@@ -486,6 +551,9 @@ export default {
         margin-top: 36px;
         line-height: 80px;
         padding: 0 32px;
+        .marB-24{
+          margin-bottom: 24px;
+        }
         .input_item {
           border: 1px solid #d9dae4;
           padding: 0 16px;
@@ -496,6 +564,33 @@ export default {
         }
         .input_box {
           width: 100%;
+        }
+        .el-form{
+          .el-form-item{
+            display: flex;
+            .el-input{
+              width: 545px;
+            }
+          }
+        }
+        .cover_warp{
+          // position: relative;
+          // width: 182px;
+          // height: 182px;
+          // border-radius: 4px;
+          // border: 1px solid #D9DAE4;
+          .delte_icon{
+            width: 28px;
+            width: 28px;
+            position: absolute;
+            top: -10px;
+            right: 0px;
+            background: #fff;
+           border-radius: 50%;
+          }
+          .file{
+            
+          }
         }
       }
       .botText {
