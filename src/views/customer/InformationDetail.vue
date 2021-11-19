@@ -908,6 +908,9 @@ export default {
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);
     }
+    /deep/ .van-action-sheet__content{
+      overflow: inherit;
+    }
     .van-action-sheet__header {
       height: 88px;
       line-height: 88px;
