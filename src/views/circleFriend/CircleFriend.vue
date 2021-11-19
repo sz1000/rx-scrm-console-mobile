@@ -294,25 +294,26 @@ export default {
       //   console.log(imgArr,"--------kkk")
       let materialList = []
       
-      // if (this.tab == 'image') {
-      //   imgArr = this.lists
-      // } else if (this.tab == 'video') {
-      //   imgArr = [this.videoUrl]
-      // } else if(this.tab == 'link'){
-      //   // imgArr = [this.inputUrl]
-      //   imgArr = this.linkhref
-      // }else{
+      if (this.tab == 'image') {
+        imgArr = this.lists
+      } else if (this.tab == 'video') {
+        imgArr = [this.videoUrl]
+      } else if(this.tab == 'link'){
+        imgArr = [this.inputUrl]
+        // imgArr = this.linkhref
+      }
+      // else{
       //    materialList.push( this.materialList)
       // }
       let params = {
         content: this.textVal,
         urls: imgArr,
         msgtype: this.tab,
-        urlList:imgArr
+        // urlList:imgArr
       }
-      if(this.linkhref.hrefTitle == "" && this.tab == "link"){
-        this.$toast("请输入链接标题")
-      }else{
+      // if(this.linkhref.hrefTitle == "" && this.tab == "link"){
+      //   this.$toast("请输入链接标题")
+      // }else{
             addFriendStrong(params).then((res) => {
         if (res.result) {
           Notify({
@@ -322,10 +323,10 @@ export default {
             // className: 'msgTitle',
             // background: '#52BD94',
           })
-          // this.$router.push('/home')
+          this.$router.push('/home')
         }
       })
-      }
+      // }
   
     }, 5000),
     // sendMessage() {},
