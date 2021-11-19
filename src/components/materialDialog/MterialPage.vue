@@ -53,7 +53,7 @@
               @load="onLoadfin"
                 >
            <ul>
-              <li class="article_list"  v-for="(item,indext) in listfin" :key="indext" @click="listtusp(item,listfin)">
+              <li class="article_list"  v-for="(item,indext) in listfin" :key="indext" @click="listtusp(item,indext)">
                    <img src="../../assets/images/pdf_image.png" alt="" class="article_img">
                    <span class="artice_text">{{item.name}}</span>
                    <!-- <van-radio-group v-model="radio" >
@@ -94,8 +94,8 @@
     </div>
  
       <div class="but_warp">
-           <div class="cancel">取消</div>
-           <div class="determine">确定</div>
+           <div class="cancel" @click="cancel">取消</div>
+           <div class="determine" @click="determine">确定</div>
       </div>
 
   </div>
@@ -104,6 +104,7 @@
 export default {
   data() {
     return {
+      centquer:{},
       tab: 1,
       indexps:1000000,
       searchInput: '',
@@ -140,6 +141,20 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
+    determine(){
+      console.log("000")
+        this.$router.push({
+          path:"/talkTool/circleFriend",
+          query:{
+            datalist:this.centquer,
+            tablable:"material"
+          }
+        })
+
+    },
+    cancel(){
+        this.$router.push({path:"/talkTool/circleFriend",})
+    },
     onLoad(){
       if(this.list.length >= this.total){
          console.log(this.list.length)
@@ -165,7 +180,9 @@ onLoadfin(){
 },
 listtusp(item,val){
      console.log(item)
+     this.centquer = item
      this.indexps = val
+      this.$set(this.centquer, "tab", this.tab);
 },
 onLoadPosters(){
    if(this.listPosters.length >= this.totalp){
@@ -186,14 +203,14 @@ onLoadPosters(){
         // this.getArticle()
           this.getList()
       } else if (v == 2) {
-      this.listfin = []
+      // this.listfin = []
       this.indexps = 1000000
       this.pageInfofin.page = 1
         this.getFileList()
       } else {
          this.pageInposters.page = 1
          this.indexps = 1000000
-        this.listPosters =[]
+        // this.listPosters =[]
         this.getFilePosters()
       }
     },
