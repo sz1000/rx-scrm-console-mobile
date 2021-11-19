@@ -87,7 +87,7 @@
         </div>
     </div>
     <!-- 群sop -->
-    <div class="sop_box">
+    <div class="sop_box" v-if="isOwmer">
       <div class="sop_top">
         <div class="sop_title">群SOP</div>
         <div class="setting_btn" @click="settingSopFun">设置</div>
