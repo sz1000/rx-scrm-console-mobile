@@ -51,6 +51,17 @@
           <img src="../../images/icon_label.png" alt="">
           <span>联系人信息</span>
         </div>
+        <el-form-item label="头像:" class="upload_avatar">
+          <div class="demo-input-suffix">
+            <el-upload class="avatar-uploader" action="#" :show-file-list="false" :http-request="handleAvatarSuccess">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <div class="resetUpload" v-show="imageUrl">重新上传</div>
+            </el-upload>
+            <img src="../../images/dele.png" alt="" v-if="imageUrl" class="el-icon-circle-close" @click="deleteImg">
+          </div>
+        </el-form-item>
+
         <el-form-item label="姓名:" prop="name" :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.name" maxlength="15" placeholder="请输入"></el-input>
         </el-form-item>
@@ -84,6 +95,7 @@
 <script>
 import KehuTip from './comTip/kehuTip.vue'
 import GongsiTip from './comTip/gongsiTip.vue'
+import { uploadFile } from '../../api/friend'
 export default {
   components: {
     KehuTip,
@@ -91,6 +103,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       formObj: {
         customerName: '',
         mobil: '',
@@ -116,6 +129,7 @@ export default {
         { label: '企微用户', customerType: 2 },
         { label: '未知', customerType: 0 },
       ],
+      imageUrl: '',
     }
   },
   created() {
@@ -123,6 +137,42 @@ export default {
   },
 
   methods: {
+    uploadFn(file) {
+      console.log(file)
+    },
+    handleAvatarSuccess(request) {
+      // console.log('--2----', request)
+      this.$toast.loading({ duration: 0 })
+      if (this.beforeAvatarUpload(request.file)) {
+        let formData = new FormData()
+        formData.append('file', request.file)
+        formData.append('filetype', 'image')
+        formData.append('type', 'friend')
+        uploadFile(formData).then((res) => {
+          if (res.result) {
+            this.imageUrl = res.data.url
+            this.$toast.clear()
+          }
+        })
+      }
+    },
+    deleteImg() {
+      this.imageUrl = ''
+    },
+    beforeAvatarUpload(file) {
+      const isJPG =
+        file.type == 'image/jpeg' ||
+        file.type == 'image/jpg' ||
+        file.type == 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG || !isLt2M) {
+        this.$message.error(
+          '上传头像图片只能是 JPG,PNG,JEPG 格式，大小不能超过 2MB!'
+        )
+      }
+      // console.log(isJPG, isLt2M)
+      return isJPG && isLt2M
+    },
     getacf(acfValue) {
       // acfValue就是子组件传过来的值
       console.log('acfValue--->>', acfValue)
@@ -317,6 +367,59 @@ export default {
           height: 80px;
           background: #4168f6;
           border-radius: 8px;
+        }
+      }
+      .upload_avatar {
+        height: 182px;
+        .demo-input-suffix {
+          display: flex;
+          position: relative;
+        }
+        .avatar-uploader .el-upload {
+          border: 1px dashed #d9d9d9;
+          width: 182px;
+          height: 182px;
+          border-radius: 6px;
+          cursor: pointer;
+          overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+          border-color: #409eff;
+        }
+        .avatar-uploader-icon {
+          font-size: 40px;
+          color: #8c939d;
+          line-height: 182px;
+          text-align: center;
+        }
+        .avatar {
+          width: 100%;
+          height: 100%;
+        }
+        .resetUpload {
+          position: absolute;
+          left: 206px;
+          bottom: 0;
+          font-size: 28px;
+          color: #4168f6;
+          cursor: pointer;
+        }
+        .el-icon-circle-close {
+          position: absolute;
+          left: 165px;
+          top: -8px;
+          cursor: pointer;
+          width: 28px;
+          height: 28px;
+        }
+        .imgTip {
+          font-size: 14px;
+          color: #c0c4cc;
+          letter-spacing: 0;
+          font-weight: 400;
+          position: absolute;
+          bottom: 0;
+          left: 144px;
         }
       }
     }

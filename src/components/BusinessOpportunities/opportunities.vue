@@ -307,18 +307,17 @@ export default {
 	margin-right: 12px;
 	display: inline-block;
 }
-.delBtn,.addBtn{
-		  color: #838a9d;
-          width: 124px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          position: absolute;
-        /*  top: 0;*/
-          background: #FFFFFF;
-          font-size: 30px;
-          top: 0;
+.addBtn{
+    color: #838a9d !important;
+    width: 124px;
+    height: 68px;
+    border-radius: 8px;
+    border: 2px solid #d9dae4 !important;
+    text-align: center;
+    position: absolute;
+    background: #FFFFFF !important;
+    font-size: 30px;
+    top: 0;
 }
 .addBtn{
 	right: 24px;

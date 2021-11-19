@@ -5,7 +5,7 @@
             <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
             <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
         </ul>
-        <search :type="type"></search>
+        <search ref="search" :type="type"></search>
         <ul class="list-box">
             <li class="item-box" v-if="type == 0">
                 <van-list
@@ -121,6 +121,9 @@ export default {
         changeNav(type) {
             this.type = type
             this.initPage(this.type)
+            this.$nextTick(() => {
+                this.$refs.search.searchText = ''
+            })
             this.getList()
         },
         getCorpId() {

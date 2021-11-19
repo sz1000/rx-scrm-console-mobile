@@ -21,11 +21,10 @@ export default {
                 this.$toast(msg)
             }
         },
-        async opportunitiesStageList(callBack, isEnd, isAdd) {
+        async opportunitiesStageList(callBack, isEnd) {
             let params = {
                 corpId: this.corpId,
                 isEnd,
-                isAdd
             }
 
             let { code, data } = await OpportunitiesStageList(params)

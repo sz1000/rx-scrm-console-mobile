@@ -42,6 +42,7 @@ export const getAuthInfo = () => {
                     store.commit('setToken', res.data.accessToken)
                     store.commit('setExpireTime', res.data.expire_time)
                     store.commit('setUserNo', res.data.user_no)
+                    store.commit('SET_CORPID', res.data.corpId)
                     store.commit('setWxLogoInfo', res)
                     resolve(res)
                 }else{
