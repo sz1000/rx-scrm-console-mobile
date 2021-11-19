@@ -24,7 +24,7 @@
         <span class="box" :class="tab=='image'? 'active':''" @click="tab = 'image'">图片</span>
         <span class="box" :class="tab=='video'? 'active':''" @click="tab = 'video'">视频</span>
         <span class="box" :class="tab=='link'? 'active':''" @click="tab = 'link'">链接</span>
-        <span class="box" :class="tab=='material'? 'active':''" @click="goToMaterial('material')">素材库</span>
+        <!-- <span class="box" :class="tab=='material'? 'active':''" @click="goToMaterial('material')">素材库</span> -->
       </div>
       <div class="uploadImg">
         <div class="upload_wrap" v-if="tab == 'image'">
@@ -69,13 +69,13 @@
           <div class="upload_tips" v-if="!videoUrl">上传视频最大支持10M</div>
         </div>
         <div class="link_wrap" v-if="tab == 'link'">
-          <!-- <div class="input_item">
+          <div class="input_item">
             <input v-model="inputUrl" @input="inputUrl=inputUrl.replace(/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]|[^\S+$]/g,'')"
                    placeholder="链接地址请以http或https开头" />
-          </div> -->
+          </div>
       
              <!-- <template > -->
-                <el-form ref="form" :model="linkhref">
+                <!-- <el-form ref="form" :model="linkhref">
               <el-input class="marB-24" v-model="linkhref.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
              
                 <el-form-item label="链接标题 :" :rules="[
@@ -92,7 +92,7 @@
                     placeholder="请输入链接摘要"
                   ></el-input>
                 </el-form-item>
-                <el-form-item label="链接封面 :" class="upload_avatar">
+                <el-form-item label="链接封面 :" class="upload_avatar"> -->
                  <!-- <div class="cover_warp"> -->
                    <!-- <div class="up">重新上传</div> -->
                      <!-- <input class="file" type="file" @change="uploadFun($event,'image','friend','png,jpg,jpeg','10')" accept=".png,.jpg,.jpeg"
@@ -103,7 +103,7 @@
                    <!-- <img src="../../assets/images/delte.png" alt="" class="delte_icon" @click="deletClick">
                   
                  </div> -->
-                 <div class="demo-input-suffix">
+                 <!-- <div class="demo-input-suffix">
             <el-upload class="avatar-uploader" action="#" :show-file-list="false" :http-request="handleAvatarSuccess">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -112,7 +112,7 @@
             <img src="../../images/dele.png" alt="" v-if="imageUrl" class="el-icon-circle-close" @click="deleteImg">
           </div>
                 </el-form-item>
-              </el-form>
+              </el-form> -->
             <!-- </template> -->
         </div>
           <div class="upload_wrap" v-if="tab == 'material'">
@@ -268,42 +268,42 @@ export default {
     sendMessage: _throttle(function () {
       // console.log(11111111)
       let imgArr = []
-        if (window.location.origin == 'https://console.jzcrm.com') {
-        this.shareUrlOrigin = 'https://h5.jzcrm.com'
-      } else {
-        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
-      }
-              if (this.materialList.tab == 1) {
-          imgArr = [
-            {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.articleId}&type=${this.materialList.tab}`,
-              ...this.materialList,
-            },
-          ]
-            console.log(imgArr,"---l素材 ",this.shareUrlOrigin)
-        } else if (this.materialList.tab == 2) {
-          imgArr = [
-            {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.documentId}&type=${this.materialList.tab}`,
-              ...this.materialList
-            },
-          ]
-        } else {
-          imgArr = [this.materialList]
-        }
-        console.log(imgArr,"--------kkk")
+      //   if (window.location.origin == 'https://console.jzcrm.com') {
+      //   this.shareUrlOrigin = 'https://h5.jzcrm.com'
+      // } else {
+      //   this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
+      // }
+      //         if (this.materialList.tab == 1) {
+      //     imgArr = [
+      //       {
+      //         url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.articleId}&type=${this.materialList.tab}`,
+      //         ...this.materialList,
+      //       },
+      //     ]
+      //       console.log(imgArr,"---l素材 ",this.shareUrlOrigin)
+      //   } else if (this.materialList.tab == 2) {
+      //     imgArr = [
+      //       {
+      //         url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.documentId}&type=${this.materialList.tab}`,
+      //         ...this.materialList
+      //       },
+      //     ]
+      //   } else {
+      //     imgArr = [this.materialList]
+      //   }
+      //   console.log(imgArr,"--------kkk")
       let materialList = []
       
-      if (this.tab == 'image') {
-        imgArr = this.lists
-      } else if (this.tab == 'video') {
-        imgArr = [this.videoUrl]
-      } else if(this.tab == 'link'){
-        // imgArr = [this.inputUrl]
-        imgArr = this.linkhref
-      }else{
-         materialList.push( this.materialList)
-      }
+      // if (this.tab == 'image') {
+      //   imgArr = this.lists
+      // } else if (this.tab == 'video') {
+      //   imgArr = [this.videoUrl]
+      // } else if(this.tab == 'link'){
+      //   // imgArr = [this.inputUrl]
+      //   imgArr = this.linkhref
+      // }else{
+      //    materialList.push( this.materialList)
+      // }
       let params = {
         content: this.textVal,
         urls: imgArr,

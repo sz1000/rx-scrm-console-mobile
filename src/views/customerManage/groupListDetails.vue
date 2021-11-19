@@ -741,7 +741,7 @@ this.highLightArr = peon
           margin-right: 16px;
           text-overflow: ellipsis;
            white-space: nowrap;
-           width: 120px;
+          //  width: 120px;
            overflow: hidden;
            text-align: center;
           &.active {
