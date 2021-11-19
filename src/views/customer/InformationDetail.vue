@@ -280,13 +280,13 @@ export default {
         { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       microList: [
-        { name: '客户简称', mapName: 'customerName', value: '' },
-        { name: '客户来源', mapName: 'source', value: '' },
-        { name: '公司名称', mapName: 'cropFullName', value: '' },
-        { name: '客户类型', mapName: 'customerType', value: '' },
-        { name: '姓名', mapName: 'name', value: '' },
-        { name: '性别', mapName: 'gender', value: '' },
-        { name: '职务', mapName: 'position', value: '' },
+        { name: '客户简称', mapName: 'externalCorpName', value: '' },
+        { name: '客户来源', mapName: 'externalSource', value: '' },
+        { name: '公司名称', mapName: 'externalCorpFullName', value: '' },
+        { name: '客户类型', mapName: 'externalType', value: '' },
+        { name: '姓名', mapName: 'externalName', value: '' },
+        { name: '性别', mapName: 'externalGender', value: '' },
+        { name: '职务', mapName: 'externalPosition', value: '' },
         { name: '添加人员', mapName: 'createBy', value: '' },
         { name: '添加客户时间', mapName: 'createTime', value: '' },
         { name: '备注', mapName: 'remark', value: '' },
@@ -806,10 +806,11 @@ export default {
         border-bottom: 0;
         line-height: 80px;
         padding-left: 24px;
-        padding-top: 10px;
+        // padding-top: 10px;
         img {
           width: 60px;
           height: 60px;
+          vertical-align: middle;
         }
       }
     }

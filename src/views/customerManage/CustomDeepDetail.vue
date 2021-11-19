@@ -100,6 +100,7 @@
         <div class="inputBox">
           <span>头像</span>
           <span><img :src="basicInfo.avatar" alt="" v-show="basicInfo.avatar" /></span>
+          <!-- <span><img src="../../images/bell.png" alt="" /></span> -->
         </div>
         <van-cell-group>
           <van-field label="联系人" v-model="basicInfo.name" label-align="center" readonly />
@@ -282,6 +283,13 @@ export default {
         cropSubIndustry: '',
         source: '',
         email: '',
+        // externalCorpName: '',
+        // externalCorpFullName: '',
+        // externalType: '',
+        // externalName: '',
+        // externalGender: '',
+        // externalPosition: '',
+        // stage: '',
       },
       systemList: [
         { name: '添加人员', mapName: 'createBy', value: '' },
@@ -291,13 +299,13 @@ export default {
       ],
       customerList: [],
       microList: [
-        { name: '客户简称', mapName: 'customerName', value: '' },
-        { name: '客户来源', mapName: 'source', value: '' },
-        { name: '公司名称', mapName: 'cropFullName', value: '' },
-        { name: '客户类型', mapName: 'customerType', value: '' },
-        { name: '姓名', mapName: 'name', value: '' },
-        { name: '性别', mapName: 'gender', value: '' },
-        { name: '职务', mapName: 'position', value: '' },
+        { name: '客户简称', mapName: 'externalCorpName', value: '' },
+        { name: '客户来源', mapName: 'externalSource', value: '' },
+        { name: '公司名称', mapName: 'externalCorpFullName', value: '' },
+        { name: '客户类型', mapName: 'externalType', value: '' },
+        { name: '姓名', mapName: 'externalName', value: '' },
+        { name: '性别', mapName: 'externalGender', value: '' },
+        { name: '职务', mapName: 'externalPosition', value: '' },
         { name: '添加人员', mapName: 'createBy', value: '' },
         { name: '添加客户时间', mapName: 'createTime', value: '' },
         { name: '备注', mapName: 'remark', value: '' },
@@ -732,6 +740,9 @@ export default {
           background: #fafbff;
           border-right: 1px solid #f0f2f7;
           line-height: 80px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .van-field__body {
           height: 80px;
@@ -839,6 +850,7 @@ export default {
         img {
           width: 60px;
           height: 60px;
+          vertical-align: middle;
         }
       }
     }
