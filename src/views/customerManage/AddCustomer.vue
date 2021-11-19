@@ -82,9 +82,37 @@
         <el-form-item label="微信号:">
           <el-input v-model="formObj.weixin" placeholder="手机号与微信号选填一个即可" maxlength="20"></el-input>
         </el-form-item>
+        <el-form-item label="微信昵称:">
+          <el-input v-model="formObj.wechatNickname" placeholder="请输入" maxlength="20"></el-input>
+        </el-form-item>
         <el-form-item label="邮箱:">
           <el-input v-model="formObj.email" placeholder="请输入" maxlength="60"></el-input>
         </el-form-item>
+        <!-- 自定义信息 -->
+        <section>
+          <div class="custonInfo">
+            <img src="../../images/icon_label.png" alt="">
+            <span>自定义信息</span>
+          </div>
+          <!-- <el-form ref="form" :model="userForm" label-width="auto"> -->
+          <el-form-item :label="item.columnName+':'" v-for="(item) in textList" :key="item.id">
+            <el-input v-model="item.value" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item :label="item.columnName+':'" v-for="(item) in selectList" :key="item.id">
+            <el-select v-model="item.value" placeholder="请选择" clearable>
+              <el-option v-for="(val) in item.optionsVOList" :key="val.id" :label="val.columnOption" :value="val.columnOption">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <div v-if="dateList.length>0">
+            <el-form-item :label="item.columnName+':'" v-for="(item) in dateList" :key="item.id">
+              <el-date-picker v-model="item.value" type="datetime" placeholder="选择日期时间" align="right" value-format='yyyy-MM-dd HH:mm:ss'>
+              </el-date-picker>
+            </el-form-item>
+          </div>
+          <!-- </el-form> -->
+        </section>
+
         <el-form-item class="submitBtn">
           <el-button type="primary" v-preventReClick @click="onSubmit('form')">提交</el-button>
         </el-form-item>
@@ -120,7 +148,12 @@ export default {
         position: '',
         weixin: '',
         email: '',
+        wechatNickname: '',
       },
+      userForm: {},
+      textList: [],
+      selectList: [],
+      dateList: [],
       optionSource: [],
       optionsCreat: [],
       optionsScale: [],
@@ -139,6 +172,18 @@ export default {
   methods: {
     uploadFn(file) {
       console.log(file)
+    },
+    dealHeader(list) {
+      list.forEach((item) => {
+        if (item.columnType == 1) {
+          this.textList.push(item)
+        } else if (item.columnType == 2) {
+          this.selectList.push(item)
+        } else if (item.columnType == 3) {
+          this.dateList.push(item)
+        }
+      })
+      // console.log(this.textList, this.selectList, this.dateList)
     },
     handleAvatarSuccess(request) {
       // console.log('--2----', request)
@@ -188,6 +233,7 @@ export default {
         this.processTree(res.data.comlist)
         this.optionSource = res.data.list
         this.optionsScale = res.data.corpScaleList
+        this.dealHeader(res.data.head)
       })
     },
     processTree(data) {
@@ -227,16 +273,55 @@ export default {
       console.log(val)
     },
     onSubmit(formName) {
+      let tempText = [],
+        tempSelect = [],
+        tempDate = []
+      let textObj = {},
+        selectObj = {},
+        dateObj = {}
+      this.textList.forEach((item, index) => {
+        let obj = {}
+        obj[this.textList[index].columnValue] = item.value || ''
+        tempText.push(obj)
+      })
+      tempText.forEach((el) => {
+        textObj = Object.assign(textObj, el)
+      })
+      this.selectList.forEach((item, index) => {
+        let obj = {}
+        obj[this.selectList[index].columnValue] = item.value || ''
+        tempSelect.push(obj)
+      })
+      tempSelect.forEach((el) => {
+        selectObj = Object.assign(selectObj, el)
+      })
+
+      this.dateList.forEach((item, index) => {
+        let obj = {}
+        obj[this.dateList[index].columnValue] = item.value || ''
+        tempDate.push(obj)
+      })
+      tempDate.forEach((el) => {
+        dateObj = Object.assign(dateObj, el)
+      })
+      console.log(textObj, selectObj, dateObj)
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.formObj.phone || this.formObj.weixin) {
             let cropSubIndustry = this.formObj.industry.toString()
             let params = {
+              avatar: this.imageUrl,
               ...this.formObj,
               ...{
                 cropSubIndustry: cropSubIndustry,
                 type: this.$route.query.type,
               },
+              corpCustomColumn: JSON.stringify({
+                ...textObj,
+                ...selectObj,
+                ...dateObj,
+              }),
             }
             this.$network
               .post('/customer-service/cluecustomer/addCul', params)
@@ -343,6 +428,7 @@ export default {
           // border: 1px solid #d9dae4;
         }
         .el-select,
+        .el-date-editor,
         .el-cascader {
           width: 100%;
           height: 80px;
