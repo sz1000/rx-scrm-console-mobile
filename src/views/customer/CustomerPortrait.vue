@@ -458,10 +458,16 @@ export default {
           background: #ffffff;
           border-radius: 8px;
           border: 2px solid #d9dae4;
+          padding-bottom: 40px;
           /deep/.van-field__control {
             height: 350px;
             padding-top: 10px;
           }
+        }
+        /deep/ .van-field__word-limit{
+          position: absolute;
+          bottom: -24px;
+          right: 0;
         }
       }
       .buttonWarp {
