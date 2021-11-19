@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <div class="tips_icon">
+        <div class="tips_icon" @click="asd = !asd">
             <img class="icon" src="@/assets/images/icon_tip.png" alt="">
             <div class="text" v-if="type == 1 || type == 2">温馨提示：数据统计来自{{dateTimeFun(detail.batchDate)}}全天数据</div>
             <div class="text" v-if="type == 3 || type == 4">温馨提示：数据统计来自{{dateTimeFun(detail.firstDate)}}-{{dateTimeFun(detail.lastDate)}}当周数据</div>
@@ -9,6 +9,16 @@
         <div class="item_wrap">
             <div class="tit_box">
                 <div class="item_tit">客户数据</div>
+            </div>
+            <div class="title_box" v-if="asd">
+                <span class="t_line"></span>
+                <span class="t_tit">客户数据</span>
+                <van-popover get-container="title_box" v-model="businessPopover" placement="top-start" theme="dark" trigger="click">
+                    <span class="popover_msg">仅统计负责人/协作人的客户中做为负责人的商机</span>
+                    <template #reference>
+                        <img class="icon" src="@/assets/images/icon_yw.png" alt="">
+                    </template>
+                </van-popover>
             </div>
             <div class="total_wrap">
                 <div class="total_box">
@@ -229,6 +239,7 @@ export default {
                 userNo: '',   //员工号
                 visitedCount: '',   //今日已拜访客户数
             },
+            asd: false,
         }
     },
     computed: {
@@ -333,7 +344,7 @@ export default {
                 _str = m + "分" + s + '秒'
             }else{
                 if(Number(s) > 0){
-                    _str = s + '秒'
+                    _str = Number(s) + '秒'
                 }else{
                     _str = '0秒'
                 }
@@ -386,11 +397,55 @@ export default {
         width: 100%;
         background: @white;
         margin-bottom: 20px;
+        .title_box{
+            width: 100%;
+            padding: 26px 32px;
+            font-size: 0;
+            position: relative;
+            &::after{
+                content: "";
+                width: calc(100% - 32px);
+                height: 1px;
+                background: @bdColor;
+                transform: scaleY(0.5);
+                position: absolute;
+                left: 32px;
+                bottom: 0;
+            }
+            span{
+                display: inline-block;
+                vertical-align: middle;
+            }
+            .t_line{
+                width: 8px;
+                height: 30px;
+                background: @main;
+                margin-right: 20px;
+            }
+            .t_tit{
+                font-size: 32px;
+                height: 44px;
+                line-height: 44px;
+                color: @fontMain;
+                font-weight: bold;
+            }
+            .icon{
+                width: 32px;
+                height: 32px;
+                margin-left: 8px;
+            }
+        }
         .tit_box{
             width: 100%;
             padding: 26px 32px;
             display: flex;
+            font-size: 0;
             align-items: center;
+            display: -webkit-box;
+            display:-moz-box;
+            display:-webkit-flex;
+            display:-ms-flexbox;
+            -webkit-align-items: center;
             position: relative;
             &::after{
                 content: "";
@@ -410,6 +465,7 @@ export default {
         }
         .item_tit{
             font-size: 32px;
+            height: 44px;
             line-height: 44px;
             color: @fontMain;
             font-weight: bold;
@@ -423,7 +479,7 @@ export default {
                 position: absolute;
                 top: 50%;
                 left: 0;
-                transform: translateY(-46%);
+                transform: translateY(-50%);
             }
             // &::after{
             //     content: "";
