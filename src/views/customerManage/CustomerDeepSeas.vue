@@ -375,6 +375,22 @@ export default {
           } else {
             this.basicInfo.industry = []
           }
+          let tempColum = res.data.clueCustomerEntity.corpCustomColumnMap
+          let nameList = []
+          res.data.head.forEach((item) => {
+            if (item.columnType) {
+              nameList.push(item)
+            }
+          })
+          // console.log('---nameList---', nameList)
+          this.customerList = []
+          nameList.forEach((item) => {
+            let obj = {}
+            obj.name = item.columnName
+            obj.value = tempColum ? tempColum[item.columnValue] : ''
+            this.customerList.push(obj)
+            // console.log('------', this.customerList)
+          })
         })
     },
     goBack() {
