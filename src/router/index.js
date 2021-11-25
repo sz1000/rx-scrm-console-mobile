@@ -67,6 +67,11 @@ import MterialPage from '../components/materialDialog/MterialPage.vue'
 // 消息通知 日报
 import Daily from '../views/notice/daily'
 
+// w我的、待处理
+import WaitDealwith from '../views/myHome/WaitDealwith.vue'
+// 客户激活
+import CustomeActive from '../views/myHome/CustomeActive.vue'
+
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -429,6 +434,18 @@ const routes = [{
         path: '/notice/daily',
         name: 'Daily',
         component: Daily,
+    },
+    // 我的/待处理
+    {
+        path: '/waitDealwith',
+        name: 'waitDealwith',
+        component: WaitDealwith,
+    },
+    // 客户激活
+    {
+        path: '/customeActive',
+        name: 'customeActive',
+        component: CustomeActive,
     },
 ]
 

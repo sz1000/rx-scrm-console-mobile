@@ -1,6 +1,6 @@
 <template>
   <div class="settinWarp">
-    <div class="main-warp">
+    <div class="main-warp" v-if="showHome">
       <div class="customAccont">客户统计</div>
       <div class="statiStical">
         <div class="numResult afterLine">
@@ -110,18 +110,23 @@
         </div> -->
       </div>
     </div>
-    <!-- <div class="btm-box">
+    <div class="identity_page" v-else>
+      <MyIndex></MyIndex>
+    </div>
+    <div class="btm-box">
       <div class="bottom-warp">
-        <div class="routerbtn" @click="goToCard">
-          <img src="../images/daka2.png" alt="" />
-          <span>打卡</span>
+        <div class="routerbtn" @click="showHome = false">
+          <img src="../images/bg_y.png" alt="" v-show="showHome" />
+          <img src="../images/bg_gy.png" alt="" v-show="!showHome" />
+          <span :class="showHome ? '' : 'textname'">我的</span>
         </div>
-        <div class="routerbtn">
-          <img src="../images/gongju1.png" alt="" />
-          <span class="textname">运营工具</span>
+        <div class="routerbtn" @click="showHome = true">
+          <img src="../images/bg_g.png" alt="" v-show="!showHome" />
+          <img src="../images/bg_m.png" alt="" v-show="showHome" />
+          <span :class="showHome ? 'textname' : ''">工作台</span>
         </div>
       </div>
-    </div> -->
+    </div>
     <van-overlay :show="show">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
@@ -133,10 +138,13 @@
 </template>
 <script>
 import CommonHome from '../utils/CommonHome'
+import MyIndex from './myHome/MyIndex.vue'
 import { Notify } from 'vant'
-import { cluecustomer_homedata,user_getUserName } from '@/api/home'
+import { cluecustomer_homedata, user_getUserName } from '@/api/home'
 export default {
-  components: {},
+  components: {
+    MyIndex,
+  },
   data() {
     return {
       userId: '',
@@ -147,6 +155,7 @@ export default {
       customerSee: '0',
       menulist: [],
       show: false,
+      showHome: false,
     }
   },
   created() {
@@ -173,9 +182,9 @@ export default {
     this.getUserName()
   },
   methods: {
-    getHome(){
-      cluecustomer_homedata().then(res => {
-        if(res.result){
+    getHome() {
+      cluecustomer_homedata().then((res) => {
+        if (res.result) {
           this.clues = res.data.myThread
           this.cluSee = res.data.derThread
           this.customer = res.data.myCustomer
@@ -196,12 +205,12 @@ export default {
       })
     },
     getUserName() {
-      user_getUserName().then(res => {
+      user_getUserName().then((res) => {
         if (res.code == 'error_corp_forbid') {
           this.show = true
         }
         this.show = !res.data.haveSecret
-        if(res.result){
+        if (res.result) {
           let tempMenuList = res.data.userEntity.permissionList
           let corpId = res.data.userEntity.corpId
           localStorage.setItem('corpId', corpId)
@@ -213,9 +222,8 @@ export default {
           this.menulist = tempMenuList.map((item) => item.enName)
         }
       })
-      
     },
-    getSource(){
+    getSource() {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
         .then((res) => {
@@ -234,21 +242,18 @@ export default {
           this.menulist = tempMenuList.map((item) => item.enName)
         })
     },
-    goToCard() {
-      this.$router.push('/punchCard')
-    },
   },
 }
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
 .settinWarp {
-  background: #fff;
-  height: 100%;
+  // height: 100%;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
   .main-warp {
+    background: #fff;
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
@@ -401,6 +406,10 @@ export default {
       }
     }
   }
+}
+.identity_page {
+  height: 100%;
+  padding-bottom: 130px;
 }
 .btm-box {
   position: fixed;

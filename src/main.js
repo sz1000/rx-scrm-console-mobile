@@ -15,6 +15,7 @@ import './styles/common.less'
 import preventReClick from './utils/directive.js' //防多次点击，重复提交
 import loadmore from './utils/directive.js' //下拉框滚动加载
 import { http } from './utils/request'
+import * as echarts from 'echarts'
 // import MintUI from 'mint-ui'
 // import 'mint-ui/lib/style.css'
 // Vue.use(MintUI)
@@ -24,6 +25,7 @@ Vue.use(Vant)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.prototype.$network = http
+Vue.prototype.$echarts = echarts
 new Vue({
     router,
     store,
