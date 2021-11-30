@@ -65,6 +65,7 @@ import Notice from '../views/notice/index'
 //朋友圈
 import CircleFriend from '../views/circleFriend/CircleFriend.vue'
 import MterialPage from '../components/materialDialog/MterialPage.vue'
+import MterialPageGroup from '../components/materialDialog/MterialPageGroup.vue'
 // 消息通知 日报
 import Daily from '../views/notice/daily'
 
@@ -204,6 +205,7 @@ const routes = [{
                 path: 'CustomerGroup',
                 meta: {
                     bodyClass: 'CustomerGroup',
+                    // keepAlive: true
                 },
                 component: CustomerGroup,
             },
@@ -274,6 +276,11 @@ const routes = [{
                 path: 'mterialPage',
                 name: 'mterialPage',
                 component: MterialPage,
+            },
+            {
+                path: 'MterialPageGroup',
+                name: 'MterialPageGroup',
+                component: MterialPageGroup,
             },
         ],
     },
