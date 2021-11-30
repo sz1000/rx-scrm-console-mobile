@@ -566,11 +566,6 @@ export default {
 @import "~@/styles/reset.less";
 
 .detail_wrap {
-  .van-popup {
-    left: 50%;
-    width: 750px;
-    transform: translate(-50%, 0);
-  }
   width: 100%;
   background: @white;
   .popup_wrap {

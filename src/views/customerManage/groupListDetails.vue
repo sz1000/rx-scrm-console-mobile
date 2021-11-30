@@ -72,11 +72,11 @@
             <div ref="spanBox">
                <span class="name_item tagBox" v-for="item in lableList" :key="item.id">
             {{ item.name }}
-            <img
+            <!-- <img
               src="../../assets/images/delte.png"
               alt=""
               @click="lableDelet(item.tagid)"
-            />
+            /> -->
           </span>
             </div>
           </div>
@@ -87,7 +87,7 @@
         </div>
     </div>
     <!-- 群sop -->
-    <div class="sop_box">
+    <div class="sop_box" v-if="isOwmer">
       <div class="sop_top">
         <div class="sop_title">群SOP</div>
         <div class="setting_btn" @click="settingSopFun">设置</div>
@@ -228,6 +228,7 @@
     </van-overlay>
     <!-- 群标签 -->
     <van-popup
+ 
       v-model="chooseCusSign"
       round
       class="choose-warp-popup"
@@ -318,8 +319,17 @@ export default {
       group: "",
       isOwmer: false, //是否群主
       lableList: [],
+      showgroup:false,
     };
   },
+
+  watch:{
+chooseCusSign(value){
+    if(value == true){
+      //  this.getTagList()
+    }
+}},
+  
   created() {
     this.group = this.$route.query.grouid;
     this.getTagList();
@@ -429,11 +439,11 @@ this.datatupList = peon
 // console.log(peon);
 this.highLightArr = peon
       
-        //  console.log(this.highLightArr, "点击保存---获取标签内容222");
+         console.log(this.highLightArr, "点击保存---获取标签内容222");
   
 
       this.chooseCusSign = false;
-   
+  //  if()
       this.groupListadd();
     },
     getSopList() {
@@ -493,29 +503,29 @@ this.highLightArr = peon
 
     // 删除标签
 
-    lableDelet(item) {
+    // lableDelet(item) {
 
-      console.log(item);
-      this.highLightArr.forEach((items, index) => {
-        // console.log(index)
+    //   console.log(item);
+    //   this.highLightArr.forEach((items, index) => {
+    //     // console.log(index)
 
-        if (item == items.tagid) {
-          this.highLightArr.splice(index, 1);
-          //      console.log(this.highLightArr, "点击删除---获取标签内容222");
-          // console.log(item);
-          this.$network
-            .get("/customer-service/groupUserTag/delete", {
-              tagid: item,
-            })
-            .then((res) => {
-              if (res.result) {
-                this.getTagList();
-                this.groupList();
-              }
-            });
-        }
-      });
-    },
+    //     if (item == items.tagid) {
+    //       this.highLightArr.splice(index, 1);
+    //       //      console.log(this.highLightArr, "点击删除---获取标签内容222");
+    //       // console.log(item);
+    //       this.$network
+    //         .get("/customer-service/groupUserTag/delete", {
+    //           tagid: item,
+    //         })
+    //         .then((res) => {
+    //           if (res.result) {
+    //             this.getTagList();
+    //             this.groupList();
+    //           }
+    //         });
+    //     }
+    //   });
+    // },
     getGroupDetail() {
       this.$network
         .get("/customer-service/group/getGroupDetail", {
@@ -729,6 +739,12 @@ this.highLightArr = peon
           color: #838a9d;
           font-weight: 400;
           margin-right: 16px;
+          text-overflow: ellipsis;
+           white-space: nowrap;
+          //  width: 120px;
+          max-width: 260px;
+           overflow: hidden;
+           text-align: center;
           &.active {
             background: #4168f6;
             border: 1px solid !important;

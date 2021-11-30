@@ -54,7 +54,8 @@ import GroupListDetails from '../views/customerManage/groupListDetails.vue'
 //错误页
 import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
-
+//素材列表
+import MaterialLibrary from '../views/customerManage/materialLibrary.vue'
 // 素材模板h5分享页面
 import MaterialTemplate from '../views/MaterialTemplate/share'
 
@@ -64,6 +65,7 @@ import Notice from '../views/notice/index'
 //朋友圈
 import CircleFriend from '../views/circleFriend/CircleFriend.vue'
 import MterialPage from '../components/materialDialog/MterialPage.vue'
+import MterialPageGroup from '../components/materialDialog/MterialPageGroup.vue'
 // 消息通知 日报
 import Daily from '../views/notice/daily'
 
@@ -210,6 +212,7 @@ const routes = [{
                 path: 'CustomerGroup',
                 meta: {
                     bodyClass: 'CustomerGroup',
+                    // keepAlive: true
                 },
                 component: CustomerGroup,
             },
@@ -281,6 +284,11 @@ const routes = [{
                 name: 'mterialPage',
                 component: MterialPage,
             },
+            {
+                path: 'MterialPageGroup',
+                name: 'MterialPageGroup',
+                component: MterialPageGroup,
+            },
         ],
     },
     //客户管理
@@ -331,6 +339,15 @@ const routes = [{
                     bodyClass: 'groupListDetails',
                 },
                 component: GroupListDetails,
+            },
+            // 素材列表
+            {
+                path: 'materiallibrary',
+                name: 'materiallibrary',
+                meta: {
+                    bodyClass: 'materiallibrary',
+                },
+                component: MaterialLibrary,
             },
 
             // 客户画像

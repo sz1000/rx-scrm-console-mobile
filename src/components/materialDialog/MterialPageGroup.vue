@@ -1,4 +1,5 @@
 <template>
+
   <div class="material_warp">
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
@@ -99,11 +100,13 @@
       </div>
 
   </div>
+
 </template>
 <script>
 export default {
   data() {
     return {
+      tabshow:0,
       centquer:{},
       tab: 1,
       indexps:1000000,
@@ -129,42 +132,48 @@ export default {
       totalp:0,
       listfin:[],
       listPosters:[],
-      loading: true
+      loading: true,
+      materialList:[],
+     
     }
   },
   created(){
    this.getList()
+     this.materialList =  this.$route.query.datalist
+     console.log( this.materialList)
   //  this.getFileList()
-  },
-  computed:{
-      corpId(){
-            return this.$store.getters.corpId
-        },
+
   },
   methods: {
 
     goBack() {
-      this.$router.go(-1)
+        //  this.$router.go(-1)
+          this.$emit('sureTab', this.tabshow)
     },
     determine(){
-      console.log("000")
-        this.$router.push({
-          path:"/talkTool/circleFriend",
-          query:{
-            datalist:this.centquer,
-            tablable:"material"
-          }
-        })
+      //  this.$router.go(-1)
+       this.$emit('sure', this.centquer)
+              this.$emit('sureTab', this.tabshow)
+        // this.$router.push({
+        //   path:"/talkTool/customerGroup",
+        //   query:{
+        //     datalist:this.centquer,
+        //     tablable:"素材库",
+        //     index:this.$route.query.datindex
+        //   }
+        // })
 
     },
     cancel(){
-        this.$router.push({path:"/talkTool/circleFriend",})
+        // this.$router.push({path:"/talkTool/circleFriend",})
+          this.$emit('sureTab', this.tabshow)
     },
     onLoad(){
       if(this.list.length >= this.total){
          console.log(this.list.length)
+   
           this.pageInfo.page++
-           this.getList()
+          //  this.getList()
         // this.finished = true;
       }
     },
@@ -188,12 +197,14 @@ listtusp(item,val){
      this.centquer = item
      this.indexps = val
       this.$set(this.centquer, "tab", this.tab);
+    //  console.log(val,"val///")
+      // this.$set(this.centquer, "tab", this.tabshow);
 },
 onLoadPosters(){
    if(this.listPosters.length >= this.totalp){
          console.log(11)
-        
-        // this.finished = true;
+        // this.pageInposters.page++
+    //  }   // this.finished = true;
       }else{
           this.pageInposters.page++
            this.getFilePosters()
@@ -230,7 +241,7 @@ onLoadPosters(){
           // this.pageInposters.page = 1
         // this.getFilePosters()
       this.$network
-        .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
+        .get('/material-service/sale-poster-entity/list', {corpId:"ww7938067cfe342e58",
               pageIndex: this.pageInposters.page,
               pageSize:this.pageInposters.limit, name: this.searchInput,})
         .then((res) => {
@@ -244,7 +255,7 @@ onLoadPosters(){
     },
       getList() {
       this.$network
-        .get('/material-service/article/list', {corpId:this.corpId,
+        .get('/material-service/article/list', {corpId:"ww7938067cfe342e58",
               pageIndex: this.pageInfo.page,
               pageSize:this.pageInfo.limit, title: this.searchInput,})
         .then((res) => {
@@ -262,7 +273,7 @@ onLoadPosters(){
     },
       getFileList() {
       this.$network
-        .get('/material-service/sale_document/list', {corpId:this.corpId,
+        .get('/material-service/sale_document/list', {corpId:"ww7938067cfe342e58",
               pageIndex: this.pageInfofin.page,
               pageSize:this.pageInfofin.limit, name: this.searchInput,})
         .then((res) => {
@@ -280,7 +291,7 @@ onLoadPosters(){
     },
         getFilePosters() {
       this.$network
-        .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
+        .get('/material-service/sale-poster-entity/list', {corpId:"ww7938067cfe342e58",
               pageIndex: this.pageInposters.page,
               pageSize:this.pageInposters.limit, name: this.searchInput,})
         .then((res) => {

@@ -114,7 +114,7 @@ export default {
     },
     methods: {
         blackFun(){
-            this.$router.replace('/groupportrait')
+            this.$router.go(-1)
         },
         getSopList(){ //获取sop规则列表
             sop_groupSopList(this.groupId).then(res => {
