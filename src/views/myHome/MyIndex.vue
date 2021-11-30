@@ -2,9 +2,10 @@
   <div class="myhome_index">
     <div class="page_title">
       <div class="head_img">
-        <img src="../../images/img_head.png" alt="">
+        <img :src="userObj.avatar" alt="" v-if="userObj.avatar" />
+        <img src="../../images/img_head.png" alt="" v-else />
         <div class="person_info">
-          <p>{{identityName}}</p>
+          <p>{{userObj.name}}</p>
           <p>{{identity}}</p>
         </div>
       </div>
@@ -16,35 +17,35 @@
     <div class="content_warp">
       <div class="statistical">
         <div class="box">
-          <p>{{num}}</p>
+          <p>{{dataObj.customerSum}}</p>
           <p>客户</p>
         </div>
         <div class="box">
-          <p>{{num}}</p>
+          <p>{{dataObj.groupSum}}</p>
           <p>群聊</p>
         </div>
         <div class="box">
-          <p>{{num}}</p>
+          <p>{{dataObj.friendSum}}</p>
           <p>朋友圈</p>
         </div>
       </div>
       <div class="wait_warp">
         <div class="text_wait">
           <span>待处理</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToWait" />
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToWait(1)" />
         </div>
         <div class="task_msg">
-          <div class="left_warp">
+          <div class="left_warp" @click="goToWait(1)">
             <div class="blank">
               <p>朋友圈</p>
-              <p>待发表<span class="friend">{{num}}</span>条</p>
+              <p>待发表<span class="friend">{{dataObj.friendSend}}</span>条</p>
             </div>
             <img src="../../images/friend_ic.png" alt="">
           </div>
-          <div class="right_warp">
+          <div class="right_warp" @click="goToWait(2)">
             <div class="blank">
               <p>群发任务</p>
-              <p>待发表<span class="group">{{num}}</span>条</p>
+              <p>待发表<span class="group">{{dataObj.custometMassSum}}</span>条</p>
             </div>
             <img src="../../images/group_task.png" alt="">
           </div>
@@ -53,27 +54,27 @@
       <div class="about_me">
         <span>@我</span>
         <div class="reply_text">
-          <span>10条待回复,关联3个客户</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+          <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToAbout" />
         </div>
       </div>
       <div class="cust_activate">
         <div class="text_wait">
           <span>客户激活</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom" />
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(1)" />
         </div>
         <div class="stati_num">
           <div class="box">
             <p>{{num}}</p>
-            <p>客户</p>
+            <p>从未联系</p>
           </div>
           <div class="box">
             <p>{{num}}</p>
-            <p>群聊</p>
+            <p>超过1天</p>
           </div>
           <div class="box">
             <p>{{num}}</p>
-            <p>朋友圈</p>
+            <p>超过1周</p>
           </div>
         </div>
       </div>
@@ -81,12 +82,29 @@
         <span>客户寻回</span>
         <div class="reply_text">
           <span>10个客户待寻回</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(2)" />
         </div>
       </div>
-      <div class="custom_add">
-        <CustomAddChart></CustomAddChart>
-      </div>
+      <!-- 图表 -->
+      <section>
+        <div class="custom_add">
+          <CustomAddChart :options='customer'></CustomAddChart>
+        </div>
+        <div class="custom_add">
+          <LookPieCharts :data="lookData"></LookPieCharts>
+        </div>
+        <div class="custom_add">
+          <TopBarCharts :data="topSortData" v-if="topSortData.length"></TopBarCharts>
+          <img src="../../images/nodae.png" alt="" v-else />
+        </div>
+        <div class="custom_add">
+          <SaleCharts v-if="scaleTotal > 0" :data="scaleData"></SaleCharts>
+          <img src="../../images/nodae.png" alt="" v-else />
+        </div>
+        <div class="custom_add">
+          <NicheCharts :time="nicheTime" :data="nicheData"></NicheCharts>
+        </div>
+      </section>
     </div>
     <section class="popup_warp">
       <van-popup v-model="showIdent">
@@ -94,7 +112,6 @@
           <!-- <img src="../../images/selected.png" alt="">
           <img src="../../images/no_select.png" alt=""> -->
           hahhah
-
         </div>
         <div class="close_warp" @click="closePopup">
           <img src="../../images/close_popup.png" alt="">
@@ -104,31 +121,176 @@
   </div>
 </template>
 <script>
-import CustomAddChart from './echartComponent/CustomAddChart.vue'
+import {
+  CustomAddChart,
+  LookPieCharts,
+  TopBarCharts,
+  SaleCharts,
+  NicheCharts,
+} from './echartComponent/index.js'
+import { getMyInfo } from '../../api/myHome'
 export default {
   components: {
     CustomAddChart,
+    LookPieCharts,
+    TopBarCharts,
+    SaleCharts,
+    NicheCharts,
+  },
+  computed: {
+    scaleTotal() {
+      let list = this.scaleData.find((el) => {
+        return el.name == 'total'
+      })
+      return list ? list.num : 0
+    },
   },
   data() {
     return {
-      identityName: '哈哈哈',
+      dataObj: {
+        customerSum: '',
+        groupSum: '',
+        friendSum: '',
+        friendSend: '',
+        custometMassSum: '',
+        forReply: '',
+        forReplyCustomer: '',
+      },
+      userObj: {
+        name: '哈哈哈',
+        avatar: '',
+      },
       identity: '个人',
-      num: 1,
+      num: '1',
       showIdent: false,
+      customer: {},
+      lookData: [],
+      topSortData: [],
+      scaleData: [],
+      nicheTime: [],
+      nicheData: {},
     }
   },
+  created() {
+    this.getData()
+  },
   methods: {
+    getData() {
+      getMyInfo().then((res) => {
+        this.dataObj = res.data.my
+        this.userObj = res.data.my.user
+        localStorage.setItem('myName', res.data.my.user.name)
+        localStorage.setItem('myAvatar', res.data.my.user.avatar)
+        localStorage.setItem('depId', res.data.my.user.depId)
+        this.$store.commit('setMyName', res.data.my.user.name)
+        this.$store.commit('setAvatar', res.data.my.user.avatar)
+        // 客户增长
+        this.customer = res.data.customer
+        //饼图
+        this.getMaterialPie(res.data.materialMap)
+        // 商机报告
+        this.setLineChart(res.data)
+        //优质内容top10
+        let arr1 = [],
+          arr = []
+        res.data.materialMap.materialTOP.data.forEach((el) => {
+          let obj = {
+            name: Object.keys(el)[0],
+            value: this.percentageFun(el[Object.keys(el)[0]]),
+          }
+          arr1.push(obj)
+        })
+        this.topSortData = arr1
+        // 商机漏斗
+        res.data.sales.forEach((el) => {
+          let list = el.split('_')
+          let obj = {
+            name: list[0],
+            id: Number(list[0].split('stage')[1]),
+            num: Number(list[1]),
+          }
+          arr.push(obj)
+        })
+        arr.sort((a, b) => {
+          return a.id - b.id
+        })
+        this.scaleData = arr
+      })
+    },
+    setLineChart(data) {
+      this.nicheData = data.oppory
+      this.nicheTime = data.dateTime
+    },
+    percentageFun(data) {
+      //小数转百分比
+      let val = this.$accMul(data, 100)
+      let arr = val ? val.toString().split('.') : []
+      let num = arr.length == 2 && arr[1].length > 1 ? val.toFixed(2) : val
+      return num
+    },
+    getMaterialPie(data) {
+      let arr = []
+      for (let key in this.objectOrder(data.materialPieChart)) {
+        let obj = {
+          value: data.materialPieChart[key],
+          name: this.getTimeName(key),
+          key: key,
+        }
+        arr.push(obj)
+      }
+      this.lookData = arr
+    },
+    getTimeName(val) {
+      let obj = {
+        count1: '0-5s',
+        count2: '5-20s',
+        count3: '20-40s',
+        count4: '40-60s',
+        count5: '60s+',
+      }
+      return obj[val]
+    },
+    objectOrder(obj) {
+      //排序的函数
+      var newkey = Object.keys(obj).sort() //先用Object内置类的keys方法获取要排序对象的属性名，再利用Array原型上的sort方法对获取的属性名进行排序，newkey是一个数组
+      var newObj = {} //创建一个新的对象，用于存放排好序的键值对
+      for (var i = 0; i < newkey.length; i++) {
+        //遍历newkey数组
+        newObj[newkey[i]] = obj[newkey[i]] //向新创建的对象中按照排好的顺序依次增加键值对
+      }
+      // console.log('newObj',newObj)
+      return newObj //返回排好序的新对象
+    },
     changeIdent() {
       // this.showIdent = true
     },
     closePopup() {
       this.showIdent = false
     },
-    goToWait() {
-      this.$router.push('/waitDealwith')
+    goToWait(v) {
+      this.$router.push({
+        path: '/waitDealwith',
+        query: {
+          tab: v,
+        },
+      })
     },
-    goToCustom() {
-      this.$router.push('/customeActive')
+    goToCustom(v) {
+      this.$router.push({
+        path: '/customeActive',
+        query: {
+          tab: v,
+        },
+      })
+    },
+    goToAbout() {
+      this.$router.push({
+        path: '/aboutme',
+        query: {
+          forReply: this.dataObj.forReply,
+          forReplyCustomer: this.dataObj.forReplyCustomer,
+        },
+      })
     },
   },
 }

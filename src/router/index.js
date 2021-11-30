@@ -71,6 +71,8 @@ import Daily from '../views/notice/daily'
 import WaitDealwith from '../views/myHome/WaitDealwith.vue'
 // 客户激活
 import CustomeActive from '../views/myHome/CustomeActive.vue'
+// @我
+import AboutComponent from '../views/myHome/AboutMe.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -446,6 +448,12 @@ const routes = [{
         path: '/customeActive',
         name: 'customeActive',
         component: CustomeActive,
+    },
+    //@我
+    {
+        path: '/aboutme',
+        name: 'aboutme',
+        component: AboutComponent,
     },
 ]
 

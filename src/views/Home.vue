@@ -118,12 +118,12 @@
         <div class="routerbtn" @click="showHome = false">
           <img src="../images/bg_y.png" alt="" v-show="showHome" />
           <img src="../images/bg_gy.png" alt="" v-show="!showHome" />
-          <span :class="showHome ? '' : 'textname'">我的</span>
+          <span :class="showHome ? '' : 'textname'">互动助手</span>
         </div>
         <div class="routerbtn" @click="showHome = true">
           <img src="../images/bg_g.png" alt="" v-show="!showHome" />
           <img src="../images/bg_m.png" alt="" v-show="showHome" />
-          <span :class="showHome ? 'textname' : ''">工作台</span>
+          <span :class="showHome ? 'textname' : ''">工作面板</span>
         </div>
       </div>
     </div>
