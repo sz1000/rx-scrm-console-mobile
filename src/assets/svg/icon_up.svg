@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/16px/展开_灰</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="icon/16px/展开_灰" stroke="#CCCCCC" stroke-width="1.5">
+            <polyline id="P" transform="translate(7.992641, 9.992641) scale(1, -1) rotate(-225.000000) translate(-7.992641, -9.992641) " points="4.99264069 6.99264069 10.9926407 6.99264069 10.9926407 12.9926407"></polyline>
+        </g>
+    </g>
+</svg>

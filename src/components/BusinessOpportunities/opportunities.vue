@@ -185,8 +185,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .opportunities {
-		position: relative;
-    padding: 0 24px 24px;
+	position: relative;
+    // padding: 0 24px 24px;
     .t_text {
         display: flex;
         justify-content: space-between;
@@ -320,7 +320,7 @@ export default {
     top: 0;
 }
 .addBtn{
-	right: 24px;
+	right: 0;
 }
 /deep/.delBtn span, .addBtn span{
 	position: relative;

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/20px/客户建档</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/20px/客户建档">
+            <rect id="R" fill="#EBF0FD" x="0" y="0" width="20" height="20" rx="10"></rect>
+            <g id="身份证_id-card-h" transform="translate(4.500000, 5.600000)" stroke="#4168F6" stroke-linejoin="round">
+                <rect id="矩形" x="0" y="0" width="11" height="8.8" rx="1"></rect>
+                <path d="M3.575,4.675 C4.1825025,4.675 4.675,4.1825025 4.675,3.575 C4.675,2.9674975 4.1825025,2.475 3.575,2.475 C2.9674975,2.475 2.475,2.9674975 2.475,3.575 C2.475,4.1825025 2.9674975,4.675 3.575,4.675 Z" id="路径"></path>
+                <path d="M5.225,6.325 C5.225,5.4137325 4.4862675,4.675 3.575,4.675 C2.6637325,4.675 1.925,5.4137325 1.925,6.325" id="路径" stroke-linecap="round"></path>
+                <line x1="6.6" y1="3.3" x2="8.8" y2="3.3" id="路径" stroke-linecap="round"></line>
+                <line x1="7.15" y1="5.5" x2="8.8" y2="5.5" id="路径" stroke-linecap="round"></line>
+            </g>
+        </g>
+    </g>
+</svg>

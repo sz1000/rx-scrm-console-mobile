@@ -16,9 +16,14 @@ import preventReClick from './utils/directive.js' //防多次点击，重复提�
 import loadmore from './utils/directive.js' //下拉框滚动加载
 import { http } from './utils/request'
 import * as echarts from 'echarts'
+
+import filters from '@/utils/filters'
 // import MintUI from 'mint-ui'
 // import 'mint-ui/lib/style.css'
 // Vue.use(MintUI)
+
+Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
+
 Vue.use(preventReClick)
 Vue.use(loadmore)
 Vue.use(Vant)
