@@ -3,7 +3,7 @@ import store from '@/store'
 import { phoneModel, isWeChat, getAuthInfo, wxAgent } from '@/utils/function.js'
 var contactsList = []                   //需获取外部联系人id页面路由
 var groupList = ['/customerPortrait']   //需获取群id页面路由 暂未启用
-var useList = ['/notice','/notice/daily','/home']       //目前可使用页面路由
+var useList = ['/notice','/notice/daily','/home','/customerPortrait']       //目前可使用页面路由
 
 router.beforeEach(async(to, from, next) => {
     let type = '',token = store.getters.token || localStorage.getItem('token')

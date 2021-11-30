@@ -17,6 +17,7 @@
     "less": "^4.1.1",
     "less-loader": "^7.3.0",
     "mint-ui": "^2.2.13",
+    "moment": "^2.29.1",
     "postcss-px2rem-exclude": "0.0.6",
     "vant": "^2.12.26",
     "vconsole": "^3.9.1",

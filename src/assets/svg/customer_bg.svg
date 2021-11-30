@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="375px" height="158px" viewBox="0 0 375 158" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>客户画像bg</title>
+    <defs>
+        <linearGradient x1="56.5523903%" y1="64.6343814%" x2="22.80434%" y2="38.0443723%" id="linearGradient-1">
+            <stop stop-color="#4168F6" offset="0%"></stop>
+            <stop stop-color="#76A1FB" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1_客户画像_客户动态" transform="translate(0.000000, -64.000000)" fill="url(#linearGradient-1)" fill-rule="nonzero">
+            <g id="客户画像bg" transform="translate(0.000000, 64.000000)">
+                <path d="M0,0 L375,0 L375,127.808917 C294.056971,147.936306 231.723638,158 188,158 C144.276362,158 81.6096954,147.936306 0,127.808917 L0,0 Z" id="矩形"></path>
+            </g>
+        </g>
+    </g>
+</svg>

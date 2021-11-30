@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import HomeTransition from '../views/HomeTransition.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
+import CustomerPortraitNew from '../views/customer/CustomerPortraitNew.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
 import CustomTransition from '../views/customer/CustomTransition.vue'
 // 拓客工具
@@ -115,12 +116,20 @@ const routes = [{
         component: CustomTransition,
     },
     {
-        path: '/customerPortrait',
+        path: '/customerPortraitn',
         name: 'CustomerPortrait',
         meta: {
             bodyClass: 'CustomerPortrait',
         },
         component: CustomerPortrait,
+    },
+    {
+        path: '/customerPortrait',
+        name: 'CustomerPortraitNew',
+        meta: {
+            bodyClass: 'CustomerPortraitNew',
+        },
+        component: CustomerPortraitNew,
     },
     {
         path: '/informationDetail',
