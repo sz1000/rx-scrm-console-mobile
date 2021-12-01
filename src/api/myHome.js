@@ -48,3 +48,19 @@ export function ReplayCustomer(data) {
         params: data,
     })
 }
+// 一键激活
+export function keyToActivate(data) {
+    return request({
+        url: CustomerService + '/my/toactivate',
+        method: 'post',
+        data: data,
+    })
+}
+// 一件巡回
+export function keyToFind(data) {
+    return request({
+        url: CustomerService + '/my/tofind',
+        method: 'post',
+        data: data,
+    })
+}

@@ -30,7 +30,7 @@
     <section v-if="tab==1">
       <div class="active_btn">
         <p class="p_text">已累计激活<span>{{num}}</span>个客户</p>
-        <p class="p_btn" v-if="tabName !== '已激活'">一键激活</p>
+        <p class="p_btn" v-if="tabName !== '已激活'" @click="fnAvtiveList">一键激活</p>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
@@ -85,7 +85,7 @@
     <section v-if="tab==2">
       <div class="active_btn">
         <p class="p_text">已累计激活<span>{{num}}</span>个客户</p>
-        <p class="p_btn" v-if="tabName !== '已寻回'">一键寻回</p>
+        <p class="p_btn" v-if="tabName !== '已寻回'" @click="fnReplayList">一键寻回</p>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
@@ -143,7 +143,12 @@
   </div>
 </template>
 <script>
-import { ActiveCustomer, ReplayCustomer } from '../../api/myHome'
+import {
+  ActiveCustomer,
+  ReplayCustomer,
+  keyToFind,
+  keyToActivate,
+} from '../../api/myHome'
 export default {
   data() {
     return {
@@ -237,6 +242,19 @@ export default {
         this.getReplayData()
       }
       // console.log(v)
+    },
+    fnAvtiveList() {
+      // console.log(this.cardList, '------')
+      keyToActivate(this.cardList).then((res) => {
+        if (res.result) {
+        }
+      })
+    },
+    fnReplayList() {
+      keyToFind(this.cardList).then((res) => {
+        if (res.result) {
+        }
+      })
     },
   },
 }
