@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/20px/激活</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/20px/激活">
+            <rect id="R" fill="#FFE7E8" x="0" y="0" width="20" height="20" rx="10"></rect>
+            <g id="提示_tips" transform="translate(3.500000, 3.500000)">
+                <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" x="0" y="0" width="13" height="13"></rect>
+                <path d="M10.8333333,5.41666667 C10.8333333,7.26041875 9.68185833,8.83523333 8.05878125,9.46118333 L6.5,9.46118333 L4.94121875,9.46118333 C3.31814167,8.83523333 2.16666667,7.26041875 2.16666667,5.41666667 C2.16666667,3.02342083 4.10675417,1.08333333 6.5,1.08333333 C8.89324583,1.08333333 10.8333333,3.02342083 10.8333333,5.41666667 Z" id="路径" stroke="#D14343" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M8.05878125,9.46118333 L7.87485833,11.6683125 C7.86315833,11.8086854 7.74580625,11.9166667 7.60494583,11.9166667 L5.39502708,11.9166667 C5.25416667,11.9166667 5.13684167,11.8086854 5.12514167,11.6683125 L4.94119167,9.46118333" id="路径" stroke="#D14343" stroke-linecap="round" stroke-linejoin="round"></path>
+                <polyline id="路径" stroke="#D14343" stroke-linecap="round" stroke-linejoin="round" points="4.875 4.60416667 4.875 6.22916667 6.5 5.41666667 8.125 6.22916667 8.125 4.60416667"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

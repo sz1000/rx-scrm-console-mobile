@@ -159,7 +159,7 @@ export default {
             let { code, data } = await SelectFollowMsgList(params)
             
             if(code == 'success') {
-                this.timeLineList = data
+                this.timeLineList = data.dataList.records
             }
             this.$toast.clear()
         },

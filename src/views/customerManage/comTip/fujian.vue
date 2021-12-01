@@ -227,7 +227,7 @@ export default {
           text-align: center;
           position: absolute;
 			    right: 0;
-			    top: -24px;
+			    top: -12px;
           background: #FFFFFF;
           font-size: 30px;
 }

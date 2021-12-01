@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/40px/link</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/40px/link">
+            <rect id="矩形" fill="#4168F6" x="0" y="0" width="40" height="40" rx="4"></rect>
+            <g id="编组" transform="translate(13.000000, 13.000000)" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                <path d="M14,4.14096332 L10.5926524,0.730672775 C9.60049538,-0.262325752 7.97007581,-0.240453554 6.95097691,0.779528892 C5.93187801,1.79949641 5.91002103,3.43136684 6.90216312,4.42434671 L9.86040815,7.38515277" id="路径" transform="translate(10.086061, 3.692576) scale(-1, 1) translate(-10.086061, -3.692576) "></path>
+                <path d="M4.13959185,6.61484993 L7.09783316,9.57565599 C8.08999015,10.5686359 8.06814436,12.200469 7.04903427,13.2204626 C6.02992419,14.2404563 4.39950462,14.262321 3.4073849,13.2693411 L4.95603558e-13,9.85900207" id="路径" transform="translate(3.913946, 10.307425) scale(-1, 1) translate(-3.913946, -10.307425) "></path>
+                <path d="M5.44207725,7.78580726 C6.46115006,6.76581362 6.48303313,5.1339805 5.49087614,4.14096332" id="路径" transform="translate(5.831499, 5.963385) scale(-1, 1) translate(-5.831499, -5.963385) "></path>
+                <path d="M8.60673497,6.16531694 C7.58766216,7.18531058 7.56577909,8.81714369 8.55793609,9.81016088" id="路径" transform="translate(8.217313, 7.987739) scale(-1, 1) translate(-8.217313, -7.987739) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

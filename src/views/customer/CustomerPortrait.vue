@@ -148,7 +148,7 @@ export default {
         if(val) {
           this.getClueCustomerByid()
         } else {
-          commonFun.getWxAppid()
+          // commonFun.getWxAppid()
         }
       }
     },
@@ -215,6 +215,7 @@ export default {
       })
     },
     getMethod() {
+      console.log('getMethed')
       this.loadingShow = true
 
       let { comeFrom, name } = this.$route.query
@@ -225,7 +226,7 @@ export default {
         // 从消息卡片进入之后处理
         if (name) {
           if (!token) {
-            commonFun.getWxAppid()
+            // commonFun.getWxAppid()
           } else if (token) {
             this.$store.commit('setUserId', name)
             this.getClueCustomerByid()
@@ -234,8 +235,9 @@ export default {
           this.$toast('信息有误')
         }
       } else {
+        console.log('userId',this.userId)
         if (!this.userId) {
-          commonFun.getWxAppid()
+          // commonFun.getWxAppid()
         } else {
           this.getClueCustomerByid()
         }

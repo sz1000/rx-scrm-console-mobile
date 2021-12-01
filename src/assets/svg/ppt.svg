@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/40px/ppt</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/40px/ppt">
+            <rect id="矩形" fill="#F34E19" x="0" y="0" width="40" height="40" rx="4"></rect>
+            <g id="文件-excel_file-excel" transform="translate(10.000000, 10.000000)">
+                <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" x="0" y="0" width="20" height="20"></rect>
+                <polygon id="路径" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" points="20 0 0 0 0 20 20 20"></polygon>
+                <path d="M4.16666667,1.66666667 L12.5,1.66666667 L16.6666667,5.83333333 L16.6666667,17.5 C16.6666667,17.96025 16.2935833,18.3333333 15.8333333,18.3333333 L4.16666667,18.3333333 C3.70642917,18.3333333 3.33333333,17.96025 3.33333333,17.5 L3.33333333,2.5 C3.33333333,2.0397625 3.70642917,1.66666667 4.16666667,1.66666667 Z" id="路径" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"></path>
+                <g id="编组" transform="translate(8.400000, 7.000000)" stroke="#FFFFFF" stroke-linecap="round" stroke-width="1.5">
+                    <line x1="0.307692308" y1="0" x2="0.307692308" y2="6.15384615" id="路径"></line>
+                    <path d="M0.307692308,0 L2.15384615,0 C3.17347692,0 4,0.826523077 4,1.84615385 L4,1.84615385 C4,2.86578462 3.17347692,3.69230769 2.15384615,3.69230769 L0.307692308,3.69230769" id="路径" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
