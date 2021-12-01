@@ -44,7 +44,7 @@
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
             <!-- 群聊 -->
-            <group :data="groupList" v-if="navActive == 'group'"></group>
+            <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
             <fujian v-if="navActive == 'enclosure'" :isPortrait="1"></fujian>
         </div>
@@ -53,10 +53,38 @@
         <!-- 协助人选择弹窗 -->
         <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
         <!-- 群成员列表 -->
-        <van-popup position="bottom" round v-model="dialog_group">
+        <van-popup @touchmove.prevent position="bottom" round v-model="dialog_group" :lock-scroll="true" :safe-area-inset-bottom="true">
             <div class="dialog_wrap">
-                <div class="dialog_header"></div>
-                <div class="dialog_content"></div>
+                <div class="dialog_header">
+                    <div class="title">群成员列表</div>
+                    <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
+                    <div class="total_box">
+                        <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
+                        <div class="btn">
+                            <span class="a">群聊详情</span>
+                            <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="dialog_content">
+                    <div class="list">
+                        <div class="li" v-for="(item,index) in groupUserList" :key="index">
+                            <!-- <div class="avatar"></div> -->
+                            <img class="avatar" :src="item.avatar" alt="">
+                            <div class="val">
+                                <div class="tit_box">
+                                    <div class="tit">{{item.name}}</div>
+                                    <div class="alt">@微信</div>
+                                    <div class="tag">员工</div>
+                                </div>
+                                <div class="time">2021-12-12 13:24</div>
+                                <div class="opera_right">
+                                    <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </van-popup>
     </div>
@@ -70,6 +98,7 @@ import {
     cluecustomer_getClueCustomerByid,
     clueCustomerFollowUser_selectFollowMsgList,
     group_getMobileCustomerGroupPage,
+    group_getMobileGroupUserlist,
 } from '@/api/customer'
 import Fujian from "../customerManage/comTip/fujian"
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
@@ -93,7 +122,7 @@ export default {
     data(){
         return {
             showPortraitType: 0,
-            dialog_group: true,
+            dialog_group: false,
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -116,6 +145,8 @@ export default {
             },
             groupList: [],
             groupTotal: 0,
+            groupUserData: {},
+            groupUserList: [],
 
             showSecret: false,
             sendUserInfo: {},
@@ -238,6 +269,15 @@ export default {
                 }
             })
         },
+        getGroupUserList(id){   //获取群群员列表
+            group_getMobileGroupUserlist(id).then(res => {
+                if(res.result){
+                    this.groupUserData = res.data.dataCount
+                    this.groupUserList = res.data.allList
+                    this.dialog_group = true
+                }
+            })
+        },
         navClickFun(code){
             this.navActive = code
         },
@@ -349,6 +389,124 @@ export default {
             position: absolute;
             right: 30px;
             top: 34px;
+        }
+        .total_box{
+            padding: 24px 32px;
+            position: relative;
+            &::after{
+                content: '';
+                width: calc(100% - 64px);
+                height: 1px;
+                background: @lineColor;
+                position: absolute;
+                bottom: 0;
+                left: 24px;
+            }
+            .total{
+                color: @fontSub1;
+                font-size: 24px;
+                line-height: 32px;
+            }
+            .btn{
+                position: absolute;
+                right: 32px;
+                bottom: 24px;
+                font-size: 24px;
+                line-height: 32px;
+                display: flex;
+                .a{
+                    color: @main;
+                }
+                .icon{
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+    }
+    .dialog_content{
+        width: 100%;
+        height: calc(100% - 184px);
+        overflow-y: scroll;
+        .list{
+            width: 100%;
+            padding: 0 32px;
+            .li{
+                width: 100%;
+                padding: 32px 0;
+                position: relative;
+                display: flex;
+                .avatar{
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    margin-right: 22px;
+                    background: rgba(0, 0, 0, 0.07);
+                }
+                .val{
+                    width: calc(100% - 102px);
+                    position: relative;
+                    .tit_box{
+                        display: flex;
+                        align-items: center;
+                        font-size: 28px;
+                        line-height: 32px;
+                        margin-bottom: 16px;
+                        .tit{
+                            color: @fontMain;
+                            font-weight: bold;
+                        }
+                        .alt{
+                            color: @green;
+                            margin-left: 4px;
+                        }
+                        .tag{
+                            margin-left: 8px;
+                            height: 32px;
+                            line-height: 30px;
+                            font-size: 20px;
+                            color: @main;
+                            background: rgba(@main,.06);
+                            padding: 0 16px;
+                            border-radius: 21px;
+                            border: 1px solid @main;
+                            &.red{
+                                color: @red;
+                                background: rgba(@red,.06);
+                                border-color: @red;
+                            }
+                            &.green{
+                                color: @green;
+                                background: rgba(@green,.06);
+                                border-color: @green;
+                            }
+                            &.yellow{
+                                color: @yellow;
+                                background: rgba(@yellow,.06);
+                                border-color: @yellow;
+                            }
+                        }
+                    }
+                    .time{
+                        color: @total;
+                        font-size: 24px;
+                        line-height: 32px;
+                    }
+                    .opera_right{
+                        width: 60px;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        .icon{
+                            height: 40px;
+                        }
+                    }
+                }
+            }
         }
     }
 }

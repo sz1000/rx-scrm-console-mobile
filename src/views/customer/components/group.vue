@@ -1,7 +1,7 @@
 <template>
     <div class="group_box">
         <div class="group_list">
-            <div class="li" v-for="(item,index) in list" :key="index">
+            <div class="li" @click="toFun(item.chatId)" v-for="(item,index) in list" :key="index">
                 <div class="group_img" :class="{'len5': item.imgList && item.imgList.length > 4 && item.imgList.length < 7}">
                     <div class="img_box" :class="{'w33':item.imgList && item.imgList.length > 4}" v-for="(url,i) in item.imgList" :key="i">
                         <img class="img" :src="url" alt="">
@@ -60,7 +60,9 @@ export default {
         },
     },
     methods: {
-        
+        toFun(id){
+            this.$emit('sure',id)
+        },
     },
 }
 </script>
@@ -80,7 +82,7 @@ export default {
             .group_img{
                 width: 80px;
                 height: 80px;
-                background: rgba(0,0,0,.03);
+                background: @navBg;
                 margin-right: 24px;
                 display: flex;
                 flex-wrap: wrap-reverse;

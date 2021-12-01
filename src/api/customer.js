@@ -20,3 +20,9 @@ export function group_getMobileCustomerGroupPage(data) { // 获取客户群列�
         params: data
     })
 }
+export function group_getMobileGroupUserlist(id) { // 获取群群员列表
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/group/getMobileGroupUserlist?chatId=' + id,
+        method: 'get'
+    })
+}
