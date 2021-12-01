@@ -52,6 +52,13 @@
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
         <!-- 协助人选择弹窗 -->
         <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
+        <!-- 群成员列表 -->
+        <van-popup position="bottom" round v-model="dialog_group">
+            <div class="dialog_wrap">
+                <div class="dialog_header"></div>
+                <div class="dialog_content"></div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -86,6 +93,7 @@ export default {
     data(){
         return {
             showPortraitType: 0,
+            dialog_group: true,
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -317,6 +325,33 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/color.less";
+.dialog_wrap{
+    width: 100%;
+    height: 60vh;
+    background: @white;
+    position: relative;
+    .dialog_header{
+        width: 100%;
+        min-height: 104px;
+        position: relative;
+        .title{
+            width: 100%;
+            padding: 32px 0;
+            text-align: center;
+            font-weight: bold;
+            color: @fontMain;
+            font-size: 32px;
+            line-height: 40px;
+        }
+        .close{
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            right: 30px;
+            top: 34px;
+        }
+    }
+}
 .customer_wrap {
   width: 100%;
   min-height: 100vh;
