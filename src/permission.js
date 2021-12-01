@@ -1,16 +1,17 @@
 import router from './router'
 import store from '@/store'
 import { phoneModel, isWeChat, getAuthInfo, wxAgent } from '@/utils/function.js'
-var contactsList = []                   //需获取外部联系人id页面路由
+var contactsList = ['/customerPortrait']                   //需获取外部联系人id页面路由
 var groupList = ['/customerPortrait']   //需获取群id页面路由 暂未启用
 var useList = ['/notice','/notice/daily','/home','/customerPortrait']       //目前可使用页面路由
 
 router.beforeEach(async(to, from, next) => {
-    let type = '',token = store.getters.token || localStorage.getItem('token')
+    let type = [],token = store.getters.token || localStorage.getItem('token')
     if(groupList.indexOf(to.path) > -1){
-        type = 'group'
-    }else if(contactsList.indexOf(to.path) > -1){
-        type = 'contacts'
+        type.push('group')
+    }
+    if(contactsList.indexOf(to.path) > -1){
+        type.push('contacts')
     }
     if(process.env.NODE_ENV === 'production'){
         console.log('href', window.location.href, to)
@@ -21,7 +22,7 @@ router.beforeEach(async(to, from, next) => {
         console.log('token is', isTokenValid(),token)
     }
     if(useList.indexOf(to.path) > -1){
-        if(token && isTokenValid() && !type){
+        if(token && isTokenValid() && type.length == 0){
             console.log('token true')
             next()
         }else {
@@ -33,7 +34,7 @@ router.beforeEach(async(to, from, next) => {
                 getAuthInfo().then(res => {
                     console.log('success',res)
                     if(res.result){
-                        if(type){
+                        if(type.length > 0){
                             console.log('wx is',res,type)
                             wxAgent(res,type).then(r => {
                                 if(r){
