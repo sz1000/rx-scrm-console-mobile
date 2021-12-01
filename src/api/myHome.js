@@ -32,3 +32,19 @@ export function getAbutMe(data) {
         params: data,
     })
 }
+
+// 客户寻回、激活
+export function ActiveCustomer(data) {
+    return request({
+        url: CustomerService + '/my/activate',
+        method: 'get',
+        params: data,
+    })
+}
+export function ReplayCustomer(data) {
+    return request({
+        url: CustomerService + '/my/regression',
+        method: 'get',
+        params: data,
+    })
+}

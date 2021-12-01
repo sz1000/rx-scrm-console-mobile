@@ -7,6 +7,14 @@
       </div>
       <span class="textTitle">客户联系</span>
     </div>
+    <div class="nav_tab">
+      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">客户激活<span>({{num}})</span></div>
+      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">客户寻回<span>({{num}})</span></div>
+    </div>
+    <div class="tips_box" v-if="tab==2 && tabName == '未寻回'">
+      <img src="../../images/ico_warning@2x.png" alt="">
+      <span>客户寻回指超过 1 个月未联系的客户，建议尝试联系</span>
+    </div>
     <div class="searchInput">
       <van-field v-model="value1" placeholder="客户名称/公司/手机号码">
         <template #left-icon>
@@ -19,11 +27,7 @@
         <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
       </div>
     </div>
-    <div class="nav_tab">
-      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">客户激活<span>({{num}})</span></div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">客户寻回<span>({{num}})</span></div>
-    </div>
-    <section v-show="tab==1">
+    <section v-if="tab==1">
       <div class="active_btn">
         <p class="p_text">已累计激活<span>{{num}}</span>个客户</p>
         <p class="p_btn" v-if="tabName !== '已激活'">一键激活</p>
@@ -33,18 +37,21 @@
           <div class="left_msg">
             <div class="img_box">
               <img :src="item.avtar" alt="" v-if="item.avtar" />
-              <img src="../../images/xiansuo.png" alt="" v-else />
+              <img src="../../images/nomal_avt.png" alt="" v-else />
             </div>
             <div class="detail_msg">
               <div class="first_text">
                 <span>{{item.name}}</span>
-                <span :class="item.status == 1 ? 'weixin' : 'qiye'">{{item.status == 1 ? '@微信' : '@企业'}}</span>
+                <span
+                      :class="item.customerType == 1 ? 'weixin' : item.customerType == 2 ? 'qiye':''">{{item.customerType == 1 ? '@微信' : item.customerType == 2 ?'@企业':'未知'}}</span>
+
                 <img src="../../images/man.png" alt="" v-if="item.gender == 1" />
-                <img src="../../images/icon_female@2x.png" alt="" v-show='item.gender ==2' />
+                <img src="../../images/icon_female@2x.png" alt="" v-else-if='item.gender ==2' />
+                <span v-else>未知</span>
               </div>
               <div class="seconde_text" v-if="tabName== '已激活'">
                 <p>{{item.phone}}</p>
-                <p>{{item.company}}</p>
+                <p>{{item.cropFullName}}</p>
                 <p>
                   <span class="time_two">激活时间</span>
                   <span>{{item.createTime}}</span>
@@ -56,14 +63,14 @@
               </div>
               <div class="seconde_text" v-else>
                 <p>{{item.phone}}</p>
-                <p>{{item.company}}</p>
+                <p>{{item.cropFullName}}</p>
                 <p>
                   <span class="time_one">最近一次互动</span>
-                  <span>{{item.createTime}}</span>
+                  <span>{{item.followTime}}</span>
                 </p>
                 <p>
                   <span class="time_one">负责人</span>
-                  <span>{{item.creatBy}}</span>
+                  <span>{{item.userName}}</span>
                 </p>
               </div>
 
@@ -75,34 +82,37 @@
         </div>
       </div>
     </section>
-    <section v-show="tab==2">
+    <section v-if="tab==2">
       <div class="active_btn">
         <p class="p_text">已累计激活<span>{{num}}</span>个客户</p>
-        <p class="p_btn" v-if="tabName !== '已激活'">一键寻回</p>
+        <p class="p_btn" v-if="tabName !== '已寻回'">一键寻回</p>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <div class="left_msg">
             <div class="img_box">
               <img :src="item.avtar" alt="" v-if="item.avtar" />
-              <img src="../../images/xiansuo.png" alt="" v-else />
+              <img src="../../images/nomal_avt.png" alt="" v-else />
             </div>
             <div class="detail_msg">
               <div class="first_text">
                 <span>{{item.name}}</span>
-                <span :class="item.status == 1 ? 'weixin' : 'qiye'">{{item.status == 1 ? '@微信' : '@企业'}}</span>
+                <span
+                      :class="item.customerType == 1 ? 'weixin' : item.customerType == 2 ? 'qiye':''">{{item.customerType == 1 ? '@微信' : item.customerType == 2 ?'@企业':'未知'}}</span>
+
                 <img src="../../images/man.png" alt="" v-if="item.gender == 1" />
-                <img src="../../images/icon_female@2x.png" alt="" v-show='item.gender ==2' />
+                <img src="../../images/icon_female@2x.png" alt="" v-else-if='item.gender ==2' />
+                <span v-else>未知</span>
               </div>
-              <div class="seconde_text" v-if="tabName== '已激活'">
+              <div class="seconde_text" v-if="tabName== '已寻回'">
                 <p>{{item.phone}}</p>
                 <p>{{item.company}}</p>
                 <p>
-                  <span class="time_two">激活时间</span>
+                  <span class="time_two">寻回时间</span>
                   <span>{{item.createTime}}</span>
                 </p>
                 <p>
-                  <span class="time_two">激活人</span>
+                  <span class="time_two">寻回人</span>
                   <span>{{item.creatBy}}</span>
                 </p>
               </div>
@@ -115,7 +125,7 @@
                 </p>
                 <p>
                   <span class="time_one">负责人</span>
-                  <span>{{item.creatBy}}</span>
+                  <span>{{item.userName}}</span>
                 </p>
               </div>
 
@@ -133,61 +143,100 @@
   </div>
 </template>
 <script>
+import { ActiveCustomer, ReplayCustomer } from '../../api/myHome'
 export default {
   data() {
     return {
       value1: '',
       tab: this.$route.query.tab,
       num: 10,
-      cardList: [
-        {
-          avtar: '',
-          name: '哈哈哈哈',
-          score: '242',
-          phone: '123123213',
-          company: '黄金卡号的卡号',
-          createTime: '2021-9-12 12:30:20',
-          creatBy: '六打包',
-          status: 2,
-          gender: 1,
-        },
-        {
-          avtar: '',
-          name: '哈哈哈哈',
-          score: '242',
-          phone: '123123213',
-          company: '黄金卡号的卡号',
-          createTime: '2021-9-12 12:30:20',
-          creatBy: '六打包',
-          status: 1,
-          gender: 2,
-        },
-      ],
+      cardList: [],
       showFilter: false,
-      actions: [
-        { name: '从未联系' },
-        { name: '超过1天' },
-        { name: '超过3天' },
-        { name: '超过1周' },
-        { name: '超过2周' },
-        { name: '已激活' },
-      ],
-      tabName: '从未联系',
+      actions: [],
+      tabName: '',
+      id: '',
+    }
+  },
+  created() {
+    if (this.tab == 1) {
+      this.actions = [
+        { name: '从未联系', id: 0 },
+        { name: '超过1天', id: 1 },
+        { name: '超过3天', id: 2 },
+        { name: '超过1周', id: 3 },
+        { name: '超过2周', id: 4 },
+        { name: '已激活', id: 5 },
+      ]
+      this.tabName = this.actions[0].name
+      this.id = this.actions[0].id
+      this.getActive()
+    } else {
+      this.actions = [
+        { name: '未寻回', id: 0 },
+        { name: '已寻回', id: 1 },
+      ]
+      this.tabName = this.actions[0].name
+      this.id = this.actions[0].id
+      this.getReplayData()
     }
   },
   methods: {
+    getActive() {
+      let params = {
+        name: this.value1,
+        id: this.id,
+      }
+      ActiveCustomer(params).then((res) => {
+        this.cardList = res.data
+      })
+    },
+    getReplayData() {
+      let params = {
+        name: this.value1,
+        id: this.id,
+      }
+      ReplayCustomer(params).then((res) => {})
+    },
     goBack() {
       this.$router.go(-1)
     },
     tabClick(v) {
       this.tab = v
+      this.value1 = ''
+      if (this.tab == 1) {
+        this.actions = [
+          { name: '从未联系', id: 0 },
+          { name: '超过1天', id: 1 },
+          { name: '超过3天', id: 2 },
+          { name: '超过1周', id: 3 },
+          { name: '超过2周', id: 4 },
+          { name: '已激活', id: 5 },
+        ]
+        this.tabName = this.actions[0].name
+        this.id = this.actions[0].id
+        this.getActive()
+      } else {
+        this.actions = [
+          { name: '未寻回', id: 0 },
+          { name: '已寻回', id: 1 },
+        ]
+        this.tabName = this.actions[0].name
+        this.id = this.actions[0].id
+        this.getReplayData()
+      }
     },
     filterCard() {
       this.showFilter = true
     },
     fnSelect(v) {
       this.tabName = v.name
-      console.log(v)
+      this.id = v.id
+      if (this.tab == 1) {
+        this.getActive()
+      } else {
+        this.getReplayData()
+      }
+      // console.log(v)
     },
   },
 }
@@ -230,6 +279,7 @@ export default {
     }
   }
   .searchInput {
+    margin-top: 32px;
     padding: 0 32px;
     display: flex;
     justify-content: space-between;
@@ -261,6 +311,24 @@ export default {
     img {
       width: 40px;
       height: 40px;
+    }
+  }
+  .tips_box {
+    display: flex;
+    background: #fffcea;
+    border-radius: 16px;
+    height: 72px;
+    margin-top: 32px;
+    padding: 20px 32px;
+    align-items: center;
+    span {
+      color: #804527;
+      font-size: 24px;
+    }
+    img {
+      width: 28px;
+      height: 28px;
+      margin-right: 24px;
     }
   }
   .nav_tab {
