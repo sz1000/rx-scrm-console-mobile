@@ -44,12 +44,12 @@
                         </div>
                         <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
                     </div>
-                    <div class="card" v-if="item.class == 'opera'" :class="{'hide':more,'no': !item.msgList}">
+                    <div class="card" v-if="item.class == 'opera'" :class="{'hide':item.more,'no': !item.msgList}">
                         <div class="info">
                             <div class="img_box" @click="fillMessage(item.context.sendUserInfo)">
-                                <img :src="item.optAvatar" alt="">
+                                <img :src="item.optAvatar | $setAvatar" alt="">
                             </div>
-                            <div class="name">{{item.optUserName}}</div>
+                            <div class="name">{{item.optUserName}}<span>{{isMeFun(item.createBy)}}</span></div>
                         </div>
                         <div class="time">{{item.createTime}}</div>
                         <div class="text">
@@ -61,7 +61,7 @@
                                 <img class="iconfont" src="@/assets/svg/icon_dz.svg" alt="">
                                 <div class="num" v-show="item.praise">{{item.praise}}</div>
                             </div>
-                            <div class="icon_btn">
+                            <div class="icon_btn" @click="addCommentDialog(item)">
                                 <img class="iconfont" src="@/assets/svg/icon_pl.svg" alt="">
                                 <div class="num" v-show="item.commentCount">{{item.commentCount}}</div>
                             </div>
@@ -102,13 +102,15 @@ export default {
     },
     data(){
         return {
-            more: true,
             whiteList: ['jiandang','gengxin','biangeng','fenpei','shangchuan','tag'],
             navList: ['全部','客户动态','商机动态','互动沟通'],
             activeIndex: 0,
         }
     },
     computed: {
+        userNo(){
+            return this.$store.getters.userNo
+        },
         list(){
             let arr = JSON.parse(JSON.stringify(this.data)),n = 0
             this.time.forEach(el => {
@@ -129,6 +131,9 @@ export default {
         },
     },
     methods: {
+        addCommentDialog(row){  //打开回复弹窗
+            this.$emit('openDialog',row.id)
+        },
         navClickFun(i){
             this.activeIndex = i
             this.$emit('sure',i+1)
@@ -136,6 +141,9 @@ export default {
         // @接收人
         fillMessage(data) {
             this.$emit('fillMessage', data)
+        },
+        isMeFun(by){    //是否自己
+            return this.userNo == by ? '(我)' : ''
         },
         getTextFun(obj){
             // console.log('asd',obj)

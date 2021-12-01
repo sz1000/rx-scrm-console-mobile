@@ -9,7 +9,7 @@
     </div>
 
     <div class="iconName">
-      <div v-if="imageUser">
+      <div class="avatar" v-if="imageUser">
         <img :src="imageUser" alt="" />
       </div>
       <div class="flag" v-else> {{name ? name.substr(0,1) : ''}}</div>
@@ -673,6 +673,9 @@ export default {
   .iconName {
     display: flex;
     margin: 24px 0;
+    .avatar{
+      width: 90px;
+    }
     .flag {
       width: 88px;
       height: 88px;

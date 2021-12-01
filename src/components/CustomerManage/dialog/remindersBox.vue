@@ -23,7 +23,7 @@
                         <van-index-anchor :index="i.initials" />
                         <div class="item-content all-people" v-for="item in i.userInfoVos" :key="item.userNo" @click="getPeople(item)">    
                             <span class="img">
-                                <img :src="item.avatar" alt="">
+                                <img :src="item.avatar | $setAvatar" alt="">
                             </span>
                             <span class="name">{{ item.userName }}</span>
                         </div>
