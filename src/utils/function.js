@@ -107,42 +107,42 @@ export const wxAgent = (res,type) => {
                 },
                 function(res) {
                     console.log('asd agentConfig',res)
-                    // if(jsApiList.indexOf('getCurExternalContact') > -1){
-                    //     //获取外部联系人ID
-                    //     wx.invoke('getCurExternalContact', {}, function(res) {
-                    //         if (res.err_msg == 'getCurExternalContact:ok') {
-                    //             localStorage.setItem('userId', res.userId)
-                    //             store.commit('setUserId', res.userId)
-                    //             resolve(true)
-                    //         } else {
-                    //             //错误处理
-                    //             console.log('getCurExternalContact>>>err>>>', res)
-                    //             reject()
-                    //         }
-                    //     })
-                    // }else if(jsApiList.indexOf('getCurExternalChat') > -1){
-                    //     //获取当前客户群ID
-                    //     wx.invoke('getCurExternalChat', {}, function(res) {
-                    //         if (res.err_msg == 'getCurExternalChat:ok') {
-                    //             store.commit('setChatId', res.chatId)
-                    //             resolve(true)
-                    //         } else {
-                    //             //错误处理
-                    //             console.log('getCurExternalChat>>>err>>>', res)
-                    //             reject()
-                    //         }
-                    //     })
-                    // }
-                    // //判断入口
-                    // wx.invoke('getContext', {}, function(res) {
-                    //     if (res.err_msg == 'getContext:ok') {
-                    //         let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
-                    //         store.commit('setEntry', entry)
-                    //     } else {
-                    //         //错误处理
-                    //         console.log('getContext>>>err>>>', res)
-                    //     }
-                    // })
+                    if(jsApiList.indexOf('getCurExternalContact') > -1){
+                        //获取外部联系人ID
+                        wx.invoke('getCurExternalContact', {}, function(res) {
+                            if (res.err_msg == 'getCurExternalContact:ok') {
+                                localStorage.setItem('userId', res.userId)
+                                store.commit('setUserId', res.userId)
+                                resolve(true)
+                            } else {
+                                //错误处理
+                                console.log('getCurExternalContact>>>err>>>', res)
+                                reject()
+                            }
+                        })
+                    }else if(jsApiList.indexOf('getCurExternalChat') > -1){
+                        //获取当前客户群ID
+                        wx.invoke('getCurExternalChat', {}, function(res) {
+                            if (res.err_msg == 'getCurExternalChat:ok') {
+                                store.commit('setChatId', res.chatId)
+                                resolve(true)
+                            } else {
+                                //错误处理
+                                console.log('getCurExternalChat>>>err>>>', res)
+                                reject()
+                            }
+                        })
+                    }
+                    //判断入口
+                    wx.invoke('getContext', {}, function(res) {
+                        if (res.err_msg == 'getContext:ok') {
+                            let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
+                            store.commit('setEntry', entry)
+                        } else {
+                            //错误处理
+                            console.log('getContext>>>err>>>', res)
+                        }
+                    })
                 }
             )
         })
