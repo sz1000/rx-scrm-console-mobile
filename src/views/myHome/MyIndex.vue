@@ -65,15 +65,15 @@
         </div>
         <div class="stati_num">
           <div class="box">
-            <p>{{num}}</p>
+            <p>{{activeObj.neverCount}}</p>
             <p>从未联系</p>
           </div>
           <div class="box">
-            <p>{{num}}</p>
+            <p>{{activeObj.excedOne}}</p>
             <p>超过1天</p>
           </div>
           <div class="box">
-            <p>{{num}}</p>
+            <p>{{activeObj.sevenCount}}</p>
             <p>超过1周</p>
           </div>
         </div>
@@ -81,7 +81,7 @@
       <div class="about_me custom_reply">
         <span>客户寻回</span>
         <div class="reply_text">
-          <span>10个客户待寻回</span>
+          <span>{{activeObj.monthCount}}个客户待寻回</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(2)" />
         </div>
       </div>
@@ -160,6 +160,12 @@ export default {
         name: '哈哈哈',
         avatar: '',
       },
+      activeObj: {
+        excedOne: '',
+        monthCount: '',
+        neverCount: '',
+        sevenCount: '',
+      },
       identity: '个人',
       num: '1',
       showIdent: false,
@@ -179,6 +185,7 @@ export default {
       getMyInfo().then((res) => {
         this.dataObj = res.data.my
         this.userObj = res.data.my.user
+        this.activeObj = res.data.customerFind
         localStorage.setItem('myName', res.data.my.user.name)
         localStorage.setItem('myAvatar', res.data.my.user.avatar)
         localStorage.setItem('depId', res.data.my.user.depId)
