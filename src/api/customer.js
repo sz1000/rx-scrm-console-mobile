@@ -26,3 +26,10 @@ export function group_getMobileGroupUserlist(id) { // 获取群群员列表
         method: 'get'
     })
 }
+export function clueCustomerFollowUser_addCommentInfo(data) { // 添加评论回复
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/addCommentInfo',
+        method: 'post',
+        data
+    })
+}

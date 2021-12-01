@@ -40,7 +40,7 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group'}">
             <!-- 客户动态 -->
-            <dynamics v-if="navActive == 'dynamics'" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople"></dynamics>
+            <dynamics v-if="navActive == 'dynamics'" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople" @openDialog="addCommentDialog"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
             <!-- 群聊 -->
@@ -91,11 +91,13 @@
                 </div>
             </div>
         </van-popup>
+        <!-- 消息回复弹窗 -->
+        <DialogComment v-model="dialog_xx" @sure="addCommentFun"></DialogComment>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group } from './components'
+import { Dynamics,Group,DialogComment } from './components'
 import { user_getUserName } from '@/api/home'
 import { MessageNotificatio } from '../../config/api'
 import {
@@ -103,6 +105,7 @@ import {
     clueCustomerFollowUser_selectFollowMsgList,
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
+    clueCustomerFollowUser_addCommentInfo,  //添加评论回复
 } from '@/api/customer'
 import Fujian from "../customerManage/comTip/fujian"
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
@@ -110,7 +113,7 @@ import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,
+        Dynamics,Group,DialogComment,
         Opportunities,Fujian,MessageBox,RemindersBox
     },
     provide() {
@@ -127,6 +130,7 @@ export default {
         return {
             showPortraitType: 0,
             dialog_group: false,
+            dialog_xx: false,
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -152,6 +156,7 @@ export default {
             groupUserData: {},
             groupUserList: [],
             groupChatId: '',
+            rowId: '',
 
             showSecret: false,
             sendUserInfo: {},
@@ -166,6 +171,9 @@ export default {
         },
         userId() {
             return this.$store.getters.userId
+        },
+        userNo(){
+            return this.$store.getters.userNo
         },
         personList(){
             let list = this.userList
@@ -281,6 +289,26 @@ export default {
                     this.groupUserData = res.data.dataCount
                     this.groupUserList = res.data.allList
                     this.dialog_group = true
+                }
+            })
+        },
+        addCommentDialog(id){  //打开回复弹窗
+            this.rowId = id
+            this.dialog_xx = true
+        },
+        addCommentFun(val){    //添加评论回复
+            let data = {
+                content: val,
+                fromUserId: this.userNo,
+                targetId: this.rowId,
+                targetType: 1,
+            }
+            console.log('submit',data)
+            // return false
+            clueCustomerFollowUser_addCommentInfo(data).then(res => {
+                if(res.result){
+                    this.dialog_xx = false
+                    this.getCustomerDetail()
                 }
             })
         },
