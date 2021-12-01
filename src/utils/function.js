@@ -107,7 +107,7 @@ export const wxAgent = (res,type) => {
                     jsApiList: jsApiList, //必填，传入需要使用的接口名称
                 },
                 function(res) {
-                    console.log('asd agentConfig',res)
+                    console.log('asd agentConfig',res,jsApiList.indexOf('getCurExternalChat'))
                     //判断入口
                     wx.invoke('getContext', {}, function(res) {
                         if (res.err_msg == 'getContext:ok') {
@@ -118,35 +118,26 @@ export const wxAgent = (res,type) => {
                             console.log('getContext>>>err>>>', res)
                         }
                     })
-                    if(jsApiList.indexOf('getCurExternalContact') > -1){
-                        //获取外部联系人ID
-                        wx.invoke('getCurExternalContact', {}, function(res) {
-                            if (res.err_msg == 'getCurExternalContact:ok') {
-                                localStorage.setItem('userId', res.userId)
-                                store.commit('setUserId', res.userId)
-                                resolve(true)
-                            } else {
-                                //错误处理
-                                console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
-                                if(jsApiList.length == 3){
-                                    reject()
-                                }
-                            }
-                        })
-                    }
-                    if(jsApiList.indexOf('getCurExternalChat') > -1){
-                        //获取当前客户群ID
-                        wx.invoke('getCurExternalChat', {}, function(res) {
-                            if (res.err_msg == 'getCurExternalChat:ok') {
-                                store.commit('setChatId', res.chatId)
-                                resolve(true)
-                            } else {
-                                //错误处理
-                                console.log('getCurExternalChat>>>err>>>', res)
-                                reject()
-                            }
-                        })
-                    }
+                    //获取外部联系人ID
+                    wx.invoke('getCurExternalContact', {}, function(res) {
+                        if (res.err_msg == 'getCurExternalContact:ok') {
+                            localStorage.setItem('userId', res.userId)
+                            store.commit('setUserId', res.userId)
+                        } else {
+                            //错误处理
+                            console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
+                        }
+                    })
+                    //获取当前客户群ID
+                    wx.invoke('getCurExternalChat', {}, function(res) {
+                        if (res.err_msg == 'getCurExternalChat:ok') {
+                            store.commit('setChatId', res.chatId)
+                        } else {
+                            //错误处理
+                            console.log('getCurExternalChat>>>err>>>', res)
+                        }
+                    })
+                    resolve(true)
                 }
             )
         })
