@@ -24,35 +24,15 @@
       <div class="btnRouter">
         <div class="commonBtn" @click="FnToRouter('/talkTool/enterpriseCode')" v-show="menulist.includes('livecode')">
           <img src="../images/huoma.png" alt="" />
-          <span>获客活码</span>
+          <span>互动活码</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
+          <img src="../images/qhm.png" alt="" />
+          <span>拉群活码</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/channelConfiguration')" v-show="menulist.includes('channle')">
           <img src="../images/qudao.png" alt="" />
           <span>渠道配置</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
-          <img src="../images/qunfa.png" alt="" />
-          <span>客户群发</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
-          <img src="../images/qunqnfa.png" alt="" />
-          <span>客户群群发</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
-          <img src="../images/yjlqon.png" alt="" />
-          <span>标签建群</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
-          <img src="../images/qhm.png" alt="" />
-          <span>群活码</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
-          <img src="../images/card.png" alt="" />
-          <span>智能名片</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
-          <img src="../images/friedn.png" alt="" />
-          <span>朋友圈</span>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lzbd.png" alt="" />
@@ -73,28 +53,52 @@
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
-        <div class="commonBtn" @click="FnToRouter('/customerManage/clues')" v-show="menulist.includes('clew')">
-          <img src="../images/xiansuo.png" alt="" />
-          <span>线索</span>
-        </div>
         <div class="commonBtn" @click="FnToRouter('/customerManage/myCustomer')" v-show="menulist.includes('customer')">
           <img src="../images/kehu.png" alt="" />
           <span>客户</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/customerManage/grouplist')" v-show="menulist.includes('group')">
           <img src="../images/grouplist.png" alt="" />
-          <span>群列表</span>
+          <span>客户群</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/customerManage/clues')" v-show="menulist.includes('clew')">
+          <img src="../images/xiansuo.png" alt="" />
+          <span>线索</span>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lskh2.png" alt="" />
           <span class="nomaltext">流失客户</span>
         </div> -->
       </div>
-      <div class="customAccont manage">办公协同</div>
+      <div class="customAccont manage">营销互动</div>
       <div class="btnRouter custom">
+
+        <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
+          <img src="../images/friedn.png" alt="" />
+          <span>朋友圈</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
+          <img src="../images/card.png" alt="" />
+          <span>智能名片</span>
+        </div>
+      </div>
+      <div class="customAccont manage">精细运营</div>
+      <div class="btnRouter custom">
+        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
+          <img src="../images/yjlqon.png" alt="" />
+          <span>一键建群</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
+          <img src="../images/qunfa.png" alt="" />
+          <span>客户群发</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
+          <img src="../images/qunqnfa.png" alt="" />
+          <span>客户群群发</span>
+        </div>
         <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
           <img src="../images/wcdk.png" alt="" />
-          <span>外出打卡</span>
+          <span>拜访客户</span>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/bfjh.png" alt="" />
@@ -257,7 +261,7 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    padding: 24px 0px 24px 24px;
+    padding: 24px 0px 110px 24px;
     overflow-y: scroll;
     scrollbar-width: 0;
     &::-webkit-scrollbar {

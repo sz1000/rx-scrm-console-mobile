@@ -287,6 +287,8 @@ export default {
         path: '/customeActive',
         query: {
           tab: v,
+          active: this.activeObj.neverCount,
+          monthCount: this.activeObj.monthCount,
         },
       })
     },

@@ -9,7 +9,7 @@
     </div>
     <div class="nav_tab">
       <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">客户激活<span>({{num}})</span></div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">客户寻回<span>({{num}})</span></div>
+      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">客户寻回<span>({{num1}})</span></div>
     </div>
     <div class="tips_box" v-if="tab==2 && tabName == '未寻回'">
       <img src="../../images/ico_warning@2x.png" alt="">
@@ -29,7 +29,7 @@
     </div>
     <section v-if="tab==1">
       <div class="active_btn">
-        <p class="p_text">已累计激活<span>{{num}}</span>个客户</p>
+        <p class="p_text">已累计激活<span>{{cumulative}}</span>个客户</p>
         <p class="p_btn" v-if="tabName !== '已激活'" @click="fnAvtiveList">一键激活</p>
       </div>
       <div class="custom_content">
@@ -84,7 +84,10 @@
     </section>
     <section v-if="tab==2">
       <div class="active_btn">
-        <p class="p_text">已累计激活<span>{{num}}</span>个客户</p>
+        <p class="p_text">
+          已累计寻回
+          <span>{{ cumulative}}</span>个客户
+        </p>
         <p class="p_btn" v-if="tabName !== '已寻回'" @click="fnReplayList">一键寻回</p>
       </div>
       <div class="custom_content">
@@ -154,12 +157,14 @@ export default {
     return {
       value1: '',
       tab: this.$route.query.tab,
-      num: 10,
+      num: '',
+      num1: '',
       cardList: [],
       showFilter: false,
       actions: [],
       tabName: '',
       id: '',
+      cumulative: '',
     }
   },
   created() {
@@ -184,6 +189,8 @@ export default {
       this.id = this.actions[0].id
       this.getReplayData()
     }
+    this.num = this.$route.query.active
+    this.num1 = this.$route.query.monthCount
   },
   methods: {
     getActive() {
@@ -192,7 +199,8 @@ export default {
         id: this.id,
       }
       ActiveCustomer(params).then((res) => {
-        this.cardList = res.data
+        this.cardList = res.data.list
+        this.cumulative = res.data.count
       })
     },
     getReplayData() {
@@ -200,7 +208,10 @@ export default {
         name: this.value1,
         id: this.id,
       }
-      ReplayCustomer(params).then((res) => {})
+      ReplayCustomer(params).then((res) => {
+        this.cardList = res.data.list
+        this.cumulative = res.data.count
+      })
     },
     goBack() {
       this.$router.go(-1)
@@ -247,12 +258,14 @@ export default {
       // console.log(this.cardList, '------')
       keyToActivate(this.cardList).then((res) => {
         if (res.result) {
+          this.$toast('提示文案')
         }
       })
     },
     fnReplayList() {
       keyToFind(this.cardList).then((res) => {
         if (res.result) {
+          this.$toast('提示文案')
         }
       })
     },
