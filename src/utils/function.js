@@ -93,7 +93,8 @@ export const wxAgent = (res,type) => {
             let jsApiList = ['invoke','getContext']
             if(type.indexOf('contacts') > -1){     //获取外部联系人ID
                 jsApiList.push('getCurExternalContact')
-            }else if(type.indexOf('group') > -1){      //获取当前客户群ID
+            }
+            if(type.indexOf('group') > -1){      //获取当前客户群ID
                 jsApiList.push('getCurExternalChat')
             }
             wx.invoke(
@@ -107,6 +108,16 @@ export const wxAgent = (res,type) => {
                 },
                 function(res) {
                     console.log('asd agentConfig',res)
+                    //判断入口
+                    wx.invoke('getContext', {}, function(res) {
+                        if (res.err_msg == 'getContext:ok') {
+                            let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
+                            store.commit('setEntry', entry)
+                        } else {
+                            //错误处理
+                            console.log('getContext>>>err>>>', res)
+                        }
+                    })
                     if(jsApiList.indexOf('getCurExternalContact') > -1){
                         //获取外部联系人ID
                         wx.invoke('getCurExternalContact', {}, function(res) {
@@ -116,11 +127,14 @@ export const wxAgent = (res,type) => {
                                 resolve(true)
                             } else {
                                 //错误处理
-                                console.log('getCurExternalContact>>>err>>>', res)
-                                reject()
+                                console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
+                                if(jsApiList.length == 3){
+                                    reject()
+                                }
                             }
                         })
-                    }else if(jsApiList.indexOf('getCurExternalChat') > -1){
+                    }
+                    if(jsApiList.indexOf('getCurExternalChat') > -1){
                         //获取当前客户群ID
                         wx.invoke('getCurExternalChat', {}, function(res) {
                             if (res.err_msg == 'getCurExternalChat:ok') {
@@ -133,16 +147,6 @@ export const wxAgent = (res,type) => {
                             }
                         })
                     }
-                    //判断入口
-                    wx.invoke('getContext', {}, function(res) {
-                        if (res.err_msg == 'getContext:ok') {
-                            let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
-                            store.commit('setEntry', entry)
-                        } else {
-                            //错误处理
-                            console.log('getContext>>>err>>>', res)
-                        }
-                    })
                 }
             )
         })
