@@ -9,7 +9,8 @@ router.beforeEach(async(to, from, next) => {
     let type = [],token = store.getters.token || localStorage.getItem('token')
     if(groupList.indexOf(to.path) > -1){
         type.push('group')
-    }else if(contactsList.indexOf(to.path) > -1){
+    }
+    if(contactsList.indexOf(to.path) > -1){
         type.push('contacts')
     }
     if(process.env.NODE_ENV === 'production'){
