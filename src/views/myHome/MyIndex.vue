@@ -9,10 +9,10 @@
           <p>{{identity}}</p>
         </div>
       </div>
-      <div class="change_identity" @click="changeIdent">
+      <!-- <div class="change_identity" @click="changeIdent">
         <img src="../../images/change_id.png" alt="">
         <span>切换身份</span>
-      </div>
+      </div> -->
     </div>
     <div class="content_warp">
       <div class="statistical">
