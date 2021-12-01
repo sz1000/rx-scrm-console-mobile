@@ -47,9 +47,9 @@
                     <div class="card" v-if="item.class == 'opera'" :class="{'hide':more,'no': !item.msgList}">
                         <div class="info">
                             <div class="img_box" @click="fillMessage(item.context.sendUserInfo)">
-                                <img :src="item.optAvatar" alt="">
+                                <img :src="item.optAvatar | $setAvatar" alt="">
                             </div>
-                            <div class="name">{{item.optUserName}}</div>
+                            <div class="name">{{item.optUserName}} 1</div>
                         </div>
                         <div class="time">{{item.createTime}}</div>
                         <div class="text">

@@ -2,11 +2,11 @@
     <div class="customer_wrap">
         <img class="bg" src="@/assets/svg/customer_bg.svg" alt="">
         <div class="top_box">
-            <div class="customer_card">
+            <div class="customer_card" @click="goDetail">
                 <!-- <div class="score">7832分</div> -->
                 <div class="info_box">
                     <div class="avatar">
-                        <img class="img" :src="customerInfo.avatar">
+                        <img class="img" :src="customerInfo.avatar | $setAvatar">
                     </div>
                     <div class="val">
                         <div class="name_box">
@@ -53,14 +53,14 @@
         <!-- 协助人选择弹窗 -->
         <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
         <!-- 群成员列表 -->
-        <van-popup @touchmove.prevent position="bottom" round v-model="dialog_group" :lock-scroll="true" :safe-area-inset-bottom="true">
+        <van-popup @touchmove.prevent position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
             <div class="dialog_wrap">
                 <div class="dialog_header">
                     <div class="title">群成员列表</div>
                     <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
                     <div class="total_box">
                         <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
-                        <div class="btn">
+                        <div class="btn" @click="toGroupDetail">
                             <span class="a">群聊详情</span>
                             <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
                         </div>
@@ -70,14 +70,18 @@
                     <div class="list">
                         <div class="li" v-for="(item,index) in groupUserList" :key="index">
                             <!-- <div class="avatar"></div> -->
-                            <img class="avatar" :src="item.avatar" alt="">
+                            <img class="avatar" :src="item.avatar | $setAvatar" alt="">
                             <div class="val">
                                 <div class="tit_box">
                                     <div class="tit">{{item.name}}</div>
-                                    <div class="alt">@微信</div>
-                                    <div class="tag">员工</div>
+                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
+                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
+                                    <div class="tag red" v-if="item.admintype == 1">群主</div>
+                                    <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
+                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
+                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
                                 </div>
-                                <div class="time">2021-12-12 13:24</div>
+                                <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
                                 <div class="opera_right">
                                     <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                                 </div>
@@ -147,6 +151,7 @@ export default {
             groupTotal: 0,
             groupUserData: {},
             groupUserList: [],
+            groupChatId: '',
 
             showSecret: false,
             sendUserInfo: {},
@@ -270,6 +275,7 @@ export default {
             })
         },
         getGroupUserList(id){   //获取群群员列表
+            this.groupChatId = id
             group_getMobileGroupUserlist(id).then(res => {
                 if(res.result){
                     this.groupUserData = res.data.dataCount
@@ -341,6 +347,20 @@ export default {
             }
             return true
         },
+        goDetail() {
+            this.$router.push({
+                name: 'informationDetail',
+                query: { id: this.customerInfo.clueCustomerNo },
+            })
+        },
+        toGroupDetail(){    //群聊详情
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
+        },
         getUserObj(n = 'num'){
             let list = this.userList
             if(!list || list.length == 0){return}
@@ -358,6 +378,16 @@ export default {
             str = arr.join('、')
             // console.log('asd',_str,arr,str)
             return str
+        },
+    },
+    filters: {
+        joinType(val){
+            let obj = {
+                1: '直接邀请入群',
+                2: '通过邀请链接入群',
+                3: '通过扫描群二维码入群',
+            }
+            return val ? obj[val] : ''
         },
     },
 }
@@ -459,11 +489,14 @@ export default {
                         .alt{
                             color: @green;
                             margin-left: 4px;
+                            &.yellow{
+                                color: @yellow;
+                            }
                         }
                         .tag{
                             margin-left: 8px;
                             height: 32px;
-                            line-height: 30px;
+                            line-height: 28px;
                             font-size: 20px;
                             color: @main;
                             background: rgba(@main,.06);
@@ -491,6 +524,9 @@ export default {
                         color: @total;
                         font-size: 24px;
                         line-height: 32px;
+                        span{
+                            margin-left: 24px;
+                        }
                     }
                     .opera_right{
                         width: 60px;
