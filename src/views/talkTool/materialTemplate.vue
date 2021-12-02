@@ -17,7 +17,9 @@
                     >
                     <div class="article-item item" v-for="i in articleList" :key="i.articleId">
                         <div class="right" @click="preview(1, i)">
-                            <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt="">
+                            <div class="img">
+                                <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
+                            </div>
                             <div class="des">
                                 <div>
                                     <h3 class="one-line">{{i.title}}</h3>
@@ -37,8 +39,8 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
-                        <div class="right">
+                    <div class="file-item item" v-for="i in saleList" :key="i.documentId">
+                        <div class="right" @click="preview(2, i)">
                             <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'" alt="">
                             <div class="des">
                                 <div>
@@ -47,11 +49,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="left"><img src="../../images/relay.png" alt=""></div>
+                        <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div>
                     </div>
                 </van-list>
             </li>
-            <li class="item-box poster" v-if="type == 2">
+            <li class="item-box" v-if="type == 2">
                 <van-list
                     v-model="posterListLoading"
                     :immediate-check="false"
@@ -59,18 +61,26 @@
                     finished-text="没有更多了"
                     @load="onLoad"
                     >
-                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId" @click="sendChatMessage('image', false, '', i.mediaId)">
-                        <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
-                        <div class="bottom">
-                            <span class="one-line">{{i.posterName}}</span>
-                            <div><img src="../../images/relay2.png" alt=""></div>
+                    <div class="file-item item" v-for="i in posterList" :key="i.posterId">
+                        <div class="right" @click="previewImg(i)">
+                            <div class="img">
+                                <span><img :src="i.posterUrl" alt=""></span>
+                            </div>
+                            <div class="des">
+                                <div>
+                                    <h3 class="one-line">{{i.posterName}}</h3>
+                                </div>
+                            </div>
                         </div>
+                        <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div>
                     </div>
                 </van-list>
             </li>
         </ul>
         <!-- 转载公众号文章按钮 -->
         <div v-if="type == 0" class="reprint-box" @click="goReprint"></div>
+
+        <img-preview ref="imgPreview"></img-preview>
     </div>
 </template>
 <script>
@@ -78,6 +88,7 @@ import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
 import { sendChatMessage, byteConvert } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
+import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 
 import { mapActions, mapState } from 'vuex'
 
@@ -228,9 +239,13 @@ export default {
                 },
             })
         },
+        previewImg(i) {
+            this.$refs.imgPreview.show(1, [i.posterUrl])
+        },
     },
     components: {
-        Search
+        Search,
+        ImgPreview
     }
 }
 </script>
@@ -284,12 +299,10 @@ export default {
                 color: @lengthColor;
             }
             .item {
-                padding:  32px;
-                position: relative;
-            }
-            .article-item, .file-item {
                 display: flex;
                 align-items: center;
+                padding:  32px;
+                position: relative;
                 .left {
                     min-width: 48px;
                     height: 48px;
@@ -308,6 +321,15 @@ export default {
                         height: 100px;
                         border-radius: 8px;
                         vertical-align: middle;
+                        background-color: #F6F7F9;
+                        overflow: hidden;
+                        span {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                     .des {
                         display: inline-block;
@@ -341,49 +363,6 @@ export default {
                     right: 0;
                     left: 32px;
                     bottom: 0;
-                }
-            }
-            .poster-item {
-                display: inline-block;
-                width: 339px;
-                vertical-align: middle;
-                .top {
-                    width: 339px;
-                    height: 339px;
-                    border-radius: 16px;
-                    background-color: #F6F7F9;
-                    overflow: hidden;
-                    position: relative;
-                    img {
-                        width: auto;
-                        height: auto;
-                        max-width: 100%;
-                        max-height: 100%;
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                    }
-                }
-                .bottom {
-                    display: flex;
-                    justify-content: space-between;
-                    height: 40px;
-                    margin-top: 16px;                  
-                    span {
-                        max-width: 90%;
-                        font-size: 28px;
-                        color: @fontMain;
-                    }
-                    div {
-                        width: 24px;
-                        height: 100%;
-                        img {
-                            width: 100%;
-                            height: 24px;
-                            margin: 8px auto;
-                        }
-                    }
                 }
             }
         }
