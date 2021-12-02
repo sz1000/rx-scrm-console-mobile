@@ -423,7 +423,7 @@ export default {
   -webkit-transform: translateZ(0);
   width: 750px;
   .bottom-warp {
-    border-top: 1px solid #f0f2f7;
+    border-top: 1px solid #e6e6e6;
     border-bottom: 1px solid #f0f2f7;
     height: 112px;
     background: #fff;

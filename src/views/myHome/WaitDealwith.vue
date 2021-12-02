@@ -199,8 +199,8 @@ export default {
       this.cardList = []
       let params = {
         status: this.tabName,
-        createTimeSta: this.startDate,
-        createTimeEnd: this.endDate,
+        createTimeSta: this.startDate ? this.startDate + ' 00:00:00' : '',
+        createTimeEnd: this.endDate ? this.endDate + ' 23:59:59' : '',
       }
 
       friendSend(params).then((res) => {
@@ -211,8 +211,8 @@ export default {
       this.cardList = []
       let params = {
         sendStatus: this.tabName,
-        createStartTime: this.startDate,
-        createEndTime: this.endDate,
+        createStartTime: this.startDate + ' 00:00:00',
+        createEndTime: this.endDate + ' 23:59:59',
       }
       groupSend(params).then((res) => {
         let dataList = res.data
@@ -258,8 +258,8 @@ export default {
     },
     onConfirm(value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
-      this.startDate = value.slice(0, 3).join('/')
-      this.endDate = value.slice(4, 7).join('/')
+      this.startDate = value.slice(0, 3).join('-')
+      this.endDate = value.slice(4, 7).join('-')
       // this.value = this.startDate + '至' + this.endDate
       this.showPicker = false
       if (this.tab == 1) {
