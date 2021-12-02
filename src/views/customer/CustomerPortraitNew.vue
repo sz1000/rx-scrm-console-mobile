@@ -2,11 +2,11 @@
     <div class="customer_wrap">
         <img class="bg" src="@/assets/svg/customer_bg.svg" alt="">
         <div class="top_box">
-            <div class="customer_card">
+            <div class="customer_card" @click="goDetail">
                 <!-- <div class="score">7832分</div> -->
                 <div class="info_box">
                     <div class="avatar">
-                        <img class="img" :src="customerInfo.avatar">
+                        <img class="img" :src="customerInfo.avatar | $setAvatar">
                     </div>
                     <div class="val">
                         <div class="name_box">
@@ -40,11 +40,11 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group'}">
             <!-- 客户动态 -->
-            <dynamics v-if="navActive == 'dynamics'" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople"></dynamics>
+            <dynamics v-if="navActive == 'dynamics'" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople" @openDialog="addCommentDialog"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
             <!-- 群聊 -->
-            <group :data="groupList" v-if="navActive == 'group'"></group>
+            <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
             <fujian v-if="navActive == 'enclosure'" :isPortrait="1"></fujian>
         </div>
@@ -52,17 +52,60 @@
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
         <!-- 协助人选择弹窗 -->
         <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
+        <!-- 群成员列表 -->
+        <van-popup @touchmove.prevent position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
+            <div class="dialog_wrap">
+                <div class="dialog_header">
+                    <div class="title">群成员列表</div>
+                    <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
+                    <div class="total_box">
+                        <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
+                        <div class="btn" @click="toGroupDetail">
+                            <span class="a">群聊详情</span>
+                            <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="dialog_content">
+                    <div class="list">
+                        <div class="li" v-for="(item,index) in groupUserList" :key="index">
+                            <!-- <div class="avatar"></div> -->
+                            <img class="avatar" :src="item.avatar | $setAvatar" alt="">
+                            <div class="val">
+                                <div class="tit_box">
+                                    <div class="tit">{{item.name}}</div>
+                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
+                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
+                                    <div class="tag red" v-if="item.admintype == 1">群主</div>
+                                    <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
+                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
+                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                                </div>
+                                <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
+                                <div class="opera_right">
+                                    <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </van-popup>
+        <!-- 消息回复弹窗 -->
+        <DialogComment v-model="dialog_xx" @sure="addCommentFun"></DialogComment>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group } from './components'
+import { Dynamics,Group,DialogComment } from './components'
 import { user_getUserName } from '@/api/home'
 import { MessageNotificatio } from '../../config/api'
 import {
     cluecustomer_getClueCustomerByid,
     clueCustomerFollowUser_selectFollowMsgList,
     group_getMobileCustomerGroupPage,
+    group_getMobileGroupUserlist,
+    clueCustomerFollowUser_addCommentInfo,  //添加评论回复
 } from '@/api/customer'
 import Fujian from "../customerManage/comTip/fujian"
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
@@ -70,7 +113,7 @@ import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,
+        Dynamics,Group,DialogComment,
         Opportunities,Fujian,MessageBox,RemindersBox
     },
     provide() {
@@ -86,6 +129,8 @@ export default {
     data(){
         return {
             showPortraitType: 0,
+            dialog_group: false,
+            dialog_xx: false,
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -108,6 +153,10 @@ export default {
             },
             groupList: [],
             groupTotal: 0,
+            groupUserData: {},
+            groupUserList: [],
+            groupChatId: '',
+            rowId: '',
 
             showSecret: false,
             sendUserInfo: {},
@@ -123,6 +172,9 @@ export default {
         userId() {
             return this.$store.getters.userId
         },
+        userNo(){
+            return this.$store.getters.userNo
+        },
         personList(){
             let list = this.userList
             return list && list.length ? list.slice(0,3) : ''
@@ -133,15 +185,24 @@ export default {
         this.getUserName()
     },
     methods: {
+        getShowPortraitType() {
+            let { comeFrom } = this.$route.query
+            
+            if (this.entry && this.entry == 'single_chat_tools' || comeFrom == 'messageCard') {
+                this.showPortraitType = 1
+            } else if(this.entry && this.entry == 'group_chat_tools') {
+                this.showPortraitType = 2
+            }
+        },
         getCustomerDetail(){    //获取客户详情
-            let id = this.userId || 
+            let id = this.userId
+            // 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
             // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
             // 'woyPDZEQAAKN_BGnwemNjnTqtjllE71g'
             // 'woyPDZEQAANKdNIy7tiPKdWh4HGqhrZw'
             // 'woyPDZEQAAsU15Y6_nJ6uNYQzGf6sbcA'  //更新客户信息
             // 'woyPDZEQAAdsUF6NtjIrKh6_NqD-mwnQ'  //协助人
-            'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             // 'woY-gRDAAAd9kSNXH541UDExp7IHHZjw'  //协助人、附件
             // 'woyPDZEQAA5NKt4Bw12Ri3N02Tz2cNmQ'  //更新协助人，客户信息、附件
             // 'woyPDZEQAA2IR5xonK_JD04coOUHVyzg'  //添加协助人
@@ -230,6 +291,36 @@ export default {
                 }
             })
         },
+        getGroupUserList(id){   //获取群群员列表
+            this.groupChatId = id
+            group_getMobileGroupUserlist(id).then(res => {
+                if(res.result){
+                    this.groupUserData = res.data.dataCount
+                    this.groupUserList = res.data.allList
+                    this.dialog_group = true
+                }
+            })
+        },
+        addCommentDialog(id){  //打开回复弹窗
+            this.rowId = id
+            this.dialog_xx = true
+        },
+        addCommentFun(val){    //添加评论回复
+            let data = {
+                content: val,
+                fromUserId: this.userNo,
+                targetId: this.rowId,
+                targetType: 1,
+            }
+            console.log('submit',data)
+            // return false
+            clueCustomerFollowUser_addCommentInfo(data).then(res => {
+                if(res.result){
+                    this.dialog_xx = false
+                    this.getCustomerDetail()
+                }
+            })
+        },
         navClickFun(code){
             this.navActive = code
         },
@@ -293,6 +384,20 @@ export default {
             }
             return true
         },
+        goDetail() {
+            this.$router.push({
+                name: 'informationDetail',
+                query: { id: this.customerInfo.clueCustomerNo },
+            })
+        },
+        toGroupDetail(){    //群聊详情
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
+        },
         getUserObj(n = 'num'){
             let list = this.userList
             if(!list || list.length == 0){return}
@@ -312,11 +417,172 @@ export default {
             return str
         },
     },
+    filters: {
+        joinType(val){
+            let obj = {
+                1: '直接邀请入群',
+                2: '通过邀请链接入群',
+                3: '通过扫描群二维码入群',
+            }
+            return val ? obj[val] : ''
+        },
+    },
 }
 </script>
 
 <style lang="less" scoped>
 @import "~@/styles/color.less";
+.dialog_wrap{
+    width: 100%;
+    height: 60vh;
+    background: @white;
+    position: relative;
+    .dialog_header{
+        width: 100%;
+        min-height: 104px;
+        position: relative;
+        .title{
+            width: 100%;
+            padding: 32px 0;
+            text-align: center;
+            font-weight: bold;
+            color: @fontMain;
+            font-size: 32px;
+            line-height: 40px;
+        }
+        .close{
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            right: 30px;
+            top: 34px;
+        }
+        .total_box{
+            padding: 24px 32px;
+            position: relative;
+            &::after{
+                content: '';
+                width: calc(100% - 64px);
+                height: 1px;    /*no*/
+                background: @lineColor;
+                position: absolute;
+                bottom: 0;
+                left: 24px;
+            }
+            .total{
+                color: @fontSub1;
+                font-size: 24px;
+                line-height: 32px;
+            }
+            .btn{
+                position: absolute;
+                right: 32px;
+                bottom: 24px;
+                font-size: 24px;
+                line-height: 32px;
+                display: flex;
+                .a{
+                    color: @main;
+                }
+                .icon{
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+    }
+    .dialog_content{
+        width: 100%;
+        height: calc(100% - 184px);
+        overflow-y: scroll;
+        .list{
+            width: 100%;
+            padding: 0 32px;
+            .li{
+                width: 100%;
+                padding: 32px 0;
+                position: relative;
+                display: flex;
+                .avatar{
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    margin-right: 22px;
+                    background: rgba(0, 0, 0, 0.07);
+                }
+                .val{
+                    width: calc(100% - 102px);
+                    position: relative;
+                    .tit_box{
+                        display: flex;
+                        align-items: center;
+                        font-size: 28px;
+                        line-height: 32px;
+                        margin-bottom: 16px;
+                        .tit{
+                            color: @fontMain;
+                            font-weight: bold;
+                        }
+                        .alt{
+                            color: @green;
+                            margin-left: 4px;
+                            &.yellow{
+                                color: @yellow;
+                            }
+                        }
+                        .tag{
+                            margin-left: 8px;
+                            height: 32px;
+                            line-height: 32px;
+                            font-size: 20px;
+                            color: @main;
+                            background: rgba(@main,.06);
+                            padding: 0 16px;
+                            border-radius: 21px;
+                            border: 1px solid @main; /*no*/
+                            &.red{
+                                color: @red;
+                                background: rgba(@red,.06);
+                                border-color: @red;
+                            }
+                            &.green{
+                                color: @green;
+                                background: rgba(@green,.06);
+                                border-color: @green;
+                            }
+                            &.yellow{
+                                color: @yellow;
+                                background: rgba(@yellow,.06);
+                                border-color: @yellow;
+                            }
+                        }
+                    }
+                    .time{
+                        color: @total;
+                        font-size: 24px;
+                        line-height: 32px;
+                        span{
+                            margin-left: 24px;
+                        }
+                    }
+                    .opera_right{
+                        width: 60px;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        .icon{
+                            height: 40px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 .customer_wrap {
   width: 100%;
   min-height: 100vh;
@@ -416,7 +682,7 @@ export default {
                 width: fit-content;
                 height: 52px;
                 border-radius: 26px;
-                border: 1px solid @bdColor;
+                border: 1px solid @bdColor; /*no*/
                 display: flex;
                 align-items: center;
                 padding: 0 16px;
@@ -442,7 +708,7 @@ export default {
                         display: flex;
                         align-items: center;
                         border-radius: 50%;
-                        border: 1px solid @white;
+                        border: 1px solid @white; /*no*/
                         &:nth-child(2){
                             transform: translateX(-25%);
                         }
@@ -472,7 +738,7 @@ export default {
             display: flex;
             align-items: center;
             padding-top: 24px;
-            border-top: 1px solid @lineColor;
+            border-top: 1px solid @lineColor;   /*no*/
             &.opt0{
                 opacity: 0;
             }
@@ -481,7 +747,7 @@ export default {
                 line-height: 50px;
                 padding: 0 16px;
                 border-radius: 26px;
-                border: 1px solid @bdColor;
+                border: 1px solid @bdColor; /*no*/
                 font-size: 28px;
                 color: @fontSub1;
                 &+.tag{
@@ -496,7 +762,7 @@ export default {
     height: 88px;
     display: flex;
     text-align: center;
-    border-bottom: 1px solid @lineColor;
+    border-bottom: 1px solid @lineColor; /*no*/
     .nav{
         color: @fontSub1;
         font-size: 28px;

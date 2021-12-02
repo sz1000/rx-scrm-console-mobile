@@ -59,9 +59,9 @@
     <reminders-box ref="remindersBox" :customerNo="item && item.clueCustomerNo"></reminders-box>
   </div>
   
-  <div v-else-if="showPortraitType == 2">
+  <!-- <div v-else-if="showPortraitType == 2">
     <Groupportrait></Groupportrait>
-  </div>
+  </div> -->
 
 </template>
 <script>
@@ -69,7 +69,7 @@ import { MessageNotificatio } from '../../config/api'
 // import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import commonFun from '../../utils/commonToken'
-import Groupportrait from '../portrait/Groupportrait.vue'
+// import Groupportrait from '../portrait/Groupportrait.vue'
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Dynamic from '../../components/CustomerManage/dynamic'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
@@ -84,7 +84,7 @@ import { getStoreValue } from '../../utils/LocalStorageDate'
 export default {
   components: {
     BackTop,
-    Groupportrait,
+    // Groupportrait,
     CustomerItem,
     Dynamic,
     Opportunities,
@@ -148,7 +148,7 @@ export default {
         if(val) {
           this.getClueCustomerByid()
         } else {
-          // commonFun.getWxAppid()
+          commonFun.getWxAppid()
         }
       }
     },
@@ -226,7 +226,7 @@ export default {
         // 从消息卡片进入之后处理
         if (name) {
           if (!token) {
-            // commonFun.getWxAppid()
+            commonFun.getWxAppid()
           } else if (token) {
             this.$store.commit('setUserId', name)
             this.getClueCustomerByid()
@@ -237,7 +237,7 @@ export default {
       } else {
         console.log('userId',this.userId)
         if (!this.userId) {
-          // commonFun.getWxAppid()
+          commonFun.getWxAppid()
         } else {
           this.getClueCustomerByid()
         }

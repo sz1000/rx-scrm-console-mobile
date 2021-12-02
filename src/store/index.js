@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        system: localStorage.getItem('system'),
         chatId: sessionStorage.getItem('chatId'),
         userId: sessionStorage.getItem('userId'),
         entry: sessionStorage.getItem('entry'), //进入H5页面的入口环境
@@ -20,6 +21,7 @@ export default new Vuex.Store({
         avatar: localStorage.getItem('myAvatar'),
     },
     getters: {
+        system: (state) => state.system,
         chatId: (state) => state.chatId,
         userId: (state) => state.userId,
         entry: (state) => state.entry,
@@ -37,6 +39,7 @@ export default new Vuex.Store({
         },
         setUserId(state, data) {
             sessionStorage.setItem('userId', data)
+            localStorage.setItem('userId', data)
             state.userId = data
         },
         setEntry(state, data) {
@@ -53,7 +56,12 @@ export default new Vuex.Store({
         },
         setToken(state, data) {
             localStorage.setItem('token', data)
+            sessionStorage.setItem('token', data)
             state.token = data
+        },
+        setSystem(state, data){
+            localStorage.setItem('system', data)
+            state.system = data
         },
         setWxLogoInfo(state, data) {
             localStorage.setItem('wxLogoInfo', JSON.stringify(data))
@@ -78,7 +86,6 @@ export default new Vuex.Store({
                 commit('setToken', '')
                 commit('setUserNo', '')
                 commit('setExpireTime', '')
-                localStorage.removeItem('userId')
                 res(true)
             })
         },

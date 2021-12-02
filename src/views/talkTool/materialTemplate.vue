@@ -1,89 +1,114 @@
 <template>
     <div class="material-template">
-        <ul class="header-nav">
-            <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
-            <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
-            <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
-        </ul>
-        <search ref="search" :type="type"></search>
-        <ul class="list-box">
-            <li class="item-box" v-if="type == 0">
-                <van-list
-                    v-model="articleListLoading"
-                    :immediate-check="false"
-                    :finished="articleListFinished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                    >
-                    <div class="article-item item" v-for="i in articleList" :key="i.articleId" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })">
-                        <div class="left"><img src="../../images/relay.png" alt=""></div>
-                        <div class="right">
-                            <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt="">
-                            <div class="des">
-                                <div>
-                                    <h3 class="one-txt-cut">{{i.title}}</h3>
-                                    <p class="two-line" v-html="i.contentAbstract"></p>
+        <template v-if="!showUploadPoster">
+            <ul class="header-nav">
+                <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
+                <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
+                <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
+            </ul>
+            <search ref="search" :type="type"></search>
+            <ul class="list-box">
+                <li class="item-box" v-if="type == 0">
+                    <van-list
+                        v-model="articleListLoading"
+                        :immediate-check="false"
+                        :finished="articleListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="i in articleList" :key="i.articleId">
+                            <div class="right" @click="preview(1, i)">
+                                <div class="img">
+                                    <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
+                                </div>
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.title}}</h3>
+                                        <p class="one-line" v-html="i.contentAbstract"></p>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div>
                         </div>
-                    </div>
-                </van-list>
-            </li>
-            <li class="item-box" v-if="type == 1">
-                <van-list
-                    v-model="saleListLoading"
-                    :immediate-check="false"
-                    :finished="saleListFinished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                    >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
-                        <div class="left"><img src="../../images/relay.png" alt=""></div>
-                        <div class="right">
-                            <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'" alt="">
-                            <div class="des">
-                                <div>
-                                    <h3 class="one-txt-cut">{{i.name}}</h3>
-                                    <p class="two-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                    </van-list>
+                </li>
+                <li class="item-box" v-if="type == 1">
+                    <van-list
+                        v-model="saleListLoading"
+                        :immediate-check="false"
+                        :finished="saleListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="i in saleList" :key="i.documentId">
+                            <div class="right" @click="preview(2, i)">
+                                <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'" alt="">
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.name}}</h3>
+                                        <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div>
                         </div>
-                    </div>
-                </van-list>
-            </li>
-            <li class="item-box poster" v-if="type == 2">
-                <van-list
-                    v-model="posterListLoading"
-                    :immediate-check="false"
-                    :finished="posterListFinished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                    >
-                    <div class="poster-item item" v-for="i in posterList" :key="i.posterId" @click="sendChatMessage('image', false, '', i.mediaId)">
-                        <div class="top"><img class="img" :src="i.posterUrl" alt=""></div>
-                        <div class="bottom">
-                            <span class="one-txt-cut">{{i.posterName}}</span>
-                            <div><img src="../../images/relay2.png" alt=""></div>
+                    </van-list>
+                </li>
+                <li class="item-box" v-if="type == 2">
+                    <van-list
+                        v-model="posterListLoading"
+                        :immediate-check="false"
+                        :finished="posterListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="i in posterList" :key="i.posterId">
+                            <div class="right" @click="previewImg(i)">
+                                <div class="img">
+                                    <span><img :src="i.posterUrl" alt=""></span>
+                                </div>
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.posterName}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div>
                         </div>
-                    </div>
-                </van-list>
-            </li>
-        </ul>
+                    </van-list>
+                </li>
+            </ul>
+
+            <!-- 转载公众号文章按钮 -->
+            <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
+
+            <!-- 上传海报按钮 -->
+            <div v-if="type == 2" class="poster-box">
+                <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+            </div>
+        </template>
+
+        <img-preview ref="imgPreview"></img-preview>
+
+        <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster"></upload-poster>
     </div>
 </template>
 <script>
-import { GetCrop, ArticleList, SaleDocumentList, PosterList } from "../../config/api"
+import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
 import { sendChatMessage, byteConvert } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
+import ImgPreview from '../../components/MaterialTemplate/imgPreview'
+import ImgUpload from '../../components/MaterialTemplate/imgUpload'
+import UploadPoster from '../../components/MaterialTemplate/uploadPoster'
+
+import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'materialTemplate',
     data() {
         return {
             type: 0,
-            corpId: null,
-            userNo: null,
 
             articleList: [],
             totalArticle: 0,
@@ -103,21 +128,27 @@ export default {
             posterListLoading: false,
             posterListFinished: false,
 
-            originUrl: location.origin
+            originUrl: location.origin,
+
+            showUploadPoster: false,  // 是否展示海报上传页面
+            posterData: {} // 上传的海报图片信息
         }
+    },
+    computed: {
+        ...mapState(["corpId", "userNo"]),
     },
     provide() {
         return {
-            checkTable: this.checkTable
+            checkTable: this.checkTable,
+            getImgUrl: this.getImgUrl,
+            previewImg: this.previewImg
         }
     },
     created() {
         this.getCorpId().then(() => this.getList())
-        let userNo = localStorage.getItem("token") && JSON.parse(localStorage.getItem("token")).userNo
-
-        this.userNo = userNo ? userNo : null
     },
     methods: {
+        ...mapActions(["getCorpId"]),
         changeNav(type) {
             this.type = type
             this.initPage(this.type)
@@ -125,20 +156,6 @@ export default {
                 this.$refs.search.searchText = ''
             })
             this.getList()
-        },
-        getCorpId() {
-            return new Promise((resolve, reject) => {
-                GetCrop().then(res => {
-                    const {code, data} = res
-                    
-                    if (code === 'success' && data) {
-                        this.corpId = data.corpId
-                        resolve()
-                    } else {
-                        reject()
-                    }
-                }).catch(reject)
-            })
         },
         onLoad() {
             if (this.type == 0 && this.articleListPage <= 1 || this.type == 1 && this.saleListPage <= 1 || this.type == 2 && this.posterListPage <= 1) {
@@ -220,22 +237,61 @@ export default {
             }
         },
         sendChatMessage,
-        byteConvert
+        byteConvert,
+        // 去往转载公众号文章页面
+        goNextStep() {
+            this.$router.push({
+                path: '/talkTool/reprint',
+                // query: {},
+            })
+        },
+        // 海报上传图片地址获取
+        getImgUrl(data) {
+            this.posterData = data
+            this.showUploadPoster = true
+        },
+        doShowUploadPoster(data) {
+            const { showUploadPoster, isRefresh } = data
+
+            if (isRefresh) {
+                this.changeNav(2)
+            }
+            this.showUploadPoster = showUploadPoster
+        },
+        preview(type, item) {
+            this.$router.push({
+                path: '/materialTemplate',
+                query: {
+                    isPreview: 1,
+                    type,
+                    userNo: this.userNo,
+                    data: encodeURIComponent(JSON.stringify(item))
+                },
+            })
+        },
+        previewImg(i) {
+            this.$refs.imgPreview.show(1, [i.posterUrl])
+        },
     },
     components: {
-        Search
+        Search,
+        ImgPreview,
+        ImgUpload,
+        UploadPoster
     }
 }
 </script>
 <style lang="less" scoped>
+@import url('../../styles/color');
 .material-template {
     min-height: 100vh;
-    background-color: #fff;
+    background-color: @white;
+    overflow-x: hidden;
     .header-nav {
         display: flex;
         width: 100%;
         height: 100px;
-        border-bottom: 1px solid #F0F2F7;
+        border-bottom: 1px solid @lineColor;
         li {
             flex: 1;
             height: 100%;
@@ -246,33 +302,45 @@ export default {
                 width: 150px;
                 height: 100%;
                 margin: 0 auto;
-                color: #838A9D;
+                color: @fontSub2;
                 font-size: 28px;
             }
         }
         .active {
             span {
-                color: #4168F6;
-                border-bottom: 4px solid #4168F6;
+                color: @main;
+                border-bottom: 4px solid @main;
             }
         }
     }
     .list-box {
         padding-bottom: 132px;
+        position: relative;
+        &::after {
+            content: '';
+            height: 2px;
+            background-color: @lineColor;
+            transform: scaleY(.5);
+            position: absolute;
+            right: 0;
+            left: 0;
+            top: 0;
+        }
         .item-box {
             /deep/ .van-list__finished-text {
                 font-size: 24px;
-                color: #C0C4CC;
+                color: @lengthColor;
             }
             .item {
-                padding: 24px;
-            }
-            .article-item, .file-item {
                 display: flex;
                 align-items: center;
+                padding:  32px;
+                position: relative;
                 .left {
                     width: 48px;
+                    min-width: 48px;
                     height: 48px;
+                    margin-left: 24px;
                     overflow: hidden;
                     img {
                         width: 100%;
@@ -280,19 +348,26 @@ export default {
                     }
                 }
                 .right {
-                    max-width: 90%;
-                    margin-left: 24px;
+                    width: 88%;
                     .img {
                         display: inline-block;
-                        width: 130px;
-                        height: 130px;
-                        margin-left: 20px;
+                        width: 100px;
+                        height: 100px;
                         border-radius: 8px;
                         vertical-align: middle;
+                        background-color: #F6F7F9;
+                        overflow: hidden;
+                        span {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                     .des {
                         display: inline-block;
-                        height: 130px;
+                        height: 100px;
                         max-width: 72%;
                         margin-left: 20px;
                         vertical-align: middle;
@@ -303,58 +378,25 @@ export default {
                             flex-direction: column;
                             h3 {
                                 font-size: 28px;
-                                color: #3C4353;
+                                color: @fontMain;
                             }
                             p {
                                 word-break: break-all;
                                 font-size: 24px;
-                                color: #838A9D;
+                                color: @fontSub2;
                             }
                         }
                     }
                 }
-            }
-            .poster-item {
-                display: inline-block;
-                width: 339px;
-                vertical-align: middle;
-                .top {
-                    width: 339px;
-                    height: 339px;
-                    border-radius: 16px;
-                    background-color: #F6F7F9;
-                    overflow: hidden;
-                    position: relative;
-                    img {
-                        width: auto;
-                        height: auto;
-                        max-width: 100%;
-                        max-height: 100%;
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                    }
-                }
-                .bottom {
-                    display: flex;
-                    justify-content: space-between;
-                    height: 40px;
-                    margin-top: 16px;                  
-                    span {
-                        max-width: 90%;
-                        font-size: 28px;
-                        color: #3C4353;
-                    }
-                    div {
-                        width: 24px;
-                        height: 100%;
-                        img {
-                            width: 100%;
-                            height: 24px;
-                            margin: 8px auto;
-                        }
-                    }
+                &::after {
+                    content: '';
+                    height: 2px;
+                    background-color: @lineColor;
+                    transform: scaleY(.5);
+                    position: absolute;
+                    right: 0;
+                    left: 32px;
+                    bottom: 0;
                 }
             }
         }
@@ -365,6 +407,40 @@ export default {
                 margin: 0 0 24px 24px;
             }
         }
+    }
+    .reprint-box {
+        width: 104px;
+        height: 104px;
+        background-color: @main;
+        border-radius: 50%;
+        box-shadow: 0 6px 34px 0 rgba(65, 104, 246, .3);
+        position: fixed;
+        right: 32px;
+        bottom: 140px;
+        &::before, &::after {
+            content: '';
+            border-radius: 100px;
+            background-color: @white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        &::before {
+            width: 44px;
+            height: 6px;
+        }
+        &::after {
+            width: 6px;
+            height: 44px;
+        }
+    }
+    .poster-box {
+        width: 104px;
+        height: 104px;
+        position: fixed;
+        right: 32px;
+        bottom: 140px;
     }
 }
 </style>

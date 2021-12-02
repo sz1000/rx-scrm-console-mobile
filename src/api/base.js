@@ -8,7 +8,8 @@ export function user_getappid(data) { //获取appid
 }
 export function user_getloguser(data) { //获取登陆信息
     return request({
-        url: BASE_USER_SERVICE + '/m/user/customize/getloguser',
+        // url: BASE_USER_SERVICE + '/m/user/customize/getloguser',
+        url: BASE_USER_SERVICE + '/m/user/getloguser',
         method: 'get',
         params: data
     })
