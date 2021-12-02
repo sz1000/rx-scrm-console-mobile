@@ -6,7 +6,9 @@ var groupList = ['/customerPortrait']   //需获取群id页面路由 暂未启�
 var useList = ['/notice','/notice/daily','/home','/customerPortrait']       //目前可使用页面路由
 
 router.beforeEach(async(to, from, next) => {
-    let type = [],token = store.getters.token || localStorage.getItem('token')
+    let system = phoneModel()
+    let type = [],token = system == 'ios' ? store.getters.token : sessionStorage.getItem('token')
+    store.commit('SET_SYSTEM', system)
     if(groupList.indexOf(to.path) > -1){
         type.push('group')
     }
@@ -14,9 +16,9 @@ router.beforeEach(async(to, from, next) => {
         type.push('contacts')
     }
     if(process.env.NODE_ENV === 'production'){
-        console.log('href', window.location.href, to)
-        console.log('is wx', isWeChat())
-        console.log('is sys', phoneModel())
+        // console.log('href', window.location.href, to)
+        // console.log('is wx', isWeChat())
+        // console.log('is sys', phoneModel())
     
     
         console.log('token is', isTokenValid(),token)
@@ -38,7 +40,7 @@ router.beforeEach(async(to, from, next) => {
                             console.log('wx is',res,type)
                             wxAgent(res,type).then(r => {
                                 if(r){
-                                    console.log('next')
+                                    console.log('next',store.getters)
                                     next()
                                 }
                             })
@@ -51,7 +53,7 @@ router.beforeEach(async(to, from, next) => {
             }
         }
     }else{
-        console.log('no user list')
+        console.log('no user list',to.path)
         next()
     }
 })

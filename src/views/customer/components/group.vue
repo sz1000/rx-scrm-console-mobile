@@ -78,7 +78,7 @@ export default {
             width: 100%;
             display: flex;
             padding: 32px 0;
-            border-bottom: 1px solid @lineColor;
+            border-bottom: 1px solid @lineColor;    /*no*/
             .group_img{
                 width: 80px;
                 height: 80px;
@@ -95,7 +95,7 @@ export default {
                     // width: 33.33%;
                     // height: calc(80px / 3);
                     // background: chocolate;
-                    border: 1px solid @white;
+                    border: 1px solid @white;   /*no*/
                     text-align: center;
                     &:first-child:nth-last-child(3),&:first-child:nth-last-child(3) ~ .img_box{
                         width: calc(80px / 2);

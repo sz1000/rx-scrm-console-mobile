@@ -185,15 +185,24 @@ export default {
         this.getUserName()
     },
     methods: {
+        getShowPortraitType() {
+            let { comeFrom } = this.$route.query
+            
+            if (this.entry && this.entry == 'single_chat_tools' || comeFrom == 'messageCard') {
+                this.showPortraitType = 1
+            } else if(this.entry && this.entry == 'group_chat_tools') {
+                this.showPortraitType = 2
+            }
+        },
         getCustomerDetail(){    //获取客户详情
-            let id = this.userId || 
+            let id = this.userId
+            // 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
             // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
             // 'woyPDZEQAAKN_BGnwemNjnTqtjllE71g'
             // 'woyPDZEQAANKdNIy7tiPKdWh4HGqhrZw'
             // 'woyPDZEQAAsU15Y6_nJ6uNYQzGf6sbcA'  //更新客户信息
             // 'woyPDZEQAAdsUF6NtjIrKh6_NqD-mwnQ'  //协助人
-            'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             // 'woY-gRDAAAd9kSNXH541UDExp7IHHZjw'  //协助人、附件
             // 'woyPDZEQAA5NKt4Bw12Ri3N02Tz2cNmQ'  //更新协助人，客户信息、附件
             // 'woyPDZEQAA2IR5xonK_JD04coOUHVyzg'  //添加协助人
@@ -454,7 +463,7 @@ export default {
             &::after{
                 content: '';
                 width: calc(100% - 64px);
-                height: 1px;
+                height: 1px;    /*no*/
                 background: @lineColor;
                 position: absolute;
                 bottom: 0;
@@ -524,13 +533,13 @@ export default {
                         .tag{
                             margin-left: 8px;
                             height: 32px;
-                            line-height: 28px;
+                            line-height: 32px;
                             font-size: 20px;
                             color: @main;
                             background: rgba(@main,.06);
                             padding: 0 16px;
                             border-radius: 21px;
-                            border: 1px solid @main;
+                            border: 1px solid @main; /*no*/
                             &.red{
                                 color: @red;
                                 background: rgba(@red,.06);
@@ -673,7 +682,7 @@ export default {
                 width: fit-content;
                 height: 52px;
                 border-radius: 26px;
-                border: 1px solid @bdColor;
+                border: 1px solid @bdColor; /*no*/
                 display: flex;
                 align-items: center;
                 padding: 0 16px;
@@ -699,7 +708,7 @@ export default {
                         display: flex;
                         align-items: center;
                         border-radius: 50%;
-                        border: 1px solid @white;
+                        border: 1px solid @white; /*no*/
                         &:nth-child(2){
                             transform: translateX(-25%);
                         }
@@ -729,7 +738,7 @@ export default {
             display: flex;
             align-items: center;
             padding-top: 24px;
-            border-top: 1px solid @lineColor;
+            border-top: 1px solid @lineColor;   /*no*/
             &.opt0{
                 opacity: 0;
             }
@@ -738,7 +747,7 @@ export default {
                 line-height: 50px;
                 padding: 0 16px;
                 border-radius: 26px;
-                border: 1px solid @bdColor;
+                border: 1px solid @bdColor; /*no*/
                 font-size: 28px;
                 color: @fontSub1;
                 &+.tag{
@@ -753,7 +762,7 @@ export default {
     height: 88px;
     display: flex;
     text-align: center;
-    border-bottom: 1px solid @lineColor;
+    border-bottom: 1px solid @lineColor; /*no*/
     .nav{
         color: @fontSub1;
         font-size: 28px;

@@ -4,9 +4,10 @@ import Home from '../views/Home.vue'
 import HomeTransition from '../views/HomeTransition.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
-import CustomerPortraitNew from '../views/customer/CustomerPortraitNew.vue'
+import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
-import CustomTransition from '../views/customer/CustomTransition.vue'
+// 群 SOP 设置
+import SettingSop from '../views/customer/settingSop'
 // 拓客工具
 import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
@@ -44,10 +45,6 @@ import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
 import StageList from '../components/BusinessOpportunities/stageList'
 import CuleFileGo from '../views/customerManage/CuleFileGo.vue'
 import CluesGongHaiGo from '../views/customerManage/CluesGongHaiGo.vue'
-// 群画像
-import Groupportrait from '../views/portrait/Groupportrait'
-// 群 SOP 设置
-import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
 // 群列表
@@ -117,14 +114,6 @@ const routes = [{
 
     // 客户画像
     {
-        path: '/customTransition',
-        name: 'customTransition',
-        meta: {
-            bodyClass: 'CustomTransition',
-        },
-        component: CustomTransition,
-    },
-    {
         path: '/customerPortraitn',
         name: 'CustomerPortrait',
         meta: {
@@ -147,15 +136,6 @@ const routes = [{
             bodyClass: 'InformationDetail',
         },
         component: InformationDetail,
-    },
-    // 群画像
-    {
-        path: '/groupportrait',
-        name: 'groupportrait',
-        meta: {
-            bodyClass: 'groupportrait',
-        },
-        component: Groupportrait,
     },
     //群SOP 设置
     {

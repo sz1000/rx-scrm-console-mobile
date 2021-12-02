@@ -113,31 +113,33 @@ export const wxAgent = (res,type) => {
                         if (res.err_msg == 'getContext:ok') {
                             let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
                             store.commit('setEntry', entry)
+                            //获取外部联系人ID
+                            wx.invoke('getCurExternalContact', {}, function(res) {
+                                if (res.err_msg == 'getCurExternalContact:ok') {
+                                    store.commit('setUserId', res.userId)
+                                    // console.log('auth wx resolve',store.getters)
+                                    resolve(true)
+                                } else {
+                                    //错误处理
+                                    console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
+                                }
+                            })
+                            //获取当前客户群ID
+                            wx.invoke('getCurExternalChat', {}, function(res) {
+                                if (res.err_msg == 'getCurExternalChat:ok') {
+                                    store.commit('setChatId', res.chatId)
+                                    // console.log('auth wx resolve',store.getters)
+                                    resolve(true)
+                                } else {
+                                    //错误处理
+                                    console.log('getCurExternalChat>>>err>>>', res)
+                                }
+                            })
                         } else {
                             //错误处理
                             console.log('getContext>>>err>>>', res)
                         }
                     })
-                    //获取外部联系人ID
-                    wx.invoke('getCurExternalContact', {}, function(res) {
-                        if (res.err_msg == 'getCurExternalContact:ok') {
-                            localStorage.setItem('userId', res.userId)
-                            store.commit('setUserId', res.userId)
-                        } else {
-                            //错误处理
-                            console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
-                        }
-                    })
-                    //获取当前客户群ID
-                    wx.invoke('getCurExternalChat', {}, function(res) {
-                        if (res.err_msg == 'getCurExternalChat:ok') {
-                            store.commit('setChatId', res.chatId)
-                        } else {
-                            //错误处理
-                            console.log('getCurExternalChat>>>err>>>', res)
-                        }
-                    })
-                    resolve(true)
                 }
             )
         })

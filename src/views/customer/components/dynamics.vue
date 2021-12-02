@@ -257,7 +257,7 @@ export default {
             font-size: 24px;
             line-height: 50px;
             padding: 0 26px;
-            border: 1px solid @navBg;
+            border: 1px solid @navBg; /*no*/
             background: @navBg;
             border-radius: 26px;
             margin-right: 24px;
@@ -366,7 +366,7 @@ export default {
                     &::before{
                         content: '';
                         width: calc(100% + 48px);
-                        height: 1px;
+                        height: 1px;    /*no*/
                         background: @lineColor;
                         position: absolute;
                         top: 0;
@@ -375,7 +375,7 @@ export default {
                     .msg_li{
                         width: 100%;
                         padding: 24px 0;
-                        border-bottom: 1px solid @lineColor;
+                        border-bottom: 1px solid @lineColor; /*no*/
                         &:last-child{
                             border: none;
                         }
@@ -429,9 +429,9 @@ export default {
                 position: relative;
                 &::before{
                     content: '';
-                    width: 1px;
+                    width: 1px; /*no*/
                     height: 24px;
-                    border-right: 1px dashed @placeholder;
+                    border-right: 1px dashed @placeholder; /*no*/
                     position: absolute;
                     left: 50%;
                     top: 0;
@@ -439,9 +439,9 @@ export default {
                 }
                 &::after{
                     content: '';
-                    width: 1px;
+                    width: 1px; /*no*/
                     height: calc(100% - 24px);
-                    border-right: 1px dashed @placeholder;
+                    border-right: 1px dashed @placeholder; /*no*/
                     position: absolute;
                     left: 50%;
                     top: 64px;

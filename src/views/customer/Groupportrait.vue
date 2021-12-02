@@ -3,7 +3,6 @@
     <div class="portrait-box">
       <div class="flex">
         <div class="portrait_img">
-          <!-- <img src="../../images/groupico.png" alt="" /> -->
           <div class="flag">群</div>
         </div>
         <div>
@@ -26,10 +25,6 @@
           <p class="num">{{ datatTite.joinsum || "0" }}</p>
           <p class="num_tite">今日新增</p>
         </div>
-        <!-- <div>
-          <p class="num">{{ datatTite.leavesum }}</p>
-          <p class="num_tite">今日退群</p>
-        </div> -->
       </div>
     </div>
     <!-- 群sop -->
@@ -153,7 +148,6 @@ export default {
     getMethod() {
       if (!this.chatId) {
         console.log('no chatId')
-        commonFun.getWxAppid()
       } else {
         console.log('init',this.chatId)
         this.init()
@@ -235,12 +229,6 @@ export default {
     getList() {
       this.$network
         .get('/customer-service/group/getGroupUserPage', {
-          // chatId: this.$route.query.id,
-          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
-          // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
-          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          // wrY-gRDAAA0w-s-nmhpGiOpbpDQvHCvQ
-          // chatId: localStorage.getItem("chatId"),
           chatId: this.chatId,
           ...this.pageInfo,
         })
@@ -279,40 +267,14 @@ export default {
           if (this.dataList.length >= this.total) {
             this.finished = true
           }
-          // this.dataList = tempList;
-          // this.total = res.data.data.total;
-          // let lengrod = res.data.data.records;
-          // let newSetArr = this.channelList.concat(lengrod);
-
-          // this.channelList = this.unique(newSetArr);
-
-          // console.log(this.channelList);
-          // if (lengrod == null || lengrod.length === 0)
-          //   if (this.channelList.length >= this.total) {
-          //     this.finished = true;
-          //   } else {
-          //     // this.onLoad();
-          //   }
         })
     },
-    // onRefresh() {
-    //   // 清空列表数据
-    //   console.log("清空列表数据");
-    // },
     // 去重一次
     unique(arr) {
       const res = new Map()
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
     },
   },
-  // mounted() {
-  //   console.log("mounted");
-  //   localStorage.removeItem("chatId");
-  // },
-  // beforeDestroy() {
-  //   console.log("beforeDestroy");
-  //   localStorage.removeItem("chatId");
-  // },
 }
 </script>
 <style lang="less" scoped>
@@ -322,22 +284,12 @@ export default {
 @fontSub2: #838a9d;
 @bdColor: #d9dae4;
 @dashedColor: #f0f2f7;
-/deep/.van-overlay {
-  // background-color: rgba(0, 0, 0, 0.3);
-}
-/deep/ .van-loading {
-  // top: 50%;
-  // left: 50%;
-}
 .loding {
   top: 50%;
   left: 50%;
   transform: translate(-2%, -50%);
-  // transform: translate(-50%, -50%);
 }
 .warp-portrait {
-  /* padding: 24px; */
-  /* background: #838a9d; */
   .sop_box {
     width: 100%;
     min-height: 120px;
