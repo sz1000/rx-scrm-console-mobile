@@ -13,12 +13,7 @@
                 </p>
                 <div class="cover-img-box">
                     <img class="cover-img" :src="form.cover" alt="" @click="previewImg">
-                    <van-uploader :max-count="1" :max-size="2 * 1024 * 1024" :before-read="beforeRead" :after-read="afterRead" @oversize="onOversize">
-                        <div class="rechoose">
-                            <span>重新选择</span>
-                            <img src="../../images/arrow_right.png" alt="">
-                        </div>
-                    </van-uploader>
+                    <img-upload :isCustomize="true" :customizeType="2"></img-upload>
                 </div>
             </div>
             <div class="field-item">
@@ -37,9 +32,9 @@
 </template>
 <script>
 import { ArticleFromReprint, AddArticle } from '../../config/api'
-import { uploadFile } from '../../api/friend'
-import EditAbstract from '../../components/MaterialTemplate/dialog/editAbstract'
-import ImgPreview from '../../components/MaterialTemplate/imgPreview'
+import EditAbstract from './dialog/editAbstract'
+import ImgUpload from './imgUpload'
+import ImgPreview from './imgPreview'
 import { mapState } from 'vuex'
 
 export default {
@@ -68,7 +63,8 @@ export default {
     inject: ['initType', 'goBack'],
     provide() {
         return {
-            getAbstractData: this.getAbstractData
+            getAbstractData: this.getAbstractData,
+            getImgUrl: this.getImgUrl
         }
     },
     methods: {
@@ -95,40 +91,8 @@ export default {
                 }
             })
         },
-        onOversize() {
-            this.$toast('文件大小不能超过 2M')
-        },
-        beforeRead(file) {
-            console.log("文件信息：：：", file)
-            if (!/\.png$|\.jpg$|\.jpeg$/i.test(file.name)) {
-                this.$toast("请上传png、jpg格式的图片");
-                return false;
-            }
-            return true
-        },
-        afterRead(file) {
-            this.$toast.loading({
-                message: '上传中...',
-                forbidClick: true,
-                duration: 0,
-                loadingType: 'spinner',
-            })
-            let formData = new FormData()
-
-            formData.append('file', file.file)
-            formData.append('filetype', 'image')
-            formData.append('type', 'material')
-
-            uploadFile(formData).then((res) => {
-                const { result, data, msg } = res
-
-                this.$toast.clear()
-                if (result) {
-                    this.form.cover = data.url
-                } else {
-                    this.$toast(msg)
-                }
-            })
+        getImgUrl(url) {
+            this.form.cover = url
         },
         previewImg() {
             this.$refs.imgPreview.show(1, [this.form.cover])
@@ -191,6 +155,7 @@ export default {
     },
     components: {
         EditAbstract,
+        ImgUpload,
         ImgPreview
     }
 }
@@ -240,30 +205,6 @@ export default {
                 .cover-img {
                     width: 160px;
                     height: 160px;
-                }
-                .rechoose {
-                    display: flex;
-                    align-items: center;
-                    position: relative;
-                    span {
-                        color: @lengthColor;
-                        font-size: 28px;
-                    }
-                    img {
-                        width: 28px;
-                        height: 28px;
-                    }
-                    .upload-box { 
-                        width: 100%;
-                        height: 100%;
-                        overflow: hidden;
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        /deep/ .van-uploader__upload {
-                            background: transparent;
-                        }
-                    }
                 }
             }
         }

@@ -28,7 +28,7 @@ export default {
     name: 'reprint',
     data() {
         return {
-            type: 2, // 1: 输入链接, 2: 编辑文章
+            type: 1, // 1: 输入链接, 2: 编辑文章
             articleUrl: ''
         }
     },

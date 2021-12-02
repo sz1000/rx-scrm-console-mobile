@@ -1,86 +1,96 @@
 <template>
     <div class="material-template">
-        <ul class="header-nav">
-            <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
-            <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
-            <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
-        </ul>
-        <search ref="search" :type="type"></search>
-        <ul class="list-box">
-            <li class="item-box" v-if="type == 0">
-                <van-list
-                    v-model="articleListLoading"
-                    :immediate-check="false"
-                    :finished="articleListFinished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                    >
-                    <div class="article-item item" v-for="i in articleList" :key="i.articleId">
-                        <div class="right" @click="preview(1, i)">
-                            <div class="img">
-                                <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
-                            </div>
-                            <div class="des">
-                                <div>
-                                    <h3 class="one-line">{{i.title}}</h3>
-                                    <p class="one-line" v-html="i.contentAbstract"></p>
+        <template v-if="!showUploadPoster">
+            <ul class="header-nav">
+                <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
+                <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
+                <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
+            </ul>
+            <search ref="search" :type="type"></search>
+            <ul class="list-box">
+                <li class="item-box" v-if="type == 0">
+                    <van-list
+                        v-model="articleListLoading"
+                        :immediate-check="false"
+                        :finished="articleListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="i in articleList" :key="i.articleId">
+                            <div class="right" @click="preview(1, i)">
+                                <div class="img">
+                                    <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
+                                </div>
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.title}}</h3>
+                                        <p class="one-line" v-html="i.contentAbstract"></p>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div>
                         </div>
-                        <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div>
-                    </div>
-                </van-list>
-            </li>
-            <li class="item-box" v-if="type == 1">
-                <van-list
-                    v-model="saleListLoading"
-                    :immediate-check="false"
-                    :finished="saleListFinished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                    >
-                    <div class="file-item item" v-for="i in saleList" :key="i.documentId">
-                        <div class="right" @click="preview(2, i)">
-                            <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'" alt="">
-                            <div class="des">
-                                <div>
-                                    <h3 class="one-line">{{i.name}}</h3>
-                                    <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                    </van-list>
+                </li>
+                <li class="item-box" v-if="type == 1">
+                    <van-list
+                        v-model="saleListLoading"
+                        :immediate-check="false"
+                        :finished="saleListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="i in saleList" :key="i.documentId">
+                            <div class="right" @click="preview(2, i)">
+                                <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'" alt="">
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.name}}</h3>
+                                        <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div>
                         </div>
-                        <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div>
-                    </div>
-                </van-list>
-            </li>
-            <li class="item-box" v-if="type == 2">
-                <van-list
-                    v-model="posterListLoading"
-                    :immediate-check="false"
-                    :finished="posterListFinished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                    >
-                    <div class="file-item item" v-for="i in posterList" :key="i.posterId">
-                        <div class="right" @click="previewImg(i)">
-                            <div class="img">
-                                <span><img :src="i.posterUrl" alt=""></span>
-                            </div>
-                            <div class="des">
-                                <div>
-                                    <h3 class="one-line">{{i.posterName}}</h3>
+                    </van-list>
+                </li>
+                <li class="item-box" v-if="type == 2">
+                    <van-list
+                        v-model="posterListLoading"
+                        :immediate-check="false"
+                        :finished="posterListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="i in posterList" :key="i.posterId">
+                            <div class="right" @click="previewImg(i)">
+                                <div class="img">
+                                    <span><img :src="i.posterUrl" alt=""></span>
+                                </div>
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.posterName}}</h3>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div>
                         </div>
-                        <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div>
-                    </div>
-                </van-list>
-            </li>
-        </ul>
-        <!-- 转载公众号文章按钮 -->
-        <div v-if="type == 0" class="reprint-box" @click="goReprint"></div>
+                    </van-list>
+                </li>
+            </ul>
+
+            <!-- 转载公众号文章按钮 -->
+            <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
+
+            <!-- 上传海报按钮 -->
+            <div v-if="type == 2" class="poster-box">
+                <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+            </div>
+        </template>
 
         <img-preview ref="imgPreview"></img-preview>
+
+        <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster"></upload-poster>
     </div>
 </template>
 <script>
@@ -89,6 +99,8 @@ import { sendChatMessage, byteConvert } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
+import ImgUpload from '../../components/MaterialTemplate/imgUpload'
+import UploadPoster from '../../components/MaterialTemplate/uploadPoster'
 
 import { mapActions, mapState } from 'vuex'
 
@@ -116,7 +128,10 @@ export default {
             posterListLoading: false,
             posterListFinished: false,
 
-            originUrl: location.origin
+            originUrl: location.origin,
+
+            showUploadPoster: false,  // 是否展示海报上传页面
+            posterData: {} // 上传的海报图片信息
         }
     },
     computed: {
@@ -124,7 +139,9 @@ export default {
     },
     provide() {
         return {
-            checkTable: this.checkTable
+            checkTable: this.checkTable,
+            getImgUrl: this.getImgUrl,
+            previewImg: this.previewImg
         }
     },
     created() {
@@ -222,11 +239,24 @@ export default {
         sendChatMessage,
         byteConvert,
         // 去往转载公众号文章页面
-        goReprint() {
+        goNextStep() {
             this.$router.push({
                 path: '/talkTool/reprint',
                 // query: {},
             })
+        },
+        // 海报上传图片地址获取
+        getImgUrl(data) {
+            this.posterData = data
+            this.showUploadPoster = true
+        },
+        doShowUploadPoster(data) {
+            const { showUploadPoster, isRefresh } = data
+
+            if (isRefresh) {
+                this.changeNav(2)
+            }
+            this.showUploadPoster = showUploadPoster
         },
         preview(type, item) {
             this.$router.push({
@@ -245,7 +275,9 @@ export default {
     },
     components: {
         Search,
-        ImgPreview
+        ImgPreview,
+        ImgUpload,
+        UploadPoster
     }
 }
 </script>
@@ -400,6 +432,13 @@ export default {
             width: 6px;
             height: 44px;
         }
+    }
+    .poster-box {
+        width: 104px;
+        height: 104px;
+        position: fixed;
+        right: 32px;
+        bottom: 140px;
     }
 }
 </style>

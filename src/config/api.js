@@ -23,6 +23,7 @@ export const SaleDocumentList = data => { return http.get(`${materialServiceApi}
 export const SaleDocumentDetail = data => { return http.get(`${materialServiceApi}/sale_document/${data}/detail`)} // 获取文件详情
 
 export const PosterList = data => { return http.get(`${materialServiceApi}/sale-poster-entity/list`, data)} // 获取海报列表
+export const AddPoster = data => { return http.post(`${materialServiceApi}/sale-poster-entity`, data)} // 添加营销海报
 
 export const MaterialOperation = data => { return http.post(`${materialServiceApi}/material_operation/${data.materialId}`, data.model)} // 上报浏览信息
 
