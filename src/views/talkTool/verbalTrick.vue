@@ -242,11 +242,13 @@
     <!-- 底部导航 -->
     <div class="footer-nav">
       <div class="item" @click="showTemplate = 1">
-        <img :src="showTemplate | getHuashuImg" alt="" />
+        <img v-show="showTemplate == 1" :src="require('../../images/icon_huashu_active.png')" alt="" />
+        <img v-show="showTemplate == 2" :src="require('../../images/icon_huashu.png')" alt="" />
         <span :class="{ active: showTemplate == 1 }">话术库</span>
       </div>
       <div class="item" @click="showTemplate = 2">
-        <img :src="showTemplate | getMaterialImg" alt="" />
+        <img v-show="showTemplate == 1" :src="require('../../images/icon_material.png')" alt="" />
+        <img v-show="showTemplate == 2" :src="require('../../images/icon_material_active.png')" alt="" />
         <span :class="{ active: showTemplate == 2 }">内容素材</span>
       </div>
     </div>
@@ -421,9 +423,19 @@ export default {
       this.verbaltrickList()
       this.getData()
       this.getUserName()
+      this.getComeFrom()
     }, 2000)
   },
   methods: {
+    // 判断是否是从转载公众号返回的
+    getComeFrom() {
+      const { comeFrom } = this.$route.query
+
+      if (comeFrom) {
+        this.showTemplate = comeFrom
+      }
+    },
+
     formatDate,
     getUserName() {
       this.$network
@@ -997,28 +1009,6 @@ export default {
       console.log('userId：', val)
     },
   },
-  filters: {
-    getHuashuImg(type) {
-      switch (type) {
-        case 1:
-          return require('../../images/icon_huashu_active.png')
-          break
-        case 2:
-          return require('../../images/icon_huashu.png')
-          break
-      }
-    },
-    getMaterialImg(type) {
-      switch (type) {
-        case 1:
-          return require('../../images/icon_material.png')
-          break
-        case 2:
-          return require('../../images/icon_material_active.png')
-          break
-      }
-    },
-  },
 }
 </script>
 
@@ -1036,8 +1026,8 @@ export default {
   .footer-nav {
     display: flex;
     width: 100%;
-    height: 112px;
-    box-shadow: 0 0 10px 0 #ccc;
+    height: 100px;
+    // box-shadow: 0 0 10px 0 #ccc;
     background-color: #fff;
     position: fixed;
     bottom: 0;
@@ -1049,7 +1039,7 @@ export default {
       img {
         width: 40px;
         height: 40px;
-        margin: 16px auto 10px;
+        margin: 12px auto 4px;
       }
       span {
         font-size: 20px;

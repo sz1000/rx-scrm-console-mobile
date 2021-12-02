@@ -288,8 +288,16 @@ img {
   -webkit-box-orient: vertical;
 }
 
+.one-line {
+  .txtCut(1);
+}
+
 .two-line {
   .txtCut(2);
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 /* 移动端点击a链接出现蓝色背景问题解决 */
@@ -475,4 +483,17 @@ img {
     width: 750px;
     margin-left: -375px;
   }
+}
+
+input::-webkit-input-placeholder {
+  color: #C0C4CC; 
+} 
+input:-moz-placeholder {
+  color: #C0C4CC; 
+} 
+input::-moz-placeholder {
+  color: #C0C4CC; 
+} 
+input:-ms-input-placeholder {
+  color: #C0C4CC; 
 }

@@ -13,6 +13,7 @@ import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
+import Reprint from '../views/talkTool/reprint' // 转载公众号文章
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
 import CustomergroupPlaye from '../views/talkTool/CustomergroupPlaye.vue' //客户群群发
@@ -187,6 +188,14 @@ const routes = [{
                     bodyClass: 'verbalTrick',
                 },
                 component: verbalTrick,
+            },
+            // 转载公众号文章
+            {
+                path: 'reprint',
+                meta: {
+                    bodyClass: 'reprint',
+                },
+                component: Reprint,
             },
             // 新增
             {
