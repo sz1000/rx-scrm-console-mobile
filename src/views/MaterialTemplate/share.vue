@@ -47,16 +47,26 @@ export default {
             formData: {},
             unionId: '',
             materialId: '',
-            materialType: '',
+            materialType: '', // 1: 文章, 2: 文件
             userNo: ''
         }
     },
     created() {
+        const { isPreview, type, userNo, data } = this.$route.query
+
+        if (isPreview == 1) {
+            this.materialType = type
+            this.formData = JSON.parse(decodeURIComponent(data))
+            this.userNo = userNo
+            this.getUsersInfo()
+            return
+        } 
+
         if (isWeiXin()) {
             // 微信授权
             this.wechatLoad()
         }
-        const { materialId, type, userNo } = this.$route.query
+        const { materialId } = this.$route.query
 
         this.materialId = materialId
         this.materialType = type
@@ -159,12 +169,13 @@ export default {
 <style lang="less" scoped>
     .material-template {
         min-height: 100vh;
-        padding: 157px 32px 32px;
+        padding: 172px 32px 32px;
         background-color: #fff;
         position: relative;
         .user-info {
             width: 100%;
-            height: 129px;
+            height: 144px;
+            padding: 32px;
             box-shadow: 0 6px 10px 0 rgba(0,0,0,0.1);
             background-color: #fff;
             position: fixed;
@@ -174,7 +185,7 @@ export default {
                 display: inline-block;
                 width: 72px;
                 height: 72px;
-                margin: 27px;
+                margin-right: 16px;
                 border-radius: 50%;
                 vertical-align: middle;
             }
@@ -194,18 +205,17 @@ export default {
             }
             .right {
                 width: 130px;
+                height: 100%;
                 text-align: center;
                 position: absolute;
                 right: 27px;
-                top: 50%;
-                transform: translateY(-50%);
+                top: 0;
                 img {
-                    width: 42px;
-                    height: 40px;
-                    margin: 0 auto;
+                    width: 48px;
+                    height: 48px;
+                    margin: 24px auto 16px;
                 }
                 span {
-                    margin-top: 8px;
                     font-size: 24px;
                 }
             }

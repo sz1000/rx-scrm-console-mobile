@@ -16,6 +16,8 @@ export const GetSignature = data => { return http.get(`${wechatServiceApi}/offi-
 // 素材模板
 export const ArticleList = data => { return http.get(`${materialServiceApi}/article/list`, data)} // 获取文章列表
 export const ArticleDetail = data => { return http.get(`${materialServiceApi}/article/${data}/detail`)} // 获取文章详情
+export const AddArticle = data => { return http.post(`${materialServiceApi}/article`, data)} // 新增文章
+export const ArticleFromReprint = data => { return http.get(`${materialServiceApi}/article/wechat_article`, data)} // 拉取微信公众号文章
 
 export const SaleDocumentList = data => { return http.get(`${materialServiceApi}/sale_document/list`, data)} // 获取文件列表
 export const SaleDocumentDetail = data => { return http.get(`${materialServiceApi}/sale_document/${data}/detail`)} // 获取文件详情
