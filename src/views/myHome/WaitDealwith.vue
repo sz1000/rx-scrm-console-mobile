@@ -409,7 +409,7 @@ export default {
   }
   .total_box {
     padding: 0 32px 18px;
-    text-align: right;
+    // text-align: right;
     color: #838a9d;
     font-size: 24px;
     border-bottom: 1px solid #e6e6e6;

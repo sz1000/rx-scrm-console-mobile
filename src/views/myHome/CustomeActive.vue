@@ -199,8 +199,10 @@ export default {
         id: this.id,
       }
       ActiveCustomer(params).then((res) => {
-        this.cardList = res.data.list
-        this.cumulative = res.data.count
+        if (res.result) {
+          this.cardList = res.data.list
+          this.cumulative = res.data.count
+        }
       })
     },
     getReplayData() {
@@ -209,8 +211,10 @@ export default {
         id: this.id,
       }
       ReplayCustomer(params).then((res) => {
-        this.cardList = res.data.list
-        this.cumulative = res.data.count
+        if (res.result) {
+          this.cardList = res.data.list
+          this.cumulative = res.data.count
+        }
       })
     },
     goBack() {
@@ -258,14 +262,18 @@ export default {
       // console.log(this.cardList, '------')
       keyToActivate(this.cardList).then((res) => {
         if (res.result) {
-          this.$toast('提示文案')
+          this.$toast(
+            `已通知所有相关成员全力激活客户，关联成员：${res.data.userCount}，激活客户：${res.data.customerCount}`
+          )
         }
       })
     },
     fnReplayList() {
       keyToFind(this.cardList).then((res) => {
         if (res.result) {
-          this.$toast('提示文案')
+          this.$toast(
+            `已通知所有相关成员全力寻回客户，关联成员：${res.data.userCount}，寻回客户：${res.data.customerCount}`
+          )
         }
       })
     },

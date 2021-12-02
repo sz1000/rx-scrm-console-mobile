@@ -32,7 +32,7 @@
                   <div class="name_one">{{list.context.sendUserInfo.userName}}</div>
                   <div class="creat_time">{{list.createTime}}</div>
                   <div class="cont_text">
-                    <span>@我</span>
+                    <span>@{{ list.context.receiveUserInfo[0].userNo == "9999999" ? '所有人' :'我'}}</span>
                     &nbsp;
                     <span>{{list.context.content}}</span>
                   </div>
@@ -91,7 +91,7 @@ export default {
           })
         })
         this.cardList = dataList
-        // console.log('@wo------', this.cardList)
+        console.log('@wo------', this.cardList)
       })
     },
     goBack() {
@@ -109,12 +109,13 @@ export default {
     },
     goCustomer(val) {
       console.log(val)
-      // this.$router.push({
-      //   path: '',
-      //   query: {
-      //     id: val.followId,
-      //   },
-      // })
+      this.$router.push({
+        path: '/customerPortrait',
+        query: {
+          id: val.followId,
+          code: val.clueCustomerNo,
+        },
+      })
     },
   },
 }
@@ -122,7 +123,7 @@ export default {
 <style lang="less" scoped>
 .about_warp {
   background: #fff;
-  height: 100%;
+  // height: 100%;
   padding-top: 87px;
   .headerTitle {
     position: fixed;
@@ -132,7 +133,7 @@ export default {
     width: 750px;
     transform: translateX(-50%);
     cursor: pointer;
-    // background: #fff;
+    background: #fff;
     padding: 0 24px;
     font-weight: 600;
     display: flex;
@@ -197,7 +198,7 @@ export default {
     height: 114px;
     line-height: 114px;
     font-size: 28px;
-    text-align: right;
+    // text-align: right;
     border-bottom: 2px solid #e6e6e6;
     font-size: 24px;
     color: #838a9d;
@@ -208,7 +209,7 @@ export default {
   }
 
   .custom_content {
-    padding: 0 32px;
+    padding: 0 32px 32px;
     .card_box {
       padding: 0 32px;
       // background: #ffffff;

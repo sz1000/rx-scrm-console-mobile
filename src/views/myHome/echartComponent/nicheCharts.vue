@@ -74,7 +74,7 @@ export default {
           data: data[i],
         }
         seriesData.push(obj)
-        console.log('---seriesData---', seriesData)
+        // console.log('---seriesData---', seriesData)
       })
       var option = {
         title: {

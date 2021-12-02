@@ -60,8 +60,8 @@ export default {
           {
             name: '浏览时长',
             type: 'pie',
-            radius: [20, 100],
-            center: ['50%', '55%'],
+            radius: [20, 90],
+            center: ['50%', '56%'],
             color: this.color,
             roseType: 'area',
             label: {
@@ -69,6 +69,7 @@ export default {
             },
             labelLine: {
               length: 1,
+              length2: 10,
             },
             data: this.data,
           },
