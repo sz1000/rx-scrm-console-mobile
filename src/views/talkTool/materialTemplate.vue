@@ -286,6 +286,7 @@ export default {
 .material-template {
     min-height: 100vh;
     background-color: @white;
+    overflow-x: hidden;
     .header-nav {
         display: flex;
         width: 100%;
@@ -336,6 +337,7 @@ export default {
                 padding:  32px;
                 position: relative;
                 .left {
+                    width: 48px;
                     min-width: 48px;
                     height: 48px;
                     margin-left: 24px;
