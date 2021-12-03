@@ -17,18 +17,19 @@
       <van-icon name="search" size="28" @click="search" class="searchIcon" />
     </div>
     <div v-loading="loading">
-         <div class="article_warp" v-show="this.tab == 1">
+         <div class="article_warp" v-if="this.tab == 1">
             <p class="tite_list">文章列表</p>
           
             <van-list
              
-              :finished="finished"
-              finished-text="没有更多了"
+              :finished="finishedArticle"
+              finished-text="已加载所有数据"
               @load="onLoad"
                 >
            <ul>
               <li class="article_list"  v-for="(item,indexp) in list" :key="indexp" @click="listtusp(item,indexp)">
-                   <img :src="item.cover" alt="" class="article_img">
+                   <img v-if="!item.cover" src="../../assets/images/article.png" alt="" class="article_img">
+                   <img v-else :src="item.cover" alt="" class="article_img">
                    <span class="artice_text">{{item.title}}</span>
                    <!-- <van-radio-group v-model="radio" @change='changeRadio(item)'>
                      <van-radio :name="item"></van-radio>
@@ -43,13 +44,13 @@
        
             </van-list>
             </div>
-    <div class="article_warp" v-show="this.tab == 2">
+    <div class="article_warp" v-if="this.tab == 2">
             <p class="tite_list">文件列表</p>
        
                <van-list
              
-              :finished="finished"
-              finished-text="没有更多了"
+              :finished="finishedfile"
+              finished-text="已加载所有数据"
               @load="onLoadfin"
                 >
            <ul>
@@ -67,12 +68,12 @@
             </ul>
             </van-list>
     </div>
-          <div class="article_warp" v-show="this.tab == 3">
+          <div class="article_warp" v-if="this.tab == 3">
             <p class="tite_list">海报列表</p>
          
                      <van-list
               :finished="finished"
-              finished-text="没有更多了"
+              finished-text="已加载所有数据"
               @load="onLoadPosters"
                 >
            <ul>
@@ -110,6 +111,8 @@ export default {
       searchInput: '',
       radio:"",
         loading: false,
+      finishedArticle: false,
+      finishedfile:false,
       finished: false,
       list:[],
         pageInfo: {
@@ -140,7 +143,17 @@ export default {
       corpId(){
             return this.$store.getters.corpId
         },
+      
   },
+    watch: {
+ 
+    searchInput(val) {
+      if (val == '') {
+       this.getFilePosters()
+      }
+    },
+  },
+  // updated(){  console.log(this.list.length,"mounted--")},
   methods: {
 
     goBack() {
@@ -161,12 +174,13 @@ export default {
         this.$router.push({path:"/talkTool/circleFriend",})
     },
     onLoad(){
-      if(this.list.length >= this.total){
-         console.log(this.list.length)
+      // console.log(this.list.length)
+      // if(this.list.length >= this.total){
+      //    console.log(this.list.length)
           this.pageInfo.page++
            this.getList()
         // this.finished = true;
-      }
+      // }
     },
       changeRadio(item) {
       console.log(this.radio)
@@ -175,47 +189,43 @@ export default {
     fanclick(item){
            console.log(item,"dainji")
     },
-onLoadfin(){
-   if(this.listfin.length >= this.totalf){
-       
-          this.pageInfofin.page++
-           this.getFileList()
-        // this.finished = true;
-      }
-},
-listtusp(item,val){
-     console.log(item)
-     this.centquer = item
-     this.indexps = val
-      this.$set(this.centquer, "tab", this.tab);
-},
-onLoadPosters(){
-   if(this.listPosters.length >= this.totalp){
-         console.log(11)
-        
-        // this.finished = true;
-      }else{
-          this.pageInposters.page++
-           this.getFilePosters()
-      }
-},
+        onLoadfin(){
+          //  if(this.listfin.length >= this.totalf){
+                  this.pageInfofin.page++
+                  this.getFileList()
+                // this.finished = true;
+              // }
+        },
+        listtusp(item,val){
+            console.log(item)
+            this.centquer = item
+            this.indexps = val
+              this.$set(this.centquer, "tab", this.tab);
+        },
+        onLoadPosters(){
+          console.log(122)
+            this.pageInposters.page+=1
+            this.getFilePosters()
+        },
     selectTab(v) {
+     
       this.tab = v
       this.searchInput = ''
       if (v == 1) {
-         this.pageInfo.page = 1
-           this.indexps = 1000000
+        //  this.pageInfo.page = 1
+          //  this.indexps = 1000000
         // this.getArticle()
+        //  this.list=[]
           this.getList()
       } else if (v == 2) {
       // this.listfin = []
-      this.indexps = 1000000
-      this.pageInfofin.page = 1
+      // this.indexps = 1000000
+      // this.pageInfofin.page = 1
         this.getFileList()
       } else {
-         this.pageInposters.page = 1
-         this.indexps = 1000000
-        // this.listPosters =[]
+        //  this.pageInposters.page = 1
+        //  this.indexps = 1000000
+        // // this.listPosters =[]
         this.getFilePosters()
       }
     },
@@ -224,22 +234,23 @@ onLoadPosters(){
         this.pageInfo.page = 1
         this.getList()
       } else if (this.tab == 2) {
-          // this.pageInfofin.page = 1
+          this.pageInfofin.page = 1
         this.getFileList()
       } else {
-          // this.pageInposters.page = 1
-        // this.getFilePosters()
-      this.$network
-        .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
-              pageIndex: this.pageInposters.page,
-              pageSize:this.pageInposters.limit, name: this.searchInput,})
-        .then((res) => {
-         console.log(res)
-        //  let dataListstd = res.data.records
-        //  this.totalp = res.data.total
-         this.listPosters =  res.data.records
+          this.pageInposters.page = 1
+            this.listPosters = []
+        this.getFilePosters()
+      // this.$network
+      //   .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
+      //         pageIndex: this.pageInposters.page,
+      //         pageSize:this.pageInposters.limit, name: this.searchInput,})
+      //   .then((res) => {
+      //    console.log(res)
+      //   //  let dataListstd = res.data.records
+      //   //  this.totalp = res.data.total
+      //    this.listPosters =  res.data.records
      
-        })
+      //   })
       }
     },
       getList() {
@@ -253,13 +264,18 @@ onLoadPosters(){
            this.loading =false
          }
          let dataList = res.data.records
-         this.total =res.data.total
+         this.total = res.data.total
          this.list =  this.list.concat(dataList)
-         if(this.tab == 1){
-            this.list =  dataList
-         }
+        //  console.log( this.list.length," this.list")
+            if (this.list.length >= this.total) {
+            this.finishedArticle = true;
+          }
+        //  if(this.tab == 1){
+        //     this.list =  dataList
+        //  }
         })
     },
+    
       getFileList() {
       this.$network
         .get('/material-service/sale_document/list', {corpId:this.corpId,
@@ -273,27 +289,46 @@ onLoadPosters(){
          let dataLists = res.data.records
          this.totalf = res.data.total
          this.listfin =  this.listfin.concat(dataLists)
-           if(this.tab == 2){
-            this.listfin =  dataLists
-         }
+        //    if(this.tab == 2){
+        //     this.listfin =  dataLists
+        //  }
+             if (this.listfin.length >= this.totalf) {
+            this.finishedfile = true;
+          }
         })
     },
         getFilePosters() {
-      this.$network
+ 
+         this.$network
         .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
               pageIndex: this.pageInposters.page,
               pageSize:this.pageInposters.limit, name: this.searchInput,})
         .then((res) => {
-         console.log(res)
-         let dataListstd = res.data.records
-         this.totalp = res.data.total
-         this.listPosters =  this.listPosters.concat(dataListstd)
+                if(res.result){
+              let dataListstd = res.data.records
+                // this.listPosters = res.data.records
+                  if (res.data.records == null || res.data.records.length === 0) {
+                  this.finished = true
+                     console.log(dataListstd,"----0")
+                  }
+                    // console.log(dataListstd,"----0")
+                    this.totalp = res.data.total
+                    this.listPosters =  this.listPosters.concat(dataListstd)
+                    console.log(this.listPosters,"====")
          if(res.result){
            this.loading =false
          }
-      
+           if (this.listPosters.length >= this.totalp) {
+            this.finished = true;
+          }
+          }
         })
     },
+     //去重一次
+    // unique(arr) {
+    //   const res = new Map()
+    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
+    // },
   },
 }
 </script>

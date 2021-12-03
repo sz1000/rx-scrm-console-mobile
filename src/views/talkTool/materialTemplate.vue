@@ -1,6 +1,6 @@
 <template>
     <div class="material-template">
-        <template v-if="!showUploadPoster">
+        <template v-if="!showUploadPoster && !showContentPreview">
             <ul class="header-nav">
                 <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
                 <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
@@ -91,6 +91,8 @@
         <img-preview ref="imgPreview"></img-preview>
 
         <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster"></upload-poster>
+        <!-- 文章/文件预览 -->
+        <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
     </div>
 </template>
 <script>
@@ -101,6 +103,7 @@ import Search from '../../components/MaterialTemplate/search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ImgUpload from '../../components/MaterialTemplate/imgUpload'
 import UploadPoster from '../../components/MaterialTemplate/uploadPoster'
+import ContentPreview from '../../components/MaterialTemplate/contentPreview'
 
 import { mapActions, mapState } from 'vuex'
 
@@ -131,7 +134,8 @@ export default {
             originUrl: location.origin,
 
             showUploadPoster: false,  // 是否展示海报上传页面
-            posterData: {} // 上传的海报图片信息
+            posterData: {}, // 上传的海报图片信息
+            showContentPreview: false,
         }
     },
     computed: {
@@ -164,6 +168,13 @@ export default {
             this.getList()
         },
         getList(title) {
+            this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0,
+                loadingType: 'spinner',
+            })
+
             let ApiOpts = ArticleList
 
             let params = {
@@ -191,6 +202,7 @@ export default {
             ApiOpts(params).then(res => {
                 const { code, data, msg } = res
 
+                this.$toast.clear()
                 if (code === 'success') {
                     if (this.type == 0) {
                         this.articleListLoading = false
@@ -230,10 +242,13 @@ export default {
         initPage(type) {
             if (type == 0) {
                 this.articleListPage = 1
+                this.articleList = []
             } else if (type == 1) {
                 this.saleListPage = 1
+                this.saleList = []
             } else if (type == 2) {
                 this.posterListPage = 1
+                this.posterList = []
             }
         },
         sendChatMessage,
@@ -247,10 +262,12 @@ export default {
         },
         // 海报上传图片地址获取
         getImgUrl(data) {
+            this.ifShowFooter(false)
             this.posterData = data
             this.showUploadPoster = true
         },
         doShowUploadPoster(data) {
+            this.ifShowFooter(true)
             const { showUploadPoster, isRefresh } = data
 
             if (isRefresh) {
@@ -258,26 +275,35 @@ export default {
             }
             this.showUploadPoster = showUploadPoster
         },
+        hideContentPreview(data) {
+            this.ifShowFooter(true)
+            this.showContentPreview = data
+        },
         preview(type, item) {
-            this.$router.push({
-                path: '/materialTemplate',
-                query: {
-                    isPreview: 1,
-                    type,
-                    userNo: this.userNo,
-                    data: encodeURIComponent(JSON.stringify(item))
-                },
+            this.ifShowFooter(false)
+            this.showContentPreview = true
+            let obj = {
+                type,
+                userNo: this.userNo,
+                data: item
+            }
+            this.$nextTick(() => {
+                this.$refs.contentPreview.show(obj)
             })
         },
         previewImg(i) {
             this.$refs.imgPreview.show(1, [i.posterUrl])
         },
+        ifShowFooter(data) {
+            this.$emit('ifShowFooter', data)
+        }
     },
     components: {
         Search,
         ImgPreview,
         ImgUpload,
-        UploadPoster
+        UploadPoster,
+        ContentPreview
     }
 }
 </script>

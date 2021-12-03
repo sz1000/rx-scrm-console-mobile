@@ -166,13 +166,14 @@
                          
                 </el-form-item>
               </el-form>
-              <!-- 素材 -->
+            
             </template>
+              <!-- 素材 -->
                 <template v-if="item.appendixType === '素材库'">
                    
                   <div>
                    
-                         <div class="article_warp" v-if="item.materialList.tab == 1">
+                  <div class="article_warp" v-if="item.materialList.tab == 1">
                  <div class="article_text">
                    <div>文章:</div>
                    <div class="tites">{{item.materialList.title}}</div>
@@ -276,7 +277,7 @@
     </div>
       <div class="psoition_falx" v-if="sucai == 1">
                        <Coumpontmaterial  @sureTab="showData"  @sure="fnMaterialInfo" />
-                     </div>
+      </div>
   </div>
 
 </template>
@@ -303,7 +304,7 @@ export default {
     return {
       dataindex:"",
        dataindext:"",
-             imgArrUrl:[],
+       imgArrUrl:[],
       minDate: new Date(),
       loading: false,
       yuangongPage: 1,
