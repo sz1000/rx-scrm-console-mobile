@@ -40,8 +40,7 @@ export default {
                 materialType: type,
                 data
             }
-                console.log("params", params)
-                console.log("111111", this.$refs)
+            
             this.$nextTick(() => {
                 this.$refs.materialContent.getPreviewDetails(params)
             })
