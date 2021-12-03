@@ -1,6 +1,6 @@
 <template>
     <div class="img-preview">
-        <van-image-preview v-model="visible" :images="images" @change="onChange">
+        <van-image-preview v-model="visible" closeable :images="images" @change="onChange">
             <!-- <template v-slot:index>第{{ index }}页</template> -->
         </van-image-preview>
     </div>

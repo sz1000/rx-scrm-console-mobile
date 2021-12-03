@@ -1,33 +1,38 @@
 <template>
     <div class="reprint-edit">
-        <div class="field-box">
-            <div class="field-item">
-                <van-field v-model="form.title" label="文章标题" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
-            </div>
-            <div class="field-item">
-                <van-field v-model="form.author" label="作者" label-class="label" placeholder="请输入(不得超过16个字符)" maxlength="16"/>
-            </div>
-            <div class="field-item cover-box">
-                <p class="label">
-                    <span>文章封面</span>
-                </p>
-                <div class="cover-img-box">
-                    <img class="cover-img" :src="form.cover" alt="" @click="previewImg">
-                    <img-upload :isCustomize="true" :customizeType="2"></img-upload>
+        <template v-if="!showContentPreview">
+            <div class="field-box">
+                <div class="field-item">
+                    <van-field v-model="form.title" label="文章标题" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
+                </div>
+                <div class="field-item">
+                    <van-field v-model="form.author" label="作者" label-class="label" placeholder="请输入(不得超过16个字符)" maxlength="16"/>
+                </div>
+                <div class="field-item cover-box">
+                    <p class="label">
+                        <span>文章封面</span>
+                    </p>
+                    <div class="cover-img-box">
+                        <img class="cover-img" :src="form.cover" alt="" @click="previewImg">
+                        <img-upload :isCustomize="true" :customizeType="2"></img-upload>
+                    </div>
+                </div>
+                <div class="field-item">
+                    <van-field v-model="form.contentAbstract" type="textarea" label="文章摘要" label-class="label" rows="1" autosize readonly @click="showAbstract"/>
                 </div>
             </div>
-            <div class="field-item">
-                <van-field v-model="form.contentAbstract" type="textarea" label="文章摘要" label-class="label" rows="1" autosize readonly @click="showAbstract"/>
+            <div class="reprint-edit-btn">
+                <span class="preview" @click="preview">预览文章</span>
+                <span class="establish" @click="confirm">创建文章</span>
             </div>
-        </div>
-        <div class="reprint-edit-btn">
-            <span class="preview" @click="preview">预览文章</span>
-            <span class="establish" @click="confirm">创建文章</span>
-        </div>
 
-        <edit-abstract ref="editAbstract"></edit-abstract>
+            <edit-abstract ref="editAbstract"></edit-abstract>
 
-        <img-preview ref="imgPreview"></img-preview>
+            <img-preview ref="imgPreview"></img-preview>
+        </template>
+
+        <!-- 文章/文件预览 -->
+        <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
     </div>
 </template>
 <script>
@@ -35,6 +40,7 @@ import { ArticleFromReprint, AddArticle } from '../../config/api'
 import EditAbstract from './dialog/editAbstract'
 import ImgUpload from './imgUpload'
 import ImgPreview from './imgPreview'
+import ContentPreview from './contentPreview'
 import { mapState } from 'vuex'
 
 export default {
@@ -54,11 +60,12 @@ export default {
                 cover: 'https://h5.jzcrm.com/static/img/default_article.png',
                 contentAbstract: '',
                 corpId: ''
-            }
+            },
+            showContentPreview: false
         }
     },
     computed: {
-        ...mapState(["corpId"]),
+        ...mapState(["corpId", "userNo"]),
     },
     inject: ['initType', 'goBack'],
     provide() {
@@ -112,19 +119,23 @@ export default {
 
             return true
         },
+        hideContentPreview(data) {
+            this.showContentPreview = data
+        },
         preview() {
             if (!this.checkForm()) {
                 this.$toast("请输入文章标题")
                 return
             }
 
-            this.$router.push({
-                path: '/materialTemplate',
-                query: {
-                    isPreview: 1,
-                    type: 1,
-                    data: encodeURIComponent(JSON.stringify(this.form))
-                },
+            this.showContentPreview = true
+            let obj = {
+                type: 1,
+                userNo: this.userNo,
+                data: this.form
+            }
+            this.$nextTick(() => {
+                this.$refs.contentPreview.show(obj)
             })
         },
         confirm() {
@@ -156,7 +167,8 @@ export default {
     components: {
         EditAbstract,
         ImgUpload,
-        ImgPreview
+        ImgPreview,
+        ContentPreview
     }
 }
 </script>

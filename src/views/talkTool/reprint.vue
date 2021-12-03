@@ -1,11 +1,6 @@
 <template>
     <div class="reprint">
-        <div class="header-title">
-            <div class="back-page" @click="goBack">
-                <img src="../../images/arrow_left.png" alt="">
-            </div>
-            <span class="text-title">转载公众号文章</span>
-        </div>
+        <header-title title="转载公众号文章"></header-title>
         <div v-if="type == 1" class="link-box">
             <ul class="link-des">
                 <li class="line-title">文章链接</li>
@@ -22,6 +17,7 @@
     </div>
 </template>
 <script>
+import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
 import ReprintEdit from '../../components/MaterialTemplate/reprintEdit'
 
 export default {
@@ -40,6 +36,10 @@ export default {
     },
     methods: {
         goEdit() {
+            if (!this.articleUrl) {
+                this.$toast("请输入公众号链接")
+                return
+            }
             this.type = 2
             this.$nextTick(() => {
                 this.$refs.reprintEdit.getDetails()
@@ -56,6 +56,7 @@ export default {
         },
     },
     components: {
+        HeaderTitle,
         ReprintEdit
     }
 }
@@ -65,31 +66,6 @@ export default {
 .reprint{
     min-height: 100%;
     background-color: @white;
-    .header-title {
-        height: 87px;
-        line-height: 87px;
-        padding: 0 24px;
-        background-color: @white;
-        border-top: 1px solid @lineColor;
-        border-bottom: 1px solid @lineColor;
-        text-align: center;
-        position: relative;
-        .back-page {
-            position: absolute;
-            left: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            img {
-                width: 48px;
-                height: 48px;
-            }
-        }
-        .text-title {
-            font-size: 34px;
-            color: #3c4353;
-            font-weight: 600;
-        }
-    }
     .link-box {
         padding: 32px;
         .link-des {
