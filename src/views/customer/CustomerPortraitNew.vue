@@ -11,7 +11,7 @@
                     <div class="val">
                         <div class="name_box">
                             <div class="name">{{customerInfo.name}}</div>
-                            <div class="alt" v-if="customerInfo.customerType">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
+                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
                             <div class="icon">
                                 <img src="../../images/icon_female@2x.png" v-if="customerInfo.gender == '2'" />
                                 <img src="../../images/man.png" v-if="customerInfo.gender == '1'" />
@@ -29,9 +29,7 @@
                     </div>
                 </div>
                 <div class="tag_box" :class="{'opt0':tagList.length == 0}">
-                    <span class="tag">nice</span>
-                    <span class="tag">有意向购买</span>
-                    <span class="tag">优质客户</span>
+                    <div class="tag" v-for="(item,index) in tagList" :key="index">{{item.name | limitFilter}}</div>
                 </div>
             </div>
         </div>
@@ -40,13 +38,13 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group'}">
             <!-- 客户动态 -->
-            <dynamics v-if="navActive == 'dynamics'" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople" @openDialog="addCommentDialog"></dynamics>
+            <dynamics v-if="navActive == 'dynamics'" :isPoint="showRedPoint" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople" @openDialog="addCommentDialog"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
             <!-- 群聊 -->
             <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
-            <fujian v-if="navActive == 'enclosure'" :isPortrait="1"></fujian>
+            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'"></enclosure>
         </div>
         <!-- 协助人消息输入框 -->
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
@@ -97,7 +95,7 @@
 </template>
 
 <script>
-import { Dynamics,Group,DialogComment } from './components'
+import { Dynamics,Group,Enclosure,DialogComment } from './components'
 import { user_getUserName } from '@/api/home'
 import { MessageNotificatio } from '../../config/api'
 import {
@@ -106,15 +104,15 @@ import {
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo,  //添加评论回复
+    clueCustomerFollowUser_message, //是否有新消息
 } from '@/api/customer'
-import Fujian from "../customerManage/comTip/fujian"
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,DialogComment,
-        Opportunities,Fujian,MessageBox,RemindersBox
+        Dynamics,Group,Enclosure,DialogComment,
+        Opportunities,MessageBox,RemindersBox
     },
     provide() {
         return {
@@ -131,6 +129,7 @@ export default {
             showPortraitType: 0,
             dialog_group: false,
             dialog_xx: false,
+            showRedPoint: false,
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -185,18 +184,9 @@ export default {
         this.getUserName()
     },
     methods: {
-        getShowPortraitType() {
-            let { comeFrom } = this.$route.query
-            
-            if (this.entry && this.entry == 'single_chat_tools' || comeFrom == 'messageCard') {
-                this.showPortraitType = 1
-            } else if(this.entry && this.entry == 'group_chat_tools') {
-                this.showPortraitType = 2
-            }
-        },
         getCustomerDetail(){    //获取客户详情
-            let id = this.userId
-            // 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
+            let id = this.userId || 
+            'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
             // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
             // 'woyPDZEQAAKN_BGnwemNjnTqtjllE71g'
@@ -214,7 +204,9 @@ export default {
                     let data = res.data
                     this.customerInfo = data.clueCustomerVO
                     this.userList = data.directorList
-                    this.tagList = data.tagList
+                    this.tagList = data.tagList.filter((el,index) => {
+                        return index < 3
+                    })
                     this.navList.forEach(el => {
                         if(el.code == 'code'){
                             el.num = data.mobileDataCount.busCount
@@ -233,16 +225,24 @@ export default {
         getUserName(){  //获取权限数据
             user_getUserName().then(res => {
                 if(res.result){
-                    if(res.result){
-                        let data = res.data
-                        this.showSecret = !data.haveSecret
-                        this.sendUserInfo = data && data.userEntity
-                    }
+                    let data = res.data
+                    this.showSecret = !data.haveSecret
+                    this.sendUserInfo = data && data.userEntity
+                }
+            })
+        },
+        userMessageReceive(id){    //是否有新消息
+            clueCustomerFollowUser_message(id).then(res => {
+                if(res.result){
+                    this.showRedPoint = res.data
                 }
             })
         },
         getSelectFollowMsgList(i){   //获取客户跟进信息
             console.log('sure',i)
+            if(i != 4){
+                this.userMessageReceive(this.customerInfo.clueCustomerNo)
+            }
             let params = {
                 page: 1,
                 limit: 50,
@@ -256,16 +256,20 @@ export default {
                     if(list && list.length > 0){
                         list.forEach(el => {
                             /*-start-*
-                             * 6.变更负责人 7.分配客户 8.领取客户
+                             * 5.更新客户 6.变更负责人 7.分配客户 8.领取客户
                              * 9.放弃客户 11.附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
                              * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
+                             * 
                              * 41.添加企微好友
+                             * 0. 老数据
                              * -end-*/ 
-                            let dotList = [6,7,8,9,11,13,14,26,28]
+                            el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
+                            el.toUser = el.toUser ? JSON.parse(el.toUser) : el.toUser
+                            let dotList = [0,5,6,7,8,9,11,13,14,26,28,36]
                             if(dotList.indexOf(el.optType) > -1){
                                 el.class = 'dot'
                             }
-                            let whiteList = [15,16,17,21]
+                            let whiteList = [5,15,16,17,21]
                             if(whiteList.indexOf(el.optType) > -1){
                                 el.context = JSON.parse(el.context)
                             }
@@ -323,6 +327,22 @@ export default {
         },
         navClickFun(code){
             this.navActive = code
+            switch (code) {
+                case 'dynamics':    //客户动态
+                    this.getSelectFollowMsgList()
+                    break;
+                case 'niche':   //商机
+                    
+                    break;
+                case 'group':   //客户群
+                    this.getCustomerGroupList()
+                    break;
+                case 'enclosure':   //附件
+                    
+                    break;
+                default:
+                    break;
+            }
         },
         showRemindersBox() {
             this.$refs.remindersBox.show()
@@ -425,6 +445,9 @@ export default {
                 3: '通过扫描群二维码入群',
             }
             return val ? obj[val] : ''
+        },
+        limitFilter(val){
+            return val && val.length > 6 ? val.substring(0,5) + '...' : val
         },
     },
 }
@@ -657,6 +680,9 @@ export default {
                     line-height: 32px;
                     color: @yellow;
                     margin-left: 8px;
+                    &.green{
+                        color: @green;
+                    }
                 }
                 .icon{
                     width: 26px;

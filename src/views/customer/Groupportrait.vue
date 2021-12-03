@@ -101,13 +101,17 @@
 </template>         
 <script>
 import { formatDate } from '../../utils/tool.js'
-import commonFun from '../../utils/commonToken'
+import { user_getUserName } from '@/api/home'
 import { sop_groupSopList } from '@/api/sop'
+import { 
+  group_getGroupDetail,
+  group_getGroupUserPage,
+} from '@/api/customer'
 export default {
   data() {
     return {
       channelList: [],
-      show: true,
+      show: false,
       loading: false,
       finished: false,
       refreshing: false,
@@ -159,12 +163,13 @@ export default {
       this.getList()
       this.getUserName()
     },
-    getUserName() {
-      this.$network
-        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
-        .then((res) => {
-          this.showSecret = !res.data.haveSecret
-        })
+    getUserName() {  //获取权限数据
+      user_getUserName().then(res => {
+        if(res.result){
+          let data = res.data
+          this.showSecret = !data.haveSecret
+        }
+      })
     },
     onLoad() {
       console.log('屏幕滚动')
@@ -192,6 +197,31 @@ export default {
       })
     },
     getGroupDetail() {
+      // this.chatId
+      let id = 'wryPDZEQAAeTjSevfGvCxJG1Qx26C-wQ'
+      group_getGroupDetail(id).then(res => {
+        if(res.result){
+          // this.show = false
+          // this.finished = true;
+          this.groupId = res.data.id
+          if (res.data.owmer == res.data.userId) {
+            console.log('我是群主')
+            this.isOwmer = true
+            this.getSopList()
+          }
+          this.datatTite.name = res.data.name
+          this.datatTite.usersum = res.data.usersum
+          this.datatTite.owmerName = res.data.owmerName
+          this.datatTite.createTime = formatDate(
+            res.data.createTime,
+            'yyyy-MM-dd hh:mm:ss'
+          )
+          this.datatTite.joinsum = res.data.joinsum
+          this.datatTite.leavesum = res.data.leavesum
+        }
+      })
+
+      return
       this.$network
         .get('/customer-service/group/getGroupDetail', {
           // chatId: this.$route.query.id,
@@ -227,12 +257,13 @@ export default {
         })
     },
     getList() {
-      this.$network
-        .get('/customer-service/group/getGroupUserPage', {
-          chatId: this.chatId,
-          ...this.pageInfo,
-        })
-        .then((res) => {
+      let id = 'wryPDZEQAAeTjSevfGvCxJG1Qx26C-wQ'
+      let obj = {
+        chatId: id || this.chatId,
+        ...this.pageInfo,
+      }
+      group_getGroupUserPage(obj).then(res => {
+        if(res.result){
           let tempList = res.data.data.records //请求返回当页的列表
           this.loading = false
           this.total = res.data.data.total
@@ -267,7 +298,8 @@ export default {
           if (this.dataList.length >= this.total) {
             this.finished = true
           }
-        })
+        }
+      })
     },
     // 去重一次
     unique(arr) {

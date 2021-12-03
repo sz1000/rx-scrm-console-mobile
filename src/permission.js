@@ -1,14 +1,14 @@
 import router from './router'
 import store from '@/store'
 import { phoneModel, isWeChat, getAuthInfo, wxAgent } from '@/utils/function.js'
-var contactsList = ['/customerPortrait']                   //需获取外部联系人id页面路由
-var groupList = ['/customerPortrait']   //需获取群id页面路由 暂未启用
-var useList = ['/notice','/notice/daily','/home','/customerPortrait']       //目前可使用页面路由
+var contactsList = ['/customerPortrait']   //需获取外部联系人id页面路由
+var groupList = ['/customerPortrait']      //需获取群id页面路由
+var useList = ['/notice','/notice/daily','/home','/customerPortrait','/informationDetail']       //目前可使用页面路由
 
 router.beforeEach(async(to, from, next) => {
     let system = phoneModel()
     let type = [],token = system == 'ios' ? store.getters.token : sessionStorage.getItem('token')
-    store.commit('SET_SYSTEM', system)
+    store.commit('setSystem', system)
     if(groupList.indexOf(to.path) > -1){
         type.push('group')
     }
@@ -59,7 +59,9 @@ router.beforeEach(async(to, from, next) => {
 })
 
 router.afterEach(async(to, from, next) => {
-    // console.log('to',to)
+    if(process.env.NODE_ENV){
+        console.log('to:',to.path,'from:',from.path)
+    }
     // finish progress bar
     // let url = ''
     // if (phoneModel() === 'ios') {
