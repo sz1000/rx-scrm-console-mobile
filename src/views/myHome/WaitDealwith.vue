@@ -211,8 +211,8 @@ export default {
       this.cardList = []
       let params = {
         sendStatus: this.tabName,
-        createStartTime: this.startDate + ' 00:00:00',
-        createEndTime: this.endDate + ' 23:59:59',
+        createStartTime: this.startDate ? this.startDate + ' 00:00:00' : '',
+        createEndTime: this.endDate ? this.endDate + ' 23:59:59' : '',
       }
       groupSend(params).then((res) => {
         let dataList = res.data

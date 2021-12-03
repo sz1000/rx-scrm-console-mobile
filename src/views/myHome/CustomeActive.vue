@@ -197,8 +197,8 @@ export default {
       this.id = this.actions[0].id
       this.getReplayData()
     }
-    this.num = this.$route.query.active
-    this.num1 = this.$route.query.monthCount
+    this.num = this.$route.query.active || '0'
+    this.num1 = this.$route.query.monthCount || '0'
   },
   methods: {
     getActive() {
