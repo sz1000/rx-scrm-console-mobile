@@ -3,8 +3,8 @@
         <div v-if="userData" class="user-info">
             <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
             <ul class="center">
-                <li class="name one-txt-cut">{{ userData.name }}</li>
-                <li class="company one-txt-cut">{{ userData.departments }}</li>
+                <li class="name one-line">{{ userData.name }}</li>
+                <li class="company one-line">{{ userData.departments }}</li>
             </ul>
             <div class="right" @click="showWechat">
                 <img src="../../images/icon_qiwei.png" alt="">
@@ -68,7 +68,7 @@ export default {
             }
         }
         .right {
-            width: 130px;
+            width: 140px;
             height: 100%;
             text-align: center;
             position: absolute;

@@ -19,6 +19,7 @@
 <script>
 import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
 import ReprintEdit from '../../components/MaterialTemplate/reprintEdit'
+import { IsURL } from '../../utils/tool'
 
 export default {
     name: 'reprint',
@@ -38,6 +39,10 @@ export default {
         goEdit() {
             if (!this.articleUrl) {
                 this.$toast("请输入公众号链接")
+                return
+            }
+            if (!IsURL(this.articleUrl)) {
+                this.$toast("请输入正确的公众号链接")
                 return
             }
             this.type = 2
