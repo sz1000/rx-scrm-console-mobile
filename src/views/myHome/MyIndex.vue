@@ -142,6 +142,7 @@ export default {
       let list = this.scaleData.find((el) => {
         return el.name == 'total'
       })
+      console.log('list----', list)
       return list ? list.num : 0
     },
   },
@@ -230,10 +231,26 @@ export default {
     },
     percentageFun(data) {
       //小数转百分比
-      let val = this.$accMul(data, 100)
+      let val = this.accMul(data, 100)
       let arr = val ? val.toString().split('.') : []
       let num = arr.length == 2 && arr[1].length > 1 ? val.toFixed(2) : val
       return num
+    },
+    accMul(arg1, arg2) {
+      //乘法
+      var m = 0,
+        s1 = arg1.toString(),
+        s2 = arg2.toString()
+      try {
+        m += s1.split('.')[1].length
+      } catch (e) {}
+      try {
+        m += s2.split('.')[1].length
+      } catch (e) {}
+      return (
+        (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) /
+        Math.pow(10, m)
+      )
     },
     getMaterialPie(data) {
       let arr = []
