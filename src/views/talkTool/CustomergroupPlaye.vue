@@ -1,6 +1,7 @@
 
 <template>
-  <div class="microCode group-setting-warp" v-loading="loading">
+<div>
+  <div class="microCode group-setting-warp" v-loading="loading" v-if="sucai == 0">
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
@@ -181,6 +182,7 @@
               <el-radio-group class="radio" @change="appendixChange(index, $event)" v-model="item.appendixType">
                 <el-radio label="图片"></el-radio>
                 <el-radio label="链接"></el-radio>
+                 <el-radio label="素材库"></el-radio>
               </el-radio-group>
             </div>
             <!-- 图片 -->
@@ -193,8 +195,8 @@
             </template>
             <!-- 链接 -->
             <template v-if="item.appendixType === '链接'">
-              <el-input class="marB-24" v-model="item.href" placeholder="链接地址请以http或https开头"></el-input>
-              <!-- <el-form ref="form" :model="item">
+              <el-input class="marB-24" v-model="item.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
+              <el-form ref="form" :model="item">
                 <el-form-item label="链接标题 :">
                   <el-input
                     v-model="item.hrefTitle"
@@ -208,9 +210,63 @@
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="链接封面 :">
-                  <van-uploader v-model="item.hrefPic" :max-count="1" />
+                 <van-uploader v-model="item.hrefPic" :max-count="1" :max-size="2 * 1024 * 1024" @oversize="onOversize"
+                            :after-read="afterReads.bind(null, item)" />
                 </el-form-item>
-              </el-form> -->
+              </el-form>
+            </template>
+             <!-- 素材 -->
+                <template v-if="item.appendixType === '素材库'">
+                   
+                  <div>
+                   
+                         <div class="article_warp" v-if="item.materialList.tab == 1">
+                 <div class="article_text">
+                   <div>文章:</div>
+                   <div class="tites">{{item.materialList.title}}</div>
+                   <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+                 </div>
+                 <div class="article_flex">
+                   <div>
+                      <p class="tite">{{item.materialList.title}}</p>
+                      <p class="link_box">{{item.materialList.contentAbstract}}</p>
+                   </div>
+                   <div>
+                     <img :src="item.materialList.cover" alt="">
+                   </div>
+                 </div>
+              </div>
+                                <div class="article_warp" v-if="item.materialList.tab == 2">
+                 <div class="article_text">
+                   <div>文件:</div>
+                   <div class="tites">{{item.materialList.name}}</div>
+                   <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+                 </div>
+                 <div class="article_flex">
+                   <div>
+                     <img src="../../assets/images/pdf_image.png" alt="">
+                   </div>
+                   <div>
+                      <p class="tite">{{item.materialList.name}}</p>
+                      <p class="link_box">{{(item.materialList.fileSize/1024).toFixed(2)}}kbs</p>
+                   </div>
+                   
+                 </div>
+              </div>
+                           <div class="article_warp" v-if="item.materialList.tab == 3">
+                 <div class="article_text">
+                   <div>海报:</div>
+                   <div class="tites">{{item.materialList.posterName}}</div>
+                   
+                 </div>
+                 <div class="article_img">
+                   <div>
+                     <img :src="item.materialList.posterUrl" alt="">
+                   </div>
+                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+                 </div>
+              </div>
+              </div>
             </template>
           </div>
         </div>
@@ -263,12 +319,20 @@
       </div>
     </van-popup>
   </div>
+  <div class="psoition_falx" v-if="sucai == 1">
+                       <Coumpontmaterial  @sureTab="showData"  @sure="fnMaterialInfo" />
+      </div>
+  </div>
 </template>
 <script>
 import { Toast } from 'vant'
 import { Notify } from 'vant'
 import { formatDate } from '../../utils/tool.js'
+import  Coumpontmaterial from "../../components/materialDialog/MterialPageGroups.vue"
 export default {
+      components:{
+       Coumpontmaterial
+  },
   data() {
     var validateSendDateTime = (rule, value, callback) => {
       if (this.baseForm.sendRule === '立即发送') {
@@ -282,6 +346,9 @@ export default {
     }
     return {
       minDate: new Date(),
+       imgArrUrl:[],
+       dataindex:"",
+       dataindext:"",
       loading: false,
       baseForm: {
         // 群发设置表单
@@ -349,6 +416,7 @@ export default {
       sendDateTime: '', // 日期时间需要的值
       chooseCusSign: false, // 选择客户标签
       tagidList: [],
+      sucai:0,
       arrImgList: [],
       listImgData: {
         url: '',
@@ -404,6 +472,69 @@ export default {
     this.chooseCustomerMass() //选择员工接口
   },
   methods: {
+        goToMaterial(){
+      this.sucai =1
+    },
+
+    fnMaterialInfo(obj){
+      console.log(obj,"-----ong")
+      // this.materialList = obj
+      console.log(this.appendixList,"999999")
+      // this.appendixList.forEach((item,indes) =>{
+      //    item.tab =obj.tab
+      //    item.materialList[] = obj
+      // })
+      this.appendixList[this.dataindex].materialList = obj
+      this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract
+      this.appendixList[this.dataindex].meiapicul = obj.cover
+      this.appendixList[this.dataindex].mediatite = obj.title
+      this.appendixList[this.dataindex].mediatype = obj.tab
+      this.appendixList[this.dataindex].objList= obj
+    },
+    showData(val){
+        this.sucai =val
+    },
+            blurUrl(){
+          let herf ="",hrefTitle
+          console.log(this.appendixList)
+          this.appendixList.forEach((item,index) =>{
+            console.log(item.href)
+          herf = item.href
+          hrefTitle = item.hrefTitle
+          })
+       this.$toast.loading()
+       let params = {
+         articleUrl: window.btoa(herf),
+        //  articleUrl: herf
+       } 
+         this.$network
+        .get('/material-service/article/wechat_article', params)
+        .then((res) => {
+          
+          if(res.result){
+             console.log(res, '------------', this.appendixList)
+         this.appendixList[this.dataindext].hrefTitle = res.data.title
+         this.appendixList[this.dataindext].hrefPic = [{url:res.data.cover}]
+         this.appendixList[this.dataindext].hrefImg = res.data.cover
+         this.appendixList[this.dataindext].hrefDesc =  res.data.contentAbstract
+            //  for(let i = 0;i<=this.appendixList.length;i++){
+            //    console.log(this.appendixList,"---for")
+            //    console.log(this.appendixList[i].appendixType)
+            //  }
+          //      this.appendixList.forEach((item,index) =>{
+          //   console.log(item,"--00",index)
+          //   //  item.hrefTitle[index] = res.data.title
+          //     // item.hrefDesc = res.data.contentAbstract
+          //     // item.hrefPic = res.data.cover
+          //     // item.hrefPic = res.data.cover
+          //     // this.afterReads()
+          // })
+          // }else{
+          //     this.$toast(res.msg)
+          }
+           
+        })
+    },
     onOversize(file) {
       console.log(file)
       Toast('文件大小不能超过 2M')
@@ -436,6 +567,33 @@ export default {
     // 返回
     goBack() {
       this.$router.go(-1)
+    },
+        afterReads(obj, file) {
+      this.loading = true
+      console.log(file, '------------')
+      console.log(obj, '------------obj')
+      let formData = new FormData()
+      formData.append('file', file.file)
+      formData.append('type', 'qunfa')
+      formData.append('filetype', 'image')
+      let config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+      this.$network
+        .post('/common-service/oss/uploadfileparam', formData, config)
+        .then((res) => {
+          console.log(res)
+          if (res.result) {
+            this.loading = false
+            obj.hrefImg = res.data.url
+
+            obj.hreobjectname = res.data.objectname
+            //  obj.data.hrefPic = res.data.url
+         
+          }
+        })
     },
     // 选择日期时间公共方法
     selectDateTime(type) {
@@ -502,12 +660,22 @@ export default {
           // hrefPic: [],
           appendixType: '图片',
         }
-      } else {
+      } else if(value === '链接'){
         appendixList[index] = {
           ...appendixList[index],
           // picList: [],
           appendixType: '链接',
         }
+      }else{
+           appendixList[index] = {
+          ...appendixList[index],
+          // picList: [],
+          appendixType: '素材库',
+         
+         
+        }
+         this.sucai = 1
+         this.dataindex = index
       }
       this.$set(this, 'appendixList', appendixList)
     },
@@ -527,6 +695,17 @@ export default {
         hrefTitle: '',
         hrefDesc: '',
         hrefPic: [],
+        hrefImg:"",
+        hreobjectname:"",
+        sucaiobj:[],
+        tab:'',
+        materialList:{},
+        mediaDesc:"",
+        meiapicul:"",
+        mediatite:"",
+        mediatype:"",
+        objList:{},
+         listurl:"",
       })
     },
     // 点击客户标签打开弹窗
@@ -595,6 +774,45 @@ export default {
       console.log('sendMsg----->', this.sendMsg)
       console.log('baseForm------>', this.baseForm)
       console.log('appendixList------>', this.appendixList)
+      
+      this.appendixList.forEach((item,indexs)=>{
+        console.log(item,"-----item")
+        console.log(item.objList.articleId,"-----item.objList.tab")
+      let imgArr = []
+      if (window.location.origin == 'https://console.jzcrm.com') {
+        this.shareUrlOrigin = 'https://h5.jzcrm.com'
+      } else {
+        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
+      }
+  
+        if (item.objList.tab == 1) {
+          imgArr = [
+            {
+              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.articleId}&type=${item.objList.tab}`,
+              ...item.objList,
+            },
+          ]
+            console.log(imgArr,"---l素材 ",this.shareUrlOrigin)
+        } else if (item.objList.tab == 2) {
+          imgArr = [
+            {
+              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.documentId}&type=${item.objList.tab}`,
+              ...item.objList
+            },
+          ]
+        } else {
+          imgArr = [item.objList]
+        }
+      // }
+      console.log(imgArr,"---l ")
+       this.imgArrUrl = imgArr
+         this.imgArrUrl.forEach(item=>{
+         console.log(item,"---------l")
+         this.appendixList[indexs].listurl = item.urls
+      })
+      })
+
+
       let list = this.appendixList.map((item) => {
         return {
           url: item.url,
@@ -606,9 +824,30 @@ export default {
       // })
       this.urlList = []
       this.appendixList.forEach((item) => {
-        this.urlList.push(item.href)
+          let obj = {
+                desc: item.hrefDesc,
+                picurl: item.hrefImg,
+                title:item.hrefTitle,
+                url:item.href
+              };
+              if(item.href){
+                 this.urlList.push(obj)
+              }
       })
-      this.$refs['form'].validate((valid) => {
+          let mediaLink = []
+         this.appendixList.forEach((item) => {
+              let obj ={
+              desc: item.mediaDesc,
+              picurl: item.meiapicul,
+              title:item.mediatite,
+              url:item.listurl,
+              type:item.mediatype
+            };
+            if(item.mediatite){
+              mediaLink.push(obj)
+            }
+          });
+      this.$refs['form'][0].validate((valid) => {
         // if (this.appendixList.length >= 1) {
         //   Toast("请上传素材内容");
         // } else {
@@ -629,6 +868,7 @@ export default {
             allCustomer: this.baseForm.selectCusType,
             fileList: list,
             customerList: this.clueCustomerLists,
+              mediaList:mediaLink
           }
 
           this.$network
@@ -809,6 +1049,80 @@ export default {
 }
 </script>
 <style lang="less">
+.psoition_falx{
+      position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+   .article_warp{
+              .article_img{
+      display: flex;
+      align-items: end;
+      margin-top: 24px;
+      img{
+        width: 200px;
+        height: 200px;
+      }
+      .article_color{
+        margin-left: 24px;
+        font-weight: 400;
+        color: #4168F6;
+        font-size: 28px;
+      }
+    }
+          .article_text{
+             color: #3C4353;
+             line-height: 40px;
+             font-size: 28px;
+             display: flex;
+             .article_color{
+               color: #4168F6;
+               margin-left: 24px;
+             }
+             .tites{
+               margin-left: 18px;
+               overflow: hidden;
+               text-overflow:ellipsis;
+               white-space: nowrap;
+               width: 120px;
+             }
+          }
+          .article_flex{
+             width: 456px;
+             height: 168px;
+             background: #FFFFFF;
+             border: 1px solid #D9DAE4;
+             display: flex;
+             align-items: center;
+              justify-content: space-evenly;
+              margin-top: 24px;
+              margin-bottom: 15px;
+             .tite{
+               font-weight: 400;
+               color: #3C4353;
+               font-size: 28px;
+               margin-bottom: 24px;
+                overflow: hidden;
+               text-overflow:ellipsis;
+               white-space: nowrap;
+               width: 200px;
+             }
+             .link_box{
+               overflow: hidden;
+               text-overflow:ellipsis;
+               white-space: nowrap;
+               font-weight: 400;
+               color: #C0C4CC;
+               font-size: 24px;
+               width: 225px;
+             }
+             img{
+               width: 100px;
+               height: 100px;
+             }
+          }
+        }
 .taskName {
   /deep/.el-input__inner {
     border: 1px solid none !important;
@@ -1159,6 +1473,11 @@ export default {
             align-items: center;
             ._t {
               margin-right: 24px;
+            }
+              .el-radio-group{
+              .el-radio{
+                margin-right: 15px;
+              }
             }
           }
           .delItem {
