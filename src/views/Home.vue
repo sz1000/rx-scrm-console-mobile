@@ -174,14 +174,6 @@ export default {
     }
   },
   mounted() {
-    // this.$network
-    //   .get('/customer-service/cluecustomer/homedata')
-    //   .then((res) => {
-    //     this.clues = res.data.myThread
-    //     this.cluSee = res.data.derThread
-    //     this.customer = res.data.myCustomer
-    //     this.customerSee = res.data.derCustomer
-    //   })
     this.getHome()
     this.getUserName()
   },

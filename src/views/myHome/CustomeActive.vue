@@ -76,9 +76,9 @@
 
             </div>
           </div>
-          <div class="right_msg">
+          <!-- <div class="right_msg">
             <span>{{item.score}} </span>分
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -134,9 +134,9 @@
 
             </div>
           </div>
-          <div class="right_msg">
+          <!-- <div class="right_msg">
             <span>{{item.score}} </span>分
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -176,14 +176,22 @@ export default {
         { name: '超过1周', id: 3 },
         { name: '超过2周', id: 4 },
         { name: '已激活', id: 5 },
+        { name: '激活中', id: 6 },
       ]
-      this.tabName = this.actions[0].name
-      this.id = this.actions[0].id
+      if (this.$route.query.id == 1) {
+        this.tabName = '超过1天'
+      } else if (this.$route.query.id == 3) {
+        this.tabName = '超过1周'
+      } else {
+        this.tabName = '从未联系'
+      }
+      this.id = this.$route.query.id || this.actions[0].id
       this.getActive()
     } else {
       this.actions = [
         { name: '未寻回', id: 0 },
         { name: '已寻回', id: 1 },
+        { name: '寻回中', id: 2 },
       ]
       this.tabName = this.actions[0].name
       this.id = this.actions[0].id

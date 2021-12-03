@@ -66,10 +66,10 @@
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
-              <img :src="avatar" alt="">
+              <img :src="item.avatar" alt="">
               <!-- <img src="../../images/ditu.png" alt=""> -->
-              <span>{{myName}}</span>
-              <span v-show="depId"> -{{depId}}</span>
+              <span>{{item.name}}</span>
+              <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
         </div>
@@ -99,10 +99,10 @@
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
-              <img :src="avatar" alt="">
+              <img :src="item.avatar" alt="">
               <!-- <img src="../../images/ditu.png" alt=""> -->
-              <span>{{myName}}</span>
-              <span v-show="depId"> -{{depId}}</span>
+              <span>{{item.name}}</span>
+              <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
         </div>
@@ -381,7 +381,7 @@ export default {
         content: '';
         position: absolute;
         bottom: 0;
-        left: 40%;
+        left: 43%;
         width: 56px;
         height: 8px;
         background: #4168f6;

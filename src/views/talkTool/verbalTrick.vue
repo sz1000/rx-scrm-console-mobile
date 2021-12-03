@@ -238,9 +238,9 @@
     </template>
 
     <!-- 素材 -->
-    <material-template v-else></material-template>
+    <material-template v-else @ifShowFooter="ifShowFooter"></material-template>
     <!-- 底部导航 -->
-    <div class="footer-nav">
+    <div v-show="footerVisible" class="footer-nav">
       <div class="item" @click="showTemplate = 1">
         <img v-show="showTemplate == 1" :src="require('../../images/icon_huashu_active.png')" alt="" />
         <img v-show="showTemplate == 2" :src="require('../../images/icon_huashu.png')" alt="" />
@@ -395,6 +395,8 @@ export default {
       popupList: [], //popup sop 提醒数据
       popupType: '个人SOP提醒', //popup弹窗类型
       showSecret: false,
+
+      footerVisible: true
     }
   },
   computed: {
@@ -1003,6 +1005,9 @@ export default {
         command: command,
       }
     },
+    ifShowFooter(data) {
+      this.footerVisible = data
+    }
   },
   watch: {
     userId(val) {

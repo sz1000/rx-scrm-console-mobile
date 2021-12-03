@@ -45,7 +45,8 @@
             <img :src="item.avatar" alt="" v-if="item.avatar" />
             <!-- <img src="../../images/xiansuo.png" alt="" v-else /> -->
             <div class="name_text">{{item.name}}</div>
-            <span :class="item.customerType == 1 ? 'qiye' : 'weixin'">{{item.status == 2 ? '@微信' :'@'+ item.customerName || item.cropFullName}}</span>
+            <span
+                  :class="item.customerType == 1 ? 'weixin' : 'qiye'">{{item.customerType == 1 ? '@微信' : '@'+ item.customerName || item.cropFullName}}</span>
           </div>
         </div>
       </div>

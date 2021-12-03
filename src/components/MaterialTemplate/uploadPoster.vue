@@ -1,11 +1,6 @@
 <template>
     <div class="upload-poster">
-        <div class="header-title">
-            <div class="back-page" @click="goBack">
-                <van-icon name="arrow-left" />
-            </div>
-            <span class="text-title">上传海报</span>
-        </div>
+        <header-title title="上传海报"></header-title>
         <div class="field-box">
             <div class="field-item">
                 <van-field v-model="form.posterName" label="海报名称" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
@@ -28,6 +23,7 @@
 <script>
 import { AddPoster } from '../../config/api'
 import { mapState } from 'vuex'
+import HeaderTitle from './headerTitle'
 import ImgUpload from './imgUpload'
 
 export default {
@@ -58,6 +54,11 @@ export default {
         }
     },
     inject: ['previewImg'],
+    provide() {
+        return {
+            goBack: this.goBack
+        }
+    },
     methods: {
         doShowUploadPoster(data) {
             this.$emit('doShowUploadPoster', data)
@@ -90,6 +91,7 @@ export default {
         },
     },
     components: {
+        HeaderTitle,
         ImgUpload,
     }
 }
@@ -100,7 +102,8 @@ export default {
     width: 100%;
     min-height: 100%;
     background-color: @white;
-    z-index: 9;
+    overflow-x: hidden;
+    overflow-y: auto;
     .header-title {
         height: 87px;
         line-height: 87px;
@@ -113,9 +116,11 @@ export default {
         .back-page {
             position: absolute;
             left: 24px;
-            .van-icon {
-                width: 28px;
-                height: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            img {
+                width: 48px;
+                height: 48px;
             }
         }
         .text-title {
@@ -177,7 +182,6 @@ export default {
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 999;
         span {
             display: block;
             width: 686px;
