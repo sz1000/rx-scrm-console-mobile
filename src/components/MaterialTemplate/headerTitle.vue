@@ -2,6 +2,7 @@
     <div class="header-title">
         <div class="back-page" @click="goBack">
             <img src="../../images/arrow_left.png" alt="">
+            <span class="reback">返回</span>
         </div>
         <span class="text-title">{{ title }}</span>
     </div>
@@ -25,8 +26,7 @@ export default {
     line-height: 87px;
     padding: 0 24px;
     background-color: @white;
-    border-top: 1px solid @lineColor;
-    border-bottom: 1px solid @lineColor;
+    // border-top: 1px solid @lineColor;
     text-align: center;
     position: relative;
     .back-page {
@@ -35,12 +35,20 @@ export default {
         top: 50%;
         transform: translateY(-50%);
         img {
-            width: 48px;
-            height: 48px;
+            display: inline-block;
+            vertical-align: middle;
+            width: 28px;
+            height: 28px;
+        }
+        .reback {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 28px;
+            color: @fontMain;
         }
     }
     .text-title {
-        font-size: 34px;
+        font-size: 30px;
         color: @fontMain;
         font-weight: 600;
     }
