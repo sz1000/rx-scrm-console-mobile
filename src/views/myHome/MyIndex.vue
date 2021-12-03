@@ -64,15 +64,15 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(1)" />
         </div>
         <div class="stati_num">
-          <div class="box">
+          <div class="box" @click="goToCustomBtn(0)">
             <p>{{activeObj.neverCount}}</p>
             <p>从未联系</p>
           </div>
-          <div class="box">
+          <div class="box" @click="goToCustomBtn(1)">
             <p>{{activeObj.excedOne}}</p>
             <p>超过1天</p>
           </div>
-          <div class="box">
+          <div class="box" @click="goToCustomBtn(3)">
             <p>{{activeObj.sevenCount}}</p>
             <p>超过1周</p>
           </div>
@@ -306,6 +306,15 @@ export default {
           tab: v,
           active: this.activeObj.neverCount,
           monthCount: this.activeObj.monthCount,
+        },
+      })
+    },
+    goToCustomBtn(val) {
+      this.$router.push({
+        path: '/customeActive',
+        query: {
+          id: val,
+          tab: 1,
         },
       })
     },
