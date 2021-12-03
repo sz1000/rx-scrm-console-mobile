@@ -381,7 +381,7 @@ export default {
         content: '';
         position: absolute;
         bottom: 0;
-        left: 40%;
+        left: 43%;
         width: 56px;
         height: 8px;
         background: #4168f6;
