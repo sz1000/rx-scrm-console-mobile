@@ -81,9 +81,8 @@ export default {
                 &::after {
                     border-bottom: none;
                 }
-                .van-field__control {
+                .van-field__body {
                     border-bottom: 2px solid @main;
-                    box-shadow: none;
                 }
             }
         }

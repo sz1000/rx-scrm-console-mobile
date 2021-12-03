@@ -154,8 +154,9 @@ export default {
     created() {
         this.getCorpId().then(() => {
             this.getList()
-            this.getTotal(1)
-            this.getTotal(2)
+            this.getTotal(1).then(() => {
+                this.getTotal(2)
+            })
         })
     },
     methods: {
@@ -169,26 +170,29 @@ export default {
             this.getList()
         },
         getTotal(type) {
-            this.$toast.loading({
-                message: '加载中...',
-                forbidClick: true,
-                duration: 0,
-                loadingType: 'spinner',
-            })
-            let ApiOpts = null
+            return new Promise((resolve, reject) => {
+                this.$toast.loading({
+                    message: '加载中...',
+                    forbidClick: true,
+                    duration: 0,
+                    loadingType: 'spinner',
+                })
+                let ApiOpts = null
 
-            if (type == 1) {
-                ApiOpts = SaleDocumentList
-            } else if (type == 2) {
-                ApiOpts = PosterList
-            }
+                if (type == 1) {
+                    ApiOpts = SaleDocumentList
+                } else if (type == 2) {
+                    ApiOpts = PosterList
+                }
 
-            ApiOpts({
-                pageIndex: 1,
-                pageSize: 10,
-                corpId: this.corpId
-            }).then(res => {
-                this.handleTotalRes(type, res)
+                ApiOpts({
+                    pageIndex: 1,
+                    pageSize: 10,
+                    corpId: this.corpId
+                }).then(res => {
+                    this.handleTotalRes(type, res)
+                    resolve()
+                })
             })
         },
         // 获取总数
