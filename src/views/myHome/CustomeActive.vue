@@ -209,6 +209,7 @@ export default {
       ActiveCustomer(params).then((res) => {
         if (res.result) {
           this.cardList = res.data.list
+          this.num = res.data.list.length
           this.cumulative = res.data.count
         }
       })
@@ -221,6 +222,7 @@ export default {
       ReplayCustomer(params).then((res) => {
         if (res.result) {
           this.cardList = res.data.list
+          this.num1 = res.data.list.length
           this.cumulative = res.data.count
         }
       })
