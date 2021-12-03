@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/16px/警告</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/16px/警告">
+            <rect id="O" stroke="#B3B3B3" stroke-width="1.5" x="1.75" y="1.75" width="12.5" height="12.5" rx="6.25"></rect>
+            <rect id="O" fill="#B3B3B3" x="7" y="9.5" width="2" height="2" rx="1"></rect>
+            <line x1="8" y1="5" x2="8" y2="8" id="O" stroke="#B3B3B3" stroke-width="1.5" stroke-linecap="round"></line>
+        </g>
+    </g>
+</svg>

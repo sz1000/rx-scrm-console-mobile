@@ -54,7 +54,7 @@ const getWxAppid = function() {
 
 function getWxCofig(v) {
     // alert('getWxCofig---后---')
-    http.get('/user-service/m/user/getloguser', {
+    http.get('/user-service/m/user/customize/getloguser', {
         code: v,
         url: location.href,
     }).then((res) => {

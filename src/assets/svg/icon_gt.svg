@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/20px/沟通</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/20px/沟通">
+            <rect id="R" fill="#E1FAF6" x="0" y="0" width="20" height="20" rx="10"></rect>
+            <g id="信息_message" transform="translate(4.000000, 4.000000)">
+                <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" x="0" y="0" width="12" height="12"></rect>
+                <path d="M11,6 C11,8.761425 8.761425,11 6,11 C4.506625,11 1,11 1,11 C1,11 1,7.26805 1,6 C1,3.238575 3.238575,1 6,1 C8.761425,1 11,3.238575 11,6 Z" id="路径" stroke="#36B39E" stroke-linecap="round" stroke-linejoin="round"></path>
+                <line x1="3.5" y1="4.5" x2="8" y2="4.5" id="路径" stroke="#36B39E" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="3.5" y1="6.5" x2="8" y2="6.5" id="路径" stroke="#36B39E" stroke-linecap="round" stroke-linejoin="round"></line>
+                <line x1="3.5" y1="8.5" x2="6" y2="8.5" id="路径" stroke="#36B39E" stroke-linecap="round" stroke-linejoin="round"></line>
+            </g>
+        </g>
+    </g>
+</svg>

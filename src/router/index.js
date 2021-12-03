@@ -4,13 +4,16 @@ import Home from '../views/Home.vue'
 import HomeTransition from '../views/HomeTransition.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
+import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
-import CustomTransition from '../views/customer/CustomTransition.vue'
+// 群 SOP 设置
+import SettingSop from '../views/customer/settingSop'
 // 拓客工具
 import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
+import Reprint from '../views/talkTool/reprint' // 转载公众号文章
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
 import CustomergroupPlaye from '../views/talkTool/CustomergroupPlaye.vue' //客户群群发
@@ -43,10 +46,6 @@ import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'
 import StageList from '../components/BusinessOpportunities/stageList'
 import CuleFileGo from '../views/customerManage/CuleFileGo.vue'
 import CluesGongHaiGo from '../views/customerManage/CluesGongHaiGo.vue'
-// 群画像
-import Groupportrait from '../views/portrait/Groupportrait'
-// 群 SOP 设置
-import SettingSop from '../views/portrait/settingSop'
 // 群列表
 import Grouplist from '../views/customerManage/Grouplist.vue'
 // 群列表
@@ -68,6 +67,13 @@ import MterialPage from '../components/materialDialog/MterialPage.vue'
 import MterialPageGroup from '../components/materialDialog/MterialPageGroup.vue'
 // 消息通知 日报
 import Daily from '../views/notice/daily'
+
+// w我的、待处理
+import WaitDealwith from '../views/myHome/WaitDealwith.vue'
+// 客户激活
+import CustomeActive from '../views/myHome/CustomeActive.vue'
+// @我
+import AboutComponent from '../views/myHome/AboutMe.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -109,20 +115,20 @@ const routes = [{
 
     // 客户画像
     {
-        path: '/customTransition',
-        name: 'customTransition',
-        meta: {
-            bodyClass: 'CustomTransition',
-        },
-        component: CustomTransition,
-    },
-    {
-        path: '/customerPortrait',
+        path: '/customerPortraitn',
         name: 'CustomerPortrait',
         meta: {
             bodyClass: 'CustomerPortrait',
         },
         component: CustomerPortrait,
+    },
+    {
+        path: '/customerPortrait',
+        name: 'CustomerPortraitNew',
+        meta: {
+            bodyClass: 'CustomerPortraitNew',
+        },
+        component: CustomerPortraitNew,
     },
     {
         path: '/informationDetail',
@@ -131,15 +137,6 @@ const routes = [{
             bodyClass: 'InformationDetail',
         },
         component: InformationDetail,
-    },
-    // 群画像
-    {
-        path: '/groupportrait',
-        name: 'groupportrait',
-        meta: {
-            bodyClass: 'groupportrait',
-        },
-        component: Groupportrait,
     },
     //群SOP 设置
     {
@@ -191,6 +188,14 @@ const routes = [{
                     bodyClass: 'verbalTrick',
                 },
                 component: verbalTrick,
+            },
+            // 转载公众号文章
+            {
+                path: 'reprint',
+                meta: {
+                    bodyClass: 'reprint',
+                },
+                component: Reprint,
             },
             // 新增
             {
@@ -446,6 +451,24 @@ const routes = [{
         path: '/notice/daily',
         name: 'Daily',
         component: Daily,
+    },
+    // 我的/待处理
+    {
+        path: '/waitDealwith',
+        name: 'waitDealwith',
+        component: WaitDealwith,
+    },
+    // 客户激活
+    {
+        path: '/customeActive',
+        name: 'customeActive',
+        component: CustomeActive,
+    },
+    //@我
+    {
+        path: '/aboutme',
+        name: 'aboutme',
+        component: AboutComponent,
     },
 ]
 

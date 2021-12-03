@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/40px/pic</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/40px/pic">
+            <rect id="矩形" fill="#FB8F28" x="0" y="0" width="40" height="40" rx="4"></rect>
+            <g id="照片_pic" transform="translate(11.000000, 11.000000)">
+                <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" x="0" y="0" width="18" height="18"></rect>
+                <g id="编组" transform="translate(1.875000, 3.000000)">
+                    <path d="M0.75,0 L13.5,0 C13.9142136,0 14.25,0.335786438 14.25,0.75 L14.25,11.25 C14.25,11.6642136 13.9142136,12 13.5,12 L0.75,12 C0.335786438,12 0,11.6642136 0,11.25 L0,0.75 C0,0.335786438 0.335786438,0 0.75,0 Z" id="路径" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <circle id="椭圆形" fill="#FFFFFF" cx="4" cy="3" r="1"></circle>
+                    <path d="M3.75,6 L5.625,7.5 L7.875,4.875 L14.25,9.75 L14.25,11.25 C14.25,11.6642136 13.9142136,12 13.5,12 L0.75,12 C0.335786438,12 8.52651281e-14,11.6642136 8.52651281e-14,11.25 L8.52651281e-14,9.75 L3.75,6 Z" id="路径" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

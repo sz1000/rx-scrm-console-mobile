@@ -1,6 +1,6 @@
 <template>
   <div class="settinWarp">
-    <div class="main-warp">
+    <div class="main-warp" v-if="showHome">
       <div class="customAccont">客户统计</div>
       <div class="statiStical">
         <div class="numResult afterLine">
@@ -24,35 +24,15 @@
       <div class="btnRouter">
         <div class="commonBtn" @click="FnToRouter('/talkTool/enterpriseCode')" v-show="menulist.includes('livecode')">
           <img src="../images/huoma.png" alt="" />
-          <span>获客活码</span>
+          <span>互动活码</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
+          <img src="../images/qhm.png" alt="" />
+          <span>拉群活码</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/channelConfiguration')" v-show="menulist.includes('channle')">
           <img src="../images/qudao.png" alt="" />
           <span>渠道配置</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
-          <img src="../images/qunfa.png" alt="" />
-          <span>客户群发</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
-          <img src="../images/qunqnfa.png" alt="" />
-          <span>客户群群发</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
-          <img src="../images/yjlqon.png" alt="" />
-          <span>标签建群</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
-          <img src="../images/qhm.png" alt="" />
-          <span>群活码</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
-          <img src="../images/card.png" alt="" />
-          <span>智能名片</span>
-        </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
-          <img src="../images/friedn.png" alt="" />
-          <span>朋友圈</span>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lzbd.png" alt="" />
@@ -73,28 +53,52 @@
       </div>
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
-        <div class="commonBtn" @click="FnToRouter('/customerManage/clues')" v-show="menulist.includes('clew')">
-          <img src="../images/xiansuo.png" alt="" />
-          <span>线索</span>
-        </div>
         <div class="commonBtn" @click="FnToRouter('/customerManage/myCustomer')" v-show="menulist.includes('customer')">
           <img src="../images/kehu.png" alt="" />
           <span>客户</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/customerManage/grouplist')" v-show="menulist.includes('group')">
           <img src="../images/grouplist.png" alt="" />
-          <span>群列表</span>
+          <span>客户群</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/customerManage/clues')" v-show="menulist.includes('clew')">
+          <img src="../images/xiansuo.png" alt="" />
+          <span>线索</span>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lskh2.png" alt="" />
           <span class="nomaltext">流失客户</span>
         </div> -->
       </div>
-      <div class="customAccont manage">办公协同</div>
+      <div class="customAccont manage">营销互动</div>
       <div class="btnRouter custom">
+
+        <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
+          <img src="../images/friedn.png" alt="" />
+          <span>朋友圈</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
+          <img src="../images/card.png" alt="" />
+          <span>智能名片</span>
+        </div>
+      </div>
+      <div class="customAccont manage">精细运营</div>
+      <div class="btnRouter custom">
+        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
+          <img src="../images/yjlqon.png" alt="" />
+          <span>一键建群</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
+          <img src="../images/qunfa.png" alt="" />
+          <span>客户群发</span>
+        </div>
+        <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
+          <img src="../images/qunqnfa.png" alt="" />
+          <span>客户群群发</span>
+        </div>
         <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
           <img src="../images/wcdk.png" alt="" />
-          <span>外出打卡</span>
+          <span>拜访客户</span>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/bfjh.png" alt="" />
@@ -110,18 +114,23 @@
         </div> -->
       </div>
     </div>
-    <!-- <div class="btm-box">
+    <div class="identity_page" v-else>
+      <MyIndex></MyIndex>
+    </div>
+    <div class="btm-box">
       <div class="bottom-warp">
-        <div class="routerbtn" @click="goToCard">
-          <img src="../images/daka2.png" alt="" />
-          <span>打卡</span>
+        <div class="routerbtn" @click="showHome = false">
+          <img src="../images/bg_y.png" alt="" v-show="showHome" />
+          <img src="../images/bg_gy.png" alt="" v-show="!showHome" />
+          <span :class="showHome ? '' : 'textname'">互动助手</span>
         </div>
-        <div class="routerbtn">
-          <img src="../images/gongju1.png" alt="" />
-          <span class="textname">运营工具</span>
+        <div class="routerbtn" @click="showHome = true">
+          <img src="../images/bg_g.png" alt="" v-show="!showHome" />
+          <img src="../images/bg_m.png" alt="" v-show="showHome" />
+          <span :class="showHome ? 'textname' : ''">工作面板</span>
         </div>
       </div>
-    </div> -->
+    </div>
     <van-overlay :show="show">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
@@ -133,10 +142,13 @@
 </template>
 <script>
 import CommonHome from '../utils/CommonHome'
+import MyIndex from './myHome/MyIndex.vue'
 import { Notify } from 'vant'
-import { cluecustomer_homedata,user_getUserName } from '@/api/home'
+import { cluecustomer_homedata, user_getUserName } from '@/api/home'
 export default {
-  components: {},
+  components: {
+    MyIndex,
+  },
   data() {
     return {
       userId: '',
@@ -147,6 +159,7 @@ export default {
       customerSee: '0',
       menulist: [],
       show: false,
+      showHome: false,
     }
   },
   created() {
@@ -173,9 +186,9 @@ export default {
     this.getUserName()
   },
   methods: {
-    getHome(){
-      cluecustomer_homedata().then(res => {
-        if(res.result){
+    getHome() {
+      cluecustomer_homedata().then((res) => {
+        if (res.result) {
           this.clues = res.data.myThread
           this.cluSee = res.data.derThread
           this.customer = res.data.myCustomer
@@ -196,12 +209,12 @@ export default {
       })
     },
     getUserName() {
-      user_getUserName().then(res => {
+      user_getUserName().then((res) => {
         if (res.code == 'error_corp_forbid') {
           this.show = true
         }
         this.show = !res.data.haveSecret
-        if(res.result){
+        if (res.result) {
           let tempMenuList = res.data.userEntity.permissionList
           let corpId = res.data.userEntity.corpId
           localStorage.setItem('corpId', corpId)
@@ -213,9 +226,8 @@ export default {
           this.menulist = tempMenuList.map((item) => item.enName)
         }
       })
-      
     },
-    getSource(){
+    getSource() {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
         .then((res) => {
@@ -234,25 +246,22 @@ export default {
           this.menulist = tempMenuList.map((item) => item.enName)
         })
     },
-    goToCard() {
-      this.$router.push('/punchCard')
-    },
   },
 }
 </script>
 <style lang='less' scoped>
 // .HomeWarp {
 .settinWarp {
-  background: #fff;
-  height: 100%;
+  // height: 100%;
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
   .main-warp {
+    background: #fff;
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    padding: 24px 0px 24px 24px;
+    padding: 24px 0px 110px 24px;
     overflow-y: scroll;
     scrollbar-width: 0;
     &::-webkit-scrollbar {
@@ -402,6 +411,10 @@ export default {
     }
   }
 }
+.identity_page {
+  height: 100%;
+  padding-bottom: 130px;
+}
 .btm-box {
   position: fixed;
   bottom: 0;
@@ -410,7 +423,7 @@ export default {
   -webkit-transform: translateZ(0);
   width: 750px;
   .bottom-warp {
-    border-top: 1px solid #f0f2f7;
+    border-top: 1px solid #e6e6e6;
     border-bottom: 1px solid #f0f2f7;
     height: 112px;
     background: #fff;

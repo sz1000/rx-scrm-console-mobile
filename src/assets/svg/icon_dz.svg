@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/赞</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="赞_thumbs-up">
+            <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" x="0" y="0" width="17" height="17"></rect>
+            <rect id="矩形" fill-opacity="0.01" fill="#FFFFFF" fill-rule="nonzero" x="0" y="0" width="17" height="17"></rect>
+            <path d="M9.775,6.5875 L9.775,4.0375 C9.775,2.98125458 8.91873125,2.125 7.8625,2.125 L5.3125,7.8625 L5.3125,14.8750827 L12.72025,14.8750827 C13.3560146,14.8821896 13.8999083,14.4198604 13.99525,13.79125 L14.875,8.05375 C14.9311354,7.68389375 14.8220167,7.3080875 14.5765437,7.02578125 C14.3311062,6.74351042 13.9740354,6.58325 13.6,6.5875 L9.775,6.5875 Z" id="路径" stroke="#262626" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M5.3125,7.7917375 L3.610375,7.7917375 C2.86355083,7.77852708 2.22512292,8.39715 2.125,9.13735833 L2.125,13.5998583 C2.22512292,14.3400667 2.86355083,14.8880687 3.610375,14.8748583 L5.3125,14.8748583 L5.3125,7.7917375 Z" id="路径" stroke="#262626" stroke-width="1.5" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

@@ -59,9 +59,9 @@
     <reminders-box ref="remindersBox" :customerNo="item && item.clueCustomerNo"></reminders-box>
   </div>
   
-  <div v-else-if="showPortraitType == 2">
+  <!-- <div v-else-if="showPortraitType == 2">
     <Groupportrait></Groupportrait>
-  </div>
+  </div> -->
 
 </template>
 <script>
@@ -69,7 +69,7 @@ import { MessageNotificatio } from '../../config/api'
 // import wx from 'weixin-js-sdk'
 import BackTop from '@/components/BackTop'
 import commonFun from '../../utils/commonToken'
-import Groupportrait from '../portrait/Groupportrait.vue'
+// import Groupportrait from '../portrait/Groupportrait.vue'
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Dynamic from '../../components/CustomerManage/dynamic'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
@@ -84,7 +84,7 @@ import { getStoreValue } from '../../utils/LocalStorageDate'
 export default {
   components: {
     BackTop,
-    Groupportrait,
+    // Groupportrait,
     CustomerItem,
     Dynamic,
     Opportunities,
@@ -215,6 +215,7 @@ export default {
       })
     },
     getMethod() {
+      console.log('getMethed')
       this.loadingShow = true
 
       let { comeFrom, name } = this.$route.query
@@ -234,6 +235,7 @@ export default {
           this.$toast('信息有误')
         }
       } else {
+        console.log('userId',this.userId)
         if (!this.userId) {
           commonFun.getWxAppid()
         } else {

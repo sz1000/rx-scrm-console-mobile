@@ -1,7 +1,11 @@
 <template>
     <div class="search">
-        <div class="text"><input type="text" v-model="searchText" :placeholder="type | getText"></div>
-        <span @click="checkTable(searchText)">查询</span>
+        <div class="search-box">
+            <input class="text" type="text" v-model="searchText" :placeholder="type | getText">
+            <div class="icon pointer" @click="checkTable(searchText)">
+                <img src="../../images/search.png" alt="">
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -37,46 +41,33 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.search {
-    display: flex;
-    padding: 24px;
-    .text {
-        width: 582px;
-        height: 80px;
-        padding: 0 24px;
-        border-radius: 8px;
-        border: 2px solid #D9DAE4;
-        input {
-            width: 100%;
-            height: 60px;
-            margin: 10px 0;
+.search{
+    padding: 32px;
+    .search-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 68px;
+        padding: 0 0 0 32px;
+        background-color: #F7F8FA;
+        border-radius: 16px;
+        .text {
+            height: 40px;
+            line-height: 40px;
+            margin: 14px 0;
             border: none;
             background-color: transparent;
             font-size: 28px;
         }
-    }
-    input::-webkit-input-placeholder {
-        color: #C0C4CC; 
-    } 
-    input:-moz-placeholder {
-        color: #C0C4CC; 
-    } 
-    input::-moz-placeholder {
-        color: #C0C4CC; 
-    } 
-    input:-ms-input-placeholder {
-        color: #C0C4CC; 
-    }
-    span {
-        width: 104px;
-        height: 80px;
-        line-height: 80px;
-        margin-left: 16px;
-        border-radius: 8px;
-        background-color: #4168F6;
-        color: #fff;
-        font-size: 28px;
-        text-align: center;
+        .icon {
+            width: 60px;
+            line-height: 68px;
+            margin-left: 16px;
+            img {
+                width: 28px;
+                height: 28px;
+            }
+        }
     }
 }
 </style>

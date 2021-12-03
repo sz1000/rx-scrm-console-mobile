@@ -69,7 +69,7 @@ export const getAuthInfo = () => {
  * 2.获取当前客户群ID
  * 3.获取进入H5页面的入口环境
  * @param {Object} res 
- * @param {String} type 
+ * @param {Array} type 
  */
 export const wxAgent = (res,type) => {
     return new Promise((resolve,reject) => {
@@ -91,9 +91,10 @@ export const wxAgent = (res,type) => {
         // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
         wx.ready(function() {
             let jsApiList = ['invoke','getContext']
-            if(type == 'contacts'){     //获取外部联系人ID
+            if(type.indexOf('contacts') > -1){     //获取外部联系人ID
                 jsApiList.push('getCurExternalContact')
-            }else if(type == 'group'){      //获取当前客户群ID
+            }
+            if(type.indexOf('group') > -1){      //获取当前客户群ID
                 jsApiList.push('getCurExternalChat')
             }
             wx.invoke(
@@ -105,38 +106,35 @@ export const wxAgent = (res,type) => {
                     signature: res.data.agent_config_data.signature, // 必填，签名，见附录-JS-SDK使用权限签名算法
                     jsApiList: jsApiList, //必填，传入需要使用的接口名称
                 },
-                function() {
-                    if(jsApiList.indexOf('getCurExternalContact') > -1){
-                        //获取外部联系人ID
-                        wx.invoke('getCurExternalContact', {}, function(res) {
-                            if (res.err_msg == 'getCurExternalContact:ok') {
-                                localStorage.setItem('userId', res.userId)
-                                store.commit('setUserId', res.userId)
-                                resolve(true)
-                            } else {
-                                //错误处理
-                                console.log('getCurExternalContact>>>err>>>', res)
-                                reject()
-                            }
-                        })
-                    }else if(jsApiList.indexOf('getCurExternalChat') > -1){
-                        //获取当前客户群ID
-                        wx.invoke('getCurExternalChat', {}, function(res) {
-                            if (res.err_msg == 'getCurExternalChat:ok') {
-                                store.commit('setChatId', res.chatId)
-                                resolve(true)
-                            } else {
-                                //错误处理
-                                console.log('getCurExternalChat>>>err>>>', res)
-                                reject()
-                            }
-                        })
-                    }
+                function(res) {
+                    console.log('asd agentConfig',res,jsApiList.indexOf('getCurExternalChat'))
                     //判断入口
                     wx.invoke('getContext', {}, function(res) {
                         if (res.err_msg == 'getContext:ok') {
                             let entry = res.entry //返回进入H5页面的入口类型，目前有normal、contact_profile、single_chat_tools、group_chat_tools、chat_attachment
                             store.commit('setEntry', entry)
+                            //获取外部联系人ID
+                            wx.invoke('getCurExternalContact', {}, function(res) {
+                                if (res.err_msg == 'getCurExternalContact:ok') {
+                                    store.commit('setUserId', res.userId)
+                                    // console.log('auth wx resolve',store.getters)
+                                    resolve(true)
+                                } else {
+                                    //错误处理
+                                    console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
+                                }
+                            })
+                            //获取当前客户群ID
+                            wx.invoke('getCurExternalChat', {}, function(res) {
+                                if (res.err_msg == 'getCurExternalChat:ok') {
+                                    store.commit('setChatId', res.chatId)
+                                    // console.log('auth wx resolve',store.getters)
+                                    resolve(true)
+                                } else {
+                                    //错误处理
+                                    console.log('getCurExternalChat>>>err>>>', res)
+                                }
+                            })
                         } else {
                             //错误处理
                             console.log('getContext>>>err>>>', res)
