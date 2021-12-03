@@ -1,14 +1,22 @@
 <template>
-    <div class="material-template">
-        <div v-if="userData" class="user-info">
-            <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
-            <ul class="center">
-                <li class="name one-txt-cut">{{ userData.name }}</li>
-                <li class="company one-txt-cut">{{ userData.departments }}</li>
-            </ul>
-            <div class="right" @click="showWechat">
-                <img src="../../images/icon_qiwei.png" alt="">
-                <span>加企业微信</span>
+    <div class="material-template" :class="{preview: isPreview == 1}">
+        <div class="top-fixed">
+            <div v-if="isPreview == 1" class="header-title">
+                <div class="back-page" @click="goBack">
+                    <img src="../../images/arrow_left.png" alt="">
+                </div>
+                <span class="text-title">{{ materialType == 1 ? '文章' : '文件' }}预览</span>
+            </div>
+            <div v-if="userData" class="user-info">
+                <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
+                <ul class="center">
+                    <li class="name one-txt-cut">{{ userData.name }}</li>
+                    <li class="company one-txt-cut">{{ userData.departments }}</li>
+                </ul>
+                <div class="right" @click="showWechat">
+                    <img src="../../images/icon_qiwei.png" alt="">
+                    <span>加企业微信</span>
+                </div>
             </div>
         </div>
 
@@ -26,7 +34,7 @@
                 <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
             </div> -->
             <!-- <iframe v-else class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe> -->
-            <iframe v-if="formData && formData.documentUrl" class="file-box" :src="'https://view.officeapps.live.com/op/view.aspx?src=' + formData.documentUrl" width="100%" height="auto"></iframe>
+            <iframe v-if="formData && formData.documentUrl" class="file-box" :src="'http://view.xdocin.com/xdoc?_xdoc=' + formData.documentUrl" width="100%" height="100%"></iframe>
         </template>
 
         <wechat-qrcode ref="wechatQrcode"></wechat-qrcode>
@@ -43,6 +51,7 @@ export default {
     name: "materialTemplate",
     data() {
         return {
+            isPreview: 0,
             userData: null,
             formData: {},
             unionId: '',
@@ -55,12 +64,15 @@ export default {
         const { isPreview, type, userNo, data } = this.$route.query
 
         if (isPreview == 1) {
+            this.isPreview = 1
             this.materialType = type
             this.formData = JSON.parse(decodeURIComponent(data))
             this.userNo = userNo
             this.getUsersInfo()
             return
-        } 
+        }
+
+        this.isPreview = 0
 
         if (isWeiXin()) {
             // 微信授权
@@ -158,7 +170,13 @@ export default {
         formatDate,
         showWechat() {
             this.$refs.wechatQrcode.show(this.userData.qrCode)
-        }
+        },
+        goBack() {
+            this.$router.push({
+                path: '/talkTool/verbalTrick',
+                query: { comeFrom: 2 },
+            })
+        },
     },
 
     components: {
@@ -167,56 +185,86 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import url('../../styles/color');
     .material-template {
         min-height: 100vh;
         padding: 172px 32px 32px;
-        background-color: #fff;
+        background-color: @white;
         position: relative;
-        .user-info {
+        .top-fixed {
             width: 100%;
-            height: 144px;
-            padding: 32px;
-            box-shadow: 0 6px 10px 0 rgba(0,0,0,0.1);
-            background-color: #fff;
             position: fixed;
             top: 0;
             left: 0;
-            .left {
-                display: inline-block;
-                width: 72px;
-                height: 72px;
-                margin-right: 16px;
-                border-radius: 50%;
-                vertical-align: middle;
-            }
-            .center {
-                display: inline-block;
-                max-width: 60%;
-                vertical-align: middle;
-                .name {
-                    color: #3C4353;
-                    font-size: 28px;
-                }
-                .company {
-                    margin-top: 8px;
-                    color: #838A9D;
-                    font-size: 24px;
-                }
-            }
-            .right {
-                width: 130px;
-                height: 100%;
+            .header-title {
+                height: 87px;
+                line-height: 87px;
+                padding: 0 24px;
+                background-color: @white;
+                border-top: 1px solid @lineColor;
+                border-bottom: 1px solid @lineColor;
                 text-align: center;
-                position: absolute;
-                right: 27px;
-                top: 0;
-                img {
-                    width: 48px;
-                    height: 48px;
-                    margin: 24px auto 16px;
+                position: relative;
+                .back-page {
+                    position: absolute;
+                    left: 24px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    img {
+                        width: 48px;
+                        height: 48px;
+                    }
                 }
-                span {
-                    font-size: 24px;
+                .text-title {
+                    font-size: 34px;
+                    color: @fontMain;
+                    font-weight: 600;
+                }
+            }
+            .user-info {
+                width: 100%;
+                height: 144px;
+                padding: 32px;
+                box-shadow: 0 6px 10px 0 rgba(0,0,0,0.1);
+                background-color: @white;
+                position: relative;
+                .left {
+                    display: inline-block;
+                    width: 72px;
+                    height: 72px;
+                    margin-right: 16px;
+                    border-radius: 50%;
+                    vertical-align: middle;
+                }
+                .center {
+                    display: inline-block;
+                    max-width: 60%;
+                    vertical-align: middle;
+                    .name {
+                        color: @fontMain;
+                        font-size: 28px;
+                    }
+                    .company {
+                        margin-top: 8px;
+                        color: @fontSub2;
+                        font-size: 24px;
+                    }
+                }
+                .right {
+                    width: 130px;
+                    height: 100%;
+                    text-align: center;
+                    position: absolute;
+                    right: 27px;
+                    top: 0;
+                    img {
+                        width: 48px;
+                        height: 48px;
+                        margin: 24px auto 16px;
+                    }
+                    span {
+                        font-size: 24px;
+                    }
                 }
             }
         }
@@ -262,6 +310,9 @@ export default {
         //         height: auto;
         //     }
         // }
+    }
+    .preview {
+        padding-top: 255px;
     }
 </style>
 <style lang="less">

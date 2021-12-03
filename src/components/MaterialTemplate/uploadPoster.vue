@@ -2,7 +2,7 @@
     <div class="upload-poster">
         <div class="header-title">
             <div class="back-page" @click="goBack">
-                <van-icon name="arrow-left" />
+                <img src="../../images/arrow_left.png" alt="">
             </div>
             <span class="text-title">上传海报</span>
         </div>
@@ -100,6 +100,9 @@ export default {
     width: 100%;
     min-height: 100%;
     background-color: @white;
+    position: absolute;
+    top: 0;
+    left: 0;
     z-index: 9;
     .header-title {
         height: 87px;
@@ -113,9 +116,11 @@ export default {
         .back-page {
             position: absolute;
             left: 24px;
-            .van-icon {
-                width: 28px;
-                height: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            img {
+                width: 48px;
+                height: 48px;
             }
         }
         .text-title {
@@ -177,7 +182,7 @@ export default {
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 999;
+        z-index: 99;
         span {
             display: block;
             width: 686px;
