@@ -34,6 +34,7 @@ Vue.prototype.$echarts = echarts
 new Vue({
     router,
     store,
+    echarts,
     render: function(h) {
         return h(App)
     },

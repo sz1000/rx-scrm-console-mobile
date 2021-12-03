@@ -145,6 +145,14 @@ export default {
         },
       
   },
+    watch: {
+ 
+    // searchInput(val) {
+    //   if (val == '') {
+    //    this.getFilePosters()
+    //   }
+    // },
+  },
   // updated(){  console.log(this.list.length,"mounted--")},
   methods: {
 
@@ -181,31 +189,24 @@ export default {
     fanclick(item){
            console.log(item,"dainji")
     },
-onLoadfin(){
-  //  if(this.listfin.length >= this.totalf){
-       
-          this.pageInfofin.page++
-           this.getFileList()
-        // this.finished = true;
-      // }
-},
-listtusp(item,val){
-     console.log(item)
-     this.centquer = item
-     this.indexps = val
-      this.$set(this.centquer, "tab", this.tab);
-},
-onLoadPosters(){
-          this.pageInposters.page++
-           this.getFilePosters()
-  //  if(this.listPosters.length >= this.totalp){
-  //        console.log(11)
-        
-  //       // this.finished = true;
-  //     }else{
-          
-  //     }
-},
+        onLoadfin(){
+          //  if(this.listfin.length >= this.totalf){
+                  this.pageInfofin.page++
+                  this.getFileList()
+                // this.finished = true;
+              // }
+        },
+        listtusp(item,val){
+            console.log(item)
+            this.centquer = item
+            this.indexps = val
+              this.$set(this.centquer, "tab", this.tab);
+        },
+        onLoadPosters(){
+          console.log(122)
+            this.pageInposters.page+=1
+            this.getFilePosters()
+        },
     selectTab(v) {
      
       this.tab = v
@@ -231,24 +232,16 @@ onLoadPosters(){
         search() {
       if (this.tab == 1) {
         this.pageInfo.page = 1
+        this.list =[]
         this.getList()
       } else if (this.tab == 2) {
-          // this.pageInfofin.page = 1
+          this.pageInfofin.page = 1
+          this.listfin = []
         this.getFileList()
       } else {
-          // this.pageInposters.page = 1
-        // this.getFilePosters()
-      this.$network
-        .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
-              pageIndex: this.pageInposters.page,
-              pageSize:this.pageInposters.limit, name: this.searchInput,})
-        .then((res) => {
-         console.log(res)
-        //  let dataListstd = res.data.records
-        //  this.totalp = res.data.total
-         this.listPosters =  res.data.records
-     
-        })
+          this.pageInposters.page = 1
+            this.listPosters = []
+        this.getFilePosters()
       }
     },
       getList() {
@@ -267,6 +260,8 @@ onLoadPosters(){
         //  console.log( this.list.length," this.list")
             if (this.list.length >= this.total) {
             this.finishedArticle = true;
+          }else{
+            this.onLoad()
           }
         //  if(this.tab == 1){
         //     this.list =  dataList
@@ -292,27 +287,41 @@ onLoadPosters(){
         //  }
              if (this.listfin.length >= this.totalf) {
             this.finishedfile = true;
+          }else{
+            this.onLoadfin()
           }
         })
     },
         getFilePosters() {
-      this.$network
+ 
+         this.$network
         .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
               pageIndex: this.pageInposters.page,
               pageSize:this.pageInposters.limit, name: this.searchInput,})
         .then((res) => {
-         console.log(res)
-         let dataListstd = res.data.records
-         this.totalp = res.data.total
-         this.listPosters =  this.listPosters.concat(dataListstd)
-         if(res.result){
-           this.loading =false
-         }
-           if (this.listPosters.length >= this.totalp) {
-            this.finished = true;
-          }
-        })
+                if(res.result){
+              let dataListstd = res.data.records
+                    // console.log(dataListstd,"----0")
+                    this.totalp = res.data.total
+                    this.listPosters =  this.listPosters.concat(dataListstd)
+                    console.log(this.listPosters,"====")
+                      if(res.result){
+                        this.loading =false
+                      }
+                        if (this.listPosters.length >= this.totalp) {
+                          this.finished = true;
+                        }else{
+                          this.onLoadPosters()
+                        }
+
+                        }
+                      })
     },
+     //去重一次
+    // unique(arr) {
+    //   const res = new Map()
+    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
+    // },
   },
 }
 </script>
