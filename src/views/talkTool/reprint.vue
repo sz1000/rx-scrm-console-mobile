@@ -69,8 +69,10 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .reprint{
+    width: 100%;
     min-height: 100%;
     background-color: @white;
+    overflow-x: hidden;
     .link-box {
         padding: 32px;
         .link-des {

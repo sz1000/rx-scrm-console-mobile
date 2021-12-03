@@ -14,7 +14,7 @@
                 <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
             </div> -->
             <!-- <iframe v-else class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe> -->
-            <iframe v-if="formData && formData.documentUrl" class="file-box" :src="'http://www.xdocin.com/xdoc?_func=to&_format=html&_cache=1&_xdoc=' + formData.documentUrl" width="100%" height="100%"></iframe>
+            <iframe v-if="formData && formData.documentUrl" class="file-box" :src="'http://www.xdocin.com/xdoc?_func=to&_format=html&_cache=1&_xdoc=' + encodeURIComponent(formData.documentUrl)" width="100%" height="100%"></iframe>
         </template>
     </div>
 </template>

@@ -2,9 +2,9 @@
     <div class="material-template">
         <template v-if="!showUploadPoster && !showContentPreview">
             <ul class="header-nav">
-                <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
-                <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
-                <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
+                <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
+                <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
+                <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
             </ul>
             <search ref="search" :type="type"></search>
             <ul class="list-box">
@@ -118,18 +118,21 @@ export default {
             articleListPage: 1,
             articleListLoading: true,
             articleListFinished: false,
+            articleListTotal: 0,
 
             saleList: [],
             totalSale: 0,
             saleListPage: 1,
             saleListLoading: true,
             saleListFinished: false,
+            saleListTotal: 0,
 
             posterList: [],
             totalPoster: 0,
             posterListPage: 1,
             posterListLoading: false,
             posterListFinished: false,
+            posterListTotal: 0,
 
             originUrl: location.origin,
 
@@ -149,7 +152,11 @@ export default {
         }
     },
     created() {
-        this.getCorpId().then(() => this.getList())
+        this.getCorpId().then(() => {
+            this.getList()
+            this.getTotal(1)
+            this.getTotal(2)
+        })
     },
     methods: {
         ...mapActions(["getCorpId"]),
@@ -160,6 +167,42 @@ export default {
                 this.$refs.search.searchText = ''
             })
             this.getList()
+        },
+        getTotal(type) {
+            this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0,
+                loadingType: 'spinner',
+            })
+            let ApiOpts = null
+
+            if (type == 1) {
+                ApiOpts = SaleDocumentList
+            } else if (type == 2) {
+                ApiOpts = PosterList
+            }
+
+            ApiOpts({
+                pageIndex: 1,
+                pageSize: 10,
+                corpId: this.corpId
+            }).then(res => {
+                this.handleTotalRes(type, res)
+            })
+        },
+        // 获取总数
+        handleTotalRes(type, res) {
+            const { code, data } = res
+
+            this.$toast.clear()
+            if (code === 'success') {
+                if (type == 1) {
+                    this.saleListTotal = data.total
+                } else if (type == 2) {
+                    this.posterListTotal = data.total
+                }
+            }
         },
         onLoad() {
             if (this.type == 0 && this.articleListPage <= 1 || this.type == 1 && this.saleListPage <= 1 || this.type == 2 && this.posterListPage <= 1) {
@@ -200,39 +243,45 @@ export default {
             }
 
             ApiOpts(params).then(res => {
-                const { code, data, msg } = res
-
-                this.$toast.clear()
-                if (code === 'success') {
-                    if (this.type == 0) {
-                        this.articleListLoading = false
-                        if (this.articleListPage == 1) {
-                            this.articleList = []
-                        }
-                        this.articleList = this.articleList.concat(data.records)
-                        this.articleListPage += 1
-                        this.articleListFinished = this.articleList.length >= data.total
-                    } else if (this.type == 1) {
-                        this.saleListLoading = false
-                        if (this.saleListPage == 1) {
-                            this.saleList = []
-                        }
-                        this.saleList = this.saleList.concat(data.records)
-                        this.saleListPage += 1
-                        this.saleListFinished = this.saleList.length >= data.total
-                    } else if (this.type == 2) {
-                        this.posterListLoading = false
-                        if (this.posterListPage == 1) {
-                            this.posterList = []
-                        }
-                        this.posterList = this.posterList.concat(data.records)
-                        this.posterListPage += 1
-                        this.posterListFinished = this.posterList.length >= data.total
-                    }
-                } else {
-                    this.$toast(msg)
-                }
+                this.handleRes(res)
             })
+        },
+        handleRes(res) {
+            const { code, data, msg } = res
+
+            this.$toast.clear()
+            if (code === 'success') {
+                if (this.type == 0) {
+                    this.articleListLoading = false
+                    if (this.articleListPage == 1) {
+                        this.articleList = []
+                    }
+                    this.articleListTotal = data.total
+                    this.articleList = this.articleList.concat(data.records)
+                    this.articleListPage += 1
+                    this.articleListFinished = this.articleList.length >= data.total
+                } else if (this.type == 1) {
+                    this.saleListLoading = false
+                    if (this.saleListPage == 1) {
+                        this.saleList = []
+                    }
+                    this.saleListTotal = data.total
+                    this.saleList = this.saleList.concat(data.records)
+                    this.saleListPage += 1
+                    this.saleListFinished = this.saleList.length >= data.total
+                } else if (this.type == 2) {
+                    this.posterListLoading = false
+                    if (this.posterListPage == 1) {
+                        this.posterList = []
+                    }
+                    this.posterListTotal = data.total
+                    this.posterList = this.posterList.concat(data.records)
+                    this.posterListPage += 1
+                    this.posterListFinished = this.posterList.length >= data.total
+                }
+            } else {
+                this.$toast(msg)
+            }
         },
         // 查询
         checkTable(data) {
@@ -319,13 +368,13 @@ export default {
         height: 100px;
         border-bottom: 1px solid @lineColor;
         li {
+            display: flex;
+            align-items: center;
             flex: 1;
             height: 100%;
             line-height: 100px;
             text-align: center;
             span {
-                display: block;
-                width: 150px;
                 height: 100%;
                 margin: 0 auto;
                 color: @fontSub2;

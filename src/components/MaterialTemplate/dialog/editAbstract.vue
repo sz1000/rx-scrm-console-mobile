@@ -45,6 +45,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import url('../../../styles/color');
 .edit-abstract {
     .edit-abstract-form {
         max-height: 90%;
@@ -56,7 +57,7 @@ export default {
             height: 104px;
             line-height: 104px;
             padding: 0 32px;
-            background-color: #fff;
+            background-color: @white;
             border-radius: 16px 16px 0px 0px;
             .close {
                 width: 34px;
@@ -64,24 +65,25 @@ export default {
             }
             .title-text {
                 font-size: 32px;
-                color: #3C4353;
+                color: @fontMain;
                 font-weight: 600;
             }
             .confirm {
-                color: #4168F6;
+                color: @main;
                 font-size: 28px;
             }
         }
         .box {
             .edit-field {
-                color: #3C4353;
+                color: @fontMain;
             }
             /deep/ .van-cell {
                 &::after {
                     border-bottom: none;
                 }
                 .van-field__control {
-                    border-bottom: 2px solid #4168F6;
+                    border-bottom: 2px solid @main;
+                    box-shadow: none;
                 }
             }
         }
