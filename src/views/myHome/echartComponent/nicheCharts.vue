@@ -187,7 +187,7 @@ export default {
         margin-right: 4px;
       }
       .text {
-        font-size: 12px;
+        font-size: 20px;
         line-height: 16px;
         color: #838a9d;
       }

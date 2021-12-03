@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">新建朋友圈</span>
+      <span class="textTitle">发表朋友圈</span>
       <div class="send" @click="sendMessage">
         <span>发表</span>
       </div>
@@ -16,7 +16,7 @@
     </div>
     <div class="friendText">
       <div class="title">文字内容</div>
-      <van-field v-model="textVal" placeholder="请输入文字(不得超过500个字符)" maxlength="500" rows="6" type="textarea" />
+      <van-field v-model="textVal" placeholder="请输入文字(文字内容和素材不可同时为空不得超过500个字符)" maxlength="500" rows="6" type="textarea" />
     </div>
     <div class="materialBox">
       <div class="title">素材类型</div>
