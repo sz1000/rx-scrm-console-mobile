@@ -30,7 +30,7 @@ export default {
     },
     methods: {
         show(obj) {
-            const { type, userNo, data } = obj
+            const { type, userNo, data, materialId } = obj
 
             this.materialType = type
             this.userNo = userNo
@@ -38,7 +38,8 @@ export default {
 
             let params = {
                 materialType: type,
-                data
+                data,
+                materialId: materialId ? materialId : null
             }
             
             this.$nextTick(() => {

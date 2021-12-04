@@ -336,6 +336,11 @@ export default {
                 userNo: this.userNo,
                 data: item
             }
+
+            if (type == 2) {
+                obj.materialId = item.documentId
+            }
+            
             this.$nextTick(() => {
                 this.$refs.contentPreview.show(obj)
             })

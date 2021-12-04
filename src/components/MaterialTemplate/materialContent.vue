@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         // 分享h5获取详情
-        getDetails(params) {
+        getDetails(params, isPreview) {
             this.materialType = params.materialType
 
             let ApiOpts = ArticleDetail
@@ -51,7 +51,9 @@ export default {
                 const { code, data, msg } = res
                 if (code === 'success') {
                     this.formData = data
-                    this.doWxShare(params)
+                    if (!isPreview) {
+                        this.doWxShare(params)
+                    }
                 } else {
                     this.$toast(msg)
                 }
@@ -78,7 +80,14 @@ export default {
         formatDate,
         // 预览获取详情
         getPreviewDetails(params) {
-            this.materialType = params.materialType
+            const { materialType, materialId = null } = params
+
+            this.materialType = materialType
+
+            if (materialType == 2 && materialId) {
+                this.getDetails(params, 'isPreview')
+                return
+            }
             this.formData = params.data
         }
     },
