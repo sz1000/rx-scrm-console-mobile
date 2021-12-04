@@ -1,6 +1,6 @@
 <template>
-    <div class="customer_wrap">
-        <img class="bg" src="@/assets/svg/customer_bg.svg" alt="">
+    <div class="customer_wrap" :class="{'glass':dialog_xzr}">
+        <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
         <div class="top_box">
             <div class="customer_card" @click="goDetail">
                 <!-- <div class="score">7832分</div> -->
@@ -93,27 +93,27 @@
         <DialogComment v-model="dialog_xx" @sure="addCommentFun"></DialogComment>
         <!-- 商机详情 -->
         <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+        <!-- 申请成为协助人 -->
+        <ApplyHelp v-model="dialog_xzr" :isApply="isApply"></ApplyHelp>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog } from './components'
+import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp } from './components'
 import { user_getUserName } from '@/api/home'
 import { MessageNotificatio } from '../../config/api'
 import {
     cluecustomer_getClueCustomerByid,
-    clueCustomerFollowUser_selectFollowMsgList,
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo,  //添加评论回复
-    clueCustomerFollowUser_message, //是否有新消息
 } from '@/api/customer'
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,
+        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,
         Opportunities,MessageBox,RemindersBox
     },
     provide() {
@@ -132,7 +132,8 @@ export default {
             dialog_group: false,
             dialog_xx: false,
             dialog_sj: false,
-            showRedPoint: false,
+            dialog_xzr: false,
+            isApply: false,     //是否已经申请成为协助人 且还未通过
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -157,17 +158,6 @@ export default {
             groupUserList: [],
             groupChatId: '',
             rowId: '',
-            followMsgSearch: {
-                page: 1,
-                limit: 10,
-                clueCustomerNo: '',
-                punckStatus: '' // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态，4：互动协同
-            },
-            timeList: [],
-            dataList: [],
-            noListLoading: false,
-            finished: false,
-            loading: false,
 
             showSecret: false,
             sendUserInfo: {},
@@ -190,12 +180,30 @@ export default {
             let list = this.userList
             return list && list.length ? list.slice(0,3) : ''
         },
+        bgY(){
+            let y = 0
+            if(this.tagList.length == 0){
+                if(!this.customerInfo.mobil){
+                    y = '70px'
+                }else{
+                    y = '40px'
+                }
+            }else{
+                if(!this.customerInfo.mobil){
+                    y = '30px'
+                }
+            }
+            return y
+        },
     },
     mounted(){
         this.getCustomerDetail()
         this.getUserName()
     },
     methods: {
+        isDirector(){   //是否是相关负责人协助人
+            this.dialog_xzr = true
+        },
         getCustomerDetail(){    //获取客户详情
             let id = this.userId || 
             'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
@@ -229,8 +237,8 @@ export default {
                         }
                     })
 
-                    // this.getSelectFollowMsgList()
                     this.getCustomerGroupList()
+                    // this.isDirector()
                 }
             })
         },
@@ -240,71 +248,6 @@ export default {
                     let data = res.data
                     this.showSecret = !data.haveSecret
                     this.sendUserInfo = data && data.userEntity
-                }
-            })
-        },
-        userMessageReceive(id){    //是否有新消息
-            clueCustomerFollowUser_message(id).then(res => {
-                if(res.result){
-                    this.showRedPoint = res.data
-                }
-            })
-        },
-        getSelectFollowMsgList(i){   //获取客户跟进信息
-            console.log('sure',i)
-            if(i != 4){
-                this.userMessageReceive(this.customerInfo.clueCustomerNo)
-            }
-            this.followMsgSearch.clueCustomerNo = this.customerInfo.clueCustomerNo
-            this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i 
-            clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch,this.noListLoading).then(res => {
-                if(res.result){
-                    let data = res.data
-                    let list = data.dataList.records
-                    let total = data.dataList.total
-                    this.noListLoading = true
-                    this.loading = false
-                    this.$emit('update:loadings',false)
-                    if(list && list.length > 0){
-                        list.forEach(el => {
-                            /*-start-*
-                             * 5.更新客户 6.变更负责人 7.分配客户 8.领取客户
-                             * 9.放弃客户 11.附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
-                             * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
-                             * 
-                             * 41.添加企微好友
-                             * 0. 老数据
-                             * -end-*/ 
-                            el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
-                            el.toUser = el.toUser ? JSON.parse(el.toUser) : el.toUser
-                            let dotList = [0,5,6,7,8,9,11,13,14,26,28,36]
-                            if(dotList.indexOf(el.optType) > -1){
-                                el.class = 'dot'
-                            }
-                            let whiteList = [5,15,16,17,21]
-                            if(whiteList.indexOf(el.optType) > -1){
-                                el.context = JSON.parse(el.context)
-                            }
-                            let newsList = [21]
-                            if(newsList.indexOf(el.optType) > -1){
-                                el.class = 'opera'
-                                el.more = false
-                            }
-                        })
-                    }
-                    if (this.followMsgSearch.page == 1) {
-                        this.dataList = []
-                    }
-                    this.followMsgSearch.page++
-                    this.dataList = list.concat(list)
-                    
-                    if (this.dataList.length >= total) {
-                        this.finished = true
-                    } else {
-                        this.finished = false
-                    }
-                    this.timeList = data.dateList
-                    this.total = total
                 }
             })
         },
@@ -644,6 +587,9 @@ export default {
   background: @white;
   position: relative;
   overflow: hidden;
+  &.glass{
+    filter: blur(4px); /* no */
+  }
   .bg{
     width: 100%;
     height: auto;
@@ -837,7 +783,7 @@ export default {
                 border-radius: 2px;
                 position: absolute;
                 left: 50%;
-                bottom: 0;
+                bottom: -1px;
                 transform: translateX(-50%);
             }
         }
