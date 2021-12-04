@@ -32,19 +32,7 @@ export default {
         }
     },
     data(){
-        return {
-            lists: [
-                {},
-                {},
-                {},
-                {},
-                // {},
-                // {},
-                // {},
-                // {},
-                // {},
-            ],
-        }
+        return {}
     },
     computed: {
         list(){
@@ -97,6 +85,10 @@ export default {
                     // background: chocolate;
                     border: 1px solid @white;   /*no*/
                     text-align: center;
+                    &:first-child:nth-last-child(2),&:first-child:nth-last-child(2) ~ .img_box{
+                        width: calc(80px / 2);
+                        height: calc(80px / 2);
+                    }
                     &:first-child:nth-last-child(3),&:first-child:nth-last-child(3) ~ .img_box{
                         width: calc(80px / 2);
                         height: calc(80px / 2);

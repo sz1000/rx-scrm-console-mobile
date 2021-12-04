@@ -108,7 +108,6 @@ export default {
             groupId: this.$route.query.id,      //群id
         }
     },
-    computed: {},
     mounted(){
         this.getSopList()
     },
@@ -181,6 +180,11 @@ export default {
             })
             this.show = true
         },
+    },
+    watch: {
+        $route(to,from){
+            console.log('to sop',to,from)
+        }
     },
 }
 </script>

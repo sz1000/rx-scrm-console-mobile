@@ -38,23 +38,13 @@ import {
 } from '@/api/customer'
 export default {
 	props: {
-		isPortrait: {
-			type: Number,
-			default: 0
+		id: {
+			type: String,
+			default: ''
 		},
-		isCustomer:{
-			type: Number,
-			default: 0
-		}
 	},
 	data() {
 		return {
-			objItem:
-			this.isPortrait == 1
-			? JSON.parse(localStorage.getItem("ISPORTRIAT_customer"))
-			: this.isCustomer == 2
-			? JSON.parse(localStorage.getItem("customer"))
-			: JSON.parse(localStorage.getItem("detail")),
 			fileList: [],
 			fileData: {},
 			BASE_URL,
@@ -78,7 +68,7 @@ export default {
   	methods: {
     	delList(id){	//删除附件
 	  		let obj = {
-				clueCustomerNo: this.objItem.clueCustomerNo,
+				clueCustomerNo: this.id,
 				id: id,
 			}
 	  		this.$dialog.confirm({
@@ -98,7 +88,7 @@ export default {
 			});
 	  	},
 	  	getDownList(){	//获取附件列表
-			cluecustomeraccessory_getList(this.objItem.clueCustomerNo).then(res => {
+			cluecustomeraccessory_getList(this.id).then(res => {
 				if(res.result){
 					this.fileList = res.data
 				}
@@ -110,7 +100,7 @@ export default {
 				this.$toast("上传文件格式为pdf, 大小不能超过20MB!")
 				return false
 			}
-			this.fileData.clueCustomerNo = this.objItem.clueCustomerNo
+			this.fileData.clueCustomerNo = this.id
 			this.fileData.filetype = file.name.substring(file.name.lastIndexOf(".") + 1)
 		},
 		onSuccess(response, file, fileList){
