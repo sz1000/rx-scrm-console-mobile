@@ -1,6 +1,6 @@
 <template>
-    <div class="customer_wrap">
-        <img class="bg" src="@/assets/svg/customer_bg.svg" alt="">
+    <div class="customer_wrap" :class="{'glass':dialog_xzr}">
+        <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
         <div class="top_box">
             <div class="customer_card" @click="goDetail">
                 <!-- <div class="score">7832分</div> -->
@@ -11,7 +11,7 @@
                     <div class="val">
                         <div class="name_box">
                             <div class="name">{{customerInfo.name}}</div>
-                            <div class="alt" v-if="customerInfo.customerType">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
+                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
                             <div class="icon">
                                 <img src="../../images/icon_female@2x.png" v-if="customerInfo.gender == '2'" />
                                 <img src="../../images/man.png" v-if="customerInfo.gender == '1'" />
@@ -29,9 +29,7 @@
                     </div>
                 </div>
                 <div class="tag_box" :class="{'opt0':tagList.length == 0}">
-                    <span class="tag">nice</span>
-                    <span class="tag">有意向购买</span>
-                    <span class="tag">优质客户</span>
+                    <div class="tag" v-for="(item,index) in tagList" :key="index">{{item.name | limitFilter}}</div>
                 </div>
             </div>
         </div>
@@ -40,20 +38,20 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group'}">
             <!-- 客户动态 -->
-            <dynamics v-if="navActive == 'dynamics'" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople" @openDialog="addCommentDialog"></dynamics>
+            <dynamics v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" @fillMessage="getPeople" @openDialog="openDialog"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
             <!-- 群聊 -->
             <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
-            <fujian v-if="navActive == 'enclosure'" :isPortrait="1"></fujian>
+            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'"></enclosure>
         </div>
         <!-- 协助人消息输入框 -->
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
         <!-- 协助人选择弹窗 -->
         <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
         <!-- 群成员列表 -->
-        <van-popup @touchmove.prevent position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
+        <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
             <div class="dialog_wrap">
                 <div class="dialog_header">
                     <div class="title">群成员列表</div>
@@ -93,28 +91,30 @@
         </van-popup>
         <!-- 消息回复弹窗 -->
         <DialogComment v-model="dialog_xx" @sure="addCommentFun"></DialogComment>
+        <!-- 商机详情 -->
+        <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+        <!-- 申请成为协助人 -->
+        <ApplyHelp v-model="dialog_xzr" :isApply="isApply"></ApplyHelp>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group,DialogComment } from './components'
+import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp } from './components'
 import { user_getUserName } from '@/api/home'
 import { MessageNotificatio } from '../../config/api'
 import {
     cluecustomer_getClueCustomerByid,
-    clueCustomerFollowUser_selectFollowMsgList,
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo,  //添加评论回复
 } from '@/api/customer'
-import Fujian from "../customerManage/comTip/fujian"
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,DialogComment,
-        Opportunities,Fujian,MessageBox,RemindersBox
+        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,
+        Opportunities,MessageBox,RemindersBox
     },
     provide() {
         return {
@@ -131,6 +131,9 @@ export default {
             showPortraitType: 0,
             dialog_group: false,
             dialog_xx: false,
+            dialog_sj: false,
+            dialog_xzr: false,
+            isApply: false,     //是否已经申请成为协助人 且还未通过
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -142,8 +145,6 @@ export default {
 
             customerInfo: {},
             userList: [],
-            timeList: [],
-            dataList: [],
             tagList: [],
 
             searchGroup: {
@@ -179,24 +180,33 @@ export default {
             let list = this.userList
             return list && list.length ? list.slice(0,3) : ''
         },
+        bgY(){
+            let y = 0
+            if(this.tagList.length == 0){
+                if(!this.customerInfo.mobil){
+                    y = '70px'
+                }else{
+                    y = '40px'
+                }
+            }else{
+                if(!this.customerInfo.mobil){
+                    y = '30px'
+                }
+            }
+            return y
+        },
     },
     mounted(){
         this.getCustomerDetail()
         this.getUserName()
     },
     methods: {
-        getShowPortraitType() {
-            let { comeFrom } = this.$route.query
-            
-            if (this.entry && this.entry == 'single_chat_tools' || comeFrom == 'messageCard') {
-                this.showPortraitType = 1
-            } else if(this.entry && this.entry == 'group_chat_tools') {
-                this.showPortraitType = 2
-            }
+        isDirector(){   //是否是相关负责人协助人
+            this.dialog_xzr = true
         },
         getCustomerDetail(){    //获取客户详情
-            let id = this.userId
-            // 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
+            let id = this.userId || 
+            'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
             // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
             // 'woyPDZEQAAKN_BGnwemNjnTqtjllE71g'
@@ -214,7 +224,9 @@ export default {
                     let data = res.data
                     this.customerInfo = data.clueCustomerVO
                     this.userList = data.directorList
-                    this.tagList = data.tagList
+                    this.tagList = data.tagList.filter((el,index) => {
+                        return index < 3
+                    })
                     this.navList.forEach(el => {
                         if(el.code == 'code'){
                             el.num = data.mobileDataCount.busCount
@@ -225,59 +237,17 @@ export default {
                         }
                     })
 
-                    this.getSelectFollowMsgList()
                     this.getCustomerGroupList()
+                    // this.isDirector()
                 }
             })
         },
         getUserName(){  //获取权限数据
             user_getUserName().then(res => {
                 if(res.result){
-                    if(res.result){
-                        let data = res.data
-                        this.showSecret = !data.haveSecret
-                        this.sendUserInfo = data && data.userEntity
-                    }
-                }
-            })
-        },
-        getSelectFollowMsgList(i){   //获取客户跟进信息
-            console.log('sure',i)
-            let params = {
-                page: 1,
-                limit: 50,
-                clueCustomerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
-                punckStatus: i == 1 || !i ? '' : i // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态
-            }
-            clueCustomerFollowUser_selectFollowMsgList(params).then(res => {
-                if(res.result){
                     let data = res.data
-                    let list = data.dataList.records
-                    if(list && list.length > 0){
-                        list.forEach(el => {
-                            /*-start-*
-                             * 6.变更负责人 7.分配客户 8.领取客户
-                             * 9.放弃客户 11.附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
-                             * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
-                             * 41.添加企微好友
-                             * -end-*/ 
-                            let dotList = [6,7,8,9,11,13,14,26,28]
-                            if(dotList.indexOf(el.optType) > -1){
-                                el.class = 'dot'
-                            }
-                            let whiteList = [15,16,17,21]
-                            if(whiteList.indexOf(el.optType) > -1){
-                                el.context = JSON.parse(el.context)
-                            }
-                            let newsList = [21]
-                            if(newsList.indexOf(el.optType) > -1){
-                                el.class = 'opera'
-                                el.more = false
-                            }
-                        })
-                    }
-                    this.timeList = data.dateList
-                    this.dataList = list
+                    this.showSecret = !data.haveSecret
+                    this.sendUserInfo = data && data.userEntity
                 }
             })
         },
@@ -301,9 +271,18 @@ export default {
                 }
             })
         },
-        addCommentDialog(id){  //打开回复弹窗
+        openDialog(id,type){  //打开回复弹窗
             this.rowId = id
-            this.dialog_xx = true
+            switch (type) {
+                case 'comment':   //消息回复
+                    this.dialog_xx = true
+                    break;
+                case 'detail':    //商机详情
+                    this.dialog_sj = true
+                    break;
+                default:
+                    break;
+            }
         },
         addCommentFun(val){    //添加评论回复
             let data = {
@@ -323,6 +302,22 @@ export default {
         },
         navClickFun(code){
             this.navActive = code
+            switch (code) {
+                case 'dynamics':    //客户动态
+                    // this.getSelectFollowMsgList()
+                    break;
+                case 'niche':   //商机
+                    
+                    break;
+                case 'group':   //客户群
+                    this.getCustomerGroupList()
+                    break;
+                case 'enclosure':   //附件
+                    
+                    break;
+                default:
+                    break;
+            }
         },
         showRemindersBox() {
             this.$refs.remindersBox.show()
@@ -425,6 +420,9 @@ export default {
                 3: '通过扫描群二维码入群',
             }
             return val ? obj[val] : ''
+        },
+        limitFilter(val){
+            return val && val.length > 6 ? val.substring(0,5) + '...' : val
         },
     },
 }
@@ -589,6 +587,9 @@ export default {
   background: @white;
   position: relative;
   overflow: hidden;
+  &.glass{
+    filter: blur(4px); /* no */
+  }
   .bg{
     width: 100%;
     height: auto;
@@ -657,6 +658,9 @@ export default {
                     line-height: 32px;
                     color: @yellow;
                     margin-left: 8px;
+                    &.green{
+                        color: @green;
+                    }
                 }
                 .icon{
                     width: 26px;
@@ -779,7 +783,7 @@ export default {
                 border-radius: 2px;
                 position: absolute;
                 left: 50%;
-                bottom: 0;
+                bottom: -1px;
                 transform: translateX(-50%);
             }
         }

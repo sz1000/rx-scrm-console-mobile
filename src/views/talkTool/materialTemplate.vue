@@ -336,6 +336,7 @@ export default {
                 userNo: this.userNo,
                 data: item
             }
+
             this.$nextTick(() => {
                 this.$refs.contentPreview.show(obj)
             })

@@ -121,7 +121,7 @@ export const wxAgent = (res,type) => {
                                     resolve(true)
                                 } else {
                                     //错误处理
-                                    console.log('getCurExternalContact>>>err>>>', res,jsApiList.length)
+                                    console.log('getCurExternalContact>>>err>>>', res)
                                 }
                             })
                             //获取当前客户群ID

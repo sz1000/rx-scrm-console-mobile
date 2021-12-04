@@ -38,7 +38,7 @@ export default {
 
             let params = {
                 materialType: type,
-                data
+                data,
             }
             
             this.$nextTick(() => {

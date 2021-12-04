@@ -222,10 +222,6 @@
         </van-list>
       </div>
     </div>
-    <!-- <p class="no_more">没有更多</p> -->
-    <van-overlay :show="show">
-      <van-loading class="loding" type="spinner" color="#fff" size="24" />
-    </van-overlay>
     <!-- 群标签 -->
     <van-popup
  
@@ -277,6 +273,14 @@
 import { formatDate } from "../../utils/tool.js";
 
 import { sop_groupSopList } from "@/api/sop";
+import {
+  grouptag_list,
+  groupUserTag_list,
+  groupUserTag_addGroupTag,
+  group_getGroupDetail,
+  group_getGroupTodayDetail,
+  group_getGroupUserPage,
+} from '@/api/customer'
 export default {
   data() {
     return {
@@ -291,7 +295,6 @@ export default {
       groupName: {},
       tabClick: 1,
       channelList: [],
-      show: true,
       loading: false,
       finished: false,
       refreshing: false,
@@ -316,79 +319,37 @@ export default {
       cusSignList: [],
       sopList: [], //群 sop 列表
       groupId: "",
-      group: "",
+      group: this.$route.query.grouid,
       isOwmer: false, //是否群主
       lableList: [],
       showgroup:false,
     };
   },
-
-  watch:{
-chooseCusSign(value){
-    if(value == true){
-      //  this.getTagList()
-    }
-}},
-  
-  created() {
-    this.group = this.$route.query.grouid;
-    this.getTagList();
-    this.groupList();
-  },
   mounted() {
-    setTimeout(() => {
-      this.pageInfo.page = 1;
-      this.getGroupDetailtop();
-      this.getGroupDetail();
-      // console.log(this.highLightArr, "首次---获取标签内容");
-      //   console.log(this.lableList, "首次---获取标签内容");
-      this.getList();
-    }, 3000);
-  
+    this.pageInfo.page = 1;
+    this.getData()
   },
   methods: {
-    deepClone(o) {
-      // 判断如果不是引用类型，直接返回数据即可
-      if (
-        typeof o === "string" ||
-        typeof o === "number" ||
-        typeof o === "boolean" ||
-        typeof o === "undefined"
-      ) {
-        return o;
-      } else if (Array.isArray(o)) {
-        // 如果是数组，则定义一个新数组，完成复制后返回
-        // 注意，这里判断数组不能用typeof，因为typeof Array 返回的是object
-        // console.log(typeof []); // --> object
-        var _arr = [];
-        o.forEach((item) => {
-          _arr.push(item);
-        });
-        return _arr;
-      } else if (typeof o === "object") {
-        var _o = {};
-        for (let key in o) {
-          _o[key] = deepClone(o[key]);
-        }
-        return _o;
-      }
+    getData(){
+      this.getTagList();
+      this.groupList();
+      this.getGroupDetailtop();
+      this.getGroupDetail();
+      this.getList();  
     },
     //客户标签列表接口
     getTagList() {
       this.highLightArr = [];
       this.namelabutArr = [];
-      this.$network.get("/customer-service/grouptag/list").then((res) => {
-        console.log("------data-----", res.data);
-        this.cusSignList = res.data;
-
-        let allChildTag = res.data.map((item) => {
-          return item.children;
-        });
-        let childTag = [].concat.apply([], allChildTag);
-        console.log(childTag, "---");
-        this.namelabutArr = [].concat.apply([], allChildTag);
-   
-      });
+      grouptag_list().then(res => {
+        if(res.result){
+          this.cusSignList = res.data;
+          let allChildTag = res.data.map((item) => {
+            return item.children;
+          });
+          this.namelabutArr = [].concat.apply([], allChildTag);
+        }
+      })
     },
 
     clickSign(list, index) {
@@ -410,13 +371,11 @@ chooseCusSign(value){
 
       let obj = {};
 
-let peon = this.highLightArr.reduce((cur,next) => {
-    obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
-    return cur;
-},[]) //设置cur默认类型为数组，并且初始值为空的数组
-// console.log(peon);
-this.datatupList = peon
-      // console.log(list);
+      let peon = this.highLightArr.reduce((cur,next) => {
+          obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
+          return cur;
+      },[]) //设置cur默认类型为数组，并且初始值为空的数组
+      this.datatupList = peon
     },
     goBack() {
       this.$router.go(-1);
@@ -424,26 +383,21 @@ this.datatupList = peon
     formatDate,
     onLoad() {
       // console.log("屏幕滚动");
-
       this.pageInfo.page += 1;
-
       this.getList();
     },
     // 保存客户标签
     saveCus() {
-          let obj = {};
+      let obj = {};
       let peon = this.highLightArr.reduce((cur,next) => {
-    obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
-    return cur;
-},[]) //设置cur默认类型为数组，并且初始值为空的数组
-// console.log(peon);
-this.highLightArr = peon
+        obj[next.tagid] ? "" : obj[next.tagid] = true && cur.push(next);
+        return cur;
+      },[]) //设置cur默认类型为数组，并且初始值为空的数组
+      // console.log(peon);
+      this.highLightArr = peon
       
-         console.log(this.highLightArr, "点击保存---获取标签内容222");
-  
-
+      console.log(this.highLightArr, "点击保存---获取标签内容222");
       this.chooseCusSign = false;
-  //  if()
       this.groupListadd();
     },
     getSopList() {
@@ -466,14 +420,8 @@ this.highLightArr = peon
     },
     // 群标签
     groupList() {
-      this.$network
-        .get("/customer-service/groupUserTag/list", {
-          chatId: this.$route.query.id,
-        })
-        .then((res) => {
-          // const uniqueSet = new Set(res.data)
-          // const bySet = [...uniqueSet]
-          // console.log(bySet,"-----=[")
+      groupUserTag_list(this.$route.query.id).then(res => {
+        if(res.result){
           let obj = {};
           let peon = res.data.reduce((cur, next) => {
             obj[next.tagid] ? "" : (obj[next.tagid] = true && cur.push(next));
@@ -483,68 +431,31 @@ this.highLightArr = peon
           this.lableList.forEach((item) => {
             this.highLightArr.push(item);
           });
-        
-        });
+        }
+      })
     },
     groupListadd() {
-      this.$network
-        .post("/customer-service/groupUserTag/addGroupTag", {
-          chatId: this.$route.query.id,
-          tagidList: this.highLightArr,
-          // tagidList: this.datatupList,
-          // tagidList: this.lableList,
-        })
-        .then((res) => {
-          if (res.result) {
-            this.groupList();
-          }
-        });
+      let data = {
+        chatId: this.$route.query.id,
+        tagidList: this.highLightArr,
+      }
+      groupUserTag_addGroupTag(data).then(res => {
+        if(res.result) {
+          this.groupList();
+        }
+      })
     },
-
-    // 删除标签
-
-    // lableDelet(item) {
-
-    //   console.log(item);
-    //   this.highLightArr.forEach((items, index) => {
-    //     // console.log(index)
-
-    //     if (item == items.tagid) {
-    //       this.highLightArr.splice(index, 1);
-    //       //      console.log(this.highLightArr, "点击删除---获取标签内容222");
-    //       // console.log(item);
-    //       this.$network
-    //         .get("/customer-service/groupUserTag/delete", {
-    //           tagid: item,
-    //         })
-    //         .then((res) => {
-    //           if (res.result) {
-    //             this.getTagList();
-    //             this.groupList();
-    //           }
-    //         });
-    //     }
-    //   });
-    // },
     getGroupDetail() {
-      this.$network
-        .get("/customer-service/group/getGroupDetail", {
-          chatId: this.$route.query.id,
-        })
-        .then((res) => {
-          if (res.result) {
-            this.notice = res.data.notice;
-            this.show = false;
-            // this.finished = true;
-            this.groupId = res.data.id;
-            if (res.data.owmer == res.data.userId) {
-              // console.log("我是群主");
-              this.isOwmer = true;
-              this.getSopList();
-            }
+      group_getGroupDetail(this.$route.query.id).then(res => {
+        if(res.result){
+          this.notice = res.data.notice;
+          // this.finished = true;
+          this.groupId = res.data.id;
+          if (res.data.owmer == res.data.userId) {
+            // console.log("我是群主");
+            this.isOwmer = true;
+            this.getSopList();
           }
-          //   this.getSopList(); //本地调试用
-          // this.show = false;  //画页面用 2021/10/11
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
           this.datatTite.owmerName = res.data.owmerName;
@@ -554,26 +465,24 @@ this.highLightArr = peon
           );
           this.datatTite.joinsum = res.data.joinsum;
           this.datatTite.leavesum = res.data.leavesum;
-        });
+        }
+      })
     },
     getGroupDetailtop() {
-      this.$network
-        .get("/customer-service/group/getGroupTodayDetail", {
-          chatId: this.$route.query.id,
-        })
-        .then((res) => {
+      group_getGroupTodayDetail(this.$route.query.id).then(res => {
+        if(res.result){
           this.groupName = res.data.group;
           this.groupNameList = res.data.groupUserEntityList;
-          // console.log(res.data.group, "---------");
-        });
+        }
+      })
     },
     getList() {
-      this.$network
-        .get("/customer-service/group/getGroupUserPage", {
-          chatId: this.$route.query.id,
-          ...this.pageInfo,
-        })
-        .then((res) => {
+      let obj = {
+        chatId: this.$route.query.id,
+        ...this.pageInfo,
+      }
+      group_getGroupUserPage(obj).then(res => {
+        if(res.result){
           let tempList = res.data.data.records; //请求返回当页的列表
           this.loading = false;
           this.total = res.data.data.total;
@@ -608,9 +517,9 @@ this.highLightArr = peon
           if (this.dataList.length >= this.total) {
             this.finished = true;
           }
-        });
+        }
+      })
     },
-
     unique(arr) {
       const res = new Map();
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));

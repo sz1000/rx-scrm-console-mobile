@@ -85,10 +85,6 @@
         </ul>
       </van-list>
     </div>
-    <!-- <p class="no_more">没有更多</p> -->
-    <van-overlay :show="show">
-      <van-loading class="loding" type="spinner" color="#fff" size="24" />
-    </van-overlay>
     <!-- 是否填写Secret -->
     <van-overlay :show="showSecret">
       <div class="wrapper" @click.stop>
@@ -101,13 +97,16 @@
 </template>         
 <script>
 import { formatDate } from '../../utils/tool.js'
-import commonFun from '../../utils/commonToken'
+import { user_getUserName } from '@/api/home'
 import { sop_groupSopList } from '@/api/sop'
+import { 
+  group_getGroupDetail,
+  group_getGroupUserPage,
+} from '@/api/customer'
 export default {
   data() {
     return {
       channelList: [],
-      show: true,
       loading: false,
       finished: false,
       refreshing: false,
@@ -137,7 +136,6 @@ export default {
   },
   computed: {
     chatId() {
-      console.log("this.$store.getters.chatId???", this.$store.getters.chatId)
       return this.$store.getters.chatId || sessionStorage.getItem('chatId')
     },
   },
@@ -159,12 +157,13 @@ export default {
       this.getList()
       this.getUserName()
     },
-    getUserName() {
-      this.$network
-        .get('/user-service/user/getUserName', { endPoint: 'mobile' })
-        .then((res) => {
-          this.showSecret = !res.data.haveSecret
-        })
+    getUserName() {  //获取权限数据
+      user_getUserName().then(res => {
+        if(res.result){
+          let data = res.data
+          this.showSecret = !data.haveSecret
+        }
+      })
     },
     onLoad() {
       console.log('屏幕滚动')
@@ -192,29 +191,17 @@ export default {
       })
     },
     getGroupDetail() {
-      this.$network
-        .get('/customer-service/group/getGroupDetail', {
-          // chatId: this.$route.query.id,
-          // chatId: "wrY-gRDAAABrTSnrxZMlwiM4Y6T1GGdg",
-          // chatId: "wrY-gRDAAA36v0CIMKDBwkiUSuOkZqJQ",
-          // chatId: "wrY-gRDAAALApfvGUiZiPu09NtjwCyGw",
-          // chatId: "wrY-gRDAAATrKANZTq32CigxbX1FKRdg",
-          // chatId: localStorage.getItem("chatId"),
-          chatId: this.chatId,
-        })
-        .then((res) => {
-          if (res.result) {
-            this.show = false
-            // this.finished = true;
-            this.groupId = res.data.id
-            if (res.data.owmer == res.data.userId) {
-              console.log('我是群主')
-              this.isOwmer = true
-              this.getSopList()
-            }
+      let id = this.chatId || 'wryPDZEQAAeTjSevfGvCxJG1Qx26C-wQ'
+      group_getGroupDetail(id).then(res => {
+        if(res.result){
+          // this.show = false
+          // this.finished = true;
+          this.groupId = res.data.id
+          if (res.data.owmer == res.data.userId) {
+            console.log('我是群主')
+            this.isOwmer = true
+            this.getSopList()
           }
-          // this.getSopList()   //本地调试用
-          // this.show = false;  //画页面用 2021/10/11
           this.datatTite.name = res.data.name
           this.datatTite.usersum = res.data.usersum
           this.datatTite.owmerName = res.data.owmerName
@@ -224,15 +211,17 @@ export default {
           )
           this.datatTite.joinsum = res.data.joinsum
           this.datatTite.leavesum = res.data.leavesum
-        })
+        }
+      })
     },
     getList() {
-      this.$network
-        .get('/customer-service/group/getGroupUserPage', {
-          chatId: this.chatId,
-          ...this.pageInfo,
-        })
-        .then((res) => {
+      let id = 'wryPDZEQAAeTjSevfGvCxJG1Qx26C-wQ'
+      let obj = {
+        chatId: this.chatId || id,
+        ...this.pageInfo,
+      }
+      group_getGroupUserPage(obj).then(res => {
+        if(res.result){
           let tempList = res.data.data.records //请求返回当页的列表
           this.loading = false
           this.total = res.data.data.total
@@ -267,7 +256,8 @@ export default {
           if (this.dataList.length >= this.total) {
             this.finished = true
           }
-        })
+        }
+      })
     },
     // 去重一次
     unique(arr) {
@@ -414,7 +404,7 @@ export default {
   width: 702px;
   height: 138px;
   background: rgba(65, 104, 246, 0.02);
-  border: 1px solid #4168f6;
+  border: 1px solid #4168f6; /* no */
   border-radius: 4px;
   margin: 24px auto 0;
 }
