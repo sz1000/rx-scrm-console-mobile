@@ -216,7 +216,7 @@ export default {
           //  this.indexps = 1000000
         // this.getArticle()
         //  this.list=[]
-          this.getList()
+          // this.getList()
       } else if (v == 2) {
       // this.listfin = []
       // this.indexps = 1000000
