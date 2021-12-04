@@ -38,7 +38,7 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group'}">
             <!-- 客户动态 -->
-            <dynamics v-if="navActive == 'dynamics'" :isPoint="showRedPoint" :time="timeList" :data="dataList" @sure="getSelectFollowMsgList" @fillMessage="getPeople" @openDialog="addCommentDialog"></dynamics>
+            <dynamics v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" @fillMessage="getPeople" @openDialog="openDialog"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
             <!-- 群聊 -->
@@ -51,7 +51,7 @@
         <!-- 协助人选择弹窗 -->
         <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
         <!-- 群成员列表 -->
-        <van-popup @touchmove.prevent position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
+        <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
             <div class="dialog_wrap">
                 <div class="dialog_header">
                     <div class="title">群成员列表</div>
@@ -91,11 +91,13 @@
         </van-popup>
         <!-- 消息回复弹窗 -->
         <DialogComment v-model="dialog_xx" @sure="addCommentFun"></DialogComment>
+        <!-- 商机详情 -->
+        <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group,Enclosure,DialogComment } from './components'
+import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog } from './components'
 import { user_getUserName } from '@/api/home'
 import { MessageNotificatio } from '../../config/api'
 import {
@@ -111,7 +113,7 @@ import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,Enclosure,DialogComment,
+        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,
         Opportunities,MessageBox,RemindersBox
     },
     provide() {
@@ -129,6 +131,7 @@ export default {
             showPortraitType: 0,
             dialog_group: false,
             dialog_xx: false,
+            dialog_sj: false,
             showRedPoint: false,
 
             navList: [
@@ -141,8 +144,6 @@ export default {
 
             customerInfo: {},
             userList: [],
-            timeList: [],
-            dataList: [],
             tagList: [],
 
             searchGroup: {
@@ -156,6 +157,17 @@ export default {
             groupUserList: [],
             groupChatId: '',
             rowId: '',
+            followMsgSearch: {
+                page: 1,
+                limit: 10,
+                clueCustomerNo: '',
+                punckStatus: '' // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态，4：互动协同
+            },
+            timeList: [],
+            dataList: [],
+            noListLoading: false,
+            finished: false,
+            loading: false,
 
             showSecret: false,
             sendUserInfo: {},
@@ -217,7 +229,7 @@ export default {
                         }
                     })
 
-                    this.getSelectFollowMsgList()
+                    // this.getSelectFollowMsgList()
                     this.getCustomerGroupList()
                 }
             })
@@ -243,16 +255,16 @@ export default {
             if(i != 4){
                 this.userMessageReceive(this.customerInfo.clueCustomerNo)
             }
-            let params = {
-                page: 1,
-                limit: 50,
-                clueCustomerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
-                punckStatus: i == 1 || !i ? '' : i // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态
-            }
-            clueCustomerFollowUser_selectFollowMsgList(params).then(res => {
+            this.followMsgSearch.clueCustomerNo = this.customerInfo.clueCustomerNo
+            this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i 
+            clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch,this.noListLoading).then(res => {
                 if(res.result){
                     let data = res.data
                     let list = data.dataList.records
+                    let total = data.dataList.total
+                    this.noListLoading = true
+                    this.loading = false
+                    this.$emit('update:loadings',false)
                     if(list && list.length > 0){
                         list.forEach(el => {
                             /*-start-*
@@ -280,8 +292,19 @@ export default {
                             }
                         })
                     }
+                    if (this.followMsgSearch.page == 1) {
+                        this.dataList = []
+                    }
+                    this.followMsgSearch.page++
+                    this.dataList = list.concat(list)
+                    
+                    if (this.dataList.length >= total) {
+                        this.finished = true
+                    } else {
+                        this.finished = false
+                    }
                     this.timeList = data.dateList
-                    this.dataList = list
+                    this.total = total
                 }
             })
         },
@@ -305,9 +328,18 @@ export default {
                 }
             })
         },
-        addCommentDialog(id){  //打开回复弹窗
+        openDialog(id,type){  //打开回复弹窗
             this.rowId = id
-            this.dialog_xx = true
+            switch (type) {
+                case 'comment':   //消息回复
+                    this.dialog_xx = true
+                    break;
+                case 'detail':    //商机详情
+                    this.dialog_sj = true
+                    break;
+                default:
+                    break;
+            }
         },
         addCommentFun(val){    //添加评论回复
             let data = {
@@ -329,7 +361,7 @@ export default {
             this.navActive = code
             switch (code) {
                 case 'dynamics':    //客户动态
-                    this.getSelectFollowMsgList()
+                    // this.getSelectFollowMsgList()
                     break;
                 case 'niche':   //商机
                     

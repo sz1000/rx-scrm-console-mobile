@@ -4,115 +4,132 @@
             <div class="type" @click="navClickFun(index)" :class="{'cur':activeIndex == index,'dot':index == 3 && isPoint}" v-for="(item,index) in navList" :key="index">{{item}}</div>
         </div>
         <div class="time_list">
-            <div class="li" :class="[item.class,{'last':list.length-1 == index}]" v-for="(item,index) in list" :key="index">
-                <div class="icon_box">
-                    <img class="icon" v-if="item.class == 'day'" src="@/assets/svg/icon_time.svg" alt="">
-                    <img class="icon" v-if="item.class == 'dot'" src="@/assets/svg/icon_cir.svg" alt="">
-                    <img class="icon" v-if="item.optType == 1" src="@/assets/svg/icon_jd.svg" alt="">
-                    <img class="icon" v-if="item.optType == 21" src="@/assets/svg/icon_gt.svg" alt="">
-                    <img class="icon" v-if="item.optType == 15 || item.optType == 16 || item.optType == 17" src="@/assets/svg/icon_sj.svg" alt="">
-                    <img class="icon" v-if="item.optType == 18 || item.optType == 19 || item.optType == 20" src="@/assets/svg/icon_xzr.svg" alt="">
-                    <img class="icon" v-if="item.optType == 29 || item.optType == 30" src="@/assets/svg/icon_jh.svg" alt="">
-                    <img class="icon" v-if="item.optType == 40" src="@/assets/svg/icon_sc.svg" alt="">
-                    <img class="icon" v-if="item.optType == 41" src="@/assets/svg/icon_wx.svg" alt="">
-                </div>
-                <div class="val">
-                    <div class="show_day" v-if="item.class == 'day'">{{item.title}}<span class="total" v-if="item.total > 0">({{item.total}}条)</span><span class="total" v-else>(暂无动态)</span></div>
-                    <div class="card" v-if="item.class != 'day' && item.class != 'opera'">
-                        <div class="tit">{{item.optName || item.title}}</div>
-                        <div class="text tips" v-if="item.optType == 28">
-                            <img class="icon" src="@/assets/svg/icon_tip.svg" alt="">
-                            <span>{{getTextFun(item)}}</span>
-                        </div>
-                        <div class="text" v-else>
-                            <!-- optType 等于0的时候是旧数据 -->
-                            <span class="name" v-if="item.optType && item.optUserName">
-                                <img class="avatar" :src="item.optAvatar | $setAvatar" alt="">
-                                <span>{{item.optUserName}}</span>
-                            </span>
-                            <span class="mr8">{{getTextFun(item)}}</span>
-                            <span class="name" v-if="item.fromUser">
-                                <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
-                                <span>{{item.fromUser | optString}}</span>
-                            </span>
-                            <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
-                            <span class="name" v-if="item.optType && item.toUser && item.optType == 6">
-                                <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
-                                <span>{{item.toUser | optString}}</span>
-                            </span>
-                            <a class="link" :href="item.ossUrl" v-if="item.optType == 11">{{item.ossObjectname}}</a>
-                        </div>
-                        <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
+            <van-list
+                v-model="loading"
+                :finished="finished"
+                finished-text="没有更多了~"
+                :immediate-check="false"
+                @load="onLoad">
+                <div class="li" :class="[item.class,{'last':list.length-1 == index}]" v-for="(item,index) in list" :key="index">
+                    <div class="icon_box">
+                        <img class="icon" v-if="item.class == 'day'" src="@/assets/svg/icon_time.svg" alt="">
+                        <img class="icon" v-if="item.class == 'dot'" src="@/assets/svg/icon_cir.svg" alt="">
+                        <img class="icon" v-if="item.optType == 1" src="@/assets/svg/icon_jd.svg" alt="">
+                        <img class="icon" v-if="item.optType == 21" src="@/assets/svg/icon_gt.svg" alt="">
+                        <img class="icon" v-if="item.optType == 15 || item.optType == 16 || item.optType == 17" src="@/assets/svg/icon_sj.svg" alt="">
+                        <img class="icon" v-if="item.optType == 18 || item.optType == 19 || item.optType == 20" src="@/assets/svg/icon_xzr.svg" alt="">
+                        <img class="icon" v-if="item.optType == 29 || item.optType == 30" src="@/assets/svg/icon_jh.svg" alt="">
+                        <img class="icon" v-if="item.optType == 40" src="@/assets/svg/icon_sc.svg" alt="">
+                        <img class="icon" v-if="item.optType == 41" src="@/assets/svg/icon_wx.svg" alt="">
                     </div>
-                    <div class="card" v-if="item.class == 'opera'" :class="{'hide':!item.more,'no': !item.commentCount}">
-                        <div class="info">
-                            <div class="img_box" @click="fillMessage(item.context.sendUserInfo)">
-                                <img :src="item.optAvatar | $setAvatar" alt="">
+                    <div class="val">
+                        <div class="show_day" v-if="item.class == 'day'">{{item.title}}<span class="total" v-if="item.total > 0">({{item.total}}条)</span><span class="total" v-else>(暂无动态)</span></div>
+                        <div class="card" v-if="item.class != 'day' && item.class != 'opera'">
+                            <div class="tit">{{item.optName || item.title}}</div>
+                            <div class="text tips" v-if="item.optType == 28">
+                                <img class="icon" src="@/assets/svg/icon_tip.svg" alt="">
+                                <span>{{getTextFun(item)}}</span>
                             </div>
-                            <div class="name">{{item.optUserName}}<span>{{isMeFun(item.createBy)}}</span></div>
-                        </div>
-                        <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
-                        <div class="text">
-                            <a class="link alt mr8">{{item.context.receiveUserInfo | alt}}</a>
-                            <span>{{item.context.content}}</span>
-                        </div>
-                        <div class="opera_right">
-                            <div class="icon_btn" @click="addFabulous(item)">
-                                <img class="iconfont" src="@/assets/svg/icon_dz.svg" alt="">
-                                <div class="num" :class="{'hide':!item.praise}">{{item.praise}}</div>
+                            <div class="text" v-else>
+                                <!-- optType 等于0的时候是旧数据 -->
+                                <span class="name" v-if="item.optType && item.optUserName">
+                                    <img class="avatar" :src="item.optAvatar | $setAvatar" alt="">
+                                    <span>{{item.optUserName}}</span>
+                                </span>
+                                <span class="mr8">{{getTextFun(item)}}</span>
+                                <span class="name" v-if="item.fromUser">
+                                    <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
+                                    <span>{{item.fromUser | optString}}</span>
+                                </span>
+                                <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
+                                <span class="name" v-if="item.optType && item.toUser && item.optType == 6">
+                                    <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
+                                    <span>{{item.toUser | optString}}</span>
+                                </span>
+                                <a class="link" :href="item.ossUrl" v-if="item.optType == 11">{{item.ossObjectname}}</a>
                             </div>
-                            <div class="icon_btn" @click="addCommentDialog(item)">
-                                <img class="iconfont" src="@/assets/svg/icon_pl.svg" alt="">
-                                <div class="num" :class="{'hide':!item.commentCount}">{{item.commentCount}}</div>
-                            </div>
+                            <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
                         </div>
-                        <div class="msg_box" v-if="item.commentCount && item.more">
-                            <div class="msg_li" v-for="(son,i) in item.msgList" :key="i">
-                                <div class="msg_info">
-                                    <img class="msg_img" :src="son.avatar | $setAvatar" alt="">
-                                    <div class="msg_name">{{son.fromUserName}}</div>
+                        <div class="card" v-if="item.class == 'opera'" :class="{'hide':!item.more,'no': !item.commentCount}">
+                            <div class="info">
+                                <div class="img_box" @click="fillMessage(item.context.sendUserInfo)">
+                                    <img :src="item.optAvatar | $setAvatar" alt="">
                                 </div>
-                                <div class="msg_text">{{son.content}}</div>
-                                <div class="time">{{son.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
+                                <div class="name">{{item.optUserName}}<span>{{isMeFun(item.createBy)}}</span></div>
                             </div>
-                        </div>
-                        <div class="more" v-if="item.commentCount" @click="getComentList(item)">
-                            <img class="icon" v-if="!item.more" src="@/assets/svg/icon_down.svg" alt="">
-                            <img class="icon" v-else src="@/assets/svg/icon_up.svg" alt="">
+                            <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
+                            <div class="text">
+                                <a class="link alt mr8">{{item.context.receiveUserInfo | alt}}</a>
+                                <span>{{item.context.content}}</span>
+                            </div>
+                            <div class="opera_right">
+                                <div class="icon_btn" @click="addFabulous(item)">
+                                    <img class="iconfont" v-if="item.dzFlag" src="@/assets/svg/icon_dz_red.svg" alt="">
+                                    <img class="iconfont" v-else src="@/assets/svg/icon_dz.svg" alt="">
+                                    <div class="num" :class="{'hide':!item.praise}">{{item.praise}}</div>
+                                </div>
+                                <div class="icon_btn" @click="openDialog(item,'comment')">
+                                    <img class="iconfont" src="@/assets/svg/icon_pl.svg" alt="">
+                                    <div class="num" :class="{'hide':!item.commentCount}">{{item.commentCount}}</div>
+                                </div>
+                            </div>
+                            <div class="msg_box" v-if="item.commentCount && item.more">
+                                <div class="msg_li" v-for="(son,i) in item.msgList" :key="i">
+                                    <div class="msg_info">
+                                        <img class="msg_img" :src="son.avatar | $setAvatar" alt="">
+                                        <div class="msg_name">{{son.fromUserName}}</div>
+                                    </div>
+                                    <div class="msg_text">{{son.content}}</div>
+                                    <div class="time">{{son.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
+                                </div>
+                            </div>
+                            <div class="more" v-if="item.commentCount" @click="getComentList(item)">
+                                <img class="icon" v-if="!item.more" src="@/assets/svg/icon_down.svg" alt="">
+                                <img class="icon" v-else src="@/assets/svg/icon_up.svg" alt="">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </van-list>
         </div>
     </div>
 </template>
 
 <script>
+import { _throttle } from '@/utils/tool'
 import {
+    clueCustomerFollowUser_selectFollowMsgList, //list
+    clueCustomerFollowUser_message, //是否有新消息
     clueCustomerFollowUser_giveTheThumbsUp, //点赞
     clueCustomerFollowUser_queryCommentInfoList,  //回复
 } from '@/api/customer'
 export default {
     name: 'Dynamics',
     props: {
-        data:{
-            type: Array,
-            default: () => []
-        },
-        time:{
-            type: Array,
-            default: () => []
-        },
-        isPoint: {  //是否有新消息 红色圆点展示
-            type: Boolean,
-            default: false
+        id: {
+            type: String,
+            default: ''
         },
     },
     data(){
         return {
-            whiteList: ['jiandang','gengxin','biangeng','fenpei','shangchuan','tag'],
             navList: ['全部','客户动态','商机动态','互动沟通'],
             activeIndex: 0,
+            
+            followMsgSearch: {
+                page: 1,
+                limit: 10,
+                clueCustomerNo: '',
+                punckStatus: '' // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态，4：互动协同
+            },
+            time: [],
+            data: [],
+            noListLoading: false,
+            finished: false,
+            loading: false,
+            
+            isAdd: true,
+            isPoint: false, //是否有新消息 红色圆点展示
         }
     },
     computed: {
@@ -120,26 +137,40 @@ export default {
             return this.$store.getters.userNo
         },
         list(){
-            let arr = JSON.parse(JSON.stringify(this.data)),n = 0
-            this.time.forEach(el => {
-                let obj = {
-                    class: 'day',
-                    title: el.dataTime,
-                    total: el.dataCount,
-                }
-                if(el.dataTime == '今日'){
-                    arr.unshift(obj)
-                }else{
-                    arr.splice(n,0,obj)
-                }
-                n+=el.dataCount
-                n++
-            })
+            let arr = this.data && this.data.length ? JSON.parse(JSON.stringify(this.data)): [],n = 0
+            if(this.time && this.time.length > 0){
+                this.time.forEach(el => {
+                    let obj = {
+                        class: 'day',
+                        title: el.dataTime,
+                        total: el.dataCount,
+                    }
+                    if(el.dataTime == '今日'){
+                        arr.unshift(obj)
+                    }else{
+                        arr.splice(n,0,obj)
+                    }
+                    n+=el.dataCount
+                    n++
+                })
+            }
             return arr
         },
     },
+    mounted(){
+        if(this.id){
+            this.getSelectFollowMsgList()
+        }
+    },
     methods: {
-        addFabulous(row){  //点赞
+        onLoad() {
+            console.log("load");
+            let i = this.activeIndex
+            this.getSelectFollowMsgList(i+1)
+        },
+        addFabulous: _throttle(function(row){    //点赞
+            if(!this.isAdd){ return false }
+            this.isAdd = false
             let obj = {
                 id: row.id,
                 isAdd: row.dzFlag ? -1 : 1   // 1 or -1
@@ -156,9 +187,10 @@ export default {
                             el.dzFlag = row.dzFlag ? 0 : 1
                         }
                     })
+                    this.isAdd = true
                 }
             })
-        },
+        },1000),
         getComentList(row){  //查看回复列表
             let more = row.more
             if(more){
@@ -186,12 +218,15 @@ export default {
                 })
             }
         },
-        addCommentDialog(row){  //打开回复弹窗
-            this.$emit('openDialog',row.id)
+        openDialog(row,type){  //打开弹窗
+            //type =>  comment(消息回复) detail(商机详情)
+            this.$emit('openDialog',row.id,type)
         },
         navClickFun(i){
             this.activeIndex = i
-            this.$emit('sure',i+1)
+            this.followMsgSearch.page = 1
+            this.noListLoading = false
+            this.getSelectFollowMsgList(i+1)
         },
         // @接收人
         fillMessage(data) {
@@ -199,6 +234,70 @@ export default {
         },
         isMeFun(by){    //是否自己
             return this.userNo == by ? '(我)' : ''
+        },
+        userMessageReceive(){    //是否有新消息
+            clueCustomerFollowUser_message(this.id).then(res => {
+                if(res.result){
+                    this.isPoint = res.data
+                }
+            })
+        },
+        getSelectFollowMsgList(i){   //获取客户跟进信息
+            console.log('get list',i)
+            if(i != 4){
+                this.userMessageReceive()
+            }
+            this.followMsgSearch.clueCustomerNo = this.id
+            this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i 
+            clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch,this.noListLoading).then(res => {
+                if(res.result){
+                    let data = res.data
+                    let list = data.dataList.records
+                    let total = data.dataList.total
+                    this.noListLoading = true
+                    this.loading = false
+                    if(list && list.length > 0){
+                        list.forEach(el => {
+                            /*-start-*
+                             * 5.更新客户 6.变更负责人 7.分配客户 8.领取客户
+                             * 9.放弃客户 11.附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
+                             * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
+                             * 
+                             * 41.添加企微好友
+                             * 0. 老数据
+                             * -end-*/ 
+                            el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
+                            el.toUser = el.toUser ? JSON.parse(el.toUser) : el.toUser
+                            let dotList = [0,5,6,7,8,9,11,13,14,26,28,36]
+                            if(dotList.indexOf(el.optType) > -1){
+                                el.class = 'dot'
+                            }
+                            let whiteList = [5,15,16,17,21]
+                            if(whiteList.indexOf(el.optType) > -1){
+                                el.context = JSON.parse(el.context)
+                            }
+                            let newsList = [21]
+                            if(newsList.indexOf(el.optType) > -1){
+                                el.class = 'opera'
+                                el.more = false
+                            }
+                        })
+                    }
+                    if (this.followMsgSearch.page == 1) {
+                        this.data = []
+                    }
+                    this.followMsgSearch.page++
+                    this.data = this.data.concat(list)
+                    
+                    if (this.data.length >= total) {
+                        this.finished = true
+                    } else {
+                        this.finished = false
+                    }
+                    this.time = data.dateList
+                    this.total = total
+                }
+            })
         },
         getTextFun(obj){
             // console.log('asd',obj)
@@ -262,6 +361,12 @@ export default {
                     break;
             }
             return str
+        },
+    },
+    watch: {
+        id(){
+            console.log('list')
+            this.getSelectFollowMsgList()
         },
     },
     filters: {
@@ -466,8 +571,9 @@ export default {
                     }
                 }
             }
-            &.last .icon_box{
-                &::after{
+            &.last{
+                padding-bottom: 0;
+                .icon_box::after{
                     display: none;
                 }
             }

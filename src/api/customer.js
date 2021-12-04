@@ -6,17 +6,23 @@ export function cluecustomer_getClueCustomerByid(id) { //客户详情
         method: 'get'
     })
 }
-export function clueCustomerFollowUser_selectFollowMsgList(data) { // 当前客户跟进信息
+export function clueCustomerFollowUser_selectFollowMsgList(data,loading = false) { // 当前客户跟进信息
     return request({
         url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/selectFollowMsgList',
         method: 'get',
+        headers: {
+            noLoading: loading
+        },
         params: data
     })
 }
 export function clueCustomerFollowUser_message(id) { // 是否有新消息
     return request({
         url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/user-message-receive?clueCustomerNo=' + id,
-        method: 'get'
+        method: 'get',
+        headers: {
+            noLoading: true
+        }
     })
 }
 export function group_getMobileCustomerGroupPage(data) { // 获取客户群列表

@@ -24,9 +24,30 @@ router.beforeEach(async(to, from, next) => {
         console.log('token is', isTokenValid(),token)
     }
     if(useList.indexOf(to.path) > -1){
-        if(token && isTokenValid() && type.length == 0){
+        if(token && isTokenValid()){
             console.log('token true')
-            next()
+            if(process.env.NODE_ENV === 'development'){
+                next()
+            }else{
+                if(from.path == '/'){
+                    getAuthInfo().then(res => {
+                        if(res.result){
+                            if(type.length > 0){
+                                wxAgent(res,type).then(r => {
+                                    if(r){
+                                        console.log('next',store.getters)
+                                        next()
+                                    }
+                                })
+                            }else{
+                                next()
+                            }
+                        }
+                    })
+                }else{
+                    next()
+                }
+            }
         }else {
             //授权获取token
             console.log('to get token')

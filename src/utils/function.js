@@ -100,7 +100,7 @@ export const wxAgent = (res,type) => {
             wx.invoke(
                 'agentConfig', {
                     corpid: res.data.corpId, // 必填，企业微信的corpid，必须与当前登录的企业一致
-                    agentid: res.data.agent_id, // 必填，企业微信的应用id （e.g. 1000247）
+                    agentid: res.data.agent_id + '', // 必填，企业微信的应用id （e.g. 1000247）
                     timestamp: res.data.agent_config_data.timestamp, // 必填，生成签名的时间戳
                     nonceStr: res.data.agent_config_data.noncestr, // 必填，生成签名的随机串
                     signature: res.data.agent_config_data.signature, // 必填，签名，见附录-JS-SDK使用权限签名算法
