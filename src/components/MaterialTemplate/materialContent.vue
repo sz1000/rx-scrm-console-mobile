@@ -9,12 +9,15 @@
             <p class="content" v-html="formData.content"></p>
         </template>
 
-        <template v-if="materialType == 2">
-            <!-- <div v-if="formData.imageRelList && formData.imageRelList.length" class="file-img-box">
+        <template v-if="materialType == 2 && (formData && formData.documentUrl || formData.imageRelList && formData.imageRelList.length) && formData.name">
+            <div v-if="/\.pdf$/i.test(formData.name)" class="file-img-box">
                 <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
-            </div> -->
-            <!-- <iframe v-else class="file-box" :src="formData.documentUrl" width="100%" height="auto"></iframe> -->
-            <iframe v-if="formData && formData.documentUrl" class="file-box" :src="'http://www.xdocin.com/xdoc?_func=to&_format=html&_cache=1&_xdoc=' + encodeURIComponent(formData.documentUrl)" width="100%" height="100%"></iframe>
+            </div>
+            <iframe v-if="/\.xls$|\.xlsx$/i.test(formData.name)" class="file-box" :src="'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURIComponent(formData.documentUrl)" width='100%' height='100%'></iframe>
+            <!-- <iframe v-else-if="/\.pdf$/i.test(formData.name)" class="file-box" :src="formData.documentUrl" width='100%' height='100%'>
+                您的浏览器暂不支持预览该pdf文件，可<a :href="formData.documentUrl">点击下载</a>之后浏览
+            </iframe> -->
+            <iframe v-else class="file-box" :src="'https://view.xdocin.com/view?src=' + encodeURIComponent(formData.documentUrl)" width="100%" height="100%"></iframe>
         </template>
     </div>
 </template>
@@ -117,15 +120,15 @@ export default {
             min-height: 85vh;
             border: none;
         }
-        // .file-img-box {
-        //     width: 100%;
-        //     height: auto;
-        //     min-height: 100vh;
-        //     .item {
-        //         width: 100%;
-        //         height: auto;
-        //     }
-        // }
+        .file-img-box {
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+            .item {
+                width: 100%;
+                height: auto;
+            }
+        }
     }
 </style>
 <style lang="less">
