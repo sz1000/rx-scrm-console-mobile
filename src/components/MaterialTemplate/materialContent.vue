@@ -9,16 +9,16 @@
             <p class="content" v-html="formData.content"></p>
         </template>
 
-        <template v-if="materialType == 2 && (formData && formData.documentUrl || formData.imageRelList && formData.imageRelList.length) && formData.name">
-            <div v-if="/\.pdf$/i.test(formData.name)" class="file-img-box">
+        <div v-if="materialType == 2 && formData && formData.documentUrl" class="file-content">
+            <!-- <div v-if="/\.pdf$/i.test(formData.name)" class="file-img-box">
                 <img class="item" v-for="i in formData.imageRelList" :key="i.documentId" :src="i.imageUrl" alt="">
-            </div>
-            <iframe v-else-if="/\.xls$|\.xlsx$/i.test(formData.name)" class="file-box" :src="'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURIComponent(formData.documentUrl)" width='100%' height='100%'></iframe>
+            </div> -->
+            <!-- <iframe v-if="/\.xls$|\.xlsx$/i.test(formData.name)" class="file-box" :src="'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURIComponent(formData.documentUrl)" width='100%' height='100%'></iframe> -->
             <!-- <iframe v-else-if="/\.pdf$/i.test(formData.name)" class="file-box" :src="formData.documentUrl" width='100%' height='100%'>
                 您的浏览器暂不支持预览该pdf文件，可<a :href="formData.documentUrl">点击下载</a>之后浏览
             </iframe> -->
-            <iframe v-else class="file-box" :src="'https://view.xdocin.com/view?src=' + encodeURIComponent(formData.documentUrl)" width="100%" height="100%"></iframe>
-        </template>
+            <iframe class="file-box" :src="'https://view.xdocin.com/view?src=' + encodeURIComponent(formData.documentUrl)" width="100%" height="auto"></iframe>
+        </div>
     </div>
 </template>
 <script>
@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         // 分享h5获取详情
-        getDetails(params, isPreview) {
+        getDetails(params) {
             this.materialType = params.materialType
 
             let ApiOpts = ArticleDetail
@@ -51,9 +51,7 @@ export default {
                 const { code, data, msg } = res
                 if (code === 'success') {
                     this.formData = data
-                    if (!isPreview) {
-                        this.doWxShare(params)
-                    }
+                    this.doWxShare(params)
                 } else {
                     this.$toast(msg)
                 }
@@ -80,14 +78,9 @@ export default {
         formatDate,
         // 预览获取详情
         getPreviewDetails(params) {
-            const { materialType, materialId = null } = params
+            const { materialType } = params
 
             this.materialType = materialType
-
-            if (materialType == 2 && materialId) {
-                this.getDetails(params, 'isPreview')
-                return
-            }
             this.formData = params.data
         }
     },
@@ -125,19 +118,22 @@ export default {
                 max-width: 100% !important;
             }
         }
-        .file-box {
-            min-height: 85vh;
-            border: none;
-        }
-        .file-img-box {
-            width: 100%;
-            height: auto;
-            min-height: 100vh;
-            .item {
-                width: 100%;
-                height: auto;
+        .file-content {
+            padding-top: 20px;
+            .file-box {
+                min-height: 85vh;
+                border: none;
             }
         }
+        // .file-img-box {
+        //     width: 100%;
+        //     height: auto;
+        //     min-height: 100vh;
+        //     .item {
+        //         width: 100%;
+        //         height: auto;
+        //     }
+        // }
     }
 </style>
 <style lang="less">
