@@ -157,21 +157,24 @@ export default {
   methods: {
 
     goBack() {
-      this.$router.go(-1)
+       this.$emit('sureTab', 0)
+        this.$emit('sureTab', 0)
     },
     determine(){
       console.log("000")
-        this.$router.push({
-          path:"/talkTool/circleFriend",
-          query:{
-            datalist:this.centquer,
-            tablable:"material"
-          }
-        })
-
+       this.$emit('sureTab', 0)
+        this.$emit('sure', this.centquer)
+        // this.$router.push({
+        //   path:"/talkTool/customerGroup",
+        //   query:{
+        //     datalist:this.centquer,
+        //     tablable:"material"
+        //   }
+        // })
+    
     },
     cancel(){
-        this.$router.push({path:"/talkTool/circleFriend",})
+         this.$emit('sureTab', 0)
     },
     onLoad(){
       // console.log(this.list.length)
@@ -199,6 +202,7 @@ export default {
         listtusp(item,val){
             console.log(item)
             this.centquer = item
+            console.log(this.centquer,"0009")
             this.indexps = val
               this.$set(this.centquer, "tab", this.tab);
         },
@@ -261,7 +265,7 @@ export default {
             if (this.list.length >= this.total) {
             this.finishedArticle = true;
           }else{
-            this.onLoad()
+            // this.onLoad()
           }
         //  if(this.tab == 1){
         //     this.list =  dataList

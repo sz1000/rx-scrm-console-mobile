@@ -307,7 +307,7 @@ export default {
       // }
       let params = {
         content: this.textVal,
-        urls: imgArr,
+        // urls: imgArr,
         msgtype: this.tab,
         urlList:imgArr
       }

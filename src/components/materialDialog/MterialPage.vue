@@ -171,7 +171,7 @@ export default {
 
     },
     cancel(){
-        this.$router.push({path:"/talkTool/circleFriend",})
+          this.$router.go(-1)
     },
     onLoad(){
       // console.log(this.list.length)
@@ -261,7 +261,7 @@ export default {
             if (this.list.length >= this.total) {
             this.finishedArticle = true;
           }else{
-            this.onLoad()
+            // this.onLoad()
           }
         //  if(this.tab == 1){
         //     this.list =  dataList

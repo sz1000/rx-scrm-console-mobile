@@ -276,7 +276,7 @@
     <!-- tankuang -->
     </div>
       <div class="psoition_falx" v-if="sucai == 1">
-                       <Coumpontmaterial  @sureTab="showData"  @sure="fnMaterialInfo" />
+         <Coumpontmaterial  @sureTab="showData"  @sure="fnMaterialInfo" />
       </div>
   </div>
 
@@ -435,49 +435,16 @@ export default {
   created() {
     this.getTagList() //标签接口
     this.chooseCustomerMass() //选择员工接口
-   console.log( this.$route.query.datalist,"----  this.appendixList")
-      //   this.appendixList.push({
-      //   appendixType: '图片',
-      //   picList: [],
-      //   href: '',
-      //   hrefTitle: '',
-      //   hrefDesc: '',
-      //   hrefPic: [],
-      //   hrefImg:"",
-      //   hreobjectname:""
-  
-      // })
-  //     if( this.$route.query.tablable){
-  //       let dataList=[]
-  this.materialList =  this.$route.query.datalist
-  //   console.log(this.materialList,"--00-0--0")
-  //       let objList={}
-  //       objList.appendixType = this.$route.query.tablable || ""
-  // console.log( JSON.parse(localStorage.getItem("appendixList") ),"-------appendixList")
-     
-  //  this.appendixList.push(objList)
-  //     }
-//   if(this.$route.query.tablable){
-//        let list =  JSON.parse(localStorage.getItem("appendixList"))
-//        let  objdata ={}
-//         objdata =this.$route.query.datalist
-//         console.log(objdata,"objdata-----objdata")
-//  list[this.$route.query.index].tab = objdata.tab
-//      this.materialList =  this.$route.query.datalist
-//      list[this.$route.query.index].appendixType =this.$route.query.tablable
-// //     
-// //     list[this.$route.query.index] = this.$route.query.datalist
-//       // list.forEach(item =>{
-//       //   item.tab = this.$route.query.datalist.tab
-//       // })
+    console.log(this.$route.query,"---===")
+ 
+    // this.materialList =  this.$route.query.datalist
 
-//      this.appendixList = list
-//   }
 
   },
   methods: {
+    
     goToMaterial(){
-      this.sucai =1
+      this.sucai = 1
     },
 
     fnMaterialInfo(obj){
@@ -496,6 +463,7 @@ export default {
       this.appendixList[this.dataindex].objList= obj
     },
     showData(val){
+      console.log(val,"--0--")
         this.sucai =val
     },
         blurUrl(){
