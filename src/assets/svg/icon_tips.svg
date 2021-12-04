@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/16px/警告 2</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12_客户画像_申请成为协助人" transform="translate(-16.000000, -446.000000)">
+            <g id="编组-8" transform="translate(0.000000, 374.000000)">
+                <g id="编组-7" transform="translate(-0.000000, 52.000000)">
+                    <g id="icon/16px/警告" transform="translate(16.000000, 20.000000)">
+                        <circle id="R" fill="#E6E6E6" cx="6" cy="6" r="6"></circle>
+                        <path d="M6,7.5 C6.41421356,7.5 6.75,7.83578644 6.75,8.25 C6.75,8.66421356 6.41421356,9 6,9 C5.58578644,9 5.25,8.66421356 5.25,8.25 C5.25,7.83578644 5.58578644,7.5 6,7.5 Z M6,2.625 C6.31066017,2.625 6.5625,2.87683983 6.5625,3.1875 L6.5625,6.1875 C6.5625,6.49816017 6.31066017,6.75 6,6.75 C5.68933983,6.75 5.4375,6.49816017 5.4375,6.1875 L5.4375,3.1875 C5.4375,2.87683983 5.68933983,2.625 6,2.625 Z" id="R" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

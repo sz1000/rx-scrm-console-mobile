@@ -1,11 +1,11 @@
 <template>
-    <van-popup :overlay="overlay" position="bottom" round v-model="dialog" :safe-area-inset-bottom="true">
+    <van-popup get-container="body" :overlay="overlay" position="bottom" round v-model="dialog" :safe-area-inset-bottom="true">
         <div class="dialog_wrap">
             <div class="dialog_header">
                 <div class="title">{{title}}</div>
                 <img class="close" @click="dialog = false" src="@/assets/svg/icon_close.svg" alt="">
             </div>
-            <div class="dialog_content">
+            <div class="dialog_content" :class="{'opera':isOpera}">
                 <slot></slot>
             </div>
             <slot name="footer_box"></slot>
@@ -28,6 +28,10 @@ export default {
         title: {
             type: String,
             default: '商机详情'
+        },
+        isOpera: {
+            type: Boolean,
+            default: false,
         },
     },
     data(){
@@ -84,6 +88,10 @@ export default {
         width: 100%;
         height: calc(100% - 104px);
         overflow-y: scroll;
+        &.opera{
+            height: calc(60vh - 248px);
+            padding-top: 32px;
+        }
         .list{
             width: 100%;
             padding: 0 32px;

@@ -16,3 +16,6 @@ from './dialogDetail.vue'
 /* 商机详情 */
 export { default as OpportunityDialog }
 from './opportunityDialog.vue'
+/* 申请成为协助人 */
+export { default as ApplyHelp }
+from './applyHelp.vue'

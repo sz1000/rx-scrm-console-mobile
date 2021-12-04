@@ -32,20 +32,20 @@
                             </div>
                             <div class="text" v-else>
                                 <!-- optType 等于0的时候是旧数据 -->
-                                <span class="name" v-if="item.optType && item.optUserName">
+                                <div class="name" v-if="item.optType && item.optUserName">
                                     <img class="avatar" :src="item.optAvatar | $setAvatar" alt="">
                                     <span>{{item.optUserName}}</span>
-                                </span>
+                                </div>
                                 <span class="mr8">{{getTextFun(item)}}</span>
-                                <span class="name" v-if="item.fromUser">
+                                <div class="name" v-if="item.fromUser">
                                     <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
                                     <span>{{item.fromUser | optString}}</span>
-                                </span>
+                                </div>
                                 <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
-                                <span class="name" v-if="item.optType && item.toUser && item.optType == 6">
+                                <div class="name" v-if="item.optType && item.toUser && item.optType == 6">
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
                                     <span>{{item.toUser | optString}}</span>
-                                </span>
+                                </div>
                                 <a class="link" :href="item.ossUrl" v-if="item.optType == 11">{{item.ossObjectname}}</a>
                             </div>
                             <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
@@ -259,8 +259,8 @@ export default {
                     if(list && list.length > 0){
                         list.forEach(el => {
                             /*-start-*
-                             * 5.更新客户 6.变更负责人 7.分配客户 8.领取客户
-                             * 9.放弃客户 11.附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
+                             * 3.企微同步 5.更新客户 6.变更负责人 7.分配客户 8.领取客户
+                             * 9.放弃客户 11.附件 12.删除附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
                              * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
                              * 
                              * 41.添加企微好友
@@ -268,14 +268,14 @@ export default {
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
                             el.toUser = el.toUser ? JSON.parse(el.toUser) : el.toUser
-                            let dotList = [0,5,6,7,8,9,11,13,14,26,28,36]
+                            let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,28,36]
                             if(dotList.indexOf(el.optType) > -1){
                                 el.class = 'dot'
                             }
-                            let whiteList = [5,15,16,17,21]
-                            if(whiteList.indexOf(el.optType) > -1){
-                                el.context = JSON.parse(el.context)
-                            }
+                            // let whiteList = [5,15,16,17,21]
+                            // if(whiteList.indexOf(el.optType) > -1){
+                            //     // el.context = JSON.parse(el.context)
+                            // }
                             let newsList = [21]
                             if(newsList.indexOf(el.optType) > -1){
                                 el.class = 'opera'
@@ -309,6 +309,12 @@ export default {
                 case 1:
                     str = '建立了客户档案'
                     break;
+                case 3:
+                    str = '从企微同步了'
+                    break;
+                case 5:
+                    str = '更新了客户信息'
+                    break;
                 case 6:
                     str = '将负责人从'
                     break;
@@ -324,6 +330,9 @@ export default {
                 case 11:
                     str = '上传了附件'
                     break;
+                case 12:
+                    str = '删除了附件'
+                    break;
                 case 13:
                     str = `新增了一条记录“${obj.context}”`
                     break;
@@ -331,7 +340,7 @@ export default {
                     str = '拜访了客户'
                     break;
                 case 15:
-                    str = '新增了商机'
+                    str = '新增了商机' + obj.context
                     break;
                 case 16:
                     str = '更新了商机'
@@ -653,6 +662,7 @@ export default {
                         padding-left: 40px;
                         position: relative;
                         margin-right: 8px;
+                        display: inline-block;
                         .avatar{
                             width: 32px;
                             height: 32px;

@@ -67,6 +67,8 @@ import MterialPage from '../components/materialDialog/MterialPage.vue'
 import MterialPageGroup from '../components/materialDialog/MterialPageGroup.vue'
 // 消息通知 日报
 import Daily from '../views/notice/daily'
+// 消息通知 申请成为协助人
+import ApplyHelp from '../views/notice/applyHelp'
 
 // w我的、待处理
 import WaitDealwith from '../views/myHome/WaitDealwith.vue'
@@ -451,6 +453,12 @@ const routes = [{
         path: '/notice/daily',
         name: 'Daily',
         component: Daily,
+    },
+    // 消息通知 互动提醒
+    {
+        path: '/notice/applyHelp',
+        name: 'applyHelp',
+        component: ApplyHelp,
     },
     // 我的/待处理
     {
