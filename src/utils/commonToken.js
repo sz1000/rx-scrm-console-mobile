@@ -102,7 +102,7 @@ function getTicket() {
     // alert('getTicket-后----')
     // alert(location.href)
     http
-        .get('/user-service/m/user/getticket', {
+        .get('/user-service/m/user/getinticket', {
             url: location.href,
         })
         .then((res) => {

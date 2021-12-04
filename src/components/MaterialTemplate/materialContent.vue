@@ -121,7 +121,7 @@ export default {
         .file-content {
             padding-top: 20px;
             .file-box {
-                min-height: 85vh;
+                min-height: 75vh;
                 border: none;
             }
         }
