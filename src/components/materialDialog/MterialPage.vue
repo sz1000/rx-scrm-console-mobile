@@ -180,7 +180,7 @@ export default {
             checkTable: this.checkTable,
             getImgUrl: this.getImgUrl,
             getFileUrl: this.getFileUrl,
-            previewImg: this.previewImg,
+            // previewImg: this.previewImg,
             initType: null,
             goBack: null,
         }
@@ -188,8 +188,8 @@ export default {
     created() {
         this.getCorpId().then(() => {
             this.getList()
-            this.getTotal(1)
             this.getTotal(2)
+            this.getTotal(3)
         })
     },
     methods: {
@@ -405,9 +405,9 @@ export default {
  
 
 
-        previewImg(i) {
-            this.$refs.imgPreview.show(1, [i.posterUrl])
-        },
+        // previewImg(i) {
+        //     this.$refs.imgPreview.show(1, [i.posterUrl])
+        // },
         ifShowFooter(data) {
             this.$emit('ifShowFooter', data)
         }
