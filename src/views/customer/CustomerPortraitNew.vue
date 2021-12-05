@@ -240,7 +240,7 @@ export default {
         },
         getCustomerDetail(){    //获取客户详情
             let id = this.userId
-            || 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
+            // || 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             if(this.code){
                 id = this.code
             }
