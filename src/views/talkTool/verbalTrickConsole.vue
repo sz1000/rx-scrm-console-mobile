@@ -1663,12 +1663,8 @@ export default {
   height: 80px;
   line-height: 80px;
 }
-/deep/.vue-treeselect__placeholder,
-.vue-treeselect__single-value {
-  top: 30%;
-}
-/deep/.vue-treeselect__single-value {
-  top: 30%;
+/deep/ .vue-treeselect__placeholder, /deep/ .vue-treeselect__single-value{
+  line-height: 76px
 }
 .input_text {
   display: flex;
