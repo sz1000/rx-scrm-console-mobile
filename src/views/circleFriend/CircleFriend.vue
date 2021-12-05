@@ -14,6 +14,12 @@
       <span>每位客户的朋友圈每个月最多展示4条企业发表的内容</span>
       <van-icon name="cross" @click="fnClose=false" />
     </div>
+     <div class="friendtite">
+      <div class="titeFlex">
+        <div class="title"><span style="color:red">*</span> 标题：</div>
+        <div> <el-input v-model="linkhref.hrefTitle"></el-input> </div>
+      </div>
+    </div>
     <div class="friendText">
       <div class="title">文字内容</div>
       <van-field v-model="textVal" placeholder="请输入文字(文字内容和素材不可同时为空不得超过500个字符)" maxlength="500" rows="6" type="textarea" />
@@ -266,8 +272,8 @@ export default {
       this.$router.push('mterialPage')
     },
     sendMessage: _throttle(function () {
-      // console.log(11111111)
-      let imgArr = []
+        if(this.tab == "material"){
+      var imgArr = []
         if (window.location.origin == 'https://console.jzcrm.com') {
         this.shareUrlOrigin = 'https://h5.jzcrm.com'
       } else {
@@ -291,9 +297,10 @@ export default {
         } else {
           imgArr = [this.materialList]
         }
+         }
       //   console.log(imgArr,"--------kkk")
       let materialList = []
-      
+    
       if (this.tab == 'image') {
         imgArr = this.lists
       } else if (this.tab == 'video') {
@@ -302,20 +309,44 @@ export default {
         imgArr = [this.inputUrl]
         // imgArr = this.linkhref
       }
+        // }
       // else{
       //    materialList.push( this.materialList)
-      // }
-      let params = {
-        content: this.textVal,
-        // urls: imgArr,
-        msgtype: this.tab,
-        urlList:imgArr
+      let params
+     if(this.tab == "material"){
+             params = {
+              content: this.textVal,
+              // urls: imgArr,
+              title:this.linkhref.hrefTitle,
+              msgtype: this.tab,
+              urlList:imgArr 
       }
+        }else{
+              params = {
+                content: this.textVal,
+                urls: imgArr,
+                title:this.linkhref.hrefTitle,
+                msgtype: this.tab,
+                // urlList:imgArr 
+              }
+        }
+      // let params = {
+      //   content: this.textVal,
+      //   // urls: imgArr,
+      //   title:this.linkhref.hrefTitle,
+      //   msgtype: this.tab,
+      //   urlList:imgArr 
+      // }
+      if(this.linkhref.hrefTitle == ''){
+         this.$toast("请输入标题")
+      }else{
+
       if(this.linkhref.hrefTitle == "" && this.tab == "link"){
         this.$toast("请输入链接标题")
       }else{
             addFriendStrong(params).then((res) => {
         if (res.result) {
+           
           Notify({
             message: '创建成功',
             type: 'success',
@@ -327,7 +358,7 @@ export default {
         }
       })
       }
-  
+    }
     }, 5000),
     // sendMessage() {},
     fnDeleteImg(v, i) {
@@ -518,7 +549,19 @@ export default {
       width: 34px;
     }
   }
+  .friendtite{
+     background: #fff;
+    padding: 32px 32px 0;
+        .titeFlex{
+      display: flex;
+      align-items: center;
+    }
+    .el-input{
+      width: 550px;
+    }
+  }
   .friendText {
+  
     background: #fff;
     padding: 32px;
     .van-cell {
