@@ -1,345 +1,465 @@
 <template>
-  <div class="material_warp">
-    <div class="headerTitle">
-      <div class="backPage" @click="goBack">
-        <van-icon name="arrow-left" />
-        返回
-      </div>
-      <span class="textTitle">从素材库选择</span>
-    </div>
-    <div class="tabBar">
-      <span class="title" :class="{'active' : tab==1}" @click="selectTab(1)">文章</span>
-      <span class="title" :class="{'active' : tab==2}" @click="selectTab(2)">文件</span>
-      <span class="title" :class="{'active' : tab==3}" @click="selectTab(3)">海报</span>
-    </div>
-    <div class="search_input">
-      <input type="text" v-model="searchInput" placeholder="请输入素材名称" class="inputArea">
-      <van-icon name="search" size="28" @click="search" class="searchIcon" />
-    </div>
-    <div v-loading="loading">
-         <div class="article_warp" v-if="this.tab == 1">
-            <p class="tite_list">文章列表</p>
-          
-            <van-list
-             
-              :finished="finishedArticle"
-              finished-text="已加载所有数据"
-              @load="onLoad"
-                >
-           <ul>
-              <li class="article_list"  v-for="(item,indexp) in list" :key="indexp" @click="listtusp(item,indexp)">
-                   <img v-if="!item.cover" src="../../assets/images/article.png" alt="" class="article_img">
-                   <img v-else :src="item.cover" alt="" class="article_img">
-                   <span class="artice_text">{{item.title}}</span>
-                   <!-- <van-radio-group v-model="radio" @change='changeRadio(item)'>
-                     <van-radio :name="item"></van-radio>
-                   </van-radio-group> -->
-                  
-                   <span v-if="indexps == indexp">
-                     <img src="../../images/duihao.png" class="duihao_img" alt="">
-                   </span>
-                  <span v-else class="roud_yun"></span>
-              </li>
-            </ul>
-       
-            </van-list>
+    <div class="material-template">
+        <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
+           <div class="headerTitle">
+            <div class="backPage" @click="goBack">
+              <van-icon name="arrow-left" />
+              返回
             </div>
-    <div class="article_warp" v-if="this.tab == 2">
-            <p class="tite_list">文件列表</p>
-       
-               <van-list
-             
-              :finished="finishedfile"
-              finished-text="已加载所有数据"
-              @load="onLoadfin"
-                >
-           <ul>
-              <li class="article_list"  v-for="(item,indext) in listfin" :key="indext" @click="listtusp(item,indext)">
-                   <img src="../../assets/images/pdf_image.png" alt="" class="article_img">
-                   <span class="artice_text">{{item.name}}</span>
-                   <!-- <van-radio-group v-model="radio" >
-                     <van-radio :name="item"></van-radio>
-                   </van-radio-group> -->
-                      <span v-if="indexps == indext">
-                     <img src="../../images/duihao.png" class="duihao_img" alt="">
-                   </span>
-                  <span v-else class="roud_yun"></span>
-              </li>
+            <span class="textTitle">从素材库选择</span>
+         </div>
+            <ul class="header-nav">
+                <li @click="changeNav(1)" :class="{active: type == 1}"><span>文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
+                <li @click="changeNav(2)" :class="{active: type == 2}"><span>文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
+                <li @click="changeNav(3)" :class="{active: type == 3}"><span>海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
             </ul>
-            </van-list>
-    </div>
-          <div class="article_warp" v-if="this.tab == 3">
-            <p class="tite_list">海报列表</p>
-         
-                     <van-list
-              :finished="finished"
-              finished-text="已加载所有数据"
-              @load="onLoadPosters"
-                >
-           <ul>
-              <li class="article_list"  v-for="(item,indexs) in listPosters" :key="indexs"  @click="listtusp(item,indexs)">
-                   <img :src="item.posterUrl" alt="" class="article_img">
-                   <span class="artice_text">{{item.posterName}}</span>
-                   <!-- <van-radio-group v-model="radio">
-                     <van-radio :name="item"></van-radio>
-                   </van-radio-group> -->
-                      <span v-if="indexps == indexs">
-                     <img src="../../images/duihao.png" class="duihao_img" alt="">
-                   </span>
-                  <span v-else class="roud_yun"></span>
-              </li>
+            <search ref="search" :type="type"></search>
+            <ul class="list-box">
+                <li class="item-box" v-if="type == 1">
+                    <van-list
+                        v-model="articleListLoading"
+                        :immediate-check="false"
+                        :finished="articleListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="(i,indexp) in articleList" :key="indexp">
+                            <div class="right" @click="preview(i,indexp)">
+                                <div class="img">
+                                    <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
+                                </div>
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.title}}</h3>
+                                        <p class="one-line" v-html="i.contentAbstract"></p>
+                                    </div>
+                                </div>
+                            </div>
+                          <div>
+                             <span v-if="indexps == indexp">
+                                 <img src="../../images/duihao.png" class="duihao_img" alt="">
+                             </span>
+                            <span v-else class="roud_yun"></span>
+                          </div>
+                            <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div> -->
+                        </div>
+                    </van-list>
+                </li>
+                <li class="item-box" v-if="type == 2">
+                    <van-list
+                        v-model="saleListLoading"
+                        :immediate-check="false"
+                        :finished="saleListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="(i,indext) in saleList" :key="indext">
+                            <div class="right" @click="preview(i,indext)">
+                                <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.name}}</h3>
+                                        <!-- <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p> -->
+                                    </div>
+                                </div>
+                            </div>
+                             <span v-if="indexps == indext">
+                                 <img src="../../images/duihao.png" class="duihao_img" alt="">
+                             </span>
+                            <span v-else class="roud_yun"></span>
+                            <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div> -->
+                        </div>
+                    </van-list>
+                </li>
+                <li class="item-box" v-if="type == 3">
+                    <van-list
+                        v-model="posterListLoading"
+                        :immediate-check="false"
+                        :finished="posterListFinished"
+                        finished-text="没有更多了"
+                        @load="onLoad"
+                        >
+                        <div class="item" v-for="(i,indexs) in posterList" :key="indexs">
+                            <div class="right" @click="preview(i,indexs)">
+                                <div class="img">
+                                    <span><img :src="i.posterUrl" alt=""></span>
+                                </div>
+                                <div class="des">
+                                    <div>
+                                        <h3 class="one-line">{{i.posterName}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                             <span v-if="indexps == indexs">
+                                 <img src="../../images/duihao.png" class="duihao_img" alt="">
+                             </span>
+                            <span v-else class="roud_yun"></span>
+                            <!-- <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div> -->
+                        </div>
+                    </van-list>
+                </li>
             </ul>
-              <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
-            </van-list>
-    </div>
-    </div>
- 
+
+            <!-- 转载公众号文章按钮 -->
+            <!-- <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div> -->
+            <!-- 上传文件按钮 -->
+            <!-- <div v-if="type == 1" class="poster-box">
+                <file-upload :needFileInfo="true"></file-upload>
+            </div> -->
+            <!-- 上传海报按钮 -->
+            <!-- <div v-if="type == 2" class="poster-box">
+                <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+            </div> -->
       <div class="but_warp">
            <div class="cancel" @click="cancel">取消</div>
            <div class="determine" @click="determine">确定</div>
       </div>
+        </template>
 
-  </div>
+        <!-- <img-preview ref="imgPreview"></img-preview> -->
+
+     
+    </div>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      centquer:{},
-      tab: 1,
-      indexps:1000000,
-      searchInput: '',
-      radio:"",
-        loading: false,
-      finishedArticle: false,
-      finishedfile:false,
-      finished: false,
-      list:[],
-        pageInfo: {
-        page: 1,
-        limit: 10,
-      },
-        pageInfofin: {
-        page: 1,
-        limit: 10,
-      },
-      pageInposters: {
-        page: 1,
-        limit: 10,
-      },
-      total:0,
-      totalf:0,
-      totalp:0,
-      listfin:[],
-      listPosters:[],
-      loading: true
-    }
-  },
-  created(){
-   this.getList()
-  //  this.getFileList()
-  },
-  computed:{
-      corpId(){
-            return this.$store.getters.corpId
-        },
-      
-  },
-    watch: {
- 
-    // searchInput(val) {
-    //   if (val == '') {
-    //    this.getFilePosters()
-    //   }
-    // },
-  },
-  // updated(){  console.log(this.list.length,"mounted--")},
-  methods: {
+import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
+import { sendChatMessage, byteConvert, getFileDefaultCover } from '../../utils/tool'
 
-    goBack() {
-      this.$router.go(-1)
+import Search from '../../components/MaterialTemplate/search'
+import ImgPreview from '../../components/MaterialTemplate/imgPreview'
+import ImgUpload from '../../components/MaterialTemplate/imgUpload'
+import UploadPoster from '../../components/MaterialTemplate/uploadPoster'
+import ContentPreview from '../../components/MaterialTemplate/contentPreview'
+import FileUpload from '../../components/MaterialTemplate/fileUpload'
+import ReprintEdit from '../../components/MaterialTemplate/reprintEdit'
+
+import { mapActions, mapState } from 'vuex'
+
+export default {
+    name: 'materialTemplate',
+    data() {
+        return {
+            type: 1,
+             centquer:{},
+              indexps:1000000,
+            articleList: [],
+            totalArticle: 0,
+            articleListPage: 1,
+            articleListLoading: true,
+            articleListFinished: false,
+            articleListTotal: 0,
+
+            saleList: [],
+            totalSale: 0,
+            saleListPage: 1,
+            saleListLoading: true,
+            saleListFinished: false,
+            saleListTotal: 0,
+
+            posterList: [],
+            totalPoster: 0,
+            posterListPage: 1,
+            posterListLoading: false,
+            posterListFinished: false,
+            posterListTotal: 0,
+             
+            originUrl: location.origin,
+
+            showUploadPoster: false,  // 是否展示海报上传页面
+            posterData: {}, // 上传的海报图片信息
+            showContentPreview: false,
+            showFileUpload: false, // 是否展示文件上传页面
+            fileData: {}, // 上传的文件信息
+        }
     },
-    determine(){
+    computed: {
+        ...mapState(["corpId", "userNo"]),
+    },
+    provide() {
+        return {
+            checkTable: this.checkTable,
+            getImgUrl: this.getImgUrl,
+            getFileUrl: this.getFileUrl,
+            previewImg: this.previewImg,
+            initType: null,
+            goBack: null,
+        }
+    },
+    created() {
+        this.getCorpId().then(() => {
+            this.getList()
+            this.getTotal(1)
+            this.getTotal(2)
+        })
+    },
+    methods: {
+          goBack() {
+     this.$emit('sureTab', 0)
+    },
+        cancel(){
+            this.$emit('sureTab', 0)
+    },
+        determine(){
       console.log("000")
-        // this.$router.push({
-        //   path:"/talkTool/CustomergroupPlaye",
-        //   query:{
-        //     datalist:this.centquer,
-        //     tablable:"material"
-        //   }
-        // })
-             this.$emit('sureTab', 0)
+           this.$emit('sureTab', 0)
         this.$emit('sure', this.centquer)
-     
+
     },
-    cancel(){
-        // this.$router.push({path:"/talkTool/CustomergroupPlaye",})
-              this.$emit('sureTab', 0)
-    },
-    onLoad(){
-      // console.log(this.list.length)
-      // if(this.list.length >= this.total){
-      //    console.log(this.list.length)
-          this.pageInfo.page++
-           this.getList()
-        // this.finished = true;
-      // }
-    },
-      changeRadio(item) {
-      console.log(this.radio)
-      console.log(item)
-    },
-    fanclick(item){
-           console.log(item,"dainji")
-    },
-        onLoadfin(){
-          //  if(this.listfin.length >= this.totalf){
-                  this.pageInfofin.page++
-                  this.getFileList()
-                // this.finished = true;
-              // }
-        },
-        listtusp(item,val){
-            console.log(item)
+        ...mapActions(["getCorpId"]),
+                preview(item,val) {
+           console.log(item,val)
             this.centquer = item
             this.indexps = val
-              this.$set(this.centquer, "tab", this.tab);
-        },
-        onLoadPosters(){
-          console.log(122)
-            this.pageInposters.page+=1
-            this.getFilePosters()
-        },
-    selectTab(v) {
-     
-      this.tab = v
-      this.searchInput = ''
-      if (v == 1) {
-        //  this.pageInfo.page = 1
-          //  this.indexps = 1000000
-        // this.getArticle()
-        //  this.list=[]
-          this.getList()
-      } else if (v == 2) {
-      // this.listfin = []
-      // this.indexps = 1000000
-      // this.pageInfofin.page = 1
-        this.getFileList()
-      } else {
-        //  this.pageInposters.page = 1
-        //  this.indexps = 1000000
-        // // this.listPosters =[]
-        this.getFilePosters()
-      }
-    },
-        search() {
-      if (this.tab == 1) {
-        this.pageInfo.page = 1
-        this.list =[]
-        this.getList()
-      } else if (this.tab == 2) {
-          this.pageInfofin.page = 1
-          this.listfin = []
-        this.getFileList()
-      } else {
-          this.pageInposters.page = 1
-            this.listPosters = []
-        this.getFilePosters()
-      }
-    },
-      getList() {
-      this.$network
-        .get('/material-service/article/list', {corpId:this.corpId,
-              pageIndex: this.pageInfo.page,
-              pageSize:this.pageInfo.limit, title: this.searchInput,})
-        .then((res) => {
-         console.log(res)
-           if(res.result ){
-           this.loading =false
-         }
-         let dataList = res.data.records
-         this.total = res.data.total
-         this.list =  this.list.concat(dataList)
-        //  console.log( this.list.length," this.list")
-            if (this.list.length >= this.total) {
-            this.finishedArticle = true;
-          }else{
-            // this.onLoad()
-          }
-        //  if(this.tab == 1){
-        //     this.list =  dataList
-        //  }
-        })
-    },
-    
-      getFileList() {
-      this.$network
-        .get('/material-service/sale_document/list', {corpId:this.corpId,
-              pageIndex: this.pageInfofin.page,
-              pageSize:this.pageInfofin.limit, name: this.searchInput,})
-        .then((res) => {
-         console.log(res)
-            if(res.result){
-           this.loading =false
-         }
-         let dataLists = res.data.records
-         this.totalf = res.data.total
-         this.listfin =  this.listfin.concat(dataLists)
-        //    if(this.tab == 2){
-        //     this.listfin =  dataLists
-        //  }
-             if (this.listfin.length >= this.totalf) {
-            this.finishedfile = true;
-          }else{
-            this.onLoadfin()
-          }
-        })
-    },
-        getFilePosters() {
- 
-         this.$network
-        .get('/material-service/sale-poster-entity/list', {corpId:this.corpId,
-              pageIndex: this.pageInposters.page,
-              pageSize:this.pageInposters.limit, name: this.searchInput,})
-        .then((res) => {
-                if(res.result){
-              let dataListstd = res.data.records
-                    // console.log(dataListstd,"----0")
-                    this.totalp = res.data.total
-                    this.listPosters =  this.listPosters.concat(dataListstd)
-                    console.log(this.listPosters,"====")
-                      if(res.result){
-                        this.loading =false
-                      }
-                        if (this.listPosters.length >= this.totalp) {
-                          this.finished = true;
-                        }else{
-                          this.onLoadPosters()
-                        }
+              this.$set(this.centquer, "tab", this.type);
+            // this.ifShowFooter(false)
+            // this.showContentPreview = true
+            // let obj = {
+            //     type,
+            //     userNo: this.userNo,
+            //     data: item
+            // }
 
-                        }
-                      })
+            // this.$nextTick(() => {
+            //     this.$refs.contentPreview.show(obj)
+            // })
+        },
+        changeNav(type) {
+          console.log(type)
+                this.type = type
+           if(type == 1){
+               this.indexps = 1000000
+           }else if(type == 2){
+                  this.indexps = 1000000
+           }else{
+             this.indexps = 1000000
+           }
+            this.type = type
+            this.initPage(this.type)
+            this.$nextTick(() => {
+                this.$refs.search.searchText = ''
+            })
+            this.getList()
+        },
+        getTotal(type) {
+            this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0,
+                loadingType: 'spinner',
+            })
+            let ApiOpts = null
+
+            if (type == 2) {
+                ApiOpts = SaleDocumentList
+            } else if (type == 3) {
+                ApiOpts = PosterList
+            }
+
+            ApiOpts({
+                pageIndex: 1,
+                pageSize: 10,
+                corpId: this.corpId
+            }).then(res => {
+                this.handleTotalRes(type, res)
+            })
+        },
+        // 获取总数
+        handleTotalRes(type, res) {
+            const { code, data } = res
+
+            this.$toast.clear()
+            if (code === 'success') {
+                if (type == 2) {
+                    this.saleListTotal = data.total
+                } else if (type == 3) {
+                    this.posterListTotal = data.total
+                }
+            }
+        },
+        onLoad() {
+            if (this.type == 1 && this.articleListPage <= 1 || this.type == 2 && this.saleListPage <= 1 || this.type == 3 && this.posterListPage <= 1) {
+                return
+            }
+            this.getList()
+        },
+        getList(title) {
+            this.$toast.loading({
+                message: '加载中...',
+                forbidClick: true,
+                duration: 0,
+                loadingType: 'spinner',
+            })
+
+            let ApiOpts = ArticleList
+
+            let params = {
+                pageSize: 10,
+                corpId: this.corpId
+            }
+
+            if (this.type == 1) {
+                params.title = title
+                params.pageIndex = this.articleListPage
+                ApiOpts = ArticleList
+                this.articleListLoading = true
+            } else if (this.type == 2) {
+                params.name = title
+                params.pageIndex = this.saleListPage
+                ApiOpts = SaleDocumentList
+                this.saleListLoading = true
+            } else if (this.type == 3) {
+                params.name = title
+                params.pageIndex = this.posterListPage
+                ApiOpts = PosterList
+                this.posterListLoading = true
+            }
+
+            ApiOpts(params).then(res => {
+                this.handleRes(res)
+            })
+        },
+        handleRes(res) {
+            const { code, data, msg } = res
+
+            this.$toast.clear()
+            if (code === 'success') {
+                if (this.type == 1) {
+                    this.articleListLoading = false
+                    if (this.articleListPage == 1) {
+                        this.articleList = []
+                    }
+                    this.articleListTotal = data.total
+                    this.articleList = this.articleList.concat(data.records)
+                    this.articleListPage += 1
+                    this.articleListFinished = this.articleList.length >= data.total
+                } else if (this.type == 2) {
+                    this.saleListLoading = false
+                    if (this.saleListPage == 1) {
+                        this.saleList = []
+                    }
+                    this.saleListTotal = data.total
+                    this.saleList = this.saleList.concat(data.records)
+                    this.saleListPage += 1
+                    this.saleListFinished = this.saleList.length >= data.total
+                } else if (this.type == 3) {
+                    this.posterListLoading = false
+                    if (this.posterListPage == 1) {
+                        this.posterList = []
+                    }
+                    this.posterListTotal = data.total
+                    this.posterList = this.posterList.concat(data.records)
+                    this.posterListPage += 1
+                    this.posterListFinished = this.posterList.length >= data.total
+                }
+            } else {
+                this.$toast(msg)
+            }
+        },
+        // 查询
+        checkTable(data) {
+            this.initPage(this.type)
+            this.getList(data)
+        },
+        initPage(type) {
+            if (type == 1) {
+                this.articleListPage = 1
+                this.articleList = []
+            } else if (type == 2) {
+                this.saleListPage = 1
+                this.saleList = []
+            } else if (type == 3) {
+                this.posterListPage = 1
+                this.posterList = []
+            }
+        },
+        sendChatMessage,
+        byteConvert,
+        getFileDefaultCover,
+        // 去往转载公众号文章页面
+        goNextStep() {
+            this.$router.push({
+                path: '/talkTool/reprint',
+                // query: {},
+            })
+        },
+        getFileUrl(data) {
+            this.ifShowFooter(false)
+            this.fileData = data
+            this.showFileUpload = true
+            this.$nextTick(() => {
+                this.$refs.reprintEdit.doShowFile(this.fileData)
+            })
+        },
+        // 海报上传图片地址获取
+        getImgUrl(data) {
+            this.ifShowFooter(false)
+            this.posterData = data
+            this.showUploadPoster = true
+        },
+ 
+ 
+
+
+        previewImg(i) {
+            this.$refs.imgPreview.show(1, [i.posterUrl])
+        },
+        ifShowFooter(data) {
+            this.$emit('ifShowFooter', data)
+        }
     },
-     //去重一次
-    // unique(arr) {
-    //   const res = new Map()
-    //   return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
-    // },
-  },
+    components: {
+        Search,
+        ImgUpload,
+        UploadPoster,
+        ContentPreview,
+        FileUpload,
+        ReprintEdit
+    }
 }
 </script>
 <style lang="less" scoped>
-.material_warp {
-  padding-top: 87px;
-  min-height: 100vh;
-  background: #fff;
-  .headerTitle {
+@import url('../../styles/color');
+.material-template {
+    .but_warp{
+    background: #fff;
+    display: flex;
     position: fixed;
-    top: 0;
+    bottom: 20px;
     left: 50%;
-    z-index: 10;
-    width: 750px;
     transform: translateX(-50%);
+    .cancel{
+    width: 339px;
+height: 80px;
+background: #FFFFFF;
+border-radius: 8px;
+border: 1px solid #4168F6;
+color: #4168F6;
+font-size: 28px;
+line-height: 80px;
+text-align: center;
+margin-right: 24px;
+  }
+    .determine{
+    width: 339px;
+height: 80px;
+background: #4168F6;
+border-radius: 8px;
+color: #FFFFFF;
+font-size: 28px;
+line-height: 80px;
+text-align: center;
+  }
+  }
+    min-height: 100vh;
+    background-color: @white;
+    overflow-x: hidden;
+     .headerTitle {
+    // position: fixed;
+    // top: 0;
+    // left: 50%;
+    // z-index: 10;
+    width: 750px;
+    // transform: translateX(-50%);
     cursor: pointer;
     background: #fff;
     padding: 0 24px;
@@ -364,83 +484,53 @@ export default {
       padding-left: 193px;
     }
   }
-  .tabBar {
-    display: flex;
-    justify-content: space-around;
-    height: 88px;
-    align-items: center;
-    .title {
-      font-size: 32px;
-      font-weight: 500;
-      color: #838a9d;
-      line-height: 45px;
-      position: relative;
-    }
-    .active {
-      color: #4168f6;
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -21px;
-        left: 0;
-        height: 4px;
+    .header-nav {
+        display: flex;
         width: 100%;
-        background: #4168f6;
-      }
+        height: 100px;
+        border-bottom: 1px solid @lineColor;
+        li {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            height: 100%;
+            line-height: 100px;
+            text-align: center;
+            span {
+                height: 100%;
+                margin: 0 auto;
+                color: @fontSub2;
+                font-size: 28px;
+            }
+        }
+        .active {
+            span {
+                color: @main;
+                border-bottom: 4px solid @main;
+            }
+        }
     }
-  }
-  .search_input {
-    margin-top: 32px;
-    padding: 0 32px;
-    position: relative;
-    .inputArea {
-      width: 686px;
-      height: 68px;
-      background: #ffffff;
-      border-radius: 4px;
-      border: 1px solid #d9dae4;
-      padding-left: 32px;
-      font-size: 28px;
-    }
-    .searchIcon {
-      position: absolute;
-      right: 64px;
-      top: 10px;
-    }
-  }
-  .article_warp{
-    padding: 0 32px 120px;
-    .tite_list{
-         
-      font-size: 28px;
-      font-weight: 550;
-      color: #3C4353;
-      margin: 34px 0;
-    }
-    .article_list{
-      display: flex;
-      align-items: center;
-    height: 122px;
-    border-bottom: 1px solid #F0F2F7;
-        justify-content: space-between;
-       .article_img{
-         width: 70px;
-         height: 70px;
-         border-radius: 4px;
-       }
-       .artice_text{
-         font-weight: 400;
-        color: #3C4353;
-        font-size: 28px;
-          margin-left: 16px;
-      margin-right: 30px;
-      overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-        width: 466px;
-    text-align: left;
-       }
-       .roud_yun{
+    .list-box {
+        padding-bottom: 132px;
+        position: relative;
+        &::after {
+            content: '';
+            height: 2px;
+            background-color: @lineColor;
+            transform: scaleY(.5);
+            position: absolute;
+            right: 0;
+            left: 0;
+            top: 0;
+        }
+        .item-box {
+            /deep/ .van-list__finished-text {
+                font-size: 24px;
+                color: @lengthColor;
+            }
+            .item {
+
+                .roud_yun{
          width: 38px;
          height: 38px;
          background: #FFFFFF;
@@ -452,37 +542,89 @@ export default {
          width: 38px;
          height: 38px;
        }
+                display: flex;
+                align-items: center;
+                padding:  32px;
+                position: relative;
+                .left {
+                    width: 48px;
+                    min-width: 48px;
+                    height: 48px;
+                    margin-left: 24px;
+                    overflow: hidden;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .right {
+                    width: 88%;
+                    .img {
+                        display: inline-block;
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 8px;
+                        vertical-align: middle;
+                        background-color: #F6F7F9;
+                        overflow: hidden;
+                        span {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    .des {
+                        display: inline-block;
+                        // height: 100px;
+                        max-width: 72%;
+                        margin-left: 20px;
+                        vertical-align: middle;
+                        div {
+                            display: flex;
+                            height: 100%;
+                            justify-content: space-between;
+                            flex-direction: column;
+                            h3 {
+                                font-size: 28px;
+                                color: @fontMain;
+                            }
+                            p {
+                                word-break: break-all;
+                                font-size: 24px;
+                                color: @fontSub2;
+                            }
+                        }
+                    }
+                }
+                &::after {
+                    content: '';
+                    height: 2px;
+                    background-color: @lineColor;
+                    transform: scaleY(.5);
+                    position: absolute;
+                    right: 0;
+                    left: 32px;
+                    bottom: 0;
+                }
+            }
+        }
+        .poster {
+            padding: 24px 0;
+            .item {
+                padding: 0;
+                margin: 0 0 24px 24px;
+            }
+        }
     }
-  }
-  .but_warp{
-    background: #fff;
-    display: flex;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%)
-  }
-  .cancel{
-    width: 339px;
-height: 80px;
-background: #FFFFFF;
-border-radius: 8px;
-border: 1px solid #4168F6;
-color: #4168F6;
-font-size: 28px;
-line-height: 80px;
-text-align: center;
-margin-right: 24px;
-  }
-  .determine{
-    width: 339px;
-height: 80px;
-background: #4168F6;
-border-radius: 8px;
-color: #FFFFFF;
-font-size: 28px;
-line-height: 80px;
-text-align: center;
-  }
+ 
+    .poster-box {
+        width: 104px;
+        height: 104px;
+        position: fixed;
+        right: 32px;
+        bottom: 140px;
+    }
 }
 </style>

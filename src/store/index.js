@@ -13,8 +13,7 @@ export default new Vuex.Store({
         corpId: localStorage.getItem('corpId'),
         token: localStorage.getItem('token'),
         expireTime: process.env.NODE_ENV === 'development' ?
-            '' :
-            localStorage.getItem('expireTime'),
+            '' : localStorage.getItem('expireTime'),
         userNo: localStorage.getItem('userNo'),
         wxLogoInfo: JSON.parse(localStorage.getItem('wxLogoInfo')),
         myName: localStorage.getItem('myName'),
@@ -59,7 +58,7 @@ export default new Vuex.Store({
             sessionStorage.setItem('token', data)
             state.token = data
         },
-        setSystem(state, data){
+        setSystem(state, data) {
             localStorage.setItem('system', data)
             state.system = data
         },

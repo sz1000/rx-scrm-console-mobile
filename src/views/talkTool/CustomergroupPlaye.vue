@@ -1482,7 +1482,7 @@ export default {
           }
           .delItem {
             position: absolute;
-            top: 44px;
+            top: 20px;
             right: 44px;
             font-size: 32px;
           }
