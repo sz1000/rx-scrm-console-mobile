@@ -19,11 +19,14 @@
                         </div>
                         <div class="p">{{customerInfo.mobil}}</div>
                         <div class="p">{{customerInfo.cropFullName}}</div>
-                        <div class="person">
+                        <div class="person" @click.stop="toFun">
                             <div class="img_box" :class="`m${personList.length}`">
                                 <img class="img" :src="item.avatar" v-for="(item,index) in personList" :key="index">
                             </div>
-                            <div class="text">{{getUserObj('name')}}等{{userList.length}}人</div>
+                            <div class="text">
+                                <span class="limit">{{getUserObj('name')}}</span>
+                                <span class="son">等{{userList.length}}人</span>
+                            </div>
                             <img class="icon_next" src="@/assets/svg/icon_next_gray.svg">
                         </div>
                     </div>
@@ -38,13 +41,17 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group'}">
             <!-- 客户动态 -->
-            <dynamics v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" @fillMessage="getPeople" @openDialog="openDialog"></dynamics>
+            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
             <!-- 商机 -->
-            <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3"></opportunities>
+            <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
             <!-- 群聊 -->
             <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
-            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'"></enclosure>
+            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+        </div>
+        <!-- 写跟进 -->
+        <div class="follow_up" v-if="navActive == 'dynamics'" @click="openDialog('','follow')">
+            <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
         </div>
         <!-- 协助人消息输入框 -->
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
@@ -80,9 +87,9 @@
                                     <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
                                 </div>
                                 <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
-                                <div class="opera_right">
+                                <!-- <div class="opera_right">
                                     <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -90,23 +97,26 @@
             </div>
         </van-popup>
         <!-- 消息回复弹窗 -->
-        <DialogComment v-model="dialog_xx" @sure="addCommentFun"></DialogComment>
+        <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
+        <!-- 写跟进弹窗 -->
+        <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
         <!-- 商机详情 -->
         <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
         <!-- 申请成为协助人 -->
-        <ApplyHelp v-model="dialog_xzr" :isApply="isApply"></ApplyHelp>
+        <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
     </div>
 </template>
 
 <script>
 import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp } from './components'
 import { user_getUserName } from '@/api/home'
-import { MessageNotificatio } from '../../config/api'
 import {
     cluecustomer_getClueCustomerByid,
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo,  //添加评论回复
+    clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
+    cluecustomer_addMessage,    //写跟进
 } from '@/api/customer'
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
@@ -128,18 +138,24 @@ export default {
     },
     data(){
         return {
+            id: this.$route.query.id,
+            code: this.$route.query.code,
+            num: this.$route.query.num,
             showPortraitType: 0,
             dialog_group: false,
             dialog_xx: false,
+            dialog_xgj: false,
             dialog_sj: false,
             dialog_xzr: false,
             isApply: false,     //是否已经申请成为协助人 且还未通过
 
+            applyData: {},
+
             navList: [
                 { name: '客户动态',code: 'dynamics'},
-                { name: '商机',code: 'niche',num: 3},
-                { name: '客户群',code: 'group',num: 5},
-                { name: '附件',code: 'enclosure',num: 1},
+                { name: '商机',code: 'niche',num: 0},
+                { name: '客户群',code: 'group',num: 0},
+                { name: '附件',code: 'enclosure',num: 0},
             ],
             navActive: 'dynamics',
 
@@ -201,12 +217,33 @@ export default {
         this.getUserName()
     },
     methods: {
-        isDirector(){   //是否是相关负责人协助人
-            this.dialog_xzr = true
+        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据
+            this.dialog_xzr = Number(data.permFlag) ? false : true
+            this.isApply = data.isApply ? true : false
+            let directorList = data.directorList
+            let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
+            this.applyData = {
+                customerName: data.clueCustomerVO.name,
+                customerAvatar: data.clueCustomerVO.avatar,
+                createTime: data.clueCustomerVO.createTime,
+                directorName: directorList && directorList.length ? directorList[0].name + depName : '',
+                directorAvatar: directorList && directorList.length ? directorList[0].avatar : '',
+            }
+        },
+        jumpFun(code){      //锚点跳转
+            // console.log('code',code,document.querySelector(`#${code}`))
+            const returnEle = document.querySelector(`#${code}`);  //productId是将要跳转区域的id
+            if (!returnEle) {
+                returnEle.scrollIntoView(true); // true 是默认的
+            }
+            document.querySelector(`#${code}`).scrollIntoView(true); //这里的counter1是将要返回地方的id
         },
         getCustomerDetail(){    //获取客户详情
-            let id = this.userId || 
-            'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
+            let id = this.userId
+            || 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
+            if(this.code){
+                id = this.code
+            }
             // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
             // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
             // 'woyPDZEQAAKN_BGnwemNjnTqtjllE71g'
@@ -222,13 +259,15 @@ export default {
             cluecustomer_getClueCustomerByid(id).then(res => {
                 if(res.result){
                     let data = res.data
+                    this.isDirectorFun(data)
+                    // this.isApply = data.permFlag ? true : false
                     this.customerInfo = data.clueCustomerVO
                     this.userList = data.directorList
                     this.tagList = data.tagList.filter((el,index) => {
                         return index < 3
                     })
                     this.navList.forEach(el => {
-                        if(el.code == 'code'){
+                        if(el.code == 'niche'){
                             el.num = data.mobileDataCount.busCount
                         }else if(el.code == 'group'){
                             el.num = data.mobileDataCount.groupCount
@@ -271,6 +310,15 @@ export default {
                 }
             })
         },
+        listLoadFun(val){   //客户动态列表获取成功判断 (跳转用)
+            if(val){
+                if(this.id){
+                    setTimeout(() => {
+                        this.jumpFun(`m${this.id}`)
+                    },200)
+                }
+            }
+        },
         openDialog(id,type){  //打开回复弹窗
             this.rowId = id
             switch (type) {
@@ -279,6 +327,9 @@ export default {
                     break;
                 case 'detail':    //商机详情
                     this.dialog_sj = true
+                    break;
+                case 'follow':    //写跟进
+                    this.dialog_xgj = true
                     break;
                 default:
                     break;
@@ -296,7 +347,21 @@ export default {
             clueCustomerFollowUser_addCommentInfo(data).then(res => {
                 if(res.result){
                     this.dialog_xx = false
-                    this.getCustomerDetail()
+                    this.$refs.dynamic.searchFun()
+                }
+            })
+        },
+        followUpFun(val){  //写跟进
+            console.log('val 写跟进',val)
+            let data = {
+                clueCustomerNo: this.customerInfo.clueCustomerNo,
+                context: val,
+            }
+            cluecustomer_addMessage(data).then(res => {
+                if(res.result){
+                    this.$toast('操作成功')
+                    this.dialog_xgj = false
+                    this.$refs.dynamic.searchFun()
                 }
             })
         },
@@ -344,7 +409,7 @@ export default {
             })
             return result.length == 0 ? true : false;
         },
-        async messageNotificatio(receiveUserInfo, message) {
+        messageNotificatio(receiveUserInfo, message) {
             if (!this.checkBeforeSend(receiveUserInfo, message)) {
                 return
             }
@@ -360,14 +425,11 @@ export default {
                     userNo
                 }
             }
-
-            let { code, msg } = await MessageNotificatio(params)
-
-            if (code == 'success') {
-                this.$refs.dynamic.changeDynamicNav(3)
-                this.$refs.messageBox.initData()
-            }
-            this.$toast(msg)
+            clueCustomerFollowUser_message_notificatio(params).then(res => {
+                if(res.result){
+                    this.$refs.dynamic.searchFun()
+                }
+            })
         },
         checkBeforeSend(receiveUserInfo, message) {
             if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
@@ -378,6 +440,10 @@ export default {
                 return false
             }
             return true
+        },
+        toFun(){    //查看协助人
+            localStorage.setItem('helperData',JSON.stringify(this.userList))
+            this.$router.push('/helper')
         },
         goDetail() {
             this.$router.push({
@@ -729,8 +795,19 @@ export default {
                 }
                 .text{
                     font-size: 20px;
-                    line-height: 50px;
                     color: @fontSub1;
+                    span{
+                        line-height: 30px;
+                        display: inline-block;
+                        vertical-align: middle;
+                        padding: 10px 0;
+                    }
+                    .limit{
+                        width: calc(100% - 60px);
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
                 }
                 .icon_next{
                     width: 30px;
@@ -794,6 +871,22 @@ export default {
     padding: 32px;
     &.pd0{
         padding: 0;
+    }
+  }
+  .follow_up{
+    width: 76px;
+    height: 76px;
+    background: rgba(0, 0, 0, .4);
+    border-radius: 50%;
+    position: fixed;
+    right: 24px;
+    bottom: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon{
+        width: 40px;
+        height: 40px;
     }
   }
 }

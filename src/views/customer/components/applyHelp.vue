@@ -1,5 +1,5 @@
 <template>
-    <DialogDetail title="申请成为协助人" v-model="dialog" isOpera>
+    <DialogDetail title="申请成为协助人" v-model="dialog" :closeable="false" :closeClickLay="false" isOpera>
         <div class="dialog_box">
             <div class="tips_box">
                 <img class="icon" src="@/assets/svg/icon_tips.svg" alt="">
@@ -9,34 +9,37 @@
                 <div class="label">客户</div>
                 <div class="val">
                     <div class="info">
-                        <div class="avatar"></div>
-                        <div class="name">陈良-运营部</div>
+                        <img class="avatar" :src="data.customerAvatar | $setAvatar" alt="">
+                        <div class="name">{{data.customerName}}</div>
                     </div>
                 </div>
             </div>
             <div class="item">
                 <div class="label">建档时间</div>
-                <div class="val">2020-01-01 12:30:30</div>
+                <div class="val">{{data.createTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
             </div>
             <div class="item">
                 <div class="label">当前负责人</div>
                 <div class="val">
                     <div class="info">
-                        <div class="avatar"></div>
-                        <div class="name">陈良-运营部</div>
+                        <img class="avatar" :src="data.directorAvatar | $setAvatar" alt="">
+                        <div class="name">{{data.directorName}}</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="opera_box" :class="{'disable':isApply}" slot="footer_box">
+        <div class="opera_box" :class="{'disable':isApply || applyState}" slot="footer_box">
             <div class="mask"></div>
-            <div class="btn disable">{{isApply ? '已提交申请，等待负责人处理中' : '提交申请'}}</div>
+            <div class="btn disable" @click="submitFun">{{isApply || applyState ? '已提交申请，等待负责人处理中' : '提交申请'}}</div>
         </div>
     </DialogDetail>
 </template>
 
 <script>
 import { DialogDetail } from '../components'
+import {
+    clueCustomerFollowUser_applyFollowUser,     //申请成为协助人
+} from '@/api/customer'
 export default {
     name: 'ApplyHelp',
     components: {
@@ -47,6 +50,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        id: {
+            type: String,
+            default: ''
+        },
+        data: {
+            type: Object,
+            default: () => {}
+        },
         isApply: {  //是否已经申请过
             type: Boolean,
             default: false,
@@ -55,12 +66,18 @@ export default {
     data(){
         return {
             dialog: false,
+            applyState: false,
         }
     },
     methods: {
         submitFun(){    //申请成为协助人
-            if(this.isApply){return false}
-            
+            if(this.isApply || this.applyState){return false}
+            clueCustomerFollowUser_applyFollowUser(this.id).then(res => {
+                if(res.result){
+                    this.$toast('申请成功')
+                    this.applyState = true
+                }
+            })
         },
     },
     watch:{

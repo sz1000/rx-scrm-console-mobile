@@ -6,6 +6,7 @@ import HomeTransition from '../views/HomeTransition.vue'
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
+import Helper from '../views/customer/helper.vue'   //协助人
 // 群 SOP 设置
 import SettingSop from '../views/customer/settingSop'
 // 拓客工具
@@ -139,6 +140,15 @@ const routes = [{
             bodyClass: 'InformationDetail',
         },
         component: InformationDetail,
+    },
+    // 协助人
+    {
+        path: '/helper',
+        name: 'helper',
+        meta: {
+            bodyClass: 'Helper',
+        },
+        component: Helper,
     },
     //群SOP 设置
     {

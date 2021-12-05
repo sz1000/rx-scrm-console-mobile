@@ -1,9 +1,9 @@
 <template>
-    <van-popup get-container="body" :overlay="overlay" position="bottom" round v-model="dialog" :safe-area-inset-bottom="true">
+    <van-popup get-container="body" :close-on-click-overlay="closeClickLay" :overlay="overlay" position="bottom" round v-model="dialog" :safe-area-inset-bottom="true">
         <div class="dialog_wrap">
             <div class="dialog_header">
                 <div class="title">{{title}}</div>
-                <img class="close" @click="dialog = false" src="@/assets/svg/icon_close.svg" alt="">
+                <img class="close" v-if="closeable" @click="dialog = false" src="@/assets/svg/icon_close.svg" alt="">
             </div>
             <div class="dialog_content" :class="{'opera':isOpera}">
                 <slot></slot>
@@ -22,6 +22,14 @@ export default {
             default: false,
         },
         overlay: {  //遮罩层
+            type: Boolean,
+            default: true,
+        },
+        closeClickLay: {  //点击遮罩层是否可以关闭弹窗
+            type: Boolean,
+            default: true,
+        },
+        closeable: {  //是否显示关闭图标
             type: Boolean,
             default: true,
         },
