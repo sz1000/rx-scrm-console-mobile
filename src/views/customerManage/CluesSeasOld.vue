@@ -1,8 +1,7 @@
 <template>
   <div class="culeDeatil">
     <div class="headerTitle">
-      <div class="backPage"
-           @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -10,164 +9,91 @@
     </div>
     <div class="iconName">
       <div v-if="imageUser">
-        <img :src="imageUser"
-             alt="" />
+        <img :src="imageUser" alt="" />
       </div>
-      <div class="flag"
-           v-else>
+      <div class="flag" v-else>
         {{ basicInfo.name ? basicInfo.name.substr(0, 1) : "" }}
       </div>
       <div class="nameSex">
         <span>{{ basicInfo.name }}</span>
-        <img src="../../images/icon_female@2x.png"
-             alt=""
-             v-if="basicInfo.gender == '2'" />
-        <img src="../../images/man.png"
-             alt=""
-             v-if="basicInfo.gender == '1'" />
+        <img src="../../images/icon_female@2x.png" alt="" v-if="basicInfo.gender == '2'" />
+        <img src="../../images/man.png" alt="" v-if="basicInfo.gender == '1'" />
       </div>
     </div>
     <div class="btnWarp">
-      <div class="btnBox"
-           @click="getReceive"
-           v-show="btnList.some(item=>item.enName == 'get')">
-        <img src="../../images/icon_like@2x.png"
-             alt="" />
+      <div class="btnBox" @click="getReceive" v-show="btnList.some(item=>item.enName == 'get')">
+        <img src="../../images/icon_like@2x.png" alt="" />
         <span>领取</span>
       </div>
-      <div class="btnBox"
-           @click="distribution"
-           v-show="btnList.some(item=>item.enName == 'allot')">
-        <img src="../../images/icon_share@2x.png"
-             alt="" />
+      <div class="btnBox" @click="distribution" v-show="btnList.some(item=>item.enName == 'allot')">
+        <img src="../../images/icon_share@2x.png" alt="" />
         <span>分配</span>
       </div>
     </div>
     <div class="basicInformation">
       <span>
-        <img src="../../images/icon_label.png"
-             alt="" />
+        <img src="../../images/icon_label.png" alt="" />
       </span>
       <span>基本信息</span>
       <div class="formEdit">
-        <el-form ref="form"
-                 :model="basicInfo">
-          <el-form-item label="姓名"
-                        class="nameBorder">
-            <el-input :disabled='disabled'
-                      v-model="basicInfo.name"
-                      maxlength="15"
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+        <el-form ref="form" :model="basicInfo">
+          <el-form-item label="姓名" class="nameBorder">
+            <el-input :disabled='disabled' v-model="basicInfo.name" maxlength="15" placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="手机号:">
-            <el-input v-model="basicInfo.phone"
-                      maxlength="11"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.phone" maxlength="11" :disabled='disabled' placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="微信号:">
-            <el-input v-model="basicInfo.weixin"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.weixin" placeholder="请输入" :disabled='disabled' maxlength="20" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="性别:">
-            <el-select v-model="basicInfo.gender"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="changeGender">
-              <el-option label="未知"
-                         value="0"></el-option>
-              <el-option label="男"
-                         value="1"></el-option>
-              <el-option label="女"
-                         value="2"></el-option>
+            <el-select v-model="basicInfo.gender" placeholder="请选择" :disabled='disabled' @change="changeGender">
+              <el-option label="未知" value="0"></el-option>
+              <el-option label="男" value="1"></el-option>
+              <el-option label="女" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="职务:">
-            <el-input v-model="basicInfo.position"
-                      placeholder="请输入"
-                      :disabled='disabled'
-                      maxlength="20"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.position" placeholder="请输入" :disabled='disabled' maxlength="20" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="公司名称">
-            <el-input v-model="basicInfo.cropFullName"
-                      placeholder="请输入"
-                      maxlength="100"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
+          <el-form-item label="企业名称">
+            <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" :disabled='disabled' @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="所属行业">
-            <el-cascader size="large"
-                         :disabled='disabled'
-                         :props="{ expandTrigger: 'click', value: 'id', label: 'name' }"
-                         :options="optionsCreat"
-                         v-model="basicInfo.industry"
-                         @change="handleChange">
+            <el-cascader size="large" :disabled='disabled' :props="{ expandTrigger: 'click', value: 'id', label: 'name' }" :options="optionsCreat"
+                         v-model="basicInfo.industry" @change="handleChange">
             </el-cascader>
           </el-form-item>
           <el-form-item label="线索来源">
-            <el-select v-model="basicInfo.source"
-                       placeholder="请选择"
-                       :disabled='disabled'
-                       @change="changeSource">
-              <el-option v-for="item in optionSource"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.type">
+            <el-select v-model="basicInfo.source" placeholder="请选择" :disabled='disabled' @change="changeSource">
+              <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="邮箱:">
-            <el-input v-model="basicInfo.email"
-                      placeholder="请输入"
-                      maxlength="60"
-                      :disabled='disabled'
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.email" placeholder="请输入" maxlength="60" :disabled='disabled' @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="basicInfo.address"
-                      maxlength="100"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.address" maxlength="100" :disabled='disabled' placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="备注"
-                        class="textareaInput">
-            <el-input v-model="basicInfo.remark"
-                      maxlength="200"
-                      :disabled='disabled'
-                      placeholder="请输入文字(不得超过200个字符)"
-                      @change="changeInput()"></el-input>
+          <el-form-item label="备注" class="textareaInput">
+            <el-input v-model="basicInfo.remark" maxlength="200" :disabled='disabled' placeholder="请输入文字(不得超过200个字符)" @change="changeInput()">
+            </el-input>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="basicInfo.describe"
-                      maxlength="100"
-                      :disabled='disabled'
-                      placeholder="请输入"
-                      @change="changeInput()"></el-input>
+            <el-input v-model="basicInfo.describe" maxlength="100" :disabled='disabled' placeholder="请输入" @change="changeInput()"></el-input>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <div class="systemInformation">
       <span>
-        <img src="../../images/icon_label.png"
-             alt="" />
+        <img src="../../images/icon_label.png" alt="" />
       </span>
       <span>系统信息</span>
       <div class="formEdit">
         <van-form v-model="systemList">
-          <van-field v-for="(item, index) in systemList"
-                     label-align="center"
-                     :ref="'barcode' + index"
-                     readonly
-                     :key="index"
-                     v-model="item.value"
+          <van-field v-for="(item, index) in systemList" label-align="center" :ref="'barcode' + index" readonly :key="index" v-model="item.value"
                      :label="item.name">
           </van-field>
         </van-form>
@@ -179,46 +105,40 @@
           <span class="label_tag">企业标签</span>
         </div>
         <div class="b_content">
-          <div :class="{ 'over-hidden': !unfold }"
-               ref="textBox">
+          <div :class="{ 'over-hidden': !unfold }" ref="textBox">
             <div ref="spanBox">
-              <span v-for="(list, index) in tagList"
-                    :key="index"
-                    class="tagBox">{{ list.name }}</span>
+              <span v-for="(list, index) in tagList" :key="index" class="tagBox">{{ list.name }}</span>
             </div>
           </div>
-          <div class="btn"
-               @click="unfold = !unfold"
-               v-if="tagList.length > 8">
+          <div class="btn" @click="unfold = !unfold" v-if="tagList.length > 8">
             {{ unfold ? "收起" : "展开" }}
             <van-icon name="arrow-down" />
           </div>
         </div>
       </div>
 
-      	
-      	<el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
-			    <el-tab-pane label="线索动态" class="tabli" name="线索动态">
-						       <div class="titleBox">
-						    			<span class="blueDiv">
-						    				
-						    			</span>
-						    			<span class="titleFujian">线索动态</span>
-						    		</div>
-						       <!-- 动态 -->
-					        <div class="dongtaiBox" style="padding: 0px;">
-					        	<Tt></Tt>
-					        </div>
-	
-			    </el-tab-pane>
-			    <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
-			    		<div class="fujianBox" style="padding: 0px;">
-				      	<FujianMini></FujianMini>
-				      </div>
-			    </el-tab-pane>
-			  </el-tabs>
-      	
-<!--        <div class="t_text">
+      <el-tabs tab-position="top" style="height: auto;padding-bottom: 100px;" stretch v-model="sanTab">
+        <el-tab-pane label="线索动态" class="tabli" name="线索动态">
+          <div class="titleBox">
+            <span class="blueDiv">
+
+            </span>
+            <span class="titleFujian">线索动态</span>
+          </div>
+          <!-- 动态 -->
+          <div class="dongtaiBox" style="padding: 0px;">
+            <Tt></Tt>
+          </div>
+
+        </el-tab-pane>
+        <el-tab-pane label="附件" style="padding-bottom: 100px;" name="附件">
+          <div class="fujianBox" style="padding: 0px;">
+            <FujianMini></FujianMini>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+
+      <!--        <div class="t_text">
           <span class="label_tag">动态</span>
         </div>
         <div class="allText">全部</div>
@@ -243,29 +163,20 @@
         </div>-->
     </div>
     <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName">
+      <van-action-sheet v-model="show" :title="titleName">
         <div class="content">
           <div class="changeUser">
             <div class="selectUser">
               <span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
+              <el-select v-model="userNo" placeholder="请选择" popper-class="popper-select-class">
+                <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.userNo" @change="fnChangeUser">
                 </el-option>
               </el-select>
             </div>
           </div>
           <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
+            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -274,16 +185,16 @@
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
-import  FujianMini  from "./comTip/fujianMini";
-import  Tt  from "./comTip/timelineTab";
+import FujianMini from './comTip/fujianMini'
+import Tt from './comTip/timelineTab'
 export default {
-	components: {
+  components: {
     FujianMini,
     Tt,
- },
+  },
   data() {
     return {
-    	sanTab:'线索动态',
+      sanTab: '线索动态',
       name: '',
       imageUser: '',
       optionSource: [],
@@ -1053,43 +964,43 @@ export default {
 }
 
 .t_text {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-        .label_tag {
-          font-weight: 600;
-          color: #3c4353;
-          position: relative;
-          padding-left: 10px;
-          &::before {
-            content: '';
-            width: 8px;
-            height: 28px;
-            background: #4168f6;
-            position: absolute;
-            top: 7px;
-            left: -10px;
-          }
-        }
-      }
-      
-      .titleBox{
-/*	width: 80px;*/
-	height: 40px;
-	font-size: 30px;
-	color: #3C4353;
-	letter-spacing: 0;
-	font-weight: bold;
-	line-height: 40px;
-	margin-bottom: 10px;
-/*	margin-top: 36px;*/
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  .label_tag {
+    font-weight: 600;
+    color: #3c4353;
+    position: relative;
+    padding-left: 10px;
+    &::before {
+      content: '';
+      width: 8px;
+      height: 28px;
+      background: #4168f6;
+      position: absolute;
+      top: 7px;
+      left: -10px;
+    }
+  }
 }
-.blueDiv{
-	width: 8px;
-	height: 25px;
-	background: #4168F6;
-	margin-right: 12px;
-	display: inline-block;
+
+.titleBox {
+  /*	width: 80px;*/
+  height: 40px;
+  font-size: 30px;
+  color: #3c4353;
+  letter-spacing: 0;
+  font-weight: bold;
+  line-height: 40px;
+  margin-bottom: 10px;
+  /*	margin-top: 36px;*/
+}
+.blueDiv {
+  width: 8px;
+  height: 25px;
+  background: #4168f6;
+  margin-right: 12px;
+  display: inline-block;
 }
 </style>

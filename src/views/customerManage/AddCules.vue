@@ -29,7 +29,7 @@
         <el-form-item label="职务:">
           <el-input v-model="formObj.position" placeholder="请输入" maxlength="20"></el-input>
         </el-form-item>
-        <el-form-item label="公司名称:">
+        <el-form-item label="企业名称:">
           <el-input v-model="formObj.cropFullName" placeholder="请输入" maxlength="30"></el-input>
         </el-form-item>
         <el-form-item label="所属行业:" class="selectLabel">

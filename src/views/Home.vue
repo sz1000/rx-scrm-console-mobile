@@ -51,7 +51,7 @@
           <span class="nomaltext">地图获客</span>
         </div> -->
       </div>
-      <div class="customAccont manage">客户管理</div>
+      <div class="customAccont manage">客户统计</div>
       <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/customerManage/myCustomer')" v-show="menulist.includes('customer')">
           <img src="../images/kehu.png" alt="" />

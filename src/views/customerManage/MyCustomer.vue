@@ -22,7 +22,7 @@
       </span>
     </div>
     <div class="searchInput">
-      <input type="text" class="input" v-model="inputValue" placeholder="请输入客户简称/公司/手机号" />
+      <input type="text" class="input" v-model="inputValue" placeholder="请输入企业简称/公司/手机号" />
       <span class="searchBtn" @click="inquire">查询</span>
     </div>
     <div class="cardWarp">

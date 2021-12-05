@@ -29,7 +29,7 @@
       <span>基本信息</span>
       <div class="formEdit">
         <el-form ref="form" :model="basicInfo">
-          <el-form-item label="客户简称">
+          <el-form-item label="企业简称">
             <el-input v-model="basicInfo.customerName" placeholder="请输入" maxlength="15" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="固定电话">
@@ -50,7 +50,7 @@
           <el-form-item label="客户阶段">
             <el-input v-model="basicInfo.stage" placeholder="请输入" maxlength="100" @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="公司名称">
+          <el-form-item label="企业名称">
             <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="企业规模">
@@ -280,9 +280,9 @@ export default {
         { name: '转换时间', mapName: 'turnTime', value: '' },
       ],
       microList: [
-        { name: '客户简称', mapName: 'externalCorpName', value: '' },
+        { name: '企业简称', mapName: 'externalCorpName', value: '' },
         { name: '客户来源', mapName: 'externalSource', value: '' },
-        { name: '公司名称', mapName: 'externalCorpFullName', value: '' },
+        { name: '企业名称', mapName: 'externalCorpFullName', value: '' },
         { name: '客户类型', mapName: 'externalType', value: '' },
         { name: '姓名', mapName: 'externalName', value: '' },
         { name: '性别', mapName: 'externalGender', value: '' },
@@ -673,7 +673,7 @@ export default {
   .iconName {
     display: flex;
     margin: 24px 0;
-    .avatar{
+    .avatar {
       width: 90px;
     }
     .flag {
@@ -929,7 +929,7 @@ export default {
     /deep/.van-overlay {
       background-color: rgba(0, 0, 0, 0.3);
     }
-    /deep/ .van-action-sheet__content{
+    /deep/ .van-action-sheet__content {
       overflow: inherit;
     }
     .van-action-sheet__header {

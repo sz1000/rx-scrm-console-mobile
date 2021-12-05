@@ -32,9 +32,9 @@
             </van-radio-group>
           </template>
         </van-field>
-        <van-field v-if="radio == 1" required :value="customerVal" name="customerVal" label="对应客户:" @focus="selectDate" placeholder="请选择"
+        <van-field v-if="radio == 1" required :value="customerVal" name="customerVal" label="客户名称:" @focus="selectDate" placeholder="请选择"
                    @click="showPicker = true" right-icon="arrow-down" :rules="[{ required: true, message: '请选择对应客户名称' }]" />
-        <van-field v-if="radio == 2" v-model.trim="client" name="client" required placeholder="请输入" maxlength="15" label="对应客户:"
+        <van-field v-if="radio == 2" v-model.trim="client" name="client" required placeholder="请输入" maxlength="15" label="客户名称:"
                    :rules="[{ required: true, message: '请输入' }]" />
         <van-field v-model="phone" name="phone" label="手机号码:" @blur="validator" maxlength="11" placeholder="请输入" />
         <van-field v-model="address" name="address" label="客户地址:" maxlength="60" placeholder="请输入" />
