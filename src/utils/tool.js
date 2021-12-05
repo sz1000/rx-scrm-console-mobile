@@ -180,6 +180,12 @@ export function sendChatMessage(
     imageId,
 ) {
     Getticket({ url: location.href }).then((res) => {
+        Toast.loading({
+            message: '发送中...',
+            forbidClick: true,
+            duration: 0,
+            loadingType: 'spinner',
+        })
         wx.config({
             beta: true,
             debug: false,
@@ -224,6 +230,7 @@ export function sendChatMessage(
                         }
                     }
                     wx.invoke('sendChatMessage', typeData, function(res) {
+                        Toast.clear()
                         if (res.err_msg == 'sendChatMessage:ok') {
                             //发送成功
                             Toast('发送成功')

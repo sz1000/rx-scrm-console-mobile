@@ -22,19 +22,22 @@ export default {
             unionId: '',
             materialId: '',
             materialType: '', // 1: 文章, 2: 文件
-            userNo: ''
+            userNo: '',
+            corpId: ''
         }
     },
     created() {
+        const { materialId, type, userNo } = this.$route.query
+
+        this.userNo = userNo
+
         if (isWeiXin()) {
             // 微信授权
             this.wechatLoad()
         }
-        const { materialId, type, userNo } = this.$route.query
 
         this.materialId = materialId
         this.materialType = type
-        this.userNo = userNo
         this.getUsersInfo()
 
         let params = {
@@ -49,15 +52,22 @@ export default {
     methods: {
         wechatLoad(){
             let { code } = this.$route.query
+
             if(!code) {
                 getCode(encodeURIComponent(window.location.href))
             } else {
-                this.offiAccount(code)
+                this.getCorpId().then(() => this.offiAccount(code))
             }
         },
         offiAccount(wechatCode) {
-            OffiAccount(wechatCode).then(res => {
+            let params = {
+                code: wechatCode,
+                corpId: this.corpId
+            }
+
+            OffiAccount(params).then(res => {
                 const { code, data } = res
+
                 if (code === 'success') {
                     this.unionId = data
                     this.materialOperation()
@@ -81,14 +91,29 @@ export default {
                 }
             })
         },
+        getCorpId() {
+            return new Promise((resolve, reject) => {
+                UsersInfo(this.userNo).then(res => {
+                    const { code, data } = res
+
+                    if (code === 'success') {
+                        this.corpId = data.corpId
+                        resolve()
+                    } else {
+                        reject('获取corpId有误')
+                    }
+                }).catch(reject)
+            })
+        },
         getUsersInfo() {
             UsersInfo(this.userNo).then(res => {
                 const { code, data } = res
+
                 if (code === 'success') {
                     this.userData = data
                 }
             })
-        },
+        }
     },
 
     components: {
