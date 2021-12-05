@@ -9,60 +9,62 @@
             closeable
             @closed="hide">
             <div class="title">{{ `确定${status}` }}</div>
-            <div class="edit-content">
-                <template v-if="status == '成交'">
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>商机负责人:</span>
-                        </p>
-                        <van-field v-model="chargeUserName" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" />
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>商机金额:</span>
-                        </p>
-                        <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :max="99999999999999999999" :decimal-length="2" :default-value="0" />
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>成交时间:</span>
-                        </p>
-                        <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate" />
-                    </div>
-                </template>
-                <template v-if="status == '输单'">
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>输单原因:</span>
-                        </p>
-                        <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span>输单备注:</span>
-                        </p>
-                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
-                    </div>
-                </template>
-                <template v-if="status == '无效'">
-                    <div class="item one-line">
-                        <p class="label">
-                            <span class="icon">*</span>
-                            <span>无效原因:</span>
-                        </p>
-                        <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
-                    </div>
-                    <div class="item one-line">
-                        <p class="label">
-                            <span>无效备注:</span>
-                        </p>
-                        <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
-                    </div>
-                </template>
+            <div class="box">
+                <div class="edit-content">
+                    <template v-if="status == '成交'">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>商机负责人:</span>
+                            </p>
+                            <van-field v-model="chargeUserName" class="edit-field" placeholder="选择员工" :readonly="true" @click="selectCharger" />
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>商机金额:</span>
+                            </p>
+                            <van-stepper v-model="form.price" class="edit-field" :show-plus="false" :show-minus="false" :input-width="'100%'" :button-size="'100%'" :allow-empty="true" placeholder="请输入" :min="0" :max="99999999999999999999" :decimal-length="2" :default-value="0" />
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>成交时间:</span>
+                            </p>
+                            <van-field v-model="timeShowText" class="edit-field" placeholder="请选择成交时间" :readonly="true" @click="selectDate" />
+                        </div>
+                    </template>
+                    <template v-if="status == '输单'">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>输单原因:</span>
+                            </p>
+                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span>输单备注:</span>
+                            </p>
+                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        </div>
+                    </template>
+                    <template v-if="status == '无效'">
+                        <div class="item one-line">
+                            <p class="label">
+                                <span class="icon">*</span>
+                                <span>无效原因:</span>
+                            </p>
+                            <van-field v-model="reasonText" clearable class="edit-field" placeholder="请选择" :readonly="true" @click="selectReason"/>
+                        </div>
+                        <div class="item one-line">
+                            <p class="label">
+                                <span>无效备注:</span>
+                            </p>
+                            <van-field v-model="form.endRemarks" class="edit-field area-field" rows="6" :border="true" autosize type="textarea" placeholder="请输入文字(不得超过200个字符)" maxlength="200" show-word-limit />
+                        </div>
+                    </template>
+                </div>
             </div>
             <div class="btn-wrap">
                 <div class="item close-btn" @click="hide">取消</div>
@@ -307,7 +309,7 @@ export default {
     .edit-opportunity-form {
         max-height: 80%;
         padding: 0 0 24px;
-        overflow-y: auto;
+        overflow: hidden;
         .title {
             height: 88px;
             line-height: 88px;
@@ -317,6 +319,11 @@ export default {
             font-size: 28px;
             color: #3c4353;
             font-weight: 600;
+        }
+        .box {
+            max-height: 70vh;
+            padding-bottom: 40px;
+            overflow-y: auto;
         }
         .edit-content {
             padding: 54px 24px 80px;
