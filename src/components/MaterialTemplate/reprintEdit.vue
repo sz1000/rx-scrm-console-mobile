@@ -1,7 +1,7 @@
 <template>
     <div class="reprint-edit">
         <template v-if="!showContentPreview">
-            <header-title title="上传文件"></header-title>
+            <header-title v-if="type == 2" title="上传文件"></header-title>
             <div class="field-box">
                 <div class="field-item">
                     <van-field v-if="type == 1" v-model="form.title" label="文章标题" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
@@ -15,7 +15,9 @@
                         <span>{{ type == 1 ? '文章封面' : '文件封面' }}</span>
                     </p>
                     <div class="cover-img-box">
-                        <img class="cover-img" :src="type == 1 ? form.cover : fileForm.cover" alt="" @click="previewImg">
+                        <div class="cover-img">
+                            <img :src="type == 1 ? form.cover : fileForm.cover" alt="" @click="previewImg">
+                        </div>
                         <img-upload :isCustomize="true" :customizeType="2"></img-upload>
                     </div>
                 </div>
@@ -200,7 +202,7 @@ export default {
                 this.$toast.clear()
                 this.$toast(msg)
                 if (code === 'success') {
-                    this.type == 1 ? this.goBack() : this.doShowFileUpload(1)
+                    this.type == 1 ? this.goBack(1) : this.doShowFileUpload(1)
                 }
             })
         },
@@ -257,8 +259,16 @@ export default {
                 justify-content: space-between;
                 width: 75%;
                 .cover-img {
+                    display: flex;
+                    align-items: center;
                     width: 160px;
                     height: 160px;
+                    background-color: #F7F8FA;
+                    overflow: hidden;
+                    img {
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
                 }
             }
         }

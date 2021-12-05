@@ -238,18 +238,18 @@
     </template>
 
     <!-- 素材 -->
-    <material-template v-else @ifShowFooter="ifShowFooter"></material-template>
+    <material-template v-else @ifShowFooter="ifShowFooter" :isIndependent="2"></material-template>
     <!-- 底部导航 -->
     <div v-show="footerVisible" class="footer-nav">
-      <div class="item" @click="showTemplate = 1">
-        <img v-show="showTemplate == 1" :src="require('../../images/icon_huashu_active.png')" alt="" />
-        <img v-show="showTemplate == 2" :src="require('../../images/icon_huashu.png')" alt="" />
-        <span :class="{ active: showTemplate == 1 }">话术库</span>
-      </div>
       <div class="item" @click="showTemplate = 2">
         <img v-show="showTemplate == 1" :src="require('../../images/icon_material.png')" alt="" />
         <img v-show="showTemplate == 2" :src="require('../../images/icon_material_active.png')" alt="" />
         <span :class="{ active: showTemplate == 2 }">内容素材</span>
+      </div>
+      <div class="item" @click="showTemplate = 1">
+        <img v-show="showTemplate == 1" :src="require('../../images/icon_huashu_active.png')" alt="" />
+        <img v-show="showTemplate == 2" :src="require('../../images/icon_huashu.png')" alt="" />
+        <span :class="{ active: showTemplate == 1 }">话术库</span>
       </div>
     </div>
     <!-- SOP 提醒 -->
@@ -325,7 +325,7 @@ export default {
   },
   data() {
     return {
-      showTemplate: 1, // 1: 话术，2: 素材
+      showTemplate: 2, // 1: 话术，2: 素材
 
       isOpen: true,
       dotlist: false, //控制小点显示
@@ -417,16 +417,11 @@ export default {
       return str
     },
   },
-  created() {
-    commonFun.getWxAppid()
-  },
   mounted() {
-    setTimeout(() => {
-      this.verbaltrickList()
-      this.getData()
-      this.getUserName()
-      this.getComeFrom()
-    }, 2000)
+    this.verbaltrickList()
+    this.getData()
+    this.getUserName()
+    this.getComeFrom()
   },
   methods: {
     // 判断是否是从转载公众号返回的
@@ -1027,7 +1022,7 @@ export default {
 @headerBg: #fafbff;
 @checkBg: #f4f6fe;
 .main-content {
-  min-height: 100vh;
+  height: 100%;
   .footer-nav {
     display: flex;
     width: 100%;

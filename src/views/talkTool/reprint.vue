@@ -52,12 +52,23 @@ export default {
         },
         initType() {
             this.type = 1
+            this.articleUrl = ''
         },
-        goBack() {
-            this.$router.push({
-                path: '/talkTool/verbalTrick',
-                query: { comeFrom: 2 },
-            })
+        goBack(type) {
+            const { isIndependent } = this.$route.query
+
+            if (this.type == 1 || type == 1) {
+                let path = isIndependent == 1 ? '/talkTool/contentMaterial' : '/talkTool/verbalTrick'
+
+                let query = isIndependent == 1 ? {} : { comeFrom: 2 }
+
+                this.$router.push({
+                    path,
+                    query,
+                })
+            } else if (this.type == 2) {
+                this.initType()
+            }
         },
     },
     components: {
