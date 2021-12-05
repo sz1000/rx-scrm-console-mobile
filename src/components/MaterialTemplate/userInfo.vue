@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="user-info-box">
         <div v-if="userData" class="user-info">
             <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
             <ul class="center">
@@ -38,13 +38,21 @@ export default {
 </script>
 <style lang="less" scoped>
 @import url('../../styles/color');
+.user-info-box {
+    /deep/ .van-overlay {
+        width: 10rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
     .user-info {
-        width: 100%;
+        width: 10rem;
         height: 144px;
         padding: 32px;
         box-shadow: 0 6px 10px 0 rgba(0,0,0,0.1);
         background-color: @white;
         position: relative;
+        left: 50%;
+        transform: translateX(-50%);
         .left {
             display: inline-block;
             width: 72px;
@@ -84,4 +92,5 @@ export default {
             }
         }
     }
+}
 </style>

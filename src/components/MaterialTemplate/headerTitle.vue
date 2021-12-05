@@ -22,6 +22,7 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .header-title {
+    width: 10rem;
     height: 87px;
     line-height: 87px;
     padding: 0 24px;
@@ -29,6 +30,8 @@ export default {
     // border-top: 1px solid @lineColor;
     text-align: center;
     position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     .back-page {
         position: absolute;
         left: 24px;

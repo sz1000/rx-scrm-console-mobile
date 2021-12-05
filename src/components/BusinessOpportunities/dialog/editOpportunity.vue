@@ -422,6 +422,9 @@ export default {
                 this.opportunitiesList()
                 this.$toast(msg)
                 this.hide()
+                if(!this.id){
+                    this.$emit('sure')
+                }
             } else {
                 this.$toast(msg)
             }
@@ -434,6 +437,7 @@ export default {
     .edit-opportunity-form {
         max-height: 90%;
         padding: 0 0 24px;
+        overflow: hidden;
         .title {
             height: 88px;
             line-height: 88px;

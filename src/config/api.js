@@ -10,7 +10,7 @@ export const GetCrop = () => { return http.get(`${userServiceApi}/Corp/getCrop`)
 export const UsersList = data => { return http.get(`${userServiceApi}/user/getlist/${data}`)} // 企业员工列表
 export const UsersInfo = data => { return http.get(`${userServiceApi}/user/getUser/${data}/info`)} // 员工信息详情
 
-export const OffiAccount = data => { return http.post(`${wechatServiceApi}/offi-account/user/${data}`)} // 添加公众号授权后获取的用户信息
+export const OffiAccount = data => { return http.post(`${wechatServiceApi}/offi-account/user/${data.code}?corpId=${data.corpId}`)} // 添加公众号授权后获取的用户信息
 export const GetSignature = data => { return http.get(`${wechatServiceApi}/offi-account/autograph?url=${data}`)} // 获取分享签名
 
 // 素材模板

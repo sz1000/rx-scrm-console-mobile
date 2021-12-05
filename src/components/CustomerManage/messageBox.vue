@@ -47,6 +47,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import "~@/styles/color.less";
 .message {
     width: 100%;
     max-width: 750px;
@@ -57,6 +58,15 @@ export default {
     left: 50%;
     bottom: 0;
     transform: translateX(-50%);
+    &::after{
+        content: '';
+        height: 1px; /* no */
+        width: 100%;
+        background: @lineColor;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
     .message-box {
         .top {
             width: 700px;

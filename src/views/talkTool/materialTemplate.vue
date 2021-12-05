@@ -8,7 +8,7 @@
             </ul>
             <search ref="search" :type="type"></search>
             <ul class="list-box">
-                <li class="item-box" v-if="type == 0">
+                <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 0">
                     <van-list
                         v-model="articleListLoading"
                         :immediate-check="false"
@@ -28,11 +28,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div>
+                            <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div>
                         </div>
                     </van-list>
                 </li>
-                <li class="item-box" v-if="type == 1">
+                <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 1">
                     <van-list
                         v-model="saleListLoading"
                         :immediate-check="false"
@@ -50,11 +50,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div>
+                            <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div>
                         </div>
                     </van-list>
                 </li>
-                <li class="item-box" v-if="type == 2">
+                <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 2">
                     <van-list
                         v-model="posterListLoading"
                         :immediate-check="false"
@@ -73,7 +73,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div>
+                            <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div>
                         </div>
                     </van-list>
                 </li>
@@ -116,6 +116,11 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
     name: 'materialTemplate',
+    props: {
+        isIndependent: {  // 1: 素材是独立路由，2: 素材是组件
+            default: 1
+        }
+    },
     data() {
         return {
             type: 0,
@@ -123,14 +128,14 @@ export default {
             articleList: [],
             totalArticle: 0,
             articleListPage: 1,
-            articleListLoading: true,
+            articleListLoading: false,
             articleListFinished: false,
             articleListTotal: 0,
 
             saleList: [],
             totalSale: 0,
             saleListPage: 1,
-            saleListLoading: true,
+            saleListLoading: false,
             saleListFinished: false,
             saleListTotal: 0,
 
@@ -164,11 +169,7 @@ export default {
         }
     },
     created() {
-        this.getCorpId().then(() => {
-            this.getList()
-            this.getTotal(1)
-            this.getTotal(2)
-        })
+        this.getCorpId().then(() => this.getList())
     },
     methods: {
         ...mapActions(["getCorpId"]),
@@ -179,42 +180,6 @@ export default {
                 this.$refs.search.searchText = ''
             })
             this.getList()
-        },
-        getTotal(type) {
-            this.$toast.loading({
-                message: '加载中...',
-                forbidClick: true,
-                duration: 0,
-                loadingType: 'spinner',
-            })
-            let ApiOpts = null
-
-            if (type == 1) {
-                ApiOpts = SaleDocumentList
-            } else if (type == 2) {
-                ApiOpts = PosterList
-            }
-
-            ApiOpts({
-                pageIndex: 1,
-                pageSize: 10,
-                corpId: this.corpId
-            }).then(res => {
-                this.handleTotalRes(type, res)
-            })
-        },
-        // 获取总数
-        handleTotalRes(type, res) {
-            const { code, data } = res
-
-            this.$toast.clear()
-            if (code === 'success') {
-                if (type == 1) {
-                    this.saleListTotal = data.total
-                } else if (type == 2) {
-                    this.posterListTotal = data.total
-                }
-            }
         },
         onLoad() {
             if (this.type == 0 && this.articleListPage <= 1 || this.type == 1 && this.saleListPage <= 1 || this.type == 2 && this.posterListPage <= 1) {
@@ -263,37 +228,40 @@ export default {
 
             this.$toast.clear()
             if (code === 'success') {
+                this.getTotal(data)
                 if (this.type == 0) {
                     this.articleListLoading = false
                     if (this.articleListPage == 1) {
                         this.articleList = []
                     }
-                    this.articleListTotal = data.total
-                    this.articleList = this.articleList.concat(data.records)
+                    this.articleList = this.articleList.concat(data.page.records)
                     this.articleListPage += 1
-                    this.articleListFinished = this.articleList.length >= data.total
+                    this.articleListFinished = this.articleList.length >= data.page.total
                 } else if (this.type == 1) {
                     this.saleListLoading = false
                     if (this.saleListPage == 1) {
                         this.saleList = []
                     }
-                    this.saleListTotal = data.total
-                    this.saleList = this.saleList.concat(data.records)
+                    this.saleList = this.saleList.concat(data.page.records)
                     this.saleListPage += 1
-                    this.saleListFinished = this.saleList.length >= data.total
+                    this.saleListFinished = this.saleList.length >= data.page.total
                 } else if (this.type == 2) {
                     this.posterListLoading = false
                     if (this.posterListPage == 1) {
                         this.posterList = []
                     }
-                    this.posterListTotal = data.total
-                    this.posterList = this.posterList.concat(data.records)
+                    this.posterList = this.posterList.concat(data.page.records)
                     this.posterListPage += 1
-                    this.posterListFinished = this.posterList.length >= data.total
+                    this.posterListFinished = this.posterList.length >= data.page.total
                 }
             } else {
                 this.$toast(msg)
             }
+        },
+        getTotal(data) {
+            this.articleListTotal = data.articleCount
+            this.saleListTotal = data.documenetCount
+            this.posterListTotal = data.posterCount
         },
         // 查询
         checkTable(data) {
@@ -319,7 +287,7 @@ export default {
         goNextStep() {
             this.$router.push({
                 path: '/talkTool/reprint',
-                // query: {},
+                query: {isIndependent: this.isIndependent},
             })
         },
         getFileUrl(data) {
@@ -375,7 +343,9 @@ export default {
             this.$refs.imgPreview.show(1, [i.posterUrl])
         },
         ifShowFooter(data) {
-            this.$emit('ifShowFooter', data)
+            if (this.isIndependent == 2) {
+                this.$emit('ifShowFooter', data)
+            }
         }
     },
     components: {
@@ -392,7 +362,7 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .material-template {
-    min-height: 100vh;
+    height: 100%;
     background-color: @white;
     overflow-x: hidden;
     .header-nav {
@@ -515,6 +485,16 @@ export default {
                 margin: 0 0 24px 24px;
             }
         }
+        .is-independent {
+            .item {
+                .right {
+                    width: 100%;
+                    .des {
+                        max-width: 80%;
+                    }
+                }
+            }
+        }
     }
     .reprint-box {
         width: 104px;
@@ -523,7 +503,8 @@ export default {
         border-radius: 50%;
         box-shadow: 0 6px 34px 0 rgba(65, 104, 246, .3);
         position: fixed;
-        right: 32px;
+        // right: 32px;
+        right: 5%;
         bottom: 140px;
         &::before, &::after {
             content: '';

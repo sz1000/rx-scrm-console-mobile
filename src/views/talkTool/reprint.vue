@@ -52,12 +52,23 @@ export default {
         },
         initType() {
             this.type = 1
+            this.articleUrl = ''
         },
-        goBack() {
-            this.$router.push({
-                path: '/talkTool/verbalTrick',
-                query: { comeFrom: 2 },
-            })
+        goBack(type) {
+            const { isIndependent } = this.$route.query
+
+            if (this.type == 1 || type == 1) {
+                let path = isIndependent == 1 ? '/talkTool/contentMaterial' : '/talkTool/verbalTrick'
+
+                let query = isIndependent == 1 ? {} : { comeFrom: 2 }
+
+                this.$router.push({
+                    path,
+                    query,
+                })
+            } else if (this.type == 2) {
+                this.initType()
+            }
         },
     },
     components: {
@@ -99,12 +110,13 @@ export default {
             }
         }
         .reprint-btn {
+            width: 10rem;
             padding: 32px 0;
             background-color: @white;
             position: fixed;
-            left: 0;
-            right: 0;
+            left: 50%;
             bottom: 0;
+            transform: translateX(-50%);
             span {
                 display: block;
                 width: 686px;

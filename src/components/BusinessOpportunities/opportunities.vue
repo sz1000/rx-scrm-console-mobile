@@ -1,5 +1,5 @@
 <template>
-    <div class="opportunities">
+    <div class="opportunities" :class="{'pd0':isPortrait}">
         <!--<div class="t_text">
           <span class="label_tag">商机</span>
           <div class="editButton" @click="handleEdit">
@@ -90,7 +90,7 @@
         </div>
 
         <!-- 新建/编辑商机 -->
-        <edit-opportunity ref="editOpportunity" :customerNo="customerNo" :fromType="fromType"></edit-opportunity>
+        <edit-opportunity ref="editOpportunity" :customerNo="customerNo" :fromType="fromType" @sure="callbackFun"></edit-opportunity>
         <!-- 删除 -->
         <delete-dialog ref="deleteDialog"></delete-dialog>
     </div>
@@ -113,7 +113,11 @@ export default {
         },
         fromType: {
             default: '3'
-        }
+        },
+        isPortrait: {   //是否是客户画像（padding置空判断用）
+            type: Boolean,
+            default: false
+        },
     },
     data() {
         return {
@@ -149,6 +153,7 @@ export default {
                 this.opportunitiesList()
                 this.$toast(msg)
                 this.$refs.deleteDialog.hide()
+                this.callbackFun()
             } else {
                 this.$toast(msg)
             }
@@ -160,6 +165,11 @@ export default {
                 path: '/customerManage/stageList',
                 query: { id: item.id, fromType: this.fromType, customerNo: this.customerNo },
             })
+        },
+        callbackFun(){  //商机数量变更回调
+            if(this.fromType == '3'){
+                this.$emit('sure')
+            }
         },
     },
     filters: {
@@ -186,7 +196,10 @@ export default {
 <style lang="less" scoped>
 .opportunities {
 	position: relative;
-    // padding: 0 24px 24px;
+    padding: 0 24px 24px;
+    &.pd0{
+        padding: 0;
+    }
     .t_text {
         display: flex;
         justify-content: space-between;

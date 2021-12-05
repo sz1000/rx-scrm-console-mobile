@@ -1482,8 +1482,8 @@ export default {
           }
           .delItem {
             position: absolute;
-            top: 24px;
-            right: 24px;
+            top: 20px;
+            right: 44px;
             font-size: 32px;
           }
           .van-uploader {

@@ -10,7 +10,7 @@
                 finished-text="没有更多了~"
                 :immediate-check="false"
                 @load="onLoad">
-                <div class="li" :class="[item.class,{'last':list.length-1 == index}]" v-for="(item,index) in list" :key="index">
+                <div class="li" :id="`m${item.id}`" :class="[item.class,{'last':list.length-1 == index}]" v-for="(item,index) in list" :key="index">
                     <div class="icon_box">
                         <img class="icon" v-if="item.class == 'day'" src="@/assets/svg/icon_time.svg" alt="">
                         <img class="icon" v-if="item.class == 'dot'" src="@/assets/svg/icon_cir.svg" alt="">
@@ -37,7 +37,7 @@
                                     <span>{{item.optUserName}}</span>
                                 </div>
                                 <span class="mr8">{{getTextFun(item)}}</span>
-                                <div class="name" v-if="item.fromUser">
+                                <div class="name" v-if="item.fromUser && item.optType != 44">
                                     <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
                                     <span>{{item.fromUser | optString}}</span>
                                 </div>
@@ -47,6 +47,10 @@
                                     <span>{{item.toUser | optString}}</span>
                                 </div>
                                 <a class="link" :href="item.ossUrl" v-if="item.optType == 11">{{item.ossObjectname}}</a>
+                                <div class="apply_opera" v-if="isDirector && item.optType == 44 && !item.optFlag">
+                                    <div class="btn" @click="reviewFun('pass',item)">通过</div>
+                                    <div class="btn" @click="reviewFun('nopass',item)">拒绝</div>
+                                </div>
                             </div>
                             <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
                         </div>
@@ -102,11 +106,16 @@ import {
     clueCustomerFollowUser_message, //是否有新消息
     clueCustomerFollowUser_giveTheThumbsUp, //点赞
     clueCustomerFollowUser_queryCommentInfoList,  //回复
+    clueCustomerFollowUser_approveHelperpplication,     //协助人审批
 } from '@/api/customer'
 export default {
     name: 'Dynamics',
     props: {
         id: {
+            type: String,
+            default: ''
+        },
+        did: {  //负责人Id
             type: String,
             default: ''
         },
@@ -156,6 +165,9 @@ export default {
             }
             return arr
         },
+        isDirector(){   //是否是负责人
+            return this.did && this.userNo == this.did ? true : false
+        },
     },
     mounted(){
         if(this.id){
@@ -165,8 +177,7 @@ export default {
     methods: {
         onLoad() {
             console.log("load");
-            let i = this.activeIndex
-            this.getSelectFollowMsgList(i+1)
+            this.getSelectFollowMsgList()
         },
         addFabulous: _throttle(function(row){    //点赞
             if(!this.isAdd){ return false }
@@ -222,11 +233,39 @@ export default {
             //type =>  comment(消息回复) detail(商机详情)
             this.$emit('openDialog',row.id,type)
         },
+        reviewFun(type,row){    //协助人审核
+            let btnText = type == 'pass' ? '同意' : '拒绝'
+            let tips = `你确定${btnText}“${row.optUserName}”成为该客户的协助人吗？`
+            let obj = {
+                id: row.sourceId,
+                optResult: type == 'pass' ? 1 : 2
+            }
+            this.$dialog.confirm({
+                title: "",
+                message: tips,
+            }).then(() => {
+                console.log("yes");
+                clueCustomerFollowUser_approveHelperpplication(obj).then(res => {
+                    if(res.result){
+                        this.$toast('操作成功')
+                        this.navClickFun()
+                    }
+                })
+            }).catch(() => {
+                // on cancel
+                console.log("cancel");
+            });
+        },
         navClickFun(i){
             this.activeIndex = i
             this.followMsgSearch.page = 1
             this.noListLoading = false
-            this.getSelectFollowMsgList(i+1)
+            this.getSelectFollowMsgList()
+        },
+        searchFun(){
+            this.followMsgSearch.page = 1
+            this.noListLoading = false
+            this.getSelectFollowMsgList()
         },
         // @接收人
         fillMessage(data) {
@@ -242,7 +281,8 @@ export default {
                 }
             })
         },
-        getSelectFollowMsgList(i){   //获取客户跟进信息
+        getSelectFollowMsgList(){   //获取客户跟进信息
+            let i = this.activeIndex + 1
             console.log('get list',i)
             if(i != 4){
                 this.userMessageReceive()
@@ -263,19 +303,20 @@ export default {
                              * 9.放弃客户 11.附件 12.删除附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
                              * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
                              * 
-                             * 41.添加企微好友
+                             * 41.添加企微好友 44.申请成为协助人
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
                             el.toUser = el.toUser ? JSON.parse(el.toUser) : el.toUser
-                            let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,28,36]
+                            let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,28,36,44]
                             if(dotList.indexOf(el.optType) > -1){
                                 el.class = 'dot'
                             }
                             // let whiteList = [5,15,16,17,21]
-                            // if(whiteList.indexOf(el.optType) > -1){
-                            //     // el.context = JSON.parse(el.context)
-                            // }
+                            let whiteList = [21]
+                            if(whiteList.indexOf(el.optType) > -1){
+                                el.context = JSON.parse(el.context)
+                            }
                             let newsList = [21]
                             if(newsList.indexOf(el.optType) > -1){
                                 el.class = 'opera'
@@ -296,6 +337,10 @@ export default {
                     }
                     this.time = data.dateList
                     this.total = total
+
+                    this.$nextTick(() => {
+                        this.$emit('load',true)
+                    })
                 }
             })
         },
@@ -322,7 +367,11 @@ export default {
                     str = '将客户分配给了'
                     break;
                 case 8:
-                    str = '领取了客户'
+                    if(obj.optUserName){
+                        str = '领取了客户'
+                    }else{
+                        str = obj.context
+                    }
                     break;
                 case 9:
                     str = '放弃了客户，客户已回到公海'
@@ -349,7 +398,15 @@ export default {
                     str = '删除了商机'
                     break;
                 case 18:
-                    str = '新增协作人'
+                    if(obj.optUserName){
+                        if(obj.createBy){
+                            str = '新增协作人'
+                        }else{
+                            str = obj.context
+                        }
+                    }else{
+                        str = obj.context
+                    }
                     break;
                 case 26:
                     str = `新增标签“${obj.ossObjectname}”`
@@ -365,6 +422,10 @@ export default {
                     break;
                 case 36:
                     str = obj.context
+                    break;
+                case 44:
+                    let _str = obj.optResult && obj.optResult == 1 ? '(已通过)' : '(已拒绝)'
+                    str = '申请成为协助人' + _str
                     break;
                 default:
                     break;
@@ -382,11 +443,15 @@ export default {
         alt(list){
             let arr = []
             if(list && list.length){
-                list.forEach(el => {
-                    let str = '@' + el.userName
-                    arr.push(str)
-                })
-                return arr.join(' ')
+                if(list.length == 1 && !list[0].userName){
+                    return '@所有人'
+                }else{
+                    list.forEach(el => {
+                        let str = '@' + el.userName
+                        arr.push(str)
+                    })
+                    return  arr.join(' ')
+                }
             }
         },
         optString(val){
@@ -401,7 +466,7 @@ export default {
 @import "~@/styles/color.less";
 .dynamics_box{
     width: 100%;
-    padding-bottom: 60px;
+    padding-bottom: 90px;
     .type_box{
         width: 100%;
         display: flex;
@@ -701,6 +766,24 @@ export default {
                         // margin-left: 8px;
                         &.alt{
                             font-weight: 400;
+                        }
+                    }
+                    .apply_opera{
+                        width: 100%;
+                        display: flex;
+                        margin-top: 24px;
+                        .btn{
+                            width: calc(50% - 12px);
+                            height: 64px;
+                            line-height: 64px;
+                            font-size: 24px;
+                            text-align: center;
+                            border-radius: 8px;
+                            color: @fontMain;
+                            background: @navBg;
+                            &:first-child{
+                                margin-right: 24px;
+                            }
                         }
                     }
                     .info{

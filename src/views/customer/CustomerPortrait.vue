@@ -148,7 +148,7 @@ export default {
         if(val) {
           this.getClueCustomerByid()
         } else {
-          commonFun.getWxAppid()
+          // commonFun.getWxAppid()
         }
       }
     },
@@ -226,7 +226,7 @@ export default {
         // 从消息卡片进入之后处理
         if (name) {
           if (!token) {
-            commonFun.getWxAppid()
+            // commonFun.getWxAppid()
           } else if (token) {
             this.$store.commit('setUserId', name)
             this.getClueCustomerByid()
@@ -237,7 +237,7 @@ export default {
       } else {
         console.log('userId',this.userId)
         if (!this.userId) {
-          commonFun.getWxAppid()
+          // commonFun.getWxAppid()
         } else {
           this.getClueCustomerByid()
         }

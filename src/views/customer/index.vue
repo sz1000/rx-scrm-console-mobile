@@ -20,10 +20,5 @@ export default {
             return obj[val]
         }
     },
-    watch: {
-        $route(to,from){
-            console.log('$route',to,from)
-        }
-    },
 }
 </script>
