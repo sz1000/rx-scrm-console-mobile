@@ -326,7 +326,7 @@ export function getFileType(name) {
 }
 
 export function getFileDefaultCover(name) {
-    let pptUrl = 'https://h5-test.jzcrm.com/static/img/default_ppt.png', wordUrl = 'https://h5-test.jzcrm.com/static/img/default_word.png', excelUrl = 'https://h5-test.jzcrm.com/static/img/default_excel.png', pdfUrl = 'https://h5-test.jzcrm.com/static/img/default_pdf2.png', fileUrl = 'https://h5-test.jzcrm.com/static/img/default_file.png'
+    let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png', wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png', excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png', pdfUrl = 'https://test-h5.jzcrm.com/static/img/default_pdf2.png', fileUrl = 'https://test-h5.jzcrm.com/static/img/default_file.png'
 
     return getFileType(name) == 1 ? pptUrl : getFileType(name) == 2 ? wordUrl : getFileType(name) == 3 ? excelUrl : getFileType(name) == 4 ? pdfUrl : fileUrl
 }
