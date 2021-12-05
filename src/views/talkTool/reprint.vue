@@ -110,12 +110,13 @@ export default {
             }
         }
         .reprint-btn {
+            width: 10rem;
             padding: 32px 0;
             background-color: @white;
             position: fixed;
-            left: 0;
-            right: 0;
+            left: 50%;
             bottom: 0;
+            transform: translateX(-50%);
             span {
                 display: block;
                 width: 686px;

@@ -277,12 +277,13 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        width: 10rem;
         padding: 32px;
         background-color: @white;
         position: fixed;
-        left: 0;
-        right: 0;
+        left: 50%;
         bottom: 0;
+        transform: translateX(-50%);
         span {
             width: 330px;
             height: 96px;

@@ -58,13 +58,14 @@ export default {
   height: 100%;
   .footer-nav {
     display: flex;
-    width: 100%;
+    width: 10rem;
     height: 100px;
     // box-shadow: 0 0 10px 0 #ccc;
     background-color: #fff;
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     .item {
       flex: 1;
       font-size: 0;
