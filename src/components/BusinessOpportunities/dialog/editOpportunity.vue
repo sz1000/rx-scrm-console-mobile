@@ -434,6 +434,7 @@ export default {
     .edit-opportunity-form {
         max-height: 90%;
         padding: 0 0 24px;
+        overflow: hidden;
         .title {
             height: 88px;
             line-height: 88px;
