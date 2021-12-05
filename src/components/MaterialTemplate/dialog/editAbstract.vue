@@ -30,7 +30,8 @@ export default {
     },
     inject: ['getAbstractData'],
     methods: {
-        show(data) {
+        show(type, data) {
+            this.title = type == 1 ? '文章摘要' : '文件摘要'
             this.content = data ? data : ''
             this.visible = true
         },

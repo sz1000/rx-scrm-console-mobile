@@ -21,6 +21,7 @@ export const ArticleFromReprint = data => { return http.get(`${materialServiceAp
 
 export const SaleDocumentList = data => { return http.get(`${materialServiceApi}/sale_document/list`, data)} // 获取文件列表
 export const SaleDocumentDetail = data => { return http.get(`${materialServiceApi}/sale_document/${data}/detail`)} // 获取文件详情
+export const AddSaleDocument = data => { return http.post(`${materialServiceApi}/sale_document`, data)} // 新增文件
 
 export const PosterList = data => { return http.get(`${materialServiceApi}/sale-poster-entity/list`, data)} // 获取海报列表
 export const AddPoster = data => { return http.post(`${materialServiceApi}/sale-poster-entity`, data)} // 添加营销海报
