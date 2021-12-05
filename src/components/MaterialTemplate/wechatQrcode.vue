@@ -22,8 +22,11 @@ export default {
 </script>
 <style lang="less" scoped>
 .img-box {
-    width: 100%;
+    width: 10rem;
     background: transparent;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     img {
         width: 500px;
         height: 500px;

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="user-info-box">
         <div v-if="userData" class="user-info">
             <img class="left" :src="userData.avatar ? userData.avatar : require('../../images/default_header.jpg')" alt="">
             <ul class="center">
@@ -38,6 +38,12 @@ export default {
 </script>
 <style lang="less" scoped>
 @import url('../../styles/color');
+.user-info-box {
+    /deep/ .van-overlay {
+        width: 10rem;
+        left: 50%;
+        transform: translateX(-50%);
+    }
     .user-info {
         width: 10rem;
         height: 144px;
@@ -86,4 +92,5 @@ export default {
             }
         }
     }
+}
 </style>

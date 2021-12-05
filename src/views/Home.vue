@@ -72,14 +72,14 @@
       </div>
       <div class="customAccont manage">营销互动</div>
       <div class="btnRouter custom">
-        <div class="commonBtn" @click="FnToRouter('/talkTool/contentMaterial')" v-show="menulist.includes('material')">
+        <!-- <div class="commonBtn" @click="FnToRouter('/talkTool/contentMaterial')" v-show="menulist.includes('material')">
           <img src="../images/neirongsucai.png" alt="" />
           <span>内容素材</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/verbalTrickConsole')" v-show="menulist.includes('verbalTrick')">
           <img src="../images/huashuku.png" alt="" />
           <span>话术库</span>
-        </div>
+        </div> -->
         <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
           <img src="../images/friedn.png" alt="" />
           <span>朋友圈</span>

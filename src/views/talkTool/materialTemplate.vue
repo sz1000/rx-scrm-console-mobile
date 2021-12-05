@@ -503,7 +503,8 @@ export default {
         border-radius: 50%;
         box-shadow: 0 6px 34px 0 rgba(65, 104, 246, .3);
         position: fixed;
-        right: 32px;
+        // right: 32px;
+        right: 5%;
         bottom: 140px;
         &::before, &::after {
             content: '';
