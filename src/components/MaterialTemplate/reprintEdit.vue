@@ -263,7 +263,7 @@ export default {
                     align-items: center;
                     width: 160px;
                     height: 160px;
-                    background-color: #F7F8FA;
+                    background-color: #F6F7F9;
                     overflow: hidden;
                     img {
                         max-width: 100%;
