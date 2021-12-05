@@ -1181,6 +1181,7 @@ export default {
       }
     }
     .header-r {
+        position: relative;
       .listAlat-box {
         padding: 24px 0;
         width: 236px;
@@ -1652,8 +1653,8 @@ export default {
 .groupname {
   display: flex;
   align-items: center;
+  min-width: 140px;
   margin-right: 20px;
-  // width: 250px;
 }
 .cent {
   justify-content: center;
