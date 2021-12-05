@@ -34,7 +34,7 @@
           <el-form-item label="客户阶段">
             <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" :disabled='disabled' @change="changeInput()"></el-input>
           </el-form-item>
-          <el-form-item label="公司名称">
+          <el-form-item label="企业名称">
             <el-input v-model="basicInfo.cropFullName" placeholder="请输入" maxlength="100" :disabled='disabled' @change="changeInput()"></el-input>
           </el-form-item>
           <el-form-item label="企业规模">
@@ -213,9 +213,9 @@ export default {
       ],
       customerList: [],
       microList: [
-        { name: '客户简称', mapName: 'externalCorpName', value: '' },
+        { name: '企业简称', mapName: 'externalCorpName', value: '' },
         { name: '客户来源', mapName: 'externalSource', value: '' },
-        { name: '公司名称', mapName: 'externalCorpFullName', value: '' },
+        { name: '企业名称', mapName: 'externalCorpFullName', value: '' },
         { name: '客户类型', mapName: 'externalType', value: '' },
         { name: '姓名', mapName: 'externalName', value: '' },
         { name: '性别', mapName: 'externalGender', value: '' },

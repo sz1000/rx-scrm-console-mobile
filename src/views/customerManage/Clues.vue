@@ -64,7 +64,7 @@
                 <span>{{ item.phone }}</span>
               </div>
               <div class="rowStyle">
-                <span>公司名称:</span>
+                <span>企业名称:</span>
                 <span>{{ item.cropFullName }}</span>
               </div>
               <div class="rowStyle">

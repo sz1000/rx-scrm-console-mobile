@@ -1,29 +1,32 @@
 <template>
     <div class="reprint-edit">
         <template v-if="!showContentPreview">
+            <header-title title="上传文件"></header-title>
             <div class="field-box">
                 <div class="field-item">
-                    <van-field v-model="form.title" label="文章标题" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
+                    <van-field v-if="type == 1" v-model="form.title" label="文章标题" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
+                    <van-field v-if="type == 2" v-model="fileForm.name" label="文件名称" label-class="label" placeholder="请输入(不得超过128个字符)" maxlength="128" :required="true"/>
                 </div>
-                <div class="field-item">
+                <div v-if="type == 1" class="field-item">
                     <van-field v-model="form.author" label="作者" label-class="label" placeholder="请输入(不得超过16个字符)" maxlength="16"/>
                 </div>
                 <div class="field-item cover-box">
                     <p class="label">
-                        <span>文章封面</span>
+                        <span>{{ type == 1 ? '文章封面' : '文件封面' }}</span>
                     </p>
                     <div class="cover-img-box">
-                        <img class="cover-img" :src="form.cover" alt="" @click="previewImg">
+                        <img class="cover-img" :src="type == 1 ? form.cover : fileForm.cover" alt="" @click="previewImg">
                         <img-upload :isCustomize="true" :customizeType="2"></img-upload>
                     </div>
                 </div>
                 <div class="field-item">
-                    <van-field v-model="form.contentAbstract" type="textarea" label="文章摘要" label-class="label" rows="1" autosize readonly @click="showAbstract"/>
+                    <van-field v-if="type == 1" v-model="form.contentAbstract" type="textarea" label="文章摘要" label-class="label" rows="1" autosize readonly @click="showAbstract"/>
+                    <van-field v-if="type == 2" v-model="fileForm.contentAbstract" type="textarea" label="文件摘要" label-class="label" rows="1" autosize readonly @click="showAbstract"/>
                 </div>
             </div>
             <div class="reprint-edit-btn">
-                <span class="preview" @click="preview">预览文章</span>
-                <span class="establish" @click="confirm">创建文章</span>
+                <span class="preview" @click="preview">{{ type == 1 ? '预览文章' : '预览文件'}}</span>
+                <span class="establish" @click="confirm">{{ type == 1 ? '创建文章' : '上传文件'}}</span>
             </div>
 
             <edit-abstract ref="editAbstract"></edit-abstract>
@@ -36,20 +39,25 @@
     </div>
 </template>
 <script>
-import { ArticleFromReprint, AddArticle } from '../../config/api'
+import { ArticleFromReprint, AddArticle, AddSaleDocument } from '../../config/api'
 import EditAbstract from './dialog/editAbstract'
 import ImgUpload from './imgUpload'
 import ImgPreview from './imgPreview'
 import ContentPreview from './contentPreview'
+import HeaderTitle from './headerTitle'
 import { mapState } from 'vuex'
+import { getFileDefaultCover } from '../../utils/tool'
 
 export default {
     name: 'reprintEdit',
     props: {
+        type: {
+            default: 1
+        },
         articleUrl: {
             type: String,
             default: ''
-        }
+        },
     },
     data() {
         return {
@@ -59,7 +67,15 @@ export default {
                 content: '',
                 cover: 'https://h5.jzcrm.com/static/img/default_article.png',
                 contentAbstract: '',
-                corpId: ''
+                corpId: this.corpId
+            },
+            fileForm: {
+                name: '',
+                documentUrl: '',
+                cover: 'https://h5.jzcrm.com/static/img/default_pdf.png',
+                contentAbstract: '',
+                fileSize: '',
+                corpId: this.corpId
             },
             showContentPreview: false
         }
@@ -71,10 +87,12 @@ export default {
     provide() {
         return {
             getAbstractData: this.getAbstractData,
-            getImgUrl: this.getImgUrl
+            getImgUrl: this.getImgUrl,
+            goBack: this.doShowFileUpload
         }
     },
     methods: {
+        // 获取文章详情
         getDetails() {
             this.$toast.loading({
                 message: '加载中...',
@@ -98,6 +116,15 @@ export default {
                 }
             })
         },
+        // 显示文件详情
+        doShowFile(data) {
+            const { url, name, size } = data
+
+            this.fileForm.name = name
+            this.fileForm.documentUrl = url
+            this.fileForm.fileSize = size
+            this.fileForm.cover = getFileDefaultCover(name)
+        },
         getImgUrl(url) {
             this.form.cover = url
         },
@@ -108,12 +135,14 @@ export default {
             this.$refs.editAbstract.show(this.form.contentAbstract)
         },
         getAbstractData(data) {
-            this.form.contentAbstract = data
+            this.type == 1 ? this.form.contentAbstract = data : this.fileForm.contentAbstract = data
         },
         checkForm() {
             const { title } = this.form
 
-            if (!title) {
+            const { name } = this.fileForm
+
+            if (this.type == 1 && !title || this.type == 2 && !name) {
                 return false
             }
 
@@ -124,23 +153,31 @@ export default {
         },
         preview() {
             if (!this.checkForm()) {
-                this.$toast("请输入文章标题")
+                this.$toast(this.type == 1 ? "请输入文章标题" : "请输入文件名称")
                 return
             }
 
             this.showContentPreview = true
             let obj = {
-                type: 1,
+                type: this.type,
                 userNo: this.userNo,
-                data: this.form
+                data: this.type == 1 ? this.form : this.fileForm
             }
             this.$nextTick(() => {
                 this.$refs.contentPreview.show(obj)
             })
         },
+        doShowFileUpload(type) {
+            let params = {
+                showFileUpload: false,
+                isRefresh: type == 1 ? true : false // 提交上传需刷新列表
+            }
+
+            this.$emit('doShowFileUpload', params)
+        },
         confirm() {
             if (!this.checkForm()) {
-                this.$toast("请输入文章标题")
+                this.$toast(this.type == 1 ? "请输入文章标题" : "请输入文件名称")
                 return
             }
 
@@ -151,15 +188,19 @@ export default {
                 loadingType: 'spinner',
             })
 
-            this.form.corpId = this.corpId
+            let ApiOpts = this.type == 1 ? AddArticle : AddSaleDocument
 
-            AddArticle(this.form).then(res => {
+            let params = this.type == 1 ? this.form : this.fileForm
+
+            this.type == 1 ? this.form.corpId = this.corpId : this.fileForm.corpId = this.corpId
+
+            ApiOpts(params).then(res => {
                 const { code, msg } = res
 
                 this.$toast.clear()
                 this.$toast(msg)
                 if (code === 'success') {
-                    this.goBack()
+                    this.type == 1 ? this.goBack() : this.doShowFileUpload(1)
                 }
             })
         },
@@ -168,7 +209,8 @@ export default {
         EditAbstract,
         ImgUpload,
         ImgPreview,
-        ContentPreview
+        ContentPreview,
+        HeaderTitle
     }
 }
 </script>

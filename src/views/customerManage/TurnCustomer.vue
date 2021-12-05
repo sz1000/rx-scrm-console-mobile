@@ -14,7 +14,7 @@
       </div>
       <el-form ref="form" :model="formObj" label-position='right'>
         <KehuTip :addChildForm="formObj" v-on:getacf="getacf"></KehuTip>
-        <!-- <el-form-item label="客户简称:"
+        <!-- <el-form-item label="企业简称:"
                       prop="customerName"
                       :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.customerName"
@@ -42,7 +42,7 @@
         <el-form-item label="电话:">
           <el-input v-model="formObj.mobil" placeholder="请输入" maxlength="11"></el-input>
         </el-form-item>
-        <!--<el-form-item label="公司名称:">
+        <!--<el-form-item label="企业名称:">
           <el-input v-model="formObj.cropFullName"
                     placeholder="请输入"
                     maxlength="100"></el-input>

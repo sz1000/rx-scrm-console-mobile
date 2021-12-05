@@ -115,6 +115,7 @@ export default {
         query: {
           id: val.followId,
           code: val.clueCustomerNo,
+          num: val.rowAt,
         },
       })
     },

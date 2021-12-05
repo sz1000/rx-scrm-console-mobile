@@ -43,11 +43,11 @@
               <div class="first_text">
                 <span>{{item.name}}</span>
                 <span
-                      :class="item.customerType == 1 ? 'weixin' : item.customerType == 2 ? 'qiye':''">{{item.customerType == 1 ? '@微信' : item.customerType == 2 ?'@企业':'未知'}}</span>
+                      :class="item.customerType == 1 ? 'weixin' : item.customerType == 2 ? 'qiye':''">{{item.customerType == 1 ? '@微信' : item.customerType == 2 ?'@企业':''}}</span>
 
                 <img src="../../images/man.png" alt="" v-if="item.gender == 1" />
-                <img src="../../images/icon_female@2x.png" alt="" v-else-if='item.gender ==2' />
-                <span v-else>未知</span>
+                <img src="../../images/icon_female@2x.png" alt="" v-if='item.gender ==2' />
+                <!-- <span v-else>未知</span> -->
               </div>
               <div class="seconde_text" v-if="tabName== '已激活'">
                 <p>{{item.phone}}</p>

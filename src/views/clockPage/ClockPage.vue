@@ -184,7 +184,7 @@ export default {
         phone: obj.phone,
         customerPlace: obj.address,
         content: obj.remark,
-        customerName: obj.client || obj.name.split('@')[1],
+        customerCalled: obj.client || obj.name.split('@')[1],
         splicingName: obj.customerVal || obj.client,
         clueCustomerNo: obj.clueCustomerNo,
         punchPlace: this.addressName,
