@@ -96,7 +96,7 @@ export default {
     clickCard() {
       if (this.addressName !== '') {
         this.$network
-          .get('/user-service/m/user/getticket', {
+          .get('/user-service/m/user/getinticket', {
             url: location.href,
           })
           .then((res) => {
@@ -214,7 +214,7 @@ export default {
     },
     getLocation() {
       this.$network
-        .get('/user-service/m/user/getticket', {
+        .get('/user-service/m/user/getinticket', {
           url: location.href,
         })
         .then((res) => {

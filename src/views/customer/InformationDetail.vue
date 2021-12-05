@@ -232,7 +232,15 @@
 </template>
 <script>
 import { formatDate } from '../../utils/tool'
-
+import {
+  cluecustomer_toupdate,
+  cluecustomer_update,
+  cluecustomer_gettag,
+  cluecustomer_addtag,
+  cluecustomer_updPertag,
+  cluecustomer_deltag,
+  cluecustomer_updCorptag,
+} from '@/api/customer'
 export default {
   data() {
     return {
@@ -342,20 +350,8 @@ export default {
       this.update()
     },
     getDetailForm() {
-      this.$toast.loading({
-        // message: '加载中...',
-        overlay: true,
-        loadingType: 'spinner',
-        duration: 0,
-      })
-      this.$network
-        .get('/customer-service/cluecustomer/toupdate', {
-          // clueCustomerNo: 'D896DC328E9149C694504B7870137430',
-          clueCustomerNo: this.clueCustomerNo,
-        })
-        .then((res) => {
-          this.$toast.clear()
-          this.loadingShow = false
+      cluecustomer_toupdate(this.clueCustomerNo).then(res => {
+        if(res.result){
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
@@ -439,7 +435,8 @@ export default {
             this.customerList.push(obj)
             // console.log('------', this.customerList)
           })
-        })
+        }
+      })
     },
     processTree(data) {
       data.forEach((item) => {
@@ -452,20 +449,19 @@ export default {
       })
     },
     update() {
-      this.$network
-        .post('/customer-service/cluecustomer/update', {
-          type: this.$route.query.type,
-          clueCustomerNo: this.clueCustomerNo,
-          ...this.basicInfo,
-        })
-        .then((res) => {
+      let obj = {
+        type: this.$route.query.type,
+        clueCustomerNo: this.clueCustomerNo,
+        ...this.basicInfo,
+      }
+      cluecustomer_update(obj).then(res => {
+        if(res.result){
           this.$message({ type: 'success', message: '更新成功' })
-          // this.getDetailForm()
-        })
+        }
+      })
     },
     goBack() {
-      this.$router.push('/customerPortrait')
-      // this.$router.go(-1)
+      this.$router.replace('/customerPortrait')
     },
     inputEdit(item, index) {
       // console.log(item, index)
@@ -481,11 +477,8 @@ export default {
     },
     getTagList() {
       this.highLightArr = []
-      this.$network
-        .get('/customer-service/cluecustomer/gettag', {
-          clueCustomerNo: this.clueCustomerNo,
-        })
-        .then((res) => {
+      cluecustomer_gettag(this.clueCustomerNo).then(res => {
+        if(res.result){
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList || []
@@ -503,7 +496,8 @@ export default {
               }
             })
           })
-        })
+        }
+      })
     },
     showCompany(v) {
       document.getElementById('html').style.overflow = 'hidden'
@@ -522,21 +516,20 @@ export default {
     handleSearch() {
       // console.log(this.tagName)
       if (this.tagName !== '') {
-        this.$network
-          .post('/customer-service/cluecustomer/addtag', {
-            name: this.tagName,
-            clueCustomerNo: this.clueCustomerNo,
-          })
-          .then((res) => {
-            if (res.result) {
-              this.personTagList = res.data
-            } else {
-              this.$message({
-                type: 'error',
-                message: res.msg || '添加失败',
-              })
-            }
-          })
+        let obj = {
+          name: this.tagName,
+          clueCustomerNo: this.clueCustomerNo,
+        }
+        cluecustomer_addtag(obj).then(res => {
+          if(res.result){
+            this.personTagList = res.data
+          }else {
+            this.$message({
+              type: 'error',
+              message: res.msg || '添加失败',
+            })
+          }
+        })
       }
       this.showInput = null
       this.isShow = false
@@ -578,36 +571,29 @@ export default {
     saveDialog(v) {
       if (v == 1) {
         // console.log(this.highLightArr)
-        this.$network
-          .post(
-            `/customer-service/cluecustomer/updCorptag/${this.clueCustomerNo}`,
-            this.highLightArr
-          )
-          .then((res) => {
-            if (res.result) {
-              this.show = false
-              document.getElementById('html').style.overflow = 'auto'
-              this.getTagList()
-            } else {
-              this.message({
-                type: 'error',
-                message: '添加失败',
-              })
-            }
-          })
+        cluecustomer_updCorptag(this.clueCustomerNo,this.highLightArr).then(res => {
+          if(res.result){
+            this.show = false
+            document.getElementById('html').style.overflow = 'auto'
+            this.getTagList()
+          }else {
+            this.message({
+              type: 'error',
+              message: '添加失败',
+            })
+          }
+        })
       } else if (v == 2) {
-        this.$network
-          .post('/customer-service/cluecustomer/updPertag', this.personTagList)
-          .then((res) => {
-            if (res.result) {
-              this.show = false
-              document.getElementById('html').style.overflow = 'auto'
-              this.$message({
-                type: 'success',
-                message: '修改成功',
-              })
-            }
-          })
+        cluecustomer_updPertag(this.personTagList).then(res => {
+          if(res.result){
+            this.show = false
+            document.getElementById('html').style.overflow = 'auto'
+            this.$message({
+              type: 'success',
+              message: '修改成功',
+            })
+          }
+        })
       }
     },
     deleteTag(v, i) {
@@ -621,13 +607,11 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          this.$network
-            .post('/customer-service/cluecustomer/deltag', v)
-            .then((res) => {
-              if (res.result) {
-                this.personTagList = res.data
-              }
-            })
+          cluecustomer_deltag(v).then(res => {
+            if(res.result){
+              this.personTagList = res.data
+            }
+          })
         })
         .catch(() => {})
     },

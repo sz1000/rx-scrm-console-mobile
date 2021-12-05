@@ -1,6 +1,6 @@
 <template>
     <div class="material-template">
-        <template v-if="!showUploadPoster && !showContentPreview">
+        <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
             <ul class="header-nav">
                 <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
                 <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
@@ -42,7 +42,7 @@
                         >
                         <div class="item" v-for="i in saleList" :key="i.documentId">
                             <div class="right" @click="preview(2, i)">
-                                <img class="img" :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'" alt="">
+                                <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
                                 <div class="des">
                                     <div>
                                         <h3 class="one-line">{{i.name}}</h3>
@@ -81,7 +81,10 @@
 
             <!-- 转载公众号文章按钮 -->
             <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
-
+            <!-- 上传文件按钮 -->
+            <div v-if="type == 1" class="poster-box">
+                <file-upload :needFileInfo="true"></file-upload>
+            </div>
             <!-- 上传海报按钮 -->
             <div v-if="type == 2" class="poster-box">
                 <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
@@ -93,17 +96,21 @@
         <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster"></upload-poster>
         <!-- 文章/文件预览 -->
         <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
+        <!-- 文件上传 -->
+        <reprint-edit v-if="showFileUpload" ref="reprintEdit" :type="2" @doShowFileUpload="doShowFileUpload"></reprint-edit>
     </div>
 </template>
 <script>
 import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
-import { sendChatMessage, byteConvert } from '../../utils/tool'
+import { sendChatMessage, byteConvert, getFileDefaultCover } from '../../utils/tool'
 
 import Search from '../../components/MaterialTemplate/search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ImgUpload from '../../components/MaterialTemplate/imgUpload'
 import UploadPoster from '../../components/MaterialTemplate/uploadPoster'
 import ContentPreview from '../../components/MaterialTemplate/contentPreview'
+import FileUpload from '../../components/MaterialTemplate/fileUpload'
+import ReprintEdit from '../../components/MaterialTemplate/reprintEdit'
 
 import { mapActions, mapState } from 'vuex'
 
@@ -139,6 +146,8 @@ export default {
             showUploadPoster: false,  // 是否展示海报上传页面
             posterData: {}, // 上传的海报图片信息
             showContentPreview: false,
+            showFileUpload: false, // 是否展示文件上传页面
+            fileData: {}, // 上传的文件信息
         }
     },
     computed: {
@@ -148,7 +157,10 @@ export default {
         return {
             checkTable: this.checkTable,
             getImgUrl: this.getImgUrl,
-            previewImg: this.previewImg
+            getFileUrl: this.getFileUrl,
+            previewImg: this.previewImg,
+            initType: null,
+            goBack: null,
         }
     },
     created() {
@@ -302,11 +314,20 @@ export default {
         },
         sendChatMessage,
         byteConvert,
+        getFileDefaultCover,
         // 去往转载公众号文章页面
         goNextStep() {
             this.$router.push({
                 path: '/talkTool/reprint',
                 // query: {},
+            })
+        },
+        getFileUrl(data) {
+            this.ifShowFooter(false)
+            this.fileData = data
+            this.showFileUpload = true
+            this.$nextTick(() => {
+                this.$refs.reprintEdit.doShowFile(this.fileData)
             })
         },
         // 海报上传图片地址获取
@@ -324,6 +345,15 @@ export default {
             }
             this.showUploadPoster = showUploadPoster
         },
+        doShowFileUpload(data) {
+            this.ifShowFooter(true)
+            const { showFileUpload, isRefresh } = data
+
+            if (isRefresh) {
+                this.changeNav(1)
+            }
+            this.showFileUpload = showFileUpload
+        },
         hideContentPreview(data) {
             this.ifShowFooter(true)
             this.showContentPreview = data
@@ -336,6 +366,7 @@ export default {
                 userNo: this.userNo,
                 data: item
             }
+
             this.$nextTick(() => {
                 this.$refs.contentPreview.show(obj)
             })
@@ -352,7 +383,9 @@ export default {
         ImgPreview,
         ImgUpload,
         UploadPoster,
-        ContentPreview
+        ContentPreview,
+        FileUpload,
+        ReprintEdit
     }
 }
 </script>

@@ -41,6 +41,11 @@ export default {
             this.dialog = val
         },
         dialog(val){
+            if(val){
+                document.getElementById('html').style.overflow = 'hidden'
+            }else{
+                document.getElementById('html').style.overflow = 'auto'
+            }
             if(this.value==val){return false}
             this.$emit('input',val)
         },

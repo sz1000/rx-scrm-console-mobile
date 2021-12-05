@@ -717,7 +717,7 @@ export default {
     shareText(v) {
       // console.log('----分享分组----', v)
       this.$network
-        .get('/user-service/m/user/getticket', {
+        .get('/user-service/m/user/getinticket', {
           url: location.href,
         })
         .then((res) => {
@@ -786,7 +786,7 @@ export default {
         }
       }
       this.$network
-        .get('/user-service/m/user/getticket', {
+        .get('/user-service/m/user/getinticket', {
           url: location.href,
         })
         .then((res) => {

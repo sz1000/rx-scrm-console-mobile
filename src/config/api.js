@@ -5,7 +5,7 @@ const wechatServiceApi = '/wechat-service'
 const materialServiceApi = '/material-service'
 const customerServiceApi = '/customer-service'
 
-export const Getticket = data => { return http.get(`${userServiceApi}/m/user/getticket`, data)} // url获取授权信息
+export const Getticket = data => { return http.get(`${userServiceApi}/m/user/getinticket`, data)} // url获取授权信息
 export const GetCrop = () => { return http.get(`${userServiceApi}/Corp/getCrop`)} // 企业详情
 export const UsersList = data => { return http.get(`${userServiceApi}/user/getlist/${data}`)} // 企业员工列表
 export const UsersInfo = data => { return http.get(`${userServiceApi}/user/getUser/${data}/info`)} // 员工信息详情
@@ -21,6 +21,7 @@ export const ArticleFromReprint = data => { return http.get(`${materialServiceAp
 
 export const SaleDocumentList = data => { return http.get(`${materialServiceApi}/sale_document/list`, data)} // 获取文件列表
 export const SaleDocumentDetail = data => { return http.get(`${materialServiceApi}/sale_document/${data}/detail`)} // 获取文件详情
+export const AddSaleDocument = data => { return http.post(`${materialServiceApi}/sale_document`, data)} // 新增文件
 
 export const PosterList = data => { return http.get(`${materialServiceApi}/sale-poster-entity/list`, data)} // 获取海报列表
 export const AddPoster = data => { return http.post(`${materialServiceApi}/sale-poster-entity`, data)} // 添加营销海报

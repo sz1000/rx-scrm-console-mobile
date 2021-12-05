@@ -161,17 +161,20 @@ export default {
     },
     determine(){
       console.log("000")
-        this.$router.push({
-          path:"/talkTool/circleFriend",
-          query:{
-            datalist:this.centquer,
-            tablable:"material"
-          }
-        })
-
+        // this.$router.push({
+        //   path:"/talkTool/CustomergroupPlaye",
+        //   query:{
+        //     datalist:this.centquer,
+        //     tablable:"material"
+        //   }
+        // })
+             this.$emit('sureTab', 0)
+        this.$emit('sure', this.centquer)
+     
     },
     cancel(){
-        this.$router.push({path:"/talkTool/circleFriend",})
+        // this.$router.push({path:"/talkTool/CustomergroupPlaye",})
+              this.$emit('sureTab', 0)
     },
     onLoad(){
       // console.log(this.list.length)
@@ -261,7 +264,7 @@ export default {
             if (this.list.length >= this.total) {
             this.finishedArticle = true;
           }else{
-            this.onLoad()
+            // this.onLoad()
           }
         //  if(this.tab == 1){
         //     this.list =  dataList

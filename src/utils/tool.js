@@ -307,3 +307,26 @@ export function IsURL (str_url) {
     
     return re.test(str_url)
 }
+
+export function getFileType(name) {
+    if (/\.ppt$|\.pptx$/i.test(name)) {
+        return 1
+    }
+    if (/\.doc$|\.docx$/i.test(name)) {
+        return 2
+    }
+    if (/\.xls$|\.xlsx$/i.test(name)) {
+        return 3
+    }
+    if (/\.pdf$/i.test(name)) {
+        return 4
+    }
+
+    return 0
+}
+
+export function getFileDefaultCover(name) {
+    let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png', wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png', excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png', pdfUrl = 'https://test-h5.jzcrm.com/static/img/default_pdf2.png', fileUrl = 'https://test-h5.jzcrm.com/static/img/default_file.png'
+
+    return getFileType(name) == 1 ? pptUrl : getFileType(name) == 2 ? wordUrl : getFileType(name) == 3 ? excelUrl : getFileType(name) == 4 ? pdfUrl : fileUrl
+}
