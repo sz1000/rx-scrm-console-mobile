@@ -8,7 +8,7 @@
             </ul>
             <search ref="search" :type="type"></search>
             <ul class="list-box">
-                <li class="item-box not-independent" v-if="type == 0">
+                <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 0">
                     <van-list
                         v-model="articleListLoading"
                         :immediate-check="false"
@@ -32,7 +32,7 @@
                         </div>
                     </van-list>
                 </li>
-                <li class="item-box not-independent" v-if="type == 1">
+                <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 1">
                     <van-list
                         v-model="saleListLoading"
                         :immediate-check="false"
@@ -54,7 +54,7 @@
                         </div>
                     </van-list>
                 </li>
-                <li class="item-box not-independent" v-if="type == 2">
+                <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 2">
                     <van-list
                         v-model="posterListLoading"
                         :immediate-check="false"
@@ -182,8 +182,6 @@ export default {
             this.getList()
         },
         onLoad() {
-            console.log("this.type>>>", this.type)
-            console.log("this.articleListPage>>>", this.articleListPage)
             if (this.type == 0 && this.articleListPage <= 1 || this.type == 1 && this.saleListPage <= 1 || this.type == 2 && this.posterListPage <= 1) {
                 return
             }
@@ -487,7 +485,7 @@ export default {
                 margin: 0 0 24px 24px;
             }
         }
-        .not-independent {
+        .is-independent {
             .item {
                 .right {
                     width: 100%;
