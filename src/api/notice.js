@@ -13,6 +13,12 @@ export function notice_getNoticeDetail(id) { //获取通知详情信息
         method: 'get'
     })
 }
+export function clueCustomerFollowUser_getApplyFollowUserDetail(id) { //查看申请协助人详情
+    return request({
+        url: BASE_CUSTOMER_SERCICE + '/clueCustomerFollowUser/getApplyFollowUserDetail?id=' + id,
+        method: 'get'
+    })
+}
 export function dataReport_getDataReportDaily(data) { //获取日报详情
     return request({
         url: BASE_CUSTOMER_SERCICE + '/dataReport/getDataReportDaily',

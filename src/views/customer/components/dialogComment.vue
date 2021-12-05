@@ -1,8 +1,8 @@
 <template>
-    <van-action-sheet v-model="dialog" title="回复" :safe-area-inset-bottom="true" class="vant_sheet">
+    <van-action-sheet v-model="dialog" :title="title" :safe-area-inset-bottom="true" class="vant_sheet">
         <div class="van_content">
             <div class="writerInput">
-                <van-field v-model="msgText" type="textarea" maxlength="200" placeholder="请输入要回复的消息~" show-word-limit />
+                <van-field v-model="msgText" type="textarea" maxlength="200" :placeholder="isComment?'请输入要回复的消息~':'记录好跟进，多签单哟~'" show-word-limit />
             </div>
             <div class="buttonWarp">
                 <span class="cancel" @click="dialog = false">取消</span>
@@ -20,6 +20,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        isComment: {    //是否消息
+            type: Boolean,
+            default: false
+        },
+        title: {
+            type: String,
+            default: '回复'
+        },
     },
     data(){
         return {
@@ -30,7 +38,8 @@ export default {
     methods: {
         confirmFun(){
             if(!this.msgText.trim()){
-                this.$toast('请输入回复内容')
+                let str = this.isComment ? '请输入回复内容' : '请输入跟进内容'
+                this.$toast(str)
                 return false
             }
             this.$emit('sure',this.msgText)

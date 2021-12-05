@@ -422,6 +422,9 @@ export default {
                 this.opportunitiesList()
                 this.$toast(msg)
                 this.hide()
+                if(!this.id){
+                    this.$emit('sure')
+                }
             } else {
                 this.$toast(msg)
             }

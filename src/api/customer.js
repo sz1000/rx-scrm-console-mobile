@@ -25,6 +25,20 @@ export function clueCustomerFollowUser_message(id) { // 是否有新消息
         }
     })
 }
+export function clueCustomerFollowUser_message_notificatio(data) { // 添加消息通知（@）
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/message-notificatio',
+        method: 'post',
+        data: data
+    })
+}
+export function cluecustomer_addMessage(data) { // 写跟进
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/addMessage',
+        method: 'post',
+        data: data
+    })
+}
 export function group_getMobileCustomerGroupPage(data) { // 获取客户群列表
     return request({
         url: BASE_CUSTOMER_SERVICE + '/group/getMobileCustomerGroupPage',
@@ -76,6 +90,19 @@ export function cluecustomeraccessory_delupload(data) { // 删除附件
         url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/delupload',
         method: 'get',
         params: data
+    })
+}
+export function clueCustomerFollowUser_applyFollowUser(id) { // 申请成为协助人
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/applyFollowUser?clueCustomerNo=' + id,
+        method: 'get'
+    })
+}
+export function clueCustomerFollowUser_approveHelperpplication(data) { // 协助人申请审批 1-同意2-拒绝
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/approveHelperpplication',
+        method: 'post',
+        data
     })
 }
 export function cluecustomer_toupdate(id){

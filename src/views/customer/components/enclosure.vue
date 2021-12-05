@@ -80,6 +80,7 @@ export default {
 					if(res.result){
 						this.$toast(res.msg)
 						this.getDownList()
+						this.$emit('sure')
 					}
 				})
 			})
@@ -107,6 +108,7 @@ export default {
 			this.eleList = []
 			this.$toast('上传成功!')
 			this.getDownList()
+			this.$emit('sure')
 		},
 		onError(err, file, fileList){
 			console.log(err)
