@@ -13,6 +13,7 @@ import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue'
+import ContentMaterial from '../views/talkTool/materialTemplate' // 内容素材
 import Reprint from '../views/talkTool/reprint' // 转载公众号文章
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
@@ -190,6 +191,14 @@ const routes = [{
                     bodyClass: 'verbalTrick',
                 },
                 component: verbalTrick,
+            },
+            // 内容素材
+            {
+                path: 'contentMaterial',
+                meta: {
+                    bodyClass: 'contentMaterial',
+                },
+                component: ContentMaterial,
             },
             // 转载公众号文章
             {
