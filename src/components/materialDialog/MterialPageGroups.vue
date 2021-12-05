@@ -318,42 +318,45 @@ export default {
                 this.handleRes(res)
             })
         },
-        handleRes(res) {
+      handleRes(res) {
             const { code, data, msg } = res
 
             this.$toast.clear()
             if (code === 'success') {
+                this.getTotal(data)
                 if (this.type == 1) {
                     this.articleListLoading = false
                     if (this.articleListPage == 1) {
                         this.articleList = []
                     }
-                    this.articleListTotal = data.total
-                    this.articleList = this.articleList.concat(data.records)
+                    this.articleList = this.articleList.concat(data.page.records)
                     this.articleListPage += 1
-                    this.articleListFinished = this.articleList.length >= data.total
+                    this.articleListFinished = this.articleList.length >= data.page.total
                 } else if (this.type == 2) {
                     this.saleListLoading = false
                     if (this.saleListPage == 1) {
                         this.saleList = []
                     }
-                    this.saleListTotal = data.total
-                    this.saleList = this.saleList.concat(data.records)
+                    this.saleList = this.saleList.concat(data.page.records)
                     this.saleListPage += 1
-                    this.saleListFinished = this.saleList.length >= data.total
+                    this.saleListFinished = this.saleList.length >= data.page.total
                 } else if (this.type == 3) {
                     this.posterListLoading = false
                     if (this.posterListPage == 1) {
                         this.posterList = []
                     }
-                    this.posterListTotal = data.total
-                    this.posterList = this.posterList.concat(data.records)
+                    this.posterList = this.posterList.concat(data.page.records)
                     this.posterListPage += 1
-                    this.posterListFinished = this.posterList.length >= data.total
+                    this.posterListFinished = this.posterList.length >= data.page.total
                 }
             } else {
                 this.$toast(msg)
             }
+        },
+            getTotal(data) {
+            this.articleListTotal = data.articleCount
+            this.saleListTotal = data.documenetCount
+            this.posterListTotal = data.posterCount
         },
         // 查询
         checkTable(data) {
@@ -450,6 +453,7 @@ line-height: 80px;
 text-align: center;
   }
   }
+    min-height: 100vh;
     min-height: 100vh;
     background-color: @white;
     overflow-x: hidden;
