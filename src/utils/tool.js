@@ -181,7 +181,7 @@ export function sendChatMessage(
 ) {
     Getticket({ url: location.href }).then((res) => {
         Toast.loading({
-            message: '发送中...',
+            message: '',
             forbidClick: true,
             duration: 0,
             loadingType: 'spinner',

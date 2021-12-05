@@ -12,8 +12,9 @@ import SettingSop from '../views/customer/settingSop'
 import TalkTool from '../views/talkTool/index.vue'
 import EnterpriseCode from '../views/talkTool/EnterpriseCode.vue'
 import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
-import verbalTrick from '../views/talkTool/verbalTrick.vue'
-import ContentMaterial from '../views/talkTool/materialTemplate' // 内容素材
+import verbalTrick from '../views/talkTool/verbalTrick.vue' // 包括话术库和内容素材
+import VerbalTrickConsole from '../views/talkTool/verbalTrickConsole' // 话术库（单独的）
+import ContentMaterial from '../views/talkTool/materialTemplate' // 内容素材（单独的）
 import Reprint from '../views/talkTool/reprint' // 转载公众号文章
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
@@ -184,13 +185,21 @@ const routes = [{
                 },
                 component: ChannelConfiguration,
             },
-            // 话术
+            // 话术(侧边栏包括内容素材)
             {
                 path: 'verbalTrick',
                 meta: {
                     bodyClass: 'verbalTrick',
                 },
                 component: verbalTrick,
+            },
+            // 话术(工作台)
+            {
+                path: 'verbalTrickConsole',
+                meta: {
+                    bodyClass: 'verbalTrickConsole',
+                },
+                component: VerbalTrickConsole,
             },
             // 内容素材
             {
