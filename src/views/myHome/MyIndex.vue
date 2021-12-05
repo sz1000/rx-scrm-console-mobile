@@ -6,7 +6,7 @@
         <img src="../../images/img_head.png" alt="" v-else />
         <div class="person_info">
           <p>{{userObj.name}}</p>
-          <p>{{identity}}</p>
+          <!-- <p>{{identity}}</p> -->
         </div>
       </div>
       <!-- <div class="change_identity" @click="changeIdent">
