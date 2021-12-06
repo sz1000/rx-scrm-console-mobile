@@ -1,7 +1,7 @@
 <template>
     <div class="search">
         <div class="search-box">
-            <input class="text" type="text" v-model="searchText" :placeholder="type | getText">
+            <input class="text" type="text"   v-model="searchText" :placeholder="type | getText">
             <div class="icon pointer" @click="checkTable(searchText)">
                 <img src="../../images/search.png" alt="">
             </div>

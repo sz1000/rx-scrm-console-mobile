@@ -1080,12 +1080,12 @@ this.appendixList.forEach((item,indexs)=>{
 }
 </script>
 <style lang="less" scoped>
-.psoition_falx{
-      position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
-}
+// .psoition_falx{
+//       position: absolute;
+//     top: 0;
+//     right: 0;
+//     z-index: 10;
+// }
 /deep/.van-popup--bottom{
   width: 50%;
   left: 50%;
