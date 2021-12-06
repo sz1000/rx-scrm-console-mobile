@@ -357,7 +357,7 @@ export default {
                 }
                 .edit-field:not(.area-field) {
                     height: 80px;
-                    line-height: 1;
+                    line-height: 40px;
                 }
                 /deep/ .van-stepper__input {
                     margin: 0;
