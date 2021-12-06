@@ -122,6 +122,7 @@ export default {
     },
     data(){
         return {
+            num: this.$route.query.num,
             navList: ['全部','客户动态','商机动态','互动沟通'],
             activeIndex: 0,
             
@@ -288,6 +289,9 @@ export default {
                 this.userMessageReceive()
             }
             this.followMsgSearch.clueCustomerNo = this.id
+            if(this.num){
+                this.followMsgSearch.limit = this.num * this.followMsgSearch.limit
+            }
             this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i 
             clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch,this.noListLoading).then(res => {
                 if(res.result){

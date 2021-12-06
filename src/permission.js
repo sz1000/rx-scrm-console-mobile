@@ -21,6 +21,7 @@ router.beforeEach(async(to, from, next) => {
         // console.log('is sys', phoneModel())
     
     
+        console.log('form', form,window.location)
         console.log('token is', isTokenValid(),token)
     }
     if(useList.indexOf(to.path) > -1){
