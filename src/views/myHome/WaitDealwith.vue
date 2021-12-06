@@ -13,7 +13,8 @@
     </div>
     <div class="tips_box">
       <img src="../../images/ico_warning@2x.png" alt="">
-      <span>请前往企微聊天面板-客户朋友圈进行发表备份</span>
+      <span v-if="tab ==1 ">请前往企微聊天面板-客户朋友圈进行发表</span>
+      <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
     </div>
     <div class="searchInput">
       <div class="select_date" @click="showPicker=true">

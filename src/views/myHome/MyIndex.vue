@@ -305,7 +305,7 @@ export default {
         query: {
           tab: v,
           active: this.activeObj.neverCount,
-          monthCount: this.activeObj.monthCount,
+          monthCount: this.activeObj.customerFind,
         },
       })
     },
