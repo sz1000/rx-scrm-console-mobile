@@ -1,12 +1,8 @@
 <template>
     <div class="helper_wrap">
         <div class="header_opera">
-            <el-button class="delBtn" size="small" type="primary" @click="delPop">
-                <i class="el-icon-delete"></i><span>删除</span>
-            </el-button>
-            <el-button class="addBtn" size="small" type="primary" @click="addPop">
-                <i class="el-icon-circle-plus-outline"></i><span>添加</span>
-            </el-button>
+            <div class="btn" @click="delPop">删除</div>
+            <div class="btn" @click="addPop">新增</div>
         </div>
         <div class="helper_title">
             <i></i>
@@ -64,39 +60,55 @@
                 </div>
             </div>
         </div>
-        <AddHelper v-model="dialog_add"></AddHelper>
+        <AddHelper v-model="dialog_add" @sure="getList"></AddHelper>
+        <DeleteHelper :list="list" v-model="dialog_delete" @sure="getList"></DeleteHelper>
     </div>
 </template>
 
 <script>
-import { AddHelper } from './components'
+import { AddHelper,DeleteHelper } from './components'
+import { clueCustomerFollowUser_getFollowUserList } from '@/api/customer'
 export default {
     components: {
-        AddHelper,
+        AddHelper,DeleteHelper
     },
     data(){
         return {
             data: localStorage.getItem('helperData') ? JSON.parse(localStorage.getItem('helperData')) : [],
+            list: [],
             dialog_add: false,
+            dialog_delete: false,
         }
     },
     computed: {
+        id(){
+            let str = localStorage.getItem('customerId') ? localStorage.getItem('customerId') : ''
+            return str
+        },
         obj(){  //负责人obj
             let obj = this.data && this.data.length ? this.data[0] : {}
             return obj
         },
-        list(){
-            let list = this.data.filter((el,index) => {
-                return index != 0
-            })
-            return list
-        },
+    },
+    mounted(){
+        if(this.id){
+            this.getList()
+        }
     },
     methods: {
         addPop(){
             this.dialog_add = true
         },
-        delPop(){},
+        delPop(){
+            this.dialog_delete = true
+        },
+        getList(){  //获取协助人列表
+            clueCustomerFollowUser_getFollowUserList(this.id).then(res => {
+                if(res.result){
+                    this.list = res.data
+                }
+            })
+        },
     },
     filters: {
         permission(val){
@@ -114,6 +126,24 @@ export default {
     background: @white;
     padding: 32px;
     position: relative;
+    .header_opera{
+        width: 100%;
+        display: flex;
+        justify-content: right;
+        .btn{
+            width: 120px;
+            height: 60px;
+            color: @fontSub2;
+            font-size: 28px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 8px;
+            border: 1px solid #d9dae4; /* no */
+            &:first-child{
+                margin-right: 20px;
+            }
+        }
+    }
     .helper_title{
         position: relative;
         display: flex;

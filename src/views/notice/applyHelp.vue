@@ -30,7 +30,7 @@
                 <div class="val">{{detail.createTime}}</div>
             </div>
         </div>
-        <div class="opera_box" v-if="detail.isFollowuser == 1 || !detail.optResult">
+        <div class="opera_box" v-if="detail.isFollowuser == 1 && !detail.optResult">
             <div class="btn plain" @click="reviewFun('nopass')">拒绝</div>
             <div class="btn" @click="reviewFun('pass')">通过</div>
         </div>

@@ -22,3 +22,6 @@ from './applyHelp.vue'
 /* 添加协助人 */
 export { default as AddHelper }
 from './addHelper.vue'
+/* 添加协助人 */
+export { default as DeleteHelper }
+from './deleteHelper.vue'
