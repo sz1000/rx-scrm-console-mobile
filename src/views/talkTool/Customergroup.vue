@@ -179,7 +179,7 @@
                    <div class="tites">{{item.materialList.title}}</div>
                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
                  </div>
-                 <div class="article_flex">
+                 <div class="article_flex" v-if="item.materialList.tab == 1 && item.materialList.title">
                    <div>
                       <p class="tite">{{item.materialList.title}}</p>
                       <p class="link_box">{{item.materialList.contentAbstract}}</p>
@@ -195,7 +195,7 @@
                    <div class="tites">{{item.materialList.name}}</div>
                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
                  </div>
-                 <div class="article_flex">
+                 <div class="article_flex" v-if="item.materialList.tab == 2 && item.materialList.name">
                    <div>
                      <img src="../../assets/images/pdf_image.png" alt="">
                    </div>
@@ -212,7 +212,7 @@
                    <div class="tites">{{item.materialList.posterName}}</div>
                    
                  </div>
-                 <div class="article_img">
+                 <div class="article_img" v-if="item.materialList.tab == 3 && item.materialList.posterUrl">
                    <div>
                      <img :src="item.materialList.posterUrl" alt="">
                    </div>
@@ -461,6 +461,15 @@ export default {
       this.appendixList[this.dataindex].mediatite = obj.title
       this.appendixList[this.dataindex].mediatype = obj.tab
       this.appendixList[this.dataindex].objList= obj
+            if(obj.tab == 2){
+          this.appendixList[this.dataindex].mediatite = obj.name
+           this.appendixList[this.dataindex].mediatype = obj.tab
+       }
+           if(obj.tab == 3){
+          this.appendixList[this.dataindex].mediatite = obj.posterName
+           this.appendixList[this.dataindex].mediatype = obj.tab
+              this.appendixList[this.dataindex].urls = obj.posterUrl
+       }
     },
     showData(val){
       console.log(val,"--0--")
@@ -708,6 +717,7 @@ export default {
         mediatype:"",
         objList:{},
          listurl:"",
+           urls:'',
       })
    localStorage.setItem("appendixList", JSON.stringify(this.appendixList));
     },
@@ -804,7 +814,7 @@ this.appendixList.forEach((item,indexs)=>{
         } else if (item.objList.tab == 2) {
           imgArr = [
             {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.documentId}&type=${item.objList.tab}`,
+              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.documentId}&type=${item.objList.tab}`,
               ...item.objList
             },
           ]
@@ -852,7 +862,7 @@ this.appendixList.forEach((item,indexs)=>{
               desc: item.mediaDesc,
               picurl: item.meiapicul,
               title:item.mediatite,
-              url:item.listurl,
+              url:item.listurl || item.urls,
               type:item.mediatype
             };
             if(item.mediatite){
@@ -1381,7 +1391,7 @@ this.appendixList.forEach((item,indexs)=>{
     height: 100%;
     background: #fff;
     box-sizing: border-box;
-    padding: 24px 12px;
+    padding: 24px;
     .el-radio-group {
       .el-radio {
         line-height: 28px;

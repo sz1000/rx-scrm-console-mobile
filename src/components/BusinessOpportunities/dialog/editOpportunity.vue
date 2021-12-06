@@ -215,7 +215,7 @@ export default {
                 this.form = JSON.parse(JSON.stringify(formData))
                 this.getText()
                 this.stageReasonList(this.form.sortId)
-                this.opportunitiesStageList(this.getStageListOptions, '')
+                this.opportunitiesStageList(this.getStageListOptions, false)
             } else {
                 this.id = null
                 this.title = '新建商机'

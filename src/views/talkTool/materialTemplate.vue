@@ -78,16 +78,17 @@
                     </van-list>
                 </li>
             </ul>
-
-            <!-- 转载公众号文章按钮 -->
-            <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
-            <!-- 上传文件按钮 -->
-            <div v-if="type == 1" class="poster-box">
-                <file-upload :needFileInfo="true"></file-upload>
-            </div>
-            <!-- 上传海报按钮 -->
-            <div v-if="type == 2" class="poster-box">
-                <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+            <div class="position-box">
+                <!-- 转载公众号文章按钮 -->
+                <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
+                <!-- 上传文件按钮 -->
+                <div v-if="type == 1" class="poster-box">
+                    <file-upload :needFileInfo="true"></file-upload>
+                </div>
+                <!-- 上传海报按钮 -->
+                <div v-if="type == 2" class="poster-box">
+                    <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+                </div>
             </div>
         </template>
 
@@ -496,16 +497,27 @@ export default {
             }
         }
     }
+    .position-box {
+        width: 5rem;
+        height: 104px;
+        background-color: transparent;
+        pointer-events: none;
+        position: fixed;
+        left: 50%;
+        bottom: 140px;
+        div {
+            pointer-events: auto;
+        }
+    }
     .reprint-box {
         width: 104px;
         height: 104px;
         background-color: @main;
         border-radius: 50%;
         box-shadow: 0 6px 34px 0 rgba(65, 104, 246, .3);
-        position: fixed;
-        // right: 32px;
-        right: 5%;
-        bottom: 140px;
+        position: absolute;
+        right: 32px;
+        bottom: 0;
         &::before, &::after {
             content: '';
             border-radius: 100px;
@@ -527,9 +539,9 @@ export default {
     .poster-box {
         width: 104px;
         height: 104px;
-        position: fixed;
+        position: absolute;
         right: 32px;
-        bottom: 140px;
+        bottom: 0;
     }
 }
 </style>
