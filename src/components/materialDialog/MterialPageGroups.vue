@@ -454,7 +454,7 @@ text-align: center;
   }
   }
     min-height: 100vh;
-    min-height: 100vh;
+     width: 750px;
     background-color: @white;
     overflow-x: hidden;
      .headerTitle {
