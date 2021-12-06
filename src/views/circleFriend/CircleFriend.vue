@@ -214,12 +214,15 @@ export default {
   },
   created(){
     this.materialList =  this.$route.query.datalist
-    if(this.materialList.tab == 1){
-       this.linkhref.hrefTitle =  this.materialList.title
-    }else if (this.materialList.tab == 2){
-        this.linkhref.hrefTitle =  this.materialList.name
-    }else{
-        this.linkhref.hrefTitle =  this.materialList.posterName
+     console.log(this.materialList,"000")
+     if(this.materialList){
+      if(this.materialList.tab == 1){
+         this.linkhref.hrefTitle =  this.materialList.title
+      }else if (this.materialList.tab == 2){
+          this.linkhref.hrefTitle =  this.materialList.name
+      }else{
+          this.linkhref.hrefTitle =  this.materialList.posterName
+      }
     }
       console.log(this.$route.query.datalist,"000000---")
       this.tab = this.$route.query.tablable || 'image'
