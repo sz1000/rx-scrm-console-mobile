@@ -21,10 +21,17 @@ router.beforeEach(async(to, from, next) => {
         // console.log('is sys', phoneModel())
     
     
-        console.log('form', form,window.location)
+        console.log('form', from,to)
         console.log('token is', isTokenValid(),token)
+        if(from.path === "/" && useList.indexOf(to.path) > -1 && !to.query.code){
+            console.log('right close',token)
+            // setTimeout(() => {
+            //     wx.closeWindow()
+            // },100)
+        }
     }
     if(useList.indexOf(to.path) > -1){
+        
         if(token && isTokenValid()){
             console.log('token true')
             if(process.env.NODE_ENV === 'development'){
@@ -43,6 +50,8 @@ router.beforeEach(async(to, from, next) => {
                             }else{
                                 next()
                             }
+                        }else{
+                            console.log('error')
                         }
                     })
                 }else{
@@ -56,10 +65,10 @@ router.beforeEach(async(to, from, next) => {
                 next()
             }else{
                 getAuthInfo().then(res => {
-                    console.log('success',res)
+                    // console.log('success',res)
                     if(res.result){
                         if(type.length > 0){
-                            console.log('wx is',res,type)
+                            // console.log('wx is',res,type)
                             wxAgent(res,type).then(r => {
                                 if(r){
                                     console.log('next',store.getters)
