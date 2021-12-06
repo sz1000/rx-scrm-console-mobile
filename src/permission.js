@@ -76,12 +76,17 @@ router.beforeEach(async(to, from, next) => {
                     if(res.result){
                         if(type.length > 0){
                             // console.log('wx is',res,type)
-                            wxAgent(res,type).then(r => {
-                                if(r){
-                                    console.log('next',store.getters)
-                                    next()
-                                }
-                            })
+                            if(to.query.comeFrom == 'messageCard'){
+                                console.log('card')
+                                next()
+                            }else{
+                                wxAgent(res,type).then(r => {
+                                    if(r){
+                                        console.log('next',store.getters)
+                                        next()
+                                    }
+                                })
+                            }
                         }else{
                             console.log('type is null')
                             next()
