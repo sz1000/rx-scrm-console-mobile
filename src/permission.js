@@ -55,6 +55,7 @@ router.beforeEach(async(to, from, next) => {
                         }
                     })
                 }else{
+                    console.log('oh h')
                     next()
                 }
             }
