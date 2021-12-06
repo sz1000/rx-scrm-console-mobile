@@ -62,7 +62,8 @@ export default {
         offiAccount(wechatCode) {
             let params = {
                 code: wechatCode,
-                corpId: this.corpId
+                corpId: this.corpId,
+                userNo: this.userNo
             }
 
             OffiAccount(params).then(res => {
