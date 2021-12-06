@@ -126,12 +126,12 @@
     </div>
     <div class="btm-box">
       <div class="bottom-warp">
-        <div class="routerbtn" @click="showHome = false">
+        <div class="routerbtn" @click="handelChangeHome(false)">
           <img src="../images/bg_y.png" alt="" v-show="showHome" />
           <img src="../images/bg_gy.png" alt="" v-show="!showHome" />
           <span :class="showHome ? '' : 'textname'">互动助手</span>
         </div>
-        <div class="routerbtn" @click="showHome = true">
+        <div class="routerbtn" @click="handelChangeHome(true)">
           <img src="../images/bg_g.png" alt="" v-show="!showHome" />
           <img src="../images/bg_m.png" alt="" v-show="showHome" />
           <span :class="showHome ? 'textname' : ''">工作面板</span>
@@ -181,10 +181,15 @@ export default {
     }
   },
   mounted() {
+    this.showHome = sessionStorage.getItem('showHome')
     this.getHome()
     this.getUserName()
   },
   methods: {
+    handelChangeHome(v) {
+      sessionStorage.setItem('showHome', v)
+      this.showHome = v
+    },
     getHome() {
       cluecustomer_homedata().then((res) => {
         if (res.result) {
