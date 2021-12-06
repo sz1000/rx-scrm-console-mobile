@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <!-- 话术 -->
-    <verbal-trick-console v-if="showTemplate === 1"></verbal-trick-console>
+    <verbal-trick-console v-if="showTemplate === 1" :isIndependent="2"></verbal-trick-console>
     <!-- 素材 -->
     <material-template v-else @ifShowFooter="ifShowFooter" :isIndependent="2"></material-template>
     <!-- 底部导航 -->

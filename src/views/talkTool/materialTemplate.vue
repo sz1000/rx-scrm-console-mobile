@@ -1,5 +1,6 @@
 <template>
     <div class="material-template">
+        <header-title v-if="isIndependent == 1" title="内容素材"></header-title>
         <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
             <ul class="header-nav">
                 <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
@@ -105,6 +106,7 @@
 import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
 import { sendChatMessage, byteConvert, getFileDefaultCover } from '../../utils/tool'
 
+import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
 import Search from '../../components/MaterialTemplate/search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ImgUpload from '../../components/MaterialTemplate/imgUpload'
@@ -166,7 +168,7 @@ export default {
             getFileUrl: this.getFileUrl,
             previewImg: this.previewImg,
             initType: null,
-            goBack: null,
+            goBack: this.goBack,
         }
     },
     created() {
@@ -343,20 +345,26 @@ export default {
         previewImg(i) {
             this.$refs.imgPreview.show(1, [i.posterUrl])
         },
+        // 是否显示footer-nav
         ifShowFooter(data) {
             if (this.isIndependent == 2) {
                 this.$emit('ifShowFooter', data)
             }
-        }
+        },
+        // 顶部标题返回（工作台）
+        goBack() {
+            this.$router.push('/home')
+        },
     },
     components: {
+        HeaderTitle,
         Search,
         ImgPreview,
         ImgUpload,
         UploadPoster,
         ContentPreview,
         FileUpload,
-        ReprintEdit
+        ReprintEdit,
     }
 }
 </script>
