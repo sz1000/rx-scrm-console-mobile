@@ -81,7 +81,7 @@
       <div class="about_me custom_reply">
         <span>客户寻回</span>
         <div class="reply_text">
-          <span>{{activeObj.monthCount}}个客户待寻回</span>
+          <span>{{activeObj.customerFind}}个客户待寻回</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(2)" />
         </div>
       </div>
@@ -163,7 +163,7 @@ export default {
       },
       activeObj: {
         excedOne: '',
-        monthCount: '',
+        customerFind: '',
         neverCount: '',
         sevenCount: '',
       },
