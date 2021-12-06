@@ -578,7 +578,7 @@ text-align: center;
                     }
                 }
                 .right {
-                    width: 88%;
+                    width: 95%;
                     .img {
                         display: inline-block;
                         width: 100px;

@@ -585,7 +585,7 @@ margin-right: 24px;
                     }
                 }
                 .right {
-                    width: 88%;
+                    width: 95%;
                     .img {
                         display: inline-block;
                         width: 100px;
