@@ -122,15 +122,15 @@
                         @click="shareText(oneitem)" /> -->
                     <span class="word-title">{{ oneitem.title }}</span>
                     </div>
-                    <div class="word-list">
-                    <div v-for="(list, lidx) in oneitem.contentList" :key="lidx" class="slot-box">
-                        <div class="text_img" @click="firstShare(list)">
-                        <img class="share_img" src="../../images/share_two@2x.png" alt="" />
-                        <div class="text-value">
-                            {{ list.value }}
-                        </div>
-                        </div>
-                    </div>
+                    <div v-if="isIndependent == 2" class="word-list">
+                      <div v-for="(list, lidx) in oneitem.contentList" :key="lidx" class="slot-box">
+                          <div class="text_img" @click="firstShare(list)">
+                          <img class="share_img" src="../../images/share_two@2x.png" alt="" />
+                          <div class="text-value">
+                              {{ list.value }}
+                          </div>
+                          </div>
+                      </div>
                     </div>
                 </li>
                 </ul>
@@ -166,16 +166,16 @@
                                 grandword.title
                             }}</span>
                             </div>
-                            <div class="word-list">
-                            <div v-for="(list, lidx) in grandword.contentList" :key="lidx" class="slot-box">
-                                <div class="text_img" @click="firstShare(list)">
-                                <img class="share_img" src="../../images/share_two@2x.png" alt="" />
+                            <div v-if="isIndependent == 2" class="word-list">
+                              <div v-for="(list, lidx) in grandword.contentList" :key="lidx" class="slot-box">
+                                  <div class="text_img" @click="firstShare(list)">
+                                  <img class="share_img" src="../../images/share_two@2x.png" alt="" />
 
-                                <div class="text-value">
-                                    {{ list.value }}
-                                </div>
-                                </div>
-                            </div>
+                                  <div class="text-value">
+                                      {{ list.value }}
+                                  </div>
+                                  </div>
+                              </div>
                             </div>
                         </li>
                         </ul>
@@ -303,6 +303,11 @@ export default {
   components: {
     SelectTree,
     // Details,
+  },
+  props: {
+    isIndependent: {  // 1: 话术是独立路由，2: 话术是组件
+      default: 1
+    }
   },
   data() {
     return {
