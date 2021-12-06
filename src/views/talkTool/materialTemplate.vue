@@ -1,5 +1,6 @@
 <template>
     <div class="material-template">
+        <header-title v-if="isIndependent == 1" title="内容素材"></header-title>
         <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
             <ul class="header-nav">
                 <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
@@ -78,16 +79,17 @@
                     </van-list>
                 </li>
             </ul>
-
-            <!-- 转载公众号文章按钮 -->
-            <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
-            <!-- 上传文件按钮 -->
-            <div v-if="type == 1" class="poster-box">
-                <file-upload :needFileInfo="true"></file-upload>
-            </div>
-            <!-- 上传海报按钮 -->
-            <div v-if="type == 2" class="poster-box">
-                <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+            <div class="position-box">
+                <!-- 转载公众号文章按钮 -->
+                <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
+                <!-- 上传文件按钮 -->
+                <div v-if="type == 1" class="poster-box">
+                    <file-upload :needFileInfo="true"></file-upload>
+                </div>
+                <!-- 上传海报按钮 -->
+                <div v-if="type == 2" class="poster-box">
+                    <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
+                </div>
             </div>
         </template>
 
@@ -104,6 +106,7 @@
 import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
 import { sendChatMessage, byteConvert, getFileDefaultCover } from '../../utils/tool'
 
+import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
 import Search from '../../components/MaterialTemplate/search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ImgUpload from '../../components/MaterialTemplate/imgUpload'
@@ -165,7 +168,7 @@ export default {
             getFileUrl: this.getFileUrl,
             previewImg: this.previewImg,
             initType: null,
-            goBack: null,
+            goBack: this.goBack,
         }
     },
     created() {
@@ -342,20 +345,26 @@ export default {
         previewImg(i) {
             this.$refs.imgPreview.show(1, [i.posterUrl])
         },
+        // 是否显示footer-nav
         ifShowFooter(data) {
             if (this.isIndependent == 2) {
                 this.$emit('ifShowFooter', data)
             }
-        }
+        },
+        // 顶部标题返回（工作台）
+        goBack() {
+            this.$router.push('/home')
+        },
     },
     components: {
+        HeaderTitle,
         Search,
         ImgPreview,
         ImgUpload,
         UploadPoster,
         ContentPreview,
         FileUpload,
-        ReprintEdit
+        ReprintEdit,
     }
 }
 </script>
@@ -496,16 +505,27 @@ export default {
             }
         }
     }
+    .position-box {
+        width: 5rem;
+        height: 104px;
+        background-color: transparent;
+        pointer-events: none;
+        position: fixed;
+        left: 50%;
+        bottom: 140px;
+        div {
+            pointer-events: auto;
+        }
+    }
     .reprint-box {
         width: 104px;
         height: 104px;
         background-color: @main;
         border-radius: 50%;
         box-shadow: 0 6px 34px 0 rgba(65, 104, 246, .3);
-        position: fixed;
-        // right: 32px;
-        right: 5%;
-        bottom: 140px;
+        position: absolute;
+        right: 32px;
+        bottom: 0;
         &::before, &::after {
             content: '';
             border-radius: 100px;
@@ -527,9 +547,9 @@ export default {
     .poster-box {
         width: 104px;
         height: 104px;
-        position: fixed;
+        position: absolute;
         right: 32px;
-        bottom: 140px;
+        bottom: 0;
     }
 }
 </style>

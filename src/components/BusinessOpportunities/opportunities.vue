@@ -7,7 +7,7 @@
             <span>添加</span>
           </div>
         </div>-->
-        <el-button class="addBtn" size="small" type="primary" @click="handleEdit">
+        <el-button class="addBtn" :class="{'right-0':isPortrait}" size="small" type="primary" @click="handleEdit">
 	  		<i class="el-icon-circle-plus-outline"></i><span>添加</span>
 	  	</el-button>
         <div class="titleBox">
@@ -333,7 +333,10 @@ export default {
     top: 0;
 }
 .addBtn{
-	right: 0;
+	right: 32px;
+}
+.right-0 {
+    right: 0;
 }
 /deep/.delBtn span, .addBtn span{
 	position: relative;

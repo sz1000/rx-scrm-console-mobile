@@ -1,5 +1,6 @@
 <template>
   <div class="main-content">
+    <header-title v-if="isIndependent == 1" title="话术库"></header-title>
     <!-- 话术 -->
     <div class="warp-bg">
     <!-- 标题 -->
@@ -123,14 +124,14 @@
                     <span class="word-title">{{ oneitem.title }}</span>
                     </div>
                     <div class="word-list">
-                    <div v-for="(list, lidx) in oneitem.contentList" :key="lidx" class="slot-box">
-                        <div class="text_img" @click="firstShare(list)">
-                        <img class="share_img" src="../../images/share_two@2x.png" alt="" />
-                        <div class="text-value">
-                            {{ list.value }}
-                        </div>
-                        </div>
-                    </div>
+                      <div v-for="(list, lidx) in oneitem.contentList" :key="lidx" class="slot-box">
+                          <div class="text_img" @click="firstShare(list)">
+                          <img v-if="isIndependent == 2" class="share_img" src="../../images/share_two@2x.png" alt="" />
+                          <div class="text-value">
+                              {{ list.value }}
+                          </div>
+                          </div>
+                      </div>
                     </div>
                 </li>
                 </ul>
@@ -167,15 +168,14 @@
                             }}</span>
                             </div>
                             <div class="word-list">
-                            <div v-for="(list, lidx) in grandword.contentList" :key="lidx" class="slot-box">
-                                <div class="text_img" @click="firstShare(list)">
-                                <img class="share_img" src="../../images/share_two@2x.png" alt="" />
-
-                                <div class="text-value">
-                                    {{ list.value }}
-                                </div>
-                                </div>
-                            </div>
+                              <div v-for="(list, lidx) in grandword.contentList" :key="lidx" class="slot-box">
+                                  <div class="text_img" @click="firstShare(list)">
+                                  <img v-if="isIndependent == 2" class="share_img" src="../../images/share_two@2x.png" alt="" />
+                                  <div class="text-value">
+                                      {{ list.value }}
+                                  </div>
+                                  </div>
+                              </div>
                             </div>
                         </li>
                         </ul>
@@ -199,7 +199,7 @@
                         @select="changeSelect">
             <label slot="option-label" slot-scope="{ node }" class="labelClassName">
                 <img src="../../images/wenjian.png" alt="" style="width: 14px; height: 12px" />
-                <span class="nodeName">{{ node.label }}</span>
+                <span class="nodeName one-line">{{ node.label }}</span>
             </label>
             </SelectTree>
         </div>
@@ -298,11 +298,18 @@ import {
   group_getGroupDetail,
   sopSendDetail_tag,
 } from '@/api/sop'
+import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
 
 export default {
   components: {
     SelectTree,
     // Details,
+    HeaderTitle
+  },
+  props: {
+    isIndependent: {  // 1: 话术是独立路由，2: 话术是组件
+      default: 1
+    }
   },
   data() {
     return {
@@ -372,6 +379,11 @@ export default {
     this.verbaltrickList()
     this.getData()
     this.getUserName()
+  },
+  provide() {
+    return {
+      goBack: this.goBack,
+    }
   },
   methods: {
     formatDate,
@@ -905,6 +917,10 @@ export default {
       console.log(val.id)
       this.groupingId = val.id
     },
+    // 顶部标题返回（工作台）
+    goBack() {
+      this.$router.push('/home')
+    },
   },
   watch: {
     userId(val) {
@@ -1298,7 +1314,7 @@ export default {
     width: 702px;
     height: 68px;
     background: rgba(65, 104, 246, 0.04);
-    border: 1px solid #4168f6;
+    border: 2px solid #4168f6;
     border-radius: 8px;
     margin: 0 auto;
     display: flex;
@@ -1648,6 +1664,10 @@ export default {
     img {
       margin-right: 5px;
     }
+    .nodeName {
+      min-width: 90%;
+      max-width: 90%;
+    }
   }
 }
 .groupname {
@@ -1660,7 +1680,7 @@ export default {
   justify-content: center;
 }
 /deep/.vue-treeselect__control {
-  width: 547px;
+  // width: 547px;
   height: 80px;
   line-height: 80px;
 }

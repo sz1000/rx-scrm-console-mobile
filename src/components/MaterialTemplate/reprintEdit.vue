@@ -54,7 +54,7 @@ export default {
     name: 'reprintEdit',
     props: {
         type: {
-            default: 1
+            default: 1 // 1: 文章创建, 2: 文件上传
         },
         articleUrl: {
             type: String,

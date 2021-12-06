@@ -1,5 +1,5 @@
 <template>
-  <div class="friendWarp">
+  <div class="friendWarp"  v-loading="loading">
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
@@ -209,10 +209,18 @@ export default {
        },
     materialList:[],
       shareUrlOrigin: '',
+       loading:false,
     }
   },
   created(){
     this.materialList =  this.$route.query.datalist
+    if(this.materialList.tab == 1){
+       this.linkhref.hrefTitle =  this.materialList.title
+    }else if (this.materialList.tab == 2){
+        this.linkhref.hrefTitle =  this.materialList.name
+    }else{
+        this.linkhref.hrefTitle =  this.materialList.posterName
+    }
       console.log(this.$route.query.datalist,"000000---")
       this.tab = this.$route.query.tablable || 'image'
   },
@@ -272,6 +280,7 @@ export default {
       this.$router.push('mterialPage')
     },
     sendMessage: _throttle(function () {
+    
         if(this.tab == "material"){
       var imgArr = []
         if (window.location.origin == 'https://console.jzcrm.com') {
@@ -340,13 +349,13 @@ export default {
       if(this.linkhref.hrefTitle == ''){
          this.$toast("请输入标题")
       }else{
-
+           this.loading = true
       if(this.linkhref.hrefTitle == "" && this.tab == "link"){
         this.$toast("请输入链接标题")
       }else{
             addFriendStrong(params).then((res) => {
         if (res.result) {
-           
+            this.loading = false
           Notify({
             message: '创建成功',
             type: 'success',
