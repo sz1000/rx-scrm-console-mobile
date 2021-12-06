@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { _throttle } from '@/utils/tool'
 import { DialogDetail } from '../components'
 import {
     clueCustomerFollowUser_applyFollowUser,     //申请成为协助人
@@ -70,7 +71,7 @@ export default {
         }
     },
     methods: {
-        submitFun(){    //申请成为协助人
+        submitFun:_throttle(function(){    //申请成为协助人
             if(this.isApply || this.applyState){return false}
             clueCustomerFollowUser_applyFollowUser(this.id).then(res => {
                 if(res.result){
@@ -78,7 +79,7 @@ export default {
                     this.applyState = true
                 }
             })
-        },
+        },2000),
     },
     watch:{
         value(val){

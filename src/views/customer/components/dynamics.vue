@@ -37,14 +37,20 @@
                                     <span>{{item.optUserName}}</span>
                                 </div>
                                 <span class="mr8">{{getTextFun(item)}}</span>
-                                <div class="name" v-if="item.fromUser && item.optType != 44">
+                                <div class="name" v-if="item.fromUser && item.optType != 44 && fromUserNum.indexOf(item.optType) > -1">
                                     <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
                                     <span>{{item.fromUser | optString}}</span>
                                 </div>
                                 <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
                                 <div class="name" v-if="item.optType && item.toUser && item.optType == 6">
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
-                                    <span>{{item.toUser | optString}}</span>
+                                    <span>{{item.toUser | optToString}}</span>
+                                </div>
+                                <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length">
+                                    <div class="name" v-for="(us,ri) in item.toUser" :key="ri">
+                                        <img class="avatar" :src="us.avatar | $setAvatar" alt="">
+                                        <span>{{us | optString}}</span>
+                                    </div>
                                 </div>
                                 <a class="link" :href="item.ossUrl" v-if="item.optType == 11">{{item.ossObjectname}}</a>
                                 <div class="apply_opera" v-if="isDirector && item.optType == 44 && !item.optFlag">
@@ -125,6 +131,7 @@ export default {
             num: this.$route.query.num,
             navList: ['全部','客户动态','商机动态','互动沟通'],
             activeIndex: 0,
+            fromUserNum: [6],
             
             followMsgSearch: {
                 page: 1,
@@ -234,7 +241,7 @@ export default {
             //type =>  comment(消息回复) detail(商机详情)
             this.$emit('openDialog',row.id,type)
         },
-        reviewFun(type,row){    //协助人审核
+        reviewFun:_throttle(function(type,row){    //协助人审核
             let btnText = type == 'pass' ? '同意' : '拒绝'
             let tips = `你确定${btnText}“${row.optUserName}”成为该客户的协助人吗？`
             let obj = {
@@ -256,7 +263,7 @@ export default {
                 // on cancel
                 console.log("cancel");
             });
-        },
+        },2000),
         navClickFun(i){
             this.activeIndex = i
             this.followMsgSearch.page = 1
@@ -305,13 +312,17 @@ export default {
                             /*-start-*
                              * 3.企微同步 5.更新客户 6.变更负责人 7.分配客户 8.领取客户
                              * 9.放弃客户 11.附件 12.删除附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
-                             * 17.删除商机 21.互动协同 26.新增标签 28.自动打标
+                             * 17.删除商机 18.新增协助人 21.互动协同 26.新增标签 28.自动打标
                              * 
                              * 41.添加企微好友 44.申请成为协助人
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
                             el.toUser = el.toUser ? JSON.parse(el.toUser) : el.toUser
+                            if(el.optType == 18 && !el.createBy){
+                                el.optAvatar = el.toUser.avatar
+                                el.optUserName = el.toUser.name
+                            }
                             let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,28,36,44]
                             if(dotList.indexOf(el.optType) > -1){
                                 el.class = 'dot'
@@ -412,6 +423,9 @@ export default {
                         str = obj.context
                     }
                     break;
+                case 20:
+                    str = '删除了协作人'
+                    break;
                 case 26:
                     str = `新增标签“${obj.ossObjectname}”`
                     break;
@@ -428,7 +442,12 @@ export default {
                     str = obj.context
                     break;
                 case 44:
-                    let _str = obj.optResult && obj.optResult == 1 ? '(已通过)' : '(已拒绝)'
+                    let _str = ''
+                    if(obj.optResult == 1){
+                        _str = '(已通过)'
+                    }else if(obj.optResult == 0){
+                        _str = '(已拒绝)'
+                    }
                     str = '申请成为协助人' + _str
                     break;
                 default:
@@ -461,6 +480,17 @@ export default {
         optString(val){
             // console.log('val',`${val.name}-${val.depId}`)
             return val.name && val.depId ? `${val.name}-${val.depId}` : val.name
+        },
+        optToString(val){
+            let arr = []
+            if(val && val.length){
+                let str = ''
+                val.forEach(el => {
+                    str = el.name && el.depId ? `${el.name}-${el.depId}` : el.name
+                })
+                arr.push(str)
+            }
+            return arr && arr.length ? arr.join('、') : ''
         },
     },
 }
@@ -723,6 +753,9 @@ export default {
                         position: absolute;
                         right: 24px;
                         top: 28px;
+                    }
+                    .name_box{
+                        display: inline-block;
                     }
                     .name{
                         font-size: 24px;

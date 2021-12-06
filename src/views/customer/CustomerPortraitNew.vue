@@ -443,6 +443,7 @@ export default {
         },
         toFun(){    //查看协助人
             localStorage.setItem('helperData',JSON.stringify(this.userList))
+            localStorage.setItem('customerId',this.customerInfo.clueCustomerNo)
             this.$router.push('/helper')
         },
         goDetail() {

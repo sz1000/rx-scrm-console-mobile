@@ -112,6 +112,19 @@ export function clueCustomerFollowUser_addFollowUser(data) { // 新增协助人
         data
     })
 }
+export function clueCustomerFollowUser_deleteFollowUsers(data) { // 删除协助人
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/deleteFollowUsers',
+        method: 'post',
+        data
+    })
+}
+export function clueCustomerFollowUser_getFollowUserList(id) { // 获取协助人列表
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/getFollowUserList?cluecustomerno=' + id,
+        method: 'get'
+    })
+}
 export function cluecustomer_toupdate(id){
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/toupdate?clueCustomerNo=' + id,
