@@ -12,7 +12,9 @@ export default {
     },
     computed: {
         currentComponents(){
-            let val = process.env.NODE_ENV === 'development' ? 'single_chat_tools' : this.$store.getters.entry
+            let { comeFrom } = this.$route.query
+            let val = process.env.NODE_ENV === 'development' || comeFrom == 'messageCard' ? 'single_chat_tools' : this.$store.getters.entry
+            console.log('obj val',val)
             let obj = {
                 'single_chat_tools': CustomerPortrait,
                 'group_chat_tools': GroupPortrait,

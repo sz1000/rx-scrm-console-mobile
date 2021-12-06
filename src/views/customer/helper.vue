@@ -128,8 +128,8 @@ export default {
     position: relative;
     .header_opera{
         width: 100%;
-        display: flex;
-        justify-content: right;
+        height: 60px;
+        text-align: right;
         .btn{
             width: 120px;
             height: 60px;
@@ -139,6 +139,7 @@ export default {
             text-align: center;
             border-radius: 8px;
             border: 1px solid #d9dae4; /* no */
+            display: inline-block;
             &:first-child{
                 margin-right: 20px;
             }
