@@ -213,6 +213,7 @@ export default {
         },
     },
     mounted(){
+        console.log('asd',this.$route.query.name)
         this.getCustomerDetail()
         this.getUserName()
     },
@@ -241,8 +242,13 @@ export default {
         getCustomerDetail(){    //获取客户详情
             let id = this.userId
             // || 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
-            if(this.code){
-                id = this.code
+            let { comeFrom, name } = this.$route.query
+            if(comeFrom == 'messageCard'){
+                id = name
+            }else{
+                if(this.code){
+                    id = this.code
+                }
             }
             // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
             // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
@@ -297,6 +303,11 @@ export default {
                     let data = res.data
                     this.groupList = data.records
                     this.groupTotal = data.total
+
+                    let { comeFrom } = this.$route.query
+                    if(comeFrom == 'messageCard'){
+                        this.$refs.dynamic.navClickFun(3)
+                    }
                 }
             })
         },
@@ -804,7 +815,7 @@ export default {
                         padding: 10px 0;
                     }
                     .limit{
-                        width: calc(100% - 60px);
+                        width: calc(100% - 80px);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;

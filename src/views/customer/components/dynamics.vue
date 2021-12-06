@@ -314,7 +314,7 @@ export default {
                              * 9.放弃客户 11.附件 12.删除附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
                              * 17.删除商机 18.新增协助人 21.互动协同 26.新增标签 28.自动打标
                              * 
-                             * 41.添加企微好友 44.申请成为协助人
+                             * 40.浏览素材 41.添加企微好友 44.申请成为协助人
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
@@ -322,6 +322,17 @@ export default {
                             if(el.optType == 18 && !el.createBy){
                                 el.optAvatar = el.toUser.avatar
                                 el.optUserName = el.toUser.name
+                            }
+                            if(el.optType == 40){
+                                let str = ''
+                                if(el.duration < 5){
+                                    str = '少于5秒'
+                                }else if(el.duration > 5 && el.duration < 60){
+                                    str = el.duration + '秒'
+                                }else{
+                                    str = this.secondToDate(el.duration)
+                                }
+                                el.optName = el.optName + ' ' + str
                             }
                             let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,28,36,44]
                             if(dotList.indexOf(el.optType) > -1){
@@ -358,6 +369,18 @@ export default {
                     })
                 }
             })
+        },
+        secondToDate(result) {
+            let _str = ''
+            var h = Math.floor(result / 3600) < 10 ? '0'+Math.floor(result / 3600) : Math.floor(result / 3600);
+            var m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60));
+            var s = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60));
+            if(Number(h)){
+                _str = h + "小时" + m + "分" + s + '秒'
+            }else if(Number(m)){
+                _str = Number(m) + "分" + s + '秒'
+            }
+            return _str
         },
         getTextFun(obj){
             // console.log('asd',obj)
@@ -433,12 +456,15 @@ export default {
                     str = obj.context
                     break;
                 case 29:
-                    str = obj.context
+                    str = '成功激活客户'
                     break;
                 case 30:
                     str = obj.context
                     break;
                 case 36:
+                    str = obj.context
+                    break;
+                case 40:
                     str = obj.context
                     break;
                 case 44:
