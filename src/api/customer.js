@@ -105,6 +105,13 @@ export function clueCustomerFollowUser_approveHelperpplication(data) { // 协助
         data
     })
 }
+export function clueCustomerFollowUser_addFollowUser(data) { // 新增协助人
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/addFollowUser',
+        method: 'post',
+        data
+    })
+}
 export function cluecustomer_toupdate(id){
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/toupdate?clueCustomerNo=' + id,
