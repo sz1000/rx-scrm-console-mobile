@@ -24,6 +24,7 @@ export default {
 .img-box {
     width: 10rem;
     background: transparent;
+    margin-left: 0 !important;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

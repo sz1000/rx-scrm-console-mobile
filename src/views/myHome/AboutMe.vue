@@ -114,7 +114,7 @@ export default {
         path: '/customerPortrait',
         query: {
           id: val.followId,
-          code: val.clueCustomerNo,
+          userNo: val.clueCustomerNo,
           num: val.rowAt,
         },
       })

@@ -88,10 +88,10 @@
       <!-- 图表 -->
       <section>
         <div class="custom_add">
-          <CustomAddChart :options='customer'></CustomAddChart>
+          <CustomAddChart :options='customer' v-if="Object.keys(customer).length>0"></CustomAddChart>
         </div>
         <div class="custom_add">
-          <LookPieCharts :data="lookData"></LookPieCharts>
+          <LookPieCharts :data="lookData" v-if="lookData.length>0"></LookPieCharts>
         </div>
         <div class="custom_add">
           <TopBarCharts :data="topSortData" v-if="topSortData.length"></TopBarCharts>
@@ -102,7 +102,7 @@
           <img src="../../images/nodae.png" alt="" v-else />
         </div>
         <div class="custom_add">
-          <NicheCharts :time="nicheTime" :data="nicheData"></NicheCharts>
+          <NicheCharts :time="nicheTime" :data="nicheData" v-if="Object.keys(nicheData).length>0 "></NicheCharts>
         </div>
       </section>
     </div>

@@ -1,5 +1,13 @@
 <template>
     <div class="helper_wrap">
+        <div class="header_opera">
+            <el-button class="delBtn" size="small" type="primary" @click="delPop">
+                <i class="el-icon-delete"></i><span>删除</span>
+            </el-button>
+            <el-button class="addBtn" size="small" type="primary" @click="addPop">
+                <i class="el-icon-circle-plus-outline"></i><span>添加</span>
+            </el-button>
+        </div>
         <div class="helper_title">
             <i></i>
             <span class="tit">负责人</span>
@@ -56,14 +64,20 @@
                 </div>
             </div>
         </div>
+        <AddHelper v-model="dialog_add"></AddHelper>
     </div>
 </template>
 
 <script>
+import { AddHelper } from './components'
 export default {
+    components: {
+        AddHelper,
+    },
     data(){
         return {
             data: localStorage.getItem('helperData') ? JSON.parse(localStorage.getItem('helperData')) : [],
+            dialog_add: false,
         }
     },
     computed: {
@@ -77,6 +91,12 @@ export default {
             })
             return list
         },
+    },
+    methods: {
+        addPop(){
+            this.dialog_add = true
+        },
+        delPop(){},
     },
     filters: {
         permission(val){

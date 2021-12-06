@@ -215,7 +215,7 @@ export default {
                 this.form = JSON.parse(JSON.stringify(formData))
                 this.getText()
                 this.stageReasonList(this.form.sortId)
-                this.opportunitiesStageList(this.getStageListOptions, false)
+                this.opportunitiesStageList(this.getStageListOptions, '')
             } else {
                 this.id = null
                 this.title = '新建商机'
@@ -498,12 +498,13 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            width: 10rem;
             padding: 20px 0;
             background-color: #fff;
             position: fixed;
             bottom: 0;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             .item {
                 width: 339px;
                 height: 80px;

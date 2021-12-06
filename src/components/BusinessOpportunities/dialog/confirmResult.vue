@@ -370,6 +370,13 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 10rem;
+            padding: 20px 0;
+            background-color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             .item {
                 width: 339px;
                 height: 80px;

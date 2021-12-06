@@ -199,7 +199,7 @@
                         @select="changeSelect">
             <label slot="option-label" slot-scope="{ node }" class="labelClassName">
                 <img src="../../images/wenjian.png" alt="" style="width: 14px; height: 12px" />
-                <span class="nodeName">{{ node.label }}</span>
+                <span class="nodeName one-line">{{ node.label }}</span>
             </label>
             </SelectTree>
         </div>
@@ -1314,7 +1314,7 @@ export default {
     width: 702px;
     height: 68px;
     background: rgba(65, 104, 246, 0.04);
-    border: 1px solid #4168f6;
+    border: 2px solid #4168f6;
     border-radius: 8px;
     margin: 0 auto;
     display: flex;
@@ -1664,6 +1664,10 @@ export default {
     img {
       margin-right: 5px;
     }
+    .nodeName {
+      min-width: 90%;
+      max-width: 90%;
+    }
   }
 }
 .groupname {
@@ -1676,7 +1680,7 @@ export default {
   justify-content: center;
 }
 /deep/.vue-treeselect__control {
-  width: 547px;
+  // width: 547px;
   height: 80px;
   line-height: 80px;
 }
