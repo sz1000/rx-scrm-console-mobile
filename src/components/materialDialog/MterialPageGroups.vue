@@ -24,7 +24,8 @@
                         @load="onLoad"
                         >
                         <div class="item" v-for="(i,indexp) in articleList" :key="indexp">
-                            <div class="right" @click="preview(i,indexp)">
+                           <div class="flex_data right"  @click="preview(i,indexp)">
+                            <div class="right" >
                                 <div class="img">
                                     <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
                                 </div>
@@ -41,6 +42,7 @@
                              </span>
                             <span v-else class="roud_yun"></span>
                           </div>
+                          </div>
                             <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div> -->
                         </div>
                     </van-list>
@@ -54,6 +56,8 @@
                         @load="onLoad"
                         >
                         <div class="item" v-for="(i,indext) in saleList" :key="indext">
+                         <div class="flex_data right" @click="preview(i,indext)">
+
                             <div class="right" @click="preview(i,indext)">
                                 <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
                                 <div class="des">
@@ -63,10 +67,13 @@
                                     </div>
                                 </div>
                             </div>
-                             <span v-if="indexps == indext">
+                          <div>
+                               <span v-if="indexps == indext">
                                  <img src="../../images/duihao.png" class="duihao_img" alt="">
                              </span>
                             <span v-else class="roud_yun"></span>
+                          </div>
+                          </div>
                             <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div> -->
                         </div>
                     </van-list>
@@ -80,6 +87,8 @@
                         @load="onLoad"
                         >
                         <div class="item" v-for="(i,indexs) in posterList" :key="indexs">
+                              <div class="flex_data right" @click="preview(i,indexs)">  
+
                             <div class="right" @click="preview(i,indexs)">
                                 <div class="img">
                                     <span><img :src="i.posterUrl" alt=""></span>
@@ -90,10 +99,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div>
+
                              <span v-if="indexps == indexs">
                                  <img src="../../images/duihao.png" class="duihao_img" alt="">
                              </span>
                             <span v-else class="roud_yun"></span>
+                            </div>
+                          </div>
                             <!-- <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div> -->
                         </div>
                     </van-list>
@@ -533,7 +546,10 @@ text-align: center;
                 color: @lengthColor;
             }
             .item {
-
+                   .flex_data{
+               display: flex;
+               align-items: center;
+             }
                 .roud_yun{
          width: 38px;
          height: 38px;
