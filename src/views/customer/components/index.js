@@ -19,3 +19,6 @@ from './opportunityDialog.vue'
 /* 申请成为协助人 */
 export { default as ApplyHelp }
 from './applyHelp.vue'
+/* 添加协助人 */
+export { default as AddHelper }
+from './addHelper.vue'

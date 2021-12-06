@@ -139,7 +139,7 @@ export default {
     data(){
         return {
             id: this.$route.query.id,
-            code: this.$route.query.code,
+            code: this.$route.query.userNo,
             num: this.$route.query.num,
             showPortraitType: 0,
             dialog_group: false,
