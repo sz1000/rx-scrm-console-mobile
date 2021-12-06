@@ -215,6 +215,13 @@ export default {
     },
         cancel(){
           this.$router.go(-1)
+        //         this.$router.push({
+        //   path:"/talkTool/circleFriend",
+        //   query:{
+        //     datalist:this.centquer,
+        //     tablable:"material"
+        //   }
+        // })
     },
         determine(){
       console.log("000")

@@ -129,7 +129,7 @@
                    <div class="tites">{{materialList.title}}</div>
                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
                  </div>
-                 <div class="article_flex">
+                 <div class="article_flex" >
                    <div>
                       <p class="tite">{{materialList.title}}</p>
                       <p class="link_box">{{materialList.contentAbstract}}</p>
@@ -223,9 +223,10 @@ export default {
       }else{
           this.linkhref.hrefTitle =  this.materialList.posterName
       }
-    }
-      console.log(this.$route.query.datalist,"000000---")
+      
+      console.log(toString(this.$route.query.datalist),"000000---")
       this.tab = this.$route.query.tablable || 'image'
+    }
   },
   methods: {
        afterRead(obj, file) {
@@ -817,7 +818,7 @@ export default {
      
         margin-top: 36px;
         line-height: 80px;
-        padding: 0 32px;
+        padding: 0 24px;
         .marB-24{
           margin-bottom: 24px;
         }
