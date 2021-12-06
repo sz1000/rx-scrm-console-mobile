@@ -1,7 +1,6 @@
 <template>
   <van-action-sheet
     v-model="dialog"
-    :lock-scroll="false"
     title="添加协助人"
   >
     <div class="vanContent">
@@ -31,8 +30,7 @@
           show-toolbar
           :columns="bumenList"
           @confirm="onConfirm"
-          @cancel="onCancel"
-          @change="onChange"
+          @cancel="bumenPop = false"
           value-key="name"
         />
       </van-action-sheet>
@@ -78,6 +76,7 @@ import {
 } from '@/api/customer'
 import {
     userdepartment_getAlllist,
+    user_getUserList,
 } from '@/api/user'
 export default {
     name: 'AddHelper',
@@ -85,6 +84,12 @@ export default {
         value: {
             type: Boolean,
             default: false,
+        },
+    },
+    computed: {
+        id(){
+            let str = localStorage.getItem('customerId') ? localStorage.getItem('customerId') : ''
+            return str
         },
     },
     data(){
@@ -125,19 +130,19 @@ export default {
         onConfirm(value, index) {
             let depId = value.depId
             this.bumenName = value.name
-            this.getHelperSerch(depId)
-            this.isHelper = true
-            this.bumenPop = false
+            this.getUserList(depId)
         },
         saveDialogAdd(){
             this.oneList[0].permission = this.addObj.permission
             let params = {
-                clueCustomerNo: this.objItem.clueCustomerNo,
+                clueCustomerNo: this.id,
                 userList: this.oneList,
             }
             clueCustomerFollowUser_addFollowUser(params).then(res => {
                 if(res.result){
                     this.dialog = false
+                    this.bumenName = ''
+                    this.yuangongName = ''
                     this.$toast('添加成功!')
                     this.$emit('sure')
                 }
@@ -152,12 +157,14 @@ export default {
         },
         getUserList(e){      //员工列表
             let params = {
-                cluecustomerno: this.objItem.clueCustomerNo,
+                cluecustomerno: this.id,
                 depId: e,
             }
             user_getUserList(params).then(res => {
                 if(res.result){
                     this.heperList = res.data.user.records
+                    this.isHelper = true
+                    this.bumenPop = false
                     this.yuangongName = ''
                 }
             })
