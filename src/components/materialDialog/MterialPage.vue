@@ -199,11 +199,15 @@ export default {
         }
     },
     created() {
+     
         this.getCorpId().then(() => {
             this.getList()
             this.getTotal(2)
             this.getTotal(3)
         })
+    },
+    mounted(){
+        
     },
     methods: {
           goBack() {
@@ -242,7 +246,7 @@ export default {
             // })
         },
         changeNav(type) {
-          console.log(type)
+        
                 this.type = type
            if(type == 1){
                this.indexps = 1000000

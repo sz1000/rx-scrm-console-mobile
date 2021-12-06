@@ -1060,10 +1060,10 @@ export default {
 </script>
 <style lang="less">
 .psoition_falx{
-      position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
+    //   position: absolute;
+    // top: 0;
+    // right: 0;
+    // z-index: 10;
 }
    .article_warp{
               .article_img{

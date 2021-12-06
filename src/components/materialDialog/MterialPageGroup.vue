@@ -436,6 +436,15 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .material-template {
+     min-height: 100vh;
+    // width: 750px;
+    // margin: 0 auto;
+    background-color: @white;
+      // position: fixed;
+    // top: 0;
+    // left: 50%;
+    // z-index: 10;
+    overflow-x: hidden;
     .but_warp{
     background: #fff;
     display: flex;
@@ -457,19 +466,16 @@ margin-right: 24px;
   }
     .determine{
     width: 339px;
-height: 80px;
-background: #4168F6;
-border-radius: 8px;
-color: #FFFFFF;
-font-size: 28px;
-line-height: 80px;
-text-align: center;
+    height: 80px;
+    background: #4168F6;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-size: 28px;
+    line-height: 80px;
+    text-align: center;
   }
-  }
-    min-height: 100vh;
-    width: 750px;
-    background-color: @white;
-    overflow-x: hidden;
+      }
+ 
      .headerTitle {
     // position: fixed;
     // top: 0;
