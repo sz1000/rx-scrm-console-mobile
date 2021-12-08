@@ -17,7 +17,7 @@
                         <img class="icon" v-if="item.optType == 1" src="@/assets/svg/icon_jd.svg" alt="">
                         <img class="icon" v-if="item.optType == 21" src="@/assets/svg/icon_gt.svg" alt="">
                         <img class="icon" v-if="item.optType == 15 || item.optType == 16 || item.optType == 17" src="@/assets/svg/icon_sj.svg" alt="">
-                        <img class="icon" v-if="item.optType == 18 || item.optType == 19 || item.optType == 20 || item.optType == 39" src="@/assets/svg/icon_xzr.svg" alt="">
+                        <img class="icon" v-if="item.optType == 18 || item.optType == 19 || item.optType == 20 || item.optType == 39 || item.optType == 44" src="@/assets/svg/icon_xzr.svg" alt="">
                         <img class="icon" v-if="item.optType == 29 || item.optType == 30" src="@/assets/svg/icon_jh.svg" alt="">
                         <img class="icon" v-if="item.optType == 40" src="@/assets/svg/icon_sc.svg" alt="">
                         <img class="icon" v-if="item.optType == 41" src="@/assets/svg/icon_wx.svg" alt="">
