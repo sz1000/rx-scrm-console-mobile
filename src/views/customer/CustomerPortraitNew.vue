@@ -739,6 +739,10 @@ export default {
                     font-size: 24px;
                     line-height: 32px;
                     color: @yellow;
+                    max-width: 160px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                     margin-left: 8px;
                     &.green{
                         color: @green;
@@ -819,7 +823,7 @@ export default {
                         padding: 10px 0;
                     }
                     .limit{
-                        width: calc(100vw - 560px);
+                        max-width: calc(100vw - 560px);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
@@ -835,7 +839,18 @@ export default {
             display: flex;
             align-items: center;
             padding-top: 24px;
-            border-top: 1px solid @lineColor;   /*no*/
+            // border-top: 1px solid @lineColor;   /*no*/
+            position: relative;
+            &::before{
+                content: '';
+                width: 100%;
+                height: 1px;   /*no*/
+                background: @lineColor;
+                transform: scaleY(.5);
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
             &.opt0{
                 opacity: 0;
             }
@@ -846,7 +861,15 @@ export default {
                 border-radius: 26px;
                 border: 1px solid @bdColor; /*no*/
                 font-size: 28px;
+                
+                // height: 104px;
+                // line-height: 100px;
+                // padding: 0 32px;
+                // border-radius: 52px;
+                // border: 1px solid @bdColor; /*no*/
+                // font-size: 56px;
                 color: @fontSub1;
+                // transform: scale(.5);
                 &+.tag{
                     margin-left: 16px;
                 }
@@ -859,7 +882,18 @@ export default {
     height: 88px;
     display: flex;
     text-align: center;
-    border-bottom: 1px solid @lineColor; /*no*/
+    // border-bottom: 1px solid @lineColor; /*no*/
+    position: relative;
+    &::before{
+        content: '';
+        width: 100%;
+        height: 1px;   /*no*/
+        background: @lineColor;
+        transform: scaleY(.5);
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
     .nav{
         color: @fontSub1;
         font-size: 28px;
@@ -876,7 +910,7 @@ export default {
                 border-radius: 2px;
                 position: absolute;
                 left: 50%;
-                bottom: -1px;
+                bottom: 0;
                 transform: translateX(-50%);
             }
         }

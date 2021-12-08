@@ -634,7 +634,7 @@ export default {
                     height: 36px;
                 }
                 .icon{
-                    left: 53.6%;
+                    left: 51%;
                     // width: 12px;
                     // height: 12px;
                     // border-radius: 50%;
@@ -745,6 +745,7 @@ export default {
                     width: 1px; /*no*/
                     height: 24px;
                     border-right: 1px dashed @placeholder; /*no*/
+                    transform: scaleX(.5);
                     position: absolute;
                     left: 50%;
                     top: 0;
@@ -755,6 +756,7 @@ export default {
                     width: 1px; /*no*/
                     height: calc(100% - 24px);
                     border-right: 1px dashed @placeholder; /*no*/
+                    transform: scaleX(.5);
                     position: absolute;
                     left: 50%;
                     top: 64px;
