@@ -47,7 +47,7 @@ export default {
 
             if (files && files[0]) {
                 const file = files[0]
-                console.log("文件信息：：：", file)
+                console.log("文件信息:", file)
                 if (!this.beforeRead(file)) {
                     input.value = ''
                     this.$toast.clear()
