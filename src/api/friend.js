@@ -22,7 +22,7 @@ export const addFriend = (data) => {
     // }
 export const addFriendStrong = (data) => {
     return request({
-        url: materialServiceApi + 'friendCircle/addFriendCircleH5',
+        url: materialServiceApi + '/friendCircle/addFriendCircleH5',
         method: 'post',
         data: data,
     })
