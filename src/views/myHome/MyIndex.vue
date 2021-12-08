@@ -53,40 +53,42 @@
           </div>
         </div>
       </div>
-      <div class="about_me">
+      <div class="about_me about_shadow">
         <span>@我</span>
         <div class="reply_text" @click="goToAbout">
           <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
-      <div class="cust_activate">
-        <div class="text_wait">
-          <span>客户激活</span>
-          <div class="cilck_area" @click="goToCustom(1)">
+      <div class="custom_r">
+        <div class="cust_activate">
+          <div class="text_wait">
+            <span>客户激活</span>
+            <div class="cilck_area" @click="goToCustom(1)">
+              <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+            </div>
+          </div>
+          <div class="stati_num">
+            <div class="box" @click="goToCustomBtn(0)">
+              <p>{{activeObj.neverCount}}</p>
+              <p>从未联系</p>
+            </div>
+            <div class="box" @click="goToCustomBtn(1)">
+              <p>{{activeObj.excedOne}}</p>
+              <p>超过1天</p>
+            </div>
+            <div class="box" @click="goToCustomBtn(3)">
+              <p>{{activeObj.sevenCount}}</p>
+              <p>超过1周</p>
+            </div>
+          </div>
+        </div>
+        <div class="about_me custom_reply">
+          <span>客户寻回</span>
+          <div class="reply_text" @click="goToCustom(2)">
+            <span>{{activeObj.customerFind}}个客户待寻回</span>
             <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
-        </div>
-        <div class="stati_num">
-          <div class="box" @click="goToCustomBtn(0)">
-            <p>{{activeObj.neverCount}}</p>
-            <p>从未联系</p>
-          </div>
-          <div class="box" @click="goToCustomBtn(1)">
-            <p>{{activeObj.excedOne}}</p>
-            <p>超过1天</p>
-          </div>
-          <div class="box" @click="goToCustomBtn(3)">
-            <p>{{activeObj.sevenCount}}</p>
-            <p>超过1周</p>
-          </div>
-        </div>
-      </div>
-      <div class="about_me custom_reply">
-        <span>客户寻回</span>
-        <div class="reply_text" @click="goToCustom(2)">
-          <span>{{activeObj.customerFind}}个客户待寻回</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
       <!-- 图表 -->
@@ -146,7 +148,7 @@ export default {
       let list = this.scaleData.find((el) => {
         return el.name == 'total'
       })
-      console.log('list----', list)
+      // console.log('list----', list)
       return list ? list.num : 0
     },
   },
@@ -172,7 +174,7 @@ export default {
         sevenCount: '',
       },
       identity: '个人',
-      num: '1',
+      num: '0',
       showIdent: false,
       customer: {},
       lookData: [],
@@ -187,6 +189,10 @@ export default {
   },
   methods: {
     getData() {
+      this.$toast.loading({
+        loadingType: 'spinner',
+        duration: 0,
+      })
       getMyInfo().then((res) => {
         this.dataObj = res.data.my
         this.userObj = res.data.my.user
@@ -227,6 +233,7 @@ export default {
           return a.id - b.id
         })
         this.scaleData = arr
+        this.$toast.clear()
       })
     },
     setLineChart(data) {

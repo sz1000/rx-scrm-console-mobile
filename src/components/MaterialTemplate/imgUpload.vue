@@ -1,7 +1,7 @@
 <template>
     <div class="img-upload">
         <div v-if="isCustomize">
-            <van-uploader :max-count="1" :max-size="2 * 1024 * 1024" :before-read="beforeRead" :after-read="afterRead" @oversize="onOversize">
+            <van-uploader :max-count="1" :before-read="beforeRead" :after-read="afterRead">
                 <div v-if="customizeType == 2" class="rechoose">
                     <span>重新选择</span>
                     <img src="../../images/arrow_right.png" alt="">
@@ -10,12 +10,13 @@
             </van-uploader>
         </div>
         <div v-else>
-            <van-uploader :max-count="1" :max-size="2 * 1024 * 1024" :before-read="beforeRead" :after-read="afterRead" @oversize="onOversize" />
+            <van-uploader :max-count="1" :before-read="beforeRead" :after-read="afterRead"/>
         </div>
     </div>
 </template>
 <script>
 import { uploadFile } from '../../api/friend'
+import { getImgBlob } from '../../utils/tool'
 
 export default {
     name: 'reprint',
@@ -42,19 +43,41 @@ export default {
     },
     inject: ['getImgUrl'],
     methods: {
-        onOversize() {
-            this.$toast('文件大小不能超过 2M')
-        },
         beforeRead(file) {
             if (!/\.png$|\.jpg$|\.jpeg$/i.test(file.name)) {
                 this.$toast("请上传png、jpg格式的图片");
                 return false;
             }
+
             return true
         },
-        afterRead(file) {
-            console.log("文件信息：：：", file)
+        async afterRead(file){
+            console.info("图片信息:", file)
 
+            let fileData = file.file
+
+            let blob = null
+
+            if (!window.FileReader || !window.Blob) {
+                console.info('浏览器不支持图片压缩')
+                blob = fileData
+            } else {
+                console.info('浏览器支持图片压缩')
+                if (fileData.size > 2 * 1024 * 1024) {
+                    blob = await getImgBlob(fileData, fileData.type, 1000, 1000)
+                } else {
+                    blob = fileData
+                }
+            }
+            console.log("blob:", blob)
+            if (blob.size > 2 * 1024 * 1024) {
+                this.$toast(`请选择小于 2M 的图片`)
+                return false
+            }
+
+            this.upload(blob, fileData.name)
+        },
+        upload(file, name) {
             this.$toast.loading({
                 message: '上传中...',
                 forbidClick: true,
@@ -63,10 +86,10 @@ export default {
             })
             let formData = new FormData()
 
-            formData.append('file', file.file)
+            formData.append('file', file)
             formData.append('filetype', 'image')
             formData.append('type', this.type)
-
+                
             uploadFile(formData).then((res) => {
                 const { result, data, msg } = res
 
@@ -77,7 +100,7 @@ export default {
                     if (this.needFileInfo) {
                         params = {
                             url: data.url,
-                            name: file.file.name
+                            name
                         }
                     }
                     this.getImgUrl(params)
