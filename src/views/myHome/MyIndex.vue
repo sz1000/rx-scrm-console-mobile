@@ -32,7 +32,9 @@
       <div class="wait_warp">
         <div class="text_wait">
           <span>待处理</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToWait(1)" />
+          <div @click="goToWait(1)" class="cilck_area">
+            <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+          </div>
         </div>
         <div class="task_msg">
           <div class="left_warp" @click="goToWait(1)">
@@ -53,15 +55,17 @@
       </div>
       <div class="about_me">
         <span>@我</span>
-        <div class="reply_text">
+        <div class="reply_text" @click="goToAbout">
           <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToAbout" />
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
       <div class="cust_activate">
         <div class="text_wait">
           <span>客户激活</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(1)" />
+          <div class="cilck_area" @click="goToCustom(1)">
+            <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+          </div>
         </div>
         <div class="stati_num">
           <div class="box" @click="goToCustomBtn(0)">
@@ -158,7 +162,7 @@ export default {
         forReplyCustomer: '',
       },
       userObj: {
-        name: '哈哈哈',
+        name: '',
         avatar: '',
       },
       activeObj: {

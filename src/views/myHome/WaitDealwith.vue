@@ -47,7 +47,7 @@
           </div>
           <!-- 视频 -->
           <div class="top_content" v-if="item.msgtype == 'video'">
-            <video :src="item.urls[0]" autoplay controls v-if="item.urls"></video>
+            <video :src="item.urls[0]" controls v-if="item.urls"></video>
             <span>{{item.content}}</span>
           </div>
           <!-- 文本 -->
@@ -82,7 +82,7 @@
           <!-- 链接 素材库-->
           <div class="top_content_link top_content" v-if="Object.keys(item.sendContent).length > 0">
             <p>{{item.massContent}}</p>
-            <div class="link_warp">
+            <div class="link_warp" v-if="item.sendContent && item.sendContent.value">
               <img :src="item.sendContent.value[0].picurl" alt="" v-if="item.sendContent.value[0].picurl" />
               <img src="../../images/article.png" alt="" v-else />
               <div class="lint_url">{{item.sendContent.value[0].url}}</div>
@@ -218,12 +218,16 @@ export default {
       groupSend(params).then((res) => {
         let dataList = res.data
         dataList.forEach((item) => {
-          if (Object.keys(item.sendContent).length > 0) {
+          if (
+            Object.keys(item.sendContent).length > 0 &&
+            item.sendContent.type !== 'image'
+          ) {
             item.sendContent.value = JSON.parse(item.sendContent.value)
+          } else {
+            item.sendContent.value = ''
           }
         })
         this.cardList = dataList
-        // console.log(' this.cardList----', this.cardList)
       })
     },
     goBack() {
