@@ -178,10 +178,13 @@ export function group_getGroupDetail(id){
         method: 'get',
     })
 }
-export function group_getGroupUserPage(data){
+export function group_getGroupUserPage(data,loading = false){
     return request({
         url: BASE_CUSTOMER_SERVICE + '/group/getGroupUserPage',
         method: 'get',
+        headers: {
+            noLoading: loading
+        },
         params: data
     })
 }

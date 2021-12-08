@@ -132,6 +132,7 @@ export default {
       groupId: '',
       isOwmer: false, //是否群主
       showSecret: false,
+      noListLoading: false,
     }
   },
   computed: {
@@ -220,10 +221,11 @@ export default {
         chatId: this.chatId || id,
         ...this.pageInfo,
       }
-      group_getGroupUserPage(obj).then(res => {
+      group_getGroupUserPage(obj,noListLoading).then(res => {
         if(res.result){
           let tempList = res.data.data.records //请求返回当页的列表
           this.loading = false
+          this.noListLoading = true
           this.total = res.data.data.total
           if (tempList == null || tempList.length === 0) {
             // 加载结束

@@ -729,6 +729,10 @@ export default {
                     color: @fontMain;
                     line-height: 48px;
                     font-size: 36px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: calc(100% - 200px);
                     font-weight: bold;
                 }
                 .alt{
@@ -815,7 +819,7 @@ export default {
                         padding: 10px 0;
                     }
                     .limit{
-                        width: calc(100% - 80px);
+                        width: calc(100vw - 560px);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
