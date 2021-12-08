@@ -22,7 +22,7 @@ import filters from '@/utils/filters'
 // import 'mint-ui/lib/style.css'
 // Vue.use(MintUI)
 
-Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
+Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]))
 
 Vue.use(preventReClick)
 Vue.use(loadmore)

@@ -47,12 +47,13 @@
           </div>
           <!-- 视频 -->
           <div class="top_content" v-if="item.msgtype == 'video'">
-            <video :src="item.urls[0]" controls v-if="item.urls"></video>
+            <div class="video_warp" @click="clickVideo('videoPlay' + index)">
+              <video :id="'videoPlay' + index" preload='auto' poster="../../images/videosq.png" :src="item.urls[0]" v-if="item.urls"></video>
+            </div>
             <span>{{item.content}}</span>
           </div>
           <!-- 文本 -->
           <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length == 0">
-            <!-- <video :src="item.urls[0]" autoplay controls v-if="item.urls"></video> -->
             <span class="text_image">{{item.content}}</span>
           </div>
           <!-- 链接 -->
@@ -195,6 +196,19 @@ export default {
     }
   },
   methods: {
+    clickVideo(id) {
+      var video1 = document.getElementById(id)
+      if (video1.requestFullscreen) {
+        video1.requestFullscreen()
+        video1.play()
+      } else if (video1.webkitRequestFullScreen) {
+        video1.webkitRequestFullScreen()
+        video1.play()
+      } else if (video1.mozRequestFullScreen) {
+        video1.mozRequestFullScreen()
+        video1.play()
+      }
+    },
     getDataList() {
       this.cardList = []
       let params = {
@@ -458,10 +472,16 @@ export default {
           height: 100px;
           margin-right: 24px;
         }
-        video {
+        .video_warp {
           width: 100px;
           height: 100px;
+          background: rgba(0, 0, 0, 0.8);
           margin-right: 24px;
+        }
+        video {
+          width: 100%;
+          height: 100%;
+          // margin-right: 24px;
         }
         .link_warp {
           display: flex;
