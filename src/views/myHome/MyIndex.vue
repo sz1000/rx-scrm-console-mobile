@@ -158,7 +158,7 @@ export default {
         forReplyCustomer: '',
       },
       userObj: {
-        name: '哈哈哈',
+        name: '',
         avatar: '',
       },
       activeObj: {
