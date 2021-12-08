@@ -181,7 +181,8 @@ export default {
     }
   },
   mounted() {
-    this.showHome = sessionStorage.getItem('showHome')
+    this.showHome = JSON.parse(sessionStorage.getItem('showHome'))
+    console.log('-----this.showHome---', this.showHome)
     this.getHome()
     this.getUserName()
   },
