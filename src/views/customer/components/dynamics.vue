@@ -187,14 +187,14 @@ export default {
             console.log("load");
             this.getSelectFollowMsgList()
         },
-        addFabulous: _throttle(function(row){    //点赞
+        async addFabulous(row){
             if(!this.isAdd){ return false }
             this.isAdd = false
             let obj = {
                 id: row.id,
                 isAdd: row.dzFlag ? -1 : 1   // 1 or -1
             }
-            clueCustomerFollowUser_giveTheThumbsUp(obj).then(res => {
+            await clueCustomerFollowUser_giveTheThumbsUp(obj).then(res => {
                 if(res.result){
                     this.data.forEach(el => {
                         if(el.id == row.id){
@@ -209,7 +209,30 @@ export default {
                     this.isAdd = true
                 }
             })
-        },1000),
+        },
+        // addFabulous: _throttle(function(row){    //点赞
+        //     if(!this.isAdd){ return false }
+        //     this.isAdd = false
+        //     let obj = {
+        //         id: row.id,
+        //         isAdd: row.dzFlag ? -1 : 1   // 1 or -1
+        //     }
+        //     clueCustomerFollowUser_giveTheThumbsUp(obj).then(res => {
+        //         if(res.result){
+        //             this.data.forEach(el => {
+        //                 if(el.id == row.id){
+        //                     if(row.dzFlag){
+        //                         el.praise--
+        //                     }else{
+        //                         el.praise++
+        //                     }
+        //                     el.dzFlag = row.dzFlag ? 0 : 1
+        //                 }
+        //             })
+        //             this.isAdd = true
+        //         }
+        //     })
+        // },1000),
         getComentList(row){  //查看回复列表
             let more = row.more
             if(more){
