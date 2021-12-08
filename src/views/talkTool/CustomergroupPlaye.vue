@@ -522,10 +522,10 @@ export default {
           
           if(res.result){
              console.log(res, '------------', this.appendixList)
-         this.appendixList[this.dataindext].hrefTitle = res.data.title
-         this.appendixList[this.dataindext].hrefPic = [{url:res.data.cover}]
-         this.appendixList[this.dataindext].hrefImg = res.data.cover
-         this.appendixList[this.dataindext].hrefDesc =  res.data.contentAbstract
+         this.appendixList[this.dataindex].hrefTitle = res.data.title
+         this.appendixList[this.dataindex].hrefPic = [{url:res.data.cover}]
+         this.appendixList[this.dataindex].hrefImg = res.data.cover
+         this.appendixList[this.dataindex].hrefDesc =  res.data.contentAbstract
             //  for(let i = 0;i<=this.appendixList.length;i++){
             //    console.log(this.appendixList,"---for")
             //    console.log(this.appendixList[i].appendixType)
