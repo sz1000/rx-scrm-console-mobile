@@ -473,7 +473,8 @@ export default {
                     str = '删除了协作人'
                     break;
                 case 26:
-                    str = `新增标签“${obj.ossObjectname}”`
+                    let name = obj.ossObjectname ? obj.ossObjectname : obj.context
+                    str = `新增标签“${name}”`
                     break;
                 case 28:
                     str = obj.context
