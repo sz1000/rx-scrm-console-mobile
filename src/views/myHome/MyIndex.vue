@@ -84,9 +84,9 @@
       </div>
       <div class="about_me custom_reply">
         <span>客户寻回</span>
-        <div class="reply_text">
+        <div class="reply_text" @click="goToCustom(2)">
           <span>{{activeObj.customerFind}}个客户待寻回</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" @click="goToCustom(2)" />
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
       <!-- 图表 -->
