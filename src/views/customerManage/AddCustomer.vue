@@ -13,6 +13,9 @@
         <span>客户信息</span>
       </div>
       <el-form ref="form" :model="formObj" label-position='right'>
+        <el-form-item label="客户名称:" prop="customerCalled" :rules="[ { required: true, message: '请输入',trigger: ['change','blur'] }]">
+          <el-input v-model="formObj.customerCalled" placeholder="请输入" maxlength="15"></el-input>
+        </el-form-item>
         <KehuTip :addChildForm="formObj" v-on:getacf="getacf"></KehuTip>
         <el-form-item label="客户来源:" prop="source" :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
           <el-select v-model="formObj.source" placeholder="请选择" @change="changeSource" clearable>
@@ -62,7 +65,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="姓名:" prop="name" :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
+        <el-form-item label="联系人:" prop="name" :rules="[ { required: true, message: '请输入联系人姓名',trigger: 'blur'}]">
           <el-input v-model="formObj.name" maxlength="15" placeholder="请输入"></el-input>
         </el-form-item>
         <el-form-item label="手机号:">
@@ -149,6 +152,7 @@ export default {
         weixin: '',
         email: '',
         wechatNickname: '',
+        customerCalled: '', //客户名称
       },
       userForm: {},
       textList: [],

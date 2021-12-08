@@ -51,6 +51,7 @@ export default {
         },
         dialog(val){
             if(val){
+                this.msgText = ''
                 document.getElementById('html').style.overflow = 'hidden'
             }else{
                 document.getElementById('html').style.overflow = 'auto'
