@@ -146,7 +146,7 @@ export default {
       let list = this.scaleData.find((el) => {
         return el.name == 'total'
       })
-      console.log('list----', list)
+      // console.log('list----', list)
       return list ? list.num : 0
     },
   },
@@ -172,7 +172,7 @@ export default {
         sevenCount: '',
       },
       identity: '个人',
-      num: '1',
+      num: '0',
       showIdent: false,
       customer: {},
       lookData: [],
@@ -187,6 +187,10 @@ export default {
   },
   methods: {
     getData() {
+      this.$toast.loading({
+        loadingType: 'spinner',
+        duration: 0,
+      })
       getMyInfo().then((res) => {
         this.dataObj = res.data.my
         this.userObj = res.data.my.user
@@ -227,6 +231,7 @@ export default {
           return a.id - b.id
         })
         this.scaleData = arr
+        this.$toast.clear()
       })
     },
     setLineChart(data) {

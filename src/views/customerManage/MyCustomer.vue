@@ -110,28 +110,30 @@ export default {
         })
         .then((res) => {
           this.$toast.clear()
-          this.total = res.data.iPage.total
-          this.loading = false
-          let rows = res.data.iPage.records //请求返回当页的列表
-          if (rows == null || rows.length === 0) {
-            this.finished = true
-            return
-          }
-          let newSetArr = this.cardList.concat(rows)
-          this.cardList = this.unique(newSetArr)
-          this.cardList.forEach((item) => {
-            if (item.gender == '0' || item.gender == '') {
-              item.gender = '未知'
-            } else if (item.gender == '1') {
-              item.gender = '男'
-            } else if (item.gender == '2') {
-              item.gender = '女'
+          if (res.result) {
+            this.total = res.data.iPage.total
+            this.loading = false
+            let rows = res.data.iPage.records //请求返回当页的列表
+            if (rows == null || rows.length === 0) {
+              this.finished = true
+              return
             }
-          })
-          if (this.cardList.length >= this.total) {
-            this.finished = true
-          } else {
-            this.onLoad()
+            let newSetArr = this.cardList.concat(rows)
+            this.cardList = this.unique(newSetArr)
+            this.cardList.forEach((item) => {
+              if (item.gender == '0' || item.gender == '') {
+                item.gender = '未知'
+              } else if (item.gender == '1') {
+                item.gender = '男'
+              } else if (item.gender == '2') {
+                item.gender = '女'
+              }
+            })
+            if (this.cardList.length >= this.total) {
+              this.finished = true
+            } else {
+              this.onLoad()
+            }
           }
         })
     },

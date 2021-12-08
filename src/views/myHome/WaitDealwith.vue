@@ -137,7 +137,6 @@ export default {
       startDate: '',
       endDate: '',
       tab: this.$route.query.tab,
-      num: 10,
       cardList: [
         // {
         //   avtar: '',
