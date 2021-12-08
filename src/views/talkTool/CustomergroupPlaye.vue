@@ -509,7 +509,7 @@ export default {
           this.appendixList.forEach((item,index) =>{
             console.log(item.href)
           herf = item.href
-          hrefTitle = item.hrefTitle
+          hrefTitle = item.hrefTitle 
           })
        this.$toast.loading()
        let params = {
