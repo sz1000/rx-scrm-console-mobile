@@ -1,5 +1,5 @@
 <template>
-  <div class="friendWarp"  v-loading="loading">
+  <div class="friendWarp" >
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
@@ -210,7 +210,7 @@ export default {
        },
     materialList:[],
       shareUrlOrigin: '',
-       loading:false,
+      //  loading:false,
     }
   },
     //   computed: {
@@ -289,13 +289,15 @@ export default {
     },
     sendMessage: _throttle(function () {
       
+      let imgArr = []
         if(this.tab == "material"){
-      var imgArr = []
         if (window.location.origin == 'https://console.jzcrm.com') {
         this.shareUrlOrigin = 'https://h5.jzcrm.com'
       } else {
         this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
       }
+ 
+          
               if (this.materialList.tab == 1) {
           imgArr = [
             {
@@ -323,8 +325,14 @@ export default {
       } else if (this.tab == 'video') {
         imgArr = [this.videoUrl]
       } else if(this.tab == 'link'){
-        imgArr = [this.inputUrl]
+        // imgArr = [this.inputUrl]
         // imgArr = this.linkhref
+        imgArr =[
+            this.linkhref.href,
+            this.linkhref.hrefTitle,
+            this.linkhref.hrefDesc,
+            this.imageUrl
+        ]
       }
         // }
       // else{
@@ -357,13 +365,13 @@ export default {
       if(this.linkhref.hrefTitle == ''){
          this.$toast("请输入标题")
       }else{
-           this.loading = true
+          //  this.loading = true
       if(this.linkhref.hrefTitle == "" && this.tab == "link"){
         this.$toast("请输入链接标题")
       }else{
             addFriendStrong(params).then((res) => {
         if (res.result) {
-            this.loading = false
+            // this.loading = false
           Notify({
             message: '创建成功',
             type: 'success',
