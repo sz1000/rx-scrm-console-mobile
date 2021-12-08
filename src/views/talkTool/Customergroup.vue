@@ -988,6 +988,14 @@ this.appendixList.forEach((item,indexs)=>{
     },
     // 选择所在群聊接口
     staffsListChange(value) {
+          var groupData =[]
+        //  console.log(this.groupList)
+         this.staffsList.forEach(el =>{
+           if(value.includes(el.userNo) ){
+                groupData.push(el)
+           }
+         })
+          this.userdataList = groupData
       console.log(value)
       this.baseForm.staffs = value
       this.groupStaffset()

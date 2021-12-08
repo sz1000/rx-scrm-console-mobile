@@ -8,7 +8,7 @@ export function userdepartment_getAlllist() {   //获取部门列表
 }
 export function user_getUserList(data) {    //获取员工列表
     return request({
-        url: BASE_USER_SERVICE + '/user/getUserList',
+        url: BASE_USER_SERVICE + '/user/getMBUserList',
         method: 'get',
         params: data
     })

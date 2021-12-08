@@ -221,7 +221,7 @@ export default {
         chatId: this.chatId || id,
         ...this.pageInfo,
       }
-      group_getGroupUserPage(obj,noListLoading).then(res => {
+      group_getGroupUserPage(obj,this.noListLoading).then(res => {
         if(res.result){
           let tempList = res.data.data.records //请求返回当页的列表
           this.loading = false

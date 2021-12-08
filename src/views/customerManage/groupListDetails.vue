@@ -421,6 +421,7 @@ export default {
     // 群标签
     groupList() {
       groupUserTag_list(this.$route.query.id).then(res => {
+     
         if(res.result){
           let obj = {};
           let peon = res.data.reduce((cur, next) => {
