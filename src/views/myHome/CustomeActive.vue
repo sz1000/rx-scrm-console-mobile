@@ -36,7 +36,7 @@
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <div class="left_msg">
             <div class="img_box">
-              <img :src="item.avtar" alt="" v-if="item.avtar" />
+              <img :src="item.avatar" alt="" v-if="item.avatar" />
               <img src="../../images/nomal_avt.png" alt="" v-else />
             </div>
             <div class="detail_msg">
@@ -94,7 +94,7 @@
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <div class="left_msg">
             <div class="img_box">
-              <img :src="item.avtar" alt="" v-if="item.avtar" />
+              <img :src="item.avatar" alt="" v-if="item.avatar" />
               <img src="../../images/nomal_avt.png" alt="" v-else />
             </div>
             <div class="detail_msg">
