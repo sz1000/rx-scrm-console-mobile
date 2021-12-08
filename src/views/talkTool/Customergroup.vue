@@ -806,7 +806,7 @@ this.appendixList.forEach((item,indexs)=>{
         if (item.objList.tab == 1) {
           imgArr = [
             {
-              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.articleId}&type=${item.objList.tab}`,
+              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.articleId}&type=${item.objList.tab}&corpId=${localStorage.getItem('corpId')}`,
               ...item.objList,
             },
           ]
@@ -814,7 +814,7 @@ this.appendixList.forEach((item,indexs)=>{
         } else if (item.objList.tab == 2) {
           imgArr = [
             {
-              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.documentId}&type=${item.objList.tab}`,
+              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.documentId}&type=${item.objList.tab}&corpId=${localStorage.getItem('corpId')}`,
               ...item.objList
             },
           ]

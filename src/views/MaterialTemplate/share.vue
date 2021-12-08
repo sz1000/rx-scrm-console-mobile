@@ -1,6 +1,6 @@
 <template>
-    <div class="material-template">
-        <div class="top-fixed">
+    <div class="material-template" :class="{pd0: !userNo}">
+        <div v-if="userNo" class="top-fixed">
             <user-info :userData="userData"></user-info>
         </div>
         <material-content ref="materialContent"></material-content>
@@ -22,14 +22,15 @@ export default {
             unionId: '',
             materialId: '',
             materialType: '', // 1: 文章, 2: 文件
-            userNo: '',
-            corpId: ''
+            userNo: null,
+            corpId: null
         }
     },
     created() {
-        const { materialId, type, userNo } = this.$route.query
+        const { materialId, type, userNo, corpId } = this.$route.query
 
-        this.userNo = userNo
+        this.userNo = userNo ? userNo : null
+        this.corpId = corpId ? corpId : null
 
         if (isWeiXin()) {
             // 微信授权
@@ -38,7 +39,10 @@ export default {
 
         this.materialId = materialId
         this.materialType = type
-        this.getUsersInfo()
+
+        if (this.userNo) {
+            this.getUsersInfo()
+        }
 
         let params = {
             materialId,
@@ -56,14 +60,18 @@ export default {
             if(!code) {
                 getCode(encodeURIComponent(window.location.href))
             } else {
-                this.getCorpId().then(() => this.offiAccount(code))
+                if (this.userNo) {
+                    this.getCorpId().then(() => this.offiAccount(code))
+                } else if (this.corpId) {
+                    this.offiAccount(code)
+                }
             }
         },
         offiAccount(wechatCode) {
             let params = {
                 code: wechatCode,
                 corpId: this.corpId,
-                userNo: this.userNo
+                userNo: this.userNo ? this.userNo : ''
             }
 
             OffiAccount(params).then(res => {
@@ -136,5 +144,8 @@ export default {
             top: 0;
             left: 0;
         }
+    }
+    .pd0 {
+        padding-top: 28px;
     }
 </style>

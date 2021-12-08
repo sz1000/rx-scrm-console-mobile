@@ -186,6 +186,7 @@
 import { uploadFile, addFriend, addFriendStrong } from '../../api/friend'
 import { _throttle } from '../../utils/tool'
 import { Notify } from 'vant'
+// import { mapState } from 'vuex'
 // import  Coumpontmaterial from "../../components/materialDialog/MterialPage.vue"
 export default {
   // components:{
@@ -212,6 +213,9 @@ export default {
        loading:false,
     }
   },
+    //   computed: {
+    //     ...mapState(["corpId", "userNo"]),
+    // },
   created(){
     this.materialList =  this.$route.query.datalist
      console.log(this.materialList,"000")
@@ -284,7 +288,7 @@ export default {
       this.$router.push('mterialPage')
     },
     sendMessage: _throttle(function () {
-    
+      
         if(this.tab == "material"){
       var imgArr = []
         if (window.location.origin == 'https://console.jzcrm.com') {
@@ -295,7 +299,7 @@ export default {
               if (this.materialList.tab == 1) {
           imgArr = [
             {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.articleId}&type=${this.materialList.tab}`,
+              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.articleId}&type=${this.materialList.tab}&corpId=${localStorage.getItem('corpId')}`,
               ...this.materialList,
             },
           ]
@@ -303,7 +307,7 @@ export default {
         } else if (this.materialList.tab == 2) {
           imgArr = [
             {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.documentId}&type=${this.materialList.tab}`,
+              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.documentId}&type=${this.materialList.tab}&corpId=${localStorage.getItem('corpId')}`,
               ...this.materialList
             },
           ]
