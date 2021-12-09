@@ -546,6 +546,7 @@ export default {
                                     font-size: 24px;
                                     color: #3C4353;
                                     margin-bottom: 24px;
+                                    word-break: break-all;
                                 }
                                 .size{
                                     height: 32px;
