@@ -596,7 +596,8 @@ export default {
 .btnBox {
   position: fixed;
   bottom: 92px;
-  width: 100%;
+  // left: 24px;
+  width: 750px;
 }
 .buttonWarp {
   width: 710px;

@@ -40,8 +40,7 @@
             </div>
             <div class="editBtn" v-show="type == 1">
               <span @click="editBtn(item)" v-show="mylist.some((item) => item.enName == 'edit')">
-                <van-icon name="
-                    edit" />
+                <van-icon name="edit" />
                 编辑
               </span>
               <span @click="deleteBtn(item)" v-show="mylist.some((item) => item.enName == 'delete')">
@@ -108,7 +107,6 @@
                   ]">
                   <el-input v-model.trim="addForm.name" placeholder="请输入" maxlength="12" show-word-limit></el-input>
                 </el-form-item>
-
                 <el-form-item label="使用员工:" prop="userArr" :rules="[
                     { required: true, message: '请选择', trigger: 'change' },
                   ]">
