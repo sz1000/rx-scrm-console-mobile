@@ -231,12 +231,11 @@ export default {
         let dataList = res.data
         dataList.forEach((item) => {
           if (
-            Object.keys(item.sendContent).length > 0 &&
+            item.sendContent &&
+            item.sendContent.value &&
             item.sendContent.type !== 'image'
           ) {
             item.sendContent.value = JSON.parse(item.sendContent.value)
-          } else {
-            item.sendContent.value = ''
           }
         })
         this.cardList = dataList
