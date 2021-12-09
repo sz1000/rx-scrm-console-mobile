@@ -249,6 +249,7 @@ export default {
         this.actions = [
           { name: '未寻回', id: 0 },
           { name: '已寻回', id: 1 },
+          { name: '寻回中', id: 2 },
         ]
         this.tabName = this.actions[0].name
         this.id = this.actions[0].id
