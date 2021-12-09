@@ -196,7 +196,7 @@ export default {
 <style lang="less" scoped>
 .out-warp {
   background: #fff;
-  height: 100%;
+  min-height: 100%;
   box-sizing: border-box;
   padding-top: 87px;
   .headerTitle {
