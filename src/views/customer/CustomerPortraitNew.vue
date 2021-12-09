@@ -9,7 +9,7 @@
                         <img class="img" :src="customerInfo.avatar | $setAvatar">
                     </div>
                     <div class="val">
-                        <div class="name_box">
+                        <div class="name_box" v-if="customerInfo.name">
                             <div class="name">{{customerInfo.name}}</div>
                             <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType && customerInfo.name.length < 10">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
                             <div class="icon" v-if="customerInfo.name.length < 10">
@@ -438,6 +438,7 @@ export default {
             }
             clueCustomerFollowUser_message_notificatio(params).then(res => {
                 if(res.result){
+                    this.$refs.messageBox.initData()
                     this.$refs.dynamic.searchFun()
                 }
             })
@@ -875,6 +876,7 @@ export default {
                 padding: 0 16px;
                 border-radius: 26px;
                 // border: 1px solid @bdColor; /*no*/
+                white-space: nowrap;
                 font-size: 28px;
                 color: @fontSub1;
                 position: relative;
