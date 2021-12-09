@@ -66,7 +66,18 @@ export default {
             width: 100%;
             display: flex;
             padding: 32px 0;
-            border-bottom: 1px solid @lineColor;    /*no*/
+            // border-bottom: 1px solid @lineColor;    /*no*/
+            position: relative;
+            &::before{
+                content: '';
+                width: 100%;
+                height: 1px;   /*no*/
+                background: @lineColor;
+                transform: scaleY(.5);
+                position: absolute;
+                left: 0;
+                bottom: 0;
+            }
             .group_img{
                 width: 80px;
                 height: 80px;

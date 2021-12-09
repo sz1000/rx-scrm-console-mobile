@@ -8,7 +8,7 @@
                     <input class="text" type="text" v-model="articleUrl" placeholder="请输入">
                 </li>
             </ul>
-            <div class="reprint-btn">
+            <div class="reprint-btn pointer">
                 <span @click="goEdit">转载文章</span>
             </div>
         </div>

@@ -11,8 +11,8 @@
                     <div class="val">
                         <div class="name_box">
                             <div class="name">{{customerInfo.name}}</div>
-                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
-                            <div class="icon">
+                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType && customerInfo.name.length < 10">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
+                            <div class="icon" v-if="customerInfo.name.length < 10">
                                 <img src="../../images/icon_female@2x.png" v-if="customerInfo.gender == '2'" />
                                 <img src="../../images/man.png" v-if="customerInfo.gender == '1'" />
                             </div>
@@ -725,6 +725,7 @@ export default {
                 display: flex;
                 align-items: flex-end;
                 margin-bottom: 16px;
+                overflow: hidden;
                 .name{
                     color: @fontMain;
                     line-height: 48px;
@@ -732,13 +733,18 @@ export default {
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    max-width: calc(100% - 200px);
+                    // max-width: calc(100% - 200px);
+                    max-width: 100%;
                     font-weight: bold;
                 }
                 .alt{
                     font-size: 24px;
                     line-height: 32px;
                     color: @yellow;
+                    max-width: 160px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                     margin-left: 8px;
                     &.green{
                         color: @green;
@@ -768,10 +774,23 @@ export default {
                 width: fit-content;
                 height: 52px;
                 border-radius: 26px;
-                border: 1px solid @bdColor; /*no*/
+                // border: 1px solid @bdColor; /*no*/
                 display: flex;
                 align-items: center;
                 padding: 0 16px;
+                color: @fontSub1;
+                position: relative;
+                &::before{
+                    content: '';
+                    width: 200%;
+                    height: 200%;
+                    border-radius: 52px;
+                    border: 1px solid @bdColor; /*no*/
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%,-50%) scale(.5);
+                }
                 .img_box{
                     display: flex;
                     width: 32px;
@@ -819,7 +838,7 @@ export default {
                         padding: 10px 0;
                     }
                     .limit{
-                        width: calc(100vw - 560px);
+                        max-width: calc(100vw - 560px);
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
@@ -835,18 +854,41 @@ export default {
             display: flex;
             align-items: center;
             padding-top: 24px;
-            border-top: 1px solid @lineColor;   /*no*/
+            // border-top: 1px solid @lineColor;   /*no*/
+            position: relative;
+            &::before{
+                content: '';
+                width: 100%;
+                height: 1px;   /*no*/
+                background: @lineColor;
+                transform: scaleY(.5);
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
             &.opt0{
                 opacity: 0;
             }
             .tag{
                 height: 52px;
-                line-height: 50px;
+                line-height: 52px;
                 padding: 0 16px;
                 border-radius: 26px;
-                border: 1px solid @bdColor; /*no*/
+                // border: 1px solid @bdColor; /*no*/
                 font-size: 28px;
                 color: @fontSub1;
+                position: relative;
+                &::before{
+                    content: '';
+                    width: 200%;
+                    height: 200%;
+                    border-radius: 52px;
+                    border: 1px solid @bdColor; /*no*/
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%,-50%) scale(.5);
+                }
                 &+.tag{
                     margin-left: 16px;
                 }
@@ -859,7 +901,18 @@ export default {
     height: 88px;
     display: flex;
     text-align: center;
-    border-bottom: 1px solid @lineColor; /*no*/
+    // border-bottom: 1px solid @lineColor; /*no*/
+    position: relative;
+    &::before{
+        content: '';
+        width: 100%;
+        height: 1px;   /*no*/
+        background: @lineColor;
+        transform: scaleY(.5);
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
     .nav{
         color: @fontSub1;
         font-size: 28px;
@@ -876,7 +929,7 @@ export default {
                 border-radius: 2px;
                 position: absolute;
                 left: 50%;
-                bottom: -1px;
+                bottom: 0;
                 transform: translateX(-50%);
             }
         }

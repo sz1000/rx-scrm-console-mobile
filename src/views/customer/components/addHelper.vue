@@ -162,7 +162,7 @@ export default {
             }
             user_getUserList(params).then(res => {
                 if(res.result){
-                    this.heperList = res.data.user.records
+                    this.heperList = res.data.user
                     this.isHelper = true
                     this.bumenPop = false
                     this.yuangongName = ''

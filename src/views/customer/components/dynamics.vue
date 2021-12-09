@@ -17,7 +17,7 @@
                         <img class="icon" v-if="item.optType == 1" src="@/assets/svg/icon_jd.svg" alt="">
                         <img class="icon" v-if="item.optType == 21" src="@/assets/svg/icon_gt.svg" alt="">
                         <img class="icon" v-if="item.optType == 15 || item.optType == 16 || item.optType == 17" src="@/assets/svg/icon_sj.svg" alt="">
-                        <img class="icon" v-if="item.optType == 18 || item.optType == 19 || item.optType == 20 || item.optType == 39" src="@/assets/svg/icon_xzr.svg" alt="">
+                        <img class="icon" v-if="helperNum.indexOf(item.optType) > -1" src="@/assets/svg/icon_xzr.svg" alt="">
                         <img class="icon" v-if="item.optType == 29 || item.optType == 30" src="@/assets/svg/icon_jh.svg" alt="">
                         <img class="icon" v-if="item.optType == 40" src="@/assets/svg/icon_sc.svg" alt="">
                         <img class="icon" v-if="item.optType == 41" src="@/assets/svg/icon_wx.svg" alt="">
@@ -132,6 +132,7 @@ export default {
             navList: ['全部','客户动态','商机动态','互动沟通'],
             activeIndex: 0,
             fromUserNum: [6],
+            helperNum: [18,19,20,39,44,46,47,48],
             
             followMsgSearch: {
                 page: 1,
@@ -210,29 +211,6 @@ export default {
                 }
             })
         },
-        // addFabulous: _throttle(function(row){    //点赞
-        //     if(!this.isAdd){ return false }
-        //     this.isAdd = false
-        //     let obj = {
-        //         id: row.id,
-        //         isAdd: row.dzFlag ? -1 : 1   // 1 or -1
-        //     }
-        //     clueCustomerFollowUser_giveTheThumbsUp(obj).then(res => {
-        //         if(res.result){
-        //             this.data.forEach(el => {
-        //                 if(el.id == row.id){
-        //                     if(row.dzFlag){
-        //                         el.praise--
-        //                     }else{
-        //                         el.praise++
-        //                     }
-        //                     el.dzFlag = row.dzFlag ? 0 : 1
-        //                 }
-        //             })
-        //             this.isAdd = true
-        //         }
-        //     })
-        // },1000),
         getComentList(row){  //查看回复列表
             let more = row.more
             if(more){
@@ -337,7 +315,8 @@ export default {
                              * 9.放弃客户 11.附件 12.删除附件 13.跟进记录 14.拜访客户 15.新增商机 16.修改商机
                              * 17.删除商机 18.新增协助人 21.互动协同 26.新增标签 28.自动打标
                              * 
-                             * 40.浏览素材 41.添加企微好友 44.申请成为协助人
+                             * 40.浏览素材 41.添加企微好友 44.申请成为协助人 46.自动成为协助人
+                             * 47.申请成为协助人已通过 48.申请成为协助人未通过
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
@@ -473,7 +452,8 @@ export default {
                     str = '删除了协作人'
                     break;
                 case 26:
-                    str = `新增标签“${obj.ossObjectname}”`
+                    let name = obj.ossObjectname ? obj.ossObjectname : obj.context
+                    str = `新增标签“${name}”`
                     break;
                 case 28:
                     str = obj.context
@@ -498,6 +478,13 @@ export default {
                         _str = '(已拒绝)'
                     }
                     str = '申请成为协助人' + _str
+                    break;
+                case 46:
+                    str = '已自动成为协助人'
+                    break;
+                case 47:
+                    break;
+                case 48:
                     break;
                 default:
                     break;
@@ -633,7 +620,7 @@ export default {
                     height: 36px;
                 }
                 .icon{
-                    left: 53.6%;
+                    left: 51%;
                     // width: 12px;
                     // height: 12px;
                     // border-radius: 50%;
@@ -747,7 +734,7 @@ export default {
                     position: absolute;
                     left: 50%;
                     top: 0;
-                    transform: translateX(-50%);
+                    transform: translateX(-50%) scaleX(.5);
                 }
                 &::after{
                     content: '';
@@ -757,7 +744,7 @@ export default {
                     position: absolute;
                     left: 50%;
                     top: 64px;
-                    transform: translateX(-50%);
+                    transform: translateX(-50%) scaleX(.5);
                 }
                 .icon{
                     width: 40px;
