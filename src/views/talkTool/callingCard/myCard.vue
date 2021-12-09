@@ -237,12 +237,17 @@ export default {
           }
         }
         .info {
+          width: calc(100% - 140px);
           color: @white;
           .name {
+            width: 64%;
             font-size: 36px;
             line-height: 40px;
             font-weight: bold;
             margin-bottom: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           .company {
             font-size: 24px;

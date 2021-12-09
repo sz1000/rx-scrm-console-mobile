@@ -315,7 +315,7 @@ export default {
             height: 128px;
             background: @white;
             padding: 24px;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
             .footer{

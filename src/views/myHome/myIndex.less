@@ -14,6 +14,7 @@
     .head_img {
       display: flex;
       align-items: center;
+      width: 100%;
 
       img {
         width: 112px;
@@ -23,19 +24,25 @@
 
       .person_info {
         margin-left: 32px;
+        width: calc(100% - 144px);
+        font-size: 40px;
+        color: #fff;
+        min-width: 70px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        // p:nth-child(1) {
+        //   font-size: 40px;
+        //   color: #fff;
+        //   margin-bottom: 8px;
+        //   min-width: 70px;
+        // }
 
-        p:nth-child(1) {
-          font-size: 40px;
-          color: #fff;
-          margin-bottom: 8px;
-          min-width: 70px;
-        }
-
-        p:nth-child(2) {
-          font-size: 24px;
-          color: #fff;
-          opacity: 0.8;
-        }
+        // p:nth-child(2) {
+        //   font-size: 24px;
+        //   color: #fff;
+        //   opacity: 0.8;
+        // }
       }
     }
 

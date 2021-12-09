@@ -4,10 +4,7 @@
       <div class="head_img">
         <img :src="userObj.avatar" alt="" v-if="userObj.avatar" />
         <img src="../../images/img_head.png" alt="" v-else />
-        <div class="person_info">
-          <p>{{userObj.name}}</p>
-          <!-- <p>{{identity}}</p> -->
-        </div>
+        <div class="person_info">{{userObj.name}}</div>
       </div>
       <!-- <div class="change_identity" @click="changeIdent">
         <img src="../../images/change_id.png" alt="">
