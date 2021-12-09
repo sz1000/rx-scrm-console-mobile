@@ -554,6 +554,9 @@ export default {
                                 }
                             }
                         }
+                        .share_link{
+                            word-break: break-all;
+                        }
                         .share_box{
                             width: 250px;
                             height: 100px;
