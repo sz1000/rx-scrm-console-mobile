@@ -70,7 +70,7 @@
             <div class="right_btm">
               <img :src="item.avatar" alt="">
               <!-- <img src="../../images/ditu.png" alt=""> -->
-              <span>{{item.name}}</span>
+              <span class="user_name">{{item.name}}</span>
               <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
@@ -97,13 +97,12 @@
               <div class="lint_url">{{item.sendContent.value[0].url}}</div>
             </div> -->
           </div>
-
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
               <img :src="item.avatar" alt="">
               <!-- <img src="../../images/ditu.png" alt=""> -->
-              <span>{{item.name}}</span>
+              <span class="user_name">{{item.name}}</span>
               <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
@@ -232,12 +231,11 @@ export default {
         let dataList = res.data
         dataList.forEach((item) => {
           if (
-            Object.keys(item.sendContent).length > 0 &&
+            item.sendContent &&
+            item.sendContent.value &&
             item.sendContent.type !== 'image'
           ) {
             item.sendContent.value = JSON.parse(item.sendContent.value)
-          } else {
-            item.sendContent.value = ''
           }
         })
         this.cardList = dataList
@@ -517,6 +515,13 @@ export default {
         }
         .right_btm {
           display: flex;
+          .user_name {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+          }
           img {
             width: 28px;
             height: 28px;

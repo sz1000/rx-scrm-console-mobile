@@ -27,7 +27,7 @@
               v-model="detail.region"
               type="text"
               placeholder="请选择"
-              disabled
+              readonly
             />
             <img class="icon" src="@/assets/images/icon_select.png" alt="" />
           </div>
@@ -43,7 +43,7 @@
               v-model="modeName"
               type="text"
               placeholder="请选择"
-              disabled
+              readonly
             />
             <img
               class="icon"
@@ -105,7 +105,7 @@
               v-model="userName"
               type="text"
               placeholder="请选择使用员工，可多选"
-              disabled
+              readonly
             />
             <img class="icon" src="@/assets/images/icon_select.png" alt="" />
           </div>
@@ -167,7 +167,7 @@
                   v-model="item.groupName"
                   type="text"
                   placeholder="选择群聊"
-                  disabled
+                  readonly
                 />
                 <img
                   class="icon"

@@ -9,10 +9,10 @@
                         <img class="img" :src="customerInfo.avatar | $setAvatar">
                     </div>
                     <div class="val">
-                        <div class="name_box">
+                        <div class="name_box" v-if="customerInfo.name">
                             <div class="name">{{customerInfo.name}}</div>
-                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
-                            <div class="icon">
+                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType && customerInfo.name.length < 10">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
+                            <div class="icon" v-if="customerInfo.name.length < 10">
                                 <img src="../../images/icon_female@2x.png" v-if="customerInfo.gender == '2'" />
                                 <img src="../../images/man.png" v-if="customerInfo.gender == '1'" />
                             </div>
@@ -438,6 +438,7 @@ export default {
             }
             clueCustomerFollowUser_message_notificatio(params).then(res => {
                 if(res.result){
+                    this.$refs.messageBox.initData()
                     this.$refs.dynamic.searchFun()
                 }
             })
@@ -725,6 +726,7 @@ export default {
                 display: flex;
                 align-items: flex-end;
                 margin-bottom: 16px;
+                overflow: hidden;
                 .name{
                     color: @fontMain;
                     line-height: 48px;
@@ -732,7 +734,8 @@ export default {
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    max-width: calc(100% - 200px);
+                    // max-width: calc(100% - 200px);
+                    max-width: 100%;
                     font-weight: bold;
                 }
                 .alt{
@@ -772,10 +775,23 @@ export default {
                 width: fit-content;
                 height: 52px;
                 border-radius: 26px;
-                border: 1px solid @bdColor; /*no*/
+                // border: 1px solid @bdColor; /*no*/
                 display: flex;
                 align-items: center;
                 padding: 0 16px;
+                color: @fontSub1;
+                position: relative;
+                &::before{
+                    content: '';
+                    width: 200%;
+                    height: 200%;
+                    border-radius: 52px;
+                    border: 1px solid @bdColor; /*no*/
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%,-50%) scale(.5);
+                }
                 .img_box{
                     display: flex;
                     width: 32px;
@@ -856,20 +872,25 @@ export default {
             }
             .tag{
                 height: 52px;
-                line-height: 50px;
+                line-height: 52px;
                 padding: 0 16px;
                 border-radius: 26px;
-                border: 1px solid @bdColor; /*no*/
-                font-size: 28px;
-                
-                // height: 104px;
-                // line-height: 100px;
-                // padding: 0 32px;
-                // border-radius: 52px;
                 // border: 1px solid @bdColor; /*no*/
-                // font-size: 56px;
+                white-space: nowrap;
+                font-size: 28px;
                 color: @fontSub1;
-                // transform: scale(.5);
+                position: relative;
+                &::before{
+                    content: '';
+                    width: 200%;
+                    height: 200%;
+                    border-radius: 52px;
+                    border: 1px solid @bdColor; /*no*/
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%,-50%) scale(.5);
+                }
                 &+.tag{
                     margin-left: 16px;
                 }

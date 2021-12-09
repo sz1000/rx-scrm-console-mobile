@@ -315,7 +315,7 @@ export default {
             height: 128px;
             background: @white;
             padding: 24px;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
             .footer{
@@ -546,6 +546,7 @@ export default {
                                     font-size: 24px;
                                     color: #3C4353;
                                     margin-bottom: 24px;
+                                    word-break: break-all;
                                 }
                                 .size{
                                     height: 32px;
@@ -553,6 +554,9 @@ export default {
                                     color: #C0C4CC;
                                 }
                             }
+                        }
+                        .share_link{
+                            word-break: break-all;
                         }
                         .share_box{
                             width: 250px;

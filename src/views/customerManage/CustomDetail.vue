@@ -469,6 +469,8 @@ export default {
           }
         }
         .selectUser {
+          display: flex;
+          align-items: center;
           /deep/.el-select {
             width: 519px;
             height: 80px;

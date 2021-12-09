@@ -95,9 +95,11 @@
       <section>
         <div class="custom_add">
           <CustomAddChart :options='customer' v-if="Object.keys(customer).length>0"></CustomAddChart>
+          <img src="../../images/nodae.png" alt="" v-else />
         </div>
         <div class="custom_add">
           <LookPieCharts :data="lookData" v-if="lookData.length>0"></LookPieCharts>
+          <img src="../../images/nodae.png" alt="" v-else />
         </div>
         <div class="custom_add">
           <TopBarCharts :data="topSortData" v-if="topSortData.length"></TopBarCharts>
@@ -109,6 +111,7 @@
         </div>
         <div class="custom_add">
           <NicheCharts :time="nicheTime" :data="nicheData" v-if="Object.keys(nicheData).length>0 "></NicheCharts>
+          <img src="../../images/nodae.png" alt="" v-else />
         </div>
       </section>
     </div>
@@ -134,7 +137,7 @@ import {
   SaleCharts,
   NicheCharts,
 } from './echartComponent/index.js'
-import { getMyInfo } from '../../api/myHome'
+import { getMyInfo, getAllCharts } from '../../api/myHome'
 export default {
   components: {
     CustomAddChart,
@@ -155,26 +158,26 @@ export default {
   data() {
     return {
       dataObj: {
-        customerSum: '',
-        groupSum: '',
-        friendSum: '',
-        friendSend: '',
-        custometMassSum: '',
-        forReply: '',
-        forReplyCustomer: '',
+        customerSum: '0',
+        groupSum: '0',
+        friendSum: '0',
+        friendSend: '0',
+        custometMassSum: '0',
+        forReply: '0',
+        forReplyCustomer: '0',
       },
       userObj: {
         name: '',
         avatar: '',
       },
       activeObj: {
-        excedOne: '',
-        customerFind: '',
-        neverCount: '',
-        sevenCount: '',
+        excedOne: '0',
+        customerFind: '0',
+        neverCount: '0',
+        sevenCount: '0',
       },
       identity: '个人',
-      num: '0',
+      num: '',
       showIdent: false,
       customer: {},
       lookData: [],
@@ -186,24 +189,11 @@ export default {
   },
   created() {
     this.getData()
+    this.getAllChartList()
   },
   methods: {
-    getData() {
-      this.$toast.loading({
-        loadingType: 'spinner',
-        duration: 0,
-      })
-      getMyInfo().then((res) => {
-        this.dataObj = res.data.my
-        this.userObj = res.data.my.user
-        this.activeObj = res.data.customerFind
-        localStorage.setItem('myName', res.data.my.user.name)
-        localStorage.setItem('myAvatar', res.data.my.user.avatar)
-        localStorage.setItem('depId', res.data.my.user.depId)
-        this.$store.commit('setMyName', res.data.my.user.name)
-        this.$store.commit('setAvatar', res.data.my.user.avatar)
-        // 客户增长
-        this.customer = res.data.customer
+    getAllChartList() {
+      getAllCharts().then((res) => {
         //饼图
         this.getMaterialPie(res.data.materialMap)
         // 商机报告
@@ -233,6 +223,24 @@ export default {
           return a.id - b.id
         })
         this.scaleData = arr
+      })
+    },
+    getData() {
+      this.$toast.loading({
+        loadingType: 'spinner',
+        duration: 0,
+      })
+      getMyInfo().then((res) => {
+        this.dataObj = res.data.my
+        this.userObj = res.data.my.user
+        this.activeObj = res.data.customerFind
+        localStorage.setItem('myName', res.data.my.user.name)
+        localStorage.setItem('myAvatar', res.data.my.user.avatar)
+        localStorage.setItem('depId', res.data.my.user.depId)
+        this.$store.commit('setMyName', res.data.my.user.name)
+        this.$store.commit('setAvatar', res.data.my.user.avatar)
+        // 客户增长
+        this.customer = res.data.customer
         this.$toast.clear()
       })
     },

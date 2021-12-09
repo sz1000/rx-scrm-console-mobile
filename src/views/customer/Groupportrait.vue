@@ -54,12 +54,12 @@
           <li class="lsits list-warp" v-for="(item, index) in dataList" :key="index">
             <div class="flex">
               <div class="portrait_img">
-                <img v-if="item.avatar != ''" :src="item.avatar" alt="" />
+                <img class="avatar" v-if="item.avatar != ''" :src="item.avatar" alt="" />
                 <div class="flag" v-if="item.avatar == ''">
                   {{ item.name.substr(0, 1) }}
                 </div>
               </div>
-              <div>
+              <div class="val">
                 <p class="portrait_tite">
                   {{ item.name }}
                   <span class="firm" v-if="item.customerType == 2">@{{ item.corpName }}</span>
@@ -373,11 +373,18 @@ export default {
   padding: 24px;
   background: #fff;
 }
-.portrait_img img {
+.portrait_img{
   width: 88px;
   height: 88px;
-  border-radius: 20px;
   margin-right: 20px;
+  .avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+  }
+}
+.val{
+  width: calc(100% - 108px);
 }
 .portrait_tite {
   font-family: PingFangSC-Medium;
