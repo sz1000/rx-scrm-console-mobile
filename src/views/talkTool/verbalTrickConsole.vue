@@ -3,8 +3,8 @@
     <header-title v-if="isIndependent == 1" title="话术库"></header-title>
     <!-- 话术 -->
     <div class="warp-bg">
-    <!-- 标题 -->
-    <!-- <div class="headerTitle">
+      <!-- 标题 -->
+      <!-- <div class="headerTitle">
         <div class="backPage"
             @click="goBack">
         <van-icon name="arrow-left" />
@@ -12,8 +12,8 @@
         </div>
         <span class="textTitle">快捷回复</span>
     </div> -->
-    <!-- 头部 -->
-    <!-- <div class="warp-box">
+      <!-- 头部 -->
+      <!-- <div class="warp-box">
         <div class="head">
         <div>
             <van-nav-bar>
@@ -30,35 +30,35 @@
         </div>
         </div>
     </div> -->
-    <!-- sop提醒  -->
-    <div class="sop_wrap">
+      <!-- sop提醒  -->
+      <div class="sop_wrap">
         <div class="sop_notice" v-if="popupList && popupList.length > 0">
-        <img class="icon" src="../../images/bell.png" alt="" />
-        <div class="label">{{ sopType }}</div>
-        <div class="val">{{ popupList.length }}条消息待发送</div>
-        <div class="r_box" @click="showPopup">
+          <img class="icon" src="../../images/bell.png" alt="" />
+          <div class="label">{{ sopType }}</div>
+          <div class="val">{{ popupList.length }}条消息待发送</div>
+          <div class="r_box" @click="showPopup">
             <span class="btn">查看</span>
             <img class="s_icon" src="@/assets/images/icon_down.png" alt="" />
+          </div>
         </div>
-        </div>
-    </div>
-    <!-- tabMenu -->
-    <div class="top-message">
+      </div>
+      <!-- tabMenu -->
+      <div class="top-message">
         <img src="../../images/bell.png" alt="" />
         <span>如需新增话术请至电脑端修改</span>
-    </div>
-    <div class="tabMenu">
+      </div>
+      <div class="tabMenu">
         <div class="tabBtn">
-        <span :class="{ active: tabClick == 1 }" class="mycule" @click="myclue(1)">个人话术</span>
-        <span :class="{ active: tabClick == 2 }" class="mycule" @click="myclue(2)">公共话术</span>
+          <span :class="{ active: tabClick == 1 }" class="mycule" @click="myclue(1)">个人话术</span>
+          <span :class="{ active: tabClick == 2 }" class="mycule" @click="myclue(2)">公共话术</span>
         </div>
         <!-- <span class="addBtn" @click="newaddClick">
         <img src="../../images/icon_add@2x.png" alt="" />
         新增
         </span> -->
-    </div>
-    <!-- 查询 -->
-    <!-- <div class="searchInput">
+      </div>
+      <!-- 查询 -->
+      <!-- <div class="searchInput">
         <input type="text"
             class="input"
             v-model="inputValue"
@@ -66,20 +66,20 @@
         <span @click="queryCenten"
             class="searchBtn">查询</span>
     </div> -->
-    <!-- 添加分组-->
-    <div class="newgrouping">
+      <!-- 添加分组-->
+      <div class="newgrouping">
         <img class="newgrp-img" src="../../images/iconadd.png" alt="" />
         <span class="add-grp" @click="addGroups(tabClick)">添加分组</span>
-    </div>
-    <!-- 列表 -->
-    <ul class="tree-box">
+      </div>
+      <!-- 列表 -->
+      <ul class="tree-box">
         <!-- 最外层 一级 -->
         <li v-for="(parent, index) in treeData" :key="index" class="all-group">
-        <div class="tree-header">
+          <div class="tree-header">
             <div class="header-left">
-            <i class="el-icon-caret-right" v-show="!parent.isOpen"></i>
-            <i class="el-icon-caret-bottom" v-show="parent.isOpen"></i>
-            <span class="header-name" @click="groupNameList(parent, index)">{{ parent.name }}</span>
+              <i class="el-icon-caret-right" v-show="!parent.isOpen"></i>
+              <i class="el-icon-caret-bottom" v-show="parent.isOpen"></i>
+              <span class="header-name" @click="groupNameList(parent, index)">{{ parent.name }}</span>
             </div>
             <!-- <div class="header-r">
         <div @click="moreDot(parent)">
@@ -93,145 +93,145 @@
             <li @click="openDelete(item)">删除</li>
         </ul>
         </div> -->
-        </div>
-        <div class="tree-body" v-show="parent.isOpen">
+          </div>
+          <div class="tree-body" v-show="parent.isOpen">
             <!-- 第二级 -->
             <ul class="child-box">
-            <li v-for="(child, childidx) in parent.children" :key="childidx">
+              <li v-for="(child, childidx) in parent.children" :key="childidx">
                 <div class="tree-header">
-                <div class="header-left child-title">
+                  <div class="header-left child-title">
                     <i class="el-icon-caret-right" v-show="!child.isOpen"></i>
                     <i class="el-icon-caret-bottom" v-show="child.isOpen"></i>
                     <span class="header-name" @click="groupNameList(child, index)">{{ child.name }}</span>
-                </div>
-                <div class="header-r" v-show="moreSet == child.id">
+                  </div>
+                  <div class="header-r" v-show="moreSet == child.id">
                     <div @click="moreDot(child)">
-                    <img style="width: 28px; height: 28px" src="../../images/icon_more@2x.png" alt="" />
+                      <img style="width: 28px; height: 28px" src="../../images/icon_more@2x.png" alt="" />
                     </div>
                     <ul class="listAlat-box" v-if="listTite">
-                    <li @click="rechristen(child)">重命名</li>
-                    <li @click="openDelete(child)">删除</li>
+                      <li @click="rechristen(child)">重命名</li>
+                      <li @click="openDelete(child)">删除</li>
                     </ul>
-                </div>
+                  </div>
                 </div>
                 <ul v-show="child.isOpen">
-                <li v-for="(oneitem, oneidx) in child.items" :key="oneidx" class="word-box">
+                  <li v-for="(oneitem, oneidx) in child.items" :key="oneidx" class="word-box">
                     <div class="group-box">
-                    <!-- <img class="group_img"
+                      <!-- <img class="group_img"
                         src="../../images/group.png"
                         alt=""
                         @click="shareText(oneitem)" /> -->
-                    <span class="word-title">{{ oneitem.title }}</span>
+                      <span class="word-title">{{ oneitem.title }}</span>
                     </div>
                     <div class="word-list">
                       <div v-for="(list, lidx) in oneitem.contentList" :key="lidx" class="slot-box">
-                          <div class="text_img" @click="firstShare(list)">
+                        <div class="text_img" @click="firstShare(list)">
                           <img v-if="isIndependent == 2" class="share_img" src="../../images/share_two@2x.png" alt="" />
                           <div class="text-value">
-                              {{ list.value }}
+                            {{ list.value }}
                           </div>
-                          </div>
+                        </div>
                       </div>
                     </div>
-                </li>
+                  </li>
                 </ul>
                 <div class="tree-body" v-show="child.isOpen">
-                <!-- 第三级 -->
-                <ul class="child-box">
+                  <!-- 第三级 -->
+                  <ul class="child-box">
                     <li v-for="(grandson, grandindex) in child.children" :key="grandindex" class="word-box">
-                    <div class="tree-header">
+                      <div class="tree-header">
                         <div class="header-left three-title">
-                        <i class="el-icon-caret-right" v-show="!grandson.isOpen"></i>
-                        <i class="el-icon-caret-bottom" v-show="grandson.isOpen"></i>
-                        <span class="header-name" @click="groupNameList(grandson, index)">{{ grandson.name }}</span>
+                          <i class="el-icon-caret-right" v-show="!grandson.isOpen"></i>
+                          <i class="el-icon-caret-bottom" v-show="grandson.isOpen"></i>
+                          <span class="header-name" @click="groupNameList(grandson, index)">{{ grandson.name }}</span>
                         </div>
                         <div class="header-r" v-show="moreSet == grandson.id">
-                        <div @click="moreDot(grandson)">
+                          <div @click="moreDot(grandson)">
                             <img style="width: 28px; height: 28px" src="../../images/icon_more@2x.png" alt="" />
-                        </div>
-                        <ul class="listAlat-box" v-if="listTite">
+                          </div>
+                          <ul class="listAlat-box" v-if="listTite">
                             <li @click="rechristen(grandson)">重命名</li>
                             <li @click="openDelete(grandson)">删除</li>
-                        </ul>
+                          </ul>
                         </div>
-                    </div>
-                    <div class="tree-body" v-show="grandson.isOpen">
+                      </div>
+                      <div class="tree-body" v-show="grandson.isOpen">
                         <ul>
-                        <li v-for="(grandword, grandidx) in grandson.items" :key="grandidx" class="word-box">
+                          <li v-for="(grandword, grandidx) in grandson.items" :key="grandidx" class="word-box">
                             <div class="group-box">
-                            <!-- <img class="group_img"
+                              <!-- <img class="group_img"
                                 src="../../images/group.png"
                                 alt=""
                                 @click="shareText(grandword)" /> -->
-                            <span class="word-title">{{
+                              <span class="word-title">{{
                                 grandword.title
                             }}</span>
                             </div>
                             <div class="word-list">
                               <div v-for="(list, lidx) in grandword.contentList" :key="lidx" class="slot-box">
-                                  <div class="text_img" @click="firstShare(list)">
+                                <div class="text_img" @click="firstShare(list)">
                                   <img v-if="isIndependent == 2" class="share_img" src="../../images/share_two@2x.png" alt="" />
                                   <div class="text-value">
-                                      {{ list.value }}
+                                    {{ list.value }}
                                   </div>
-                                  </div>
+                                </div>
                               </div>
                             </div>
-                        </li>
+                          </li>
                         </ul>
-                    </div>
+                      </div>
                     </li>
-                </ul>
+                  </ul>
                 </div>
-            </li>
+              </li>
             </ul>
-        </div>
+          </div>
         </li>
-    </ul>
+      </ul>
     </div>
     <!-- 新建分组 -->
     <van-action-sheet v-model="newshow" title="新建分组">
-    <div class="content">
+      <div class="content">
         <div class="codeDetail">
-        <div class="select-Tree">
+          <div class="select-Tree">
             <span class="groupname"><span style="color: red">*</span> 上级分组:</span>
             <SelectTree :options="optionSelect" v-model="value" :multiple="false" :searchable="false" placeholder="请选择分组" :normalizer="normalizer"
                         @select="changeSelect">
-            <label slot="option-label" slot-scope="{ node }" class="labelClassName">
+              <label slot="option-label" slot-scope="{ node }" class="labelClassName">
                 <img src="../../images/wenjian.png" alt="" style="width: 14px; height: 12px" />
                 <span class="nodeName one-line">{{ node.label }}</span>
-            </label>
+              </label>
             </SelectTree>
-        </div>
-        <div class="input_text">
+          </div>
+          <div class="input_text">
             <span class="groupname"><span style="color: red">*</span> 分组名称:</span>
             <el-input v-model="groupingName" placeholder="请输入内容" maxlength="20" show-word-limit>
             </el-input>
-        </div>
-        <div class="buttonWarp">
-            <span class="cancel" @click="cancel">取消</span>
+          </div>
+          <div class="buttonWarp">
+            <span class="cancel" @click="cancelBtn">取消</span>
             <span class="save" @click="saveBut">保存</span>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
     </van-action-sheet>
     <!-- 重命名 -->
     <van-action-sheet v-model="rename" title="重命名">
-    <div class="content">
+      <div class="content">
         <div class="codeDetail">
-        <div class="select-Tree"></div>
-        <div class="input_text">
+          <div class="select-Tree"></div>
+          <div class="input_text">
             <span class="groupname"><span style="color: red">*</span> 重命名:</span>
 
             <el-input v-model="wordTitle" placeholder="请输入内容" maxlength="20" show-word-limit>
             </el-input>
-        </div>
-        <div class="buttonWarp">
-            <span class="cancel" @click="cancel">取消</span>
+          </div>
+          <div class="buttonWarp">
+            <span class="cancel" @click="cancelName">取消</span>
             <span class="save" @click="saveName">保存</span>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
     </van-action-sheet>
     <!-- <Details /> -->
 
@@ -290,7 +290,7 @@
 import SelectTree from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import commonFun from '../../utils/commonToken'
-import { _throttle,formatDate } from '../../utils/tool'
+import { _throttle, formatDate } from '../../utils/tool'
 import {
   sop_prompt_personal,
   m_cluecustomer_getClueCustomerByid,
@@ -304,12 +304,13 @@ export default {
   components: {
     SelectTree,
     // Details,
-    HeaderTitle
+    HeaderTitle,
   },
   props: {
-    isIndependent: {  // 1: 话术是独立路由，2: 话术是组件
-      default: 1
-    }
+    isIndependent: {
+      // 1: 话术是独立路由，2: 话术是组件
+      default: 1,
+    },
   },
   data() {
     return {
@@ -858,9 +859,9 @@ export default {
     //       });
     //     });
     // },
-    // 点击取消
-    cancel() {
-      this.newshow = false
+    // 重命名取消
+    cancelName() {
+      this.rename = false
     },
     //重命名 保存
     saveName: _throttle(function () {
@@ -888,7 +889,10 @@ export default {
           })
       }
     }, 3000),
-
+    // 新建 点击取消
+    cancelBtn() {
+      this.newshow = false
+    },
     // 新建分组baoc
     saveBut: _throttle(function () {
       let params = {
@@ -1197,7 +1201,7 @@ export default {
       }
     }
     .header-r {
-        position: relative;
+      position: relative;
       .listAlat-box {
         padding: 24px 0;
         width: 236px;
@@ -1684,8 +1688,9 @@ export default {
   height: 80px;
   line-height: 80px;
 }
-/deep/ .vue-treeselect__placeholder, /deep/ .vue-treeselect__single-value{
-  line-height: 76px
+/deep/ .vue-treeselect__placeholder,
+/deep/ .vue-treeselect__single-value {
+  line-height: 76px;
 }
 .input_text {
   display: flex;
@@ -1711,6 +1716,7 @@ export default {
 }
 // 底部按钮
 .buttonWarp {
+  cursor: pointer;
   display: flex;
   // justify-content: space-around;
   position: absolute;
@@ -1718,6 +1724,7 @@ export default {
   width: 100%;
   // position: fixed;
   bottom: 24px;
+  z-index: 10;
   // margin-top: 243px;
 
   span {
