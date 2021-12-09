@@ -135,6 +135,11 @@ export default {
                     font-weight: bold;
                     color: @fontMain;
                     margin-bottom: 12px;
+                    width: 100%;
+                    word-break: break-all;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
                 .time{
                     font-size: 24px;
@@ -162,6 +167,10 @@ export default {
                         font-size: 24px;
                         line-height: 32px;
                         color: @total;
+                        max-width: 190px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                 }
             }
