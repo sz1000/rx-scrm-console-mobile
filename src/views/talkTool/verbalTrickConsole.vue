@@ -1187,6 +1187,10 @@ export default {
     padding: 5px 16px;
     .header-left {
       display: flex;
+      i {
+        line-height: 35px;
+        // line-height: normal;
+      }
       .header-name {
         flex: 1;
         max-width: 500px;

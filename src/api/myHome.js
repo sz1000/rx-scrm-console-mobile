@@ -8,6 +8,13 @@ export function getMyInfo() {
         method: 'get',
     })
 }
+// 图表
+export function getAllCharts() {
+    return request({
+        url: CustomerService + '/my/getAllCharts',
+        method: 'get',
+    })
+}
 // 待处理 朋友圈
 export function friendSend(data) {
     return request({
