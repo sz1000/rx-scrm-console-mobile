@@ -146,6 +146,10 @@ export default {
                     line-height: 32px;
                     color: @fontMain;
                     font-weight: 400;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: calc(100% - 200px);
                 }
             }
         }
