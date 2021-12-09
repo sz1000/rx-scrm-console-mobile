@@ -128,7 +128,7 @@ export default {
             this.fileForm.cover = getFileDefaultCover(name)
         },
         getImgUrl(url) {
-            this.form.cover = url
+            this.type == 1 ? this.form.cover = url : this.fileForm.cover = url
         },
         previewImg() {
             let url = this.type == 1 ? this.form.cover : this.fileForm.cover
@@ -137,7 +137,7 @@ export default {
         },
         showAbstract() {
             let text = this.type == 1 ? this.form.contentAbstract : this.fileForm.contentAbstract
-            
+
             this.$refs.editAbstract.show(this.type, text)
         },
         getAbstractData(data) {
