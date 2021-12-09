@@ -315,7 +315,7 @@ export default {
             height: 128px;
             background: @white;
             padding: 24px;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
             .footer{
@@ -553,6 +553,9 @@ export default {
                                     color: #C0C4CC;
                                 }
                             }
+                        }
+                        .share_link{
+                            word-break: break-all;
                         }
                         .share_box{
                             width: 250px;
