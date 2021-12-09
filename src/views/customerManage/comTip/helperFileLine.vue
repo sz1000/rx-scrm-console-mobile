@@ -594,7 +594,7 @@ export default {
   position: relative;
 }
 .btnBox {
-  position: fixed;
+  position: absolute;
   bottom: 92px;
   // left: 24px;
   width: 750px;
