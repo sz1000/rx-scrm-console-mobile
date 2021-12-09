@@ -6,7 +6,7 @@
                 <li class="name one-line">{{ userData.name }}</li>
                 <li class="company one-line">{{ userData.departments }}</li>
             </ul>
-            <div class="right" @click="showWechat">
+            <div class="right pointer" @click="showWechat">
                 <img src="../../images/icon_qiwei.png" alt="">
                 <span>加企业微信</span>
             </div>

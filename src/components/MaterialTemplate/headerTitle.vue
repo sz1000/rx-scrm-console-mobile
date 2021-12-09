@@ -1,5 +1,5 @@
 <template>
-    <div class="header-title">
+    <div class="header-title pointer">
         <div class="back-page" @click="goBack">
             <img src="../../images/arrow_left.png" alt="">
             <span class="reback">返回</span>

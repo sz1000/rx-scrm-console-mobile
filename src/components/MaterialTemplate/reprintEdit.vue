@@ -15,7 +15,7 @@
                         <span>{{ type == 1 ? '文章封面' : '文件封面' }}</span>
                     </p>
                     <div class="cover-img-box">
-                        <div class="cover-img">
+                        <div class="cover-img pointer">
                             <img :src="type == 1 ? form.cover : fileForm.cover" alt="" @click="previewImg">
                         </div>
                         <img-upload :isCustomize="true" :customizeType="2"></img-upload>
@@ -26,7 +26,7 @@
                     <van-field v-if="type == 2" v-model="fileForm.contentAbstract" type="textarea" label="文件摘要" label-class="label" rows="1" autosize readonly @click="showAbstract"/>
                 </div>
             </div>
-            <div class="reprint-edit-btn">
+            <div class="reprint-edit-btn pointer">
                 <span class="preview" @click="preview">{{ type == 1 ? '预览文章' : '预览文件'}}</span>
                 <span class="establish" @click="confirm">{{ type == 1 ? '创建文章' : '上传文件'}}</span>
             </div>
@@ -131,10 +131,14 @@ export default {
             this.form.cover = url
         },
         previewImg() {
-            this.$refs.imgPreview.show(1, [this.form.cover])
+            let url = this.type == 1 ? this.form.cover : this.fileForm.cover
+
+            this.$refs.imgPreview.show(1, [url])
         },
         showAbstract() {
-            this.$refs.editAbstract.show(this.form.contentAbstract)
+            let text = this.type == 1 ? this.form.contentAbstract : this.fileForm.contentAbstract
+            
+            this.$refs.editAbstract.show(this.type, text)
         },
         getAbstractData(data) {
             this.type == 1 ? this.form.contentAbstract = data : this.fileForm.contentAbstract = data

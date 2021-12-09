@@ -2,7 +2,7 @@
     <div class="material-template">
         <header-title v-if="isIndependent == 1 && !showUploadPoster && !showContentPreview && !showFileUpload" title="内容素材"></header-title>
         <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
-            <ul class="header-nav">
+            <ul class="header-nav pointer">
                 <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
                 <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
                 <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
@@ -17,7 +17,7 @@
                         finished-text="没有更多了"
                         @load="onLoad"
                         >
-                        <div class="item" v-for="i in articleList" :key="i.articleId">
+                        <div class="item pointer" v-for="i in articleList" :key="i.articleId">
                             <div class="right" @click="preview(1, i)">
                                 <div class="img">
                                     <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
@@ -41,7 +41,7 @@
                         finished-text="没有更多了"
                         @load="onLoad"
                         >
-                        <div class="item" v-for="i in saleList" :key="i.documentId">
+                        <div class="item pointer" v-for="i in saleList" :key="i.documentId">
                             <div class="right" @click="preview(2, i)">
                                 <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
                                 <div class="des">
@@ -63,7 +63,7 @@
                         finished-text="没有更多了"
                         @load="onLoad"
                         >
-                        <div class="item" v-for="i in posterList" :key="i.posterId">
+                        <div class="item pointer" v-for="i in posterList" :key="i.posterId">
                             <div class="right" @click="previewImg(i)">
                                 <div class="img">
                                     <span><img :src="i.posterUrl" alt=""></span>
@@ -81,7 +81,7 @@
             </ul>
             <div class="position-box">
                 <!-- 转载公众号文章按钮 -->
-                <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div>
+                <div v-if="type == 0" class="reprint-box pointer" @click="goNextStep"></div>
                 <!-- 上传文件按钮 -->
                 <div v-if="type == 1" class="poster-box">
                     <file-upload :needFileInfo="true"></file-upload>

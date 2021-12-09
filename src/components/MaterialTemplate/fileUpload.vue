@@ -1,7 +1,7 @@
 <template>
     <div class="file-upload">
         <div class="reprint-box"></div>
-        <input class="upload-inp" type="file" @change="afterRead">
+        <input class="upload-inp pointer" type="file" @change="afterRead">
     </div>
 </template>
 <script>
@@ -118,6 +118,7 @@ export default {
         height: 104px;
         background: transparent;
         opacity: 0;
+        font-size: 0;
         position: absolute;
         top: 0;
         left: 0;

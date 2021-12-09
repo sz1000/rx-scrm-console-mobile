@@ -10,12 +10,12 @@
                     <span>海报图片</span>
                 </p>
                 <div class="cover-img-box">
-                    <img class="cover-img" :src="form.posterUrl" alt="" @click="previewImg(form)">
+                    <img class="cover-img pointer" :src="form.posterUrl" alt="" @click="previewImg(form)">
                     <img-upload :isCustomize="true" :customizeType="2" :needFileInfo="true"></img-upload>
                 </div>
             </div>
         </div>
-        <div class="submit-btn">
+        <div class="submit-btn pointer">
             <span @click="confirm">上传海报</span>
         </div>
     </div>
@@ -151,12 +151,13 @@ export default {
         }
     }
     .submit-btn {
+        width: 10rem;
         padding: 32px 0;
         background-color: @white;
         position: fixed;
-        left: 0;
-        right: 0;
+        left: 50%;
         bottom: 0;
+        transform: translateX(-50%);
         span {
             display: block;
             width: 686px;

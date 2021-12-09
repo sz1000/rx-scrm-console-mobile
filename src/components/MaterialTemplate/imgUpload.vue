@@ -1,5 +1,5 @@
 <template>
-    <div class="img-upload">
+    <div class="img-upload pointer">
         <div v-if="isCustomize">
             <van-uploader :max-count="1" :before-read="beforeRead" :after-read="afterRead">
                 <div v-if="customizeType == 2" class="rechoose">
@@ -152,6 +152,9 @@ export default {
             width: 6px;
             height: 44px;
         }
+    }
+    /deep/ .van-uploader__input {
+        font-size: 0;
     }
 }
 </style>
