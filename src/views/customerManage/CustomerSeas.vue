@@ -519,6 +519,8 @@ export default {
         font-size: 28px;
         font-weight: 600;
         .selectUser {
+          display: flex;
+          align-items: center;
           /deep/.el-select {
             width: 519px;
             height: 80px;

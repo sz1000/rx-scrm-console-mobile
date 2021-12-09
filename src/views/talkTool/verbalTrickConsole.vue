@@ -1681,6 +1681,7 @@ export default {
 .groupname {
   display: flex;
   align-items: center;
+  white-space: nowrap;
   min-width: 140px;
   margin-right: 20px;
 }
