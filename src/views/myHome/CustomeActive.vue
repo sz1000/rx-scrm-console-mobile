@@ -243,6 +243,7 @@ export default {
           { name: '超过1周', id: 3 },
           { name: '超过2周', id: 4 },
           { name: '已激活', id: 5 },
+          { name: '激活中', id: 6 },
         ]
         this.tabName = this.actions[0].name
         this.id = this.actions[0].id
