@@ -129,7 +129,7 @@
                    <div class="tites">{{materialList.title}}</div>
                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
                  </div>
-                 <div class="article_flex" >
+                 <div class="article_flex">
                    <div>
                       <p class="tite">{{materialList.title}}</p>
                       <p class="link_box">{{materialList.contentAbstract}}</p>
