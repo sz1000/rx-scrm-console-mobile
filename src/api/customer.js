@@ -140,8 +140,8 @@ export function cluecustomer_gettag(id) {
 export function cluecustomer_update(data) {
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/update',
-        method: 'get',
-        params: data
+        method: 'post',
+        data: data
     })
 }
 export function cluecustomer_addtag(data) {

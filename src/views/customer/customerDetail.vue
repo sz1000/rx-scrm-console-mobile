@@ -36,8 +36,8 @@
                     <div class="item">
                         <div class="label">客户来源</div>
                         <div class="val">
-                            <div class="icon_select" @click="dialog = true">
-                                <span class="text">扫描二维码</span>
+                            <div class="icon_select" @click="openSelectDialog('source')">
+                                <span :class="{'placeholder':!detail.source}">{{detail.source | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -45,8 +45,8 @@
                     <div class="item">
                         <div class="label">客户类型</div>
                         <div class="val">
-                            <div class="icon_select">
-                                <span class="text">微信用户</span>
+                            <div class="icon_select" @click="openSelectDialog('type')">
+                                <span :class="{'placeholder':!detail.customerType}">{{detail.customerType | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -54,23 +54,20 @@
                     <div class="item">
                         <div class="label">客户阶段</div>
                         <div class="val">
-                            <div class="icon_select">
-                                <span class="text">沟通</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
+                            <input type="text" class="input" v-model="detail.stage" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">公司名称</div>
                         <div class="val">
-                            <input type="text" class="input" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.cropFullName" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">企业规模</div>
                         <div class="val">
-                            <div class="icon_select">
-                                <span class="placeholder">请选择</span>
+                            <div class="icon_select" @click="openSelectDialog('scale')">
+                                <span :class="{'placeholder':!detail.corpScale}">{{detail.corpScale | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -78,8 +75,9 @@
                     <div class="item">
                         <div class="label">所属行业</div>
                         <div class="val">
-                            <div class="icon_select">
+                            <div class="icon_select" @click="openSelectDialog('industry')">
                                 <span class="text">教育/高等教育</span>
+                                <!-- <span :class="{'placeholder':!detail.industry}">{{detail.industry | $textEmpty('请选择')}}</span> -->
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -208,12 +206,13 @@
             </div>
         </div>
         <!-- 客户来源 -->
-        <SelectDialog :data="customerList" title="客户来源" v-model="dialog" @confirm="selectedFun"></SelectDialog>
+        <SelectDialog :data="columns" :keys="select.key" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
     </div>
 </template>
 
 <script>
 import { SelectDialog } from './components'
+import { customerType } from '@/utils/config'
 import {
   cluecustomer_toupdate,
   cluecustomer_update,
@@ -229,10 +228,46 @@ export default {
     },
     data(){
         return {
-            id: this.$route.query,
+            id: this.$route.query.id,
             dialog: false,
-            customerList:[],        //客户来源
+            columns: [],
+            pickerType: '',
+            select: {
+                key: 'name',
+                title: '客户来源'
+            },
+            customerList:[],                 //客户来源
+            customerTypeList: customerType,  //客户类型
+            scaleList: [],                   //企业规模
+            industryList: [],                //所属行业
+
+            detail: {
+                avatar: '',
+                industry: [],
+                customerName: '',
+                source: '',
+                customerType: '',
+                mobil: '',
+                cropFullName: '',
+                corpScale: '',
+                address: '',
+                remark: '',
+                describe: '',
+                name: '',
+                phone: '',
+                weixin: '',
+                gender: '',
+                position: '',
+                cropFullName: '',
+                cropSubIndustry: '',
+                source: '',
+                email: '',
+                stage: '',
+            },
         }
+    },
+    mounted(){
+        this.getDetail()
     },
     methods: {
         getDetail(){
@@ -240,11 +275,68 @@ export default {
                 if(res.result){
                     let data = res.data
                     this.customerList = data.list
+                    this.scaleList = data.corpScaleList
+                    data.comlist.forEach(el => {
+                        if(el.children.length == 0){
+                            el.children = null
+                        }else{
+                            el.children.forEach(son => {
+                                if(son.children.length == 0){
+                                    son.children = null
+                                }
+                            })
+                        }
+                    })
+                    this.industryList = data.comlist
                 }
             })
         },
+        openSelectDialog(type){     //打开选择弹窗
+            this.pickerType = type
+            switch (type) {
+                case 'source':  //客户来源
+                    this.select.title = '客户来源'
+                    this.columns = this.customerList
+                    break;
+                case 'type':  //客户类型
+                    this.select.title = '客户类型'
+                    this.columns = this.customerTypeList
+                    break;
+                case 'scale':  //企业规模
+                    this.select.title = '企业规模'
+                    this.columns = this.scaleList
+                    break;
+                case 'industry':  //所属行业
+                    this.select.title = '所属行业'
+                    this.columns = this.industryList
+                    break;
+                default:
+                    break;
+            }
+            this.dialog = true
+        },
         selectedFun(val){   //筛选项确认
-
+            let type = this.pickerType
+            switch (type) {
+                case 'source':  //客户来源
+                    console.log('客户来源',val[0].name)
+                    this.detail.source = val[0].name
+                    break;
+                case 'type':  //客户类型
+                    console.log('客户类型',val)
+                    // this.detail.customerTypeName = val[0].name
+                    this.detail.customerType = val[0].code
+                    break;
+                case 'scale':  //企业规模
+                    console.log('企业规模',val)
+                    this.detail.corpScale = val[0].name
+                    break;
+                case 'industry':  //所属行业
+                    console.log('所属行业',val)
+                    break;
+                default:
+                    break;
+            }
         },
     },
 }

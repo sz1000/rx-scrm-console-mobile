@@ -7,7 +7,7 @@
                 <div class="confirm_btn" @click="onConfirm">确定</div>
             </div>
             <div class="dialog_content">
-                <van-picker :columns="data" :value-key="keys" @change="onChange"/>
+                <van-picker ref="picker" :columns="data" :value-key="keys"/>
             </div>
         </div>
     </van-popup>
@@ -35,9 +35,7 @@ export default {
         },
     },
     data(){
-        return {
-            obj: null,
-        }
+        return {}
     },
     computed: {
         dialog: {
@@ -51,30 +49,10 @@ export default {
     },
     methods: {
         onConfirm() {
-            let data = this.obj,val = ''
-            if(data == null){
-                if(this.keys){
-                    val = this.list && this.list.length ? this.list[0].value : null
-                }else{
-                    val = this.list && this.list.length ? this.list[0] : null
-                }
-                if(val != null){
-                    data = {
-                        value: val,
-                        index: 0
-                    }
-                }
-            }
+            let data = this.$refs.picker.getValues()
             this.dialog = false
-            console.log(data)
+            // console.log(data)
             this.$emit('confirm',data)
-        },
-        onChange(picker, value, index) {
-            this.obj = {
-                value: value,
-                index: index
-            }
-            this.$toast(`当前值：${value}, 当前索引：${index}`);
         },
     },
     watch: {
@@ -124,8 +102,9 @@ export default {
     }
     .dialog_content{
         width: 100%;
-        height: calc(100% - 104px);
-        // overflow-y: scroll;
+        /deep/ .van-picker__columns{
+            height: calc(46vh - 104px) !important;
+        }
     }
 }
 </style>
