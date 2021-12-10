@@ -9,7 +9,7 @@
     </div>
     <div class="addForm">
       <el-form ref="form" :model="formObj" label-position="right">
-        <el-form-item label="客户名称:" prop="customerCalled" :rules="[ { required: true, message: '请输入',trigger: ['change','blur'] }]">
+        <el-form-item label="线索名称:" prop="customerCalled" :rules="[ { required: true, message: '请输入',trigger: ['change','blur'] }]">
           <el-input v-model="formObj.customerCalled" placeholder="请输入" maxlength="15"></el-input>
         </el-form-item>
         <el-form-item label="联系人:" prop="name" :rules="[{ required: true, message: '请输入联系人姓名' }]">
