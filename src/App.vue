@@ -11,7 +11,9 @@ import { hideQwOptionMenu } from './utils/tool'
 
 export default {
   created() {
-    hideQwOptionMenu()
+    if (window.location.pathname != '/materialTemplate') {
+      hideQwOptionMenu()
+    }
   }
 }
 </script>
