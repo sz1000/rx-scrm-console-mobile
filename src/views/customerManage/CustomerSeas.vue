@@ -314,7 +314,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .culeDeatil {
-  padding-bottom: 112px;
+  padding-bottom: 180px;
   .headerTitle {
     background: #fff;
     padding: 0 24px;
