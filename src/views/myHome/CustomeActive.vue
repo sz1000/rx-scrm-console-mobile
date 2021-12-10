@@ -483,7 +483,7 @@ export default {
             margin-top: 8px;
             .time_one {
               display: inline-block;
-              width: 144px;
+              width: 160px;
               margin-right: 16px;
             }
             .time_two {
