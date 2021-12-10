@@ -7,7 +7,15 @@
   </div>
 </template>
 <script>
-export default {};
+import { hideQwOptionMenu } from './utils/tool'
+
+export default {
+  created() {
+    if (window.location.pathname != '/materialTemplate') {
+      hideQwOptionMenu()
+    }
+  }
+}
 </script>
 <style lang="less">
 @supports (bottom: env(safe-area-inset-bottom)){

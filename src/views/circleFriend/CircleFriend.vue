@@ -27,9 +27,9 @@
     <div class="materialBox">
       <div class="title">素材类型</div>
       <div class="tabBtn">
-        <span class="box" :class="tab=='image'? 'active':''" @click="tab = 'image'">图片</span>
-        <span class="box" :class="tab=='video'? 'active':''" @click="tab = 'video'">视频</span>
-        <span class="box" :class="tab=='link'? 'active':''" @click="tab = 'link'">链接</span>
+        <span class="box" :class="tab=='image'? 'active':''"  @click="goToMaterials('image')">图片</span>
+        <span class="box" :class="tab=='video'? 'active':''"  @click="goToMaterials('video')">视频</span>
+        <span class="box" :class="tab=='link'? 'active':''"  @click="goToMaterials('link')">链接</span>
         <span class="box" :class="tab=='material'? 'active':''" @click="goToMaterial('material')">素材库</span>
       </div>
       <div class="uploadImg">
@@ -129,7 +129,7 @@
                    <div class="tites">{{materialList.title}}</div>
                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
                  </div>
-                 <div class="article_flex" >
+                 <div class="article_flex">
                    <div>
                       <p class="tite">{{materialList.title}}</p>
                       <p class="link_box">{{materialList.contentAbstract}}</p>
@@ -233,6 +233,15 @@ export default {
     }
   },
   methods: {
+    goToMaterials(val){
+      this.tab = val
+      if( this.tab = val){
+        this.linkhref.hrefTitle =''
+      }else{
+         this.linkhref.hrefTitle =''
+      }
+          console.log(val)
+    },
        afterRead(obj, file) {
       
       console.log(file, '------------')
