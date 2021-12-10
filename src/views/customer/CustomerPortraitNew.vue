@@ -613,6 +613,7 @@ export default {
                             line-height: 32px;
                             font-size: 20px;
                             color: @main;
+                            white-space: nowrap;
                             background: rgba(@main,.06);
                             padding: 0 16px;
                             border-radius: 21px;

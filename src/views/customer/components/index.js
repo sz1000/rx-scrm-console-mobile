@@ -25,3 +25,6 @@ from './addHelper.vue'
 /* 添加协助人 */
 export { default as DeleteHelper }
 from './deleteHelper.vue'
+/* 添加协助人 */
+export { default as SelectDialog }
+from './selectDialog.vue'
