@@ -242,7 +242,7 @@ export function sendChatMessage(
     })
 }
 // 企业微信分享
-export function qwShare(title, link, imgUrl, desc) {
+export function qwShare(showShare, title, link, imgUrl, desc) {
     Getticket({ url: location.href }).then((res) => {
         wx.config({
             beta: true,
@@ -254,6 +254,11 @@ export function qwShare(title, link, imgUrl, desc) {
             jsApiList: ['invoke', 'onMenuShareAppMessage', 'onMenuShareTimeline'],
         })
         wx.ready(function() {
+            if (showShare) {
+                wx.showOptionMenu();
+            } else {
+                wx.hideOptionMenu();
+            }
             // 获取“转发”按钮点击状态及自定义分享内容接口
             wx.onMenuShareAppMessage({
                 title,
@@ -279,6 +284,23 @@ export function qwShare(title, link, imgUrl, desc) {
                     console.log('朋友圈分享取消')
                 }
             });
+        })
+    })
+}
+// 隐藏企业微信右上角三个点按钮
+export function hideQwOptionMenu() {
+    Getticket({ url: location.href }).then((res) => {
+        wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [],
+        })
+        wx.ready(function() {
+            wx.hideOptionMenu()
         })
     })
 }

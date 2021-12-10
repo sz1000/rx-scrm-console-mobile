@@ -380,8 +380,10 @@ export default {
                     imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'
                     desc = fileSize ? byteConvert(fileSize) : name
                 }
+                qwShare(true, shareTitle, url, imgUrl, desc)
+            } else {
+                qwShare(false, shareTitle, url, imgUrl, desc)
             }
-            qwShare(shareTitle, url, imgUrl, desc)
         },
     },
     components: {
