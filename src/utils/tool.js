@@ -251,7 +251,7 @@ export function qwShare(title, link, imgUrl, desc) {
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
             signature: res.data.signature,
-            jsApiList: ['invoke', 'onMenuShareAppMessage', 'onMenuShareWechat', 'onMenuShareTimeline', 'shareWechatMessage', 'shareAppMessage'],
+            jsApiList: ['invoke', 'onMenuShareAppMessage', 'onMenuShareTimeline'],
         })
         wx.ready(function() {
             // 获取“转发”按钮点击状态及自定义分享内容接口
@@ -265,19 +265,6 @@ export function qwShare(title, link, imgUrl, desc) {
                 },
                 cancel: function () {
                     console.log('转发取消')
-                }
-            });
-            // 获取“微信”按钮点击状态及自定义分享内容接口
-            wx.onMenuShareWechat({
-                title,
-                desc,
-                link,
-                imgUrl,
-                success: function () {
-                    console.log('微信分享成功')
-                },
-                cancel: function () {
-                    console.log('微信分享取消')
                 }
             });
             // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
