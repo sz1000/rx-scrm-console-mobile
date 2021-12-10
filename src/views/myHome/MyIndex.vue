@@ -60,7 +60,7 @@
         </div>
       </div>
       <div class="about_me about_shadow">
-        <span>@我</span>
+        <span>待回复</span>
         <div class="reply_text" @click="goToAbout">
           <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
