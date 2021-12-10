@@ -191,7 +191,7 @@
                     {{ item.name.substr(0, 1) }}
                   </div>
                 </div>
-                <div>
+                <div class="right_box">
                   <p class="portrait_tite">
                     {{ item.name }}
                     <span class="firm" v-if="item.customerType == 2"
@@ -1085,11 +1085,18 @@ export default {
   padding: 24px;
   background: #fff;
 }
-.portrait_img img {
+.portrait_img{
   width: 88px;
   height: 88px;
-  border-radius: 20px;
   margin-right: 20px;
+  img {
+   width: 100%;
+   height: 100%;
+   border-radius: 20px;
+ }
+}
+.right_box{
+  width: calc(100% - 108px);
 }
 .portrait_tite {
   font-family: PingFangSC-Medium;
