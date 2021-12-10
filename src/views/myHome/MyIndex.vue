@@ -1,5 +1,11 @@
 <template>
   <div class="myhome_index">
+    <!-- <div class="test_btn">
+      <div @click="clickTo(1)">群发消息给客户</div>
+      <div @click="clickTo(2)">群发消息客户群</div>
+      <div @click="clickTo(3)">添加客户界面</div>
+      <div @click="clickTo(4)">发到朋友圈</div>
+    </div> -->
     <div class="page_title">
       <div class="head_img">
         <img :src="userObj.avatar" alt="" v-if="userObj.avatar" />
@@ -386,9 +392,88 @@ export default {
         return false
       }
     },
+
+    // 测试企微接口
+    // clickTo(v) {
+    //   console.log('----分享分组----', v)
+    //   this.$network
+    //     .get('/user-service/m/user/getinticket', {
+    //       url: location.href,
+    //     })
+    //     .then((res) => {
+    //       wx.config({
+    //         beta: true,
+    //         debug: false,
+    //         appId: res.data.corpId,
+    //         timestamp: res.data.timestamp,
+    //         nonceStr: res.data.nonceStr,
+    //         signature: res.data.signature,
+    //         jsApiList: [
+    //           'sendChatMessage',
+    //           'getContext',
+    //           'invoke',
+    //           'shareToExternalContact',
+    //           'shareToExternalChat',
+    //           'navigateToAddCustomer',
+    //           'shareToExternalMoments',
+    //         ],
+    //       })
+    //       var that = this
+    //       wx.ready(function () {
+    //         wx.invoke(
+    //           'agentConfig',
+    //           {
+    //             corpid: res.data.corpId,
+    //             agentid: res.data.agent_id + '',
+    //             timestamp: res.data.agent_config_data.timestamp,
+    //             nonceStr: res.data.agent_config_data.noncestr,
+    //             signature: res.data.agent_config_data.signature,
+    //             jsApiList: [
+    //               'sendChatMessage',
+    //               'getContext',
+    //               'invoke',
+    //               'shareToExternalContact',
+    //               'shareToExternalChat',
+    //               'navigateToAddCustomer',
+    //               'shareToExternalMoments',
+    //             ],
+    //           },
+
+    //           function (res) {
+    //             if (v == 1) {
+    //               wx.invoke('shareToExternalContact', {
+    //                 text: {
+    //                   content: '1111111', // 文本内容
+    //                 },
+    //               })
+    //             } else if (v == 2) {
+    //               wx.invoke('shareToExternalChat', {
+    //                 text: {
+    //                   content: '2222222', // 文本内容
+    //                 },
+    //               })
+    //             } else if (v == 3) {
+    //               wx.invoke('navigateToAddCustomer', {}, function (res) {})
+    //             } else if (v == 4) {
+    //               wx.invoke('shareToExternalMoments', {
+    //                 text: {
+    //                   content: '333333333333', // 文本内容
+    //                 },
+    //               })
+    //             }
+    //           }
+    //         )
+    //       })
+    //     })
+    // },
   },
 }
 </script>
 <style lang="less" scoped>
 @import './myIndex.less';
+.test_btn {
+  div {
+    margin-bottom: 20px;
+  }
+}
 </style>
