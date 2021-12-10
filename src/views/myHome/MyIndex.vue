@@ -185,11 +185,16 @@ export default {
       scaleData: [],
       nicheTime: [],
       nicheData: {},
+      scroll: true,
     }
   },
   created() {
     this.getData()
-    this.getAllChartList()
+  },
+  mounted() {
+    this.$nextTick(() => {
+      // window.addEventListener('scroll', this.scrollLoad)
+    })
   },
   methods: {
     getAllChartList() {
@@ -223,6 +228,7 @@ export default {
           return a.id - b.id
         })
         this.scaleData = arr
+        this.scroll = false
       })
     },
     getData() {
@@ -242,6 +248,7 @@ export default {
         // 客户增长
         this.customer = res.data.customer
         this.$toast.clear()
+        this.getAllChartList()
       })
     },
     setLineChart(data) {
@@ -345,6 +352,39 @@ export default {
           forReplyCustomer: this.dataObj.forReplyCustomer,
         },
       })
+    },
+    scrollLoad() {
+      var scrollTop = 0
+      var clientHeight = 0
+      var scrollHeight = 0
+      if (document.documentElement && document.documentElement.scrollTop) {
+        scrollTop = document.documentElement.scrollTop
+      } else if (document.body) {
+        scrollTop = document.body.scrollTop
+      }
+      if (document.body.clientHeight && document.documentElement.clientHeight) {
+        clientHeight =
+          document.body.clientHeight < document.documentElement.clientHeight
+            ? document.body.clientHeight
+            : document.documentElement.clientHeight
+      } else {
+        clientHeight =
+          document.body.clientHeight > document.documentElement.clientHeight
+            ? document.body.clientHeight
+            : document.documentElement.clientHeight
+      }
+      scrollHeight = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      )
+      if (scrollTop + clientHeight + 200 > scrollHeight) {
+        console.log(scrollTop, clientHeight, scrollHeight)
+        if (this.scroll) {
+          this.getAllChartList()
+        }
+      } else {
+        return false
+      }
     },
   },
 }

@@ -385,10 +385,6 @@ a:hover {
   }
 }
 
-.clueConfirmClassLable {
-  width: 702px !important;
-}
-
 .deleteBtn {
   width: 702px;
   // height: 300px;
@@ -401,31 +397,7 @@ a:hover {
   .commonVant();
 }
 
-.giveUpBtn {
-  width: 702px;
-  height: 326px;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #eeeeee;
-
-  .van-dialog__content {
-    height: 140px;
-
-    .message {
-      img {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .van-dialog__message {
-      line-height: 40px;
-      margin-top: 0;
-    }
-  }
-
-  .commonVant();
-}
+.giveUpBtn {}
 
 /deep/.popper-select-class {
   .el-popper {
@@ -454,13 +426,6 @@ textarea {
   font-size: 24px;
 }
 
-// .detail_wrap {
-//   .van-popup--bottom {
-//     left: 50% !important;
-//     width: 50%;
-//     transform: translate(-50%, 0) !important;
-//   }
-// }
 img {
   max-width: 100%;
 }
@@ -500,4 +465,13 @@ input::-moz-placeholder {
 
 input:-ms-input-placeholder {
   color: #C0C4CC;
+}
+
+// 提示框样式修改
+.van-dialog {
+  .van-dialog__header {
+    color: #262626;
+    font-size: 32px;
+    font-weight: 600;
+  }
 }
