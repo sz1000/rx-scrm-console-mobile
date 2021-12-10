@@ -459,7 +459,7 @@ export default {
                     str = obj.context
                     break;
                 case 29:
-                    str = '成功激活客户'
+                    str = '发起激活客户'
                     break;
                 case 30:
                     str = obj.context

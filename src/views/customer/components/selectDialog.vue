@@ -33,6 +33,10 @@ export default {
             type: String,
             default: ''
         },
+        isGetIndex: {   //返回的数据是否是对应的索引
+            type: Boolean,
+            default: false
+        },
     },
     data(){
         return {}
@@ -49,9 +53,9 @@ export default {
     },
     methods: {
         onConfirm() {
-            let data = this.$refs.picker.getValues()
+            let data = this.isGetIndex ? this.$refs.picker.getIndexes() : this.$refs.picker.getValues()
             this.dialog = false
-            // console.log(data)
+            console.log(data)
             this.$emit('confirm',data)
         },
     },

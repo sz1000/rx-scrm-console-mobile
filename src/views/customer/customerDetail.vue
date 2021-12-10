@@ -37,7 +37,7 @@
                         <div class="label">客户来源</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('source')">
-                                <span :class="{'placeholder':!detail.source}">{{detail.source | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.source}">{{detail.sourceName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -46,7 +46,7 @@
                         <div class="label">客户类型</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('type')">
-                                <span :class="{'placeholder':!detail.customerType}">{{detail.customerType | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.customerType}">{{detail.customerTypeName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                         <div class="label">企业规模</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('scale')">
-                                <span :class="{'placeholder':!detail.corpScale}">{{detail.corpScale | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.corpScale}">{{detail.corpScaleName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -206,7 +206,7 @@
             </div>
         </div>
         <!-- 客户来源 -->
-        <SelectDialog :data="columns" :keys="select.key" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
+        <SelectDialog :data="columns" :keys="select.key" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
     </div>
 </template>
 
@@ -234,7 +234,8 @@ export default {
             pickerType: '',
             select: {
                 key: 'name',
-                title: '客户来源'
+                title: '客户来源',
+                isGetIndex: false
             },
             customerList:[],                 //客户来源
             customerTypeList: customerType,  //客户类型
@@ -246,10 +247,13 @@ export default {
                 industry: [],
                 customerName: '',
                 source: '',
+                sourceName: '',         //暂增
                 customerType: '',
+                customerTypeName: '',   //暂增
                 mobil: '',
                 cropFullName: '',
                 corpScale: '',
+                corpScaleName: '',      //暂增
                 address: '',
                 remark: '',
                 describe: '',
@@ -296,18 +300,22 @@ export default {
             switch (type) {
                 case 'source':  //客户来源
                     this.select.title = '客户来源'
+                    this.select.isGetIndex = false
                     this.columns = this.customerList
                     break;
                 case 'type':  //客户类型
                     this.select.title = '客户类型'
+                    this.select.isGetIndex = false
                     this.columns = this.customerTypeList
                     break;
                 case 'scale':  //企业规模
                     this.select.title = '企业规模'
+                    this.select.isGetIndex = false
                     this.columns = this.scaleList
                     break;
                 case 'industry':  //所属行业
                     this.select.title = '所属行业'
+                    this.select.isGetIndex = true
                     this.columns = this.industryList
                     break;
                 default:
@@ -320,19 +328,22 @@ export default {
             switch (type) {
                 case 'source':  //客户来源
                     console.log('客户来源',val[0].name)
-                    this.detail.source = val[0].name
+                    this.detail.sourceName = val[0].name
+                    this.detail.source = val[0].type
                     break;
                 case 'type':  //客户类型
                     console.log('客户类型',val)
-                    // this.detail.customerTypeName = val[0].name
+                    this.detail.customerTypeName = val[0].name
                     this.detail.customerType = val[0].code
                     break;
                 case 'scale':  //企业规模
                     console.log('企业规模',val)
-                    this.detail.corpScale = val[0].name
+                    this.detail.corpScaleName = val[0].name
+                    this.detail.corpScale = val[0].id
                     break;
                 case 'industry':  //所属行业
                     console.log('所属行业',val)
+                    this.detail.industry = val
                     break;
                 default:
                     break;
