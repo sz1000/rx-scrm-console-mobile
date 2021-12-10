@@ -74,7 +74,7 @@
       <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/talkTool/contentMaterial')" v-show="menulist.includes('material')">
           <img src="../images/neirongsucai.png" alt="" />
-          <span>素材管理</span>
+          <span>素材库</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/verbalTrickConsole')" v-show="menulist.includes('verbalTrick')">
           <img src="../images/huashuku.png" alt="" />
