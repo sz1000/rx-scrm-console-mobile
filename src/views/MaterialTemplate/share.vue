@@ -88,7 +88,8 @@ export default {
                 materialId: this.materialId,
                 model: {
                     materialType: this.materialType,
-                    unionId: this.unionId
+                    unionId: this.unionId,
+                    userNo: this.userNo ? this.userNo : ''
                 }
             }
 

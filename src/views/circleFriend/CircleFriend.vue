@@ -329,9 +329,10 @@ export default {
         // imgArr = this.linkhref
         imgArr =[
             this.linkhref.href,
+              this.imageUrl,
             this.linkhref.hrefTitle,
             this.linkhref.hrefDesc,
-            this.imageUrl
+          
         ]
       }
         // }
