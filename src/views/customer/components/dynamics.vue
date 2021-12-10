@@ -671,6 +671,7 @@ export default {
                         width: 100%;
                         padding: 24px 0;
                         border-bottom: 1px solid @lineColor; /*no*/
+                        position: relative;
                         &:last-child{
                             border: none;
                         }

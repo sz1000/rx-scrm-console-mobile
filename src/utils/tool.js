@@ -241,7 +241,61 @@ export function sendChatMessage(
         })
     })
 }
-
+// 企业微信分享
+export function qwShare(title, link, imgUrl, desc) {
+    Getticket({ url: location.href }).then((res) => {
+        wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: ['invoke', 'onMenuShareAppMessage', 'onMenuShareWechat', 'onMenuShareTimeline', 'shareWechatMessage', 'shareAppMessage'],
+        })
+        wx.ready(function() {
+            // 获取“转发”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareAppMessage({
+                title,
+                desc,
+                link, // 分享链接；在微信上分享时，该链接的域名必须与企业某个应用的可信域名一致
+                imgUrl,
+                success: function () {
+                    console.log('转发成功')
+                },
+                cancel: function () {
+                    console.log('转发取消')
+                }
+            });
+            // 获取“微信”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareWechat({
+                title,
+                desc,
+                link,
+                imgUrl,
+                success: function () {
+                    console.log('微信分享成功')
+                },
+                cancel: function () {
+                    console.log('微信分享取消')
+                }
+            });
+            // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareTimeline({
+                title,
+                link, // 分享链接；在微信上分享时，该链接的域名必须与企业某个应用的可信域名一致
+                imgUrl,
+                success: function () {
+                    console.log('朋友圈分享成功')
+                },
+                cancel: function () {
+                    console.log('朋友圈分享取消')
+                }
+            });
+        })
+    })
+}
+// 微信分享
 export async function wxShare(title, link, imgUrl, desc) {
     let { appId, timestamp, nonceStr, signature } = await getSignature()
 

@@ -93,7 +93,7 @@ export default {
     data() {
         return {
             showLoading: false,
-            dynamicContentType: 1,
+            dynamicContentType: 0,
             dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
             timeLineList: [],
             objItem: this.isPortrait == 1 ? JSON.parse(localStorage.getItem('ISPORTRIAT_customer')) : JSON.parse(localStorage.getItem('customer')),
@@ -110,12 +110,9 @@ export default {
 
             if (this.isPortrait == 1) {
                 this.dynamicNavList[3] = '消息通知'
-                this.dynamicContentType = 0
-                this.selectFollowMsgList('')
                 this.userMessageReceive()
-            } else {
-                this.selectFollowMsgList(2)
             }
+            this.selectFollowMsgList('')
         },
         formatDate,
         // 动态导航切换

@@ -104,7 +104,7 @@
 </template>
 <script>
 import { ArticleList, SaleDocumentList, PosterList } from "../../config/api"
-import { sendChatMessage, byteConvert, getFileDefaultCover } from '../../utils/tool'
+import { sendChatMessage, byteConvert, getFileDefaultCover, qwShare } from '../../utils/tool'
 
 import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
 import Search from '../../components/MaterialTemplate/search'
@@ -173,6 +173,7 @@ export default {
     },
     created() {
         this.getCorpId().then(() => this.getList())
+        this.doQwShare(false)
     },
     methods: {
         ...mapActions(["getCorpId"]),
@@ -328,6 +329,7 @@ export default {
         hideContentPreview(data) {
             this.ifShowFooter(true)
             this.showContentPreview = data
+            this.doQwShare(false)
         },
         preview(type, item) {
             this.ifShowFooter(false)
@@ -341,6 +343,8 @@ export default {
             this.$nextTick(() => {
                 this.$refs.contentPreview.show(obj)
             })
+
+            this.doQwShare(true, type, item)
         },
         previewImg(i) {
             this.$refs.imgPreview.show(1, [i.posterUrl])
@@ -354,6 +358,30 @@ export default {
         // 顶部标题返回（工作台）
         goBack() {
             this.$router.push('/home')
+        },
+        // 企业微信分享
+        doQwShare(showContentPreview, type, item) {
+            let shareTitle = '内容素材-极洲互动', url = window.location.href, imgUrl = 'https://test-h5.jzcrm.com/static/img/neirongsucai.png', desc = '多种文章、文件及海报供你参阅'
+
+            if (showContentPreview) {
+                // 预览状态
+                if (type == 1) {
+                    let {articleId, title, cover, contentAbstract} = item
+
+                    url = `${window.location.origin}/materialTemplate?materialId=${articleId}&type=1&userNo=${this.userNo}`
+                    shareTitle = title
+                    imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_article.png'
+                    desc = contentAbstract ? contentAbstract : title
+                } else if (type == 2) {
+                    let {documentId, name, cover, fileSize} = item
+
+                    url = `${window.location.origin}/materialTemplate?materialId=${documentId}&type=2&userNo=${this.userNo}`
+                    shareTitle = name
+                    imgUrl = cover && cover.length ? cover : 'https://h5.jzcrm.com/static/img/default_pdf.png'
+                    desc = fileSize ? byteConvert(fileSize) : name
+                }
+            }
+            qwShare(shareTitle, url, imgUrl, desc)
         },
     },
     components: {
