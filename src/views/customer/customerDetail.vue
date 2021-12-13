@@ -2,42 +2,47 @@
     <div class="detail_wrap">
         <div class="top_box">
             <div class="avatar_box">
-                <div class="avatar"></div>
-                <div class="name">小鱼儿</div>
-                <div class="alt">@企业</div>
+                <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
+                <div class="val">
+                    <div class="name">{{detail.name}}</div>
+                    <div class="alt">{{detail.customerType | typeName}}</div>
+                    <img class="gender" :src="gender" alt="">
+                </div>
             </div>
         </div>
         <div class="content">
             <div class="row tag">
                 <div class="tit">企业标签</div>
                 <div class="tag_box">
-                    <div class="tag" v-for="(item,index) in 8" :key="index">有意向购买</div>
+                    <div class="tag" v-for="(item,index) in companyTagList" :key="index">{{item.name}}</div>
                 </div>
             </div>
             <div class="row tag">
                 <div class="tit">个人标签</div>
                 <div class="tag_box">
-                    <div class="tag" v-for="(item,index) in 8" :key="index">潜力股客户</div>
+                    <div class="tag" v-for="(item,index) in personTagList" :key="index">{{item.name}}</div>
                 </div>
             </div>
             <div class="row">
                 <div class="tit">基本信息</div>
                 <div class="item_box">
                     <div class="item">
-                        <div class="label">客户简称</div>
-                        <div class="val">客户简称</div>
+                        <div class="label">企业简称</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.customerName" maxlength="30" placeholder="请输入">
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">固定电话</div>
                         <div class="val">
-                            <input type="text" class="input" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.mobil" maxlength="12" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">客户来源</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('source')">
-                                <span :class="{'placeholder':!detail.source}">{{detail.sourceName | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.sourceName}">{{detail.sourceName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -46,7 +51,7 @@
                         <div class="label">客户类型</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('type')">
-                                <span :class="{'placeholder':!detail.customerType}">{{detail.customerTypeName | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.customerTypeName}">{{detail.customerTypeName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -58,16 +63,16 @@
                         </div>
                     </div>
                     <div class="item">
-                        <div class="label">公司名称</div>
+                        <div class="label">企业名称</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.cropFullName" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.cropFullName" maxlength="30" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">企业规模</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('scale')">
-                                <span :class="{'placeholder':!detail.corpScale}">{{detail.corpScaleName | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.corpScaleName}">{{detail.corpScaleName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -76,22 +81,23 @@
                         <div class="label">所属行业</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('industry')">
-                                <span class="text">教育/高等教育</span>
-                                <!-- <span :class="{'placeholder':!detail.industry}">{{detail.industry | $textEmpty('请选择')}}</span> -->
+                                <span :class="{'placeholder':!detail.industryName}">{{detail.industryName | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">地址</div>
-                        <div class="val">
-                            <input type="text" class="input" maxlength="200" placeholder="请输入">
+                        <div class="val" @click="openDialog('address')">
+                            <!-- <input type="text" class="input" v-model="detail.address" maxlength="200" placeholder="请输入" readonly> -->
+                            <span :class="{'placeholder':!detail.address}">{{detail.address | $textEmpty('请输入')}}</span>
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">备注</div>
-                        <div class="val">
-                            <input type="text" class="input" maxlength="200" placeholder="请输入（不得超过200个字符）">
+                        <div class="val" @click="openDialog('remark')">
+                            <!-- <input type="text" class="input" v-model="detail.remark" maxlength="200" placeholder="请输入（不得超过200个字符）" readonly> -->
+                            <span :class="{'placeholder':!detail.remark}">{{detail.corpScaleName | $textEmpty('请输入（不得超过200个字符）')}}</span>
                         </div>
                     </div>
                 </div>
@@ -101,40 +107,40 @@
                 <div class="item_box">
                     <div class="item">
                         <div class="label">联系人</div>
-                        <div class="val">无名氏</div>
+                        <div class="val">{{detail.name}}</div>
                     </div>
                     <div class="item">
                         <div class="label">性别</div>
-                        <div class="val">女</div>
+                        <div class="val">{{detail.gender | $gender}}</div>
                     </div>
                     <div class="item">
                         <div class="label">手机号</div>
-                        <div class="val">17782349586</div>
+                        <div class="val">{{detail.phone}}</div>
                     </div>
                     <div class="item">
                         <div class="label">微信号</div>
-                        <div class="val">sunshine0209</div>
+                        <div class="val">{{detail.weixin}}</div>
                     </div>
                     <div class="item">
                         <div class="label">微信昵称</div>
-                        <div class="val">昵称</div>
+                        <div class="val">{{detail.name}}</div>
                     </div>
                     <div class="item">
                         <div class="label">职务</div>
-                        <div class="val">销售</div>
+                        <div class="val">{{detail.position}}</div>
                     </div>
                     <div class="item">
                         <div class="label">邮箱</div>
-                        <div class="val">sunshine0209@qq.com</div>
+                        <div class="val">{{detail.email}}</div>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="customList && customList.length">
                 <div class="tit">自定义信息</div>
                 <div class="item_box">
-                    <div class="item">
-                        <div class="label">自定义金额</div>
-                        <div class="val">5-10万</div>
+                    <div class="item" v-for="item in customList" :key="item.id">
+                        <div class="label">{{item.columnName}}</div>
+                        <div class="val">{{item.value}}</div>
                     </div>
                 </div>
             </div>
@@ -143,19 +149,19 @@
                 <div class="item_box">
                     <div class="item">
                         <div class="label">添加人员</div>
-                        <div class="val">abcdefg</div>
+                        <div class="val">{{detail.createBy}}</div>
                     </div>
                     <div class="item">
                         <div class="label">添加客户时间</div>
-                        <div class="val">2021-07-02 15:23</div>
+                        <div class="val">{{detail.createTime}}</div>
                     </div>
                     <div class="item">
                         <div class="label">前负责人</div>
-                        <div class="val">abcdefg</div>
+                        <div class="val">{{detail.beBelongBy}}</div>
                     </div>
                     <div class="item">
                         <div class="label">转换时间</div>
-                        <div class="val">2021-07-02</div>
+                        <div class="val">{{detail.turnTime}}</div>
                     </div>
                 </div>
             </div>
@@ -163,55 +169,57 @@
                 <div class="tit">企微信息</div>
                 <div class="item_box">
                     <div class="item">
-                        <div class="label">客户简称</div>
-                        <div class="val">大熊网络科技</div>
+                        <div class="label">企业简称</div>
+                        <div class="val">{{detail.externalCorpName}}</div>
                     </div>
                     <div class="item">
                         <div class="label">客户来源</div>
-                        <div class="val">扫描二维码</div>
+                        <div class="val">{{detail.externalSource}}</div>
                     </div>
                     <div class="item">
-                        <div class="label">公司名称</div>
-                        <div class="val">上海大熊网络科技有限公司</div>
+                        <div class="label">企业名称</div>
+                        <div class="val">{{detail.externalCorpFullName}}</div>
                     </div>
                     <div class="item">
                         <div class="label">客户类型</div>
-                        <div class="val">微信用户</div>
+                        <div class="val">{{detail.externalType | $customerType}}</div>
                     </div>
                     <div class="item">
                         <div class="label">姓名</div>
-                        <div class="val">某某某</div>
+                        <div class="val">{{detail.externalName}}</div>
                     </div>
                     <div class="item">
                         <div class="label">性别</div>
-                        <div class="val">男</div>
+                        <div class="val">{{detail.externalGender | $gender}}</div>
                     </div>
                     <div class="item">
                         <div class="label">职务</div>
-                        <div class="val">技术开发</div>
+                        <div class="val">{{detail.externalPosition}}</div>
                     </div>
                     <div class="item">
                         <div class="label">添加人员</div>
-                        <div class="val">技术开发</div>
+                        <div class="val">{{detail.createBy}}</div>
                     </div>
                     <div class="item">
                         <div class="label">添加客户时间</div>
-                        <div class="val">2021-07-02 10:20:55</div>
+                        <div class="val">{{detail.createTime}}</div>
                     </div>
                     <div class="item">
                         <div class="label">备注</div>
-                        <div class="val">这个也许会非常的长，换行显示，还是很长拉高行高，就像现在这个样子。</div>
+                        <div class="val">{{detail.remark}}</div>
                     </div>
                 </div>
             </div>
         </div>
         <!-- 客户来源 -->
         <SelectDialog :data="columns" :keys="select.key" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
+        <!-- 地址 and 备注 -->
+        <InputDialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></InputDialog>
     </div>
 </template>
 
 <script>
-import { SelectDialog } from './components'
+import { SelectDialog,InputDialog } from './components'
 import { customerType } from '@/utils/config'
 import {
   cluecustomer_toupdate,
@@ -224,12 +232,13 @@ import {
 } from '@/api/customer'
 export default {
     components: {
-        SelectDialog
+        SelectDialog,InputDialog
     },
     data(){
         return {
             id: this.$route.query.id,
             dialog: false,
+            dialog_address: false,
             columns: [],
             pickerType: '',
             select: {
@@ -237,14 +246,23 @@ export default {
                 title: '客户来源',
                 isGetIndex: false
             },
+            openType: '',
+            dialogTitle: '',
+            dialogType: '',
+            dialogText: '',
             customerList:[],                 //客户来源
             customerTypeList: customerType,  //客户类型
             scaleList: [],                   //企业规模
             industryList: [],                //所属行业
+            allCompanyTagList: [],           //企业标签(all)
+            companyTagList: [],              //企业标签
+            personTagList: [],               //个人标签
+            customList: [],                  //自定义信息
 
             detail: {
                 avatar: '',
                 industry: [],
+                industryName: '',       //暂增
                 customerName: '',
                 source: '',
                 sourceName: '',         //暂增
@@ -270,14 +288,35 @@ export default {
             },
         }
     },
+    computed: {
+        gender(){
+            let val = this.detail.gender,obj = {
+                1: require('@/images/man.png'),
+                2: require('@/images/icon_female@2x.png'),
+            }
+            return val ? obj[val] : ''
+        },
+    },
     mounted(){
         this.getDetail()
+        this.getTagList()
     },
     methods: {
+        getTagList(){   //获取标签列表
+            cluecustomer_gettag(this.id).then(res => {
+                if(res.result){
+                    let data = res.data
+                    this.companyTagList = data.corpTagList
+                    this.personTagList = data.personTagList
+                    this.allCompanyTagList = data.tagCorpList
+                }
+            })
+        },
         getDetail(){
             cluecustomer_toupdate(this.id).then(res => {
                 if(res.result){
                     let data = res.data
+                    this.detail = Object.assign(this.detail,data.clueCustomerEntity)
                     this.customerList = data.list
                     this.scaleList = data.corpScaleList
                     data.comlist.forEach(el => {
@@ -292,8 +331,38 @@ export default {
                         }
                     })
                     this.industryList = data.comlist
+                    let tempColum = data.clueCustomerEntity.corpCustomColumnMap
+                    data.head.forEach(el => {
+                        el.value = tempColum ? tempColum[item.columnValue] : ''
+                    })
+                    this.customList =  data.head.filter(item => {
+                        return item.columnType
+                    })
                 }
             })
+        },
+        fixData(data){  //数据调整
+
+        },
+        openDialog(type){   //打开弹窗 (地址 and 备注)
+            this.openType = type
+            if(type == 'address'){
+                this.dialogTitle = '地址'
+                this.dialogType = 'input'
+                this.dialogText = this.detail.address
+            }else{
+                this.dialogTitle = '备注'
+                this.dialogType = 'textarea'
+                this.dialogText = this.detail.remark
+            }
+            this.dialog_address = true
+        },
+        confirmFun(val){   //弹窗确认 (地址 and 备注)
+            if(this.openType == 'address'){
+                this.detail.address = val
+            }else{
+                this.detail.remark = val
+            }
         },
         openSelectDialog(type){     //打开选择弹窗
             this.pickerType = type
@@ -342,12 +411,19 @@ export default {
                     this.detail.corpScale = val[0].id
                     break;
                 case 'industry':  //所属行业
-                    console.log('所属行业',val)
+                    console.log('所属行业',val,this.industryList[val[0]])
+                    let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
+                    this.detail.industryName = str
                     this.detail.industry = val
                     break;
                 default:
                     break;
             }
+        },
+    },
+    filters: {
+        typeName(val){
+            return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
         },
     },
 }
@@ -393,17 +469,26 @@ export default {
                 border-radius: 50%;
                 margin-right: 24px;
             }
-            .name{
-                color: @fontMain;
-                font-weight: bold;
-                font-size: 36px;
-                line-height: 48px;
-            }
-            .alt{
-                color: @yellow;
-                font-size: 24px;
-                line-height: 32px;
-                margin-left: 8px;
+            .val{
+                width: calc(100% - 124px);
+                display: flex;
+                align-items: flex-end;
+                .name{
+                    color: @fontMain;
+                    font-weight: bold;
+                    font-size: 36px;
+                    line-height: 48px;
+                }
+                .alt{
+                    color: @yellow;
+                    font-size: 24px;
+                    line-height: 32px;
+                    margin-left: 8px;
+                }
+                .gender{
+                    width: 30px;
+                    height: auto;
+                }
             }
         }
     }
@@ -487,14 +572,14 @@ export default {
                         .icon_select{
                             display: flex;
                             align-items: center;
-                            .placeholder{
-                                color: @total;
-                            }
                             .icon{
                                 width: 32px;
                                 height: 32px;
                                 // margin-left: 12px;
                             }
+                        }
+                        .placeholder{
+                            color: @total;
                         }
                     }
                 }

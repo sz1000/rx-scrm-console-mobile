@@ -4,7 +4,7 @@
       <div class="line_title">推送详情</div>
       <div class="p" v-if="taskType == 6">
         客户联系人{{ detail.customerContactName }}在
-        {{ detail.customerAddTimeStr }} 阅读了{{ detail.materialTitle }}
+        {{ detail.customerViewTimeStr }} 阅读了{{ detail.materialTitle }}
       </div>
       <div class="p" v-else>
         [{{ detail.promptTimeStr }}] 给以下客户联系人发送消息
