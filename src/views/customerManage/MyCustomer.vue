@@ -235,6 +235,7 @@ export default {
 @import url('../../styles/color');
 .my-customer {
     height: 100%;
+    min-height: 100vh;
     background-color: @white;
 }
 // .clueWarp {
