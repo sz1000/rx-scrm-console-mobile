@@ -38,11 +38,20 @@ export default {
     line-height: 87px;
     padding: 0 36px;
     background-color: @white;
-    border-bottom: 1px solid @lineColor;
     text-align: center;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
+    &::before{
+        content: '';
+        height: 2px;
+        background: @lineColor;
+        transform: scaleY(.5);
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
     .back-page {
         min-width: 28px;
         img {
@@ -57,17 +66,6 @@ export default {
         width: 100%;
         height: 88px;
         padding: 0 100px;
-        position: relative;
-        &::before{
-            content: '';
-            height: 2px;
-            background: @lineColor;
-            transform: scaleY(.5);
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
         .nav{
             color: @fontSub1;
             font-size: 28px;

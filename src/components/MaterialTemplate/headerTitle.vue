@@ -1,8 +1,8 @@
 <template>
-    <div class="header-title pointer">
+    <div class="header-title pointer" :class="{'header-line': needLine}">
         <div class="back-page" @click="goBack">
             <img src="../../images/arrow_left.png" alt="">
-            <span class="reback">返回</span>
+            <span v-if="needBackText" class="reback">返回</span>
         </div>
         <span class="text-title">{{ title }}</span>
     </div>
@@ -14,6 +14,14 @@ export default {
         title: {
             type: String,
             default: ''
+        },
+        needBackText: {
+            type: Boolean,
+            default: true
+        },
+        needLine: {
+            type: Boolean,
+            default: false
         }
     },
     inject: ['goBack']
@@ -54,6 +62,19 @@ export default {
         font-size: 30px;
         color: @fontMain;
         font-weight: 600;
+    }
+}
+.header-line {
+    position: relative;
+    &::after {
+        content: '';
+        height: 2px;
+        background-color: @lineColor;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transform: scaleY(.5);
     }
 }
 </style>

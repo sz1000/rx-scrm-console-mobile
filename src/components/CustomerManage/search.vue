@@ -8,7 +8,7 @@
                 <input class="text" type="search" autocomplete="off" v-model="searchText" :placeholder="type | getText" @keydown.enter="checkTable(searchText)" @change="resetSearch">
             </form>
         </div>
-        <div class="screen pointer">
+        <div class="screen pointer" @click="showScreen">
             <div class="icon">
                 <img src="@/assets/svg/icon_screen.svg" alt="">
             </div>
@@ -29,7 +29,7 @@ export default {
             searchText: ''
         }
     },
-    inject: ['checkTable', 'changeNav'],
+    inject: ['checkTable', 'changeNav', 'showScreen'],
     methods: {
         resetSearch(v) {
             if (!v) {
