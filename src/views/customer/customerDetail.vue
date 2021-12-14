@@ -35,7 +35,7 @@
                     <div class="item">
                         <div class="label">固定电话</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.mobil" maxlength="12" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.mobil" maxlength="20" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
