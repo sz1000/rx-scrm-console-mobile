@@ -107,7 +107,7 @@
             </div> -->
       <div class="but_warp">
         <div class="cancel" @click="cancel">取消</div>
-        <div class="determine" @click="determine">确定</div>
+        <div class="determine" @click="determine">确认选择</div>
       </div>
     </template>
 
@@ -422,10 +422,13 @@ export default {
 @import url('../../styles/color');
 .material-template {
   .but_warp {
+    padding-left: 24px;
+    width: 750px;
+    height: 100px;
     background: #fff;
     display: flex;
     position: fixed;
-    bottom: 20px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     .cancel {
@@ -563,7 +566,7 @@ export default {
           }
         }
         .right {
-          width: 95%;
+          width: 94%;
           .img {
             display: inline-block;
             width: 100px;

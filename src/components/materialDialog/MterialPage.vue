@@ -83,7 +83,7 @@
                 </div>
                 <div>
 
-                  <span v-if="indexps == indexs">
+                  <span v-if="indexps == indexs" class="span_img">
                     <img src="../../images/duihao.png" class="duihao_img" alt="">
                   </span>
                   <span v-else class="roud_yun"></span>
@@ -558,6 +558,11 @@ export default {
           display: inline-block;
           border-radius: 50%;
         }
+        .span_img {
+          display: inline-block;
+          width: 38px;
+          height: 38px;
+        }
         .duihao_img {
           width: 38px;
           height: 38px;
@@ -578,7 +583,7 @@ export default {
           }
         }
         .right {
-          width: 95%;
+          width: 94%;
           .img {
             display: inline-block;
             width: 100px;

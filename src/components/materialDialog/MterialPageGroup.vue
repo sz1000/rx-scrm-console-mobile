@@ -83,7 +83,7 @@
                 </div>
                 <div>
 
-                  <span v-if="indexps == indexs">
+                  <span v-if="indexps == indexs" class="span_img">
                     <img src="../../images/duihao.png" class="duihao_img" alt="">
                   </span>
                   <span v-else class="roud_yun"></span>
@@ -107,7 +107,7 @@
             </div> -->
       <div class="but_warp">
         <div class="cancel" @click="cancel">取消</div>
-        <div class="determine" @click="determine">确定</div>
+        <div class="determine" @click="determine">确认选择</div>
       </div>
     </template>
 
@@ -432,10 +432,13 @@ export default {
   // z-index: 10;
   overflow-x: hidden;
   .but_warp {
+    padding-left: 24px;
+    width: 750px;
+    height: 100px;
     background: #fff;
     display: flex;
     position: fixed;
-    bottom: 20px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     .cancel {
@@ -550,6 +553,11 @@ export default {
           display: inline-block;
           border-radius: 50%;
         }
+        .span_img {
+          display: inline-block;
+          width: 38px;
+          height: 38px;
+        }
         .duihao_img {
           width: 38px;
           height: 38px;
@@ -570,7 +578,7 @@ export default {
           }
         }
         .right {
-          width: 95%;
+          width: 94%;
           .img {
             display: inline-block;
             width: 100px;
