@@ -186,6 +186,10 @@ export default {
       ) {
         return
       }
+      if (this.$refs.search.searchText) {
+        this.getList(this.$refs.search.searchText)
+        return
+      }
       this.getList()
     },
     getList(title) {
