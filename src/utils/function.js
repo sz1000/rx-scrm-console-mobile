@@ -33,29 +33,32 @@ export const getAuthInfo = () => {
         let qywxUrl = encodeURIComponent(window.location.href)
         let authCode = queryObj.code
         console.log('location.href',location.href,localStorage.getItem('authCode'))
-        if(authCode && localStorage.getItem('authCode')){
+        // if(authCode && localStorage.getItem('authCode')){
+        if(authCode){
+            if(window.location.pathname.indexOf('verbalTrick') > -1){
+                localStorage.setItem('verbalTrick',authCode)
+            }else if(window.location.pathname.indexOf('customerPortrait') > -1){
+                localStorage.setItem('customerPortrait',authCode)
+            }
             let _data = {
                 code: authCode,
                 url: location.href
             }
             user_getloguser(_data).then(res => {
                 if(res.result){
-                    localStorage.setItem('authCode','')
+                    // localStorage.setItem('authCode','')
                     store.commit('setToken', res.data.accessToken)
                     store.commit('setExpireTime', res.data.expire_time)
                     store.commit('setUserNo', res.data.user_no)
                     store.commit('SET_CORPID', res.data.corpId)
                     store.commit('setWxLogoInfo', res)
-                    resolve(res)
-                }else{
-                    reject(false)
                 }
+                resolve(res)
             })
         }else{
             let url = window.location.pathname
             user_getappid(url).then(res => {
                 if(res.result){
-                    localStorage.setItem('authCode',authCode)
                     let appid = res.data.suiteid
                     window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${qywxUrl}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
                 }
