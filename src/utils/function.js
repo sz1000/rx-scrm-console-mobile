@@ -32,13 +32,15 @@ export const getAuthInfo = () => {
         let queryObj = parseQueryString(location)
         let qywxUrl = encodeURIComponent(window.location.href)
         let authCode = queryObj.code
-        if(authCode){
+        console.log('location.href',location.href,localStorage.getItem('authCode'))
+        if(authCode && localStorage.getItem('authCode')){
             let _data = {
                 code: authCode,
                 url: location.href
             }
             user_getloguser(_data).then(res => {
                 if(res.result){
+                    localStorage.setItem('authCode','')
                     store.commit('setToken', res.data.accessToken)
                     store.commit('setExpireTime', res.data.expire_time)
                     store.commit('setUserNo', res.data.user_no)
@@ -53,6 +55,7 @@ export const getAuthInfo = () => {
             let url = window.location.pathname
             user_getappid(url).then(res => {
                 if(res.result){
+                    localStorage.setItem('authCode',authCode)
                     let appid = res.data.suiteid
                     window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${qywxUrl}&response_type=code&state=state&scope=snsapi_base#wechat_redirect`
                 }
