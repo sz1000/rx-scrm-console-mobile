@@ -1,83 +1,64 @@
 <template>
     <div class="helper_wrap">
-        <div class="header_opera">
-            <div class="btn" @click="delPop">删除</div>
-            <div class="btn" @click="addPop">新增</div>
+        <div class="top_back" @click="$router.go(-1)">
+            <img class="icon" src="@/assets/svg/icon_back.svg" alt="">
+            <div class="title">协助人</div>
         </div>
-        <div class="helper_title">
-            <i></i>
-            <span class="tit">负责人</span>
-        </div>
-        <div class="list">
-            <div class="li">
-                <div class="row">
-                    <div class="item">
-                        <div class="label">员工姓名</div>
-                        <div class="val">{{obj.name}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">权限</div>
-                        <div class="val">{{obj.permission | permission}}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="item">
-                        <div class="label">添加时间</div>
-                        <div class="val">{{obj.createTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">最近沟通</div>
-                        <div class="val">{{obj.addTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
+        <div class="content">
+            <div class="item_box">
+                <div class="tit">负责人</div>
+                <div class="item trans">
+                    <div class="avatar"></div>
+                    <div class="val">
+                        <div class="name">许宣-运营部</div>
+                        <div class="text_box">
+                            <div class="time">2021.12.25</div>
+                            <div class="text">权限:只读</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="helper_title">
-            <i></i>
-            <span class="tit">协助人</span>
-        </div>
-        <div class="list">
-            <div class="li" v-for="(item,index) in list" :key="index">
-                <div class="row">
-                    <div class="item">
-                        <div class="label">员工姓名</div>
-                        <div class="val">{{item.name}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">权限</div>
-                        <div class="val">{{item.permission | permission}}</div>
-                    </div>
+            <div class="item_box">
+                <div class="opera_box" v-if="!showBtn">
+                    <img class="icon" @click="addDialog" src="@/assets/svg/icon_add_cir.svg" alt="">
+                    <img class="icon" @click="showBtn = true" src="@/assets/svg/icon_ljt.svg" alt="">
                 </div>
-                <div class="row">
-                    <div class="item">
-                        <div class="label">添加时间</div>
-                        <div class="val">{{item.createTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
+                <div class="opera_btn" @click="showBtn = false" v-else>完成</div>
+                <div class="tit">协助人</div>
+                <van-swipe-cell v-for="(item,index) in 3" :key="index">
+                    <div class="item" :class="{'trans':showBtn}">
+                        <img class="red_btn" @click="deleteFun" src="@/assets/svg/icon_remove.svg" alt="">
+                        <div class="avatar"></div>
+                        <div class="val">
+                            <div class="name">陈良-运营部</div>
+                            <div class="text_box">
+                                <div class="time">2021.12.25</div>
+                                <div class="text">权限:只读</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="item">
-                        <div class="label">最近沟通</div>
-                        <div class="val">{{item.addTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
-                    </div>
-                </div>
+                    <template #right>
+                        <van-button text="删除" @click="deleteFun" class="delete_button" />
+                    </template>
+                </van-swipe-cell>
             </div>
         </div>
-        <AddHelper v-model="dialog_add" @sure="getList"></AddHelper>
-        <DeleteHelper :list="list" v-model="dialog_delete" @sure="getList"></DeleteHelper>
     </div>
 </template>
 
 <script>
-import { AddHelper,DeleteHelper } from './components'
-import { clueCustomerFollowUser_getFollowUserList } from '@/api/customer'
+// import { AddHelper,DeleteHelper } from './components'
+// import { clueCustomerFollowUser_getFollowUserList } from '@/api/customer'
 export default {
     components: {
-        AddHelper,DeleteHelper
+        // AddHelper,DeleteHelper
     },
     data(){
         return {
             data: localStorage.getItem('helperData') ? JSON.parse(localStorage.getItem('helperData')) : [],
             list: [],
             dialog_add: false,
-            dialog_delete: false,
+            showBtn: false,
         }
     },
     computed: {
@@ -91,16 +72,17 @@ export default {
         },
     },
     mounted(){
-        if(this.id){
-            this.getList()
-        }
+        // if(this.id){
+        //     this.getList()
+        // }
     },
     methods: {
-        addPop(){
+        addDialog(){
+            console.log('add')
             this.dialog_add = true
         },
-        delPop(){
-            this.dialog_delete = true
+        deleteFun(){
+            console.log('删除')
         },
         getList(){  //获取协助人列表
             clueCustomerFollowUser_getFollowUserList(this.id).then(res => {
@@ -124,84 +106,138 @@ export default {
     width: 100%;
     min-height: 100vh;
     background: @white;
-    padding: 32px;
     position: relative;
-    .header_opera{
+    .top_back{
         width: 100%;
-        height: 60px;
-        text-align: right;
-        .btn{
-            width: 120px;
-            height: 60px;
-            color: @fontSub2;
-            font-size: 28px;
-            line-height: 60px;
-            text-align: center;
-            border-radius: 8px;
-            border: 1px solid #d9dae4; /* no */
-            display: inline-block;
-            &:first-child{
-                margin-right: 20px;
-            }
-        }
-    }
-    .helper_title{
+        height: 88px;
         position: relative;
-        display: flex;
-        align-items: center;
-        margin-bottom: 32px;
-        i{
-            font-style: normal;
-            width: 8px;
-            height: 26px;
-            background: @main;
-            margin-right: 12px;
-        }
-        .tit{
-            font-size: 30px;
-            color: @fontMain;
-            font-weight: bold;
-            line-height: 40px;
-        }
-    }
-    .list{
-        width: 100%;
-        position: relative;
-        .li{
+        text-align: center;
+        &::before{
+            content: '';
             width: 100%;
+            height: 1px; /* no */
+            background: @lineColor;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            transform: scaleY(.5);
+        }
+        .icon{
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            left: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .title{
+            display: inline-block;
+            line-height: 88px;
+            font-size: 28px;
+            font-weight: bold;
+            color: @fontMain;
+        }
+    }
+    .content{
+        width: 100%;
+        padding: 32px 0;
+        .item_box{
+            width: 100%;
+            position: relative;
             margin-bottom: 40px;
-            .row{
+            .opera_box{
                 display: flex;
+                position: absolute;
+                top: 0;
+                right: 32px;
+                .icon{
+                    width: 30px;
+                    height: 30px;
+                    &:last-child{
+                        margin-left: 28px;
+                    }
+                }
+            }
+            .opera_btn{
+                font-size: 28px;
+                line-height: 36px;
+                color: @main;
+                font-weight: bold;
+                position: absolute;
+                right: 32px;
+                top: 0;
+            }
+            .tit{
+                font-size: 28px;
+                line-height: 36px;
+                color: @fontMain;
+                font-weight: bold;
                 margin-bottom: 16px;
-                &:last-child{
-                    margin-bottom: 0;
-                }
-                .item{
-                    width: calc(50% - 10px);
-                }
+                padding-left: 32px;
             }
             .item{
-                line-height: 40px;
-                font-size: 28px;
+                width: 100%;
                 display: flex;
-                &:first-child{
-                    margin-right: 20px;
+                align-items: center;
+                padding: 32px;
+                position: relative;
+                transform: translate3d(-70px,0,0);
+                transition: all .25s;
+                &.bd::before{
+                    content: '';
+                    width: 100%;
+                    height: 1px;    /* no */
+                    background: @lineColor;
+                    transform: scaleY(.5);
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
                 }
-                .label{
-                    width: 120px;
-                    white-space: nowrap;
-                    color: @fontSub2;
-                    text-align: right;
-                    margin-right: 12px;
+                &.trans{
+                    transform: translate3d(0,0,0);
+                }
+                .red_btn{
+                    width: 36px;
+                    height: 36px;
+                    margin-right: 34px;
+                }
+                .avatar{
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 50%;
+                    background: rgba(0,0,0,.05);
+                    margin-right: 24px;
                 }
                 .val{
-                    width: calc(100% - 132px);
-                    color: @fontMain;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
+                    // width: calc(100% - 88px);
+                    .name{
+                        font-size: 28px;
+                        line-height: 36px;
+                        color: @fontMain;
+                        margin-bottom: 8px;
+                    }
+                    .text_box{
+                        width: 100%;
+                        font-size: 24px;
+                        line-height: 36px;
+                        color: @total;
+                        display: flex;
+                        .text{
+                            margin-left: 24px;
+                        }
+                    }
                 }
             }
+            .delete_button{
+                height: 100%;
+                width: 120px;
+                color: @white;
+                background: @red;
+                border-color: @red;
+            }
+            // /deep/ .van-swipe-cell__right{
+            //     right: -1px !important; /* no */
+            // }
         }
     }
 }
