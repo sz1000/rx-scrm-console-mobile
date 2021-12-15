@@ -27,7 +27,7 @@
             </van-swipe-cell>
         </div>
         <!-- 操作面板 -->
-        <van-action-sheet v-model="dialog" :actions="actions" :round="false" cancel-text="取消" close-on-click-action @select="selectFun"/>
+        <van-action-sheet v-model="dialog" :actions="actions" cancel-text="取消" close-on-click-action @select="selectFun"/>
     </div>
 </template>
 

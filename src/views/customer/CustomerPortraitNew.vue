@@ -1,41 +1,7 @@
 <template>
     <div class="customer_wrap" :class="{'glass':dialog_xzr}">
         <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-        <div class="top_box">
-            <div class="customer_card" @click="goDetail">
-                <!-- <div class="score">7832分</div> -->
-                <div class="info_box">
-                    <div class="avatar">
-                        <img class="img" :src="customerInfo.avatar | $setAvatar">
-                    </div>
-                    <div class="val">
-                        <div class="name_box" v-if="customerInfo.name">
-                            <div class="name">{{customerInfo.name}}</div>
-                            <div class="alt" :class="{'green':customerInfo.customerType == 1}" v-if="customerInfo.customerType && customerInfo.name.length < 10">{{customerInfo.customerType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
-                            <div class="icon" v-if="customerInfo.name.length < 10">
-                                <img src="../../images/icon_female@2x.png" v-if="customerInfo.gender == '2'" />
-                                <img src="../../images/man.png" v-if="customerInfo.gender == '1'" />
-                            </div>
-                        </div>
-                        <div class="p">{{customerInfo.mobil}}</div>
-                        <div class="p">{{customerInfo.cropFullName}}</div>
-                        <div class="person" @click.stop="toFun">
-                            <div class="img_box" :class="`m${personList.length}`">
-                                <img class="img" :src="item.avatar" v-for="(item,index) in personList" :key="index">
-                            </div>
-                            <div class="text">
-                                <span class="limit">{{getUserObj('name')}}</span>
-                                <span class="son">等{{userList.length}}人</span>
-                            </div>
-                            <img class="icon_next" src="@/assets/svg/icon_next_gray.svg">
-                        </div>
-                    </div>
-                </div>
-                <div class="tag_box" :class="{'opt0':tagList.length == 0}">
-                    <div class="tag" v-for="(item,index) in tagList" :key="index">{{item.name | limitFilter}}</div>
-                </div>
-            </div>
-        </div>
+        <TopCard :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
         <div class="nav_box">
             <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
         </div>
@@ -108,7 +74,7 @@
 </template>
 
 <script>
-import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp } from './components'
+import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard } from './components'
 import { user_getUserName } from '@/api/home'
 import {
     cluecustomer_getClueCustomerByid,
@@ -123,7 +89,7 @@ import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,
+        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,
         Opportunities,MessageBox,RemindersBox
     },
     provide() {
@@ -453,16 +419,18 @@ export default {
             }
             return true
         },
-        toFun(){    //查看协助人
-            localStorage.setItem('helperData',JSON.stringify(this.userList))
-            localStorage.setItem('customerId',this.customerInfo.clueCustomerNo)
-            this.$router.push('/helper')
-        },
-        goDetail() {
-            this.$router.push({
-                name: 'informationDetail',
-                query: { id: this.customerInfo.clueCustomerNo },
-            })
+        toFun(val){
+            console.log('asd',val)
+            if(val == 'helper'){    //查看协助人
+                localStorage.setItem('helperData',JSON.stringify(this.userList))
+                localStorage.setItem('customerId',this.customerInfo.clueCustomerNo)
+                this.$router.push('/helper')
+            }else if(val == 'detail'){    //详情
+                this.$router.push({
+                    name: 'informationDetail',
+                    query: { id: this.customerInfo.clueCustomerNo },
+                })
+            }
         },
         toGroupDetail(){    //群聊详情
             this.$router.push({
@@ -471,24 +439,6 @@ export default {
                     id: this.groupChatId
                 }
             })
-        },
-        getUserObj(n = 'num'){
-            let list = this.userList
-            if(!list || list.length == 0){return}
-            let _str = null,arr = [],str = ''
-            list.forEach((el,index) => {
-                if(index < 3){
-                    arr.push(el.name)
-                }
-            })
-            // if(n == 'num'){
-            //     _str = list.length > 3 ? 3 : list.length
-            // }else{
-            //     _str = arr.join('、')
-            // }
-            str = arr.join('、')
-            // console.log('asd',_str,arr,str)
-            return str
         },
     },
     filters: {
@@ -499,9 +449,6 @@ export default {
                 3: '通过扫描群二维码入群',
             }
             return val ? obj[val] : ''
-        },
-        limitFilter(val){
-            return val && val.length > 6 ? val.substring(0,5) + '...' : val
         },
     },
 }
@@ -676,228 +623,6 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-  }
-  .top_box{
-    width: 100%;
-    padding: 32px;
-    .customer_card {
-        width: 100%;
-        // min-height: 392px;
-        background: @white;
-        box-shadow: 0px 10px 32px 0px rgba(0, 0, 0, 0.07);
-        border-radius: 24px;
-        padding: 40px 32px 24px 32px;
-        position: relative;
-        .score{
-            width: 136px;
-            height: 56px;
-            background: linear-gradient(186deg, #76A1FB 0%, #4168F6 100%);
-            border-radius: 0 22px 0px 35px;
-            line-height: 56px;
-            font-size: 28px;
-            font-weight: bold;
-            text-align: center;
-            color: @white;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        .info_box{
-            width: 100%;
-            display: flex;
-            margin-bottom: 32px;
-        }
-        .avatar{
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            overflow: hidden;
-            background: rgba(@placeholder,.2);
-            margin-right: 32px;
-            font-size: 0;
-            .img{
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-        .val{
-            width: calc(100% - 152px);
-            .name_box{
-                display: flex;
-                align-items: flex-end;
-                margin-bottom: 16px;
-                overflow: hidden;
-                .name{
-                    color: @fontMain;
-                    line-height: 48px;
-                    font-size: 36px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    // max-width: calc(100% - 200px);
-                    max-width: 100%;
-                    font-weight: bold;
-                }
-                .alt{
-                    font-size: 24px;
-                    line-height: 32px;
-                    color: @yellow;
-                    max-width: 160px;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    margin-left: 8px;
-                    &.green{
-                        color: @green;
-                    }
-                }
-                .icon{
-                    width: 26px;
-                    height: 26px;
-                    font-size: 26px;
-                    margin-left: 10px;
-                    img{
-                        width: 100%;
-                        height: 100%;
-                    }
-                }
-            }
-            .p{
-                font-size: 28px;
-                line-height: 36px;
-                color: @fontSub1;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                margin-bottom: 16px;
-            }
-            .person{
-                width: fit-content;
-                height: 52px;
-                border-radius: 26px;
-                // border: 1px solid @bdColor; /*no*/
-                display: flex;
-                align-items: center;
-                padding: 0 16px;
-                color: @fontSub1;
-                position: relative;
-                &::before{
-                    content: '';
-                    width: 200%;
-                    height: 200%;
-                    border-radius: 52px;
-                    border: 1px solid @bdColor; /*no*/
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%,-50%) scale(.5);
-                }
-                .img_box{
-                    display: flex;
-                    width: 32px;
-                    margin-right: 10px;
-                    &.m2{
-                        width: calc(32px * 1.75);
-                    }
-                    &.m3{
-                        width: calc(32px * 2.5);
-                    }
-                    &.m4{
-                        width: calc(32px * 3.25);
-                    }
-                    &.m5{
-                        width: calc(32px * 4);
-                    }
-                    .img{
-                        width: 32px;
-                        height: 32px;
-                        display: flex;
-                        align-items: center;
-                        border-radius: 50%;
-                        border: 1px solid @white; /*no*/
-                        &:nth-child(2){
-                            transform: translateX(-25%);
-                        }
-                        &:nth-child(3){
-                            transform: translateX(-50%);
-                        }
-                        &:nth-child(4){
-                            transform: translateX(-75%);
-                        }
-                        &:nth-child(5){
-                            transform: translateX(-100%);
-                        }
-                    }
-                }
-                .text{
-                    font-size: 20px;
-                    color: @fontSub1;
-                    span{
-                        line-height: 30px;
-                        display: inline-block;
-                        vertical-align: middle;
-                        padding: 10px 0;
-                    }
-                    .limit{
-                        max-width: calc(100vw - 560px);
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                    }
-                }
-                .icon_next{
-                    width: 30px;
-                    height: 30px;
-                }
-            }
-        }
-        .tag_box{
-            display: flex;
-            align-items: center;
-            padding-top: 24px;
-            // border-top: 1px solid @lineColor;   /*no*/
-            position: relative;
-            &::before{
-                content: '';
-                width: 100%;
-                height: 1px;   /*no*/
-                background: @lineColor;
-                transform: scaleY(.5);
-                position: absolute;
-                left: 0;
-                top: 0;
-            }
-            &.opt0{
-                opacity: 0;
-            }
-            .tag{
-                height: 52px;
-                line-height: 52px;
-                padding: 0 16px;
-                border-radius: 26px;
-                // border: 1px solid @bdColor; /*no*/
-                white-space: nowrap;
-                font-size: 28px;
-                color: @fontSub1;
-                position: relative;
-                &::before{
-                    content: '';
-                    width: 200%;
-                    height: 200%;
-                    border-radius: 52px;
-                    border: 1px solid @bdColor; /*no*/
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%,-50%) scale(.5);
-                }
-                &+.tag{
-                    margin-left: 16px;
-                }
-            }
-        }
-    }
   }
   .nav_box{
     width: 100%;
