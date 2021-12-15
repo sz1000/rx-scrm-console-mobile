@@ -125,6 +125,18 @@ export function clueCustomerFollowUser_getFollowUserList(id) { // 获取协助�
         method: 'get'
     })
 }
+export function cluecustomeraccessory_upload(e,id,filetype) { // 附件上传
+    let formData = new FormData()
+    formData.append('file', e.target.files[0])
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id + '&filetype=' + filetype,
+        method: 'post',
+        header: {
+            noLoading: noLoading
+        },
+        data: formData
+    })
+}
 export function cluecustomer_toupdate(id) {
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/toupdate?clueCustomerNo=' + id,
