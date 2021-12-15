@@ -234,3 +234,27 @@ export function group_getGroupTodayDetail(id) {
         method: 'get'
     })
 }
+// 客户线索列表
+export function getcluecustomerlist(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getcluecustomerlist',
+        method: 'post',
+        data: data
+    })
+}
+// 客户列表筛选条件商机阶段下拉列表数据
+export function opportunitiesList(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/business-opportunities/corpStage/list',
+        method: 'get',
+        params: data,
+    })
+}
+// 客户列表筛选条件下拉列表数据
+export function getlistFiled(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/common/getlist',
+        method: 'get',
+        params: data,
+    })
+}

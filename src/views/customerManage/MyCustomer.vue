@@ -12,16 +12,19 @@
 </template>
 <script>
 // import { _throttle } from '../../utils/tool'
+import { getcluecustomerlist } from '@/api/customer'
 import MyMixin from '../../mixins/permissionsList'
 import HeaderTitle from '../../components/CustomerManage/headerTitle'
 import Search from '../../components/CustomerManage/search'
 import CustomerListBox from '../../components/CustomerManage/customerListBox'
 import Screen from '../../components/CustomerManage/screen'
+import { mapActions } from 'vuex'
 
 export default {
     mixins: [MyMixin],
     data() {
         return {
+            customerType: '3', // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             ifShowScreen: false,
             navList: [{name: '我的客户', code: 'myCustomer'}, {name: '客户公海', code: 'customerSea'}],
             navActive: 'myCustomer',
@@ -30,7 +33,7 @@ export default {
         }
     },
     created() {
-
+        this.getCorpId()
     },
     provide() {
         return {
@@ -43,6 +46,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions(["getCorpId"]),
         changeNav(code, type) {
             if (code) {
                 this.navActive = code
@@ -59,9 +63,11 @@ export default {
 
             if (this.navActive == 'myCustomer') {
                 // 我的客户
+                this.customerType = '3'
                 this.searchType = 0
             } else if (this.navActive == 'customerSea') {
                 // 客户公海
+                this.customerType = '4'
                 this.searchType = 1
             }
         },
@@ -83,6 +89,20 @@ export default {
         hideScreen(data) {
             this.ifShowScreen = false
             console.log('筛选条件：', data)
+        },
+        // 获取客户列表
+        getList() {
+            let params = {
+
+            }
+
+            getcluecustomerlist(params).then(res => {
+                let { code, data } = res
+
+                if (code == 'success') {
+                    console.log(data)
+                }
+            })
         },
         goDetail(item, index) {
             localStorage.setItem('customer', JSON.stringify(item))
