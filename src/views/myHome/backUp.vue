@@ -178,7 +178,14 @@ export default {
   },
   methods: {
     // 发送到朋友圈
-    shareToMoments() {},
+    shareToMoments() {
+      this.$router.push({
+        path: '/talkTool/mterialPage',
+        query: {
+          friendtype: 'person',
+        },
+      })
+    },
     clickVideo(id) {
       var video1 = document.getElementById(id)
       if (video1.requestFullscreen) {
