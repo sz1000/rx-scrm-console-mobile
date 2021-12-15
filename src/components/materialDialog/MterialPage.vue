@@ -193,6 +193,7 @@ export default {
   },
   mounted() {},
   methods: {
+    ...mapActions(['getCorpId']),
     goBack() {
       this.$router.go(-1)
     },
@@ -207,7 +208,7 @@ export default {
       // })
     },
     determine() {
-      console.log('000')
+      // console.log('000')
       this.$router.push({
         path: '/talkTool/circleFriend',
         query: {
@@ -215,8 +216,88 @@ export default {
           tablable: 'material',
         },
       })
+      // let type = this.$route.query.friendtype
+      // if (type == 'person') {
+      //   this.sendChart()
+      // } else if (type == 'compony') {
+      // } else {
+      //   this.$router.push({
+      //     path: '/talkTool/circleFriend',
+      //     query: {
+      //       datalist: this.centquer,
+      //       tablable: 'material',
+      //     },
+      //   })
+      // }
     },
-    ...mapActions(['getCorpId']),
+    sendChart() {
+      this.$network
+        .get('/user-service/m/user/getinticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'getContext',
+              'invoke',
+              'shareToExternalContact',
+              'shareToExternalChat',
+              'navigateToAddCustomer',
+              'shareToExternalMoments',
+              'createChatWithMsg',
+              'openExistedChatWithMsg',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: [
+                  'sendChatMessage',
+                  'getContext',
+                  'invoke',
+                  'shareToExternalContact',
+                  'shareToExternalChat',
+                  'navigateToAddCustomer',
+                  'shareToExternalMoments',
+                  'createChatWithMsg',
+                  'openExistedChatWithMsg',
+                ],
+              },
+
+              function (res) {
+                wx.invoke(
+                  'shareToExternalMoments',
+                  {
+                    text: {
+                      content: '发到朋友圈', // 文本内容
+                    },
+                  },
+                  function (res) {
+                    if (res.err_msg == 'shareToExternalMoments:ok') {
+                      console.log('朋友圈=====', res)
+                    }
+                  }
+                )
+              }
+            )
+          })
+        })
+    },
+
     preview(item, val) {
       console.log(item, val)
       this.centquer = item
