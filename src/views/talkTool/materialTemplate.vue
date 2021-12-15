@@ -25,7 +25,8 @@
               </div>
               <div v-show="isIndependent == 2" class="left"
                    @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })">
-                <img src="../../images/relay.png" alt=""></div>
+                <img src="../../images/relay.png" alt="">
+              </div>
             </div>
           </van-list>
         </li>
@@ -43,7 +44,8 @@
               </div>
               <div v-show="isIndependent == 2" class="left"
                    @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
-                <img src="../../images/relay.png" alt=""></div>
+                <img src="../../images/relay.png" alt="">
+              </div>
             </div>
           </van-list>
         </li>
@@ -184,6 +186,10 @@ export default {
         (this.type == 1 && this.saleListPage <= 1) ||
         (this.type == 2 && this.posterListPage <= 1)
       ) {
+        return
+      }
+      if (this.$refs.search.searchText) {
+        this.getList(this.$refs.search.searchText)
         return
       }
       this.getList()
@@ -336,6 +342,8 @@ export default {
         userNo: this.userNo,
         data: item,
       }
+      
+      document.getElementsByClassName('material-template')[0].scrollTop = 0
 
       this.$nextTick(() => {
         this.$refs.contentPreview.show(obj)

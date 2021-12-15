@@ -43,22 +43,28 @@ router.beforeEach(async(to, from, next) => {
                         next()
                     }else{
                         console.log('no card')
-                        getAuthInfo().then(res => {
-                            if(res.result){
-                                if(type.length > 0){
-                                    wxAgent(res,type).then(r => {
-                                        if(r){
-                                            console.log('next',store.getters)
-                                            next()
-                                        }
-                                    })
+                        if(groupList.indexOf(to.path) > -1 && (localStorage.getItem('verbalTrick') == to.query.code || localStorage.getItem('customerPortrait') == to.query.code)){
+                            console.log('is auth code y')
+                            next()
+                        }else{
+                            getAuthInfo().then(res => {
+                                if(res.result){
+                                    if(type.length > 0){
+                                        wxAgent(res,type).then(r => {
+                                            if(r){
+                                                console.log('next',store.getters)
+                                                next()
+                                            }
+                                        })
+                                    }else{
+                                        next()
+                                    }
                                 }else{
+                                    console.log('getAuthInfo error')
                                     next()
                                 }
-                            }else{
-                                console.log('error')
-                            }
-                        })
+                            })
+                        }
                     }
                 }else{
                     console.log('oh h')

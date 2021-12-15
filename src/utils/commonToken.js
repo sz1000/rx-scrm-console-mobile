@@ -7,7 +7,7 @@ import {
     getStoreValue,
     removeStoreValue,
 } from '../utils/LocalStorageDate'
-console.log('-------auth--', window.location.href)
+// console.log('-------auth--', window.location.href)
 let queryObj = parseQueryString(location),
     comeFrom = queryObj.comeFrom,
     name = queryObj.name,

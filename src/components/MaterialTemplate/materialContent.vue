@@ -17,7 +17,7 @@
             <!-- <iframe v-else-if="/\.pdf$/i.test(formData.name)" class="file-box" :src="formData.documentUrl" width='100%' height='100%'>
                 您的浏览器暂不支持预览该pdf文件，可<a :href="formData.documentUrl">点击下载</a>之后浏览
             </iframe> -->
-            <iframe class="file-box" :src="'https://view.xdocin.com/view?src=' + encodeURIComponent(formData.documentUrl)" width="100%" height="auto"></iframe>
+            <iframe class="file-box" :class="{h2: !userNo}" :src="'https://view.xdocin.com/view?src=' + encodeURIComponent(formData.documentUrl)" width="100%" height="auto"></iframe>
         </div>
     </div>
 </template>
@@ -28,6 +28,11 @@ import { formatDate, wxShare, byteConvert } from "../../utils/tool"
 
 export default {
     name: "materialContent",
+    props: {
+        userNo: {
+            default: null
+        }
+    },
     data() {
         return {
             formData: {},
@@ -119,10 +124,12 @@ export default {
             }
         }
         .file-content {
-            padding-top: 20px;
             .file-box {
-                min-height: 75vh;
+                min-height: calc(100vh - 270px);
                 border: none;
+            }
+            .h2 {
+                min-height: calc(100vh - 70px);
             }
         }
         // .file-img-box {

@@ -8,7 +8,11 @@ import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
 import Helper from '../views/customer/helper.vue' //协助人
-// 群 SOP 设置
+const CustomerDetail = () =>
+    import ('../views/customer/customerDetail.vue')
+const Demo = () =>
+    import ('../views/customer/demo.vue')
+    // 群 SOP 设置
 import SettingSop from '../views/customer/settingSop'
 // 拓客工具
 import TalkTool from '../views/talkTool/index.vue'
@@ -150,6 +154,22 @@ const routes = [{
             bodyClass: 'InformationDetail',
         },
         component: InformationDetail,
+    },
+    {
+        path: '/customerDetail',
+        name: 'CustomerDetail',
+        meta: {
+            bodyClass: 'CustomerDetail',
+        },
+        component: CustomerDetail,
+    },
+    {
+        path: '/demo',
+        name: 'Demo',
+        meta: {
+            bodyClass: 'demo',
+        },
+        component: Demo,
     },
     // 协助人
     {

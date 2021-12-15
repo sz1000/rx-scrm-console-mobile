@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="8_客户画像_客户详情_文本输入" transform="translate(-343.000000, -210.000000)">
+            <g id="编组-8备份" transform="translate(0.000000, 132.000000)">
+                <g id="ic/小关闭-2" transform="translate(341.000000, 75.000000)">
+                    <g id="ic/小关闭" transform="translate(0.100505, 0.686292)">
+                        <g id="Group" transform="translate(9.899495, 9.899495) rotate(-315.000000) translate(-9.899495, -9.899495) translate(2.899495, 2.899495)">
+                            <rect id="ic/小关闭" fill="#E6E6E6" x="0" y="0" width="14" height="14" rx="7"></rect>
+                            <rect id="Rectangle" fill="#FFFFFF" transform="translate(7.292893, 7.292893) rotate(-270.000000) translate(-7.292893, -7.292893) " x="6.79289322" y="3.29289322" width="1" height="8" rx="0.5"></rect>
+                            <rect id="Rectangle-Copy" fill="#FFFFFF" transform="translate(7.292893, 7.292893) rotate(-180.000000) translate(-7.292893, -7.292893) " x="6.79289322" y="3.29289322" width="1" height="8" rx="0.5"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

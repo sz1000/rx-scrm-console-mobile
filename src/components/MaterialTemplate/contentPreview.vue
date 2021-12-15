@@ -1,10 +1,10 @@
 <template>
-    <div class="content-preview">
+    <div class="content-preview" :class="{p0: materialType == 2}">
         <div class="top-fixed">
             <header-title :title="materialType == 1 ? '文章预览' : '文件预览'"></header-title>
             <user-info :userData="userData"></user-info>
         </div>
-        <material-content ref="materialContent"></material-content>
+        <material-content ref="materialContent" :userNo="userNo"></material-content>
     </div>
 </template>
 <script>
@@ -81,5 +81,8 @@ export default {
             top: 0;
             left: 0;
         }
+    }
+    .p0 {
+        padding: 232px 0 32px;
     }
 </style>

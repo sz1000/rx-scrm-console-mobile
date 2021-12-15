@@ -46,7 +46,7 @@
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
                                     <span>{{item.toUser | optToString}}</span>
                                 </div>
-                                <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length">
+                                <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length && item.toUser[0]">
                                     <div class="name" v-for="(us,ri) in item.toUser" :key="ri">
                                         <img class="avatar" :src="us.avatar | $setAvatar" alt="">
                                         <span>{{us | optString}}</span>

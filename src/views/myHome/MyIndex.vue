@@ -5,6 +5,8 @@
       <div @click="clickTo(2)">群发消息客户群</div>
       <div @click="clickTo(3)">添加客户界面</div>
       <div @click="clickTo(4)">发到朋友圈</div>
+      <div @click="clickTo(5)">创建群聊并发送消息</div>
+      <div @click="clickTo(6)">打开已有群聊并发送消息</div>
     </div> -->
     <div class="page_title">
       <div class="head_img">
@@ -455,78 +457,144 @@ export default {
     },
 
     // 测试企微接口
-    // clickTo(v) {
-    //   console.log('----分享分组----', v)
-    //   this.$network
-    //     .get('/user-service/m/user/getinticket', {
-    //       url: location.href,
-    //     })
-    //     .then((res) => {
-    //       wx.config({
-    //         beta: true,
-    //         debug: false,
-    //         appId: res.data.corpId,
-    //         timestamp: res.data.timestamp,
-    //         nonceStr: res.data.nonceStr,
-    //         signature: res.data.signature,
-    //         jsApiList: [
-    //           'sendChatMessage',
-    //           'getContext',
-    //           'invoke',
-    //           'shareToExternalContact',
-    //           'shareToExternalChat',
-    //           'navigateToAddCustomer',
-    //           'shareToExternalMoments',
-    //         ],
-    //       })
-    //       var that = this
-    //       wx.ready(function () {
-    //         wx.invoke(
-    //           'agentConfig',
-    //           {
-    //             corpid: res.data.corpId,
-    //             agentid: res.data.agent_id + '',
-    //             timestamp: res.data.agent_config_data.timestamp,
-    //             nonceStr: res.data.agent_config_data.noncestr,
-    //             signature: res.data.agent_config_data.signature,
-    //             jsApiList: [
-    //               'sendChatMessage',
-    //               'getContext',
-    //               'invoke',
-    //               'shareToExternalContact',
-    //               'shareToExternalChat',
-    //               'navigateToAddCustomer',
-    //               'shareToExternalMoments',
-    //             ],
-    //           },
+    clickTo(v) {
+      this.$network
+        .get('/user-service/m/user/getinticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'getContext',
+              'invoke',
+              'shareToExternalContact',
+              'shareToExternalChat',
+              'navigateToAddCustomer',
+              'shareToExternalMoments',
+              'createChatWithMsg',
+              'openExistedChatWithMsg',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: [
+                  'sendChatMessage',
+                  'getContext',
+                  'invoke',
+                  'shareToExternalContact',
+                  'shareToExternalChat',
+                  'navigateToAddCustomer',
+                  'shareToExternalMoments',
+                  'createChatWithMsg',
+                  'openExistedChatWithMsg',
+                ],
+              },
 
-    //           function (res) {
-    //             if (v == 1) {
-    //               wx.invoke('shareToExternalContact', {
-    //                 text: {
-    //                   content: '1111111', // 文本内容
-    //                 },
-    //               })
-    //             } else if (v == 2) {
-    //               wx.invoke('shareToExternalChat', {
-    //                 text: {
-    //                   content: '2222222', // 文本内容
-    //                 },
-    //               })
-    //             } else if (v == 3) {
-    //               wx.invoke('navigateToAddCustomer', {}, function (res) {})
-    //             } else if (v == 4) {
-    //               wx.invoke('shareToExternalMoments', {
-    //                 text: {
-    //                   content: '333333333333', // 文本内容
-    //                 },
-    //               })
-    //             }
-    //           }
-    //         )
-    //       })
-    //     })
-    // },
+              function (res) {
+                if (v == 1) {
+                  wx.invoke(
+                    'shareToExternalContact',
+                    {
+                      text: {
+                        content: '群发消息给客户', // 文本内容
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'shareToExternalContact:ok') {
+                        console.log('shareOk==', res)
+                      }
+                    }
+                  )
+                } else if (v == 2) {
+                  wx.invoke('shareToExternalChat', {
+                    text: {
+                      content: '群发消息客户群', // 文本内容
+                    },
+                  })
+                } else if (v == 3) {
+                  wx.invoke('navigateToAddCustomer', {}, function (res) {})
+                } else if (v == 4) {
+                  wx.invoke(
+                    'shareToExternalMoments',
+                    {
+                      text: {
+                        content: '发到朋友圈', // 文本内容
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'shareToExternalMoments:ok') {
+                        console.log('朋友圈=====', res)
+                      }
+                    }
+                  )
+                } else if (v == 5) {
+                  wx.invoke(
+                    'createChatWithMsg',
+                    {
+                      selectedOpenUserIds: [
+                        'woY-gRDAAA9oIgFvRMPOvgEzsf9RGgNQ',
+                        'wmY-gRDAAAuteJF6uiT_NJF_9j1KwRLA',
+                      ],
+                      selectedTickets: ['tick1', 'token2'],
+                      chatName: 'discussName',
+                      msg: {
+                        msgtype: 'link',
+                        link: {
+                          title: 'title1',
+                          desc: 'desc1',
+                          url: 'wwww.baidu.com',
+                          imgUrl: 'imgurl1',
+                        },
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'createChatWithMsg:ok') {
+                        console.log('=====创建群', res)
+                        var chatId = res.chatId // 新建的会话ID，当会话为单聊时不返回此字段
+                      }
+                    }
+                  )
+                } else if (v == 6) {
+                  wx.invoke(
+                    'openExistedChatWithMsg',
+                    {
+                      chatId: 'wryPDZEQAAj0m3IkOQ1nmngt2AX8h-jQ',
+                      msg: {
+                        msgtype: 'link',
+                        link: {
+                          title: 'title1',
+                          desc: 'desc1',
+                          url: 'link1',
+                          imgUrl: 'imgurl1',
+                        },
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'openExistedChatWithMsg:ok') {
+                      }
+                    }
+                  )
+                }
+              }
+            )
+          })
+        })
+    },
   },
 }
 </script>
