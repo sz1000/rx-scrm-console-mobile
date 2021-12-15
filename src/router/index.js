@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Interactive from '../views/myHome/MyIndex'
 import HomeTransition from '../views/HomeTransition.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
-import Helper from '../views/customer/helper.vue'   //协助人
+import Helper from '../views/customer/helper.vue' //协助人
 // 群 SOP 设置
 import SettingSop from '../views/customer/settingSop'
 // 拓客工具
@@ -96,6 +97,7 @@ const routes = [{
 
         component: Test,
     },
+
     {
         path: '/homeTransition',
         name: 'homeTransition',
@@ -113,10 +115,16 @@ const routes = [{
         component: Home,
     },
     {
+        path: '/Interactive',
+        name: 'interactive',
+        component: Interactive,
+    },
+    {
         path: '/404',
         name: '404',
         component: NoPermissions,
     },
+
 
     // 客户画像
     {

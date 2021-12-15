@@ -12,7 +12,7 @@
         <img src="../../images/img_head.png" alt="" v-else />
         <div class="person_info">
           <p>{{userObj.name}}</p>
-          <p>{{identity}}</p>
+          <!-- <p>{{identity}}</p> -->
         </div>
       </div>
       <!-- <div class="change_identity" @click="changeIdent">
@@ -35,7 +35,7 @@
           <p>朋友圈</p>
         </div>
       </div>
-      <!-- <div class="wait_warp">
+      <div class="wait_warp">
         <div class="text_wait">
           <span>待处理</span>
           <div @click="goToWait(1)" class="cilck_area">
@@ -57,49 +57,6 @@
             </div>
             <img src="../../images/group_task.png" alt="">
           </div>
-        </div>
-      </div> -->
-           <div class="wait_warp">
-        <div class="text_wait">
-          <span>客户动态</span>
-          <div @click="goToWait(1)" class="cilck_area">
-            <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
-          </div>
-        </div>
-        <div class="task_msg">
-           <ul>
-             <li class="dynamic_list">
-                <span class="circle_line"></span>
-                <span class="circle_lines"></span>
-                <p class="title">Kristen浏览了《SCRM项目介绍.pdf》《SCRM项目介绍.pdf</p>
-                <p class="time_tite">3秒前</p>
-             </li>
-             <li class="dynamic_list">
-                <span class="circle_line"></span>
-                <span class="circle_lines"></span>
-                <p class="title">Kristen浏览了《SCRM项目介绍.pdf》《SCRM项目介绍.pdf</p>
-                <p class="time_tite">3秒前</p>
-             </li>
-             <li class="dynamic_list">
-                <span class="circle_line"></span>
-                <span class="circle_lines"></span>
-                <p class="title">Kristen浏览了《SCRM项目介绍.pdf》《SCRM项目介绍.pdf</p>
-                <p class="time_tite">3小时前</p>
-             </li>
-             <li class="dynamic_list">
-                <span class="circle_line"></span>
-                <span class="circle_lines"></span>
-                <p class="title">Kristen浏览了《SCRM项目介绍.pdf》《SCRM项目介绍.pdf</p>
-                <p class="time_tite">3小时前</p>
-             </li>
-             <li class="dynamic_list">
-                <span class="circle_line"></span>
-                <span class="circle_lines"></span>
-                <p class="title">Kristen浏览了《SCRM项目介绍.pdf》《SCRM项目介绍.pdf</p>
-                <p class="time_tite">3小时前</p>
-             </li>
-           </ul>
-        
         </div>
       </div>
       <div class="about_me about_shadow">
@@ -139,21 +96,6 @@
             <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-
-        <div class="about_me about_shadow">
-        <span>企业朋友圈</span>
-        <div class="reply_text"  @click="goToWait(1)">
-          <span>{{dataObj.forReply}}条企业朋友圈待发表</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
-        </div>
-      </div>
-        <div class="about_me about_shadow">
-        <span>群发任务</span>
-        <div class="reply_text" @click="goToWait(2)">
-          <span>{{dataObj.custometMassSum}}条群发任务待发送</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
-        </div>
-      </div>
       </div>
       <!-- 图表 -->
       <section>

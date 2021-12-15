@@ -1,31 +1,7 @@
 <template>
   <div class="settinWarp">
-    <div class="main-warp">
-      <div class="warp_car">
-          <div class="car_box client_color" @click="FnToRouter('/customerManage/clues')">
-              <div class="client ">
-                 <img src="../assets/svg/clue.svg" alt="">
-                 <span class="name">线索</span>
-              </div>
-              <p class="num">{{ clues }}</p>
-          </div>
-            <div class="car_box  clients_color mg_auto" @click="FnToRouter('/customerManage/myCustomer')">
-              <div class="client">
-                 <img src="../assets/svg/client.svg" alt="">
-                 <span class="name">客户</span>
-              </div>
-              <p class="num">{{ customer }}</p>
-          </div>
-          <div class="car_box group_color" @click="FnToRouter('/customerManage/grouplist')">
-              <div class="client">
-                 <img src="../assets/images/client_group.png" alt="">
-                 <span class="name">客户群</span>
-              </div>
-              <p class="num">{{groupNum}}</p>
-          </div>
-        
-      </div>
-      <!-- <div class="customAccont">客户统计</div>
+    <div class="main-warp" v-if="showHome">
+      <div class="customAccont">客户统计</div>
       <div class="statiStical">
         <div class="numResult afterLine">
           <span>{{ clues }}</span>
@@ -43,28 +19,20 @@
           <span>{{ customerSee }}</span>
           <span>客户公海</span>
         </div>
-      </div> -->
-     
-      <div class="drainage_warp ">
-           <div class="customAccont tool">引流获客</div>
-      <div class="btnRouters">
+      </div>
+      <div class="customAccont tool">引流获客</div>
+      <div class="btnRouter">
         <div class="commonBtn" @click="FnToRouter('/talkTool/enterpriseCode')" v-show="menulist.includes('livecode')">
-          <div class="huoma huoma_bg">
-             <img src="../assets/svg/huoma.svg" alt="" /> 
-          </div>
-          <p>互动活码</p>
+          <img src="../images/huoma.png" alt="" />
+          <span>互动活码</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
-          <!-- <img src="../images/qhm.png" alt="" /> -->
-           <div class="huoma huoma_bg">
-             <img src="../assets/svg/laqunhuoma.svg" alt="" /> 
-          </div>
-          <p>拉群活码</p>
+          <img src="../images/qhm.png" alt="" />
+          <span>拉群活码</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/channelConfiguration')" v-show="menulist.includes('channle')">
           <img src="../images/qudao.png" alt="" />
           <span>渠道配置</span>
-        </div>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lzbd.png" alt="" />
@@ -83,8 +51,6 @@
           <span class="nomaltext">地图获客</span>
         </div> -->
       </div>
-
-       <!-- <div class="drainage_warp">
       <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/customerManage/myCustomer')" v-show="menulist.includes('customer')">
@@ -99,66 +65,47 @@
           <img src="../images/xiansuo.png" alt="" />
           <span>线索</span>
         </div>
-        <div class="commonBtn" @click="showMsg">
+        <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/lskh2.png" alt="" />
           <span class="nomaltext">流失客户</span>
-        </div>
+        </div> -->
       </div>
-       </div> -->
-       <div class="drainage_warp">
       <div class="customAccont manage">营销互动</div>
-         <div class="btnRouter custom">
+      <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/talkTool/contentMaterial')" v-show="menulist.includes('material')">
-            <div class="huoma centsucai_bg">
-             <img src="../assets/svg/centsucai.svg" alt="" /> 
-          </div>
-          <p>内容素材</p>
+          <img src="../images/neirongsucai.png" alt="" />
+          <span>素材库</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/verbalTrickConsole')" v-show="menulist.includes('verbalTrick')">
-          <div class="huoma centsucai_bg">
-             <img src="../assets/svg/huashuku.svg" alt="" /> 
-          </div>
-          <p>话术库</p>
+          <img src="../images/huashuku.png" alt="" />
+          <span>话术库</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
-          <div class="huoma ongroup_bg">
-             <img src="../assets/svg/pengyouquan.svg" alt="" /> 
-          </div>
-          <p>朋友圈</p>
+          <img src="../images/friedn.png" alt="" />
+          <span>朋友圈</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
           <img src="../images/card.png" alt="" />
           <span>智能名片</span>
         </div>
-         </div>
-       </div>
-       <div class="drainage_warp">
+      </div>
       <div class="customAccont manage">精细运营</div>
-      <div class="btnRouters custom">
-       <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
-         <div class="huoma huoma_bg">
-             <img src="../assets/svg/ongroup.svg" alt="" /> 
-          </div>
-          <p>一键拉群</p>
+      <div class="btnRouter custom">
+        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
+          <img src="../images/yjlqon.png" alt="" />
+          <span>一键拉群</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
-          <div class="huoma kehuqunfa_bg">
-             <img src="../assets/svg/kehuqunfa.svg" alt="" /> 
-          </div>
-          <p>客户群发</p>
+          <img src="../images/qunfa.png" alt="" />
+          <span>客户群发</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
-          <div class="huoma kehuqunfa_bg">
-             <img src="../assets/svg/kehuqunquqnfa.svg" alt="" /> 
-          </div>
-            <p>客户群群发</p>
+          <img src="../images/qunqnfa.png" alt="" />
+          <span>客户群群发</span>
         </div>
         <!-- <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
-           <div class="huoma handshake_bg">
-             <img src="../assets/svg/handshake.svg" alt="" /> 
-          </div>
-            <p>拜访客户</p>
-          
+          <img src="../images/wcdk.png" alt="" />
+          <span>拜访客户</span>
         </div> -->
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/bfjh.png" alt="" />
@@ -173,12 +120,11 @@
           <span class="nomaltext">我的报表</span>
         </div> -->
       </div>
-       </div>
     </div>
-    <!-- <div class="identity_page" v-else>
+    <div class="identity_page" v-else>
       <MyIndex></MyIndex>
-    </div> -->
-    <!-- <div class="btm-box">
+    </div>
+    <div class="btm-box">
       <div class="bottom-warp">
         <div class="routerbtn" @click="handelChangeHome(false)">
           <img src="../images/bg_y.png" alt="" v-show="showHome" />
@@ -191,7 +137,7 @@
           <span :class="showHome ? 'textname' : ''">工作面板</span>
         </div>
       </div>
-    </div> -->
+    </div>
     <van-overlay :show="show">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
@@ -218,7 +164,6 @@ export default {
       cluSee: '0',
       customer: '0',
       customerSee: '0',
-      groupNum:"0",
       menulist: [],
       show: false,
       showHome: false,
@@ -236,16 +181,16 @@ export default {
     }
   },
   mounted() {
-    // this.showHome = JSON.parse(sessionStorage.getItem('showHome'))
-    // console.log('-----this.showHome---', this.showHome)
+    this.showHome = JSON.parse(sessionStorage.getItem('showHome'))
+    console.log('-----this.showHome---', this.showHome)
     this.getHome()
     this.getUserName()
   },
   methods: {
-    // handelChangeHome(v) {
-    //   sessionStorage.setItem('showHome', v)
-    //   this.showHome = v
-    // },
+    handelChangeHome(v) {
+      sessionStorage.setItem('showHome', v)
+      this.showHome = v
+    },
     getHome() {
       cluecustomer_homedata().then((res) => {
         if (res.result) {
@@ -253,7 +198,6 @@ export default {
           this.cluSee = res.data.derThread
           this.customer = res.data.myCustomer
           this.customerSee = res.data.derCustomer
-          this.groupNum = res.data.groupSum.groupSum
         }
       })
     },
@@ -318,67 +262,15 @@ export default {
   overflow: hidden;
   position: relative;
   .main-warp {
-    background: #F6F7F9;
+    background: #fff;
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    // padding: 24px 0px 110px 24px;
-    padding: 40px 32px 0;
+    padding: 24px 0px 110px 24px;
     overflow-y: scroll;
     scrollbar-width: 0;
-    .drainage_warp{
-      background: #fff;
-      padding-top: 32px; 
-      margin-top: 48px;
-      border-radius: 8px;
-    }
     &::-webkit-scrollbar {
       width: 0;
-    }
-    .warp_car{
-       display: flex;
-       justify-content: space-around;
-         .client_color{
-            background: linear-gradient(315deg, #FFAE20 0%, #FFC96A 100%);
-         }
-         .group_color{        
-           background: linear-gradient(137deg, #4390FF 0%, #4168F6 100%);
-         }
-          .clients_color{
-             background: linear-gradient(315deg, #55A7FE 0%, #55BBFE 100%);
-         }
-         .mg_auto{
-           margin: 0 10px;
-         }
-        .car_box{
-        width: 214px;
-        height: 140px;
-         box-shadow: 0px 3px 12px 0px rgba(67, 144, 255, 0.3);
-         border-radius: 8px;
-         padding: 20px;
-      
-        .client{
-          display: flex;
-          align-items: center;
-           img{
-              width: 24px;
-              height: 20px;
-              margin-right: 8px;
-           }
-           .name{
-             font-size: 24px;
-             font-weight: 500;
-             color: #FFFFFF;
-           }
-        }
-        .num{
-          font-size: 48px;
-          font-weight: bold;
-          color: #FFFFFF;
-          margin-top: 10px;
-          text-align: center;
-        }
-       }
     }
   }
   .dialogImg {
@@ -433,15 +325,15 @@ export default {
     color: #3c4353;
     padding-left: 20px;
     margin-bottom: 24px;
-    // &::before {
-    //   content: '';
-    //   position: absolute;
-    //   top: 5px;
-    //   left: 0;
-    //   width: 8px;
-    //   height: 28px;
-    //   background: #4168f6;
-    // }
+    &::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 0;
+      width: 8px;
+      height: 28px;
+      background: #4168f6;
+    }
   }
   .cardContent {
     display: flex;
@@ -485,7 +377,6 @@ export default {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 32px;
-    justify-content: space-around;
     a {
       // font-family: PingFangSC-Medium, PingFang SC;
     }
@@ -493,9 +384,9 @@ export default {
       font-size: 28px;
       margin-bottom: 20px;
       font-weight: 500;
-      color: #737373;
+      color: #3c4353;
       text-align: center;
-      // width: 175px;
+      width: 175px;
       cursor: pointer;
       .nomaltext {
         color: #c0c4cc;
@@ -507,87 +398,11 @@ export default {
         width: 88px;
         height: 88px;
         margin: 0 auto 16px auto;
-      }
-      .huoma{
-        width: 88px;
-        border-radius: 24px;
-        margin: 0 auto 16px auto;
-        // line-height: 88px;
-        // text-align: center;
-        img{
-          width: 48px;
-          // height: 48px;
-          line-height: 48px;
-          line-height: 48px;
-        }
-      }
-      .centsucai_bg{
-         background: #FFB020;
-      }
-      .ongroup_bg{
-        background: #36B39E;
-      }
-      .kehuqunfa_bg{
-          background: #55A7FE;
-      }
-      .handshake_bg{
-        background: #D14343;
-      }
-    }
-  }
-    .btnRouters {
-    padding: 0 35px;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 32px;
-    // justify-content: space-around;
-    a {
-      // font-family: PingFangSC-Medium, PingFang SC;
-    }
-    .commonBtn {
-      font-size: 28px;
-      margin-bottom: 20px;
-      font-weight: 500;
-      color: #737373;
-      text-align: center;
-      // width: 100px;
-      cursor: pointer;
-      margin-right: 84px;
-      .nomaltext {
-        color: #c0c4cc;
-      }
-      span {
-        display: inline-block;
-      }
-      img {
-        width: 88px;
-        height: 88px;
-        margin: 0 auto 16px auto;
-      }
-      .huoma{
-        width: 88px;
-        border-radius: 24px;
-         margin: 0 auto 16px auto;
-        // line-height: 88px;
-        // text-align: center;
-        img{
-          width: 48px;
-          // height: 48px;
-          line-height: 48px;
-          line-height: 48px;
-        }
-      }
-      .huoma_bg{
-          background: #36B39E;
-      }
-         .kehuqunfa_bg{
-          background: #55A7FE;
       }
     }
   }
   .tool {
-    // margin-top: 48px;
+    margin-top: 48px;
   }
   .manage {
     margin-top: 32px;
