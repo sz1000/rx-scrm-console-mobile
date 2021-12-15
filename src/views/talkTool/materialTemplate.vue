@@ -25,7 +25,8 @@
               </div>
               <div v-show="isIndependent == 2" class="left"
                    @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })">
-                <img src="../../images/relay.png" alt=""></div>
+                <img src="../../images/relay.png" alt="">
+              </div>
             </div>
           </van-list>
         </li>
@@ -43,7 +44,8 @@
               </div>
               <div v-show="isIndependent == 2" class="left"
                    @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
-                <img src="../../images/relay.png" alt=""></div>
+                <img src="../../images/relay.png" alt="">
+              </div>
             </div>
           </van-list>
         </li>

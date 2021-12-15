@@ -351,7 +351,6 @@ export default {
             this.finished = true
             return
           }
-          // this.liveList = this.liveList.concat(rows)
           let newSetArr = this.liveList.concat(rows)
           this.liveList = this.unique(newSetArr)
           if (this.liveList.length >= this.total) {

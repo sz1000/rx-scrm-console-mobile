@@ -1,31 +1,31 @@
 
 <template>
-<div>
-  <div class="microCode group-setting-warp" v-loading="loading" v-if="sucai == 0">
-    <div class="headerTitle">
-      <div class="backPage" @click="goBack">
-        <van-icon name="arrow-left" />
-        返回
+  <div>
+    <div class="microCode group-setting-warp" v-loading="loading" v-if="sucai == 0">
+      <div class="headerTitle">
+        <div class="backPage" @click="goBack">
+          <van-icon name="arrow-left" />
+          返回
+        </div>
+        <span class="textTitle">新增客户群群发</span>
       </div>
-      <span class="textTitle">新增客户群群发</span>
-    </div>
-    <div class="warp_box">
-      <!-- 群发设置 -->
-      <div class="group-setting">
-        <div class="title">群发设置</div>
-        <div class="form">
-          <el-form ref="form" :rules="rules" :model="baseForm">
-            <!-- 任务名称 -->
+      <div class="warp_box">
+        <!-- 群发设置 -->
+        <div class="group-setting">
+          <div class="title">群发设置</div>
+          <div class="form">
+            <el-form ref="form" :rules="rules" :model="baseForm">
+              <!-- 任务名称 -->
 
-            <el-form-item label="任务名称 :" prop="taskName">
-              <el-input v-model="baseForm.taskName" placeholder="请输入任务名称" :onkeyup="
+              <el-form-item label="任务名称 :" prop="taskName">
+                <el-input v-model="baseForm.taskName" placeholder="请输入任务名称" :onkeyup="
                   (baseForm.taskName = baseForm.taskName.replace(/\s+/g, ''))
                 " maxlength="30" show-word-limit></el-input>
-            </el-form-item>
+              </el-form-item>
 
-            <!-- 选择员工 -->
-            <el-form-item label="选择群主 :" prop="staffs">
-              <!-- <el-select
+              <!-- 选择员工 -->
+              <el-form-item label="选择群主 :" prop="staffs">
+                <!-- <el-select
                 v-model="baseForm.staffs"
                 style="width: 100%"
                 multiple
@@ -40,14 +40,14 @@
                   :key="item.id"
                 ></el-option>
               </el-select> -->
-              <el-select v-model="baseForm.staffs" style="width: 100%" multiple placeholder="选择群主 （可多选）" @change="staffsListChange">
-                <!-- <el-option label="区域一" value="shanghai"></el-option> -->
-                <el-option v-for="item in groupList" :key="item.id" :label="item.owmerName" :value="item.chatId">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <!-- 选择客户 -->
-            <!-- <el-form-item label="选择客户 :" prop="selectCusType">
+                <el-select v-model="baseForm.staffs" style="width: 100%" multiple placeholder="选择群主 （可多选）" @change="staffsListChange">
+                  <!-- <el-option label="区域一" value="shanghai"></el-option> -->
+                  <el-option v-for="item in groupList" :key="item.id" :label="item.owmerName" :value="item.chatId">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <!-- 选择客户 -->
+              <!-- <el-form-item label="选择客户 :" prop="selectCusType">
               <el-radio-group
                 v-model="baseForm.selectCusType"
                 @change="selecusChange"
@@ -56,8 +56,8 @@
                 <el-radio :label="1">筛选客户</el-radio>
               </el-radio-group>
             </el-form-item> -->
-            <!-- 筛选客户 -->
-            <!-- <template v-if="baseForm.selectCusType == 1">
+              <!-- 筛选客户 -->
+              <!-- <template v-if="baseForm.selectCusType == 1">
               <div class="filterCus">
                 <el-form-item label="性别 :" prop="cusSex">
                   <el-radio-group v-model="baseForm.cusSex" @change="sexChange">
@@ -130,208 +130,202 @@
                 </el-form-item>
               </div>
             </template> -->
-            <!-- 客户预计数量 -->
-            <!-- <el-form-item label="">
+              <!-- 客户预计数量 -->
+              <!-- <el-form-item label="">
               预计发送客户数量：{{ estimateCusNum }}
             </el-form-item> -->
-            <!-- 发送规则 -->
-            <el-form-item label="发送规则 :" prop="sendRule">
-              <el-radio-group v-model="baseForm.sendRule">
-                <el-radio :label="1">立即发送</el-radio>
-                <el-radio :label="2">定时发送</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <!-- 设定时间 -->
-            <el-form-item v-if="baseForm.sendRule == 2" label="设定时间 :" prop="sendDateTime">
-              <div style="display: flex">
-                <div @click="selectDateTime('date')">
-                  <el-input placeholder="请选择日期" class="marR-24 selectDate" suffix-icon="el-icon-date" readonly v-model="baseForm.sendDate">
-                  </el-input>
+              <!-- 发送规则 -->
+              <el-form-item label="发送规则 :" prop="sendRule">
+                <el-radio-group v-model="baseForm.sendRule">
+                  <el-radio :label="1">立即发送</el-radio>
+                  <el-radio :label="2">定时发送</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <!-- 设定时间 -->
+              <el-form-item v-if="baseForm.sendRule == 2" label="设定时间 :" prop="sendDateTime">
+                <div style="display: flex">
+                  <div @click="selectDateTime('date')">
+                    <el-input placeholder="请选择日期" class="marR-24 selectDate" suffix-icon="el-icon-date" readonly v-model="baseForm.sendDate">
+                    </el-input>
+                  </div>
+                  <div @click="selectDateTime('time')">
+                    <el-input placeholder="请选择时间" suffix-icon="el-icon-time" readonly v-model="baseForm.sendTime">
+                    </el-input>
+                  </div>
                 </div>
-                <div @click="selectDateTime('time')">
-                  <el-input placeholder="请选择时间" suffix-icon="el-icon-time" readonly v-model="baseForm.sendTime">
-                  </el-input>
-                </div>
-              </div>
-            </el-form-item>
-          </el-form>
-        </div>
-      </div>
-      <!-- 群发消息 -->
-      <div class="group-content">
-        <div class="title">群发消息</div>
-        <div class="tips">
-          <span>注意：</span>
-          <span>客户每个月最多接收来自同一企业的管理员的4条群发消息
-            4条消息可在同一天发送</span>
-        </div>
-        <!-- 群发内容 -->
-        <div class="txt-28 marB-24">群发内容：</div>
-        <el-input class="marB-24" type="textarea" placeholder="请输入群发内容" v-model="sendMsg" maxlength="500" show-word-limit>
-        </el-input>
-        <!-- 附件 -->
-        <div class="appendix-list">
-          <div class="item marB-24" v-for="(item, index) in appendixList" :key="index">
-            <!-- 删除素材 -->
-            <div class="delItem" @click="delItem(index)">
-              <i class="el-icon-delete"></i>
-            </div>
-            <!-- 选择素材类型 -->
-            <div class="appendixType">
-              <span class="_t txt-28"> 选择素材类型 </span>
-              <el-radio-group class="radio" @change="appendixChange(index, $event)" v-model="item.appendixType">
-                <el-radio label="图片"></el-radio>
-                <el-radio label="链接"></el-radio>
-                 <el-radio label="素材库"></el-radio>
-              </el-radio-group>
-            </div>
-            <!-- 图片 -->
-            <template v-if="item.appendixType === '图片'">
-              <van-uploader v-model="item.picList" @oversize="onOversize" :max-size="2 * 1024 * 1024" :max-count="1"
-                            :after-read="afterRead.bind(null, { index: index, data: item })" />
-              <div class="picTips marB-24">
-                建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
-              </div>
-            </template>
-            <!-- 链接 -->
-            <template v-if="item.appendixType === '链接'">
-              <el-input class="marB-24" v-model="item.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
-              <el-form ref="form" :model="item">
-                <el-form-item label="链接标题 :">
-                  <el-input
-                    v-model="item.hrefTitle"
-                    placeholder="请输入链接标题"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接摘要 :">
-                  <el-input
-                    v-model="item.hrefDesc"
-                    placeholder="请输入链接摘要"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接封面 :">
-                 <van-uploader v-model="item.hrefPic" :max-count="1" :max-size="2 * 1024 * 1024" @oversize="onOversize"
-                            :after-read="afterReads.bind(null, item)" />
-                </el-form-item>
-              </el-form>
-            </template>
-             <!-- 素材 -->
-                <template v-if="item.appendixType === '素材库'">
-                   
-                  <div>
-                   
-                         <div class="article_warp" v-if="item.materialList.tab == 1">
-                 <div class="article_text">
-                   <div>文章:</div>
-                   <div class="tites">{{item.materialList.title}}</div>
-                   <div class="article_color" @click="goToMaterial('material')">重新选择</div>
-                 </div>
-                 <div class="article_flex" v-if="item.materialList.tab == 1 && item.materialList.title">
-                   <div>
-                      <p class="tite">{{item.materialList.title}}</p>
-                      <p class="link_box">{{item.materialList.contentAbstract}}</p>
-                   </div>
-                   <div>
-                     <img :src="item.materialList.cover" alt="">
-                   </div>
-                 </div>
-              </div>
-                                <div class="article_warp" v-if="item.materialList.tab == 2">
-                 <div class="article_text">
-                   <div>文件:</div>
-                   <div class="tites">{{item.materialList.name}}</div>
-                   <div class="article_color" @click="goToMaterial('material')">重新选择</div>
-                 </div>
-                 <div class="article_flex" v-if="item.materialList.tab == 2 && item.materialList.name">
-                   <div>
-                     <img src="../../assets/images/pdf_image.png" alt="">
-                   </div>
-                   <div>
-                      <p class="tite">{{item.materialList.name}}</p>
-                      <p class="link_box">{{(item.materialList.fileSize/1024).toFixed(2)}}kbs</p>
-                   </div>
-                   
-                 </div>
-              </div>
-                           <div class="article_warp" v-if="item.materialList.tab == 3">
-                 <div class="article_text">
-                   <div>海报:</div>
-                   <div class="tites">{{item.materialList.posterName}}</div>
-                   
-                 </div>
-                 <div class="article_img" v-if="item.materialList.tab == 3 && item.materialList.posterUrl">
-                   <div>
-                     <img :src="item.materialList.posterUrl" alt="">
-                   </div>
-                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
-                 </div>
-              </div>
-              </div>
-            </template>
+              </el-form-item>
+            </el-form>
           </div>
         </div>
-        <!-- 添加素材 -->
-        <div class="appendix-add-warp" v-if="this.appendixList.length < 9">
-          <button class="addAppendix-button" @click="addAppendix">
-            <i class="el-icon-circle-plus-outline"></i> 新增素材内容
-          </button>
-          <span class="add-tips" style="margin-left: 24px">（最多可添加<span>{{ this.appendixList.length }}</span>/9个附件）</span>
+        <!-- 群发消息 -->
+        <div class="group-content">
+          <div class="title">群发消息</div>
+          <div class="tips">
+            <span>注意：</span>
+            <span>客户每个月最多接收来自同一企业的管理员的4条群发消息
+              4条消息可在同一天发送</span>
+          </div>
+          <!-- 群发内容 -->
+          <div class="txt-28 marB-24">群发内容：</div>
+          <el-input class="marB-24" type="textarea" placeholder="请输入群发内容" v-model="sendMsg" maxlength="500" show-word-limit>
+          </el-input>
+          <!-- 附件 -->
+          <div class="appendix-list">
+            <div class="item marB-24" v-for="(item, index) in appendixList" :key="index">
+              <!-- 删除素材 -->
+              <div class="delItem" @click="delItem(index)">
+                <i class="el-icon-delete"></i>
+              </div>
+              <!-- 选择素材类型 -->
+              <div class="appendixType">
+                <span class="_t txt-28"> 选择素材类型 </span>
+                <el-radio-group class="radio" @change="appendixChange(index, $event)" v-model="item.appendixType">
+                  <!-- <el-radio label="图片"></el-radio>
+                <el-radio label="链接"></el-radio> -->
+                  <el-radio label="素材库"></el-radio>
+                </el-radio-group>
+              </div>
+              <!-- 图片 -->
+              <template v-if="item.appendixType === '图片'">
+                <van-uploader v-model="item.picList" @oversize="onOversize" :max-size="2 * 1024 * 1024" :max-count="1"
+                              :after-read="afterRead.bind(null, { index: index, data: item })" />
+                <div class="picTips marB-24">
+                  建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
+                </div>
+              </template>
+              <!-- 链接 -->
+              <template v-if="item.appendixType === '链接'">
+                <el-input class="marB-24" v-model="item.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
+                <el-form ref="form" :model="item">
+                  <el-form-item label="链接标题 :">
+                    <el-input v-model="item.hrefTitle" placeholder="请输入链接标题"></el-input>
+                  </el-form-item>
+                  <el-form-item label="链接摘要 :">
+                    <el-input v-model="item.hrefDesc" placeholder="请输入链接摘要"></el-input>
+                  </el-form-item>
+                  <el-form-item label="链接封面 :">
+                    <van-uploader v-model="item.hrefPic" :max-count="1" :max-size="2 * 1024 * 1024" @oversize="onOversize"
+                                  :after-read="afterReads.bind(null, item)" />
+                  </el-form-item>
+                </el-form>
+              </template>
+              <!-- 素材 -->
+              <template v-if="item.appendixType === '素材库'">
+
+                <div>
+
+                  <div class="article_warp" v-if="item.materialList.tab == 1">
+                    <div class="article_text">
+                      <div>文章:</div>
+                      <div class="tites">{{item.materialList.title}}</div>
+                      <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+                    </div>
+                    <div class="article_flex" v-if="item.materialList.tab == 1 && item.materialList.title">
+                      <div>
+                        <p class="tite">{{item.materialList.title}}</p>
+                        <p class="link_box">{{item.materialList.contentAbstract}}</p>
+                      </div>
+                      <div>
+                        <img :src="item.materialList.cover" alt="">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="article_warp" v-if="item.materialList.tab == 2">
+                    <div class="article_text">
+                      <div>文件:</div>
+                      <div class="tites">{{item.materialList.name}}</div>
+                      <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+                    </div>
+                    <div class="article_flex" v-if="item.materialList.tab == 2 && item.materialList.name">
+                      <div>
+                        <img src="../../assets/images/pdf_image.png" alt="">
+                      </div>
+                      <div>
+                        <p class="tite">{{item.materialList.name}}</p>
+                        <p class="link_box">{{(item.materialList.fileSize/1024).toFixed(2)}}kbs</p>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="article_warp" v-if="item.materialList.tab == 3">
+                    <div class="article_text">
+                      <div>海报:</div>
+                      <div class="tites">{{item.materialList.posterName}}</div>
+
+                    </div>
+                    <div class="article_img" v-if="item.materialList.tab == 3 && item.materialList.posterUrl">
+                      <div>
+                        <img :src="item.materialList.posterUrl" alt="">
+                      </div>
+                      <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+          <!-- 添加素材 -->
+          <div class="appendix-add-warp" v-if="this.appendixList.length < 9">
+            <button class="addAppendix-button" @click="addAppendix">
+              <i class="el-icon-circle-plus-outline"></i> 新增素材内容
+            </button>
+            <span class="add-tips" style="margin-left: 24px">（最多可添加<span>{{ this.appendixList.length }}</span>/9个附件）</span>
+          </div>
+          <!-- 通知成员 -->
+          <span class="sendRequest" @click="sendRequest">通知成员发送</span>
         </div>
-        <!-- 通知成员 -->
-        <span class="sendRequest" @click="sendRequest">通知成员发送</span>
       </div>
+      <!-- 日期、时间选择框 -->
+      <van-popup v-model="chooseDateTime" position="bottom">
+        <van-datetime-picker :min-date="minDate" @cancel="chooseDateTime = false" v-model="sendDateTime" :type="activeChoose"
+                             @confirm="confirmDateTime" :title="activeChoose === 'date' ? '选择年月日' : '选择时间'" />
+      </van-popup>
+      <!-- 用户添加起止时间 -->
+      <van-popup v-model="chooseCusAddDate" position="bottom">
+        <van-datetime-picker @cancel="chooseCusAddDate = false" v-model="cusAddTime" type="date" @confirm="confirmCusAddDate" title="选择年月日" />
+      </van-popup>
+      <!-- 选择客户标签 -->
+      <van-popup class="choose-cus-popup" v-model="chooseCusSign" position="bottom">
+        <!-- 标题 -->
+        <div class="_top">
+          <div class="fill"></div>
+          <div>选择客户标签</div>
+          <div class="fill" @click="chooseCusSign = false">
+            <i class="el-icon-close"></i>
+          </div>
+        </div>
+        <!-- 标签组 -->
+        <div class="_center">
+          <div class="_item" v-for="(item, index) in cusSignList" :key="index">
+            <div class="group-title">{{ item.name }}</div>
+            <div class="group-label">
+              <div class="label-item" :class="[signItm.checked ? 'active' : '']" @click="clickSign(index, signIdx, signItm.tagid)"
+                   v-for="(signItm, signIdx) in item.children" :key="`${index} - ${signIdx}`">
+                {{ signItm.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 底部按钮 -->
+        <div class="_bottom">
+          <div class="_button cancel" @click="chooseCusSign = false">取消</div>
+          <div class="_button save" @click="saveCus">保存</div>
+        </div>
+      </van-popup>
     </div>
-    <!-- 日期、时间选择框 -->
-    <van-popup v-model="chooseDateTime" position="bottom">
-      <van-datetime-picker :min-date="minDate" @cancel="chooseDateTime = false" v-model="sendDateTime" :type="activeChoose" @confirm="confirmDateTime"
-                           :title="activeChoose === 'date' ? '选择年月日' : '选择时间'" />
-    </van-popup>
-    <!-- 用户添加起止时间 -->
-    <van-popup v-model="chooseCusAddDate" position="bottom">
-      <van-datetime-picker @cancel="chooseCusAddDate = false" v-model="cusAddTime" type="date" @confirm="confirmCusAddDate" title="选择年月日" />
-    </van-popup>
-    <!-- 选择客户标签 -->
-    <van-popup class="choose-cus-popup" v-model="chooseCusSign" position="bottom">
-      <!-- 标题 -->
-      <div class="_top">
-        <div class="fill"></div>
-        <div>选择客户标签</div>
-        <div class="fill" @click="chooseCusSign = false">
-          <i class="el-icon-close"></i>
-        </div>
-      </div>
-      <!-- 标签组 -->
-      <div class="_center">
-        <div class="_item" v-for="(item, index) in cusSignList" :key="index">
-          <div class="group-title">{{ item.name }}</div>
-          <div class="group-label">
-            <div class="label-item" :class="[signItm.checked ? 'active' : '']" @click="clickSign(index, signIdx, signItm.tagid)"
-                 v-for="(signItm, signIdx) in item.children" :key="`${index} - ${signIdx}`">
-              {{ signItm.name }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- 底部按钮 -->
-      <div class="_bottom">
-        <div class="_button cancel" @click="chooseCusSign = false">取消</div>
-        <div class="_button save" @click="saveCus">保存</div>
-      </div>
-    </van-popup>
-  </div>
-  <div class="psoition_falx" v-if="sucai == 1">
-                       <Coumpontmaterial  @sureTab="showData"  @sure="fnMaterialInfo" />
-      </div>
+    <div class="psoition_falx" v-if="sucai == 1">
+      <Coumpontmaterial @sureTab="showData" @sure="fnMaterialInfo" />
+    </div>
   </div>
 </template>
 <script>
 import { Toast } from 'vant'
 import { Notify } from 'vant'
 import { formatDate } from '../../utils/tool.js'
-import  Coumpontmaterial from "../../components/materialDialog/MterialPageGroups.vue"
+import Coumpontmaterial from '../../components/materialDialog/MterialPageGroups.vue'
 export default {
-      components:{
-       Coumpontmaterial
+  components: {
+    Coumpontmaterial,
   },
   data() {
     var validateSendDateTime = (rule, value, callback) => {
@@ -346,9 +340,9 @@ export default {
     }
     return {
       minDate: new Date(),
-       imgArrUrl:[],
-       dataindex:"",
-       dataindext:"",
+      imgArrUrl: [],
+      dataindex: '',
+      dataindext: '',
       loading: false,
       baseForm: {
         // 群发设置表单
@@ -416,7 +410,7 @@ export default {
       sendDateTime: '', // 日期时间需要的值
       chooseCusSign: false, // 选择客户标签
       tagidList: [],
-      sucai:0,
+      sucai: 0,
       arrImgList: [],
       listImgData: {
         url: '',
@@ -472,14 +466,14 @@ export default {
     this.chooseCustomerMass() //选择员工接口
   },
   methods: {
-        goToMaterial(){
-      this.sucai =1
+    goToMaterial() {
+      this.sucai = 1
     },
 
-    fnMaterialInfo(obj){
-      console.log(obj,"-----ong")
+    fnMaterialInfo(obj) {
+      console.log(obj, '-----ong')
       // this.materialList = obj
-      console.log(this.appendixList,"999999")
+      console.log(this.appendixList, '999999')
       // this.appendixList.forEach((item,indes) =>{
       //    item.tab =obj.tab
       //    item.materialList[] = obj
@@ -489,59 +483,61 @@ export default {
       this.appendixList[this.dataindex].meiapicul = obj.cover
       this.appendixList[this.dataindex].mediatite = obj.title
       this.appendixList[this.dataindex].mediatype = obj.tab
-      this.appendixList[this.dataindex].objList= obj
-           if(obj.tab == 2){
-          this.appendixList[this.dataindex].mediatite = obj.name
-           this.appendixList[this.dataindex].mediatype = obj.tab
-       }
-           if(obj.tab == 3){
-          this.appendixList[this.dataindex].mediatite = obj.posterName
-           this.appendixList[this.dataindex].mediatype = obj.tab
-              this.appendixList[this.dataindex].urls = obj.posterUrl
-       }
+      this.appendixList[this.dataindex].objList = obj
+      if (obj.tab == 2) {
+        this.appendixList[this.dataindex].mediatite = obj.name
+        this.appendixList[this.dataindex].mediatype = obj.tab
+      }
+      if (obj.tab == 3) {
+        this.appendixList[this.dataindex].mediatite = obj.posterName
+        this.appendixList[this.dataindex].mediatype = obj.tab
+        this.appendixList[this.dataindex].urls = obj.posterUrl
+      }
     },
-    showData(val){
-        this.sucai =val
+    showData(val) {
+      this.sucai = val
     },
-            blurUrl(){
-          let herf ="",hrefTitle
-          console.log(this.appendixList)
-          this.appendixList.forEach((item,index) =>{
-            console.log(item.href)
-          herf = item.href
-          hrefTitle = item.hrefTitle 
-          })
-       this.$toast.loading()
-       let params = {
-         articleUrl: window.btoa(herf),
+    blurUrl() {
+      let herf = '',
+        hrefTitle
+      console.log(this.appendixList)
+      this.appendixList.forEach((item, index) => {
+        console.log(item.href)
+        herf = item.href
+        hrefTitle = item.hrefTitle
+      })
+      this.$toast.loading()
+      let params = {
+        articleUrl: window.btoa(herf),
         //  articleUrl: herf
-       } 
-         this.$network
+      }
+      this.$network
         .get('/material-service/article/wechat_article', params)
         .then((res) => {
-          
-          if(res.result){
-             console.log(res, '------------', this.appendixList)
-         this.appendixList[this.dataindex].hrefTitle = res.data.title
-         this.appendixList[this.dataindex].hrefPic = [{url:res.data.cover}]
-         this.appendixList[this.dataindex].hrefImg = res.data.cover
-         this.appendixList[this.dataindex].hrefDesc =  res.data.contentAbstract
+          if (res.result) {
+            console.log(res, '------------', this.appendixList)
+            this.appendixList[this.dataindex].hrefTitle = res.data.title
+            this.appendixList[this.dataindex].hrefPic = [
+              { url: res.data.cover },
+            ]
+            this.appendixList[this.dataindex].hrefImg = res.data.cover
+            this.appendixList[this.dataindex].hrefDesc =
+              res.data.contentAbstract
             //  for(let i = 0;i<=this.appendixList.length;i++){
             //    console.log(this.appendixList,"---for")
             //    console.log(this.appendixList[i].appendixType)
             //  }
-          //      this.appendixList.forEach((item,index) =>{
-          //   console.log(item,"--00",index)
-          //   //  item.hrefTitle[index] = res.data.title
-          //     // item.hrefDesc = res.data.contentAbstract
-          //     // item.hrefPic = res.data.cover
-          //     // item.hrefPic = res.data.cover
-          //     // this.afterReads()
-          // })
-          // }else{
-          //     this.$toast(res.msg)
+            //      this.appendixList.forEach((item,index) =>{
+            //   console.log(item,"--00",index)
+            //   //  item.hrefTitle[index] = res.data.title
+            //     // item.hrefDesc = res.data.contentAbstract
+            //     // item.hrefPic = res.data.cover
+            //     // item.hrefPic = res.data.cover
+            //     // this.afterReads()
+            // })
+            // }else{
+            //     this.$toast(res.msg)
           }
-           
         })
     },
     onOversize(file) {
@@ -577,7 +573,7 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
-        afterReads(obj, file) {
+    afterReads(obj, file) {
       this.loading = true
       console.log(file, '------------')
       console.log(obj, '------------obj')
@@ -600,7 +596,6 @@ export default {
 
             obj.hreobjectname = res.data.objectname
             //  obj.data.hrefPic = res.data.url
-         
           }
         })
     },
@@ -669,22 +664,20 @@ export default {
           // hrefPic: [],
           appendixType: '图片',
         }
-      } else if(value === '链接'){
+      } else if (value === '链接') {
         appendixList[index] = {
           ...appendixList[index],
           // picList: [],
           appendixType: '链接',
         }
-      }else{
-           appendixList[index] = {
+      } else {
+        appendixList[index] = {
           ...appendixList[index],
           // picList: [],
           appendixType: '素材库',
-         
-         
         }
-         this.sucai = 1
-         this.dataindex = index
+        this.sucai = 1
+        this.dataindex = index
       }
       this.$set(this, 'appendixList', appendixList)
     },
@@ -704,18 +697,18 @@ export default {
         hrefTitle: '',
         hrefDesc: '',
         hrefPic: [],
-        hrefImg:"",
-        hreobjectname:"",
-        sucaiobj:[],
-        tab:'',
-        materialList:{},
-        mediaDesc:"",
-        meiapicul:"",
-        mediatite:"",
-        mediatype:"",
-        objList:{},
-         listurl:"",
-          urls:'',
+        hrefImg: '',
+        hreobjectname: '',
+        sucaiobj: [],
+        tab: '',
+        materialList: {},
+        mediaDesc: '',
+        meiapicul: '',
+        mediatite: '',
+        mediatype: '',
+        objList: {},
+        listurl: '',
+        urls: '',
       })
     },
     // 点击客户标签打开弹窗
@@ -784,44 +777,51 @@ export default {
       console.log('sendMsg----->', this.sendMsg)
       console.log('baseForm------>', this.baseForm)
       console.log('appendixList------>', this.appendixList)
-      
-      this.appendixList.forEach((item,indexs)=>{
-        console.log(item,"-----item")
-        console.log(item.objList.articleId,"-----item.objList.tab")
-      let imgArr = []
-      if (window.location.origin == 'https://console.jzcrm.com') {
-        this.shareUrlOrigin = 'https://h5.jzcrm.com'
-      } else {
-        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
-      }
-  
+
+      this.appendixList.forEach((item, indexs) => {
+        console.log(item, '-----item')
+        console.log(item.objList.articleId, '-----item.objList.tab')
+        let imgArr = []
+        if (window.location.origin == 'https://console.jzcrm.com') {
+          this.shareUrlOrigin = 'https://h5.jzcrm.com'
+        } else {
+          this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
+        }
+
         if (item.objList.tab == 1) {
           imgArr = [
             {
-              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.articleId}&type=${item.objList.tab}&corpId=${localStorage.getItem('corpId')}`,
+              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${
+                item.objList.articleId
+              }&type=${item.objList.tab}&corpId=${localStorage.getItem(
+                'corpId'
+              )}`,
               ...item.objList,
             },
           ]
-            console.log(imgArr,"---l素材 ",this.shareUrlOrigin)
+          console.log(imgArr, '---l素材 ', this.shareUrlOrigin)
         } else if (item.objList.tab == 2) {
           imgArr = [
             {
-              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${item.objList.documentId}&type=${item.objList.tab}&corpId=${localStorage.getItem('corpId')}`,
-              ...item.objList
+              urls: `${this.shareUrlOrigin}/materialTemplate?materialId=${
+                item.objList.documentId
+              }&type=${item.objList.tab}&corpId=${localStorage.getItem(
+                'corpId'
+              )}`,
+              ...item.objList,
             },
           ]
         } else {
           imgArr = [item.objList]
         }
-      // }
-      console.log(imgArr,"---l ")
-       this.imgArrUrl = imgArr
-         this.imgArrUrl.forEach(item=>{
-         console.log(item,"---------l")
-         this.appendixList[indexs].listurl = item.urls
+        // }
+        console.log(imgArr, '---l ')
+        this.imgArrUrl = imgArr
+        this.imgArrUrl.forEach((item) => {
+          console.log(item, '---------l')
+          this.appendixList[indexs].listurl = item.urls
+        })
       })
-      })
-
 
       let list = this.appendixList.map((item) => {
         return {
@@ -834,29 +834,29 @@ export default {
       // })
       this.urlList = []
       this.appendixList.forEach((item) => {
-          let obj = {
-                desc: item.hrefDesc,
-                picurl: item.hrefImg,
-                title:item.hrefTitle,
-                url:item.href
-              };
-              if(item.href){
-                 this.urlList.push(obj)
-              }
+        let obj = {
+          desc: item.hrefDesc,
+          picurl: item.hrefImg,
+          title: item.hrefTitle,
+          url: item.href,
+        }
+        if (item.href) {
+          this.urlList.push(obj)
+        }
       })
-          let mediaLink = []
-         this.appendixList.forEach((item) => {
-              let obj ={
-              desc: item.mediaDesc,
-              picurl: item.meiapicul,
-              title:item.mediatite,
-              url:item.listurl || item.urls,
-              type:item.mediatype
-            };
-            if(item.mediatite){
-              mediaLink.push(obj)
-            }
-          });
+      let mediaLink = []
+      this.appendixList.forEach((item) => {
+        let obj = {
+          desc: item.mediaDesc,
+          picurl: item.meiapicul,
+          title: item.mediatite,
+          url: item.listurl || item.urls,
+          type: item.mediatype,
+        }
+        if (item.mediatite) {
+          mediaLink.push(obj)
+        }
+      })
       this.$refs['form'].validate((valid) => {
         // if (this.appendixList.length >= 1) {
         //   Toast("请上传素材内容");
@@ -874,11 +874,11 @@ export default {
             lableList: this.customerlistdata || [],
             sendType: this.baseForm.sendRule,
             sendTime: this.baseForm.sendDate + ' ' + this.baseForm.sendTime,
-            urlList: this.urlList, //this.urlList,
+            // urlList: this.urlList, //this.urlList,
             allCustomer: this.baseForm.selectCusType,
-            fileList: list,
+            // fileList: list,
             customerList: this.clueCustomerLists,
-              mediaList:mediaLink
+            mediaList: mediaLink,
           }
 
           this.$network
@@ -1059,80 +1059,80 @@ export default {
 }
 </script>
 <style lang="less">
-.psoition_falx{
-    //   position: absolute;
-    // top: 0;
-    // right: 0;
-    // z-index: 10;
+.psoition_falx {
+  //   position: absolute;
+  // top: 0;
+  // right: 0;
+  // z-index: 10;
 }
-   .article_warp{
-              .article_img{
-      display: flex;
-      align-items: end;
-      margin-top: 24px;
-      img{
-        width: 200px;
-        height: 200px;
-      }
-      .article_color{
-        margin-left: 24px;
-        font-weight: 400;
-        color: #4168F6;
-        font-size: 28px;
-      }
+.article_warp {
+  .article_img {
+    display: flex;
+    align-items: end;
+    margin-top: 24px;
+    img {
+      width: 200px;
+      height: 200px;
     }
-          .article_text{
-             color: #3C4353;
-             line-height: 40px;
-             font-size: 28px;
-             display: flex;
-             .article_color{
-               color: #4168F6;
-               margin-left: 24px;
-             }
-             .tites{
-               margin-left: 18px;
-               overflow: hidden;
-               text-overflow:ellipsis;
-               white-space: nowrap;
-               width: 120px;
-             }
-          }
-          .article_flex{
-             width: 456px;
-             height: 168px;
-             background: #FFFFFF;
-             border: 1px solid #D9DAE4;
-             display: flex;
-             align-items: center;
-              justify-content: space-evenly;
-              margin-top: 24px;
-              margin-bottom: 15px;
-             .tite{
-               font-weight: 400;
-               color: #3C4353;
-               font-size: 28px;
-               margin-bottom: 24px;
-                overflow: hidden;
-               text-overflow:ellipsis;
-               white-space: nowrap;
-               width: 200px;
-             }
-             .link_box{
-               overflow: hidden;
-               text-overflow:ellipsis;
-               white-space: nowrap;
-               font-weight: 400;
-               color: #C0C4CC;
-               font-size: 24px;
-               width: 225px;
-             }
-             img{
-               width: 100px;
-               height: 100px;
-             }
-          }
-        }
+    .article_color {
+      margin-left: 24px;
+      font-weight: 400;
+      color: #4168f6;
+      font-size: 28px;
+    }
+  }
+  .article_text {
+    color: #3c4353;
+    line-height: 40px;
+    font-size: 28px;
+    display: flex;
+    .article_color {
+      color: #4168f6;
+      margin-left: 24px;
+    }
+    .tites {
+      margin-left: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 120px;
+    }
+  }
+  .article_flex {
+    width: 456px;
+    height: 168px;
+    background: #ffffff;
+    border: 1px solid #d9dae4;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 24px;
+    margin-bottom: 15px;
+    .tite {
+      font-weight: 400;
+      color: #3c4353;
+      font-size: 28px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 200px;
+    }
+    .link_box {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 400;
+      color: #c0c4cc;
+      font-size: 24px;
+      width: 225px;
+    }
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
 .taskName {
   /deep/.el-input__inner {
     border: 1px solid none !important;
@@ -1473,7 +1473,7 @@ export default {
       }
       .appendix-list {
         .item {
-          padding:  24px;
+          padding: 24px;
           box-sizing: border-box;
           border-radius: 8px;
           border: 1px solid #d9dae4;
@@ -1484,8 +1484,8 @@ export default {
             ._t {
               margin-right: 24px;
             }
-              .el-radio-group{
-              .el-radio{
+            .el-radio-group {
+              .el-radio {
                 margin-right: 15px;
               }
             }
