@@ -434,6 +434,7 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .material-template {
+  height: 100%;
   .but_warp {
     padding-left: 24px;
     width: 750px;

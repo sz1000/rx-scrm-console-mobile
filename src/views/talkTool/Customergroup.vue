@@ -1030,7 +1030,8 @@ export default {
     Screeningcustomer() {
       this.$network
         .post('/customer-service/cluecustomerMass/customerScreen', {
-          userList: this.baseForm.staffs,
+          userList: this.userdataList,
+          // userList: this.baseForm.staffs,
           gender: this.baseForm.cusSex, //性别
           addStarTime: this.baseForm.cusAddBeginTime,
           addEndTime: this.baseForm.cusAddEndTime,
