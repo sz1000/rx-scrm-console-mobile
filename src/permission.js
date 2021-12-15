@@ -42,8 +42,9 @@ router.beforeEach(async(to, from, next) => {
                         console.log('card')
                         next()
                     }else{
-                        console.log('no card')
-                        if(groupList.indexOf(to.path) > -1 && (localStorage.getItem('verbalTrick') == to.query.code || localStorage.getItem('customerPortrait') == to.query.code)){
+                        let verbalTrickStr = localStorage.getItem('verbalTrick'),customerPortraitStr = localStorage.getItem('customerPortrait')
+                        console.log('no card',verbalTrickStr,customerPortraitStr)
+                        if(groupList.indexOf(to.path) > -1 && ((verbalTrickStr && verbalTrickStr.length > 5 && verbalTrickStr == to.query.code) || (customerPortraitStr && customerPortraitStr.length > 5 && customerPortraitStr == to.query.code))){
                             console.log('is auth code y')
                             next()
                         }else{
