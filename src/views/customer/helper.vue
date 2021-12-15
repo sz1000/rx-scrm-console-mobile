@@ -25,9 +25,9 @@
                 </div>
                 <div class="opera_btn" @click="showBtn = false" v-else>完成</div>
                 <div class="tit">协助人</div>
-                <van-swipe-cell v-for="(item,index) in 3" :key="index">
+                <van-swipe-cell ref="swipercell" v-for="(item,index) in 3" :key="index">
                     <div class="item" :class="{'trans':showBtn}">
-                        <img class="red_btn" @click="deleteFun" src="@/assets/svg/icon_remove.svg" alt="">
+                        <img class="red_btn" @click.stop="openFun(index)" src="@/assets/svg/icon_remove.svg" alt="">
                         <div class="avatar"></div>
                         <div class="val">
                             <div class="name">陈良-运营部</div>
@@ -80,6 +80,9 @@ export default {
         addDialog(){
             console.log('add')
             this.dialog_add = true
+        },
+        openFun(i){
+            this.$refs.swipercell[i].open('right')
         },
         deleteFun(){
             console.log('删除')

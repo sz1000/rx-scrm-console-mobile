@@ -1,38 +1,37 @@
 <template>
-  	<div class="clueWarp">
-		<div class="titleBox">
-			<span class="titleFujian">附件</span>
-		</div>
-		<el-upload
-			class="upload-demo"
-			:action="`${BASE_URL}/customer-service/cluecustomeraccessory/upload`"
-			:headers="headers"
-			:on-remove="delList"
-			:before-upload="BeforeUpload"
-			:multiple="false"
-			:limit="20"
-			:data="fileData"
-			:file-list="eleList"
-			:on-success="onSuccess"
-			:on-error="onError">
-			<el-button class="upBtn" size="small" type="primary">
-			<img class="yunClass" src="../../../assets/images/icon_shangchuan.png" alt="" />
-			<span class="upTxt">上传</span></el-button>
-		</el-upload>
-			
-		<div class="listBox" v-for="(item, index) in fileList" :key="index">
-			<div class="listBoxLeft">
-				<span class="listName">{{item.name}}</span>
-			</div>
-			<div class="listBoxRight">
-				<span class="delList" @click="delList(item.id)">删除</span>
-			</div>
-		</div>
-  	</div>
+  	<div class="enclosure_wrap">
+        <div class="tit_box">
+            <div class="tit">附件</div>
+            <div class="icon_upload">
+                <img class="icon" src="@/assets/svg/icon_upload.svg" alt="">
+                <input class="file" @change="uploadFun" type="file">
+            </div>
+        </div>
+        <div class="enclosure_list">
+            <van-swipe-cell v-for="(item,index) in list" :key="index">
+                <div class="li">
+                    <img class="icon" :src="fileIcon(item.name,item.ossUrl)" alt="">
+                    <div class="val">
+                        <div class="name">{{item.name}}</div>
+                        <div class="text">上传于 {{item.createTime | $time('YYYY.MM.DD')}}</div>
+                    </div>
+                    <div class="opera" @click="openDialog(item)">
+                        <img class="icon_point" src="@/assets/svg/icon_point.svg" alt="">
+                    </div>
+                </div>
+                <template #right>
+                    <van-button text="下载" @click="selectFun({code: 'download'},item)" class="download_button btn" />
+                    <van-button text="删除" @click="selectFun({code: 'delete'},item)" class="delete_button btn" />
+                </template>
+            </van-swipe-cell>
+        </div>
+        <!-- 操作面板 -->
+        <van-action-sheet v-model="dialog" :actions="actions" cancel-text="取消" close-on-click-action @select="selectFun"/>
+    </div>
 </template>
 <script>
-import { BASE_URL } from '../../../utils/request.js'
-import {
+import { 
+	cluecustomeraccessory_upload,
 	cluecustomeraccessory_getList,		//附件列表
 	cluecustomeraccessory_delupload,	//删除附件
 } from '@/api/customer'
@@ -45,203 +44,187 @@ export default {
 	},
 	data() {
 		return {
-			fileList: [],
-			fileData: {},
-			BASE_URL,
-			eleList: [],
+			dialog: false,
+            actions: [{ name: '下载',code: 'download' }, { name: '删除',code: 'delete' }],
+			list: [],
+			row: null,
 		};
 	},
    	computed: {
 		token(){
 			return this.$store.getters.token
 		},
-		headers() {
-			return {
-				Accept: "application/json",
-				token: this.token
-			}
-		},
   	},
 	mounted() {
-		this.getDownList()
+		this.getList()
 	},
   	methods: {
-    	delList(id){	//删除附件
-	  		let obj = {
-				clueCustomerNo: this.id,
-				id: id,
+		selectFun(action,data){
+			this.row = data
+			switch (action.code) {
+				case 'download':	//下载
+					window.open(this.row.ossUrl)
+					break;
+				case 'delete':		//删除
+					this.deleteFun()
+					break;
+				default:
+					break;
 			}
-	  		this.$dialog.confirm({
-				title: '',
-				message: '确认删除吗',
+			console.log('asd',action.name)
+        },
+		openDialog(data){	 //打开弹窗
+			this.row = data
+			this.dialog = true
+		},
+        uploadFun(e){    //附件上传
+			let id = this.id || 'A280C994F2114D3ABFA02FAED9B8B081'
+            cluecustomeraccessory_upload(e,id).then(res => {
+                if(res.result){
+					this.getList()
+                }
+            })
+        },
+        fileIcon(val,link){
+			let arr = val.split('.'),type = arr[arr.length - 1],str = ''
+			let imgArr = ['jpg','jpeg','png','gif'],ather = ['avi','mp4']
+			let obj = {
+                pdf: require('@/assets/svg/pdf.svg'),
+                ppt: require('@/assets/svg/ppt.svg'),
+                excel: require('@/assets/svg/excel.svg'),
+                word: require('@/assets/svg/word.svg'),
+            }
+			if(imgArr.indexOf(type) > -1){
+				str = link
+			}else {
+				if(ather.indexOf(type) > -1){
+					str = require('@/assets/svg/file.svg')
+				}else{
+					str = obj[type]
+				}
+			}
+            return str
+        },
+		deleteFun(){	//删除附件
+			let obj = {
+				clueCustomerNo: this.id,
+				id: this.row.id,
+			}
+			cluecustomeraccessory_delupload(obj).then(res => {
+				if(res.result){
+					this.$toast(res.msg)
+					this.getList()
+					this.$emit('sure')
+				}
 			})
-			.then(() => {
-				cluecustomeraccessory_delupload(obj).then(res => {
-					if(res.result){
-						this.$toast(res.msg)
-						this.getDownList()
-						this.$emit('sure')
-					}
-				})
-			})
-			.catch(() => {
-				// on cancel
-			});
-	  	},
-	  	getDownList(){	//获取附件列表
+		},
+	  	getList(){	//获取附件列表
 			cluecustomeraccessory_getList(this.id).then(res => {
 				if(res.result){
-					this.fileList = res.data
+					this.list = res.data
 				}
 			})
 	  	},
-		BeforeUpload(file) {
-			console.log(file.name)
-			if (file.size / 1024 / 1024 >= 20) {
-				this.$toast("上传文件格式为pdf, 大小不能超过20MB!")
-				return false
-			}
-			this.fileData.clueCustomerNo = this.id
-			this.fileData.filetype = file.name.substring(file.name.lastIndexOf(".") + 1)
-		},
-		onSuccess(response, file, fileList){
-			this.eleList = []
-			this.$toast('上传成功!')
-			this.getDownList()
-			this.$emit('sure')
-		},
-		onError(err, file, fileList){
-			console.log(err)
-			this.$toast('上传失败!')
-		},
-		beforeRemove(file, fileList) {
-			console.log(file, fileList)
-			return this.$confirm();
-		},
   	},
 }
 </script>
 <style lang="less" scoped>
-
-
-.listBox{
-	width: 100%;
-	height: 40px;
-	font-size: 30px;
-	color: #3C4353;
-	letter-spacing: 0;
-	font-weight: 400;
-	line-height: 40px;
-	margin-top: 26px;
-}
-.listBoxLeft{
-		height: 40px;
-		float: left;
-	/*	margin-left: 16px;*/
-		width: 300px;
-	    overflow: hidden;
-	    white-space: nowrap;
-	    text-overflow: ellipsis;
-	}
-	.listBoxRight{
-/*		width: 110px;*/
-		height: 20px;
-		float: right;
-	}
-	.sessionOpen,.upDown,.delList{
-		margin-right: 8px;
-		cursor:pointer;
-	}
-
-
-.clueWarp {
-	position: relative;
-  height: 100%;
-}
-/deep/ .el-upload-list__item .el-icon-close-tip{
-	color: #fafbff00;
-}
-/deep/ .el-upload-list__item{
-	font-size: 28px;
-	height: 40px;
-	line-height: 40px;
-}
-.titleBox{
-/*	width: 80px;*/
-	height: 40px;
-	font-size: 30px;
-	color: #3C4353;
-	letter-spacing: 0;
-	font-weight: bold;
-	line-height: 40px;
-	margin-bottom: -20px;
-/*	margin-top: 36px;*/
-}
-.blueDiv{
-	width: 8px;
-	height: 25px;
-	background: #4168F6;
-	margin-right: 12px;
-	display: inline-block;
-}
-/deep/.upBtn{
-					color: #838a9d;
-          width: 124px;
-          height: 68px;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          text-align: center;
-          position: absolute;
-			    right: 0;
-			    top: -12px;
-          background: #FFFFFF;
-          font-size: 30px;
-}
-/deep/.upBtn span{
-position: relative;
-    bottom: 14px;
-    left: 8px;
-}
-/deep/.upBtn i{
-	position: relative;
-	right: 1px;
-}
-/deep/.el-button--primary:focus, .el-button--primary:hover {
-    background: #FFFFFF;
-    border-color: #D9DAE4;
-    color: #838A9D;
-}
-/deep/.el-upload-list__item .el-icon-upload-success,/deep/.el-upload-list__item .el-icon-close{
-	font-size: 30px;
-}
-/deep/.el-tabs__item{
-	height: 88px;
-	line-height: 88px;
-	font-size: 30px;
-}
-/deep/.el-upload-list__item-name{
-	margin-top: 20px;
-	font-size: 35px;
-	line-height: 35px;
-}
-/deep/.el-message-box__btns button:nth-child(2){
-	margin-left: 56px;
-	    position: relative;
-    left: 32px;
-}
-/deep/.el-message-box{
-	    width: 376px!important;
-    	height: 134px !important;
-}
-.yunClass{
-	width: 28px;
-	height: 28px;
-/*	float: left;*/
-position: relative;
-    top: 14px;
-    right: 22px;
-}
-.upTxt{
-	display: inline-block;
+@import "~@/styles/color.less";
+.enclosure_wrap{
+    width: 100%;
+    background: @white;
+    padding: 40px 0;
+    .van-popup{
+        .van-action-sheet__gap{
+            height: 24px;
+        }
+        .van-action-sheet__cancel,.van-action-sheet__item{
+            height: 102px;
+            font-size: 32px;
+            .van-action-sheet__name{
+                font-size: 32px;
+            }
+        }
+    }
+    .tit_box{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding: 0 32px;
+        .tit{
+            font-size: 28px;
+            line-height: 36px;
+            color: @fontMain;
+            font-weight: bold;
+        }
+        .icon_upload{
+            width: 32px;
+            height: 32px;
+            position: relative;
+            .icon{
+                width: 100%;
+                height: 100%;
+            }
+            .file{
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                opacity: 0;
+            }
+        }
+    }
+    .enclosure_list{
+        width: 100%;
+        .btn{
+            height: 100%;
+            width: 120px;
+            color: @white;
+        }
+        .delete_button{
+            background: @red;
+            border-color: @red;
+        }
+        .download_button{
+            background: @main;
+            border-color: @main;
+        }
+        .li{
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            .icon{
+                width: 80px;
+                height: 80px;
+                border-radius: 8px;
+                margin-right: 16px;
+            }
+            .val{
+                // width: calc(100% - 140px);
+                flex: 1;
+                .name{
+                    font-size: 28px;
+                    line-height: 36px;
+                    color: @fontMain;
+                    margin-bottom: 12px;
+                }
+                .text{
+                    font-size: 24px;
+                    line-height: 32px;
+                    color: @total;
+                }
+            }
+            .opera{
+                width: 36px;
+                height: 36px;
+                .icon_point{
+                    width: 100%;
+                    height: auto;
+                }
+            }
+        }
+    }
 }
 </style>

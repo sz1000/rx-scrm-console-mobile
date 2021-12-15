@@ -88,7 +88,7 @@ export function cluecustomeraccessory_getList(id) { // 获取附件列表
 export function cluecustomeraccessory_delupload(data) { // 删除附件
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/delupload',
-        method: 'get',
+        method: 'post',
         params: data
     })
 }
@@ -125,11 +125,11 @@ export function clueCustomerFollowUser_getFollowUserList(id) { // 获取协助�
         method: 'get'
     })
 }
-export function cluecustomeraccessory_upload(e,id,filetype) { // 附件上传
+export function cluecustomeraccessory_upload(e,id,noLoading = false) { // 附件上传
     let formData = new FormData()
     formData.append('file', e.target.files[0])
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id + '&filetype=' + filetype,
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id,
         method: 'post',
         header: {
             noLoading: noLoading
@@ -149,10 +149,13 @@ export function cluecustomer_gettag(id) {
         method: 'get',
     })
 }
-export function cluecustomer_update(data) {
+export function cluecustomer_update(data,loading = false) {     //客户画像详情修改
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/update',
         method: 'post',
+        headers: {
+            noLoading: loading
+        },
         data: data
     })
 }

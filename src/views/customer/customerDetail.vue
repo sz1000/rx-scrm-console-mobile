@@ -29,13 +29,13 @@
                     <div class="item">
                         <div class="label">企业简称</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.customerName" maxlength="30" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.customerName" @change="updateFun" maxlength="30" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">固定电话</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.mobil" maxlength="20" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.mobil" @change="updateFun" @input="detail.mobil=detail.mobil.replace(/[^\d|\-]/g,'')" maxlength="20" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
@@ -65,7 +65,7 @@
                     <div class="item">
                         <div class="label">企业名称</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.cropFullName" maxlength="30" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.cropFullName" @change="updateFun" maxlength="30" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
@@ -93,7 +93,7 @@
                             <span :class="{'placeholder':!detail.address}">{{detail.address | $textEmpty('请输入')}}</span>
                         </div>
                     </div>
-                    <div class="item">
+                    <div class="item lh">
                         <div class="label">备注</div>
                         <div class="val" @click="openDialog('remark')">
                             <!-- <input type="text" class="input" v-model="detail.remark" maxlength="200" placeholder="请输入（不得超过200个字符）" readonly> -->
@@ -204,7 +204,7 @@
                         <div class="label">添加客户时间</div>
                         <div class="val">{{detail.createTime}}</div>
                     </div>
-                    <div class="item">
+                    <div class="item lh">
                         <div class="label">备注</div>
                         <div class="val">{{detail.remark}}</div>
                     </div>
@@ -260,6 +260,7 @@ export default {
             customList: [],                  //自定义信息
 
             detail: {
+                clueCustomerNo: '',
                 avatar: '',
                 industry: [],
                 industryName: '',       //暂增
@@ -343,6 +344,14 @@ export default {
         },
         fixData(data){  //数据调整
 
+        },
+        updateFun(){
+            this.detail.clueCustomerNo = this.id
+            cluecustomer_update(this.detail,true).then(res => {
+                if(res.result){
+                    this.$toast('更新成功')
+                }
+            })
         },
         openDialog(type){   //打开弹窗 (地址 and 备注)
             this.openType = type
@@ -554,6 +563,9 @@ export default {
                     line-height: 36px;
                     color: @fontMain;
                     padding: 32px 0;
+                    &.lh{
+                        align-items: flex-start;
+                    }
                     .label{
                         width: 180px;
                         font-weight: bold;
