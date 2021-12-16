@@ -144,6 +144,7 @@
             <div class="article_flex">
               <div>
                 <img src="../../assets/images/pdf_image.png" alt="">
+                <!-- <img :src="materialList.cover" alt=""> -->
               </div>
               <div>
                 <p class="tite">{{materialList.name}}</p>

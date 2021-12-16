@@ -342,7 +342,7 @@ export default {
         userNo: this.userNo,
         data: item,
       }
-      
+
       document.getElementsByClassName('material-template')[0].scrollTop = 0
 
       this.$nextTick(() => {
