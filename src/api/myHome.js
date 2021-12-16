@@ -13,6 +13,9 @@ export function getAllCharts() {
     return request({
         url: CustomerService + '/my/getAllCharts',
         method: 'get',
+        headers: {
+            noLoading: true,
+        },
     })
 }
 // 待处理 朋友圈

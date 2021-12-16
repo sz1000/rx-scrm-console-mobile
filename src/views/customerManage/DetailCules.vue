@@ -1,8 +1,7 @@
 <template>
   <div class="custom-detail">
     <div class="headerTitle">
-      <div class="backPage"
-          @click="goBack">
+      <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
         返回
       </div>
@@ -20,57 +19,39 @@
 
       <!-- 线索动态 -->
       <div class="xiezuoBox" style="padding: 12px;" v-if="contentType == 0">
-      	<TimelineTabDiy ref="dynamic" :comeType="1" :btnList="btnList"></TimelineTabDiy>
-			</div>
+        <TimelineTabDiy ref="dynamic" :comeType="1" :btnList="btnList"></TimelineTabDiy>
+      </div>
       <!-- 协作人 -->
       <div class="xiezuoBox" style="padding: 12px;" v-if="contentType == 1">
-      	<HelperFileLine></HelperFileLine>
+        <HelperFileLine></HelperFileLine>
       </div>
-      
+
       <!-- 附件 -->
       <div class="fujianBox" style="padding: 12px;" v-if="contentType == 2">
-      	<Fujian></Fujian>
+        <Fujian></Fujian>
       </div>
-			
+
     </div>
 
     <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName"
-                        @cancel="cancelIcon"
-                        @click-overlay="cancelIcon"
-                        :lock-scroll="false">
+      <van-action-sheet v-model="show" :title="titleName" @cancel="cancelIcon" @click-overlay="cancelIcon" :lock-scroll="false">
         <div class="content">
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
+          <div class="writerInput" v-if="isShowDialog == '3'">
+            <van-field v-model="message" type="textarea" maxlength="200" placeholder="记录好跟进，多签单哟~" show-word-limit />
           </div>
-          <div class="changeUser"
-               v-if="isShowDialog == '4'">
+          <div class="changeUser" v-if="isShowDialog == '4'">
             <div class="nowUser">
               <span>现有所属人:</span>
               <span>{{ nowUser }}</span>
             </div>
             <div class="selectUser">
-            	<div class="pleSs"><span style="color: red;">*</span>指定所属人:</div>
-              <input class="changeSsSec" type="text" readonly="readonly" placeholder="请选择"  :value="helperName" @click="openSsPop" />
-		              
-		              <van-action-sheet v-model="SsPop" title="选择所属人">
-							  		<van-picker
-											  title=""
-											  show-toolbar
-											  :columns="options"
-											  @confirm="onConfirm"
-											  @cancel="onCancel"
-											  @change="onChange"
-											  value-key="name"
-											/>
-						 			</van-action-sheet>
-		              <!--<el-select v-model="userNo"
+              <div class="pleSs"><span style="color: red;">*</span>指定所属人:</div>
+              <input class="changeSsSec" type="text" readonly="readonly" placeholder="请选择" :value="helperName" @click="openSsPop" />
+
+              <van-action-sheet v-model="SsPop" title="选择所属人">
+                <van-picker title="" show-toolbar :columns="options" @confirm="onConfirm" @cancel="onCancel" @change="onChange" value-key="name" />
+              </van-action-sheet>
+              <!--<el-select v-model="userNo"
 		                         placeholder="请选择"
 		                         popper-class="popper-select-class">
 		                <el-option v-for="item in options"
@@ -83,10 +64,8 @@
             </div>
           </div>
           <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
+            <span class="cancel" @click="closeDialog(isShowDialog)">取消</span>
+            <span class="save" @click="saveDialog(isShowDialog)">保存</span>
           </div>
         </div>
       </van-action-sheet>
@@ -94,46 +73,38 @@
 
     <!-- 底部导航栏 -->
     <div class="btnWarp">
-      <div class="btnBox"
-           @click="transCustom"
-           v-show="btnList.some(item=>item.enName == 'turn')">
-        <img src="../../images/icon_change@2x.png"
-             alt="" />
+      <div class="btnBox" @click="transCustom" v-show="btnList.some(item=>item.enName == 'turn')">
+        <img src="../../images/icon_change@2x.png" alt="" />
         <span>转客户</span>
       </div>
-      <div class="btnBox"
-           @click="changeUser"
-           v-show="btnList.some(item=>item.enName == 'change')">
-        <img src="../../images/icon_change2@2x.png"
-             alt="" />
+      <div class="btnBox" @click="changeUser" v-show="btnList.some(item=>item.enName == 'change')">
+        <img src="../../images/icon_change2@2x.png" alt="" />
         <span>变更所属人</span>
       </div>
-      <div class="btnBox"
-           @click="giveUp"
-           v-show="btnList.some(item=>item.enName == 'giveup')">
-        <img src="../../images/icon_clear@2x.png"
-             alt="" />
+      <div class="btnBox" @click="giveUp" v-show="btnList.some(item=>item.enName == 'giveup')">
+        <img src="../../images/icon_clear@2x.png" alt="" />
         <span>放弃</span>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { Dialog } from 'vant'
 import { _throttle } from '../../utils/tool'
 
 import ClueItem from '../../components/CustomerManage/clueItem'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
-import  HelperFileLine  from "./comTip/helperFileLine";
-import  Fujian  from "./comTip/fujian";
+import HelperFileLine from './comTip/helperFileLine'
+import Fujian from './comTip/fujian'
 import TimelineTabDiy from '../../components/CustomerManage/timelineTabDiy'
 export default {
   data() {
     return {
       timeLineList: [],
       contentType: 0,
-      navList: [ '线索动态', '协作人',  '附件' ],
+      navList: ['线索动态', '协作人', '附件'],
       dynamicContentType: 1,
-      dynamicNavList: [ '全部', '线索动态', '跟进记录' ],
+      dynamicNavList: ['全部', '线索动态', '跟进记录'],
       show: false,
       isShowDialog: null,
       titleName: '',
@@ -144,9 +115,9 @@ export default {
       options: [],
       objItem: JSON.parse(localStorage.getItem('detail')),
       btnList: [],
-      SsPop:false,
-      helperName:'',
-     }
+      SsPop: false,
+      helperName: '',
+    }
   },
   created() {
     this.btnList = JSON.parse(this.$route.query.mylist)
@@ -157,29 +128,29 @@ export default {
   provide() {
     return {
       showCompany: this.showCompany,
-      goDetail: this.goDetail
+      goDetail: this.goDetail,
     }
   },
   methods: {
-  	openSsPop(){
-  		this.SsPop = true;
-  	},
-  	onConfirm(value, index) {
-     // console.log(`当前值：${value}, 当前索引：${index}`);
+    openSsPop() {
+      this.SsPop = true
+    },
+    onConfirm(value, index) {
+      // console.log(`当前值：${value}, 当前索引：${index}`);
       console.log(value)
-				this.userNo = value.userNo
-       this.helperName = value.name
-   			this.SsPop = false;
+      this.userNo = value.userNo
+      this.helperName = value.name
+      this.SsPop = false
     },
     onChange(picker, value, index) {
-    	/*console.log(value)
+      /*console.log(value)
       console.log(`当前值：${value}, 当前索引：${index}`);*/
     },
     onCancel() {
-    	this.SsPop = false;
-      console.log('取消');
+      this.SsPop = false
+      console.log('取消')
     },
-  	transCustom() {
+    transCustom() {
       this.$router.push({
         path: 'turnCustomer',
         query: {
@@ -190,7 +161,7 @@ export default {
     },
     // 导航切换
     changeNav(index) {
-    	console.log('contentType---->',index)
+      console.log('contentType---->', index)
       this.contentType = index
     },
     goBack() {
@@ -201,7 +172,10 @@ export default {
     goDetail() {
       this.$router.push({
         path: 'CuleFileGo',
-        query: { type: this.$route.query.type, mylist: JSON.stringify(this.btnList) },
+        query: {
+          type: this.$route.query.type,
+          mylist: JSON.stringify(this.btnList),
+        },
       })
     },
     cancelIcon() {
@@ -233,13 +207,14 @@ export default {
     giveUp() {
       this.$dialog
         .confirm({
-          title: '放弃警告',
+          title: '是否放弃至公海',
           message:
-            '是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
+            '放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
+          confirmButtonColor: '#4168f6',
           className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          // messageAlign: 'left',
         })
         .then(() => {
           this.$network
@@ -260,7 +235,7 @@ export default {
         .catch(() => {})
     },
     fnChangeUser(val) {
-    	console.log('fnChangeUser',val)
+      console.log('fnChangeUser', val)
       this.userNo = val.userNo
     },
     closeDialog(v) {
@@ -323,7 +298,7 @@ export default {
     HelperFileLine,
     Fujian,
     TimelineTabDiy,
-  }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -364,7 +339,7 @@ export default {
     width: 100%;
     max-width: 750px;
     background-color: #fff;
-    border-top: 2px solid #F0F2F7;
+    border-top: 2px solid #f0f2f7;
     z-index: 9;
     position: fixed;
     left: 50%;
@@ -383,7 +358,7 @@ export default {
       }
       span {
         font-size: 20px;
-        color: #3C4353;
+        color: #3c4353;
       }
     }
   }
@@ -391,31 +366,31 @@ export default {
     margin-top: 24px;
     background-color: #fff;
     .header-nav {
-        display: flex;
-        width: 100%;
-        height: 100px;
-        margin-bottom: 24px;
-        border-bottom: 1px solid #F0F2F7;
-        li {
-            flex: 1;
-            height: 100%;
-            line-height: 100px;
-            text-align: center;
-            span {
-                display: inline-block;
-                height: 100%;
-                margin: 0 auto;
-                color: #838A9D;
-                font-size: 28px;
-                font-weight: 600;
-            }
+      display: flex;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f0f2f7;
+      li {
+        flex: 1;
+        height: 100%;
+        line-height: 100px;
+        text-align: center;
+        span {
+          display: inline-block;
+          height: 100%;
+          margin: 0 auto;
+          color: #838a9d;
+          font-size: 28px;
+          font-weight: 600;
         }
-        .active {
-            span {
-                color: #4168F6;
-                border-bottom: 4px solid #4168F6;
-            }
+      }
+      .active {
+        span {
+          color: #4168f6;
+          border-bottom: 4px solid #4168f6;
         }
+      }
     }
   }
 
@@ -455,14 +430,14 @@ export default {
         font-size: 28px;
         font-weight: 600;
         .nowUser {
-        		display: inline-block;
-						margin-left: 38px;
-						margin-bottom: 25px;
-						margin-top: 15px;
-						font-size: 30px;
-						font-weight: 400;
-						color:  #3C4353;
-         /* padding-left: 20px;
+          display: inline-block;
+          margin-left: 38px;
+          margin-bottom: 25px;
+          margin-top: 15px;
+          font-size: 30px;
+          font-weight: 400;
+          color: #3c4353;
+          /* padding-left: 20px;
           margin-bottom: 28px;
           span {
             display: inline-block;
@@ -515,32 +490,34 @@ export default {
     }
   }
 }
-.changeSsSec{
-	    height: 80px;
-    	font-size: 30px;
-    	padding-left: 15px;
-    	border-radius: 8px;
-    	margin-left: 17px;
-    	color: #C0C4CC ;
-    	line-height: 80px;
-    	background: #FFFFFF;
-			border: 2px solid #D9DAE4;
-			border-radius: 8px;
-			width: 440px;
+.changeSsSec {
+  height: 80px;
+  font-size: 30px;
+  padding-left: 15px;
+  border-radius: 8px;
+  margin-left: 17px;
+  color: #c0c4cc;
+  line-height: 80px;
+  background: #ffffff;
+  border: 2px solid #d9dae4;
+  border-radius: 8px;
+  width: 440px;
 }
-.pleSs{
-	display: inline-block;
-	margin-left: 23px;
-	margin-bottom: 25px;
-	margin-top: 15px;
-	font-size: 30px;
-	font-weight: 400;
-	color:  #3C4353;
+.pleSs {
+  display: inline-block;
+  margin-left: 23px;
+  margin-bottom: 25px;
+  margin-top: 15px;
+  font-size: 30px;
+  font-weight: 400;
+  color: #3c4353;
 }
 </style>
 <style lang="less">
 .customer-data {
-  .customInfo, .detailInfo, .tjry {
+  .customInfo,
+  .detailInfo,
+  .tjry {
     padding: 0 24px;
   }
 }

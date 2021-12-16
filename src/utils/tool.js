@@ -173,12 +173,7 @@ export function handleMoney(num) {
 }
 
 // 分享消息到当前会话
-export function sendChatMessage(
-    msgtype,
-    enterChat,
-    content,
-    imageId,
-) {
+export function sendChatMessage(msgtype, enterChat, content, imageId) {
     Getticket({ url: location.href }).then((res) => {
         Toast.loading({
             message: '',
@@ -241,7 +236,70 @@ export function sendChatMessage(
         })
     })
 }
-
+// 企业微信分享
+export function qwShare(showShare, title, link, imgUrl, desc) {
+    Getticket({ url: location.href }).then((res) => {
+        wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: ['invoke', 'onMenuShareAppMessage', 'onMenuShareTimeline'],
+        })
+        wx.ready(function() {
+            if (showShare) {
+                wx.showOptionMenu()
+            } else {
+                wx.hideOptionMenu()
+            }
+            // 获取“转发”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareAppMessage({
+                    title,
+                    desc,
+                    link, // 分享链接；在微信上分享时，该链接的域名必须与企业某个应用的可信域名一致
+                    imgUrl,
+                    success: function() {
+                        console.log('转发成功')
+                    },
+                    cancel: function() {
+                        console.log('转发取消')
+                    },
+                })
+                // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
+            wx.onMenuShareTimeline({
+                title,
+                link, // 分享链接；在微信上分享时，该链接的域名必须与企业某个应用的可信域名一致
+                imgUrl,
+                success: function() {
+                    console.log('朋友圈分享成功')
+                },
+                cancel: function() {
+                    console.log('朋友圈分享取消')
+                },
+            })
+        })
+    })
+}
+// 隐藏企业微信右上角三个点按钮
+export function hideQwOptionMenu() {
+    Getticket({ url: location.href }).then((res) => {
+        wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [],
+        })
+        wx.ready(function() {
+            wx.hideOptionMenu()
+        })
+    })
+}
+// 微信分享
 export async function wxShare(title, link, imgUrl, desc) {
     let { appId, timestamp, nonceStr, signature } = await getSignature()
 
@@ -298,20 +356,21 @@ async function getSignature() {
     }
 }
 
-export function IsURL (str_url) { 
-    let strRegex = '^((https|http|ftp|rtsp|mms)?://)' 
-    + '?(([0-9a-z_!~*\'().&=+$%-]+: )?[0-9a-z_!~*\'().&=+$%-]+@)?' //ftp的user@ 
-    + '(([0-9]{1,3}.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184 
-    + '|' // 允许IP和DOMAIN（域名） 
-    + '([0-9a-z_!~*\'()-]+.)*' // 域名- www. 
-    + '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' // 二级域名 
-    + '[a-z]{2,6})' // first level domain- .com or .museum 
-    + '(:[0-9]{1,4})?' // 端口- :80 
-    + '((/?)|' // a slash isn't required if there is no file name 
-    + '(/[0-9a-zA-Z_!~*\'().;?:@&=+$,%#-]+)+/?)$'
+export function IsURL(str_url) {
+    let strRegex =
+        '^((https|http|ftp|rtsp|mms)?://)' +
+        "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" + //ftp的user@
+        '(([0-9]{1,3}.){3}[0-9]{1,3}' + // IP形式的URL- 199.194.52.184
+        '|' + // 允许IP和DOMAIN（域名）
+        "([0-9a-z_!~*'()-]+.)*" + // 域名- www.
+        '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' + // 二级域名
+        '[a-z]{2,6})' + // first level domain- .com or .museum
+        '(:[0-9]{1,4})?' + // 端口- :80
+        '((/?)|' + // a slash isn't required if there is no file name
+        "(/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+/?)$"
 
     let re = new RegExp(strRegex)
-    
+
     return re.test(str_url)
 }
 
@@ -333,9 +392,21 @@ export function getFileType(name) {
 }
 // 获取素材不同类型文件默认封面图
 export function getFileDefaultCover(name) {
-    let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png', wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png', excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png', pdfUrl = 'https://test-h5.jzcrm.com/static/img/default_pdf2.png', fileUrl = 'https://test-h5.jzcrm.com/static/img/default_file.png'
+    let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png',
+        wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png',
+        excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png',
+        pdfUrl = 'https://test-h5.jzcrm.com/static/img/default_pdf2.png',
+        fileUrl = 'https://test-h5.jzcrm.com/static/img/default_file.png'
 
-    return getFileType(name) == 1 ? pptUrl : getFileType(name) == 2 ? wordUrl : getFileType(name) == 3 ? excelUrl : getFileType(name) == 4 ? pdfUrl : fileUrl
+    return getFileType(name) == 1 ?
+        pptUrl :
+        getFileType(name) == 2 ?
+        wordUrl :
+        getFileType(name) == 3 ?
+        excelUrl :
+        getFileType(name) == 4 ?
+        pdfUrl :
+        fileUrl
 }
 // 返回压缩后的图片二进制流（blob）
 export async function getImgBlob(file, type, mx, mh) {
@@ -368,10 +439,10 @@ function readImg(file) {
 /**
  * 压缩图片
  *@param img 被压缩的img对象
-* @param type 压缩后转换的文件类型
-* @param mx 触发压缩的图片最大宽度限制
-* @param mh 触发压缩的图片最大高度限制
-*/
+ * @param type 压缩后转换的文件类型
+ * @param mx 触发压缩的图片最大宽度限制
+ * @param mh 触发压缩的图片最大高度限制
+ */
 function compressImg(img, type, mx, mh) {
     return new Promise((resolve, reject) => {
         const canvas = document.createElement('canvas')
@@ -380,7 +451,7 @@ function compressImg(img, type, mx, mh) {
         // 最大尺寸限制
         const maxWidth = mx
         const maxHeight = mh
-        // 目标尺寸
+            // 目标尺寸
         let targetWidth = originWidth
         let targetHeight = originHeight
 
@@ -398,10 +469,10 @@ function compressImg(img, type, mx, mh) {
         canvas.width = targetWidth
         canvas.height = targetHeight
         context.clearRect(0, 0, targetWidth, targetHeight)
-        // 图片绘制
+            // 图片绘制
         context.drawImage(img, 0, 0, targetWidth, targetHeight)
         canvas.toBlob(function(blob) {
             resolve(blob)
-        }, type || 'image/png') 
+        }, type || 'image/png')
     })
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="friendWarp" >
+  <div class="friendWarp">
     <div class="headerTitle">
       <div class="backPage" @click="goBack">
         <van-icon name="arrow-left" />
@@ -14,10 +14,12 @@
       <span>每位客户的朋友圈每个月最多展示4条企业发表的内容</span>
       <van-icon name="cross" @click="fnClose=false" />
     </div>
-     <div class="friendtite">
+    <div class="friendtite">
       <div class="titeFlex">
         <div class="title"><span style="color:red">*</span> 标题：</div>
-        <div> <el-input v-model="linkhref.hrefTitle"></el-input> </div>
+        <div>
+          <el-input v-model="linkhref.hrefTitle"></el-input>
+        </div>
       </div>
     </div>
     <div class="friendText">
@@ -27,9 +29,9 @@
     <div class="materialBox">
       <div class="title">素材类型</div>
       <div class="tabBtn">
-        <span class="box" :class="tab=='image'? 'active':''" @click="tab = 'image'">图片</span>
-        <span class="box" :class="tab=='video'? 'active':''" @click="tab = 'video'">视频</span>
-        <span class="box" :class="tab=='link'? 'active':''" @click="tab = 'link'">链接</span>
+        <!-- <span class="box" :class="tab=='image'? 'active':''" @click="goToMaterials('image')">图片</span>
+        <span class="box" :class="tab=='video'? 'active':''" @click="goToMaterials('video')">视频</span>
+        <span class="box" :class="tab=='link'? 'active':''" @click="goToMaterials('link')">链接</span> -->
         <span class="box" :class="tab=='material'? 'active':''" @click="goToMaterial('material')">素材库</span>
       </div>
       <div class="uploadImg">
@@ -79,97 +81,91 @@
             <input v-model="inputUrl" @input="inputUrl=inputUrl.replace(/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]|[^\S+$]/g,'')"
                    placeholder="链接地址请以http或https开头" />
           </div> -->
-      
-             <!-- <template > -->
-                <el-form ref="form" :model="linkhref">
-              <el-input class="marB-24" v-model="linkhref.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
-             
-                <el-form-item label="链接标题 :" :rules="[
+
+          <!-- <template > -->
+          <el-form ref="form" :model="linkhref">
+            <el-input class="marB-24" v-model="linkhref.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
+
+            <el-form-item label="链接标题 :" :rules="[
                 { required: true,}]">
-                  
-                  <el-input
-                    v-model="linkhref.hrefTitle"
-                    placeholder="请输入链接标题"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接摘要 :">
-                  <el-input
-                    v-model="linkhref.hrefDesc"
-                    placeholder="请输入链接摘要"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="链接封面 :" class="upload_avatar">
-                 <!-- <div class="cover_warp">
+
+              <el-input v-model="linkhref.hrefTitle" placeholder="请输入链接标题"></el-input>
+            </el-form-item>
+            <el-form-item label="链接摘要 :">
+              <el-input v-model="linkhref.hrefDesc" placeholder="请输入链接摘要"></el-input>
+            </el-form-item>
+            <el-form-item label="链接封面 :" class="upload_avatar">
+              <!-- <div class="cover_warp">
                    <div class="up">重新上传</div> -->
-                     <!-- <input class="file" type="file" @change="uploadFun($event,'image','friend','png,jpg,jpeg','10')" accept=".png,.jpg,.jpeg"
+              <!-- <input class="file" type="file" @change="uploadFun($event,'image','friend','png,jpg,jpeg','10')" accept=".png,.jpg,.jpeg"
                        multiple="multiple" />  -->
-                       <!-- <van-uploader v-model="linkhref.hrefPic" :deletable="false"	:after-read="afterRead" :max-count="1" >
+              <!-- <van-uploader v-model="linkhref.hrefPic" :deletable="false"	:after-read="afterRead" :max-count="1" >
                          <div class="resetUpload">重新上传</div>
                          </van-uploader>               -->
-                   <!-- <img src="../../assets/images/delte.png" alt="" class="delte_icon" @click="deletClick"> -->
-                  
-                 <!-- </div> -->
-                 <div class="demo-input-suffix">
-            <el-upload class="avatar-uploader" action="#" :show-file-list="false" :http-request="handleAvatarSuccess">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <div class="resetUpload" v-show="imageUrl">重新上传</div>
-            </el-upload>
-            <img src="../../images/dele.png" alt="" v-if="imageUrl" class="el-icon-circle-close" @click="deleteImg">
-          </div>
-                </el-form-item>
-              </el-form>
-            <!-- </template> -->
+              <!-- <img src="../../assets/images/delte.png" alt="" class="delte_icon" @click="deletClick"> -->
+
+              <!-- </div> -->
+              <div class="demo-input-suffix">
+                <el-upload class="avatar-uploader" action="#" :show-file-list="false" :http-request="handleAvatarSuccess">
+                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                  <div class="resetUpload" v-show="imageUrl">重新上传</div>
+                </el-upload>
+                <img src="../../images/dele.png" alt="" v-if="imageUrl" class="el-icon-circle-close" @click="deleteImg">
+              </div>
+            </el-form-item>
+          </el-form>
+          <!-- </template> -->
         </div>
-          <div class="upload_wrap" v-if="tab == 'material'">
-            <!-- <Coumpontmaterial /> -->
-              <div class="article_warp" v-if="materialList.tab == 1">
-                 <div class="article_text">
-                   <div>文章:</div>
-                   <div class="tites">{{materialList.title}}</div>
-                   <div class="article_color" @click="goToMaterial('material')">重新选择</div>
-                 </div>
-                 <div class="article_flex" >
-                   <div>
-                      <p class="tite">{{materialList.title}}</p>
-                      <p class="link_box">{{materialList.contentAbstract}}</p>
-                   </div>
-                   <div>
-                     <img :src="materialList.cover" alt="">
-                   </div>
-                 </div>
+        <div class="upload_wrap" v-if="tab == 'material'">
+          <!-- <Coumpontmaterial /> -->
+          <div class="article_warp" v-if="materialList.tab == 1">
+            <div class="article_text">
+              <div>文章:</div>
+              <div class="tites">{{materialList.title}}</div>
+              <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+            </div>
+            <div class="article_flex">
+              <div>
+                <p class="tite">{{materialList.title}}</p>
+                <p class="link_box">{{materialList.contentAbstract}}</p>
               </div>
-                    <div class="article_warp" v-if="materialList.tab == 2">
-                 <div class="article_text">
-                   <div>文件:</div>
-                   <div class="tites">{{materialList.name}}</div>
-                   <div class="article_color" @click="goToMaterial('material')">重新选择</div>
-                 </div>
-                 <div class="article_flex">
-                   <div>
-                     <img src="../../assets/images/pdf_image.png" alt="">
-                   </div>
-                   <div>
-                      <p class="tite">{{materialList.name}}</p>
-                      <p class="link_box">{{(materialList.fileSize/1024).toFixed(2)}}kbs</p>
-                   </div>
-                   
-                 </div>
+              <div>
+                <img :src="materialList.cover" alt="">
               </div>
-                       <div class="article_warp" v-if="materialList.tab == 3">
-                 <div class="article_text">
-                   <div>海报:</div>
-                   <div class="tites">{{materialList.posterName}}</div>
-                   
-                 </div>
-                 <div class="article_img">
-                   <div>
-                     <img :src="materialList.posterUrl" alt="">
-                   </div>
-                    <div class="article_color" @click="goToMaterial('material')">重新选择</div>
-                 </div>
+            </div>
+          </div>
+          <div class="article_warp" v-if="materialList.tab == 2">
+            <div class="article_text">
+              <div>文件:</div>
+              <div class="tites">{{materialList.name}}</div>
+              <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+            </div>
+            <div class="article_flex">
+              <div>
+                <img src="../../assets/images/pdf_image.png" alt="">
               </div>
-               
+              <div>
+                <p class="tite">{{materialList.name}}</p>
+                <p class="link_box">{{(materialList.fileSize/1024).toFixed(2)}}kbs</p>
+              </div>
+
+            </div>
+          </div>
+          <div class="article_warp" v-if="materialList.tab == 3">
+            <div class="article_text">
+              <div>海报:</div>
+              <div class="tites">{{materialList.posterName}}</div>
+
+            </div>
+            <div class="article_img">
+              <div>
+                <img :src="materialList.posterUrl" alt="">
+              </div>
+              <div class="article_color" @click="goToMaterial('material')">重新选择</div>
+            </div>
+          </div>
+
         </div>
         <div class="botText">
           <div class="look">
@@ -194,47 +190,55 @@ export default {
   // },
   data() {
     return {
-      imageUrl:"",
+      imageUrl: '',
       fnClose: true,
       textVal: '',
-      tab: 'image',
+      tab: '',
       lists: [],
       videoUrl: '',
       url: '',
       inputUrl: '',
-       linkhref:{
-          href:"",
-          hrefTitle:"",
-          hrefDesc:"",
-          hrefurl:""
-       },
-    materialList:[],
+      linkhref: {
+        href: '',
+        hrefTitle: '',
+        hrefDesc: '',
+        hrefurl: '',
+      },
+      materialList: [],
       shareUrlOrigin: '',
       //  loading:false,
     }
   },
-    //   computed: {
-    //     ...mapState(["corpId", "userNo"]),
-    // },
-  created(){
-    this.materialList =  this.$route.query.datalist
-     console.log(this.materialList,"000")
-     if(this.materialList){
-      if(this.materialList.tab == 1){
-         this.linkhref.hrefTitle =  this.materialList.title
-      }else if (this.materialList.tab == 2){
-          this.linkhref.hrefTitle =  this.materialList.name
-      }else{
-          this.linkhref.hrefTitle =  this.materialList.posterName
+  //   computed: {
+  //     ...mapState(["corpId", "userNo"]),
+  // },
+  created() {
+    this.materialList = this.$route.query.datalist
+    console.log(this.materialList, '000')
+    if (this.materialList) {
+      if (this.materialList.tab == 1) {
+        this.linkhref.hrefTitle = this.materialList.title
+      } else if (this.materialList.tab == 2) {
+        this.linkhref.hrefTitle = this.materialList.name
+      } else {
+        this.linkhref.hrefTitle = this.materialList.posterName
       }
-      
-      console.log(toString(this.$route.query.datalist),"000000---")
+
+      console.log(toString(this.$route.query.datalist), '000000---')
       this.tab = this.$route.query.tablable || 'image'
     }
   },
   methods: {
-       afterRead(obj, file) {
-      
+    goToMaterials(val) {
+      this.tab = val
+      if ((this.tab = val)) {
+        this.linkhref.hrefTitle = ''
+      } else {
+        this.linkhref.hrefTitle = ''
+      }
+      console.log(val)
+    },
+    afterRead(obj, file) {
       console.log(file, '------------')
       console.log(obj, '------------obj')
       let formData = new FormData()
@@ -250,9 +254,7 @@ export default {
         .post('/common-service/oss/uploadfileparam', formData, config)
         .then((res) => {
           if (res.result) {
-          
             console.log(res, '------------图片')
-      
           }
         })
       // console.log(this.listImg, "----222--------");
@@ -260,27 +262,26 @@ export default {
     goBack() {
       this.$router.push('/home')
     },
-    deletClick(){
-       this.linkhref.hrefPic =[]
+    deletClick() {
+      this.linkhref.hrefPic = []
     },
-    blurUrl(){
-       this.$toast.loading()
-       let params = {
-         articleUrl: window.btoa(this.linkhref.href)
-       } 
-         this.$network
+    blurUrl() {
+      this.$toast.loading()
+      let params = {
+        articleUrl: window.btoa(this.linkhref.href),
+      }
+      this.$network
         .get('/material-service/article/wechat_article', params)
         .then((res) => {
-          if(res.result){
-             console.log(res, '------------')
-            this.linkhref.hrefTitle =res.data.title
-            this.linkhref.hrefDesc =res.data.contentAbstract
-            this.imageUrl =res.data.cover
+          if (res.result) {
+            console.log(res, '------------')
+            this.linkhref.hrefTitle = res.data.title
+            this.linkhref.hrefDesc = res.data.contentAbstract
+            this.imageUrl = res.data.cover
             this.linkhref.hrefurl = res.data.cover
-          }else{
-              this.$toast(res.msg)
+          } else {
+            this.$toast(res.msg)
           }
-           
         })
     },
     goToMaterial(v) {
@@ -288,103 +289,108 @@ export default {
       this.$router.push('mterialPage')
     },
     sendMessage: _throttle(function () {
-      
       let imgArr = []
-        if(this.tab == "material"){
+      if (this.tab == 'material') {
         if (window.location.origin == 'https://console.jzcrm.com') {
-        this.shareUrlOrigin = 'https://h5.jzcrm.com'
-      } else {
-        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
-      }
- 
-          
-              if (this.materialList.tab == 1) {
+          this.shareUrlOrigin = 'https://h5.jzcrm.com'
+        } else {
+          this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
+        }
+
+        if (this.materialList.tab == 1) {
           imgArr = [
             {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.articleId}&type=${this.materialList.tab}&corpId=${localStorage.getItem('corpId')}`,
+              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${
+                this.materialList.articleId
+              }&type=${this.materialList.tab}&corpId=${localStorage.getItem(
+                'corpId'
+              )}`,
               ...this.materialList,
             },
           ]
-            console.log(imgArr,"---l素材 ",this.shareUrlOrigin)
+          console.log(imgArr, '---l素材 ', this.shareUrlOrigin)
         } else if (this.materialList.tab == 2) {
           imgArr = [
             {
-              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${this.materialList.documentId}&type=${this.materialList.tab}&corpId=${localStorage.getItem('corpId')}`,
-              ...this.materialList
+              url: `${this.shareUrlOrigin}/materialTemplate?materialId=${
+                this.materialList.documentId
+              }&type=${this.materialList.tab}&corpId=${localStorage.getItem(
+                'corpId'
+              )}`,
+              ...this.materialList,
             },
           ]
         } else {
           imgArr = [this.materialList]
         }
-         }
+      }
       //   console.log(imgArr,"--------kkk")
       let materialList = []
-    
+
       if (this.tab == 'image') {
         imgArr = this.lists
       } else if (this.tab == 'video') {
         imgArr = [this.videoUrl]
-      } else if(this.tab == 'link'){
+      } else if (this.tab == 'link') {
         // imgArr = [this.inputUrl]
         // imgArr = this.linkhref
-        imgArr =[
-            this.linkhref.href,
-              this.imageUrl,
-            this.linkhref.hrefTitle,
-            this.linkhref.hrefDesc,
-          
+        imgArr = [
+          this.linkhref.href,
+          this.imageUrl,
+          this.linkhref.hrefTitle,
+          this.linkhref.hrefDesc,
         ]
       }
-        // }
+      // }
       // else{
       //    materialList.push( this.materialList)
       let params
-     if(this.tab == "material"){
-             params = {
-              content: this.textVal,
-              // urls: imgArr,
-              title:this.linkhref.hrefTitle,
-              msgtype: this.tab,
-              urlList:imgArr 
-      }
-        }else{
-              params = {
-                content: this.textVal,
-                urls: imgArr,
-                title:this.linkhref.hrefTitle,
-                msgtype: this.tab,
-                // urlList:imgArr 
-              }
+      if (this.tab == 'material') {
+        params = {
+          content: this.textVal,
+          // urls: imgArr,
+          title: this.linkhref.hrefTitle,
+          msgtype: this.tab,
+          urlList: imgArr,
         }
+      } else {
+        params = {
+          content: this.textVal,
+          urls: imgArr,
+          title: this.linkhref.hrefTitle,
+          msgtype: this.tab,
+          // urlList:imgArr
+        }
+      }
       // let params = {
       //   content: this.textVal,
       //   // urls: imgArr,
       //   title:this.linkhref.hrefTitle,
       //   msgtype: this.tab,
-      //   urlList:imgArr 
+      //   urlList:imgArr
       // }
-      if(this.linkhref.hrefTitle == ''){
-         this.$toast("请输入标题")
-      }else{
-          //  this.loading = true
-      if(this.linkhref.hrefTitle == "" && this.tab == "link"){
-        this.$toast("请输入链接标题")
-      }else{
-            addFriendStrong(params).then((res) => {
-        if (res.result) {
-            // this.loading = false
-          Notify({
-            message: '创建成功',
-            type: 'success',
-            duration: 1000,
-            // className: 'msgTitle',
-            // background: '#52BD94',
+      if (this.linkhref.hrefTitle == '') {
+        this.$toast('请输入标题')
+      } else {
+        //  this.loading = true
+        if (this.linkhref.hrefTitle == '' && this.tab == 'link') {
+          this.$toast('请输入链接标题')
+        } else {
+          addFriendStrong(params).then((res) => {
+            if (res.result) {
+              // this.loading = false
+              Notify({
+                message: '创建成功',
+                type: 'success',
+                duration: 1000,
+                // className: 'msgTitle',
+                // background: '#52BD94',
+              })
+              this.$router.push('/home')
+            }
           })
-          this.$router.push('/home')
         }
-      })
       }
-    }
     }, 5000),
     // sendMessage() {},
     fnDeleteImg(v, i) {
@@ -405,24 +411,24 @@ export default {
     //   // console.log(isJPG, isLt2M)
     //   return isJPG && isLt2M;
     // },
-        handleAvatarSuccess(request) {
+    handleAvatarSuccess(request) {
       // console.log('--2----', request)
       this.$toast.loading({ duration: 0 })
       // if (this.beforeAvatarUpload(request.file)) {
-        let formData = new FormData()
-        formData.append('file', request.file)
-        formData.append('filetype', 'image')
-        formData.append('type', 'friend')
-        uploadFile(formData).then((res) => {
-          if (res.result) {
-            this.imageUrl = res.data.url
-            this.linkhref.hrefurl = res.data.url
-            this.$toast.clear()
-          }
-        })
+      let formData = new FormData()
+      formData.append('file', request.file)
+      formData.append('filetype', 'image')
+      formData.append('type', 'friend')
+      uploadFile(formData).then((res) => {
+        if (res.result) {
+          this.imageUrl = res.data.url
+          this.linkhref.hrefurl = res.data.url
+          this.$toast.clear()
+        }
+      })
       // }
     },
-       deleteImg() {
+    deleteImg() {
       this.imageUrl = ''
     },
     uploadFun(e, fileType, type, accept, size) {
@@ -512,7 +518,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
 .friendWarp {
   padding-top: 87px;
   min-height: 100vh;
@@ -575,19 +580,18 @@ export default {
       width: 34px;
     }
   }
-  .friendtite{
-     background: #fff;
+  .friendtite {
+    background: #fff;
     padding: 32px 32px 0;
-        .titeFlex{
+    .titeFlex {
       display: flex;
       align-items: center;
     }
-    .el-input{
+    .el-input {
       width: 550px;
     }
   }
   .friendText {
-  
     background: #fff;
     padding: 32px;
     .van-cell {
@@ -598,6 +602,7 @@ export default {
     font-size: 28px;
     font-weight: 600;
     color: #3c4353;
+    margin-bottom: 16px;
   }
   .materialBox {
     height: 100vh;
@@ -630,71 +635,71 @@ export default {
     .uploadImg {
       background: #fff;
       .upload_wrap {
-        .article_warp{
-              .article_img{
-      display: flex;
-      align-items: end;
-      margin-top: 24px;
-      img{
-        width: 200px;
-        height: 200px;
-      }
-      .article_color{
-        margin-left: 24px;
-        font-weight: 400;
-        color: #4168F6;
-        font-size: 28px;
-      }
-    }
-          .article_text{
-             color: #3C4353;
-             line-height: 40px;
-             font-size: 28px;
-             display: flex;
-             .article_color{
-               color: #4168F6;
-               margin-left: 24px;
-             }
-             .tites{
-               margin-left: 18px;
-               overflow: hidden;
-               text-overflow:ellipsis;
-               white-space: nowrap;
-               width: 120px;
-             }
+        .article_warp {
+          .article_img {
+            display: flex;
+            align-items: end;
+            margin-top: 24px;
+            img {
+              width: 200px;
+              height: 200px;
+            }
+            .article_color {
+              margin-left: 24px;
+              font-weight: 400;
+              color: #4168f6;
+              font-size: 28px;
+            }
           }
-          .article_flex{
-             width: 686px;
-             height: 168px;
-             background: #FFFFFF;
-             border: 1px solid #D9DAE4;
-             display: flex;
-             align-items: center;
-              justify-content: space-evenly;
-              margin-top: 24px;
-             .tite{
-               font-weight: 400;
-               color: #3C4353;
-               font-size: 28px;
-               margin-bottom: 24px;
-                overflow: hidden;
-               text-overflow:ellipsis;
-               white-space: nowrap;
-               width: 500px;
-             }
-             .link_box{
-               overflow: hidden;
-               text-overflow:ellipsis;
-               white-space: nowrap;
-               font-weight: 400;
-               color: #C0C4CC;
-               font-size: 24px;
-               width: 525px;
-             }
-             img{
-               width: 100px;
-               height: 100px;
-             }
+          .article_text {
+            color: #3c4353;
+            line-height: 40px;
+            font-size: 28px;
+            display: flex;
+            .article_color {
+              color: #4168f6;
+              margin-left: 24px;
+            }
+            .tites {
+              margin-left: 18px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              width: 120px;
+            }
+          }
+          .article_flex {
+            width: 686px;
+            height: 168px;
+            background: #ffffff;
+            border: 1px solid #d9dae4;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            margin-top: 24px;
+            .tite {
+              font-weight: 400;
+              color: #3c4353;
+              font-size: 28px;
+              margin-bottom: 24px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              width: 500px;
+            }
+            .link_box {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              font-weight: 400;
+              color: #c0c4cc;
+              font-size: 24px;
+              width: 525px;
+            }
+            img {
+              width: 100px;
+              height: 100px;
+            }
           }
         }
         margin-top: 36px;
@@ -820,19 +825,19 @@ export default {
         }
       }
       .link_wrap {
-        .el-form{
-          .el-form-item{
-              /deep/ .el-form-item__label{
-             padding: 0 2px 0 0;
-             width: 160px;
-        }
+        .el-form {
+          .el-form-item {
+            /deep/ .el-form-item__label {
+              padding: 0 2px 0 0;
+              width: 160px;
+            }
           }
         }
-     
+
         margin-top: 36px;
         line-height: 80px;
         padding: 0 24px;
-        .marB-24{
+        .marB-24 {
           margin-bottom: 24px;
         }
         .input_item {
@@ -846,87 +851,86 @@ export default {
         .input_box {
           width: 100%;
         }
-        .el-form{
-          .el-form-item{
+        .el-form {
+          .el-form-item {
             display: flex;
-            .el-input{
+            .el-input {
               width: 545px;
             }
           }
         }
-        .cover_warp{
+        .cover_warp {
           // position: relative;
           // width: 182px;
           // height: 182px;
           // border-radius: 4px;
           // border: 1px solid #D9DAE4;
-          .delte_icon{
+          .delte_icon {
             width: 28px;
             width: 28px;
             position: absolute;
             top: -10px;
             right: 0px;
             background: #fff;
-           border-radius: 50%;
+            border-radius: 50%;
           }
-          .file{
-            
+          .file {
           }
         }
-         .upload_avatar {
-        height: 182px;
-        .demo-input-suffix {
-          display: flex;
-          position: relative;
-        }
-        /deep/.avatar-uploader .el-upload {
-          border: 1px dashed #d9d9d9;
-          width: 182px;
+        .upload_avatar {
           height: 182px;
-          border-radius: 6px;
-          cursor: pointer;
-          overflow: hidden;
+          .demo-input-suffix {
+            display: flex;
+            position: relative;
+          }
+          /deep/.avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            width: 182px;
+            height: 182px;
+            border-radius: 6px;
+            cursor: pointer;
+            overflow: hidden;
+          }
+          .avatar-uploader .el-upload:hover {
+            border-color: #409eff;
+          }
+          .avatar-uploader-icon {
+            font-size: 40px;
+            color: #8c939d;
+            line-height: 182px;
+            text-align: center;
+          }
+          .avatar {
+            width: 100%;
+            height: 100%;
+          }
+          .resetUpload {
+            position: absolute;
+            left: 190px;
+            bottom: 0;
+            font-size: 28px;
+            color: #4168f6;
+            cursor: pointer;
+            width: 150px;
+          }
+          .el-icon-circle-close {
+            position: absolute;
+            left: 165px;
+            top: -8px;
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+          }
+          .imgTip {
+            font-size: 14px;
+            color: #c0c4cc;
+            letter-spacing: 0;
+            font-weight: 400;
+            position: absolute;
+            bottom: 0;
+            left: 144px;
+          }
         }
-        .avatar-uploader .el-upload:hover {
-          border-color: #409eff;
-        }
-        .avatar-uploader-icon {
-          font-size: 40px;
-          color: #8c939d;
-          line-height: 182px;
-          text-align: center;
-        }
-        .avatar {
-          width: 100%;
-          height: 100%;
-        }
-        .resetUpload {
-          position: absolute;
-          left: 190px;
-          bottom: 0;
-          font-size: 28px;
-          color: #4168f6;
-          cursor: pointer;
-          width: 150px;
-        }
-        .el-icon-circle-close {
-          position: absolute;
-          left: 165px;
-          top: -8px;
-          cursor: pointer;
-          width: 28px;
-          height: 28px;
-        }
-        .imgTip {
-          font-size: 14px;
-          color: #c0c4cc;
-          letter-spacing: 0;
-          font-weight: 400;
-          position: absolute;
-          bottom: 0;
-          left: 144px;
-        }
-      }
       }
       .botText {
         margin-top: 120px;
@@ -952,7 +956,5 @@ export default {
       }
     }
   }
-
-  
 }
 </style>

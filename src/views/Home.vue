@@ -51,7 +51,7 @@
           <span class="nomaltext">地图获客</span>
         </div> -->
       </div>
-      <div class="customAccont manage">客户统计</div>
+      <div class="customAccont manage">客户管理</div>
       <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/customerManage/myCustomer')" v-show="menulist.includes('customer')">
           <img src="../images/kehu.png" alt="" />
@@ -74,7 +74,7 @@
       <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/talkTool/contentMaterial')" v-show="menulist.includes('material')">
           <img src="../images/neirongsucai.png" alt="" />
-          <span>内容素材</span>
+          <span>素材库</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/verbalTrickConsole')" v-show="menulist.includes('verbalTrick')">
           <img src="../images/huashuku.png" alt="" />
@@ -93,7 +93,7 @@
       <div class="btnRouter custom">
         <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
           <img src="../images/yjlqon.png" alt="" />
-          <span>一键建群</span>
+          <span>一键拉群</span>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
           <img src="../images/qunfa.png" alt="" />
@@ -103,10 +103,10 @@
           <img src="../images/qunqnfa.png" alt="" />
           <span>客户群群发</span>
         </div>
-        <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
+        <!-- <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
           <img src="../images/wcdk.png" alt="" />
           <span>拜访客户</span>
-        </div>
+        </div> -->
         <!-- <div class="commonBtn" @click="showMsg">
           <img src="../images/bfjh.png" alt="" />
           <span class="nomaltext">拜访计划</span>

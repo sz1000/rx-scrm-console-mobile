@@ -1,9 +1,9 @@
 <template>
-    <div class="material-template" :class="{pd0: !userNo}">
+    <div class="material-template" :class="{pd01: materialType == 1 && !userNo, pd02: materialType == 2 && !userNo, p0: materialType == 2 && userNo}">
         <div v-if="userNo" class="top-fixed">
             <user-info :userData="userData"></user-info>
         </div>
-        <material-content ref="materialContent"></material-content>
+        <material-content ref="materialContent" :userNo="userNo"></material-content>
     </div>
 </template>
 <script>
@@ -88,7 +88,8 @@ export default {
                 materialId: this.materialId,
                 model: {
                     materialType: this.materialType,
-                    unionId: this.unionId
+                    unionId: this.unionId,
+                    userNo: this.userNo ? this.userNo : ''
                 }
             }
 
@@ -145,7 +146,13 @@ export default {
             left: 0;
         }
     }
-    .pd0 {
+    .pd01 {
         padding-top: 28px;
+    }
+    .pd02 {
+        padding: 28px 0 32px;
+    }
+    .p0 {
+        padding: 144px 0 32px;
     }
 </style>

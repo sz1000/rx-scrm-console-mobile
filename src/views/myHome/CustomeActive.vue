@@ -30,7 +30,8 @@
     <section v-if="tab==1">
       <div class="active_btn">
         <p class="p_text">已累计激活<span>{{cumulative}}</span>个客户</p>
-        <p class="p_btn" v-if="tabName !== '已激活'" @click="fnAvtiveList">一键激活</p>
+        <!-- <p class="p_btn" v-if="tabName !== '已激活'" @click="fnAvtiveList">一键激活</p> -->
+        <p class="p_btn" v-if="list.includes(tabName)" @click="fnAvtiveList">一键激活</p>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
@@ -88,7 +89,7 @@
           已累计寻回
           <span>{{ cumulative}}</span>个客户
         </p>
-        <p class="p_btn" v-if="tabName !== '已寻回'" @click="fnReplayList">一键寻回</p>
+        <p class="p_btn" v-if="tabName == '未寻回'" @click="fnReplayList">一键寻回</p>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
@@ -107,7 +108,7 @@
                 <img src="../../images/icon_female@2x.png" alt="" v-else-if='item.gender ==2' />
                 <span v-else>未知</span>
               </div>
-              <div class="seconde_text" v-if="tabName== '已寻回'">
+              <div class="seconde_text" v-if="tabName !== '已寻回'">
                 <p>{{item.phone}}</p>
                 <p>{{item.company}}</p>
                 <p>
@@ -165,6 +166,7 @@ export default {
       tabName: '',
       id: '',
       cumulative: '',
+      list: ['从未联系', '超过1天', '超过3天', '超过1周', '超过2周'],
     }
   },
   created() {
@@ -241,6 +243,7 @@ export default {
           { name: '超过1周', id: 3 },
           { name: '超过2周', id: 4 },
           { name: '已激活', id: 5 },
+          { name: '激活中', id: 6 },
         ]
         this.tabName = this.actions[0].name
         this.id = this.actions[0].id
@@ -276,6 +279,7 @@ export default {
           this.$toast(
             `已通知所有相关成员全力激活客户，关联成员：${res.data.userCount}，激活客户：${res.data.customerCount}`
           )
+          this.getActive()
         }
       })
     },
@@ -285,6 +289,7 @@ export default {
           this.$toast(
             `已通知所有相关成员全力寻回客户，关联成员：${res.data.userCount}，寻回客户：${res.data.customerCount}`
           )
+          this.getReplayData()
         }
       })
     },
@@ -483,7 +488,7 @@ export default {
             margin-top: 8px;
             .time_one {
               display: inline-block;
-              width: 144px;
+              width: 160px;
               margin-right: 16px;
             }
             .time_two {

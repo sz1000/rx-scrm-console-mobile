@@ -278,7 +278,8 @@ img {
 }
 
 .txtCut (@line) {
-  display: -webkit-box;
+  // display: -webkit-box;
+  white-space: nowrap;
   -webkit-line-clamp: @line;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -329,104 +330,75 @@ a:hover {
 }
 
 /*客户管理 放弃、删除弹窗*/
-.commonVant {
-  .van-dialog__header {
-    text-align: left;
-    padding-left: 24px;
-    padding-top: 16px;
-    font-size: 28px;
-    font-weight: 600;
-  }
+// .commonVant {
+//   .van-dialog__header {
+//     text-align: left;
+//     padding-left: 24px;
+//     padding-top: 16px;
+//     font-size: 28px;
+//     font-weight: 600;
+//   }
 
-  .van-dialog__message {
-    // margin-top: 24px;
-    font-size: 28px;
-    line-height: 35px;
-    padding: 24px;
-  }
+//   .van-dialog__message {
+//     // margin-top: 24px;
+//     font-size: 28px;
+//     line-height: 35px;
+//     padding: 24px;
+//   }
 
-  .van-dialog__footer {
-    // height: 68px;
-    overflow: visible;
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 24px;
-    padding-top: 24px;
+//   .van-dialog__footer {
+//     // height: 68px;
+//     overflow: visible;
+//     display: flex;
+//     justify-content: flex-end;
+//     padding-right: 24px;
+//     padding-top: 24px;
 
-    .van-button--default {
-      flex: 0;
-      margin-left: 24px;
-      height: auto;
-    }
+//     .van-button--default {
+//       flex: 0;
+//       margin-left: 24px;
+//       height: auto;
+//     }
 
-    .van-dialog__cancel {
-      .van-button__content {
-        font-size: 28px;
-        margin-left: 24px;
-        background: #ffffff;
-        color: #4168f6;
-        border: 2px solid #4168f6;
-        width: 160px;
-        height: 68px;
-        border-radius: 8px;
-      }
-    }
+//     .van-dialog__cancel {
+//       .van-button__content {
+//         font-size: 28px;
+//         margin-left: 24px;
+//         background: #ffffff;
+//         color: #4168f6;
+//         border: 2px solid #4168f6;
+//         width: 160px;
+//         height: 68px;
+//         border-radius: 8px;
+//       }
+//     }
 
-    .van-dialog__confirm {
-      .van-button__content {
-        font-size: 28px;
-        background: #4168f6;
-        color: #fff;
-        border: 2px solid #fff;
-        width: 160px;
-        height: 68px;
-        border-radius: 8px;
-      }
-    }
-  }
-}
+//     .van-dialog__confirm {
+//       .van-button__content {
+//         font-size: 28px;
+//         background: #4168f6;
+//         color: #fff;
+//         border: 2px solid #fff;
+//         width: 160px;
+//         height: 68px;
+//         border-radius: 8px;
+//       }
+//     }
+//   }
+// }
 
-.clueConfirmClassLable {
-  width: 702px !important;
-}
+// .deleteBtn {
+//   width: 702px;
+//   // height: 300px;
+//   background: #ffffff;
+//   border-radius: 16px;
+//   border: 1px solid #eeeeee;
+//   // padding-bottom: 10px;
+//   font-size: 28px;
+//   padding-bottom: 20px;
+//   .commonVant();
+// }
 
-.deleteBtn {
-  width: 702px;
-  // height: 300px;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #eeeeee;
-  // padding-bottom: 10px;
-  font-size: 28px;
-  padding-bottom: 20px;
-  .commonVant();
-}
-
-.giveUpBtn {
-  width: 702px;
-  height: 326px;
-  background: #ffffff;
-  border-radius: 16px;
-  border: 1px solid #eeeeee;
-
-  .van-dialog__content {
-    height: 140px;
-
-    .message {
-      img {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
-    .van-dialog__message {
-      line-height: 40px;
-      margin-top: 0;
-    }
-  }
-
-  .commonVant();
-}
 
 /deep/.popper-select-class {
   .el-popper {
@@ -455,13 +427,6 @@ textarea {
   font-size: 24px;
 }
 
-// .detail_wrap {
-//   .van-popup--bottom {
-//     left: 50% !important;
-//     width: 50%;
-//     transform: translate(-50%, 0) !important;
-//   }
-// }
 img {
   max-width: 100%;
 }
@@ -501,4 +466,13 @@ input::-moz-placeholder {
 
 input:-ms-input-placeholder {
   color: #C0C4CC;
+}
+
+// 提示框样式修改
+.van-dialog {
+  .van-dialog__header {
+    color: #262626;
+    font-size: 32px;
+    font-weight: 600;
+  }
 }

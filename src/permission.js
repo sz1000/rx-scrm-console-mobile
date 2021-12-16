@@ -3,7 +3,7 @@ import store from '@/store'
 import { phoneModel, isWeChat, getAuthInfo, wxAgent } from '@/utils/function.js'
 var contactsList = ['/customerPortrait', '/talkTool/verbalTrick']   //需获取外部联系人id页面路由
 var groupList = ['/customerPortrait', '/talkTool/verbalTrick']      //需获取群id页面路由
-var useList = ['/notice','/notice/daily','/notice/applyHelp','/home','/customerPortrait','/informationDetail', '/talkTool/verbalTrick']       //目前可使用页面路由
+var useList = ['/notice','/notice/daily','/notice/applyHelp','/home','/customerPortrait','/informationDetail', '/talkTool/verbalTrick', '/talkTool/contentMaterial']       //目前可使用页面路由
 
 router.beforeEach(async(to, from, next) => {
     let system = phoneModel()
@@ -42,23 +42,30 @@ router.beforeEach(async(to, from, next) => {
                         console.log('card')
                         next()
                     }else{
-                        console.log('no card')
-                        getAuthInfo().then(res => {
-                            if(res.result){
-                                if(type.length > 0){
-                                    wxAgent(res,type).then(r => {
-                                        if(r){
-                                            console.log('next',store.getters)
-                                            next()
-                                        }
-                                    })
+                        let verbalTrickStr = localStorage.getItem('verbalTrick'),customerPortraitStr = localStorage.getItem('customerPortrait')
+                        console.log('no card',verbalTrickStr,customerPortraitStr)
+                        if(groupList.indexOf(to.path) > -1 && ((verbalTrickStr && verbalTrickStr.length > 5 && verbalTrickStr == to.query.code) || (customerPortraitStr && customerPortraitStr.length > 5 && customerPortraitStr == to.query.code))){
+                            console.log('is auth code y')
+                            next()
+                        }else{
+                            getAuthInfo().then(res => {
+                                if(res.result){
+                                    if(type.length > 0){
+                                        wxAgent(res,type).then(r => {
+                                            if(r){
+                                                console.log('next',store.getters)
+                                                next()
+                                            }
+                                        })
+                                    }else{
+                                        next()
+                                    }
                                 }else{
+                                    console.log('getAuthInfo error')
                                     next()
                                 }
-                            }else{
-                                console.log('error')
-                            }
-                        })
+                            })
+                        }
                     }
                 }else{
                     console.log('oh h')

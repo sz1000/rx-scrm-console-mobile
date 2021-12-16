@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">@我</span>
+      <span class="textTitle">待回复</span>
     </div>
     <div class="searchInput">
       <van-field v-model="value1" placeholder="关联客户名称">

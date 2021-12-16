@@ -1,5 +1,13 @@
 <template>
   <div class="myhome_index">
+    <!-- <div class="test_btn">
+      <div @click="clickTo(1)">群发消息给客户</div>
+      <div @click="clickTo(2)">群发消息客户群</div>
+      <div @click="clickTo(3)">添加客户界面</div>
+      <div @click="clickTo(4)">发到朋友圈</div>
+      <div @click="clickTo(5)">创建群聊并发送消息</div>
+      <div @click="clickTo(6)">打开已有群聊并发送消息</div>
+    </div> -->
     <div class="page_title">
       <div class="head_img">
         <img :src="userObj.avatar" alt="" v-if="userObj.avatar" />
@@ -54,7 +62,7 @@
         </div>
       </div>
       <div class="about_me about_shadow">
-        <span>@我</span>
+        <span>待回复</span>
         <div class="reply_text" @click="goToAbout">
           <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
@@ -185,11 +193,16 @@ export default {
       scaleData: [],
       nicheTime: [],
       nicheData: {},
+      scroll: true,
     }
   },
   created() {
     this.getData()
-    this.getAllChartList()
+  },
+  mounted() {
+    this.$nextTick(() => {
+      // window.addEventListener('scroll', this.scrollLoad)
+    })
   },
   methods: {
     getAllChartList() {
@@ -223,6 +236,7 @@ export default {
           return a.id - b.id
         })
         this.scaleData = arr
+        this.scroll = false
       })
     },
     getData() {
@@ -242,6 +256,7 @@ export default {
         // 客户增长
         this.customer = res.data.customer
         this.$toast.clear()
+        this.getAllChartList()
       })
     },
     setLineChart(data) {
@@ -346,9 +361,187 @@ export default {
         },
       })
     },
+    scrollLoad() {
+      var scrollTop = 0
+      var clientHeight = 0
+      var scrollHeight = 0
+      if (document.documentElement && document.documentElement.scrollTop) {
+        scrollTop = document.documentElement.scrollTop
+      } else if (document.body) {
+        scrollTop = document.body.scrollTop
+      }
+      if (document.body.clientHeight && document.documentElement.clientHeight) {
+        clientHeight =
+          document.body.clientHeight < document.documentElement.clientHeight
+            ? document.body.clientHeight
+            : document.documentElement.clientHeight
+      } else {
+        clientHeight =
+          document.body.clientHeight > document.documentElement.clientHeight
+            ? document.body.clientHeight
+            : document.documentElement.clientHeight
+      }
+      scrollHeight = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      )
+      if (scrollTop + clientHeight + 200 > scrollHeight) {
+        console.log(scrollTop, clientHeight, scrollHeight)
+        if (this.scroll) {
+          this.getAllChartList()
+        }
+      } else {
+        return false
+      }
+    },
+
+    // 测试企微接口
+    clickTo(v) {
+      this.$network
+        .get('/user-service/m/user/getinticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'getContext',
+              'invoke',
+              'shareToExternalContact',
+              'shareToExternalChat',
+              'navigateToAddCustomer',
+              'shareToExternalMoments',
+              'createChatWithMsg',
+              'openExistedChatWithMsg',
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: [
+                  'sendChatMessage',
+                  'getContext',
+                  'invoke',
+                  'shareToExternalContact',
+                  'shareToExternalChat',
+                  'navigateToAddCustomer',
+                  'shareToExternalMoments',
+                  'createChatWithMsg',
+                  'openExistedChatWithMsg',
+                ],
+              },
+
+              function (res) {
+                if (v == 1) {
+                  wx.invoke(
+                    'shareToExternalContact',
+                    {
+                      text: {
+                        content: '群发消息给客户', // 文本内容
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'shareToExternalContact:ok') {
+                        console.log('shareOk==', res)
+                      }
+                    }
+                  )
+                } else if (v == 2) {
+                  wx.invoke('shareToExternalChat', {
+                    text: {
+                      content: '群发消息客户群', // 文本内容
+                    },
+                  })
+                } else if (v == 3) {
+                  wx.invoke('navigateToAddCustomer', {}, function (res) {})
+                } else if (v == 4) {
+                  wx.invoke(
+                    'shareToExternalMoments',
+                    {
+                      text: {
+                        content: '发到朋友圈', // 文本内容
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'shareToExternalMoments:ok') {
+                        console.log('朋友圈=====', res)
+                      }
+                    }
+                  )
+                } else if (v == 5) {
+                  wx.invoke(
+                    'createChatWithMsg',
+                    {
+                      selectedOpenUserIds: [
+                        'woY-gRDAAA9oIgFvRMPOvgEzsf9RGgNQ',
+                        'wmY-gRDAAAuteJF6uiT_NJF_9j1KwRLA',
+                      ],
+                      selectedTickets: ['tick1', 'token2'],
+                      chatName: 'discussName',
+                      msg: {
+                        msgtype: 'link',
+                        link: {
+                          title: 'title1',
+                          desc: 'desc1',
+                          url: 'wwww.baidu.com',
+                          imgUrl: 'imgurl1',
+                        },
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'createChatWithMsg:ok') {
+                        console.log('=====创建群', res)
+                        var chatId = res.chatId // 新建的会话ID，当会话为单聊时不返回此字段
+                      }
+                    }
+                  )
+                } else if (v == 6) {
+                  wx.invoke(
+                    'openExistedChatWithMsg',
+                    {
+                      chatId: 'wryPDZEQAAj0m3IkOQ1nmngt2AX8h-jQ',
+                      msg: {
+                        msgtype: 'link',
+                        link: {
+                          title: 'title1',
+                          desc: 'desc1',
+                          url: 'link1',
+                          imgUrl: 'imgurl1',
+                        },
+                      },
+                    },
+                    function (res) {
+                      if (res.err_msg == 'openExistedChatWithMsg:ok') {
+                      }
+                    }
+                  )
+                }
+              }
+            )
+          })
+        })
+    },
   },
 }
 </script>
 <style lang="less" scoped>
 @import './myIndex.less';
+.test_btn {
+  div {
+    margin-bottom: 20px;
+  }
+}
 </style>

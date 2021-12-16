@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">获客活码</span>
+      <span class="textTitle">互动活码</span>
     </div>
     <div class="tabMenu">
       <!-- <div class="tabBtn">全部活码</div> -->
@@ -351,7 +351,6 @@ export default {
             this.finished = true
             return
           }
-          // this.liveList = this.liveList.concat(rows)
           let newSetArr = this.liveList.concat(rows)
           this.liveList = this.unique(newSetArr)
           if (this.liveList.length >= this.total) {

@@ -533,10 +533,11 @@ export default {
         .confirm({
           title: '提示',
           message: '此操作将删除本分组及分组内全部内容，是否确认删除分组？',
-          className: 'deleteBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
+          confirmButtonColor: '#4168f6',
+          // className: 'deleteBtn',
+          // confirmButtonText: '是',
+          // cancelButtonText: '否',
+          // messageAlign: 'left',
         })
         .then(() => {
           this.$network
