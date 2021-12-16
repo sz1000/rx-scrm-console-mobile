@@ -258,3 +258,11 @@ export function getlistFiled(data) {
         params: data,
     })
 }
+// 新增客户筛选条件下拉列表数据
+export function getAddFiled(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/toadd',
+        method: 'get',
+        params: data,
+    })
+}

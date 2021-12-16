@@ -119,7 +119,9 @@
 </template>
 <script>
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
+import { getAddFiled } from '@/api/customer'
 import { SelectDialog, InputDialog } from '../customer/components'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -155,7 +157,16 @@ export default {
                 address: '',
                 remark: '',
             },
+
+            customerTypeOptions: [], // 客户类型选择列表
+            customerStageOptions: [], // 客户阶段选择列表
+            sourceOptions: [], // 客户来源选择列表
+            scaleOptions: [], // 企业规模选择列表
+            industryFieldOptions: [], // 行业领域选择列表
         }
+    },
+    computed: {
+        ...mapState(["corpId"]),
     },
     created() {
         this.init()
@@ -170,15 +181,45 @@ export default {
             const { navActive } = this.$route.query
 
             this.navActive = navActive
-            this.headTitle = navActive == 'myCustomer' ? '新增我的客户' : navActive == 'customerSea' ? '新增公海客户' : '新增客户'
+            this.headTitle = navActive == 'myCustomer' ? '新增我的客户' : '新增客户'
+
+            this.getAddFiled()
+        },
+        // 获取各个选择列表
+        getAddFiled() {
+            getAddFiled({ corpId: this.corpId }).then(res => {
+                let { code, data } = res
+
+                if (code == 'success') {
+                    const { comlist, commonList} = data
+
+                    this.industryFieldOptions = comlist  // 行业领域
+
+                    commonList.forEach((item) => {
+                        if (item.type == 'stage') {
+                            // 客户阶段
+                            this.customerStageOptions.push(item)
+                        } else if (item.type == 'source') {
+                            // 客户来源
+                            this.sourceOptions.push(item)
+                        } else if (item.type == 'customer_type') {
+                            // 客户类型
+                            this.customerTypeOptions.push(item)
+                        } else if (item.type == 'scale') {
+                            // 企业规模
+                            this.scaleOptions.push(item)
+                        }
+                    })
+                }
+            })
         },
         goBack() {
-            this.$router.push({ path: '/customerManage/myCustomer', query: { navActive: this.navActive } })
+            this.$router.push({ path: '/customerManage/myCustomer' })
         },
         openDialog(type){   //打开弹窗 (地址 and 备注)
             this.openType = type
             if(type == 'address'){
-                this.dialogTitle = '地址'
+                this.dialogTitle = '办公地址'
                 this.dialogType = 'input'
                 this.dialogText = this.form.address
             }else{
@@ -225,6 +266,7 @@ export default {
         },
         selectedFun(val){   //筛选项确认
             let type = this.pickerType
+            
             switch (type) {
                 case 'source':  //客户来源
                     console.log('客户来源',val[0].name)

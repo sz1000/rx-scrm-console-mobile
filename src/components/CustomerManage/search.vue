@@ -5,7 +5,7 @@
                 <img src="../../images/search.png" alt="">
             </div>
             <form action="Javascript: ;">
-                <input class="text" type="search" autocomplete="off" v-model="searchText" :placeholder="type | getText" @keydown.enter="checkTable(searchText)" @change="resetSearch">
+                <input class="text" type="search" autocomplete="off" v-model="searchText" :placeholder="customerType | getText" @keydown.enter="checkTable(searchText)">
             </form>
         </div>
         <div class="screen pointer" @click="showScreen">
@@ -20,7 +20,7 @@
 export default {
     name: 'search',
     props: {
-        type: {
+        customerType: {
             default: 0
         }
     },
@@ -29,23 +29,26 @@ export default {
             searchText: ''
         }
     },
-    inject: ['checkTable', 'changeNav', 'showScreen'],
-    methods: {
-        resetSearch(v) {
-            if (!v) {
-                this.changeNav('', this.type)
+    watch: {
+        searchText(val) {
+            if (!val) {
+                this.changeNav('', this.customerType)
             }
         }
+    },
+    inject: ['checkTable', 'changeNav', 'showScreen'],
+    methods: {
+        
     },
     filters: {
         getText(type) {
             let text = ''
 
             switch(type) {
-                case 0:
+                case '3':
                     text = '客户名称/企业名称/联系人/手机号码'
                     break;
-                case 1:
+                case '4':
                     text = '客户名称/企业名称/联系人'
                     break;
             }

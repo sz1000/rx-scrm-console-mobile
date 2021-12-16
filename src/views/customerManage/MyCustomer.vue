@@ -1,18 +1,16 @@
 <template>
     <div class="my-customer">
         <template v-if="!ifShowScreen">
-            <header-title :navList="navList" :navActive="navActive"></header-title>
-            <search :type="searchType"></search>
+            <header-title :navList="navList" :navActive="navActive" :showAdd="showAdd"></header-title>
+            <search ref="search" :customerType="customerType"></search>
 
-            <customer-list-box :listData="listData"></customer-list-box>
+            <customer-list-box ref="customerListBox" :customerType="customerType" :form="form" :searchParam="searchParam"></customer-list-box>
         </template>
 
         <screen v-else ref="screen" :navActive="navActive" @hideScreen="hideScreen"></screen>
     </div>
 </template>
 <script>
-// import { _throttle } from '../../utils/tool'
-import { getcluecustomerlist } from '@/api/customer'
 import MyMixin from '../../mixins/permissionsList'
 import HeaderTitle from '../../components/CustomerManage/headerTitle'
 import Search from '../../components/CustomerManage/search'
@@ -28,12 +26,17 @@ export default {
             ifShowScreen: false,
             navList: [{name: '我的客户', code: 'myCustomer'}, {name: '客户公海', code: 'customerSea'}],
             navActive: 'myCustomer',
-            searchType: 0,
-            listData: []
+            showAdd: true, // 是否显示新增按钮
+
+            form: {}, // 搜索筛选条件表单
+            searchParam: '' // 搜索框输入的内容
         }
     },
     created() {
         this.getCorpId()
+        this.$nextTick(() => {
+            this.$refs.customerListBox.getList()
+        })
     },
     provide() {
         return {
@@ -42,7 +45,6 @@ export default {
             doAdd: this.doAdd,
             checkTable: this.checkTable,
             showScreen: this.showScreen,
-            goDetail: this.goDetail,
         }
     },
     methods: {
@@ -64,12 +66,27 @@ export default {
             if (this.navActive == 'myCustomer') {
                 // 我的客户
                 this.customerType = '3'
-                this.searchType = 0
+                this.showAdd = true
             } else if (this.navActive == 'customerSea') {
                 // 客户公海
                 this.customerType = '4'
-                this.searchType = 1
+                this.showAdd = false
             }
+            this.clearSearch()
+            this.getList()
+        },
+        clearSearch() {
+            this.form = {}
+            this.searchParam = ''
+            this.$nextTick(() => {
+                this.$refs.search.searchText = ''
+            })
+        },
+        getList() {
+            this.$nextTick(() => {
+                this.$refs.customerListBox.initData()
+                this.$refs.customerListBox.getList()
+            })
         },
         // 新增客户
         doAdd() {
@@ -77,7 +94,9 @@ export default {
         },
         // 搜索
         checkTable(text) {
-            console.log(text)
+            this.searchParam = text
+            console.log('最终筛选条件：', this.form)
+            this.getList()
         },
         goBack() {
             this.$router.push('/home')
@@ -85,39 +104,21 @@ export default {
         // 显示筛选面板
         showScreen() {
             this.ifShowScreen = true
-        },
-        hideScreen(data) {
-            this.ifShowScreen = false
-            console.log('筛选条件：', data)
-        },
-        // 获取客户列表
-        getList() {
-            let params = {
-
-            }
-
-            getcluecustomerlist(params).then(res => {
-                let { code, data } = res
-
-                if (code == 'success') {
-                    console.log(data)
-                }
+            this.$nextTick(() => {
+                this.$refs.screen.show(this.form)
             })
         },
-        goDetail(item, index) {
-            localStorage.setItem('customer', JSON.stringify(item))
-            if (this.type == 3) {
-                this.$router.push({
-                path: 'customDetail',
-                query: { type: this.type, mylist: JSON.stringify(this.mylist) },
-                })
-            } else if (this.type == 4) {
-                this.$router.push({
-                path: 'customerSeas',
-                query: { type: this.type, alllist: JSON.stringify(this.alllist) },
-                })
+        hideScreen(data) {
+            const { optNum, params } = data
+            
+            if (optNum == 1 || optNum == 2) {
+                this.form = params
+            } else {
+                this.form = this.form ? this.form : params
             }
-        },
+            this.ifShowScreen = false
+            this.checkTable(this.searchParam)
+        },    
     },
     components: {
         HeaderTitle,

@@ -50,3 +50,9 @@ export function group_getGroupDetail(id) { //获取群详情
         method: 'get',
     })
 }
+export function sop_employeeList() { //当前登录用户企业员工列表-新增SOP规则使用员工下拉选
+    return request({
+        url: BASE_Prefix + '/sop/employeeList',
+        method: 'get'
+    })
+}

@@ -143,7 +143,7 @@ export default {
         // 获取动态
         async selectFollowMsgList(punckStatus) {
             this.$toast.loading({
-                message: '加载中...',
+                message: '',
                 forbidClick: true,
                 duration: 0,
                 loadingType: 'spinner',

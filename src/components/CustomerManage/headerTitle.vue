@@ -6,7 +6,8 @@
         <ul class="nav-box">
             <li v-for="i in navList" :key="i.code" class="nav" :class="{'cur': i.code == navActive}" @click="changeNav(i.code)">{{ i.name }}</li>
         </ul>
-        <span class="add-btn" @click="doAdd"></span>
+        <span v-if="showAdd" class="add-btn" @click="doAdd"></span>
+        <span v-else class="btn-position"></span>
     </div>
 </template>
 <script>
@@ -22,6 +23,10 @@ export default {
         navActive: {
             type: String,
             default: 'myCustomer'
+        },
+        showAdd: {
+            type: Boolean,
+            default: true
         }
     },
     inject: ['goBack', 'changeNav', 'doAdd']
@@ -109,6 +114,10 @@ export default {
             width: 28px;
             height: 4px;
         }
+    }
+    .btn-position {
+        min-width: 28px;
+        height: 100%;
     }
 }
 </style>
