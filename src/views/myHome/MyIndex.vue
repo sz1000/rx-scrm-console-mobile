@@ -64,7 +64,7 @@
            <div class="wait_warp">
         <div class="text_wait">
           <span>客户动态</span>
-          <div @click="goToWait(1)" class="cilck_area">
+          <div @click="dynamicFn" class="cilck_area">
             <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
@@ -105,7 +105,7 @@
         </div>
       </div>
       <div class="about_me about_shadow">
-        <span>待回复</span>
+        <span>互动协同</span>
         <div class="reply_text" @click="goToAbout">
           <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
@@ -152,7 +152,7 @@
         <div class="about_me about_shadow">
         <span>群发任务</span>
         <div class="reply_text" @click="goToWait(2)">
-          <span>{{dataObj.custometMassSum}}条群发任务待发送</span>
+          <span>你有群发任务待发送</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
@@ -186,7 +186,7 @@
         <div class="popup_content">
           <!-- <img src="../../images/selected.png" alt="">
           <img src="../../images/no_select.png" alt=""> -->
-          hahhah
+          
         </div>
         <div class="close_warp" @click="closePopup">
           <img src="../../images/close_popup.png" alt="">
@@ -385,6 +385,11 @@ export default {
     },
     closePopup() {
       this.showIdent = false
+    },
+    dynamicFn(){
+       this.$router.push({
+        path: './AllDynamic',
+      })
     },
     goToWait(v) {
       this.$router.push({

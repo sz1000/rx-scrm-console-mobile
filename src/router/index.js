@@ -84,6 +84,8 @@ import WaitDealwith from '../views/myHome/WaitDealwith.vue'
 import CustomeActive from '../views/myHome/CustomeActive.vue'
 // @我
 import AboutComponent from '../views/myHome/AboutMe.vue'
+//客户动态
+import AllDynamic from '../views/myHome/AllDynamic.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -533,6 +535,12 @@ const routes = [{
         path: '/aboutme',
         name: 'aboutme',
         component: AboutComponent,
+    },
+    //客户动态
+    {
+        path: '/alldynamic',
+        name: 'alldynamic',
+        component: AllDynamic,
     },
 ]
 
