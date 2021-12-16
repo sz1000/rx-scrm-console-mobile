@@ -34,3 +34,6 @@ from './selectDialog.vue'
 /* 输入框弹窗(地址 and 备注) */
 export { default as InputDialog }
 from './inputDialog.vue'
+/* 标签弹窗 (个人 and 企业) */
+export { default as TagDialog }
+from './tagDialog.vue'
