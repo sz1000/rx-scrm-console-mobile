@@ -424,7 +424,7 @@ export default {
             if(val == 'helper'){    //查看协助人
                 name = 'helper'
             }else if(val == 'detail'){    //详情
-                name = 'informationDetail'
+                name = 'CustomerDetail'
             }
             this.$router.push({
                 name: name,
