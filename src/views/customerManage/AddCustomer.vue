@@ -9,7 +9,7 @@
                     <span class="require">*</span>
                 </div>
                 <div class="val">
-                    <input type="text" class="input" v-model="form.customerName" maxlength="30" placeholder="请输入">
+                    <input type="text" class="input" v-model="form.customerCalled" maxlength="30" placeholder="请输入">
                 </div>
             </div>
             <div class="item">
@@ -18,7 +18,7 @@
                     <span class="require">*</span>
                 </div>
                 <div class="val">
-                    <input type="text" class="input" v-model="form.customerName" maxlength="30" placeholder="请输入">
+                    <input type="text" class="input" v-model="form.name" maxlength="30" placeholder="请输入">
                 </div>
             </div>
             <div class="item">
@@ -26,7 +26,7 @@
                     <span>手机号码</span>
                 </div>
                 <div class="val">
-                    <input type="text" class="input" v-model="form.mobile" maxlength="12" placeholder="请输入">
+                    <input type="text" class="input" v-model="form.phone" maxlength="12" placeholder="请输入">
                 </div>
             </div>
             <div class="item">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="val">
                     <div class="icon-select" @click="openSelectDialog('source')">
-                        <span :class="{'placeholder':!form.sourceName}">{{form.sourceName | $textEmpty('请选择')}}</span>
+                        <span :class="{'placeholder':!form.source}">{{form.source | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -46,8 +46,8 @@
                     <span>客户阶段</span>
                 </div>
                 <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('source')">
-                        <span :class="{'placeholder':!form.sourceName}">{{form.sourceName | $textEmpty('请选择')}}</span>
+                    <div class="icon-select" @click="openSelectDialog('stage')">
+                        <span :class="{'placeholder':!form.stage}">{{form.stage | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -57,8 +57,8 @@
                     <span>客户类型</span>
                 </div>
                 <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('type')">
-                        <span :class="{'placeholder':!form.customerTypeName}">{{form.customerTypeName | $textEmpty('请选择')}}</span>
+                    <div class="icon-select" @click="openSelectDialog('customerType')">
+                        <span :class="{'placeholder':!form.customerType}">{{form.customerType | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -76,8 +76,8 @@
                     <span>企业规模</span>
                 </div>
                 <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('scale')">
-                        <span :class="{'placeholder':!form.corpScaleName}">{{form.corpScaleName | $textEmpty('请选择')}}</span>
+                    <div class="icon-select" @click="openSelectDialog('corpScale')">
+                        <span :class="{'placeholder':!form.corpScale}">{{form.corpScale | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="val">
                     <div class="icon-select" @click="openSelectDialog('industry')">
-                        <span :class="{'placeholder':!form.industryName}">{{form.industryName | $textEmpty('请选择')}}</span>
+                        <span :class="{'placeholder':!form.industry}">{{form.industry | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -106,7 +106,7 @@
                     <span>备注</span>
                 </div>
                 <div class="val" @click="openDialog('remark')">
-                    <span :class="{'placeholder':!form.remark}">{{form.corpScaleName | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    <span :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                 </div>
             </div>
         </div>
@@ -143,19 +143,17 @@ export default {
             },
 
             form: {
-                industry: [],
-                industryName: '',       //暂增
-                customerName: '',
-                source: '',
-                sourceName: '',         //暂增
-                customerType: '',
-                customerTypeName: '',   //暂增
-                mobile: '',
-                cropFullName: '',
-                corpScale: '',
-                corpScaleName: '',      //暂增
-                address: '',
-                remark: '',
+                customerCalled: '', // 客户名称
+                source: '', // 客户来源
+                customerType: '', // 客户类型
+                cropFullName: '', // 企业名称
+                corpScale: '', // 企业规模
+                industry: [], // 行业领域 
+                address: '', // 办公地址
+                remark: '', // 备注
+                stage: '', // 客户阶段
+                name: '', // 联系人
+                phone: '', // 手机号码
             },
 
             customerTypeOptions: [], // 客户类型选择列表
@@ -239,23 +237,28 @@ export default {
         openSelectDialog(type){     //打开选择弹窗
             this.pickerType = type
             switch (type) {
-                case 'source':  //客户来源
+                case 'source':  // 客户来源
                     this.select.title = '客户来源'
                     this.select.isGetIndex = false
                     this.columns = this.customerList
                     break;
-                case 'type':  //客户类型
+                case 'source':  // 客户来源
+                    this.select.title = '客户来源'
+                    this.select.isGetIndex = false
+                    this.columns = this.customerList
+                    break;
+                case 'customerType':  // 客户类型
                     this.select.title = '客户类型'
                     this.select.isGetIndex = false
-                    this.columns = this.customerTypeList
+                    this.columns = this.customerTypeOptions
                     break;
-                case 'scale':  //企业规模
+                case 'corpScale':  // 企业规模
                     this.select.title = '企业规模'
                     this.select.isGetIndex = false
-                    this.columns = this.scaleList
+                    this.columns = this.scaleOptions
                     break;
-                case 'industry':  //所属行业
-                    this.select.title = '所属行业'
+                case 'industry':  // 行业领域
+                    this.select.title = '行业领域'
                     this.select.isGetIndex = true
                     this.columns = this.industryList
                     break;
