@@ -79,10 +79,10 @@ export default {
                 const { code, data } = res
 
                 if (code === 'success') {
-                    const { unionId, openId } = data
+                    const { unionid, openid } = data
 
-                    this.unionId = unionId
-                    this.openId = openId
+                    this.unionId = unionid
+                    this.openId = openid
                     this.materialOperation()
                 }
             })
