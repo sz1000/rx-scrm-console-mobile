@@ -71,7 +71,7 @@ export default {
 @import "~@/styles/color.less";
 .dialog_wrap{
     width: 100%;
-    height: 46vh;
+    // height: 46vh;
     background: @white;
     position: relative;
     .dialog_header{
@@ -106,9 +106,9 @@ export default {
     }
     .dialog_content{
         width: 100%;
-        /deep/ .van-picker__columns{
-            height: calc(46vh - 104px) !important;
-        }
+        // /deep/ .van-picker__columns{
+        //     height: calc(46vh - 104px) !important;
+        // }
     }
 }
 </style>

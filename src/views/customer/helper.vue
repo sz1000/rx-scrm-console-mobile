@@ -5,15 +5,15 @@
             <div class="title">协助人</div>
         </div>
         <div class="content">
-            <div class="item_box">
+            <div class="item_box" v-if="obj">
                 <div class="tit">负责人</div>
                 <div class="item trans">
-                    <div class="avatar"></div>
+                    <img class="avatar" :src="obj.avatar | $setAvatar" alt="">
                     <div class="val">
-                        <div class="name">许宣-运营部</div>
+                        <div class="name">{{nameString(obj)}}</div>
                         <div class="text_box">
-                            <div class="time">2021.12.25</div>
-                            <div class="text">权限:只读</div>
+                            <div class="time">{{obj.addTime | $time('YYYY.MM.DD')}}</div>
+                            <div class="text">权限:{{obj.permission | permission}}</div>
                         </div>
                     </div>
                 </div>
@@ -25,37 +25,41 @@
                 </div>
                 <div class="opera_btn" @click="showBtn = false" v-else>完成</div>
                 <div class="tit">协助人</div>
-                <van-swipe-cell ref="swipercell" v-for="(item,index) in 3" :key="index">
+                <van-swipe-cell ref="swipercell" v-for="(item,index) in helperList" :key="index">
                     <div class="item" :class="{'trans':showBtn}">
                         <img class="red_btn" @click.stop="openFun(index)" src="@/assets/svg/icon_remove.svg" alt="">
-                        <div class="avatar"></div>
+                        <img class="avatar" :src="item.avatar | $setAvatar" alt="">
                         <div class="val">
-                            <div class="name">陈良-运营部</div>
+                            <div class="name">{{nameString(item)}}</div>
                             <div class="text_box">
-                                <div class="time">2021.12.25</div>
-                                <div class="text">权限:只读</div>
+                                <div class="time">{{item.addTime | $time('YYYY.MM.DD')}}</div>
+                            <div class="text">权限:{{item.permission | permission}}</div>
                             </div>
                         </div>
                     </div>
                     <template #right>
-                        <van-button text="删除" @click="deleteFun" class="delete_button" />
+                        <van-button text="删除" @click="deleteFun(item)" class="delete_button" />
                     </template>
                 </van-swipe-cell>
             </div>
         </div>
+        <!-- 添加协助人 -->
+        <AddHelper v-model="dialog_add" @sure="getList"></AddHelper>
     </div>
 </template>
 
 <script>
-// import { AddHelper,DeleteHelper } from './components'
-// import { clueCustomerFollowUser_getFollowUserList } from '@/api/customer'
+import { AddHelper } from './components'
+import { 
+    clueCustomerFollowUser_getMBFollowUserList,
+    clueCustomerFollowUser_deleteFollowUsers,
+} from '@/api/customer'
 export default {
     components: {
-        // AddHelper,DeleteHelper
+        AddHelper
     },
     data(){
         return {
-            data: localStorage.getItem('helperData') ? JSON.parse(localStorage.getItem('helperData')) : [],
             list: [],
             dialog_add: false,
             showBtn: false,
@@ -63,18 +67,25 @@ export default {
     },
     computed: {
         id(){
-            let str = localStorage.getItem('customerId') ? localStorage.getItem('customerId') : ''
-            return str
+            return this.$route.query.id
         },
         obj(){  //负责人obj
-            let obj = this.data && this.data.length ? this.data[0] : {}
-            return obj
+            let list = this.list.find(el => {
+                return el.flag == 1
+            })
+            return list
+        },
+        helperList(){
+            let list = this.list.filter(el => {
+                return el.flag == 2
+            })
+            return list
         },
     },
     mounted(){
-        // if(this.id){
-        //     this.getList()
-        // }
+        if(this.id){
+            this.getList()
+        }
     },
     methods: {
         addDialog(){
@@ -84,15 +95,25 @@ export default {
         openFun(i){
             this.$refs.swipercell[i].open('right')
         },
-        deleteFun(){
-            console.log('删除')
+        deleteFun(row){
+            let data = {
+                ids: [row.id],
+            }
+            clueCustomerFollowUser_deleteFollowUsers(data).then(res => {
+                if(res.result){
+                    this.getList()
+                }
+            })
         },
         getList(){  //获取协助人列表
-            clueCustomerFollowUser_getFollowUserList(this.id).then(res => {
+            clueCustomerFollowUser_getMBFollowUserList(this.id).then(res => {
                 if(res.result){
                     this.list = res.data
                 }
             })
+        },
+        nameString(val){
+            return val.name && val.depId ? `${val.name}-${val.depId}` : val.name
         },
     },
     filters: {

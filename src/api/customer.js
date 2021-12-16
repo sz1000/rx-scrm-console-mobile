@@ -125,6 +125,12 @@ export function clueCustomerFollowUser_getFollowUserList(id) { // 获取协助�
         method: 'get'
     })
 }
+export function clueCustomerFollowUser_getMBFollowUserList(id) { // 获取协助人列表 new
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/clueCustomerFollowUser/getMBFollowUserList?cluecustomerno=' + id,
+        method: 'get'
+    })
+}
 export function cluecustomeraccessory_upload(e,id,noLoading = false) { // 附件上传
     let formData = new FormData()
     formData.append('file', e.target.files[0])

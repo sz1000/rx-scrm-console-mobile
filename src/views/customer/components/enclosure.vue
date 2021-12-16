@@ -60,7 +60,9 @@ export default {
 	},
   	methods: {
 		selectFun(action,data){
-			this.row = data
+            if(data && data.id){
+                this.row = data
+            }
 			switch (action.code) {
 				case 'download':	//下载
 					window.open(this.row.ossUrl)

@@ -420,17 +420,16 @@ export default {
             return true
         },
         toFun(val){
-            console.log('asd',val)
+            let name = ''
             if(val == 'helper'){    //查看协助人
-                localStorage.setItem('helperData',JSON.stringify(this.userList))
-                localStorage.setItem('customerId',this.customerInfo.clueCustomerNo)
-                this.$router.push('/helper')
+                name = 'helper'
             }else if(val == 'detail'){    //详情
-                this.$router.push({
-                    name: 'informationDetail',
-                    query: { id: this.customerInfo.clueCustomerNo },
-                })
+                name = 'informationDetail'
             }
+            this.$router.push({
+                name: name,
+                query: { id: this.customerInfo.clueCustomerNo },
+            })
         },
         toGroupDetail(){    //群聊详情
             this.$router.push({

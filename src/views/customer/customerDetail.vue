@@ -13,12 +13,14 @@
         <div class="content">
             <div class="row tag">
                 <div class="tit">企业标签</div>
+                <img class="edit" @click="openDialog('company')" src="@/assets/svg/icon_edit.svg" alt="">
                 <div class="tag_box">
                     <div class="tag" v-for="(item,index) in companyTagList" :key="index">{{item.name}}</div>
                 </div>
             </div>
             <div class="row tag">
                 <div class="tit">个人标签</div>
+                <img class="edit" @click="openDialog('person')" src="@/assets/svg/icon_edit.svg" alt="">
                 <div class="tag_box">
                     <div class="tag" v-for="(item,index) in personTagList" :key="index">{{item.name}}</div>
                 </div>
@@ -72,7 +74,7 @@
                         <div class="label">企业规模</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('scale')">
-                                <span :class="{'placeholder':!detail.corpScaleName}">{{detail.corpScaleName | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.cropscale}">{{detail.cropscale | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -97,7 +99,7 @@
                         <div class="label">备注</div>
                         <div class="val" @click="openDialog('remark')">
                             <!-- <input type="text" class="input" v-model="detail.remark" maxlength="200" placeholder="请输入（不得超过200个字符）" readonly> -->
-                            <span :class="{'placeholder':!detail.remark}">{{detail.corpScaleName | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                            <span :class="{'placeholder':!detail.remark}">{{detail.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                         </div>
                     </div>
                 </div>
@@ -215,12 +217,51 @@
         <SelectDialog :data="columns" :keys="select.key" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
         <!-- 地址 and 备注 -->
         <InputDialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></InputDialog>
+        <!-- 企业标签 -->
+        <TagDialog :title="tagTitle" :type="openType" :companyList="allCompanyTagList" :personList="personTagList" v-model="dialog_tag" @sure="tagUpdateFun"></TagDialog>
+        <!-- <DialogDetail :title="tagTitle" v-model="dialog_tag" className="tag" isOpera>
+            <div class="dialog_row" v-if="openType == 'company'">
+                <div class="dialog_item" v-for="(item,index) in allCompanyTagList" :key="index">
+                    <div class="label">{{item.name}}</div>
+                    <div class="val">
+                        <div class="tag" @click="tagChangeFun(son)" :class="{'cur':son.active}" v-for="(son,i) in item.children" :key="i">{{son.name}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialog_row" v-if="openType == 'person'">
+                <div class="add_btn" v-if="isAdd">
+                    <img class="icon" src="@/assets/svg/icon_btn_add.svg" alt="">
+                    <span class="text">添加</span>
+                </div>
+                <div class="input_box" v-else>
+                    <input type="text" class="input" placeholder="输入后回车">
+                    <span class="btn">取消</span>
+                    <span class="btn main">确定</span>
+                </div>
+                <div class="tag_box">
+                    <div class="icon_tag">
+                        <span class="text">nice</span>
+                        <jzIcon class="icon" type="icon-shanchu"></jzIcon>
+                    </div>
+                    <div class="icon_tag cur">
+                        <span class="text">有意向购买</span>
+                        <jzIcon class="icon" type="icon-shanchu"></jzIcon>
+                    </div>
+                    <div class="icon_tag">
+                        <span class="text">优质客户</span>
+                        <jzIcon class="icon" type="icon-shanchu"></jzIcon>
+                    </div>
+                </div>
+            </div>
+            <div class="opera_box" slot="footer_box">
+                <div class="btn" @click="tagUpdateFun">确定</div>
+            </div>
+        </DialogDetail> -->
     </div>
 </template>
 
 <script>
-import { SelectDialog,InputDialog } from './components'
-import { customerType } from '@/utils/config'
+import { SelectDialog,InputDialog,TagDialog } from './components'
 import {
   cluecustomer_toupdate,
   cluecustomer_update,
@@ -232,13 +273,14 @@ import {
 } from '@/api/customer'
 export default {
     components: {
-        SelectDialog,InputDialog
+        SelectDialog,InputDialog,TagDialog
     },
     data(){
         return {
             id: this.$route.query.id,
             dialog: false,
             dialog_address: false,
+            dialog_tag: false,
             columns: [],
             pickerType: '',
             select: {
@@ -250,6 +292,7 @@ export default {
             dialogTitle: '',
             dialogType: '',
             dialogText: '',
+            tagTitle: '企业标签',
             commonList: [],                  //所有列表(综合)
             customerList:[],                 //客户来源
             customerTypeList: [],  //客户类型
@@ -263,17 +306,17 @@ export default {
             detail: {
                 clueCustomerNo: '',
                 avatar: '',
-                industry: [],
+                cropSubIndustry: '',
                 industryName: '',       //暂增
                 customerName: '',
                 source: '',
-                sourceName: '',         //暂增
+                sourceName: '',         
                 customerType: '',
-                customerTypeName: '',   //暂增
+                customerTypeName: '',   
                 mobil: '',
                 cropFullName: '',
                 corpScale: '',
-                corpScaleName: '',      //暂增
+                cropscale: '',      
                 address: '',
                 remark: '',
                 describe: '',
@@ -310,6 +353,16 @@ export default {
                     let data = res.data
                     this.companyTagList = data.corpTagList
                     this.personTagList = data.personTagList
+                    data.tagCorpList.forEach(el => {
+                        el.children.forEach(son => {
+                            son.active = false
+                            data.corpTagList.forEach(item => {
+                                if(son.tagid == item.tagid){
+                                    son.active = true
+                                }
+                            })
+                        })
+                    })
                     this.allCompanyTagList = data.tagCorpList
                 }
             })
@@ -350,6 +403,37 @@ export default {
         fixData(data){  //数据调整
 
         },
+        tagUpdateFun(val){     //标签增减
+            console.log(this.openType)
+            // return false
+            if(this.openType == 'company'){
+                let list = []
+                this.allCompanyTagList.forEach(el => {
+                    el.children.forEach(son => {
+                        if(son.active){
+                            list.push(son)
+                        }
+                    })
+                })
+                cluecustomer_updCorptag(this.id,list).then(res => {
+                    if(res.result){
+                        this.dialog_tag = false
+                        this.getTagList()
+                    }
+                })
+            }else{      //个人标签
+                console.log('个人标签')
+                let obj = {
+                    clueCustomerNo: this.id,
+                    name: val
+                }
+                cluecustomer_addtag(obj).then(res => {
+                    if(res.result){
+                        this.getTagList()
+                    }
+                })
+            }
+        },
         updateFun(){
             this.detail.clueCustomerNo = this.id
             cluecustomer_update(this.detail,true).then(res => {
@@ -360,23 +444,39 @@ export default {
         },
         openDialog(type){   //打开弹窗 (地址 and 备注)
             this.openType = type
-            if(type == 'address'){
-                this.dialogTitle = '地址'
-                this.dialogType = 'input'
-                this.dialogText = this.detail.address
-            }else{
-                this.dialogTitle = '备注'
-                this.dialogType = 'textarea'
-                this.dialogText = this.detail.remark
+            switch (type) {
+                case 'address':
+                    this.dialogTitle = '地址'
+                    this.dialogType = 'input'
+                    this.dialogText = this.detail.address
+                    this.dialog_address = true
+                    break;
+                case 'remark':
+                    this.dialogTitle = '备注'
+                    this.dialogType = 'textarea'
+                    this.dialogText = this.detail.remark
+                    this.dialog_address = true
+                    break;
+                case 'company':
+                    this.tagTitle = '企业标签'
+                    this.dialog_tag = true
+                    break;
+                case 'person':
+                    this.tagTitle = '个人标签'
+                    this.dialog_tag = true
+                    break;
+                default:
+                    break;
             }
-            this.dialog_address = true
         },
         confirmFun(val){   //弹窗确认 (地址 and 备注)
+            val = val.trim() ? val.trim() : ''
             if(this.openType == 'address'){
                 this.detail.address = val
             }else{
                 this.detail.remark = val
             }
+            this.updateFun()
         },
         openSelectDialog(type){     //打开选择弹窗
             this.pickerType = type
@@ -421,14 +521,14 @@ export default {
                     break;
                 case 'scale':  //企业规模
                     console.log('企业规模',val)
-                    this.detail.corpScaleName = val[0].name
+                    this.detail.cropscale = val[0].name
                     this.detail.corpScale = val[0].id
                     break;
                 case 'industry':  //所属行业
                     console.log('所属行业',val,this.industryList[val[0]])
                     let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
                     this.detail.industryName = str
-                    this.detail.industry = val
+                    this.detail.cropSubIndustry = val.join(',')
                     break;
                 default:
                     break;
@@ -444,15 +544,6 @@ export default {
     },
     filters: {
         typeName(val){
-            // let str = ''
-            // if(val && this.detail){
-            //     if(val == 1){
-            //         str = '@微信'
-            //     }else{
-            //         str = this.detail.customerTypeValue ? '@' + this.detail.customerTypeValue : ''
-            //     }
-            // }
-            // console.log('val',str)
             return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
         },
     },
@@ -554,6 +645,13 @@ export default {
                 position: absolute;
                 bottom: 0;
                 left: 0;
+            }
+            .edit{
+                width: 40px;
+                height: 40px;
+                position: absolute;
+                right: 0;
+                top: 0;
             }
             .tit{
                 font-size: 24px;

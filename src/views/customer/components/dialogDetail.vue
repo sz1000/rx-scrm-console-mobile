@@ -5,7 +5,7 @@
                 <div class="title">{{title}}</div>
                 <img class="close" v-if="closeable" @click="dialog = false" src="@/assets/svg/icon_close.svg" alt="">
             </div>
-            <div class="dialog_content" :class="{'opera':isOpera}">
+            <div class="dialog_content" :class="[{'opera':isOpera},className]">
                 <slot></slot>
             </div>
             <slot name="footer_box"></slot>
@@ -40,6 +40,10 @@ export default {
         isOpera: {
             type: Boolean,
             default: false,
+        },
+        className: {
+            type: String,
+            default: ''
         },
     },
     data(){
@@ -99,6 +103,9 @@ export default {
         &.opera{
             height: calc(60vh - 248px);
             padding-top: 32px;
+        }
+        &.tag{
+            height: calc(60vh - 104px);
         }
         .list{
             width: 100%;
