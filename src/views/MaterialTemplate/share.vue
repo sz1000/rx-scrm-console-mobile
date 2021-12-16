@@ -20,6 +20,7 @@ export default {
         return {
             userData: null,
             unionId: '',
+            openId: '',
             materialId: '',
             materialType: '', // 1: 文章, 2: 文件
             userNo: null,
@@ -78,7 +79,10 @@ export default {
                 const { code, data } = res
 
                 if (code === 'success') {
-                    this.unionId = data
+                    const { unionId, openId } = data
+
+                    this.unionId = unionId
+                    this.openId = openId
                     this.materialOperation()
                 }
             })
@@ -89,6 +93,7 @@ export default {
                 model: {
                     materialType: this.materialType,
                     unionId: this.unionId,
+                    openId: this.openId,
                     userNo: this.userNo ? this.userNo : ''
                 }
             }
