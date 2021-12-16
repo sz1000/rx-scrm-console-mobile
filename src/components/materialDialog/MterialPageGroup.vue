@@ -422,7 +422,7 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .material-template {
-  min-height: 100vh;
+  height: 100%;
   // width: 750px;
   // margin: 0 auto;
   background-color: @white;

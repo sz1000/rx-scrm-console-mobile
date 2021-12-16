@@ -29,9 +29,9 @@
     <div class="materialBox">
       <div class="title">素材类型</div>
       <div class="tabBtn">
-        <span class="box" :class="tab=='image'? 'active':''" @click="goToMaterials('image')">图片</span>
+        <!-- <span class="box" :class="tab=='image'? 'active':''" @click="goToMaterials('image')">图片</span>
         <span class="box" :class="tab=='video'? 'active':''" @click="goToMaterials('video')">视频</span>
-        <span class="box" :class="tab=='link'? 'active':''" @click="goToMaterials('link')">链接</span>
+        <span class="box" :class="tab=='link'? 'active':''" @click="goToMaterials('link')">链接</span> -->
         <span class="box" :class="tab=='material'? 'active':''" @click="goToMaterial('material')">素材库</span>
       </div>
       <div class="uploadImg">
@@ -193,7 +193,7 @@ export default {
       imageUrl: '',
       fnClose: true,
       textVal: '',
-      tab: 'image',
+      tab: '',
       lists: [],
       videoUrl: '',
       url: '',

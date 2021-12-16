@@ -186,13 +186,13 @@
                 </el-radio-group>
               </div>
               <!-- 图片 -->
-              <template v-if="item.appendixType === '图片'">
+              <!-- <template v-if="item.appendixType === '图片'">
                 <van-uploader v-model="item.picList" @oversize="onOversize" :max-size="2 * 1024 * 1024" :max-count="1"
                               :after-read="afterRead.bind(null, { index: index, data: item })" />
                 <div class="picTips marB-24">
                   建议上传大小不超过2MB的图片，格式支持jpeg、jpg、png
                 </div>
-              </template>
+              </template> -->
               <!-- 链接 -->
               <template v-if="item.appendixType === '链接'">
                 <el-input class="marB-24" v-model="item.href" placeholder="链接地址请以http或https开头" @blur="blurUrl"></el-input>
