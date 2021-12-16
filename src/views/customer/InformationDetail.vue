@@ -321,7 +321,7 @@ export default {
   created() {
     const { id } = this.$route.query
 
-    // this.clueCustomerNo = '6D9094692014462DAFBE61CEFE09E882'
+    // this.clueCustomerNo = '31CD520DB161428DA73F326C9CCB6EE6'
     this.clueCustomerNo = id
     this.getDetailForm()
     this.getTagList()
@@ -350,12 +350,19 @@ export default {
       this.update()
     },
     getDetailForm() {
-      cluecustomer_toupdate(this.clueCustomerNo).then(res => {
-        if(res.result){
+      cluecustomer_toupdate(this.clueCustomerNo).then((res) => {
+        if (res.result) {
           this.processTree(res.data.comlist)
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
+          if (this.basicInfo.customerType == 0) {
+            this.basicInfo.customerType = '未知'
+          } else if ((this.basicInfo.customerType = 1)) {
+            this.basicInfo.customerType = '微信用户'
+          } else {
+            this.basicInfo.customerType = '企微用户'
+          }
           // this.basicInfo.corpScale = res.data.clueCustomerEntity.cropscale
           this.imageUser = res.data.clueCustomerEntity.avatar
           this.name = res.data.clueCustomerEntity.name
@@ -454,8 +461,8 @@ export default {
         clueCustomerNo: this.clueCustomerNo,
         ...this.basicInfo,
       }
-      cluecustomer_update(obj).then(res => {
-        if(res.result){
+      cluecustomer_update(obj).then((res) => {
+        if (res.result) {
           this.$message({ type: 'success', message: '更新成功' })
         }
       })
@@ -477,8 +484,8 @@ export default {
     },
     getTagList() {
       this.highLightArr = []
-      cluecustomer_gettag(this.clueCustomerNo).then(res => {
-        if(res.result){
+      cluecustomer_gettag(this.clueCustomerNo).then((res) => {
+        if (res.result) {
           this.companyTagList = res.data.corpTagList
           this.groupList = res.data.tagCorpList
           this.personTagList = res.data.personTagList || []
@@ -520,10 +527,10 @@ export default {
           name: this.tagName,
           clueCustomerNo: this.clueCustomerNo,
         }
-        cluecustomer_addtag(obj).then(res => {
-          if(res.result){
+        cluecustomer_addtag(obj).then((res) => {
+          if (res.result) {
             this.personTagList = res.data
-          }else {
+          } else {
             this.$message({
               type: 'error',
               message: res.msg || '添加失败',
@@ -571,29 +578,33 @@ export default {
     saveDialog(v) {
       if (v == 1) {
         // console.log(this.highLightArr)
-        cluecustomer_updCorptag(this.clueCustomerNo,this.highLightArr).then(res => {
-          if(res.result){
-            this.show = false
-            document.getElementById('html').style.overflow = 'auto'
-            this.getTagList()
-          }else {
-            this.message({
-              type: 'error',
-              message: '添加失败',
-            })
+        cluecustomer_updCorptag(this.clueCustomerNo, this.highLightArr).then(
+          (res) => {
+            if (res.result) {
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
+              this.getTagList()
+            } else {
+              this.message({
+                type: 'error',
+                message: '添加失败',
+              })
+            }
           }
-        })
+        )
       } else if (v == 2) {
-        cluecustomer_updPertag(this.personTagList).then(res => {
-          if(res.result){
-            this.show = false
-            document.getElementById('html').style.overflow = 'auto'
-            this.$message({
-              type: 'success',
-              message: '修改成功',
-            })
+        cluecustomer_updPertag(this.personTagList, this.clueCustomerNo).then(
+          (res) => {
+            if (res.result) {
+              this.show = false
+              document.getElementById('html').style.overflow = 'auto'
+              this.$message({
+                type: 'success',
+                message: '修改成功',
+              })
+            }
           }
-        })
+        )
       }
     },
     deleteTag(v, i) {
@@ -607,8 +618,8 @@ export default {
           messageAlign: 'left',
         })
         .then(() => {
-          cluecustomer_deltag(v).then(res => {
-            if(res.result){
+          cluecustomer_deltag(v).then((res) => {
+            if (res.result) {
               this.personTagList = res.data
             }
           })
