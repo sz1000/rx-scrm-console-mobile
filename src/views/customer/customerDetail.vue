@@ -5,7 +5,7 @@
                 <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
                 <div class="val">
                     <div class="name">{{detail.name}}</div>
-                    <div class="alt">{{detail.customerType | typeName}}</div>
+                    <div class="alt" :class="{'green':detail.externalType == 1}">{{detail.externalType | typeName}}</div>
                     <img class="gender" :src="gender" alt="">
                 </div>
             </div>
@@ -250,8 +250,9 @@ export default {
             dialogTitle: '',
             dialogType: '',
             dialogText: '',
+            commonList: [],                  //所有列表(综合)
             customerList:[],                 //客户来源
-            customerTypeList: customerType,  //客户类型
+            customerTypeList: [],  //客户类型
             scaleList: [],                   //企业规模
             industryList: [],                //所属行业
             allCompanyTagList: [],           //企业标签(all)
@@ -313,13 +314,17 @@ export default {
                 }
             })
         },
-        getDetail(){
+        getDetail(){    //详情
             cluecustomer_toupdate(this.id).then(res => {
                 if(res.result){
                     let data = res.data
                     this.detail = Object.assign(this.detail,data.clueCustomerEntity)
-                    this.customerList = data.list
-                    this.scaleList = data.corpScaleList
+                    this.commonList = data.commonList
+                    this.customerList = this.getTypeList('source')
+                    this.customerTypeList = this.getTypeList('customer_type')
+                    // this.customerList = data.list
+                    this.scaleList = this.getTypeList('scale')
+                    // this.scaleList = data.corpScaleList
                     data.comlist.forEach(el => {
                         if(el.children.length == 0){
                             el.children = null
@@ -407,12 +412,12 @@ export default {
                 case 'source':  //客户来源
                     console.log('客户来源',val[0].name)
                     this.detail.sourceName = val[0].name
-                    this.detail.source = val[0].type
+                    this.detail.source = val[0].value
                     break;
                 case 'type':  //客户类型
                     console.log('客户类型',val)
                     this.detail.customerTypeName = val[0].name
-                    this.detail.customerType = val[0].code
+                    this.detail.customerType = val[0].value
                     break;
                 case 'scale':  //企业规模
                     console.log('企业规模',val)
@@ -428,10 +433,26 @@ export default {
                 default:
                     break;
             }
+            this.updateFun()
+        },
+        getTypeList(val){   //获取对应的列表
+            let list = this.commonList.filter(el => {
+                return el.type == val
+            })
+            return list
         },
     },
     filters: {
         typeName(val){
+            // let str = ''
+            // if(val && this.detail){
+            //     if(val == 1){
+            //         str = '@微信'
+            //     }else{
+            //         str = this.detail.customerTypeValue ? '@' + this.detail.customerTypeValue : ''
+            //     }
+            // }
+            // console.log('val',str)
             return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
         },
     },
@@ -493,6 +514,9 @@ export default {
                     font-size: 24px;
                     line-height: 32px;
                     margin-left: 8px;
+                    &.green{
+                        color: @green;
+                    }
                 }
                 .gender{
                     width: 30px;
