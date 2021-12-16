@@ -37,6 +37,14 @@ export default {
             type: Boolean,
             default: false
         },
+        columnIndex: {    //设置对应列选中项的索引
+            type: [String,Number,Array],
+            default: null
+        },
+        columnValue: {    //设置对应列选中项的值
+            type: [String,Array],
+            default: null
+        },
     },
     data(){
         return {}
@@ -60,8 +68,29 @@ export default {
         },
     },
     watch: {
+        columnIndex(val){
+            if(val){
+                this.$nextTick(() => {
+                    this.$refs.picker.setColumnIndex(0,val[0])
+                    if(val.length > 1){
+                        this.$refs.picker.setColumnIndex(1,val[1])
+                    }
+                })
+            }
+        },
+        columnValue(val){
+            if(val){
+                this.$nextTick(() => {
+                    this.$refs.picker.setColumnValue(0,val)
+                })
+            }
+        },
         dialog(val){
-            val ? document.getElementById('html').style.overflow = 'hidden' : document.getElementById('html').style.overflow = 'auto'
+            if(val){
+                document.getElementById('html').style.overflow = 'hidden'
+            }else {
+                document.getElementById('html').style.overflow = 'auto'
+            }
         },
     }
 }

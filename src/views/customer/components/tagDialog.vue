@@ -16,22 +16,14 @@
                 <span class="text">添加</span>
             </div>
             <div class="input_box" v-else>
-                <input type="text" class="input" v-model="msg" placeholder="输入后回车">
+                <input type="text" class="input" v-model="msg" @input="msg=msg.replace(' ','')" @keyup.enter="confirmFun('add')" maxlength="30" placeholder="输入后回车">
                 <span class="btn" @click="isAdd = true">取消</span>
-                <span class="btn main" @click="saveTagFun">确定</span>
+                <span class="btn main" @click="confirmFun('add')">确定</span>
             </div>
             <div class="tag_box">
-                <div class="icon_tag">
-                    <span class="text">nice</span>
-                    <jzIcon class="icon" type="icon-shanchu"></jzIcon>
-                </div>
-                <div class="icon_tag cur">
-                    <span class="text">有意向购买</span>
-                    <jzIcon class="icon" type="icon-shanchu"></jzIcon>
-                </div>
-                <div class="icon_tag">
-                    <span class="text">优质客户</span>
-                    <jzIcon class="icon" type="icon-shanchu"></jzIcon>
+                <div class="icon_tag" @click="tagChangeFun(item)" :class="{'cur':item.isChecked}" v-for="item in personList" :key="item.id">
+                    <span class="text">{{item.name}}</span>
+                    <jzIcon class="icon" @click.native="confirmFun('delete',item)" type="icon-shanchu"></jzIcon>
                 </div>
             </div>
         </div>
@@ -66,10 +58,14 @@ export default {
             type: Array,
             default: () => []
         },
+        personList: {
+            type: Array,
+            default: () => []
+        },
     },
     data(){
         return {
-            isAdd: false,
+            isAdd: true,
             msg: '',
         }
     },
@@ -86,17 +82,50 @@ export default {
     methods: {
         tagChangeFun(row){     //企业标签选择
             console.log('row',row)
-            row.active = !row.active
+            if(this.type == 'company'){
+                row.active = !row.active
+            }else{
+                row.isChecked = row.isChecked ? 0 : 1
+            }
         },
         addFun(){   //新增标签
             this.msg = ''
             this.isAdd = false
         },
-        saveTagFun(){   //确认个人标签新增
-            this.isAdd = true
-        },
-        confirmFun(){
-            this.$emit('sure')
+        confirmFun(type,val){
+            let _type = type == 'add' || type == 'delete' ? type : this.type
+            let _data = null
+            switch (_type) {
+                case 'add':
+                    _data = this.msg
+                    this.isAdd = true
+                    break;
+                case 'delete':
+                    _data = val
+                    break;
+                case 'company':
+                    _data = []
+                    this.companyList.forEach(el => {
+                        el.children.forEach(son => {
+                            if(son.active){
+                                _data.push(son)
+                            }
+                        })
+                    })
+                    break;
+                case 'person':
+                    _data = []
+                    this.personList.forEach(el => {
+                        if(el.isChecked){
+                            _data.push(el)
+                        }
+                    })
+                    break;
+                default:
+                    break;
+            }
+            console.log('sure',_type,_data)
+            this.$emit('sure',_type,_data)
         },
     },
 }

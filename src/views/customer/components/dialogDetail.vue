@@ -46,23 +46,19 @@ export default {
             default: ''
         },
     },
-    data(){
-        return {
-            dialog: false,
-        }
+    computed: {
+        dialog: {
+            get(){
+                return this.value
+            },
+            set(val){
+                this.$emit('input',val)
+            }
+        },
     },
     watch:{
-        value(val){
-            this.dialog = val
-        },
         dialog(val){
-            if(val){
-                document.getElementById('html').style.overflow = 'hidden'
-            }else{
-                document.getElementById('html').style.overflow = 'auto'
-            }
-            if(this.value==val){return false}
-            this.$emit('input',val)
+            val ? document.getElementById('html').style.overflow = 'hidden' : document.getElementById('html').style.overflow = 'auto'
         },
     },
 }

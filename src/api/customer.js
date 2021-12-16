@@ -172,9 +172,9 @@ export function cluecustomer_addtag(data) {
         data
     })
 }
-export function cluecustomer_updPertag(data) {
+export function cluecustomer_updPertag(data,id) {
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/updPertag',
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/updPertag/' + id,
         method: 'post',
         data
     })
