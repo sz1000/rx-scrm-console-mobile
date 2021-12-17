@@ -79,10 +79,7 @@ export default {
                 const { code, data } = res
 
                 if (code === 'success') {
-                    const { unionid, openid } = data
-
-                    this.unionId = unionid
-                    this.openId = openid
+                    this.unionId = data
                     this.materialOperation()
                 }
             })
@@ -93,7 +90,6 @@ export default {
                 model: {
                     materialType: this.materialType,
                     unionId: this.unionId,
-                    openId: this.openId,
                     userNo: this.userNo ? this.userNo : ''
                 }
             }
