@@ -7,9 +7,9 @@
         </div>
         <ul class="list-item-right">
           <li class="right-top">
-            <div class="name-box one-line">
-              <h3 class="one-line">{{ i.name }}</h3>
-              <span v-if="i.cropFullName" class="crop-name">@{{ i.cropFullName }}</span>
+            <div class="name-box">
+              <h3 class="one-line">{{ i.customerCalled }}</h3>
+              <span v-if="i.cropFullName" class="crop-name one-line">@{{ i.cropFullName }}</span>
             </div>
             <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
           </li>
@@ -17,6 +17,7 @@
             <span v-if="i.stage" :class="{first: i.stage == '沟通洽谈', second: i.stage == '合同签约', third: i.stage == '维护运营', fourth: i.stage == '暂停', fifth: i.stage == '终止'}">{{ i.stage }}</span>
             <span v-if="i.source">{{ i.source }}</span>
             <span v-if="i.customerType">{{ i.customerType }}</span>
+            <span v-show="i.customerTagNames && i.customerTagNames.length" v-for="item in i.customerTagNames" :key="item">{{ item }}</span>
           </li>
           <li class="right-bottom">
             <span v-if="i.phone">{{ i.phone }}</span>
@@ -163,19 +164,16 @@ export default {
         justify-content: space-between;
         max-width: 100%;
         .name-box {
-          max-width: 85%;
+          display: flex;
+          align-items: flex-end;
+          max-width: calc(100% - 130px);
           h3 {
-            display: inline-block;
             max-width: 100%;
-            vertical-align: bottom;
             color: @fontSub3;
             font-size: 32px;
             font-weight: 600;
           }
           .crop-name {
-            display: inline-block;
-            max-width: 100%;
-            vertical-align: bottom;
             margin-left: 10px;
             color: @yellow;
             font-size: 20px;
