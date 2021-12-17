@@ -9,7 +9,7 @@
                 <div class="val">
                     <div class="name_box" v-if="customerInfo.name">
                         <div class="name">{{customerInfo.name}}</div>
-                        <div class="alt" :class="{'green':customerInfo.externalType == 1}" v-if="Number(customerInfo.customerType) && customerInfo.name.length < 10">{{customerInfo.externalType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
+                        <div class="alt" :class="{'green':customerInfo.externalType == 1}" v-if="customerInfo.externalType && customerInfo.name.length < 10">{{customerInfo.externalType == 1 ? '@微信' : `@${customerInfo.customerName}`}}</div>
                         <div class="icon" v-if="customerInfo.name.length < 10">
                             <img src="@/images/icon_female@2x.png" v-if="customerInfo.gender == '2'" />
                             <img src="@/images/man.png" v-if="customerInfo.gender == '1'" />
