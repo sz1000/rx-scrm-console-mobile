@@ -47,12 +47,12 @@
      
       <div class="drainage_warp ">
            <div class="customAccont tool">引流获客</div>
-      <div class="btnRouters">
+      <div class="btnRouter">
         <div class="commonBtn" @click="FnToRouter('/talkTool/enterpriseCode')" v-show="menulist.includes('livecode')">
           <div class="huoma huoma_bg">
              <img src="../assets/svg/huoma.svg" alt="" /> 
           </div>
-          <p>互动活码</p>
+          <p>客户活码</p>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
           <!-- <img src="../images/qhm.png" alt="" /> -->
@@ -134,7 +134,7 @@
        </div>
        <div class="drainage_warp" v-show="menulist.includes('labelGroup') ||  menulist.includes('customerSend') || menulist.includes('groupSend')">
       <div class="customAccont manage">精细运营</div>
-      <div class="btnRouters custom">
+      <div class="btnRouter custom">
        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
          <div class="huoma huoma_bg">
              <img src="../assets/svg/ongroup.svg" alt="" /> 
@@ -260,6 +260,11 @@ export default {
     FnToRouter(path) {
       this.$router.push(path)
     },
+    // FnToRouters() {
+    //   // /customerManage/grouplist
+    //   // this.$router.push(path)
+    //   this.$router.push({ path: '/customerManage/grouplist', query: { flag: "1"}});
+    // },
     showMsg() {
       Notify({
         message: '功能即将上线，请耐心等待~',
@@ -538,6 +543,12 @@ export default {
       .handshake_bg{
         background: #D14343;
       }
+            .huoma_bg{
+          background: #36B39E;
+      }
+         .kehuqunfa_bg{
+          background: #55A7FE;
+      }
     }
   }
     .btnRouters {
@@ -558,7 +569,7 @@ export default {
       text-align: center;
       // width: 100px;
       cursor: pointer;
-      margin-right: 84px;
+      margin-right: 74px;
       .nomaltext {
         color: #c0c4cc;
       }

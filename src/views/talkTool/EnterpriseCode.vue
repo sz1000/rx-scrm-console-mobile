@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">互动活码</span>
+      <span class="textTitle">客户活码</span>
     </div>
     <div class="tabMenu">
       <!-- <div class="tabBtn">全部活码</div> -->
