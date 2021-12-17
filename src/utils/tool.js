@@ -387,6 +387,9 @@ export function getFileType(name) {
     if (/\.pdf$/i.test(name)) {
         return 4
     }
+    if (/\.mp4$/i.test(name)) {
+        return 5
+    }
 
     return 0
 }
@@ -401,7 +404,9 @@ export function getFileDefaultCover(name) {
         pdfUrl =
         'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216135330506596/default_pdf2.png',
         fileUrl =
-        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216114825551154/defaultFile.png'
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216114825551154/defaultFile.png',
+        videoUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211217164417455332/default_video.png'
         // let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png',
         //     wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png',
         //     excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png',
@@ -416,6 +421,8 @@ export function getFileDefaultCover(name) {
         excelUrl :
         getFileType(name) == 4 ?
         pdfUrl :
+        getFileType(name) == 5 ?
+        videoUrl :
         fileUrl
 }
 // 返回压缩后的图片二进制流（blob）

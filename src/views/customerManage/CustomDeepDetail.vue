@@ -426,6 +426,13 @@ export default {
           this.optionSource = res.data.list
           this.optionsScale = res.data.corpScaleList
           this.basicInfo = res.data.clueCustomerEntity
+          if (this.basicInfo.customerType == 0) {
+            this.basicInfo.customerType = '未知'
+          } else if (this.basicInfo.customerType == 1) {
+            this.basicInfo.customerType = '微信用户'
+          } else {
+            this.basicInfo.customerType = '企微用户'
+          }
           let tempSystem = this.systemList.map((item) => {
             return {
               name: item.name,
