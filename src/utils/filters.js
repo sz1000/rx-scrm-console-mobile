@@ -14,10 +14,11 @@ const $setAvatar = function(val) {
 
 const $gender = function(val) {
     let obj = {
+        0: '未知',
         1: '男',
-        2: '女'
+        2: '女',
     }
-    return obj ? obj[val] : '未知'
+    return val ? obj[val] : '未知'
 }
 
 const $customerType = function(val) {

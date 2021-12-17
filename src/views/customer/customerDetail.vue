@@ -1,9 +1,19 @@
 <template>
     <div class="detail_wrap">
+        <div class="top_back" @click="$router.go(-1)">
+            <img class="icon" src="@/assets/svg/icon_back.svg" alt="">
+            <div class="title">客户详情</div>
+        </div>
         <div class="top_box">
             <div class="avatar_box">
                 <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
                 <div class="val">
+                    <!-- <van-popover get-container="avatar_box" v-model="showPopover" placement="bottom" theme="dark" trigger="click">
+                        <div class="name">{{detail.name}}</div>
+                        <template #reference>
+                            <div class="name">{{detail.name}}</div>
+                        </template>
+                    </van-popover> -->
                     <div class="name">{{detail.name}}</div>
                     <div class="alt" :class="{'green':detail.externalType == 1}">{{typeNameFun(detail.externalType)}}</div>
                     <img class="gender" :src="gender" alt="">
@@ -73,7 +83,11 @@
                     <div class="item">
                         <div class="label">客户阶段</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.stage" placeholder="请输入">
+                            <!-- <input type="text" class="input" v-model="detail.stage" placeholder="请输入"> -->
+                            <div class="icon_select" @click="openSelectDialog('stage')">
+                                <span :class="{'placeholder':!detail.stage}">{{detail.stage | $textEmpty('请选择')}}</span>
+                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                            </div>
                         </div>
                     </div>
                     <div class="item">
@@ -121,31 +135,48 @@
                 <div class="item_box">
                     <div class="item">
                         <div class="label">联系人</div>
-                        <div class="val">{{detail.name}}</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.name" @change="updateFun" maxlength="20" placeholder="请输入">
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">性别</div>
-                        <div class="val">{{detail.gender | $gender}}</div>
+                        <div class="val">
+                            <div class="icon_select" @click="openSelectDialog('gender')">
+                                <span :class="{'placeholder':!detail.gender}">{{$gender(detail.gender)}}</span>
+                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                            </div>
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">手机号</div>
-                        <div class="val">{{detail.phone}}</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.phone" @change="updateFun" @input="detail.phone=detail.phone.replace(/[^\d]/g,'')" maxlength="11" placeholder="请输入">
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">微信号</div>
-                        <div class="val">{{detail.weixin}}</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.weixin" @change="updateFun" maxlength="20" placeholder="请输入">
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">微信昵称</div>
-                        <div class="val">{{detail.name}}</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.wechatNickname" @change="updateFun" maxlength="20" placeholder="请输入">
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">职务</div>
-                        <div class="val">{{detail.position}}</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.position" @change="updateFun" maxlength="20" placeholder="请输入">
+                        </div>
                     </div>
                     <div class="item">
                         <div class="label">邮箱</div>
-                        <div class="val">{{detail.email}}</div>
+                        <div class="val">
+                            <input type="text" class="input" v-model="detail.email" @change="updateFun" maxlength="20" placeholder="请输入">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -236,6 +267,7 @@
 
 <script>
 import { SelectDialog,InputDialog,TagDialog } from './components'
+import { genderType } from '@/utils/config'
 import {
   cluecustomer_toupdate,
   cluecustomer_update,
@@ -257,6 +289,7 @@ export default {
             dialog_tag: false,
             personTagMore: false,
             companyTagMore: false,
+            showPopover: false,
             columns: [],
             pickerType: '',
             select: {
@@ -273,15 +306,18 @@ export default {
             tagTitle: '企业标签',
             commonList: [],                  //所有列表(综合)
             customerList:[],                 //客户来源
-            customerTypeList: [],  //客户类型
+            customerTypeList: [],            //客户类型
             scaleList: [],                   //企业规模
+            stageList: [],                   //客户阶段
             industryList: [],                //所属行业
             allCompanyTagList: [],           //企业标签(all)
             companyTagList: [],              //企业标签
             personTagList: [],               //个人标签
             customList: [],                  //自定义信息
+            genderList: genderType,
             sourcePerTag: [],
             allComTagList: [],
+            industryId: null,
             isPersonMore: false,
             isCompanyMore: false,
 
@@ -368,6 +404,7 @@ export default {
                     this.customerTypeList = this.getTypeList('customer_type')
                     // this.customerList = data.list
                     this.scaleList = this.getTypeList('scale')
+                    this.stageList = this.getTypeList('stage')
                     // this.scaleList = data.corpScaleList
                     data.comlist.forEach(el => {
                         if(el.children.length == 0){
@@ -383,7 +420,7 @@ export default {
                     this.industryList = data.comlist
                     let tempColum = data.clueCustomerEntity.corpCustomColumnMap
                     data.head.forEach(el => {
-                        el.value = tempColum ? tempColum[item.columnValue] : ''
+                        el.value = tempColum ? tempColum[el.columnValue] : ''
                     })
                     this.customList =  data.head.filter(item => {
                         return item.columnType
@@ -396,7 +433,19 @@ export default {
             let val = data.cropSubIndustry ? data.cropSubIndustry.split(',') : null
             console.log('val',val)
             if(val){
-                data.industryName = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
+                let i = 0,j = 0
+                this.industryList.forEach((el,index) => {
+                    if(el.id == val[0]){
+                        i = index
+                    }
+                    el.children.forEach((son,s) => {
+                        if(son.id == val[1]){
+                            j = s
+                        }
+                    })
+                })
+                this.industryId = [i,j]
+                data.industryName = this.industryList[i].name + '/' + this.industryList[i].children[j].name
             }
 
             this.getMoreState()
@@ -523,19 +572,31 @@ export default {
                     this.select.value = this.detail.cropscale
                     this.columns = this.scaleList
                     break;
+                case 'stage':  //客户阶段
+                    this.select.title = '客户阶段'
+                    this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.detail.stage
+                    this.columns = this.stageList
+                    break;
                 case 'industry':  //所属行业
                     this.select.title = '所属行业'
                     this.select.isGetIndex = true
-                    this.select.value = null,
-                    this.select.indexList = this.detail.cropSubIndustry.split(',')
+                    this.select.value = null
+                    this.select.indexList = this.industryId
                     this.columns = this.industryList
                     break;
+                case 'gender':    //性别
+                    this.select.title = '性别'
+                    this.select.isGetIndex = false
+                    this.select.value = this.$gender(this.detail.gender)
+                    this.columns = this.genderList
                 default:
                     break;
             }
             this.dialog = true
         },
-        selectedFun(val){   //筛选项确认
+        selectedFun(val,name){   //筛选项确认
             let type = this.pickerType
             switch (type) {
                 case 'source':  //客户来源
@@ -553,12 +614,19 @@ export default {
                     this.detail.cropscale = val[0].name
                     this.detail.corpScale = val[0].id
                     break;
+                case 'stage':  //客户阶段
+                    console.log('客户阶段',val)
+                    this.detail.stage = val[0].name
+                    break;
                 case 'industry':  //所属行业
-                    console.log('所属行业',val,this.industryList[val[0]])
-                    let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
-                    this.detail.industryName = str
+                    // console.log('所属行业',val,this.industryList[val[0]])
+                    // let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
+                    this.detail.industryName = name.join('/')
                     this.detail.cropSubIndustry = val.join(',')
                     break;
+                case 'gender':  //性别
+                    console.log('asd',val)
+                    this.detail.gender = val[0].code.toString()
                 default:
                     break;
             }
@@ -583,6 +651,37 @@ export default {
     width: 100%;
     min-height: 100vh;
     background: @white;
+    .top_back{
+        width: 100%;
+        height: 88px;
+        position: relative;
+        text-align: center;
+        &::before{
+            content: '';
+            width: 100%;
+            height: 1px; /* no */
+            background: @lineColor;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            transform: scaleY(.5);
+        }
+        .icon{
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            left: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .title{
+            display: inline-block;
+            line-height: 88px;
+            font-size: 28px;
+            font-weight: bold;
+            color: @fontMain;
+        }
+    }
     .top_box{
         width: 100%;
         padding: 32px;
