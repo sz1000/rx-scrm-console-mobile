@@ -387,16 +387,31 @@ export function getFileType(name) {
     if (/\.pdf$/i.test(name)) {
         return 4
     }
+    if (/\.mp4$/i.test(name)) {
+        return 5
+    }
 
     return 0
 }
 // 获取素材不同类型文件默认封面图
 export function getFileDefaultCover(name) {
-    let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png',
-        wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png',
-        excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png',
-        pdfUrl = 'https://test-h5.jzcrm.com/static/img/default_pdf2.png',
-        fileUrl = 'https://test-h5.jzcrm.com/static/img/default_file.png'
+    let pptUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216135539604031/default_ppt.png',
+        wordUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216135516502226/default_word.png',
+        excelUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216135414874992/default_excel.png',
+        pdfUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216135330506596/default_pdf2.png',
+        fileUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211216114825551154/defaultFile.png',
+        videoUrl =
+        'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211217164417455332/default_video.png'
+        // let pptUrl = 'https://test-h5.jzcrm.com/static/img/default_ppt.png',
+        //     wordUrl = 'https://test-h5.jzcrm.com/static/img/default_word.png',
+        //     excelUrl = 'https://test-h5.jzcrm.com/static/img/default_excel.png',
+        //     pdfUrl = 'https://test-h5.jzcrm.com/static/img/default_pdf2.png',
+        //     fileUrl = 'https://test-h5.jzcrm.com/static/img/default_file.png'
 
     return getFileType(name) == 1 ?
         pptUrl :
@@ -406,6 +421,8 @@ export function getFileDefaultCover(name) {
         excelUrl :
         getFileType(name) == 4 ?
         pdfUrl :
+        getFileType(name) == 5 ?
+        videoUrl :
         fileUrl
 }
 // 返回压缩后的图片二进制流（blob）

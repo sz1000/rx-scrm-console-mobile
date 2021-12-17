@@ -90,8 +90,6 @@ export default {
       this.getListData()
     },
     onLoad() {
-      // console.log('----gundong------')
-      this.page++
       this.getListData()
     },
     getListData() {
@@ -111,15 +109,17 @@ export default {
         .then((res) => {
           this.$toast.clear()
           if (res.result) {
-            this.total = res.data.iPage.total
-            this.loading = false
             let rows = res.data.iPage.records //请求返回当页的列表
-            if (rows == null || rows.length === 0) {
-              this.finished = true
-              return
+            this.loading = false
+            if (this.page == 1) {
+              this.cardList = []
             }
-            let newSetArr = this.cardList.concat(rows)
-            this.cardList = this.unique(newSetArr)
+            this.page++
+            this.total = res.data.iPage.total
+            this.cardList = this.cardList.concat(rows)
+
+            // let newSetArr = this.cardList.concat(rows)
+            // this.cardList = this.unique(newSetArr)
             this.cardList.forEach((item) => {
               if (item.gender == '0' || item.gender == '') {
                 item.gender = '未知'
@@ -132,7 +132,7 @@ export default {
             if (this.cardList.length >= this.total) {
               this.finished = true
             } else {
-              this.onLoad()
+              this.finished = false
             }
           }
         })
@@ -294,6 +294,7 @@ export default {
     }
   }
   .cardWarp {
+    // min-height: 100vh;
     .topInfo {
       margin-top: 24px;
       background: #fff;

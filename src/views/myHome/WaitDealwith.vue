@@ -57,7 +57,7 @@
             <span class="text_image">{{item.content}}</span>
           </div>
           <!-- 链接 -->
-          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
+          <div class="top_content top_content_link" v-if="item.msgtype == 'link' || item.msgtype == 'pdf'">
             <p>{{item.content}}</p>
             <div class="link_warp">
               <img src="../../images/article.png" alt="">

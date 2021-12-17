@@ -584,7 +584,7 @@ export default {
           }
         })
       } else if (v == 2) {
-        cluecustomer_updPertag(this.personTagList).then(res => {
+        cluecustomer_updPertag(this.personTagList,this.clueCustomerNo).then(res => {
           if(res.result){
             this.show = false
             document.getElementById('html').style.overflow = 'auto'

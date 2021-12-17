@@ -4,7 +4,7 @@
             <div class="tit">附件</div>
             <div class="icon_upload">
                 <img class="icon" src="@/assets/svg/icon_upload.svg" alt="">
-                <input class="file" type="file">
+                <input class="file" @change="uploadFun" type="file">
             </div>
         </div>
         <div class="enclosure_list">
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { cluecustomeraccessory_upload } from '@/api/customer'
 export default {
     data(){
         return {
@@ -42,6 +43,13 @@ export default {
     methods: {
         selectFun(action,index){
             console.log('asd',action,index)
+        },
+        uploadFun(e){    //附件上传
+            cluecustomeraccessory_upload(e,'A280C994F2114D3ABFA02FAED9B8B081').then(res => {
+                if(res.result){
+
+                }
+            })
         },
         fileIcon(val){
             let obj = {

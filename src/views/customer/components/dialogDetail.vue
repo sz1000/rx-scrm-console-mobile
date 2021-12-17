@@ -5,7 +5,7 @@
                 <div class="title">{{title}}</div>
                 <img class="close" v-if="closeable" @click="dialog = false" src="@/assets/svg/icon_close.svg" alt="">
             </div>
-            <div class="dialog_content" :class="{'opera':isOpera}">
+            <div class="dialog_content" :class="[{'opera':isOpera},className]">
                 <slot></slot>
             </div>
             <slot name="footer_box"></slot>
@@ -41,24 +41,24 @@ export default {
             type: Boolean,
             default: false,
         },
+        className: {
+            type: String,
+            default: ''
+        },
     },
-    data(){
-        return {
-            dialog: false,
-        }
+    computed: {
+        dialog: {
+            get(){
+                return this.value
+            },
+            set(val){
+                this.$emit('input',val)
+            }
+        },
     },
     watch:{
-        value(val){
-            this.dialog = val
-        },
         dialog(val){
-            if(val){
-                document.getElementById('html').style.overflow = 'hidden'
-            }else{
-                document.getElementById('html').style.overflow = 'auto'
-            }
-            if(this.value==val){return false}
-            this.$emit('input',val)
+            val ? document.getElementById('html').style.overflow = 'hidden' : document.getElementById('html').style.overflow = 'auto'
         },
     },
 }
@@ -99,6 +99,9 @@ export default {
         &.opera{
             height: calc(60vh - 248px);
             padding-top: 32px;
+        }
+        &.tag{
+            height: calc(60vh - 104px);
         }
         .list{
             width: 100%;

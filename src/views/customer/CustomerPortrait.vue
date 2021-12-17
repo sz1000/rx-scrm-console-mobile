@@ -14,15 +14,15 @@
 
       <!-- 协助人 -->
       <div class="xiezuoBox" style="padding: 15px;" v-if="contentType == 1">
-      	<HelperFile :isPortrait="1"></HelperFile>
+        <HelperFile :isPortrait="1"></HelperFile>
       </div>
 
       <!-- 商机 -->
       <opportunities v-if="contentType == 2" :customerNo="item && item.clueCustomerNo" fromType="3"></opportunities>
-      
+
       <!-- 附件 -->
       <div class="fujianBox" style="padding: 15px;" v-if="contentType == 3">
-      	<Fujian :isPortrait="1"></Fujian>
+        <Fujian :isPortrait="1"></Fujian>
       </div>
     </div>
 
@@ -58,7 +58,7 @@
     <!-- 协助人选择弹窗 -->
     <reminders-box ref="remindersBox" :customerNo="item && item.clueCustomerNo"></reminders-box>
   </div>
-  
+
   <!-- <div v-else-if="showPortraitType == 2">
     <Groupportrait></Groupportrait>
   </div> -->
@@ -73,10 +73,10 @@ import commonFun from '../../utils/commonToken'
 import CustomerItem from '../../components/CustomerManage/customerItem'
 import Dynamic from '../../components/CustomerManage/dynamic'
 import Opportunities from '../../components/BusinessOpportunities/opportunities'
-import HelperFile from "../customerManage/comTip/helperFile"
-import Fujian from "../customerManage/comTip/fujian"
-import GuideBox from "../../components/CustomerManage/guideBox"
-import MessageBox from "../../components/CustomerManage/messageBox"
+import HelperFile from '../customerManage/comTip/helperFile'
+import Fujian from '../customerManage/comTip/fujian'
+import GuideBox from '../../components/CustomerManage/guideBox'
+import MessageBox from '../../components/CustomerManage/messageBox'
 import RemindersBox from '../../components/CustomerManage/dialog/remindersBox'
 import { mapState } from 'vuex'
 import { getStoreValue } from '../../utils/LocalStorageDate'
@@ -92,7 +92,7 @@ export default {
     Fujian,
     GuideBox,
     MessageBox,
-    RemindersBox
+    RemindersBox,
   },
   data() {
     return {
@@ -107,7 +107,7 @@ export default {
       sendUserInfo: {},
       timeLineList: [],
       contentType: 0,
-      navList: [ '客户动态', '协助人', '商机', '附件' ],
+      navList: ['客户动态', '协助人', '商机', '附件'],
       show: false,
       isShowDialog: null,
       titleName: '',
@@ -135,17 +135,17 @@ export default {
   },
   watch: {
     chatId(val) {
-      console.log("chat>>>???", val)
-      if(val) {
+      console.log('chat>>>???', val)
+      if (val) {
         this.showPortraitType = 2
       }
     },
     userId(val) {
-      console.log("???>>>???", val)
+      console.log('???>>>???', val)
       let { comeFrom } = this.$route.query
 
-      if (!comeFrom || comeFrom && comeFrom != 'messageCard') {
-        if(val) {
+      if (!comeFrom || (comeFrom && comeFrom != 'messageCard')) {
+        if (val) {
           this.getClueCustomerByid()
         } else {
           // commonFun.getWxAppid()
@@ -157,12 +157,14 @@ export default {
     this.getMethod()
   },
   mounted() {
-    window.onresize = () => (() => {
-      if (document.getElementsByClassName('vant_sheet ')) {
-        this.showHeight =  document.getElementsByClassName('vant_sheet ')[0].clientHeight
-      }
-      // console.log(this.showHeight, this.docmHeight)
-    })()
+    window.onresize = () =>
+      (() => {
+        if (document.getElementsByClassName('vant_sheet ')) {
+          this.showHeight =
+            document.getElementsByClassName('vant_sheet ')[0].clientHeight
+        }
+        // console.log(this.showHeight, this.docmHeight)
+      })()
   },
   provide() {
     return {
@@ -201,17 +203,20 @@ export default {
     },
     getUserName() {
       return new Promise((resolve, reject) => {
-        this.$network.get('/user-service/user/getUserName', { endPoint: 'mobile' }).then(res => {
-          let {code, data} = res
-          
-          if (code === 'success' && data) {
-            this.showSecret = !data.haveSecret
-            this.sendUserInfo = data && data.userEntity
-            resolve()
-          } else {
-            reject()
-          }
-        }).catch(reject)
+        this.$network
+          .get('/user-service/user/getUserName', { endPoint: 'mobile' })
+          .then((res) => {
+            let { code, data } = res
+
+            if (code === 'success' && data) {
+              this.showSecret = !data.haveSecret
+              this.sendUserInfo = data && data.userEntity
+              resolve()
+            } else {
+              reject()
+            }
+          })
+          .catch(reject)
       })
     },
     getMethod() {
@@ -235,7 +240,7 @@ export default {
           this.$toast('信息有误')
         }
       } else {
-        console.log('userId',this.userId)
+        console.log('userId', this.userId)
         if (!this.userId) {
           // commonFun.getWxAppid()
         } else {
@@ -251,31 +256,39 @@ export default {
         loadingType: 'spinner',
         duration: 0,
       })
-      this.$network.get('/customer-service/m/cluecustomer/getClueCustomerByid', {
-        // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
-        id: this.userId,
-      }).then((res) => {
-        console.log('entry', this.entry)
-        this.getUserName().then(() => {
-          this.$toast.clear()
-          this.loadingShow = false
-          this.name = res.data.clueCustomerVO.name
-          this.nameFrom = res.data.clueCustomerVO.customerType
-          this.item = res.data.clueCustomerVO
-          this.imageUser = res.data.clueCustomerVO.avatar
-          // this.timeLineList = res.data.followMessageEntity
-          localStorage.removeItem('userId')
-
-          localStorage.setItem("ISPORTRIAT_customer", JSON.stringify(this.item))
-
-          this.getShowPortraitType()
+      this.$network
+        .get('/customer-service/m/cluecustomer/getClueCustomerByid', {
+          // id: 'woY-gRDAAAwqsxbqJZT0etf3nkVE9NLg',
+          id: this.userId,
         })
-      })
+        .then((res) => {
+          console.log('entry', this.entry)
+          this.getUserName().then(() => {
+            this.$toast.clear()
+            this.loadingShow = false
+            this.name = res.data.clueCustomerVO.name
+            this.nameFrom = res.data.clueCustomerVO.customerType
+            this.item = res.data.clueCustomerVO
+            this.imageUser = res.data.clueCustomerVO.avatar
+            // this.timeLineList = res.data.followMessageEntity
+            localStorage.removeItem('userId')
+
+            localStorage.setItem(
+              'ISPORTRIAT_customer',
+              JSON.stringify(this.item)
+            )
+
+            this.getShowPortraitType()
+          })
+        })
     },
     getShowPortraitType() {
       let { comeFrom } = this.$route.query
-       
-      if (this.entry && this.entry == 'single_chat_tools' || comeFrom == 'messageCard') {
+
+      if (
+        (this.entry && this.entry == 'single_chat_tools') ||
+        comeFrom == 'messageCard'
+      ) {
         this.showPortraitType = 1
         this.showGuideBox()
         if (this.$route.query && this.$route.query.comeFrom == 'messageCard') {
@@ -283,7 +296,7 @@ export default {
             this.$refs.dynamic.changeDynamicNav(3)
           })
         }
-      } else if(this.entry && this.entry == 'group_chat_tools') {
+      } else if (this.entry && this.entry == 'group_chat_tools') {
         this.showPortraitType = 2
       }
     },
@@ -332,7 +345,9 @@ export default {
       this.$refs.remindersBox.show()
     },
     getPeople(data) {
-      let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
+      let arr = JSON.parse(
+        JSON.stringify(this.$refs.messageBox.receiveUserInfo)
+      )
 
       arr.push(data)
       this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
@@ -348,13 +363,13 @@ export default {
       return newArr
     },
     noHas(arr, userNo) {
-      let result = arr.filter((item) =>{
-        return item.userNo == userNo;
+      let result = arr.filter((item) => {
+        return item.userNo == userNo
       })
-      return result.length == 0 ? true : false;
+      return result.length == 0 ? true : false
     },
     checkBeforeSend(receiveUserInfo, message) {
-      if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
+      if (!receiveUserInfo || (receiveUserInfo && !receiveUserInfo.length)) {
         this.$toast('接收人不能为空')
         return false
       } else if (!message) {
@@ -376,8 +391,8 @@ export default {
         sendUserInfo: {
           avatar,
           userName: name,
-          userNo
-        }
+          userNo,
+        },
       }
 
       let { code, msg } = await MessageNotificatio(params)
@@ -388,7 +403,7 @@ export default {
       }
       this.$toast(msg)
     },
-  }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -407,31 +422,31 @@ export default {
     margin-top: 24px;
     background: #fff;
     .header-nav {
-        display: flex;
-        width: 100%;
-        height: 100px;
-        margin-bottom: 24px;
-        border-bottom: 1px solid #F0F2F7;
-        li {
-            flex: 1;
-            height: 100%;
-            line-height: 100px;
-            text-align: center;
-            span {
-                display: inline-block;
-                height: 100%;
-                margin: 0 auto;
-                color: #838A9D;
-                font-size: 28px;
-                font-weight: 600;
-            }
+      display: flex;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f0f2f7;
+      li {
+        flex: 1;
+        height: 100%;
+        line-height: 100px;
+        text-align: center;
+        span {
+          display: inline-block;
+          height: 100%;
+          margin: 0 auto;
+          color: #838a9d;
+          font-size: 28px;
+          font-weight: 600;
         }
-        .active {
-            span {
-                color: #4168F6;
-                border-bottom: 4px solid #4168F6;
-            }
+      }
+      .active {
+        span {
+          color: #4168f6;
+          border-bottom: 4px solid #4168f6;
         }
+      }
     }
   }
   .bottom_model {
@@ -466,7 +481,7 @@ export default {
             padding-top: 10px;
           }
         }
-        /deep/ .van-field__word-limit{
+        /deep/ .van-field__word-limit {
           position: absolute;
           bottom: -24px;
           right: 0;

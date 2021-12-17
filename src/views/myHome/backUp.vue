@@ -29,7 +29,6 @@
             <span>结束时间</span>
           </div>
         </div>
-
       </div>
       <div class="friend_warp">
         <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈</div>
@@ -83,6 +82,29 @@
       <div class="search_company">
         <van-field v-model="companyValue" left-icon="search" placeholder="标题/内容" />
       </div>
+      <div class="searchInput search_tab2">
+        <div class="select_date" @click="showPicker=true">
+          <img src="../../images/date_pick.png" alt="">
+          <div v-if="startDate&&endDate" class="time_sty">
+            <span>{{startDate}}</span>
+            至
+            <span>{{endDate}}</span>
+          </div>
+          <div v-else class="time_sty">
+            <span>开始时间</span>
+            -
+            <span>结束时间</span>
+          </div>
+        </div>
+        <div class="select_box" @click="filterCard">
+          <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
+          <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
+        </div>
+      </div>
+      <div class="friend_warp">
+        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
+        <div class="published_btn" @click="creatFriend">创建朋友圈任务</div>
+      </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <!-- 链接 素材库-->
@@ -96,11 +118,6 @@
           </div>
           <div class="top_content_link top_content" v-if="Object.keys(item.sendContent).length == 0">
             <p>{{item.massContent}}</p>
-            <!-- <div class="link_warp">
-              <img :src="item.sendContent.value[0].picurl" alt="" v-if="item.sendContent.value[0].picurl" />
-              <img src="../../images/article.png" alt="" v-else />
-              <div class="lint_url">{{item.sendContent.value[0].url}}</div>
-            </div> -->
           </div>
           <div class="bot_content">
             <span>{{item.createTime}}</span>
@@ -144,7 +161,10 @@ export default {
       tab: this.$route.query.tab,
       cardList: [],
       showFilter: false,
-      actions: [],
+      actions: [
+        { name: '未发表', id: 0 },
+        { name: '已发表', id: 1 },
+      ],
       tabName: 0,
       depId: localStorage.getItem('depId'),
       searchValue: '',
@@ -163,17 +183,9 @@ export default {
     if (this.tab == 1) {
       // 朋友圈
       this.getDataList()
-      this.actions = [
-        { name: '未发表', id: 0 },
-        { name: '已发表', id: 1 },
-      ]
     } else {
       // 群发
       this.getGroupList()
-      this.actions = [
-        { name: '未发送', id: 0 },
-        { name: '已发送', id: 1 },
-      ]
     }
   },
   methods: {
@@ -186,6 +198,8 @@ export default {
         },
       })
     },
+    // 创建朋友圈任务
+    creatFriend() {},
     clickVideo(id) {
       var video1 = document.getElementById(id)
       if (video1.requestFullscreen) {
@@ -198,6 +212,9 @@ export default {
         video1.mozRequestFullScreen()
         video1.play()
       }
+    },
+    filterCard() {
+      this.showFilter = true
     },
     getDataList() {
       this.cardList = []
@@ -237,19 +254,13 @@ export default {
     },
     tabClick(v) {
       this.tab = v
+      this.startDate = ''
+      this.endDate = ''
       this.tabName = 0
       if (v == 1) {
         this.getDataList()
-        this.actions = [
-          { name: '未发表', id: 0 },
-          { name: '已发表', id: 1 },
-        ]
       } else {
         this.getGroupList()
-        this.actions = [
-          { name: '未发送', id: 0 },
-          { name: '已发送', id: 1 },
-        ]
       }
     },
 
@@ -338,9 +349,10 @@ export default {
       }
     }
     .select_date {
-      padding: 22px 16px;
+      padding: 20px 16px;
       width: 332px;
       height: 68px;
+
       background: #f7f7f7;
       border-radius: 8px;
       display: flex;
@@ -362,6 +374,26 @@ export default {
     img {
       width: 40px;
       height: 40px;
+    }
+  }
+  .search_tab2 {
+    .select_date {
+      width: 432px;
+    }
+  }
+  .select_box {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    color: #838a9d;
+    width: 230px;
+    height: 68px;
+    background: #f7f8fa;
+    border-radius: 16px;
+    justify-content: space-between;
+    padding: 0 32px;
+    .rotate {
+      transform: rotate(180deg);
     }
   }
   .nav_tab {

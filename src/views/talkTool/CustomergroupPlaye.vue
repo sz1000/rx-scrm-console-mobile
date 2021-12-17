@@ -238,7 +238,8 @@
                     </div>
                     <div class="article_flex" v-if="item.materialList.tab == 2 && item.materialList.name">
                       <div>
-                        <img src="../../assets/images/pdf_image.png" alt="">
+                        <!-- <img src="../../assets/images/pdf_image.png" alt=""> -->
+                        <img :src="item.materialList.cover" alt="">
                       </div>
                       <div>
                         <p class="tite">{{item.materialList.name}}</p>

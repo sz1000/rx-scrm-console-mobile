@@ -18,11 +18,15 @@ import { http } from './utils/request'
 import * as echarts from 'echarts'
 
 import filters from '@/utils/filters'
+import globalComponents from '@/components/global/index.js'
 // import MintUI from 'mint-ui'
 // import 'mint-ui/lib/style.css'
 // Vue.use(MintUI)
 
 Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]))
+Object.keys(globalComponents).forEach((g) =>
+    Vue.component(g, globalComponents[g])
+)
 
 Vue.use(preventReClick)
 Vue.use(loadmore)

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/16px/添加</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="15_客户画像_客户详情_修改个人标签" transform="translate(-28.000000, -337.000000)" fill="#737373">
+            <g id="编组-8" transform="translate(0.000000, 261.000000)">
+                <g id="编组备份" transform="translate(16.000000, 68.000000)">
+                    <g id="icon/16px/添加" transform="translate(12.000000, 8.000000)">
+                        <g transform="translate(-0.000000, -0.000000)" id="编组">
+                            <g id="icon/16px/关闭_黑_小" transform="translate(8.000000, 8.000000) rotate(-270.000000) translate(-8.000000, -8.000000) ">
+                                <path d="M8,1.75 C8.41421356,1.75 8.75,2.08578644 8.75,2.5 L8.749,7 L13.25,7 C13.6642136,7 14,7.33578644 14,7.75 C14,8.16421356 13.6642136,8.5 13.25,8.5 L8.75,8.5 L8.75,13 C8.75,13.4142136 8.41421356,13.75 8,13.75 C7.58578644,13.75 7.25,13.4142136 7.25,13 L7.25,8.5 L2.75,8.5 C2.33578644,8.5 2,8.16421356 2,7.75 C2,7.33578644 2.33578644,7 2.75,7 L7.249,7 L7.25,2.5 C7.25,2.08578644 7.58578644,1.75 8,1.75 Z" id="Combined-Shape" transform="translate(8.000000, 7.750000) rotate(-270.000000) translate(-8.000000, -7.750000) "></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
