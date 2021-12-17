@@ -231,44 +231,6 @@
         <InputDialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></InputDialog>
         <!-- 企业标签 -->
         <TagDialog :title="tagTitle" :type="openType" :companyList="allComTagList" :personList="personTagList" v-model="dialog_tag" @sure="tagUpdateFun"></TagDialog>
-        <!-- <DialogDetail :title="tagTitle" v-model="dialog_tag" className="tag" isOpera>
-            <div class="dialog_row" v-if="openType == 'company'">
-                <div class="dialog_item" v-for="(item,index) in allCompanyTagList" :key="index">
-                    <div class="label">{{item.name}}</div>
-                    <div class="val">
-                        <div class="tag" @click="tagChangeFun(son)" :class="{'cur':son.active}" v-for="(son,i) in item.children" :key="i">{{son.name}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="dialog_row" v-if="openType == 'person'">
-                <div class="add_btn" v-if="isAdd">
-                    <img class="icon" src="@/assets/svg/icon_btn_add.svg" alt="">
-                    <span class="text">添加</span>
-                </div>
-                <div class="input_box" v-else>
-                    <input type="text" class="input" placeholder="输入后回车">
-                    <span class="btn">取消</span>
-                    <span class="btn main">确定</span>
-                </div>
-                <div class="tag_box">
-                    <div class="icon_tag">
-                        <span class="text">nice</span>
-                        <jzIcon class="icon" type="icon-shanchu"></jzIcon>
-                    </div>
-                    <div class="icon_tag cur">
-                        <span class="text">有意向购买</span>
-                        <jzIcon class="icon" type="icon-shanchu"></jzIcon>
-                    </div>
-                    <div class="icon_tag">
-                        <span class="text">优质客户</span>
-                        <jzIcon class="icon" type="icon-shanchu"></jzIcon>
-                    </div>
-                </div>
-            </div>
-            <div class="opera_box" slot="footer_box">
-                <div class="btn" @click="tagUpdateFun">确定</div>
-            </div>
-        </DialogDetail> -->
     </div>
 </template>
 
@@ -459,7 +421,6 @@ export default {
                     })
                     break;
                 case 'person':  //个人标签更改
-                    console.log('来了老弟')
                     cluecustomer_updPertag(val,this.id).then(res => {
                         if(res.result){
                             this.dialog_tag = false
