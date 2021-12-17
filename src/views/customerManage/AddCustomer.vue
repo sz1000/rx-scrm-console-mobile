@@ -26,7 +26,7 @@
                     <span>手机号码</span>
                 </div>
                 <div class="val">
-                    <input type="text" class="input" v-model="form.phone" maxlength="12" placeholder="请输入">
+                    <input type="text" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
                 </div>
             </div>
             <div class="item">
@@ -98,7 +98,7 @@
                     <span>办公地址</span>
                 </div>
                 <div class="val" @click="openDialog('address')">
-                    <span :class="{'placeholder':!form.address}">{{form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    <span class="one-line" :class="{'placeholder':!form.address}">{{form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
                 </div>
             </div>
             <div class="item">
@@ -106,13 +106,13 @@
                     <span>备注</span>
                 </div>
                 <div class="val" @click="openDialog('remark')">
-                    <span :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    <span class="text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                 </div>
             </div>
         </div>
 
         <!-- 客户来源 -->
-        <select-dialog :data="columns" :keys="select.key" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></select-dialog>
+        <select-dialog :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></select-dialog>
         <!-- 地址 and 备注 -->
         <input-dialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></input-dialog>
     </div>
@@ -139,7 +139,9 @@ export default {
             select: {
                 key: 'name',
                 title: '客户来源',
-                isGetIndex: false
+                isGetIndex: false,
+                indexList: null,
+                value: '',
             },
 
             form: {
@@ -152,6 +154,7 @@ export default {
                 corpScale: '', // 企业规模
                 corpScaleName: '', // 企业规模
                 industry: [], // 行业领域
+                industryIndex: [], // 行业领域
                 industryName: '', // 行业领域
                 address: '', // 办公地址
                 remark: '', // 备注
@@ -194,6 +197,18 @@ export default {
 
                 if (code == 'success') {
                     const { comlist, commonList} = data
+
+                    comlist.forEach(el => {
+                        if(el.children.length == 0){
+                            el.children = null
+                        }else{
+                            el.children.forEach(son => {
+                                if(son.children.length == 0){
+                                    son.children = null
+                                }
+                            })
+                        }
+                    })
 
                     this.industryFieldOptions = comlist  // 行业领域
 
@@ -244,26 +259,36 @@ export default {
                 case 'source':  // 客户来源
                     this.select.title = '客户来源'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.form.sourceName
                     this.columns = this.sourceOptions
                     break;
                 case 'stage':  // 客户阶段
                     this.select.title = '客户阶段'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.form.stage
                     this.columns = this.customerStageOptions
                     break;
                 case 'customerType':  // 客户类型
                     this.select.title = '客户类型'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.form.customerTypeName
                     this.columns = this.customerTypeOptions
                     break;
                 case 'corpScale':  // 企业规模
                     this.select.title = '企业规模'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.form.corpScaleName
                     this.columns = this.scaleOptions
                     break;
                 case 'industry':  // 行业领域
                     this.select.title = '行业领域'
                     this.select.isGetIndex = true
+                    this.select.value = null,
+                    this.select.indexList = this.form.industryIndex
                     this.columns = this.industryFieldOptions
                     break;
                 default:
@@ -276,29 +301,27 @@ export default {
             
             switch (type) {
                 case 'source':  // 客户来源
-                    console.log('客户来源',val[0].name)
                     this.form.sourceName = val[0].name
                     this.form.source = val[0].value
                     break;
-                case 'source':  // 客户阶段
-                    console.log('客户阶段',val[0].name)
-                    this.form.source = val[0].name
+                case 'stage':  // 客户阶段
+                    this.form.stage = val[0].name
                     break;
-                case 'type':  // 客户类型
-                    console.log('客户类型',val)
+                case 'customerType':  // 客户类型
                     this.form.customerTypeName = val[0].name
                     this.form.customerType = val[0].value
                     break;
-                case 'scale':  // 企业规模
-                    console.log('企业规模',val)
+                case 'corpScale':  // 企业规模
                     this.form.corpScaleName = val[0].name
                     this.form.corpScale = val[0].id
                     break;
                 case 'industry':  // 行业领域
-                    console.log('行业领域',val,this.industryList[val[0]])
-                    let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
+                    console.log('所属行业', val, this.industryFieldOptions[val[0]])
+
+                    let str = this.industryFieldOptions[val[0]].name + '/' + this.industryFieldOptions[val[0]].children[val[1]].name
                     this.form.industryName = str
-                    this.form.industry = val
+                    this.form.industryIndex = val
+                    this.form.industry = [this.industryFieldOptions[val[0]].id, this.industryFieldOptions[val[0]].children[val[1]].id]
                     break;
                 default:
                     break;
@@ -306,7 +329,7 @@ export default {
         },
         async doSubmit() {
             let params = {
-
+                ...this.form
             }
 
             console.log("入参：", params)
@@ -377,6 +400,10 @@ export default {
                 }
                 .placeholder{
                     color: @total;
+                }
+                .text {
+                    display: block;
+                    word-break: break-all;
                 }
             }
         }
