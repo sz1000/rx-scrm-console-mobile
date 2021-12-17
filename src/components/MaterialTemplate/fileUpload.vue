@@ -24,9 +24,10 @@ export default {
   inject: ['getFileUrl'],
   methods: {
     beforeRead(file) {
-      console.log(file, '-----file----')
       if (
-        !/\.ppt$|\.pptx$|\.doc$|\.docx$|\.xls$|\.xlsx$|\.pdf$/i.test(file.name)
+        !/\.ppt$|\.pptx$|\.doc$|\.docx$|\.xls$|\.xlsx$|\.pdf$|\.mp4$/i.test(
+          file.name
+        )
       ) {
         return false
       }
@@ -49,11 +50,15 @@ export default {
       if (files && files[0]) {
         const file = files[0]
         console.log('文件信息:', file)
+        if (/\.mp4$/i.test(file.name) && file.size / 1024 / 1024 >= 10) {
+          this.$toast('视频大小不能超过10MB!')
+          return
+        }
         if (!this.beforeRead(file)) {
           input.value = ''
           this.$toast.clear()
           this.$toast(
-            '上传文件格式为ppt、pptx、doc、docx、xls、xlsx、pdf, 大小不能超过20MB!'
+            '上传文件格式为ppt、pptx、doc、docx、xls、xlsx、pdf、MP4, 大小不能超过20MB!'
           )
           return
         }
