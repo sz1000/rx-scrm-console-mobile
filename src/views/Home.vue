@@ -18,7 +18,7 @@
           </div>
           <div class="car_box group_color" @click="FnToRouter('/customerManage/grouplist')">
               <div class="client">
-                 <img src="../assets/images/client_group.png" alt="">
+                 <img class="img_group" src="../assets/svg/kehuqun.svg" alt="">
                  <span class="name">客户群</span>
               </div>
               <p class="num">{{groupNum}}</p>
@@ -132,7 +132,7 @@
         </div>
          </div>
        </div>
-       <div class="drainage_warp">
+       <div class="drainage_warp" v-show="menulist.includes('labelGroup') ||  menulist.includes('customerSend') || menulist.includes('groupSend')">
       <div class="customAccont manage">精细运营</div>
       <div class="btnRouters custom">
        <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
@@ -149,7 +149,7 @@
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
           <div class="huoma kehuqunfa_bg">
-             <img src="../assets/svg/kehuqunquqnfa.svg" alt="" /> 
+             <img  src="../assets/svg/kehuqunquqnfa.svg" alt="" /> 
           </div>
             <p>客户群群发</p>
         </div>
@@ -329,6 +329,7 @@ export default {
     .drainage_warp{
       background: #fff;
       padding-top: 32px; 
+      // padding-bottom: 10px;
       margin-top: 48px;
       border-radius: 8px;
     }
@@ -355,14 +356,18 @@ export default {
         height: 140px;
          box-shadow: 0px 3px 12px 0px rgba(67, 144, 255, 0.3);
          border-radius: 8px;
-         padding: 20px;
+         padding: 20px 16px 20px;
       
         .client{
           display: flex;
           align-items: center;
+          .img_group{
+            width: 32px;
+            height: 32px;
+          }
            img{
-              width: 24px;
-              height: 20px;
+              width: 28px;
+              height: 28px;
               margin-right: 8px;
            }
            .name{
@@ -484,7 +489,7 @@ export default {
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 32px;
+    padding-bottom: 15px;
     justify-content: space-around;
     a {
       // font-family: PingFangSC-Medium, PingFang SC;
@@ -536,11 +541,11 @@ export default {
     }
   }
     .btnRouters {
-    padding: 0 35px;
+    padding: 0 32px;
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 32px;
+    padding-bottom: 20px;
     // justify-content: space-around;
     a {
       // font-family: PingFangSC-Medium, PingFang SC;
@@ -590,7 +595,7 @@ export default {
     // margin-top: 48px;
   }
   .manage {
-    margin-top: 32px;
+    // margin-top: 32px;
   }
   .custom {
     .commonBtn {

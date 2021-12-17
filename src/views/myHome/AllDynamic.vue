@@ -16,7 +16,7 @@
     <div class="searchInput">
       <van-field v-model="value1" placeholder="客户名称/公司/手机号码">
         <template #left-icon>
-          <van-icon name="search" />
+          <van-icon name="search"  @click="search" />
         </template>
       </van-field>
    
@@ -34,21 +34,36 @@
         <li class="item-box" v-if="type == 1">
            <!-- v-for="(i,indexp) in articleList" :key="indexp" -->
           <van-list v-model="articleListLoading" :immediate-check="false" :finished="articleListFinished" finished-text="没有更多了" @load="onLoad">
-               <p class="tite_num"> 共 <span class="num">3</span><span>客户动态，关联</span> <span class="num">2</span>个客户</p>
-            <div   class="client_list">
+               <p class="tite_num"> 共 <span class="num">{{articletotal}}</span><span>客户动态，关联</span> <span class="num">{{articlecusCount}}</span>个客户</p>
+            <div   class="client_list" v-for="(item ,index) in articleList" :key="index">
                  <div class="client_item">
                      <div  class="client_img">
                          <div class="user_img">
-                             <img src="../../images/nomal_avt.png" alt="">
+                             <img :src="item.avatar" alt="" v-if="item.avatar">
+                             <img src="../../images/nomal_avt.png" alt="" v-else>
                          </div>
                      </div>
                         <div class="client_message">
                              <div class="tite_name"> 
-                                 <span class="name">李萌萌</span>
-                                 <span class="company"> @车速派二手车销售服务有限公司</span>
+                                 <span class="name">{{item.customerCalled}}</span>
+                                 <span class="company" v-if="item.externalType != 0">{{item.cropFullName}}</span>
                              </div>
-                             <div class="time">2021-9-12 12:30:20</div>
-                             <div class="department">[陈良-运营部] 新增了协助人 [王扬-</div>
+                             <div class="time">{{item.createTime}}</div>
+                             <div class="department"><span v-if="item.optUserName">[{{item.optUserName}}]</span>{{getTextFun(item)}} 
+                                 <!-- <span v-if="item.toUser">[{{item.toUser | optToString}}]</span> -->
+                                <span v-if="item.fromUser && item.optType != 44 && fromUserNum.indexOf(item.optType) > -1">
+                                    {{item.fromUser | optString}}
+                                </span>
+                                <span  v-if="item.optType && item.toUser && item.optType == 6">
+                                    <span>{{item.toUser | optToString}}</span>
+                                </span>
+                                <span v-for="(us,ri) in item.toUser" :key="ri">
+                                  <span v-if="item.fromUser && item.optType != 44 && fromUserNum.indexOf(item.optType) > -1">
+                                    {{us | optString}}
+                                  </span>
+                                </span>
+                                <span></span>
+                            </div>
                         </div>
 
                  </div>
@@ -59,21 +74,36 @@
         <li class="item-box" v-if="type == 2">
           <van-list v-model="saleListLoading" :immediate-check="false" :finished="saleListFinished" finished-text="没有更多了" @load="onLoad">
             <!-- <div class="item" v-for="(i,indext) in saleList" :key="indext"> -->
-                 <p class="tite_num"> 共 <span class="num">3</span><span>条商机动态，关联</span> <span class="num">2</span>个客户</p>
-            <div   class="client_list">
+                 <p class="tite_num"> 共 <span class="num">{{saletotal}}</span><span>条商机动态，关联</span> <span class="num">{{salecusCount}}</span>个客户</p>
+            <div   class="client_list" v-for="(item,indext) in saleList" :key="indext">
                  <div class="client_item">
                      <div  class="client_img">
                          <div class="user_img">
-                             <img src="../../images/nomal_avt.png" alt="">
+                             <img :src="item.avatar" alt="" v-if="item.avatar">
+                             <img src="../../images/nomal_avt.png" alt="" v-else>
                          </div>
                      </div>
                         <div class="client_message">
                              <div class="tite_name"> 
-                                 <span class="name">自在随原</span>
-                                 <span class="company"> @车速派二手车销售服务有限公司</span>
+                                 <span class="name">{{item.customerCalled}}</span>
+                                 <span class="company" v-if="item.cropFullName || item.customerName"> @{{item.cropFullName || item.customerName}}</span>
                              </div>
-                             <div class="time">2021-9-12 12:30:20</div>
-                             <div class="department">[陈良-运营部] 新增了协助人 [王扬-</div>
+                             <div class="time">{{item.createTime}}</div>
+                              <div class="department"><span v-if="item.optUserName">[{{item.optUserName}}]</span>{{getTextFun(item)}} 
+                                 <!-- <span v-if="item.toUser">[{{item.toUser | optToString}}]</span> -->
+                                <span v-if="item.fromUser && item.optType != 44 && fromUserNum.indexOf(item.optType) > -1">
+                                    {{item.fromUser | optString}}
+                                </span>
+                                <span  v-if="item.optType && item.toUser && item.optType == 6">
+                                    <span>{{item.toUser | optToString}}</span>
+                                </span>
+                                <span v-for="(us,ri) in item.toUser" :key="ri">
+                                  <span v-if="item.fromUser && item.optType != 44 && fromUserNum.indexOf(item.optType) > -1">
+                                    {{us | optString}}
+                                  </span>
+                                </span>
+                                <span></span>
+                            </div>
                         </div>
 
                  </div>
@@ -84,31 +114,32 @@
         </li>
         <li class="item-box" v-if="type == 3">
           <van-list v-model="posterListLoading" :immediate-check="false" :finished="posterListFinished" finished-text="没有更多了" @load="onLoad">
-            
-            <div class="custom_content">
+              <p class="tite_num"> 共 <span class="num">{{postertotal}}</span><span>条互动协同消息，关联</span> <span class="num">{{postercusCount}}</span>个客户</p>
+            <div class="custom_content" v-for="(item,indexs) in posterList" :key="indexs">
                 <div class="card_box" >
                 <div class="chat_warp">
                     <div class="chat_one" >
                     <div class="left_cnt">
-                        <img src="../../images/nomal_avt.png" alt="">
+                        <img :src="item.optAvatar" alt="" v-if="item.optAvatar">
+                        <img src="../../images/nomal_avt.png" alt="" v-else>
                         <div class="content">
-                        <div class="name_one">111</div>
-                        <div class="creat_time">222}</div>
+                        <div class="name_one">{{item.optUserName}}</div>
+                        <div class="creat_time">{{item.createTime}}</div>
                         <div class="cont_text">
-                            <span>@我</span>
-                            &nbsp;
-                            <span>11122</span>
+                            <span>{{item.context.receiveUserInfo | alt}}</span>
+                            <span>{{item.context.content}}</span>
                         </div>
                         </div>
                     </div>
-                    <img src="../../images/ico_pl.png" alt="" class="talk" @click="goCustomer(list)" />
+                    <img src="../../images/ico_pl.png" alt="" class="talk" @click="goCustomer(item)" />
                     </div>
                 </div>
                 <div class="custom_msg">
                     <!-- <img :src="item.avatar" alt="" v-if="item.avatar" /> -->
-                    <img src="../../images/xiansuo.png" alt=""  />
-                    <div class="name_text">223</div>
-                    <span>444</span>
+                    <img :src="item.avatar" alt=""  />
+                    <div class="name_text">{{item.customerCalled}}</div>
+                    <span class="weixin" v-if="item.externalType == 1">@微信</span>
+                    <span class="company_name" v-else> @{{item.customerName || item.cropFullName }}</span>
                 </div>
                 </div>
             </div>
@@ -127,13 +158,13 @@
   </div>
 </template>
 <script>
-import { ArticleList, SaleDocumentList, PosterList } from '../../config/api'
+import { ArticleLists, SaleDocumentLists, PosterLists } from '../../config/api'
 import {
   sendChatMessage,
   byteConvert,
   getFileDefaultCover,
 } from '../../utils/tool'
-
+import {queryFollowMsgPage} from "../../api/myHome"
 // import Search from './search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ImgUpload from '../../components/MaterialTemplate/imgUpload'
@@ -157,6 +188,8 @@ export default {
       articleListLoading: true,
       articleListFinished: false,
       articleListTotal: 0,
+      articlecusCount:0,
+      articletotal:0,
 
       saleList: [],
       totalSale: 0,
@@ -164,6 +197,8 @@ export default {
       saleListLoading: true,
       saleListFinished: false,
       saleListTotal: 0,
+      salecusCount:0,
+      saletotal:0,
 
       posterList: [],
       totalPoster: 0,
@@ -171,7 +206,8 @@ export default {
       posterListLoading: false,
       posterListFinished: false,
       posterListTotal: 0,
-
+      postercusCount:0,
+      postertotal:0,
       originUrl: location.origin,
 
       showUploadPoster: false, // 是否展示海报上传页面
@@ -183,11 +219,16 @@ export default {
       value1:'',
       showFilter: false,
       actions: [
-        { name: '从未联系', id: 0 },
-        { name: '超过1天', id: 1 },
-        { name: '超过3天', id: 2 },],
-        tabName: '',
-        cardList:[]
+        { name: '全部', id: 0 },
+        { name: '负责人', id: 1 },
+        { name: '协助人', id: 2 },],
+        tabName: '全部',
+        cardList:[],
+        dynamicList:[],
+        selectId:'',
+        types:1,
+        fromUserNum: [6],
+        
     }
   },
   computed: {
@@ -204,14 +245,53 @@ export default {
     }
   },
   created() {
-    this.getCorpId().then(() => {
+    //    this.cataList()
+    // this.getCorpId().then(() => {
       this.getList()
       this.getTotal(2)
       this.getTotal(3)
-    })
+     
+    // })
   },
   mounted() {},
   methods: {
+          goCustomer(val) {
+      console.log(val)
+      this.$router.push({
+        path: '/customerPortrait',
+        query: {
+          id: val.followId,
+          userNo: val.clueCustomerNo,
+          num: val.rowAt,
+        },
+      })
+    },
+    //   cataList(){
+    //       let params = {
+    //         page:1,
+    //         limit:10,
+    //         isMang:0,
+    //         searchParam:"",
+    //         punckStatus:1
+    //       }
+    //       queryFollowMsgPage(params).then((res) =>{
+    //           console.log(res.data.data.records)
+    //           this.dynamicList =  res.data.data.records
+    //       })
+    //   }, 
+    search(){
+        console.log(11)
+        if(this.type == 1){
+            this.articleListPage =1
+          this.getList()
+        }else if(this.type == 2){
+            this.saleListPage = 1
+              this.getList()
+        }else{
+            this.posterListPage = 1
+            this.getList()
+        }
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -220,10 +300,22 @@ export default {
     },
     fnSelect(v) {
       this.tabName = v.name
+      this.selectId = v.id
       console.log(v)
+         if(this.type == 1){
+            this.articleListPage =1
+          this.getList()
+        }else if(this.type == 2){
+           this.saleListPage = 1
+              this.getList()
+        }else{
+             this.posterListPage = 1
+            this.getList()
+        }
+    //   this.getList()
     },
     
-    ...mapActions(['getCorpId']),
+    // ...mapActions(['getCorpId']),
     preview(item, val) {
       console.log(item, val)
       this.centquer = item
@@ -242,13 +334,26 @@ export default {
       // })
     },
     changeNav(type) {
+        console.log(type)
       this.type = type
       if (type == 1) {
-        this.indexps = 1000000
+          this.types = 1
+          this.value1 = ""
+          this.tabName = "全部"
+           this.selectId = 0
+        // this.indexps = 1000000
       } else if (type == 2) {
-        this.indexps = 1000000
+          this.types = 3
+          this.value1 = ""
+          this.tabName = "全部"
+            this.selectId = 0
+        // this.indexps = 1000000
       } else {
-        this.indexps = 1000000
+        // this.indexps = 1000000
+         this.types = 4
+           this.value1 = ""
+           this.tabName = "全部"
+             this.selectId = 0
       }
       this.type = type
       this.initPage(this.type)
@@ -267,15 +372,16 @@ export default {
       let ApiOpts = null
 
       if (type == 2) {
-        ApiOpts = SaleDocumentList
+        ApiOpts = SaleDocumentLists
       } else if (type == 3) {
-        ApiOpts = PosterList
+        ApiOpts = PosterLists
       }
 
       ApiOpts({
-        pageIndex: 1,
-        pageSize: 10,
-        corpId: this.corpId,
+        // pageIndex: 1,
+        // pageSize: 10,
+        // corpId: this.corpId,
+        
       }).then((res) => {
         this.handleTotalRes(type, res)
       })
@@ -304,34 +410,39 @@ export default {
       this.getList()
     },
     getList(title) {
+  if (this.type == 1 && this.articleListPage == 1 || this.type == 2 && this.saleListPage == 1 || this.type == 3 && this.posterListPage == 1) {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
         duration: 0,
         loadingType: 'spinner',
       })
-
-      let ApiOpts = ArticleList
+              }
+      let ApiOpts = ArticleLists
 
       let params = {
-        pageSize: 10,
-        corpId: this.corpId,
+        // pageSize: 10,
+         limit: 10,
+         isMang:this.selectId || 0,
+         searchParam:this.value1,
+         punckStatus:this.types
+        // corpId: this.corpId,
       }
 
       if (this.type == 1) {
         params.title = title
-        params.pageIndex = this.articleListPage
-        ApiOpts = ArticleList
+        params.page = this.articleListPage
+        ApiOpts = ArticleLists
         this.articleListLoading = true
       } else if (this.type == 2) {
         params.name = title
-        params.pageIndex = this.saleListPage
-        ApiOpts = SaleDocumentList
+        params.page = this.saleListPage
+        ApiOpts = SaleDocumentLists
         this.saleListLoading = true
       } else if (this.type == 3) {
         params.name = title
-        params.pageIndex = this.posterListPage
-        ApiOpts = PosterList
+        params.page = this.posterListPage
+        ApiOpts = PosterLists
         this.posterListLoading = true
       }
 
@@ -341,7 +452,7 @@ export default {
     },
     handleRes(res) {
       const { code, data, msg } = res
-
+     console.log(data,"00p",data.data.records)
       this.$toast.clear()
       if (code === 'success') {
         this.getTotal(data)
@@ -350,25 +461,45 @@ export default {
           if (this.articleListPage == 1) {
             this.articleList = []
           }
-          this.articleList = this.articleList.concat(data.page.records)
+              console.log("搜索",this.articleList.concat(data.data.records))
+          this.articleList = this.articleList.concat(data.data.records)
+          console.log("-----",this.articleList)
+          this.articlecusCount = data.cusCount
+          this.articletotal = data.total
           this.articleListPage += 1
-          this.articleListFinished = this.articleList.length >= data.page.total
+          this.articleListFinished = this.articleList.length >= data.total
         } else if (this.type == 2) {
           this.saleListLoading = false
           if (this.saleListPage == 1) {
             this.saleList = []
           }
-          this.saleList = this.saleList.concat(data.page.records)
+          this.salecusCount = data.cusCount
+          this.saletotal = data.total
+          this.saleList = this.saleList.concat(data.data.records)
           this.saleListPage += 1
-          this.saleListFinished = this.saleList.length >= data.page.total
+          this.saleListFinished = this.saleList.length >= data.total
         } else if (this.type == 3) {
           this.posterListLoading = false
           if (this.posterListPage == 1) {
             this.posterList = []
           }
-          this.posterList = this.posterList.concat(data.page.records)
+            // let whiteList = [21]
+            //   if(whiteList.indexOf(el.optType) > -1){
+            //   el.context = JSON.parse(el.context)
+            //   }
+         this.postercusCount = data.cusCount
+          this.postertotal = data.total
+          this.posterList = this.posterList.concat(data.data.records)
+          if(this.posterList && this.posterList.length > 0){
+             this.posterList.forEach(el =>{
+             let whiteList = [21]
+              if(whiteList.indexOf(el.optType) > -1){
+              el.context = JSON.parse(el.context)
+              }
+            })
+          }
           this.posterListPage += 1
-          this.posterListFinished = this.posterList.length >= data.page.total
+          this.posterListFinished = this.posterList.length >= data.total
         }
       } else {
         this.$toast(msg)
@@ -427,7 +558,152 @@ export default {
     ifShowFooter(data) {
       this.$emit('ifShowFooter', data)
     },
+     getTextFun(obj){
+            // console.log('asd',obj)
+            let val = obj.optType,str = ''
+            switch (val) {
+                case 0:
+                    str = obj.context
+                    break;
+                case 1:
+                    str = '建立了客户档案'
+                    break;
+                case 2:
+                    str = '导入了客户信息'
+                    break;
+                case 3:
+                    str = '从企微同步了'
+                    break;
+                case 5:
+                    str = '更新了客户信息'
+                    break;
+                case 6:
+                    str = '将负责人从'
+                    break;
+                case 7:
+                    str = '将客户分配给了'
+                    break;
+                case 8:
+                    if(obj.optUserName){
+                        str = '领取了客户'
+                    }else{
+                        str = obj.context
+                    }
+                    break;
+                case 9:
+                    str = '放弃了客户，客户已回到公海'
+                    break;
+                case 11:
+                    str = '上传了附件'
+                    break;
+                case 12:
+                    str = '删除了附件'
+                    break;
+                case 13:
+                    str = `新增了一条记录“${obj.context}”`
+                    break;
+                case 14:
+                    str = '拜访了客户'
+                    break;
+                case 15:
+                    str = '新增了商机' + obj.context
+                    break;
+                case 16:
+                    str = '更新了商机'
+                    break;
+                case 17:
+                    str = '删除了商机'
+                    break;
+                case 18:
+                    if(obj.optUserName){
+                        if(obj.createBy){
+                            str = '新增协作人'
+                        }else{
+                            str = obj.context
+                        }
+                    }else{
+                        str = obj.context
+                    }
+                    break;
+                case 20:
+                    str = '删除了协作人'
+                    break;
+                case 26:
+                    let name = obj.ossObjectname ? obj.ossObjectname : obj.context
+                    str = `新增标签“${name}”`
+                    break;
+                case 28:
+                    str = obj.context
+                    break;
+                case 29:
+                    str = '发起激活客户'
+                    break;
+                case 30:
+                    str = obj.context
+                    break;
+                case 36:
+                    str = obj.context
+                    break;
+                case 39:
+                    str = obj.context
+                    break;
+                case 40:
+                    str = obj.context
+                    break;
+                case 44:
+                    let _str = ''
+                    if(obj.optResult == 1){
+                        _str = '(已通过)'
+                    }else if(obj.optResult == 0){
+                        _str = '(已拒绝)'
+                    }
+                    str = '申请成为协助人' + _str
+                    break;
+                case 46:
+                    str = '已自动成为协助人'
+                    break;
+                case 47:
+                    break;
+                case 48:
+                    break;
+                default:
+                    break;
+            }
+            return str
+        },
   },
+     filters: {
+        alt(list){
+        let arr = []
+        if(list && list.length){
+         if(list.length == 1 && !list[0].userName){
+            return '@所有人'
+            }else{
+             list.forEach(el => {
+              let str = '@' + el.userName
+                arr.push(str)
+                    })
+                return  arr.join(' ')
+                }
+            }
+        
+        },
+        optString(val){
+            // console.log('val',`${val.name}-${val.depId}`)
+            return val.name && val.depId ? `${val.name}-${val.depId}` : val.name
+        },
+        optToString(val){
+            let arr = []
+            if(val && val.length){
+                let str = ''
+                val.forEach(el => {
+                    str = el.name && el.depId ? `${el.name}-${el.depId}` : el.name
+                })
+                arr.push(str)
+            }
+            return arr && arr.length ? arr.join('、') : ''
+        },
+    },
   components: {
     // Search,
     ImgUpload,
@@ -574,6 +850,7 @@ export default {
   .list-box {
     padding-bottom: 132px;
     position: relative;
+    background: #fff;
     &::after {
       content: '';
       height: 2px;
@@ -604,7 +881,7 @@ export default {
       }
       .client_list{
         width: 686px;
-        height: 244px;
+        mix-height: 244px;
         background: #FFFFFF;
         box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.04);
         border-radius: 16px;
@@ -619,6 +896,7 @@ export default {
                img{
                    width: 80px;
                    height: 80px;
+                   border-radius: 50% ;
                }
             }
              }
@@ -629,6 +907,11 @@ export default {
                         font-size: 32px;    
                         color: #262626;
                         font-weight: 600;
+                        overflow: hidden;
+                        text-overflow:ellipsis;
+                        white-space: nowrap;
+                        width: 180px;
+                        display: inline-block;
                     }
                     .company{
                         font-size: 24px;
@@ -644,6 +927,7 @@ export default {
                    font-size: 28px;
                    color: #737373;
                    margin-top: 16px;
+                   width: 526px;
                }
             }
           }
@@ -772,6 +1056,9 @@ export default {
               }
               .cont_text {
                 font-size: 28px;
+                word-break: break-word;
+                 width: 526px;
+              
                 span:nth-child(1) {
                 }
                 span:nth-child(2) {
@@ -795,7 +1082,18 @@ export default {
           font-size: 32px;
           color: #3c4353;
           margin: 0 8px;
+          font-weight: 600;
         }
+          .weixin{
+            font-weight: 400;
+            color: #52BD94;    
+            font-size: 24px;
+          }
+          .company_name{
+            color: #FFB020;
+            font-size: 24px;
+            font-weight: 400;
+          }
         .weixin {
           display: inline-block;
           font-size: 24px;

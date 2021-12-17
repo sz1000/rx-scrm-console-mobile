@@ -74,3 +74,19 @@ export function keyToFind(data) {
         data: data,
     })
 }
+// 客户动态
+export function getMBTop10FollowMsgList(data) {
+    return request({
+        url: CustomerService + '/my/getMBTop10FollowMsgList',
+        method: 'get',
+        params: data,
+    })
+}
+//客户动态 全部
+export function queryFollowMsgPage(data) {
+    return request({
+        url: CustomerService + '/my/queryFollowMsgPage',
+        method: 'post',
+        data: data,
+    })
+}
