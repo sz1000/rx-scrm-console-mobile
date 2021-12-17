@@ -9,7 +9,8 @@
                     <span class="require">*</span>
                 </div>
                 <div class="val">
-                    <input type="text" class="input" v-model="form.customerCalled" maxlength="30" placeholder="请输入">
+                    <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
+                    <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
                 </div>
             </div>
             <div class="item">
@@ -18,7 +19,8 @@
                     <span class="require">*</span>
                 </div>
                 <div class="val">
-                    <input type="text" class="input" v-model="form.name" maxlength="30" placeholder="请输入">
+                    <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
+                    <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
                 </div>
             </div>
             <div class="item">
@@ -35,8 +37,8 @@
                     <span class="require">*</span>
                 </div>
                 <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('source')">
-                        <span :class="{'placeholder':!form.sourceName}">{{form.sourceName | $textEmpty('请选择')}}</span>
+                    <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
+                        <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -121,12 +123,13 @@
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import { getAddFiled, doAdd } from '@/api/customer'
 import { SelectDialog, InputDialog } from '../customer/components'
+import { throttle } from '@/utils/tool'
 import { mapState } from 'vuex'
 
 export default {
     data() {
         return {
-            customerType: '',
+            customerType: '',  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             headTitle: '',
 
             dialog: false,
@@ -168,6 +171,10 @@ export default {
             sourceOptions: [], // 客户来源选择列表
             scaleOptions: [], // 企业规模选择列表
             industryFieldOptions: [], // 行业领域选择列表
+
+            customerCalledRequired: false,
+            nameRequired: false,
+            sourceRequired: false
         }
     },
     computed: {
@@ -327,21 +334,81 @@ export default {
                     break;
             }
         },
+        // 表单验证
+        checkForm() {
+            const { customerCalled, name, source } = this.form
+
+            if (!customerCalled) {
+                this.customerCalledRequired = true
+                return false
+            }
+            if (!name) {
+                this.nameRequired = true
+                return false
+            }
+            if (!source) {
+                this.sourceRequired = true
+                return false
+            }
+
+            return true
+        },
+        showInput(type) {
+            this.initRequired(type)
+            switch (type) {
+                case 'customerCalled':  // 客户名称
+                    this.$nextTick(() => {
+                        this.$refs.customerCalled.focus()
+                    })
+                    break;
+                case 'name':  // 联系人
+                    this.$nextTick(() => {
+                        this.$refs.name.focus()
+                    })
+                    break;
+                case 'source':  // 客户来源
+                    this.openSelectDialog('source')
+                    break;
+                default:
+                    break;
+            }
+        },
+        initRequired(type) {
+             switch (type) {
+                case 'customerCalled':  // 客户名称
+                    this.customerCalledRequired = false
+                    break;
+                case 'name':  // 联系人
+                    this.nameRequired = false
+                    break;
+                case 'source':  // 客户来源
+                    this.sourceRequired = false
+                    break;
+                default:
+                    break;
+            }
+        },
         async doSubmit() {
+            if(!this.checkForm()) {
+                return
+            }
+
+            if(!throttle()) {
+                return
+            }
+
             let params = {
                 ...this.form,
                 type: this.customerType
             }
-
-            console.log("入参：", params)
-
-            let { code, msg } = await doAdd(params)
+            
+            let { code, data, msg } = await doAdd(params)
 
             if (code == 'success') {
-                this.$toast(msg)
+                this.$toast(data)
                 setTimeout(() => {
                     this.goBack()
-                }, 1000)
+                }, 500)
             } else {
                 this.$toast(msg)
             }
@@ -415,6 +482,9 @@ export default {
                 .text {
                     display: block;
                     word-break: break-all;
+                }
+                .tips {
+                    color: @red;
                 }
             }
         }

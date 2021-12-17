@@ -78,11 +78,7 @@ export default {
             _debounce(this.getList(), 1000)
         },
         async getList() {
-            this.$toast.loading({
-                overlay: true,
-                loadingType: 'spinner',
-                duration: 0,
-            })
+            this.$toast.loading()
 
             let params = {
                 customerNo: this.customerNo,

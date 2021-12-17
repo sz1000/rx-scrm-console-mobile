@@ -142,12 +142,7 @@ export default {
         },
         // 获取动态
         async selectFollowMsgList(punckStatus) {
-            this.$toast.loading({
-                message: '',
-                forbidClick: true,
-                duration: 0,
-                loadingType: 'spinner',
-            })
+            this.$toast.loading()
             let params = {
                 clueCustomerNo: this.objItem && this.objItem.clueCustomerNo,
                 punckStatus // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态

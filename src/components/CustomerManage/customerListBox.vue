@@ -1,14 +1,14 @@
 <template>
   <div class="customer-list-box">
     <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <div v-for="i in list" :key="i.id" class="list-item">
+      <div v-for="i in list" :key="i.id" class="list-item" @click="goDetail(i)">
         <div class="list-item-left">
           <img :src="i.avatar | $setAvatar" alt="">
         </div>
         <ul class="list-item-right">
           <li class="right-top">
             <div class="name-box">
-              <h3 class="one-line">{{ i.customerCalled }}</h3>
+              <h3 class="one-line">{{ i.name }}</h3>
               <span v-if="i.cropFullName" class="crop-name one-line">@{{ i.cropFullName }}</span>
             </div>
             <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
@@ -19,7 +19,7 @@
             <span v-if="i.customerType">{{ i.customerType }}</span>
             <span v-show="i.customerTagNames && i.customerTagNames.length" v-for="item in i.customerTagNames" :key="item">{{ item }}</span>
           </li>
-          <li class="right-bottom">
+          <li v-if="customerType == '3'" class="right-bottom">
             <span v-if="i.phone">{{ i.phone }}</span>
             <span v-if="i.userNo">负责人：{{ i.userNo }}</span>
           </li>
@@ -35,7 +35,7 @@ import { throttle, formatDate } from '@/utils/tool'
 export default {
   name: 'customerListBox',
   props: {
-    customerType: {
+    customerType: {  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
       default: 0,
     },
     form: {
@@ -67,12 +67,10 @@ export default {
       if(this.customerType == '3' && !throttle()) {
         return
       }
-      this.$toast.loading({
-        message: '',
-        forbidClick: true,
-        duration: 0,
-        loadingType: 'spinner',
-      })
+
+      if (this.page == 1) {
+        this.$toast.loading()
+      }
 
       this.loading = true
 
@@ -108,20 +106,11 @@ export default {
       this.getList()
     },
     // 去往客户详情
-    goDetail(item, index) {
-      // localStorage.setItem('customer', JSON.stringify(item))
-
-      // if (this.type == 3) {
-      //     this.$router.push({
-      //     path: 'customDetail',
-      //     query: { type: this.type, mylist: JSON.stringify(this.mylist) },
-      //     })
-      // } else if (this.type == 4) {
-      //     this.$router.push({
-      //     path: 'customerSeas',
-      //     query: { type: this.type, alllist: JSON.stringify(this.alllist) },
-      //     })
-      // }
+    goDetail(item) {
+      this.$router.push({
+        path: 'customDetail',
+        query: { fromType: this.customerType, userNo: item.clueCustomerNo },
+      })
     },
   },
 }

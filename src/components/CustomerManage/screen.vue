@@ -6,9 +6,15 @@
             <li class="screen-item">
                 <h3 class="label">建档时间</h3>
                 <div class="content">
-                    <span class="time pointer start" :class="{'placeholder': !form.createTimeStaShow}" @click="showDateSelect(1)">{{ form.createTimeStaShow && formatDate(form.createTimeStaShow, "yyyy-MM-dd") | $textEmpty('开始时间')}}</span>
+                    <span class="time pointer start" :class="{'placeholder': !form.createTimeStaShow}">
+                        <p class="text one-line" @click="showDateSelect(1)">{{ form.createTimeStaShow && formatDate(form.createTimeStaShow, "yyyy-MM-dd") | $textEmpty('开始时间')}}</p>
+                        <p v-if="form.createTimeStaShow" class="icon remove" @click="removeText('createTimeStaShow')"></p>
+                    </span>
                     <span class="divider"></span>
-                    <span class="time pointer end" :class="{'placeholder': !form.createTimeEndShow}" @click="showDateSelect(2)">{{ form.createTimeEndShow && formatDate(form.createTimeEndShow, "yyyy-MM-dd") | $textEmpty('结束时间')}}</span>
+                    <span class="time pointer end" :class="{'placeholder': !form.createTimeEndShow}">
+                        <p class="text one-line" @click="showDateSelect(2)">{{ form.createTimeEndShow && formatDate(form.createTimeEndShow, "yyyy-MM-dd") | $textEmpty('结束时间')}}</p>
+                        <p v-if="form.createTimeEndShow" class="icon remove" @click="removeText('createTimeEndShow')"></p>
+                    </span>
                 </div>
             </li>
             <li class="screen-item tag-item">
@@ -242,6 +248,7 @@ export default {
             this.selectDateType = type
             this.selectDatePopupShow = true
         },
+        // 选中建档时间
         dateConfirm(date) {
             let type = this.selectDateType
 
@@ -249,20 +256,14 @@ export default {
                 this.$toast("开始时间不能大于结束时间")
                 return
             }
-
-            this.selectDatePopupShow = false
-
-            if (this.checkStartEndTime(type, date) == 'equal') {
-                return
-            }
-
             if (type == 1) {
                 this.form.createTimeStaShow = date
                 this.form.createTimeSta = formatDate(date, "yyyy-MM-dd hh:mm:ss")
             } else if (type == 2) {
                 this.form.createTimeEndShow = date
-                this.form.createTimeEnd = formatDate(date, "yyyy-MM-dd hh:mm:ss")
+                this.form.createTimeEnd = `${formatDate(date, "yyyy-MM-dd")} 23:59:59`
             }
+            this.selectDatePopupShow = false
         },
         // 开始时间不能大于结束时间
         checkStartEndTime(type, date) {
@@ -271,22 +272,12 @@ export default {
             if (this.form.createTimeEndShow || this.form.createTimeStaShow) {
                 let timeNum = type == 1 ? new Date(this.form.createTimeEndShow).getTime() : new Date(this.form.createTimeStaShow).getTime()
 
-                if (type == 1 && dateNum > timeNum || type == 2 && dateNum < timeNum) {
+                if (timeNum > 0 && (type == 1 && dateNum > timeNum || type == 2 && dateNum < timeNum)) {
                     return false
-                }
-
-                if (dateNum == timeNum) {
-                    type == 1 ? this.form.createTimeStaShow = date : this.form.createTimeEndShow = date
-                    this.getDateTime()
-                    return 'equal'
                 }
             }
 
             return true
-        },
-        getDateTime() {
-            this.form.createTimeSta = `${formatDate(this.form.createTimeStaShow, "yyyy-MM-dd")} 00:00:00`
-            this.form.createTimeEnd = `${formatDate(this.form.createTimeEndShow, "yyyy-MM-dd")} 23:59:59`
         },
         // 各个标签选项选择
         choose(type, item) {
@@ -391,6 +382,14 @@ export default {
         // 清楚选中数据
         removeText(type) {
             switch (type) {
+                case 'createTimeStaShow':  // 建档开始时间
+                    this.form.createTimeStaShow = null
+                    this.form.createTimeSta = ''
+                    break;
+                case 'createTimeEndShow':  // 建档结束时间
+                    this.form.createTimeEndShow = null
+                    this.form.createTimeEnd = ''
+                    break;
                 case 'chargeUserNo':  // 负责人
                     this.form.chargeUserName = ''
                     this.form.chargeUserNo = ''
@@ -458,6 +457,7 @@ export default {
                 }
                 .time {
                     width: 320px;
+                    position: relative;
                 }
                 .placeholder{
                     color: @total;
@@ -476,13 +476,6 @@ export default {
                     .text {
                         padding-right: 24px;
                     }
-                    .icon {
-                        display: inline-block;
-                        position: absolute;
-                        right: 16px;
-                        top: 50%;
-                        transform: translateY(-50%) rotate(90deg);
-                    }
                     .arrow {
                         width: 0;
                         height: 0;
@@ -490,26 +483,33 @@ export default {
                         border-right: 11px solid transparent;
                         border-left: 11px solid transparent;
                     }
-                    .remove {
+                }
+                .icon {
+                    display: inline-block;
+                    position: absolute;
+                    right: 16px;
+                    top: 50%;
+                    transform: translateY(-50%) rotate(90deg);
+                }
+                .remove {
+                    width: 24px;
+                    height: 24px;
+                    &::before, &::after {
+                        content: '';
+                        border-radius: 50%;
+                        background-color: #ccc;
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) rotate(45deg);
+                    }
+                    &::before {
                         width: 24px;
+                        height: 4px;
+                    }
+                    &::after {
+                        width: 4px;
                         height: 24px;
-                        &::before, &::after {
-                            content: '';
-                            border-radius: 50%;
-                            background-color: #ccc;
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            transform: translate(-50%, -50%) rotate(45deg);
-                        }
-                        &::before {
-                            width: 24px;
-                            height: 4px;
-                        }
-                        &::after {
-                            width: 4px;
-                            height: 24px;
-                        }
                     }
                 }
                 .tag {

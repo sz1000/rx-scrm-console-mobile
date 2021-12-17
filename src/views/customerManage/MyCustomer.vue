@@ -85,6 +85,9 @@ export default {
         getList() {
             this.$nextTick(() => {
                 this.$refs.customerListBox.initData()
+                if (this.searchParam) {
+                    this.$refs.search.searchText = this.searchParam
+                }
                 this.$refs.customerListBox.getList()
             })
         },

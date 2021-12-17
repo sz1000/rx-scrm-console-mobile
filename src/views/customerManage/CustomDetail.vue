@@ -1,545 +1,649 @@
 <template>
-  <div class="custom-detail">
-    <div class="headerTitle">
-      <div class="backPage"
-          @click="goBack">
-        <van-icon name="arrow-left" />
-        返回
-      </div>
-      <span class="textTitle">客户详情</span>
-    </div>
-
-    <div class="customer-data">
-      <customer-item :type="2" :fromType="$route.query.type" :itemData="objItem"></customer-item>
-    </div>
-
-    <div class="infoContent">
-      <ul class="header-nav">
-        <li v-for="(i, index) in navList" :key="i" @click="changeNav(index)" :class="{active: contentType == index}"><span>{{ i }}</span></li>
-      </ul>
-
-      <!-- 客户动态 -->
-      <dynamic v-if="contentType == 0" ref="dynamic" :comeType="1" :btnList="btnList"></dynamic>
-
-      <!-- 协作人 -->
-      <div class="xiezuoBox" style="padding: 12px;" v-if="contentType == 1">
-      	<HelperFile></HelperFile>
-      </div>
-
-      <!-- 商机 -->
-      <opportunities v-if="contentType == 2" :customerNo="objItem && objItem.clueCustomerNo" :fromType="$route.query.type"></opportunities>
-      
-      <!-- 附件 -->
-      <div class="fujianBox" style="padding: 12px;" v-if="contentType == 3">
-      	<Fujian :isCustomer="2"></Fujian>
-      </div>
-			
-    </div>
-
-    <div class="bottom_model">
-      <van-action-sheet v-model="show"
-                        :title="titleName"
-                        @cancel="cancelIcon"
-                        @click-overlay="cancelIcon"
-                        :lock-scroll="false">
-        <div class="content">
-          <div class="writerInput"
-               v-if="isShowDialog == '3'">
-            <van-field v-model="message"
-                       type="textarea"
-                       maxlength="200"
-                       placeholder="记录好跟进，多签单哟~"
-                       show-word-limit />
-          </div>
-          <div class="changeUser"
-               v-if="isShowDialog == '4'">
-            <div class="nowUser">
-              <span>现有所属人:</span>
-              <span>{{ nowUser }}</span>
-            </div>
-            <div class="selectUser">
-            	<div class="pleSs"><span style="color: red;">*</span>指定所属人:</div>
-              <input class="changeSsSec" type="text" readonly="readonly" placeholder="请选择"  :value="helperName" @click="openSsPop" />
-		              
-		              <van-action-sheet v-model="SsPop" title="选择所属人">
-							  		<van-picker
-											  title=""
-											  show-toolbar
-											  :columns="options"
-											  @confirm="onConfirm"
-											  @cancel="onCancel"
-											  @change="onChange"
-											  value-key="name"
-											/>
-						 			</van-action-sheet>
-            	
-              <!--<span style="color: red">*</span><span>指定所属人:</span>
-              <el-select v-model="userNo"
-                         placeholder="请选择"
-                         popper-class="popper-select-class">
-                <el-option v-for="item in options"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.userNo"
-                           @change="fnChangeUser">
-                </el-option>
-              </el-select>-->
-            </div>
-          </div>
-          <div class="buttonWarp">
-            <span class="cancel"
-                  @click="closeDialog(isShowDialog)">取消</span>
-            <span class="save"
-                  @click="saveDialog(isShowDialog)">保存</span>
-          </div>
+    <div class="customer_wrap" :class="{'glass':dialog_xzr}">
+        <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
+        <TopCard :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+        <div class="nav_box">
+            <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
         </div>
-      </van-action-sheet>
+        <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
+            <!-- 客户动态 -->
+            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+            <!-- 商机 -->
+            <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
+            <!-- 群聊 -->
+            <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
+            <!-- 附件 -->
+            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+        </div>
+        <!-- 写跟进 -->
+        <div class="follow_up" v-if="navActive == 'dynamics'" @click="openDialog('','follow')">
+            <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+        </div>
+        <!-- 协助人消息输入框 -->
+        <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
+        <!-- 协助人选择弹窗 -->
+        <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
+        <!-- 群成员列表 -->
+        <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
+            <div class="dialog_wrap">
+                <div class="dialog_header">
+                    <div class="title">群成员列表</div>
+                    <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
+                    <div class="total_box">
+                        <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
+                        <div class="btn" @click="toGroupDetail">
+                            <span class="a">群聊详情</span>
+                            <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="dialog_content">
+                    <div class="list">
+                        <div class="li" v-for="(item,index) in groupUserList" :key="index">
+                            <!-- <div class="avatar"></div> -->
+                            <img class="avatar" :src="item.avatar | $setAvatar" alt="">
+                            <div class="val">
+                                <div class="tit_box">
+                                    <div class="tit">{{item.name}}</div>
+                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
+                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
+                                    <div class="tag red" v-if="item.admintype == 1">群主</div>
+                                    <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
+                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
+                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                                </div>
+                                <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
+                                <!-- <div class="opera_right">
+                                    <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </van-popup>
+        <!-- 消息回复弹窗 -->
+        <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
+        <!-- 写跟进弹窗 -->
+        <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
+        <!-- 商机详情 -->
+        <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+        <!-- 申请成为协助人 -->
+        <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
     </div>
-
-    <!-- 底部导航栏 -->
-    <div class="btnWarp">
-      <!-- <div class="btnBox"
-           @click="transCustom">
-        <img src="../../images/icon_change@2x.png"
-             alt="" />
-        <span>转客户</span>
-      </div> -->
-      <div class="btnBox"
-           @click="changeUser"
-           v-show="btnList.some(item=>item.enName == 'change')">
-        <img src="../../images/icon_change2@2x.png"
-             alt="" />
-        <span>变更所属人</span>
-      </div>
-      <div class="btnBox"
-           @click="giveUp"
-           v-show="btnList.some(item=>item.enName == 'giveup')">
-        <img src="../../images/icon_clear@2x.png"
-             alt="" />
-        <span>放弃</span>
-      </div>
-    </div>
-  </div>
 </template>
+
 <script>
-import { _throttle } from '../../utils/tool'
-
-import CustomerItem from '../../components/CustomerManage/customerItem'
-import Dynamic from '../../components/CustomerManage/dynamic'
-import Opportunities from '../../components/BusinessOpportunities/opportunities'
-import  HelperFile  from "./comTip/helperFile";
-import  Fujian  from "./comTip/fujian";
-import  Tt  from "./comTip/timelineTab";
+import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard } from '../customer/components'
+import { user_getUserName } from '@/api/home'
+import {
+    cluecustomer_getClueCustomerByid,
+    group_getMobileCustomerGroupPage,
+    group_getMobileGroupUserlist,
+    clueCustomerFollowUser_addCommentInfo,  //添加评论回复
+    clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
+    cluecustomer_addMessage,    //写跟进
+} from '@/api/customer'
+import Opportunities from '@/components/BusinessOpportunities/opportunities'
+import MessageBox from "@/components/CustomerManage/messageBox"
+import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
-  data() {
-    return {
-      timeLineList: [],
-      contentType: 0,
-      navList: [ '客户动态', '协助人', '商机', '附件' ],
-      dynamicContentType: 1,
-      dynamicNavList: [ '全部', '客户动态', '商机动态', '跟进记录' ],
-      show: false,
-      isShowDialog: null,
-      titleName: '',
-      message: '',
-      isShow: false,
-      nowUser: '',
-      userNo: '',
-      options: [],
-      objItem: JSON.parse(localStorage.getItem('customer')),
-      btnList: [],
-      SsPop:false,
-      helperName:'',
-    }
-  },
-  created() {
-    this.btnList = JSON.parse(this.$route.query.mylist)
-  },
-  mounted() {
-    this.$refs.dynamic.selectFollowMsgList(2)
-  },
-  provide() {
-    return {
-      showCompany: this.showCompany,
-      goDetail: this.goDetail
-    }
-  },
-  methods: {
-  	openSsPop(){
-  		this.SsPop = true;
-  	},
-  	onConfirm(value, index) {
-     // console.log(`当前值：${value}, 当前索引：${index}`);
-      console.log(value)
-				this.userNo = value.userNo
-       this.helperName = value.name
-   			this.SsPop = false;
+    components: {
+        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,
+        Opportunities,MessageBox,RemindersBox
     },
-    onChange(picker, value, index) {
-    	/*console.log(value)
-      console.log(`当前值：${value}, 当前索引：${index}`);*/
-    },
-    onCancel() {
-    	this.SsPop = false;
-      console.log('取消');
-    },
-    // 导航切换
-    changeNav(index) {
-    	console.log('contentType---->',index)
-      this.contentType = index
-    },
-    goBack() {
-      this.$router.go(-1)
-    },
-
-    // 去往下层详情页
-    goDetail() {
-      this.$router.push({
-        path: 'customDeepDetail',
-        query: { type: this.$route.query.type, mylist: JSON.stringify(this.btnList) },
-      })
-    },
-    cancelIcon() {
-      document.getElementById('html').style.overflow = 'auto'
-    },
-    showCompany(v) {
-      document.getElementById('html').style.overflow = 'hidden'
-      this.isShowDialog = v
-      this.show = true
-      if (v == 3) {
-        this.titleName = '写跟进'
-        this.message = ''
-      }
-    },
-    changeUser() {
-      this.isShowDialog = '4'
-      this.show = true
-      this.titleName = '变更所属人'
-      let params = {
-        clueCustomerNo: this.objItem.clueCustomerNo,
-      }
-      this.$network
-        .get('/customer-service/cluecustomer/getuserList', params)
-        .then((res) => {
-          this.nowUser = res.data.userNo
-          this.options = res.data.list
-        })
-    },
-    giveUp() {
-      this.$dialog
-        .confirm({
-          title: '放弃警告',
-          message:
-            '是否放弃返回公海？\n* 放弃到公海后，此客户数据将属于公共资源，原归属 人员不能再维护跟进和更新此客户数据。',
-          className: 'giveUpBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })
-        .then(() => {
-          this.$network
-            .get('/customer-service/cluecustomer/giveUpType', {
-              clueCustomerNo: this.objItem.clueCustomerNo,
-              type: this.$route.query.type,
-            })
-            .then((res) => {
-              if (res.result) {
-                this.$router.go(-1)
-                this.$message({
-                  type: 'success',
-                  message: '操作成功',
-                })
-              }
-            })
-        })
-        .catch(() => {})
-    },
-    fnChangeUser(val) {
-      console.log(val)
-      this.userNo = val
-    },
-    closeDialog(v) {
-      this.show = false
-      document.getElementById('html').style.overflow = 'auto'
-      if (v == 3) {
-        this.message = ''
-      } else if (v == 4) {
-      }
-    },
-    saveDialog: _throttle(function (v) {
-      if (v == 3) {
-        this.$network
-          .post('/customer-service/cluecustomer/addMessage', {
-            clueCustomerNo: this.objItem.clueCustomerNo,
-            context: this.message,
-          })
-          .then((res) => {
-            if (res.result) {
-              document.getElementById('html').style.overflow = 'auto'
-              this.show = false
-              this.$refs.dynamic.dynamicContentType = 3
-              this.$refs.dynamic.selectFollowMsgList(1)
-              this.$message({
-                type: 'success',
-                message: '修改成功',
-              })
-            }
-          })
-      } else if (v == 4) {
-        let params = {
-          cluecustomerno: this.objItem.clueCustomerNo,
-          user_no: this.userNo,
-          oldname: this.nowUser,
+    provide() {
+        return {
+            goDetail: this.goDetail,
+            showCompany: this.showCompany,
+            showGuideBox: this.showGuideBox,
+            showRemindersBox: this.showRemindersBox,
+            messageNotificatio: this.messageNotificatio,
+            getPeople: this.getPeople,
         }
-        this.$network
-          .get('/customer-service/cluecustomer/turnBlon', params)
-          .then((res) => {
-            if (res.result) {
-              this.show = false
-              this.$router.go(-1)
-              this.$message({
-                type: 'success',
-                message: '编辑成功!',
-              })
-            } else {
-              this.show = false
-              this.$message({
-                type: 'error',
-                message: res.msg,
-              })
+    },
+    data(){
+        return {
+            id: this.$route.query.id,
+            code: this.$route.query.userNo,
+            num: this.$route.query.num,
+            showPortraitType: 0,
+            dialog_group: false,
+            dialog_xx: false,
+            dialog_xgj: false,
+            dialog_sj: false,
+            dialog_xzr: false,
+            isApply: false,     //是否已经申请成为协助人 且还未通过
+
+            applyData: {},
+
+            navList: [
+                { name: '客户动态',code: 'dynamics'},
+                { name: '商机',code: 'niche',num: 0},
+                { name: '客户群',code: 'group',num: 0},
+                { name: '附件',code: 'enclosure',num: 0},
+            ],
+            navActive: 'dynamics',
+
+            customerInfo: {},
+            userList: [],
+            tagList: [],
+
+            searchGroup: {
+                page: 1,
+                limit: 10,
+                customerNo: '',
+            },
+            groupList: [],
+            groupTotal: 0,
+            groupUserData: {},
+            groupUserList: [],
+            groupChatId: '',
+            rowId: '',
+
+            showSecret: false,
+            sendUserInfo: {},
+        }
+    },
+     computed: {
+        bgY(){
+            let y = 0
+            if(this.tagList.length == 0){
+                if(!this.customerInfo.mobil){
+                    y = '70px'
+                }else{
+                    y = '40px'
+                }
+            }else{
+                if(!this.customerInfo.mobil){
+                    y = '30px'
+                }
             }
-          })
-      }
-    }, 5000),
-  },
-  components: {
-    CustomerItem,
-    Dynamic,
-    Opportunities,
-    HelperFile,
-    Fujian,
-    Tt,
-  }
+            return y
+        },
+    },
+    mounted(){
+        this.getCustomerDetail()
+        this.getUserName()
+    },
+    methods: {
+        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据
+            this.dialog_xzr = Number(data.permFlag) ? false : true
+            this.isApply = data.isApply ? true : false
+            let directorList = data.directorList
+            let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
+            this.applyData = {
+                customerName: data.clueCustomerVO.name,
+                customerAvatar: data.clueCustomerVO.avatar,
+                createTime: data.clueCustomerVO.createTime,
+                directorName: directorList && directorList.length ? directorList[0].name + depName : '',
+                directorAvatar: directorList && directorList.length ? directorList[0].avatar : '',
+            }
+        },
+        jumpFun(code){      //锚点跳转
+            // console.log('code',code,document.querySelector(`#${code}`))
+            const returnEle = document.querySelector(`#${code}`);  //productId是将要跳转区域的id
+            if (!returnEle) {
+                returnEle.scrollIntoView(true); // true 是默认的
+            }
+            document.querySelector(`#${code}`).scrollIntoView(true); //这里的counter1是将要返回地方的id
+        },
+        getCustomerDetail(){    //获取客户详情
+            cluecustomer_getClueCustomerByid(this.code).then(res => {
+                if(res.result){
+                    let data = res.data
+                    this.isDirectorFun(data)
+                    // this.isApply = data.permFlag ? true : false
+                    this.customerInfo = data.clueCustomerVO
+                    this.userList = data.directorList
+                    this.tagList = data.tagList.filter((el,index) => {
+                        return index < 3
+                    })
+                    this.navList.forEach(el => {
+                        if(el.code == 'niche'){
+                            el.num = data.mobileDataCount.busCount
+                        }else if(el.code == 'group'){
+                            el.num = data.mobileDataCount.groupCount
+                        }else if(el.code == 'enclosure'){
+                            el.num = data.mobileDataCount.encCount
+                        }
+                    })
+
+                    this.getCustomerGroupList()
+                }
+            })
+        },
+        getUserName(){  //获取权限数据
+            user_getUserName().then(res => {
+                if(res.result){
+                    let data = res.data
+                    this.showSecret = !data.haveSecret
+                    this.sendUserInfo = data && data.userEntity
+                }
+            })
+        },
+        getCustomerGroupList(){     //获取客户群列表
+            this.searchGroup.customerNo = this.customerInfo.clueCustomerNo
+            group_getMobileCustomerGroupPage(this.searchGroup).then(res => {
+                if(res.result){
+                    let data = res.data
+                    this.groupList = data.records
+                    this.groupTotal = data.total
+
+                    let { comeFrom } = this.$route.query
+                    if(comeFrom == 'messageCard'){
+                        this.$refs.dynamic.navClickFun(3)
+                    }
+                }
+            })
+        },
+        getGroupUserList(id){   //获取群群员列表
+            this.groupChatId = id
+            group_getMobileGroupUserlist(id).then(res => {
+                if(res.result){
+                    this.groupUserData = res.data.dataCount
+                    this.groupUserList = res.data.allList
+                    this.dialog_group = true
+                }
+            })
+        },
+        listLoadFun(val){   //客户动态列表获取成功判断 (跳转用)
+            if(val){
+                if(this.id){
+                    setTimeout(() => {
+                        this.jumpFun(`m${this.id}`)
+                    },200)
+                }
+            }
+        },
+        openDialog(id,type){  //打开回复弹窗
+            this.rowId = id
+            switch (type) {
+                case 'comment':   //消息回复
+                    this.dialog_xx = true
+                    break;
+                case 'detail':    //商机详情
+                    this.dialog_sj = true
+                    break;
+                case 'follow':    //写跟进
+                    this.dialog_xgj = true
+                    break;
+                default:
+                    break;
+            }
+        },
+        addCommentFun(val){    //添加评论回复
+            let data = {
+                content: val,
+                fromUserId: this.userNo,
+                targetId: this.rowId,
+                targetType: 1,
+            }
+            console.log('submit',data)
+            // return false
+            clueCustomerFollowUser_addCommentInfo(data).then(res => {
+                if(res.result){
+                    this.dialog_xx = false
+                    this.$refs.dynamic.searchFun()
+                }
+            })
+        },
+        followUpFun(val){  //写跟进
+            console.log('val 写跟进',val)
+            let data = {
+                clueCustomerNo: this.customerInfo.clueCustomerNo,
+                context: val,
+            }
+            cluecustomer_addMessage(data).then(res => {
+                if(res.result){
+                    this.$toast('操作成功')
+                    this.dialog_xgj = false
+                    this.$refs.dynamic.searchFun()
+                }
+            })
+        },
+        navClickFun(code){
+            this.navActive = code
+            switch (code) {
+                case 'dynamics':    //客户动态
+                    // this.getSelectFollowMsgList()
+                    break;
+                case 'niche':   //商机
+                    
+                    break;
+                case 'group':   //客户群
+                    this.getCustomerGroupList()
+                    break;
+                case 'enclosure':   //附件
+                    
+                    break;
+                default:
+                    break;
+            }
+        },
+        showRemindersBox() {
+            this.$refs.remindersBox.show()
+        },
+        getPeople(data) {
+            let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
+
+            arr.push(data)
+            this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
+            this.$refs.remindersBox.hide()
+        },
+        resetReceiveUserInfo(arr) {
+            let newArr = []
+            for (let i = 0; i < arr.length; i++) {
+                if (this.noHas(newArr, arr[i].userNo)) {
+                    newArr.push(arr[i])
+                }
+            }
+            return newArr
+        },
+        noHas(arr, userNo) {
+            let result = arr.filter((item) =>{
+                return item.userNo == userNo;
+            })
+            return result.length == 0 ? true : false;
+        },
+        messageNotificatio(receiveUserInfo, message) {
+            if (!this.checkBeforeSend(receiveUserInfo, message)) {
+                return
+            }
+            const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
+
+            let params = {
+                content: message,
+                customerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
+                receiveUserInfo,
+                sendUserInfo: {
+                    avatar,
+                    userName: name,
+                    userNo
+                }
+            }
+            clueCustomerFollowUser_message_notificatio(params).then(res => {
+                if(res.result){
+                    this.$refs.messageBox.initData()
+                    this.$refs.dynamic.searchFun()
+                }
+            })
+        },
+        checkBeforeSend(receiveUserInfo, message) {
+            if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
+                this.$toast('接收人不能为空')
+                return false
+            } else if (!message) {
+                this.$toast('消息内容不能为空')
+                return false
+            }
+            return true
+        },
+        toFun(val){
+            let name = ''
+            if(val == 'helper'){    //查看协助人
+                name = 'helper'
+            }else if(val == 'detail'){    //详情
+                name = 'CustomerDetail'
+            }
+            this.$router.push({
+                name: name,
+                query: { id: this.customerInfo.clueCustomerNo },
+            })
+        },
+        toGroupDetail(){    //群聊详情
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
+        },
+    },
+    filters: {
+        joinType(val){
+            let obj = {
+                1: '直接邀请入群',
+                2: '通过邀请链接入群',
+                3: '通过扫描群二维码入群',
+            }
+            return val ? obj[val] : ''
+        },
+    },
 }
 </script>
+
 <style lang="less" scoped>
-.custom-detail {
-  padding-bottom: 112px;
-  .headerTitle {
-    background: #fff;
-    padding: 0 24px;
-    font-weight: 600;
-    display: flex;
-    height: 87px;
-    line-height: 87px;
-    font-size: 28px;
-    color: #3c4353;
-    border-top: 1px solid #f0f2f7;
-    border-bottom: 1px solid #f0f2f7;
-    .backPage {
-      width: 150px;
-      .van-icon {
-        vertical-align: -10%;
-        width: 28px;
-        height: 28px;
-      }
-    }
-    .textTitle {
-      flex: 1;
-      display: inline-block;
-      padding-left: 150px;
-    }
-  }
-  .customer-data {
-    padding: 0 0 24px;
-    background: #fff;
-  }
-  .btnWarp {
-    display: flex;
+@import "~@/styles/color.less";
+.dialog_wrap{
     width: 100%;
-    max-width: 750px;
-    background-color: #fff;
-    border-top: 2px solid #F0F2F7;
-    z-index: 9;
+    height: 60vh;
+    background: @white;
+    position: relative;
+    .dialog_header{
+        width: 100%;
+        min-height: 104px;
+        position: relative;
+        .title{
+            width: 100%;
+            padding: 32px 0;
+            text-align: center;
+            font-weight: bold;
+            color: @fontMain;
+            font-size: 32px;
+            line-height: 40px;
+        }
+        .close{
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            right: 30px;
+            top: 34px;
+        }
+        .total_box{
+            padding: 24px 32px;
+            position: relative;
+            &::after{
+                content: '';
+                width: calc(100% - 64px);
+                height: 1px;    /*no*/
+                background: @lineColor;
+                position: absolute;
+                bottom: 0;
+                left: 24px;
+            }
+            .total{
+                color: @fontSub1;
+                font-size: 24px;
+                line-height: 32px;
+            }
+            .btn{
+                position: absolute;
+                right: 32px;
+                bottom: 24px;
+                font-size: 24px;
+                line-height: 32px;
+                display: flex;
+                .a{
+                    color: @main;
+                }
+                .icon{
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+    }
+    .dialog_content{
+        width: 100%;
+        height: calc(100% - 184px);
+        overflow-y: scroll;
+        .list{
+            width: 100%;
+            padding: 0 32px;
+            .li{
+                width: 100%;
+                padding: 32px 0;
+                position: relative;
+                display: flex;
+                .avatar{
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    margin-right: 22px;
+                    background: rgba(0, 0, 0, 0.07);
+                }
+                .val{
+                    width: calc(100% - 102px);
+                    position: relative;
+                    .tit_box{
+                        display: flex;
+                        align-items: center;
+                        font-size: 28px;
+                        line-height: 32px;
+                        margin-bottom: 16px;
+                        .tit{
+                            color: @fontMain;
+                            font-weight: bold;
+                        }
+                        .alt{
+                            color: @green;
+                            margin-left: 4px;
+                            &.yellow{
+                                color: @yellow;
+                            }
+                        }
+                        .tag{
+                            margin-left: 8px;
+                            height: 32px;
+                            line-height: 32px;
+                            font-size: 20px;
+                            color: @main;
+                            white-space: nowrap;
+                            background: rgba(@main,.06);
+                            padding: 0 16px;
+                            border-radius: 21px;
+                            border: 1px solid @main; /*no*/
+                            &.red{
+                                color: @red;
+                                background: rgba(@red,.06);
+                                border-color: @red;
+                            }
+                            &.green{
+                                color: @green;
+                                background: rgba(@green,.06);
+                                border-color: @green;
+                            }
+                            &.yellow{
+                                color: @yellow;
+                                background: rgba(@yellow,.06);
+                                border-color: @yellow;
+                            }
+                        }
+                    }
+                    .time{
+                        color: @total;
+                        font-size: 24px;
+                        line-height: 32px;
+                        span{
+                            margin-left: 24px;
+                        }
+                    }
+                    .opera_right{
+                        width: 60px;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        .icon{
+                            height: 40px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.customer_wrap {
+  width: 100%;
+  min-height: 100vh;
+  background: @white;
+  position: relative;
+  overflow: hidden;
+  &.glass{
+    filter: blur(4px); /* no */
+  }
+  .bg{
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .nav_box{
+    width: 100%;
+    height: 88px;
+    display: flex;
+    text-align: center;
+    // border-bottom: 1px solid @lineColor; /*no*/
+    position: relative;
+    &::before{
+        content: '';
+        width: 100%;
+        height: 1px;   /*no*/
+        background: @lineColor;
+        transform: scaleY(.5);
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
+    .nav{
+        color: @fontSub1;
+        font-size: 28px;
+        line-height: 88px;
+        flex: 1;
+        position: relative;
+        &.cur{
+            color: @main;
+            &::before{
+                content: '';
+                width: 40px;
+                height: 4px;
+                background: @main;
+                border-radius: 2px;
+                position: absolute;
+                left: 50%;
+                bottom: 0;
+                transform: translateX(-50%);
+            }
+        }
+    }
+  }
+  .content{
+    width: 100%;
+    padding: 32px;
+    &.pd0{
+        padding: 0;
+    }
+  }
+  .follow_up{
+    width: 76px;
+    height: 76px;
+    background: rgba(0, 0, 0, .4);
+    border-radius: 50%;
     position: fixed;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    .btnBox {
-      flex: 1;
-      height: 112px;
-      border-radius: 9px;
-      text-align: center;
-      font-size: 0;
-      img {
+    right: 24px;
+    bottom: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon{
         width: 40px;
         height: 40px;
-        margin: 16px auto 12px;
-      }
-      span {
-        font-size: 20px;
-        color: #3C4353;
-      }
     }
-  }
-  .infoContent {
-    margin-top: 24px;
-    background-color: #fff;
-    .header-nav {
-        display: flex;
-        width: 100%;
-        height: 100px;
-        margin-bottom: 38px;
-        border-bottom: 1px solid #F0F2F7;
-        li {
-            flex: 1;
-            height: 100%;
-            line-height: 100px;
-            text-align: center;
-            span {
-                display: inline-block;
-                height: 100%;
-                margin: 0 auto;
-                color: #838A9D;
-                font-size: 28px;
-                font-weight: 600;
-            }
-        }
-        .active {
-            span {
-                color: #4168F6;
-                border-bottom: 4px solid #4168F6;
-            }
-        }
-    }
-  }
-
-  .bottom_model {
-    /deep/.van-overlay {
-      background-color: rgba(0, 0, 0, 0.3);
-    }
-    .van-action-sheet__header {
-      height: 88px;
-      line-height: 88px;
-      background: #fafbff;
-      border-radius: 16px 16px 0px 0px;
-      font-size: 28px;
-      color: #3c4353;
-      font-weight: 600;
-    }
-    .content {
-      padding: 24px;
-      .writerInput {
-        height: 490px;
-        .van-cell,
-        .van-field,
-        .van-field--min-height {
-          font-size: 28px;
-          height: 400px;
-          background: #ffffff;
-          border-radius: 8px;
-          border: 2px solid #d9dae4;
-          /deep/.van-field__control {
-            height: 350px;
-            padding-top: 10px;
-          }
-        }
-      }
-      .changeUser {
-        height: 490px;
-        font-size: 28px;
-        font-weight: 600;
-        .nowUser {
-        		display: inline-block;
-						margin-left: 38px;
-						margin-bottom: 25px;
-						margin-top: 15px;
-						font-size: 30px;
-						font-weight: 400;
-						color:  #3C4353;
-         /* padding-left: 20px;
-          margin-bottom: 28px;
-          span {
-            display: inline-block;
-          }*/
-          span:nth-child(2) {
-            font-weight: normal;
-            color: #838a9d;
-            margin-left: 15px;
-          }
-        }
-        .selectUser {
-          display: flex;
-          align-items: center;
-          /deep/.el-select {
-            width: 519px;
-            height: 80px;
-            margin-left: 16px;
-            .el-input,
-            .el-input__inner {
-              width: 519px;
-              height: 80px;
-              border-radius: 8px;
-              font-size: 28px;
-              font-weight: normal;
-              border: 1px solid #d9dae4;
-            }
-          }
-        }
-      }
-      .buttonWarp {
-        display: flex;
-        justify-content: space-between;
-        font-size: 28px;
-        span {
-          display: inline-block;
-          width: 339px;
-          height: 80px;
-          border-radius: 8px;
-          border: 2px solid #4168f6;
-          text-align: center;
-          line-height: 80px;
-        }
-        .cancel {
-          color: #4168f6;
-          background: #fff;
-        }
-        .save {
-          background: #4168f6;
-          color: #fff;
-        }
-      }
-    }
-  }
-}
-.changeSsSec{
-	    height: 80px;
-    	font-size: 30px;
-    	padding-left: 15px;
-    	border-radius: 8px;
-    	margin-left: 17px;
-    	color: #C0C4CC ;
-    	line-height: 80px;
-    	background: #FFFFFF;
-			border: 1px solid #D9DAE4;
-			border-radius: 8px;
-			font-weight: 300;
-			width: 440px;
-}
-.pleSs{
-	display: inline-block;
-	margin-left: 23px;
-	margin-bottom: 25px;
-	margin-top: 15px;
-	font-size: 30px;
-	font-weight: 400;
-	color:  #3C4353;
-}
-</style>
-<style lang="less">
-.customer-data {
-  .customInfo, .detailInfo, .tjry {
-    padding: 0 24px;
   }
 }
 </style>
