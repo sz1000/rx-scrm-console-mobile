@@ -777,8 +777,8 @@ export default {
                     .val{
                         width: calc(100% - 180px);
                         text-align: right;
-                        display: flex;
-                        justify-content: right;
+                        // display: flex;
+                        // justify-content: right;
                         .input{
                             width: 100%;
                             height: 100%;
@@ -786,12 +786,19 @@ export default {
                             text-align: right;
                         }
                         .icon_select{
-                            display: flex;
-                            align-items: center;
+                            // display: flex;
+                            // align-items: center;
+                            display: inline-block;
+                            span{
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
                             .icon{
                                 width: 32px;
                                 height: 32px;
                                 // margin-left: 12px;
+                                display: inline-block;
+                                vertical-align: middle;
                             }
                         }
                         .placeholder{
