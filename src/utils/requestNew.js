@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 import { Toast } from 'vant'
 import Vue from 'vue'
 import VConsole from 'vconsole'
@@ -92,7 +93,7 @@ service.interceptors.response.use(
                 console.log('token无效', process.env.NODE_ENV)
                 if (process.env.NODE_ENV === 'production') {
                     store.dispatch('signOut').then(() => {
-                        window.location.reload()
+                        router.replace(window.location.pathname)
                     })
                 }
             } else {

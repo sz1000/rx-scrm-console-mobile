@@ -123,6 +123,15 @@ export default {
             width: 100%;
             height: 72px;
             position: relative;
+            &::before{
+                content: '';
+                height: 1px; /* no */
+                width: 100%;
+                background: @main;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
             .input{
                 width: 100%;
                 line-height: 40px;
@@ -131,7 +140,6 @@ export default {
                 padding: 16px 0;
                 border: none;
                 word-break: break-all;
-                border-bottom: 1px solid @main; /* no */
                 padding-right: 60px;
             }
             .icon{
@@ -147,6 +155,15 @@ export default {
         .textarea_box{
             padding: 16px 0;
             position: relative;
+            &::before{
+                content: '';
+                height: 1px; /* no */
+                width: 100%;
+                background: @main;
+                position: absolute;
+                bottom: 16px;
+                left: 0;
+            }
             .textarea{
                 border: none;
                 width: 100%;
@@ -155,7 +172,6 @@ export default {
                 font-size: 28px;
                 color: @fontMain;
                 word-break: break-all;
-                border-bottom: 1px solid @main; /* no */
             }
             .length{
                 font-size: 20px;
