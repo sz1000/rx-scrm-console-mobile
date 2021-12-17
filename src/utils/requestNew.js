@@ -93,7 +93,7 @@ service.interceptors.response.use(
                 console.log('token无效', process.env.NODE_ENV)
                 if (process.env.NODE_ENV === 'production') {
                     store.dispatch('signOut').then(() => {
-                        console.log('signOut',window.location.pathname)
+                        console.log('signOut', window.location.pathname)
                         router.replace(window.location.pathname)
                     })
                 }
