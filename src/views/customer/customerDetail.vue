@@ -149,7 +149,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" v-if="customList && customList.length">
+            <div class="row no" v-if="customList && customList.length">
                 <div class="tit">自定义信息</div>
                 <div class="item_box">
                     <div class="item" v-for="item in customList" :key="item.id">
@@ -158,7 +158,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row no">
                 <div class="tit">系统信息</div>
                 <div class="item_box">
                     <div class="item">
@@ -179,7 +179,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row no">
                 <div class="tit">企微信息</div>
                 <div class="item_box">
                     <div class="item">
@@ -661,6 +661,9 @@ export default {
                 .tit{
                     margin-bottom: 32px;
                 }
+            }
+            &.no .item_box .item .val{
+                color: @fontSub1;
             }
             &:last-child{
                 margin-bottom: 0;

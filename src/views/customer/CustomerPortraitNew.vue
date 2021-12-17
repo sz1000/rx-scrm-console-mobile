@@ -45,12 +45,12 @@
                             <div class="val">
                                 <div class="tit_box">
                                     <div class="tit">{{item.name}}</div>
-                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 1">@微信</div>
-                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 2">{{item.corpName}}</div>
+                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && Number(item.externalType) == 1">@微信</div>
+                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && Number(item.externalType) == 2">@{{item.customerName || item.corpName}}</div>
                                     <div class="tag red" v-if="item.admintype == 1">群主</div>
                                     <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
-                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 1">客户</div>
-                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 2">企业客户</div>
+                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && Number(item.externalType) == 1">客户</div>
+                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && Number(item.externalType) == 2">企业客户</div>
                                 </div>
                                 <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
                                 <!-- <div class="opera_right">
@@ -546,10 +546,17 @@ export default {
                         .tit{
                             color: @fontMain;
                             font-weight: bold;
+                            max-width: 50%;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                         }
                         .alt{
                             color: @green;
                             margin-left: 4px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                             &.yellow{
                                 color: @yellow;
                             }
