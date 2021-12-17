@@ -26,9 +26,7 @@ export default {
     beforeRead(file) {
       console.log(file, '-----file----')
       if (
-        !/\.ppt$|\.pptx$|\.doc$|\.docx$|\.xls$|\.xlsx$|\.pdf$|\.avi$/i.test(
-          file.name
-        )
+        !/\.ppt$|\.pptx$|\.doc$|\.docx$|\.xls$|\.xlsx$|\.pdf$/i.test(file.name)
       ) {
         return false
       }
