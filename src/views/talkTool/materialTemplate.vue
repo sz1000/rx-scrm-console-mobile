@@ -1,6 +1,7 @@
 <template>
   <div class="material-template">
     <header-title v-if="isIndependent == 1 && !showUploadPoster && !showContentPreview && !showFileUpload" title="素材库"></header-title>
+
     <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
       <ul class="header-nav pointer">
         <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
