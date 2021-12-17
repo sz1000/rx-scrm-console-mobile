@@ -5,8 +5,6 @@
       <div @click="clickTo(2)">群发消息客户群</div>
       <div @click="clickTo(3)">添加客户界面</div>
       <div @click="clickTo(4)">发到朋友圈</div>
-      <div @click="clickTo(5)">创建群聊并发送消息</div>
-      <div @click="clickTo(6)">打开已有群聊并发送消息</div>
     </div> -->
     <div class="page_title">
       <div class="head_img">
@@ -14,7 +12,7 @@
         <img src="../../images/img_head.png" alt="" v-else />
         <div class="person_info">
           <p>{{userObj.name}}</p>
-          <p>{{userObj.departments}}</p>
+          <!-- <p>{{identity}}</p> -->
         </div>
       </div>
       <!-- <div class="change_identity" @click="changeIdent">
@@ -37,7 +35,7 @@
           <p>朋友圈</p>
         </div>
       </div>
-      <!-- <div class="wait_warp">
+      <div class="wait_warp">
         <div class="text_wait">
           <span>待处理</span>
           <div @click="goToWait(1)" class="cilck_area">
@@ -60,28 +58,9 @@
             <img src="../../images/group_task.png" alt="">
           </div>
         </div>
-      </div> -->
-           <div class="wait_warp">
-        <div class="text_wait">
-          <span>客户动态</span>
-          <div @click="dynamicFn" class="cilck_area">
-            <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
-          </div>
-        </div>
-        <div class="task_msg">
-           <ul>
-             <li class="dynamic_list" v-for="(item,index) in clientList" :key="index" @click="goCustomer(item)" >
-                <span class="circle_line"></span>
-                <span class="circle_lines"></span>
-                <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
-                <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
-             </li>
-           </ul>
-        
-        </div>
       </div>
       <div class="about_me about_shadow">
-        <span>互动协同</span>
+        <span>待回复</span>
         <div class="reply_text" @click="goToAbout">
           <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
@@ -117,21 +96,6 @@
             <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-
-        <div class="about_me about_shadow">
-        <span>企业朋友圈</span>
-        <div class="reply_text"  @click="goToWait(1)">
-          <span>{{dataObj.friendSend}}条企业朋友圈待发表</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
-        </div>
-      </div>
-        <div class="about_me about_shadow">
-        <span>群发任务</span>
-        <div class="reply_text" @click="goToWait(2)">
-          <span>你有群发任务待发送</span>
-          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
-        </div>
-      </div>
       </div>
       <!-- 图表 -->
       <section>
@@ -162,7 +126,7 @@
         <div class="popup_content">
           <!-- <img src="../../images/selected.png" alt="">
           <img src="../../images/no_select.png" alt=""> -->
-          
+          hahhah
         </div>
         <div class="close_warp" @click="closePopup">
           <img src="../../images/close_popup.png" alt="">
@@ -179,8 +143,7 @@ import {
   SaleCharts,
   NicheCharts,
 } from './echartComponent/index.js'
-import { getMyInfo, getAllCharts,getMBTop10FollowMsgList } from '../../api/myHome'
-import router from '../../router/index.js'
+import { getMyInfo, getAllCharts } from '../../api/myHome'
 export default {
   components: {
     CustomAddChart,
@@ -212,7 +175,6 @@ export default {
       userObj: {
         name: '',
         avatar: '',
-        departments:"",
       },
       activeObj: {
         excedOne: '0',
@@ -230,12 +192,10 @@ export default {
       nicheTime: [],
       nicheData: {},
       scroll: true,
-      clientList:[]
     }
   },
   created() {
     this.getData()
-    this.client()
   },
   mounted() {
     this.$nextTick(() => {
@@ -245,17 +205,6 @@ export default {
   methods: {
        FnToRouter(path) {
       this.$router.push(path)
-    },
-        goCustomer(val) {
-      console.log(val)
-      this.$router.push({
-        path: '/customerPortrait',
-        query: {
-          id: val.followId,
-          userNo: val.clueCustomerNo,
-          num: val.rowAt,
-        },
-      })
     },
     getAllChartList() {
       getAllCharts().then((res) => {
@@ -311,147 +260,6 @@ export default {
         this.getAllChartList()
       })
     },
-    client(){
-       getMBTop10FollowMsgList().then((res)=>{
-              console.log(res.data,"------客户动态")
-              this.clientList = res.data
-             
-       })
-    },
-          getTextFun(obj){
-            // console.log('asd',obj)
-            let val = obj.optType,str = ''
-            switch (val) {
-                case 0:
-                    str = obj.context
-                    break;
-                case 1:
-                     str =`建立了${obj.customerCalled}的档案`
-                    break;
-                case 2:
-                     str =`导入了客户${obj.customerCalled}的信息`
-                    break;
-                case 3:
-                    str =`${obj.customerCalled}从企微同步了`
-                    break;
-                case 5:
-                    str =`更新${obj.customerCalled}的信息`
-                    break;
-                case 6:
-                    str =`将${obj.customerCalled}变更负责人`
-                    break;
-                case 7:
-                  str =`将客户${obj.customerCalled}分配给了`
-
-                    break;
-                case 8:
-                    if(obj.optUserName){
-                        str = `领取了客户${obj.customerCalled}`
-                    }else{
-                        str = obj.context
-                    }
-                    break;
-                case 9:
-                    str = `放弃了客户${obj.customerCalled}，客户已回到公海`
-                    break;
-                case 11:
-                    str = '上传了附件'
-                    break;
-                case 12:
-                    str = '删除了附件'
-                    break;
-                case 13:
-                    str = `新增了一条记录“${obj.context}”`
-                    break;
-                case 14:
-                    str = `拜访了客户${obj.customerCalled}`
-                    break;
-                case 15:
-                    str = '新增了商机' + obj.context
-                    break;
-                case 16:
-                    str = '更新了商机'
-                    break;
-                case 17:
-                    str = '删除了商机'
-                    break;
-                case 18:
-                    if(obj.optUserName){
-                        if(obj.createBy){
-                            str = '新增协作人'
-                        }else{
-                            str = obj.context
-                        }
-                    }else{
-                        str = obj.context
-                    }
-                    break;
-                case 20:
-                    str = '删除了协作人'
-                    break;
-                case 26:
-                    let name = obj.ossObjectname ? obj.ossObjectname : obj.context
-                    str = `新增标签“${name}”`
-                    break;
-                case 28:
-                    str = obj.context
-                    break;
-                case 29:
-                    str = `发起激活客户${obj.customerCalled}`
-                    break;
-                case 30:
-                    str = obj.context
-                    break;
-                case 36:
-                    str = obj.context
-                    break;
-                case 40:
-                    str = obj.context
-                    break;
-                case 41:
-                    str =`添加 ${obj.customerCalled} 为企业微信好友`
-                    break;
-                case 44:
-                    let _str = ''
-                    if(obj.optResult == 1){
-                        _str = '(已通过)'
-                    }else if(obj.optResult == 0){
-                        _str = '(已拒绝)'
-                    }
-                    str = `申请成为客户${obj.customerCalled}的协助人` + _str
-                    break;
-                case 46:
-                    str = `已自动成为客户${obj.customerCalled}的协助人`
-                    break;
-                case 47:
-                    break;
-                case 48:
-                    break;
-                default:
-                    break;
-            }
-            return str
-        },
-
-        getTimeFun(value){
-            let days = parseInt(value / (1000 * 60 * 60 * 24)),
-            hours = parseInt((value % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes = parseInt((value % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds = (value % (1000 * 60)) / 1000
-               if(seconds < 1){
-                  return 1 + "秒前"
-               }else if(  1<seconds< 60){
-                return parseInt(seconds) + "秒前"
-              }else if( 1 < minutes < 60){
-                return parseInt(seconds) + "分钟前"
-              }else if(1 < hours < 24){
-                 return parseInt(seconds) + "小时前"
-              }else if(1 < days < 30){
-                  return parseInt(seconds) + "天前"
-              }
-        
-          
-         },
     setLineChart(data) {
       this.nicheData = data.oppory
       this.nicheTime = data.dateTime
@@ -517,11 +325,6 @@ export default {
     },
     closePopup() {
       this.showIdent = false
-    },
-    dynamicFn(){
-       this.$router.push({
-        path: './AllDynamic',
-      })
     },
     goToWait(v) {
       this.$router.push({
@@ -594,144 +397,78 @@ export default {
     },
 
     // 测试企微接口
-    clickTo(v) {
-      this.$network
-        .get('/user-service/m/user/getinticket', {
-          url: location.href,
-        })
-        .then((res) => {
-          wx.config({
-            beta: true,
-            debug: true,
-            appId: res.data.corpId,
-            timestamp: res.data.timestamp,
-            nonceStr: res.data.nonceStr,
-            signature: res.data.signature,
-            jsApiList: [
-              'sendChatMessage',
-              'getContext',
-              'invoke',
-              'shareToExternalContact',
-              'shareToExternalChat',
-              'navigateToAddCustomer',
-              'shareToExternalMoments',
-              'createChatWithMsg',
-              'openExistedChatWithMsg',
-            ],
-          })
-          var that = this
-          wx.ready(function () {
-            wx.invoke(
-              'agentConfig',
-              {
-                corpid: res.data.corpId,
-                agentid: res.data.agent_id + '',
-                timestamp: res.data.agent_config_data.timestamp,
-                nonceStr: res.data.agent_config_data.noncestr,
-                signature: res.data.agent_config_data.signature,
-                jsApiList: [
-                  'sendChatMessage',
-                  'getContext',
-                  'invoke',
-                  'shareToExternalContact',
-                  'shareToExternalChat',
-                  'navigateToAddCustomer',
-                  'shareToExternalMoments',
-                  'createChatWithMsg',
-                  'openExistedChatWithMsg',
-                ],
-              },
+    // clickTo(v) {
+    //   console.log('----分享分组----', v)
+    //   this.$network
+    //     .get('/user-service/m/user/getinticket', {
+    //       url: location.href,
+    //     })
+    //     .then((res) => {
+    //       wx.config({
+    //         beta: true,
+    //         debug: false,
+    //         appId: res.data.corpId,
+    //         timestamp: res.data.timestamp,
+    //         nonceStr: res.data.nonceStr,
+    //         signature: res.data.signature,
+    //         jsApiList: [
+    //           'sendChatMessage',
+    //           'getContext',
+    //           'invoke',
+    //           'shareToExternalContact',
+    //           'shareToExternalChat',
+    //           'navigateToAddCustomer',
+    //           'shareToExternalMoments',
+    //         ],
+    //       })
+    //       var that = this
+    //       wx.ready(function () {
+    //         wx.invoke(
+    //           'agentConfig',
+    //           {
+    //             corpid: res.data.corpId,
+    //             agentid: res.data.agent_id + '',
+    //             timestamp: res.data.agent_config_data.timestamp,
+    //             nonceStr: res.data.agent_config_data.noncestr,
+    //             signature: res.data.agent_config_data.signature,
+    //             jsApiList: [
+    //               'sendChatMessage',
+    //               'getContext',
+    //               'invoke',
+    //               'shareToExternalContact',
+    //               'shareToExternalChat',
+    //               'navigateToAddCustomer',
+    //               'shareToExternalMoments',
+    //             ],
+    //           },
 
-              function (res) {
-                if (v == 1) {
-                  wx.invoke(
-                    'shareToExternalContact',
-                    {
-                      text: {
-                        content: '群发消息给客户', // 文本内容
-                      },
-                    },
-                    function (res) {
-                      if (res.err_msg == 'shareToExternalContact:ok') {
-                        console.log('shareOk==', res)
-                      }
-                    }
-                  )
-                } else if (v == 2) {
-                  wx.invoke('shareToExternalChat', {
-                    text: {
-                      content: '群发消息客户群', // 文本内容
-                    },
-                  })
-                } else if (v == 3) {
-                  wx.invoke('navigateToAddCustomer', {}, function (res) {})
-                } else if (v == 4) {
-                  wx.invoke(
-                    'shareToExternalMoments',
-                    {
-                      text: {
-                        content: '发到朋友圈', // 文本内容
-                      },
-                    },
-                    function (res) {
-                      if (res.err_msg == 'shareToExternalMoments:ok') {
-                        console.log('朋友圈=====', res)
-                      }
-                    }
-                  )
-                } else if (v == 5) {
-                  wx.invoke(
-                    'createChatWithMsg',
-                    {
-                      selectedOpenUserIds: [
-                        'woY-gRDAAA9oIgFvRMPOvgEzsf9RGgNQ',
-                        'wmY-gRDAAAuteJF6uiT_NJF_9j1KwRLA',
-                      ],
-                      selectedTickets: ['tick1', 'token2'],
-                      chatName: 'discussName',
-                      msg: {
-                        msgtype: 'link',
-                        link: {
-                          title: 'title1',
-                          desc: 'desc1',
-                          url: 'wwww.baidu.com',
-                          imgUrl: 'imgurl1',
-                        },
-                      },
-                    },
-                    function (res) {
-                      if (res.err_msg == 'createChatWithMsg:ok') {
-                        console.log('=====创建群', res)
-                        var chatId = res.chatId // 新建的会话ID，当会话为单聊时不返回此字段
-                      }
-                    }
-                  )
-                } else if (v == 6) {
-                  wx.invoke(
-                    'openExistedChatWithMsg',
-                    {
-                      chatId: 'wryPDZEQAAj0m3IkOQ1nmngt2AX8h-jQ',
-                      msg: {
-                        msgtype: 'link',
-                        link: {
-                          title: 'title1',
-                          desc: 'desc1',
-                          url: 'link1',
-                          imgUrl: 'imgurl1',
-                        },
-                      },
-                    },
-                    function (res) {
-                      if (res.err_msg == 'openExistedChatWithMsg:ok') {
-                      }
-                    }
-                  )
-                }
-              }
-            )
-          })
-        })
-    },
+    //           function (res) {
+    //             if (v == 1) {
+    //               wx.invoke('shareToExternalContact', {
+    //                 text: {
+    //                   content: '1111111', // 文本内容
+    //                 },
+    //               })
+    //             } else if (v == 2) {
+    //               wx.invoke('shareToExternalChat', {
+    //                 text: {
+    //                   content: '2222222', // 文本内容
+    //                 },
+    //               })
+    //             } else if (v == 3) {
+    //               wx.invoke('navigateToAddCustomer', {}, function (res) {})
+    //             } else if (v == 4) {
+    //               wx.invoke('shareToExternalMoments', {
+    //                 text: {
+    //                   content: '333333333333', // 文本内容
+    //                 },
+    //               })
+    //             }
+    //           }
+    //         )
+    //       })
+    //     })
+    // },
   },
 }
 </script>

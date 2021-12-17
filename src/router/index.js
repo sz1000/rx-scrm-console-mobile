@@ -1,15 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Interactive from '../views/myHome/MyIndex'
 import HomeTransition from '../views/HomeTransition.vue'
 // 客户画像
 import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
-import Helper from '../views/customer/helper.vue'   //协助人
-const CustomerDetail = () => import('../views/customer/customerDetail.vue')
-const Demo = () => import('../views/customer/demo.vue')
-// 群 SOP 设置
+import Helper from '../views/customer/helper.vue' //协助人
+const CustomerDetail = () =>
+    import ('../views/customer/customerDetail.vue')
+const Demo = () =>
+    import ('../views/customer/demo.vue')
+    // 群 SOP 设置
 import SettingSop from '../views/customer/settingSop'
 // 拓客工具
 import TalkTool from '../views/talkTool/index.vue'
@@ -81,6 +84,8 @@ import WaitDealwith from '../views/myHome/WaitDealwith.vue'
 import CustomeActive from '../views/myHome/CustomeActive.vue'
 // @我
 import AboutComponent from '../views/myHome/AboutMe.vue'
+//客户动态
+import AllDynamic from '../views/myHome/AllDynamic.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -98,6 +103,7 @@ const routes = [{
 
         component: Test,
     },
+
     {
         path: '/homeTransition',
         name: 'homeTransition',
@@ -115,10 +121,16 @@ const routes = [{
         component: Home,
     },
     {
+        path: '/Interactive',
+        name: 'interactive',
+        component: Interactive,
+    },
+    {
         path: '/404',
         name: '404',
         component: NoPermissions,
     },
+
 
     // 客户画像
     {
@@ -523,6 +535,12 @@ const routes = [{
         path: '/aboutme',
         name: 'aboutme',
         component: AboutComponent,
+    },
+    //客户动态
+    {
+        path: '/alldynamic',
+        name: 'alldynamic',
+        component: AllDynamic,
     },
 ]
 

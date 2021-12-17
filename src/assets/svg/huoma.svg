@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/24px/活码</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon/24px/活码">
+            <rect id="矩形" fill="#D8D8D8" opacity="0" x="0" y="0" width="24" height="24"></rect>
+            <polygon id="路径" stroke="#FFFFFF" stroke-width="2" fill="#FFFFFF" fill-rule="nonzero" stroke-linejoin="round" points="10.2222222 4 4 4 4 10.2222222 10.2222222 10.2222222"></polygon>
+            <polygon id="路径" stroke="#FFFFFF" stroke-width="2" fill="#FFFFFF" fill-rule="nonzero" stroke-linejoin="round" points="10.2222222 13.7777778 4 13.7777778 4 20 10.2222222 20"></polygon>
+            <polygon id="路径" stroke="#FFFFFF" stroke-width="2" fill="#FFFFFF" fill-rule="nonzero" stroke-linejoin="round" points="20 4 13.7777778 4 13.7777778 10.2222222 20 10.2222222"></polygon>
+            <line x1="14.2222222" y1="13.7777778" x2="14.2222222" y2="20" id="路径" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
+            <line x1="19.5555556" y1="13.7777778" x2="19.5555556" y2="20" id="路径" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></line>
+        </g>
+    </g>
+</svg>

@@ -6,114 +6,125 @@
           <van-icon name="arrow-left" />
           返回
         </div>
-        <span class="textTitle">从素材库选择</span>
+        <span class="textTitle">全部动态</span>
       </div>
       <ul class="header-nav">
-        <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
-        <li @click="changeNav(2)" :class="{active: type == 2}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
-        <li @click="changeNav(3)" :class="{active: type == 3}"><span>营销海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
+        <li @click="changeNav(1)" :class="{active: type == 1}" ><span>客户动态</span></li>
+        <li @click="changeNav(2)" :class="{active: type == 2}" ><span>商机动态</span></li>
+        <li @click="changeNav(3)" :class="{active: type == 3}" ><span>互动协同</span></li>
       </ul>
-      <search ref="search" :type="type"></search>
+    <div class="searchInput">
+      <van-field v-model="value1" placeholder="客户名称/公司/手机号码">
+        <template #left-icon>
+          <van-icon name="search" />
+        </template>
+      </van-field>
+   
+      <div class="select_box" @click="filterCard">
+        <span>{{tabName}}</span>
+        <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
+      </div>
+      
+    </div>
+      
+     
+       
+      <!-- <search ref="search" :type="type"></search> -->
       <ul class="list-box">
         <li class="item-box" v-if="type == 1">
+           <!-- v-for="(i,indexp) in articleList" :key="indexp" -->
           <van-list v-model="articleListLoading" :immediate-check="false" :finished="articleListFinished" finished-text="没有更多了" @load="onLoad">
-            <div class="item" v-for="(i,indexp) in articleList" :key="indexp">
-              <div class="flex_data right" @click="preview(i,indexp)">
-                <div class="right">
-                  <div class="img">
-                    <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
-                  </div>
-                  <div class="des">
-                    <div>
-                      <h3 class="one-line">{{i.title}}</h3>
-                      <p class="one-line" v-html="i.contentAbstract"></p>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <span v-if="indexps == indexp">
-                    <img src="../../images/duihao.png" class="duihao_img" alt="">
-                  </span>
-                  <span v-else class="roud_yun"></span>
-                </div>
-              </div>
-              <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })"><img src="../../images/relay.png" alt=""></div> -->
+               <p class="tite_num"> 共 <span class="num">3</span><span>客户动态，关联</span> <span class="num">2</span>个客户</p>
+            <div   class="client_list" v-for="(item ,index) in dynamicList" :key="index">
+                 <div class="client_item">
+                     <div  class="client_img">
+                         <div class="user_img">
+                             <img :src="item.optAvatar" alt="" v-if="item.optAvatar">
+                             <img src="../../images/nomal_avt.png" alt="" v-else>
+                         </div>
+                     </div>
+                        <div class="client_message">
+                             <div class="tite_name"> 
+                                 <span class="name">{{item.userName}}</span>
+                                 <span class="company"> @车速派二手车销售服务有限公司</span>
+                             </div>
+                             <div class="time">{{item.createTime}}</div>
+                             <div class="department">[陈良-运营部] 新增了协助人 [王扬-</div>
+                        </div>
+
+                 </div>
             </div>
+            
           </van-list>
         </li>
         <li class="item-box" v-if="type == 2">
           <van-list v-model="saleListLoading" :immediate-check="false" :finished="saleListFinished" finished-text="没有更多了" @load="onLoad">
-            <div class="item" v-for="(i,indext) in saleList" :key="indext">
-              <div class="flex_data right" @click="preview(i,indext)">
+            <!-- <div class="item" v-for="(i,indext) in saleList" :key="indext"> -->
+                 <p class="tite_num"> 共 <span class="num">3</span><span>条商机动态，关联</span> <span class="num">2</span>个客户</p>
+            <div   class="client_list">
+                 <div class="client_item">
+                     <div  class="client_img">
+                         <div class="user_img">
+                             <img src="../../images/nomal_avt.png" alt="">
+                         </div>
+                     </div>
+                        <div class="client_message">
+                             <div class="tite_name"> 
+                                 <span class="name">自在随原</span>
+                                 <span class="company"> @车速派二手车销售服务有限公司</span>
+                             </div>
+                             <div class="time">2021-9-12 12:30:20</div>
+                             <div class="department">[陈良-运营部] 新增了协助人 [王扬-</div>
+                        </div>
 
-                <div class="right" @click="preview(i,indext)">
-                  <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
-                  <div class="des">
-                    <div>
-                      <h3 class="one-line">{{i.name}}</h3>
-                      <!-- <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p> -->
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <span v-if="indexps == indext">
-                    <img src="../../images/duihao.png" class="duihao_img" alt="">
-                  </span>
-                  <span v-else class="roud_yun"></span>
-                </div>
-              </div>
-              <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div> -->
+                 </div>
             </div>
+              <!-- <div class="left" @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })"><img src="../../images/relay.png" alt=""></div> -->
+            <!-- </div> -->
           </van-list>
         </li>
         <li class="item-box" v-if="type == 3">
           <van-list v-model="posterListLoading" :immediate-check="false" :finished="posterListFinished" finished-text="没有更多了" @load="onLoad">
-            <div class="item" v-for="(i,indexs) in posterList" :key="indexs">
-              <div class="flex_data right" @click="preview(i,indexs)">
-
-                <div class="right" @click="preview(i,indexs)">
-                  <div class="img">
-                    <span><img :src="i.posterUrl" alt=""></span>
-                  </div>
-                  <div class="des">
-                    <div>
-                      <h3 class="one-line">{{i.posterName}}</h3>
+            
+            <div class="custom_content">
+                <div class="card_box" >
+                <div class="chat_warp">
+                    <div class="chat_one" >
+                    <div class="left_cnt">
+                        <img src="../../images/nomal_avt.png" alt="">
+                        <div class="content">
+                        <div class="name_one">111</div>
+                        <div class="creat_time">222}</div>
+                        <div class="cont_text">
+                            <span>@我</span>
+                            &nbsp;
+                            <span>11122</span>
+                        </div>
+                        </div>
                     </div>
-                  </div>
+                    <img src="../../images/ico_pl.png" alt="" class="talk" @click="goCustomer(list)" />
+                    </div>
                 </div>
-                <div>
-
-                  <span v-if="indexps == indexs" class="span_img">
-                    <img src="../../images/duihao.png" class="duihao_img" alt="">
-                  </span>
-                  <span v-else class="roud_yun"></span>
+                <div class="custom_msg">
+                    <!-- <img :src="item.avatar" alt="" v-if="item.avatar" /> -->
+                    <img src="../../images/xiansuo.png" alt=""  />
+                    <div class="name_text">223</div>
+                    <span>444</span>
                 </div>
-              </div>
-              <!-- <div class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png" alt=""></div> -->
+                </div>
             </div>
+
           </van-list>
         </li>
       </ul>
 
-      <!-- 转载公众号文章按钮 -->
-      <!-- <div v-if="type == 0" class="reprint-box" @click="goNextStep"></div> -->
-      <!-- 上传文件按钮 -->
-      <!-- <div v-if="type == 1" class="poster-box">
-                <file-upload :needFileInfo="true"></file-upload>
-            </div> -->
-      <!-- 上传海报按钮 -->
-      <!-- <div v-if="type == 2" class="poster-box">
-                <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
-            </div> -->
 
-      <div class="but_warp">
-        <div class="cancel" @click="cancel">取消</div>
-        <div class="determine" @click="determine">确认选择</div>
-      </div>
     </template>
 
     <!-- <img-preview ref="imgPreview"></img-preview> -->
-
+       <div class="filter_box">
+      <van-action-sheet v-model="showFilter" :actions="actions" cancel-text="取消" close-on-click-action @select='fnSelect' />
+    </div>
   </div>
 </template>
 <script>
@@ -123,8 +134,8 @@ import {
   byteConvert,
   getFileDefaultCover,
 } from '../../utils/tool'
-
-import Search from './search'
+import {queryFollowMsgPage} from "../../api/myHome"
+// import Search from './search'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ImgUpload from '../../components/MaterialTemplate/imgUpload'
 import UploadPoster from '../../components/MaterialTemplate/uploadPoster'
@@ -169,6 +180,16 @@ export default {
       showContentPreview: false,
       showFileUpload: false, // 是否展示文件上传页面
       fileData: {}, // 上传的文件信息
+
+      value1:'',
+      showFilter: false,
+      actions: [
+        { name: '从未联系', id: 0 },
+        { name: '超过1天', id: 1 },
+        { name: '超过3天', id: 2 },],
+        tabName: '',
+        cardList:[],
+        dynamicList:[],
     }
   },
   computed: {
@@ -185,119 +206,41 @@ export default {
     }
   },
   created() {
+       this.cataList()
     this.getCorpId().then(() => {
       this.getList()
       this.getTotal(2)
       this.getTotal(3)
+     
     })
   },
   mounted() {},
   methods: {
-    ...mapActions(['getCorpId']),
+      cataList(){
+          let params = {
+            page:1,
+            limit:10,
+            isMang:0,
+            searchParam:"",
+            punckStatus:1
+          }
+          queryFollowMsgPage(params).then((res) =>{
+              console.log(res.data.data.records)
+              this.dynamicList =  res.data.data.records
+          })
+      }, 
     goBack() {
       this.$router.go(-1)
     },
-    cancel() {
-      this.$router.go(-1)
-      //         this.$router.push({
-      //   path:"/talkTool/circleFriend",
-      //   query:{
-      //     datalist:this.centquer,
-      //     tablable:"material"
-      //   }
-      // })
+     filterCard() {
+      this.showFilter = true
     },
-    determine() {
-      // console.log('000')
-      this.$router.push({
-        path: '/talkTool/circleFriend',
-        query: {
-          datalist: this.centquer,
-          tablable: 'material',
-        },
-      })
-      // let type = this.$route.query.friendtype
-      // if (type == 'person') {
-      //   this.sendChart()
-      // } else if (type == 'compony') {
-      // } else {
-      //   this.$router.push({
-      //     path: '/talkTool/circleFriend',
-      //     query: {
-      //       datalist: this.centquer,
-      //       tablable: 'material',
-      //     },
-      //   })
-      // }
+    fnSelect(v) {
+      this.tabName = v.name
+      console.log(v)
     },
-    sendChart() {
-      this.$network
-        .get('/user-service/m/user/getinticket', {
-          url: location.href,
-        })
-        .then((res) => {
-          wx.config({
-            beta: true,
-            debug: false,
-            appId: res.data.corpId,
-            timestamp: res.data.timestamp,
-            nonceStr: res.data.nonceStr,
-            signature: res.data.signature,
-            jsApiList: [
-              'sendChatMessage',
-              'getContext',
-              'invoke',
-              'shareToExternalContact',
-              'shareToExternalChat',
-              'navigateToAddCustomer',
-              'shareToExternalMoments',
-              'createChatWithMsg',
-              'openExistedChatWithMsg',
-            ],
-          })
-          var that = this
-          wx.ready(function () {
-            wx.invoke(
-              'agentConfig',
-              {
-                corpid: res.data.corpId,
-                agentid: res.data.agent_id + '',
-                timestamp: res.data.agent_config_data.timestamp,
-                nonceStr: res.data.agent_config_data.noncestr,
-                signature: res.data.agent_config_data.signature,
-                jsApiList: [
-                  'sendChatMessage',
-                  'getContext',
-                  'invoke',
-                  'shareToExternalContact',
-                  'shareToExternalChat',
-                  'navigateToAddCustomer',
-                  'shareToExternalMoments',
-                  'createChatWithMsg',
-                  'openExistedChatWithMsg',
-                ],
-              },
-
-              function (res) {
-                wx.invoke(
-                  'shareToExternalMoments',
-                  {
-                    text: {
-                      content: '发到朋友圈', // 文本内容
-                    },
-                  },
-                  function (res) {
-                    if (res.err_msg == 'shareToExternalMoments:ok') {
-                      console.log('朋友圈=====', res)
-                    }
-                  }
-                )
-              }
-            )
-          })
-        })
-    },
-
+    
+    ...mapActions(['getCorpId']),
     preview(item, val) {
       console.log(item, val)
       this.centquer = item
@@ -326,9 +269,9 @@ export default {
       }
       this.type = type
       this.initPage(this.type)
-      this.$nextTick(() => {
-        this.$refs.search.searchText = ''
-      })
+    //   this.$nextTick(() => {
+    //     this.$refs.search.searchText = ''
+    //   })
       this.getList()
     },
     getTotal(type) {
@@ -503,7 +446,7 @@ export default {
     },
   },
   components: {
-    Search,
+    // Search,
     ImgUpload,
     UploadPoster,
     ContentPreview,
@@ -515,43 +458,58 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .material-template {
-//   height: 100%;
-  .but_warp {
-    padding-left: 24px;
-    width: 750px;
-    height: 100px;
-    background: #fff;
+    height: 100%;
+//   min-height: 100vh;
+    background-color: @white;
+    // overflow-x: hidden;
+//   .tite_num{
+//        padding: 0 32px;
+//        margin-top: 36px;
+//        font-size: 24px;
+//         font-weight: 500;
+//        color: #737373;
+//        .num{
+//           font-weight: 600;
+//           color: #262626;
+//           font-size: 28px;
+//           margin: 0 4px;
+//         }
+//       }
+    .searchInput {
+    margin-top: 32px;
+    padding: 0 32px;
     display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    .cancel {
-      width: 339px;
-      height: 80px;
-      background: #ffffff;
-      border-radius: 8px;
-      border: 1px solid #4168f6;
-      color: #4168f6;
-      font-size: 28px;
-      line-height: 80px;
-      text-align: center;
-      margin-right: 24px;
+    justify-content: space-between;
+    align-items: center;
+    .van-field {
+      height: 68px;
+      width: 424px;
+      background: #f7f8fa;
+      border-radius: 16px;
+      padding: 0;
+      padding-left: 32px;
+      line-height: 68px;
     }
-    .determine {
-      width: 339px;
-      height: 80px;
-      background: #4168f6;
-      border-radius: 8px;
-      color: #ffffff;
+    .select_box {
+      display: flex;
+      align-items: center;
       font-size: 28px;
-      line-height: 80px;
-      text-align: center;
+      color: #838a9d;
+      width: 230px;
+      height: 68px;
+      background: #f7f8fa;
+      border-radius: 16px;
+      justify-content: space-between;
+      padding: 0 32px;
+      .rotate {
+        transform: rotate(180deg);
+      }
+    }
+    img {
+      width: 40px;
+      height: 40px;
     }
   }
-  min-height: 100vh;
-  background-color: @white;
-  overflow-x: hidden;
   .headerTitle {
     // position: fixed;
     // top: 0;
@@ -598,15 +556,36 @@ export default {
       span {
         height: 100%;
         margin: 0 auto;
-        color: @fontSub2;
+        color: #262626;
         font-size: 28px;
       }
     }
     .active {
-      span {
-        color: @main;
-        border-bottom: 4px solid @main;
+         color: #3c4353;
+      font-weight: bold;
+      position: relative;
+           &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 40%;
+        width: 56px;
+        height: 8px;
+        background: #4168f6;
+        border-radius: 4px;
       }
+    //   span {
+    //     // color: @main;
+    //     // border-bottom: 4px solid @main;
+    //       content: '';
+    //     position: absolute;
+    //     bottom: 0;
+    //     left: 40%;
+    //     width: 56px;
+    //     height: 8px;
+    //     background: #4168f6;
+    //     border-radius: 4px;
+    //   }
     }
   }
   .list-box {
@@ -615,7 +594,7 @@ export default {
     &::after {
       content: '';
       height: 2px;
-      background-color: @lineColor;
+    //   background-color: @lineColor;
       transform: scaleY(0.5);
       position: absolute;
       right: 0;
@@ -626,6 +605,66 @@ export default {
       /deep/ .van-list__finished-text {
         font-size: 24px;
         color: @lengthColor;
+      }
+        .tite_num{
+       padding: 36px 32px 0;
+    //    margin-top: 36px;
+       font-size: 24px;
+        font-weight: 500;
+       color: #737373;
+       .num{
+          font-weight: 600;
+          color: #262626;
+          font-size: 28px;
+          margin: 0 4px;
+        }
+      }
+      .client_list{
+        width: 686px;
+        height: 244px;
+        background: #FFFFFF;
+        box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.04);
+        border-radius: 16px;
+         padding: 32px;
+          margin: 18px auto 0;
+          .client_item{
+              display: flex;
+           .client_img{
+            //    display: flex;
+            //    align-items: center;
+            .user_img{
+               img{
+                   width: 80px;
+                   height: 80px;
+                   border-radius: 50% ;
+               }
+            }
+             }
+            .client_message{
+                margin-left: 16px;
+                .tite_name{
+                    .name{
+                        font-size: 32px;    
+                        color: #262626;
+                        font-weight: 600;
+                    }
+                    .company{
+                        font-size: 24px;
+                        color: #FFB020;
+                    }
+                }
+               .time{
+                   font-size: 24px;
+                   color: #B3B3B3;
+                   margin-top: 12px;
+               }
+               .department{
+                   font-size: 28px;
+                   color: #737373;
+                   margin-top: 16px;
+               }
+            }
+          }
       }
       .item {
         .flex_data {
@@ -716,6 +755,85 @@ export default {
           bottom: 0;
         }
       }
+        .custom_content {
+    padding: 0 32px 32px;
+    .card_box {
+      padding: 0 32px;
+      // background: #ffffff;
+      box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.04);
+      border-radius: 16px;
+      margin-top: 32px;
+      .chat_warp {
+        padding-top: 32px;
+        .chat_one {
+          display: flex;
+          margin-bottom: 56px;
+          justify-content: space-between;
+          .left_cnt {
+            display: flex;
+            img {
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              margin-right: 16px;
+            }
+            .content {
+              .name_one {
+                font-size: 28px;
+                color: #3c4353;
+                font-weight: bold;
+              }
+              .creat_time {
+                color: #c0c4cc;
+                font-size: 24px;
+                margin: 8px 0 16px;
+              }
+              .cont_text {
+                font-size: 28px;
+                span:nth-child(1) {
+                }
+                span:nth-child(2) {
+                  color: #c0c4cc;
+                }
+              }
+            }
+          }
+          .talk {
+            width: 32px;
+            height: 32px;
+          }
+        }
+      }
+      .custom_msg {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid #e6e6e6;
+        height: 110px;
+        .name_text {
+          font-size: 32px;
+          color: #3c4353;
+          margin: 0 8px;
+        }
+        .weixin {
+          display: inline-block;
+          font-size: 24px;
+          color: #52bd94;
+          margin-right: 8px;
+        }
+        .qiye {
+          display: inline-block;
+          font-size: 24px;
+          color: #ffb020;
+          margin-right: 8px;
+        }
+        img {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
     }
     .poster {
       padding: 24px 0;
@@ -733,5 +851,6 @@ export default {
     right: 32px;
     bottom: 140px;
   }
+
 }
 </style>

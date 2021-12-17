@@ -56,7 +56,7 @@ export default {
                 pdf: require('@/assets/svg/pdf.svg'),
                 ppt: require('@/assets/svg/ppt.svg'),
                 img: require('@/assets/svg/pic.svg'),
-                excel: require('@/assets/svg/excel.svg'),
+                // excel: require('@/assets/svg/excel.svg'),
                 word: require('@/assets/svg/word.svg'),
             }
             return obj[val]
