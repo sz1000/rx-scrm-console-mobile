@@ -5,7 +5,7 @@
                 <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
                 <div class="val">
                     <div class="name">{{detail.name}}</div>
-                    <div class="alt" :class="{'green':detail.externalType == 1}">{{detail.externalType | typeName}}</div>
+                    <div class="alt" :class="{'green':detail.externalType == 1}">{{typeNameFun(detail.externalType)}}</div>
                     <img class="gender" :src="gender" alt="">
                 </div>
             </div>
@@ -188,7 +188,7 @@
                     </div>
                     <div class="item">
                         <div class="label">客户来源</div>
-                        <div class="val">{{detail.externalSource}}</div>
+                        <div class="val">{{detail.externalSourceName}}</div>
                     </div>
                     <div class="item">
                         <div class="label">企业名称</div>
@@ -393,8 +393,11 @@ export default {
             })
         },
         fixData(data){  //数据调整
-            let val = data.cropSubIndustry.split(',')
-            data.industryName = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
+            let val = data.cropSubIndustry ? data.cropSubIndustry.split(',') : null
+            console.log('val',val)
+            if(val){
+                data.industryName = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
+            }
 
             this.getMoreState()
         },
@@ -567,11 +570,9 @@ export default {
             })
             return list
         },
-    },
-    filters: {
-        typeName(val){
+        typeNameFun(val){
             return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
-        },
+        }
     },
 }
 </script>
@@ -621,8 +622,13 @@ export default {
                 display: flex;
                 align-items: flex-end;
                 .name{
+                    max-width: 60%;
                     color: @fontMain;
                     font-weight: bold;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    word-break: break-all;
                     font-size: 36px;
                     line-height: 48px;
                 }
