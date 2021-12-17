@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="warp-box">
     <div>
       <div class="headerTitle">
         <div class="backPage" @click="goBack">
@@ -26,6 +26,7 @@
         finished-text="没有更多了"
         @load="onLoad"
         :offset="20"
+        :immediate-check="false"
       >
         <ul>
           <li
@@ -79,7 +80,9 @@ export default {
     };
   },
   created() {
+    this.page = 1
     this.getGroupList();
+    console.log(this.$route.query.userId,"pppppolk")
   },
   methods: {
     goBack() {
@@ -105,6 +108,7 @@ export default {
           owmer: "",
           createTimeSta: "",
           createTimeEnd: "",
+          flag:"1"
         })
         .then((res) => {
           console.log(res);
@@ -126,7 +130,7 @@ export default {
     },
     onLoad() {
       // console.log(1)
-      this.page++;
+      // this.page++;
       this.getGroupList();
     },
     // 请求群列表
@@ -140,30 +144,30 @@ export default {
           owmer: "",
           createTimeSta: "",
           createTimeEnd: "",
+          flag:"1"
         })
         .then((res) => {
           console.log(res);
-          this.total = res.data.groupEntityPage.total;
-          this.loading = false;
           let tempList = res.data.groupEntityPage.records;
-          if (tempList == null || tempList.length === 0) {
-            // 加载结束
-            this.finished = true;
-            return;
-          }
-          tempList.forEach((item) => {
+          this.loading = false;
+         
+             if (this.page == 1) {
+              this.dataList = []
+            }
+             this.page++
+              this.total = res.data.groupEntityPage.total;
+        
+          this.dataList = this.dataList.concat(tempList);
+             this.dataList.forEach((item) => {
             item.createTime = item.createTime
               ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
               : "-";
           });
-          // this.dataList = tempList;
-          // 将新数据与老数据进行合并
-          // let newSetArr = this.dataList.concat(tempList);
-          // this.dataList = this.unique(newSetArr);
-          this.dataList = this.dataList.concat(tempList);
           // 如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
             this.finished = true;
+          }else{
+              this.finished = false
           }
         });
     },
@@ -192,6 +196,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.warp-box{
+  height: 100%;
+}
 .headerTitle {
   background: #fff;
   padding: 0 24px;

@@ -30,7 +30,7 @@
         </div>
         <div class="box"  @click="FnToRouter('/customerManage/grouplist')">
           <p>{{dataObj.groupSum}}</p>
-          <p>群聊</p>
+          <p>客户群</p>
         </div>
         <div class="box" @click="FnToRouter('/talkTool/circleFriend')">
           <p>{{dataObj.friendSum}}</p>
