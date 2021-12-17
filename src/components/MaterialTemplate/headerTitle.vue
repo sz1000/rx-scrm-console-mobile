@@ -1,10 +1,11 @@
 <template>
-    <div class="header-title pointer" :class="{'header-line': needLine}">
+    <div class="header-title pointer" :class="{'header-line': needLine, 'right-btn': btnText}">
         <div class="back-page" @click="goBack">
             <img src="../../images/arrow_left.png" alt="">
             <span v-if="needBackText" class="reback">返回</span>
         </div>
-        <span class="text-title">{{ title }}</span>
+        <span class="text-title one-line">{{ title }}</span>
+        <div v-if="btnText" class="btn pointer" @click="submit">{{ btnText }}</div>
     </div>
 </template>
 <script>
@@ -22,9 +23,18 @@ export default {
         needLine: {
             type: Boolean,
             default: false
-        }
+        },
+        btnText: {
+            type: String,
+            default: ''
+        },
     },
-    inject: ['goBack']
+    inject: ['goBack'],
+    methods: {
+        submit() {
+            this.$emit('doSubmit')
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -59,6 +69,8 @@ export default {
         }
     }
     .text-title {
+        display: inline-block;
+        max-width: 80%;
         font-size: 30px;
         color: @fontMain;
         font-weight: 600;
@@ -75,6 +87,20 @@ export default {
         right: 0;
         bottom: 0;
         transform: scaleY(.5);
+    }
+}
+.right-btn {
+    .btn {
+        display: inline-block;
+        width: 60px;
+        height: 87px;
+        line-height: 87px;
+        color: @main;
+        font-size: 28px;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        right: 32px;
     }
 }
 </style>

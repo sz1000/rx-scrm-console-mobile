@@ -1,6 +1,6 @@
 <template>
     <div class="add-customer">
-        <header-title :title="headTitle" :needBackText="false" :needLine="true"></header-title>
+        <header-title :title="headTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
 
         <div class="form-box">
             <div class="item">
@@ -36,7 +36,7 @@
                 </div>
                 <div class="val">
                     <div class="icon-select" @click="openSelectDialog('source')">
-                        <span :class="{'placeholder':!form.source}">{{form.source | $textEmpty('请选择')}}</span>
+                        <span :class="{'placeholder':!form.sourceName}">{{form.sourceName | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="val">
                     <div class="icon-select" @click="openSelectDialog('customerType')">
-                        <span :class="{'placeholder':!form.customerType}">{{form.customerType | $textEmpty('请选择')}}</span>
+                        <span :class="{'placeholder':!form.customerTypeName}">{{form.customerTypeName | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                 </div>
                 <div class="val">
                     <div class="icon-select" @click="openSelectDialog('corpScale')">
-                        <span :class="{'placeholder':!form.corpScale}">{{form.corpScale | $textEmpty('请选择')}}</span>
+                        <span :class="{'placeholder':!form.corpScaleName}">{{form.corpScaleName | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="val">
                     <div class="icon-select" @click="openSelectDialog('industry')">
-                        <span :class="{'placeholder':!form.industry}">{{form.industry | $textEmpty('请选择')}}</span>
+                        <span :class="{'placeholder':!form.industryName}">{{form.industryName | $textEmpty('请选择')}}</span>
                         <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                     <span>办公地址</span>
                 </div>
                 <div class="val" @click="openDialog('address')">
-                    <span :class="{'placeholder':!form.address}">{{form.address | $textEmpty('请输入')}}</span>
+                    <span :class="{'placeholder':!form.address}">{{form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
                 </div>
             </div>
             <div class="item">
@@ -119,7 +119,7 @@
 </template>
 <script>
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
-import { getAddFiled } from '@/api/customer'
+import { getAddFiled, doAdd } from '@/api/customer'
 import { SelectDialog, InputDialog } from '../customer/components'
 import { mapState } from 'vuex'
 
@@ -145,10 +145,14 @@ export default {
             form: {
                 customerCalled: '', // 客户名称
                 source: '', // 客户来源
+                sourceName: '', // 客户来源
                 customerType: '', // 客户类型
+                customerTypeName: '', // 客户类型
                 cropFullName: '', // 企业名称
                 corpScale: '', // 企业规模
-                industry: [], // 行业领域 
+                corpScaleName: '', // 企业规模
+                industry: [], // 行业领域
+                industryName: '', // 行业领域
                 address: '', // 办公地址
                 remark: '', // 备注
                 stage: '', // 客户阶段
@@ -240,12 +244,12 @@ export default {
                 case 'source':  // 客户来源
                     this.select.title = '客户来源'
                     this.select.isGetIndex = false
-                    this.columns = this.customerList
+                    this.columns = this.sourceOptions
                     break;
-                case 'source':  // 客户来源
-                    this.select.title = '客户来源'
+                case 'stage':  // 客户阶段
+                    this.select.title = '客户阶段'
                     this.select.isGetIndex = false
-                    this.columns = this.customerList
+                    this.columns = this.customerStageOptions
                     break;
                 case 'customerType':  // 客户类型
                     this.select.title = '客户类型'
@@ -260,34 +264,38 @@ export default {
                 case 'industry':  // 行业领域
                     this.select.title = '行业领域'
                     this.select.isGetIndex = true
-                    this.columns = this.industryList
+                    this.columns = this.industryFieldOptions
                     break;
                 default:
                     break;
             }
             this.dialog = true
         },
-        selectedFun(val){   //筛选项确认
+        selectedFun(val){   // 筛选项确认
             let type = this.pickerType
             
             switch (type) {
-                case 'source':  //客户来源
+                case 'source':  // 客户来源
                     console.log('客户来源',val[0].name)
                     this.form.sourceName = val[0].name
-                    this.form.source = val[0].type
+                    this.form.source = val[0].value
                     break;
-                case 'type':  //客户类型
+                case 'source':  // 客户阶段
+                    console.log('客户阶段',val[0].name)
+                    this.form.source = val[0].name
+                    break;
+                case 'type':  // 客户类型
                     console.log('客户类型',val)
                     this.form.customerTypeName = val[0].name
-                    this.form.customerType = val[0].code
+                    this.form.customerType = val[0].value
                     break;
-                case 'scale':  //企业规模
+                case 'scale':  // 企业规模
                     console.log('企业规模',val)
                     this.form.corpScaleName = val[0].name
                     this.form.corpScale = val[0].id
                     break;
-                case 'industry':  //所属行业
-                    console.log('所属行业',val,this.industryList[val[0]])
+                case 'industry':  // 行业领域
+                    console.log('行业领域',val,this.industryList[val[0]])
                     let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
                     this.form.industryName = str
                     this.form.industry = val
@@ -295,6 +303,19 @@ export default {
                 default:
                     break;
             }
+        },
+        async doSubmit() {
+            let params = {
+
+            }
+
+            console.log("入参：", params)
+
+            // let { code, msg } = await doAdd(params)
+
+            // if (code == 'success') {
+            //     this.$toast(msg)
+            // }
         },
     },
     components: {

@@ -266,3 +266,11 @@ export function getAddFiled(data) {
         params: data,
     })
 }
+// 新增客户
+export function doAdd(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/addCul',
+        method: 'post',
+        params: data,
+    })
+}
