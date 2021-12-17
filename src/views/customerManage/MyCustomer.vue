@@ -90,7 +90,7 @@ export default {
         },
         // 新增客户
         doAdd() {
-            this.$router.push({ path: '/customerManage/addCustomer', query: { navActive: this.navActive } })
+            this.$router.push({ path: '/customerManage/addCustomer', query: { customerType: this.customerType } })
         },
         // 搜索
         checkTable(text) {

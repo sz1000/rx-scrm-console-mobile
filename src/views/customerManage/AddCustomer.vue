@@ -1,6 +1,6 @@
 <template>
     <div class="add-customer">
-        <header-title :title="headTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
+        <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
 
         <div class="form-box">
             <div class="item">
@@ -126,7 +126,7 @@ import { mapState } from 'vuex'
 export default {
     data() {
         return {
-            navActive: '',
+            customerType: '',
             headTitle: '',
 
             dialog: false,
@@ -183,10 +183,10 @@ export default {
     },
     methods: {
         init() {
-            const { navActive } = this.$route.query
+            const { customerType } = this.$route.query
 
-            this.navActive = navActive
-            this.headTitle = navActive == 'myCustomer' ? '新增我的客户' : '新增客户'
+            this.customerType = customerType
+            this.headTitle = customerType == '3' ? '新增我的客户' : '新增客户'
 
             this.getAddFiled()
         },
@@ -329,16 +329,22 @@ export default {
         },
         async doSubmit() {
             let params = {
-                ...this.form
+                ...this.form,
+                type: this.customerType
             }
 
             console.log("入参：", params)
 
-            // let { code, msg } = await doAdd(params)
+            let { code, msg } = await doAdd(params)
 
-            // if (code == 'success') {
-            //     this.$toast(msg)
-            // }
+            if (code == 'success') {
+                this.$toast(msg)
+                setTimeout(() => {
+                    this.goBack()
+                }, 1000)
+            } else {
+                this.$toast(msg)
+            }
         },
     },
     components: {
@@ -354,8 +360,13 @@ export default {
     min-height: 100vh;
     padding: 0 32px;
     background-color: @white;
+    .customer-title {
+        position: fixed;
+        top: 0;
+    }
     .form-box{
         width: 100%;
+        padding-top: 88px;
         .item{
             display: flex;
             align-items: center;

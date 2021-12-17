@@ -8,7 +8,7 @@
         <ul class="list-item-right">
           <li class="right-top">
             <div class="name-box one-line">
-              <h3>{{ i.name }}</h3>
+              <h3 class="one-line">{{ i.name }}</h3>
               <span v-if="i.cropFullName" class="crop-name">@{{ i.cropFullName }}</span>
             </div>
             <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
@@ -166,6 +166,7 @@ export default {
           max-width: 85%;
           h3 {
             display: inline-block;
+            max-width: 100%;
             vertical-align: bottom;
             color: @fontSub3;
             font-size: 32px;
@@ -173,6 +174,7 @@ export default {
           }
           .crop-name {
             display: inline-block;
+            max-width: 100%;
             vertical-align: bottom;
             margin-left: 10px;
             color: @yellow;
