@@ -23,7 +23,7 @@
             <div class="tag_box">
                 <div class="icon_tag" @click="tagChangeFun(item)" :class="{'cur':item.isChecked}" v-for="item in personList" :key="item.id">
                     <span class="text">{{item.name}}</span>
-                    <jzIcon class="icon" @click.native="confirmFun('delete',item)" type="icon-shanchu"></jzIcon>
+                    <jzIcon class="icon" @click.native.stop="confirmFun('delete',item)" type="icon-shanchu"></jzIcon>
                 </div>
             </div>
         </div>
