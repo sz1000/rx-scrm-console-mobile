@@ -1,7 +1,7 @@
 <template>
   <div class="img-upload pointer">
     <div v-if="isCustomize">
-      <van-uploader :max-count="1" :before-read="beforeRead" :after-read="afterRead" accept="image/*">
+      <van-uploader :max-count="1" :before-read="beforeRead" :after-read="afterRead">
         <div v-if="customizeType == 2" class="rechoose">
           <span>重新选择</span>
           <img src="../../images/arrow_right.png" alt="">

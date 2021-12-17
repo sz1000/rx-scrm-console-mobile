@@ -1,7 +1,7 @@
 <template>
   <div class="file-upload">
     <div class="reprint-box"></div>
-    <input class="upload-inp pointer" type="file" @change="afterRead" accept=".ppt ,.pptx,.doc,.docx,.xls,.xlsx,.pdf,.mp4">
+    <input class="upload-inp pointer" type="file" @change="afterRead">
   </div>
 </template>
 <script>
