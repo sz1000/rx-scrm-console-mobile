@@ -37,6 +37,14 @@ export default {
             type: Boolean,
             default: false
         },
+        columnIndex: {    //设置对应列选中项的索引
+            type: [String,Number,Array],
+            default: null
+        },
+        columnValue: {    //设置对应列选中项的值
+            type: [String,Array],
+            default: null
+        },
     },
     data(){
         return {}
@@ -60,8 +68,29 @@ export default {
         },
     },
     watch: {
+        columnIndex(val){
+            if(val){
+                this.$nextTick(() => {
+                    this.$refs.picker.setColumnIndex(0,val[0])
+                    if(val.length > 1){
+                        this.$refs.picker.setColumnIndex(1,val[1])
+                    }
+                })
+            }
+        },
+        columnValue(val){
+            if(val){
+                this.$nextTick(() => {
+                    this.$refs.picker.setColumnValue(0,val)
+                })
+            }
+        },
         dialog(val){
-            val ? document.getElementById('html').style.overflow = 'hidden' : document.getElementById('html').style.overflow = 'auto'
+            if(val){
+                document.getElementById('html').style.overflow = 'hidden'
+            }else {
+                document.getElementById('html').style.overflow = 'auto'
+            }
         },
     }
 }
@@ -71,7 +100,7 @@ export default {
 @import "~@/styles/color.less";
 .dialog_wrap{
     width: 100%;
-    height: 46vh;
+    // height: 46vh;
     background: @white;
     position: relative;
     .dialog_header{
@@ -106,9 +135,9 @@ export default {
     }
     .dialog_content{
         width: 100%;
-        /deep/ .van-picker__columns{
-            height: calc(46vh - 104px) !important;
-        }
+        // /deep/ .van-picker__columns{
+        //     height: calc(46vh - 104px) !important;
+        // }
     }
 }
 </style>

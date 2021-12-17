@@ -20,6 +20,7 @@ export default {
         return {
             userData: null,
             unionId: '',
+            openId: '',
             materialId: '',
             materialType: '', // 1: 文章, 2: 文件
             userNo: null,

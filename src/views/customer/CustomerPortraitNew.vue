@@ -5,7 +5,7 @@
         <div class="nav_box">
             <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
         </div>
-        <div class="content" :class="{'pd0':navActive == 'group'}">
+        <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
             <!-- 客户动态 -->
             <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
             <!-- 商机 -->
@@ -45,12 +45,12 @@
                             <div class="val">
                                 <div class="tit_box">
                                     <div class="tit">{{item.name}}</div>
-                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
-                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
+                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 1">@微信</div>
+                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 2">{{item.corpName}}</div>
                                     <div class="tag red" v-if="item.admintype == 1">群主</div>
                                     <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
-                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
-                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 1">客户</div>
+                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.externalType == 2">企业客户</div>
                                 </div>
                                 <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
                                 <!-- <div class="opera_right">
@@ -420,17 +420,16 @@ export default {
             return true
         },
         toFun(val){
-            console.log('asd',val)
+            let name = ''
             if(val == 'helper'){    //查看协助人
-                localStorage.setItem('helperData',JSON.stringify(this.userList))
-                localStorage.setItem('customerId',this.customerInfo.clueCustomerNo)
-                this.$router.push('/helper')
+                name = 'helper'
             }else if(val == 'detail'){    //详情
-                this.$router.push({
-                    name: 'informationDetail',
-                    query: { id: this.customerInfo.clueCustomerNo },
-                })
+                name = 'CustomerDetail'
             }
+            this.$router.push({
+                name: name,
+                query: { id: this.customerInfo.clueCustomerNo },
+            })
         },
         toGroupDetail(){    //群聊详情
             this.$router.push({

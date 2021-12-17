@@ -196,12 +196,14 @@ export default {
       this.getList()
     },
     getList(title) {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-        loadingType: 'spinner',
-      })
+      if (this.type == 0 && this.articleListPage == 1 || this.type == 1 && this.saleListPage == 1 || this.type == 2 && this.posterListPage == 1) {
+        this.$toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 0,
+          loadingType: 'spinner',
+        })
+      }
 
       let ApiOpts = ArticleList
 

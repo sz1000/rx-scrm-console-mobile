@@ -5,7 +5,7 @@
                 <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
                 <div class="val">
                     <div class="name">{{detail.name}}</div>
-                    <div class="alt">{{detail.customerType | typeName}}</div>
+                    <div class="alt" :class="{'green':detail.externalType == 1}">{{detail.externalType | typeName}}</div>
                     <img class="gender" :src="gender" alt="">
                 </div>
             </div>
@@ -13,14 +13,28 @@
         <div class="content">
             <div class="row tag">
                 <div class="tit">企业标签</div>
-                <div class="tag_box">
-                    <div class="tag" v-for="(item,index) in companyTagList" :key="index">{{item.name}}</div>
+                <img class="edit" @click="openDialog('company')" src="@/assets/svg/icon_edit.svg" alt="">
+                <div class="tag_wrap" ref="companyTagWrap" :class="{'more':companyTagMore}">
+                    <div class="tag_box" ref="companyTagBox">
+                        <div class="tag" v-for="(item,index) in companyTagList" :key="index">{{item.name}}</div>
+                    </div>
+                </div>
+                <div class="more" v-if="isCompanyMore">
+                    <img class="icon" v-if="!companyTagMore" @click="companyTagMore = true" src="@/assets/svg/icon_down.svg" alt="">
+                    <img class="icon" v-else @click="companyTagMore = false" src="@/assets/svg/icon_up.svg" alt="">
                 </div>
             </div>
             <div class="row tag">
                 <div class="tit">个人标签</div>
-                <div class="tag_box">
-                    <div class="tag" v-for="(item,index) in personTagList" :key="index">{{item.name}}</div>
+                <img class="edit" @click="openDialog('person')" src="@/assets/svg/icon_edit.svg" alt="">
+                <div class="tag_wrap" ref="personTagWrap" :class="{'more':personTagMore}">
+                    <div class="tag_box" ref="personTagBox">
+                        <div class="tag" v-for="(item,index) in personList" :key="index">{{item.name}}</div>
+                    </div>
+                </div>
+                <div class="more" v-if="isPersonMore">
+                    <img class="icon" v-if="!personTagMore" @click="personTagMore = true" src="@/assets/svg/icon_down.svg" alt="">
+                    <img class="icon" v-else @click="personTagMore = false" src="@/assets/svg/icon_up.svg" alt="">
                 </div>
             </div>
             <div class="row">
@@ -29,13 +43,13 @@
                     <div class="item">
                         <div class="label">企业简称</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.customerName" maxlength="30" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.customerName" @change="updateFun" maxlength="30" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">固定电话</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.mobil" maxlength="20" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.mobil" @change="updateFun" @input="detail.mobil=detail.mobil.replace(/[^\d|\-]/g,'')" maxlength="20" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
@@ -65,14 +79,14 @@
                     <div class="item">
                         <div class="label">企业名称</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.cropFullName" maxlength="30" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.cropFullName" @change="updateFun" maxlength="30" placeholder="请输入">
                         </div>
                     </div>
                     <div class="item">
                         <div class="label">企业规模</div>
                         <div class="val">
                             <div class="icon_select" @click="openSelectDialog('scale')">
-                                <span :class="{'placeholder':!detail.corpScaleName}">{{detail.corpScaleName | $textEmpty('请选择')}}</span>
+                                <span :class="{'placeholder':!detail.cropscale}">{{detail.cropscale | $textEmpty('请选择')}}</span>
                                 <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                             </div>
                         </div>
@@ -93,11 +107,11 @@
                             <span :class="{'placeholder':!detail.address}">{{detail.address | $textEmpty('请输入')}}</span>
                         </div>
                     </div>
-                    <div class="item">
+                    <div class="item lh">
                         <div class="label">备注</div>
                         <div class="val" @click="openDialog('remark')">
                             <!-- <input type="text" class="input" v-model="detail.remark" maxlength="200" placeholder="请输入（不得超过200个字符）" readonly> -->
-                            <span :class="{'placeholder':!detail.remark}">{{detail.corpScaleName | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                            <span :class="{'placeholder':!detail.remark}">{{detail.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                         </div>
                     </div>
                 </div>
@@ -204,7 +218,7 @@
                         <div class="label">添加客户时间</div>
                         <div class="val">{{detail.createTime}}</div>
                     </div>
-                    <div class="item">
+                    <div class="item lh">
                         <div class="label">备注</div>
                         <div class="val">{{detail.remark}}</div>
                     </div>
@@ -212,15 +226,16 @@
             </div>
         </div>
         <!-- 客户来源 -->
-        <SelectDialog :data="columns" :keys="select.key" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
+        <SelectDialog :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
         <!-- 地址 and 备注 -->
         <InputDialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></InputDialog>
+        <!-- 企业标签 -->
+        <TagDialog :title="tagTitle" :type="openType" :companyList="allComTagList" :personList="personTagList" v-model="dialog_tag" @sure="tagUpdateFun"></TagDialog>
     </div>
 </template>
 
 <script>
-import { SelectDialog,InputDialog } from './components'
-import { customerType } from '@/utils/config'
+import { SelectDialog,InputDialog,TagDialog } from './components'
 import {
   cluecustomer_toupdate,
   cluecustomer_update,
@@ -232,46 +247,58 @@ import {
 } from '@/api/customer'
 export default {
     components: {
-        SelectDialog,InputDialog
+        SelectDialog,InputDialog,TagDialog
     },
     data(){
         return {
             id: this.$route.query.id,
             dialog: false,
             dialog_address: false,
+            dialog_tag: false,
+            personTagMore: false,
+            companyTagMore: false,
             columns: [],
             pickerType: '',
             select: {
                 key: 'name',
                 title: '客户来源',
-                isGetIndex: false
+                isGetIndex: false,
+                indexList: null,
+                value: '',
             },
             openType: '',
             dialogTitle: '',
             dialogType: '',
             dialogText: '',
+            tagTitle: '企业标签',
+            commonList: [],                  //所有列表(综合)
             customerList:[],                 //客户来源
-            customerTypeList: customerType,  //客户类型
+            customerTypeList: [],  //客户类型
             scaleList: [],                   //企业规模
             industryList: [],                //所属行业
             allCompanyTagList: [],           //企业标签(all)
             companyTagList: [],              //企业标签
             personTagList: [],               //个人标签
             customList: [],                  //自定义信息
+            sourcePerTag: [],
+            allComTagList: [],
+            isPersonMore: false,
+            isCompanyMore: false,
 
             detail: {
+                clueCustomerNo: '',
                 avatar: '',
-                industry: [],
+                cropSubIndustry: '',
                 industryName: '',       //暂增
                 customerName: '',
                 source: '',
-                sourceName: '',         //暂增
+                sourceName: '',         
                 customerType: '',
-                customerTypeName: '',   //暂增
+                customerTypeName: '',   
                 mobil: '',
                 cropFullName: '',
                 corpScale: '',
-                corpScaleName: '',      //暂增
+                cropscale: '',      
                 address: '',
                 remark: '',
                 describe: '',
@@ -296,6 +323,12 @@ export default {
             }
             return val ? obj[val] : ''
         },
+        personList(){   //已使用个人标签
+            let list = this.sourcePerTag.filter(el => {
+                return el.isChecked
+            })
+            return list
+        },
     },
     mounted(){
         this.getDetail()
@@ -306,19 +339,36 @@ export default {
             cluecustomer_gettag(this.id).then(res => {
                 if(res.result){
                     let data = res.data
+                    this.sourcePerTag = data.personTagList
+                    this.personTagList = JSON.parse(JSON.stringify(this.sourcePerTag))
                     this.companyTagList = data.corpTagList
-                    this.personTagList = data.personTagList
+                    data.tagCorpList.forEach(el => {
+                        el.children.forEach(son => {
+                            son.active = false
+                            data.corpTagList.forEach(item => {
+                                if(son.tagid == item.tagid){
+                                    son.active = true
+                                }
+                            })
+                        })
+                    })
                     this.allCompanyTagList = data.tagCorpList
+
+                    this.getMoreState()
                 }
             })
         },
-        getDetail(){
+        getDetail(){    //详情
             cluecustomer_toupdate(this.id).then(res => {
                 if(res.result){
                     let data = res.data
                     this.detail = Object.assign(this.detail,data.clueCustomerEntity)
-                    this.customerList = data.list
-                    this.scaleList = data.corpScaleList
+                    this.commonList = data.commonList
+                    this.customerList = this.getTypeList('source')
+                    this.customerTypeList = this.getTypeList('customer_type')
+                    // this.customerList = data.list
+                    this.scaleList = this.getTypeList('scale')
+                    // this.scaleList = data.corpScaleList
                     data.comlist.forEach(el => {
                         if(el.children.length == 0){
                             el.children = null
@@ -338,31 +388,113 @@ export default {
                     this.customList =  data.head.filter(item => {
                         return item.columnType
                     })
+                    this.fixData(this.detail)
                 }
             })
         },
         fixData(data){  //数据调整
+            let val = data.cropSubIndustry.split(',')
+            data.industryName = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
 
+            this.getMoreState()
+        },
+        getMoreState(){     //获取more状态
+            this.$nextTick(() => {
+                let _wrap = this.$refs.personTagWrap.clientHeight
+                let _box = this.$refs.personTagBox.clientHeight
+                let _wrap1 = this.$refs.companyTagWrap.clientHeight
+                let _box1 = this.$refs.companyTagBox.clientHeight
+                this.isPersonMore = _box > _wrap ? true : false
+                this.isCompanyMore = _box1 > _wrap1 ? true : false
+                console.log(_wrap,_box,_wrap1,_box1)
+            })
+        },
+        tagUpdateFun(type,val){     //标签增减
+            console.log(type,val)
+            switch (type) {
+                case 'company':     //企业标签更改
+                    cluecustomer_updCorptag(this.id,val).then(res => {
+                        if(res.result){
+                            this.dialog_tag = false
+                            this.getTagList()
+                        }
+                    })
+                    break;
+                case 'person':  //个人标签更改
+                    cluecustomer_updPertag(val,this.id).then(res => {
+                        if(res.result){
+                            this.dialog_tag = false
+                            this.getTagList()
+                        }
+                    })
+                    break;
+                case 'add':     //新增个人标签
+                    let obj = {
+                        clueCustomerNo: this.id,
+                        name: val
+                    }
+                    cluecustomer_addtag(obj).then(res => {
+                        if(res.result){
+                            this.getTagList()
+                        }
+                    })
+                    break;
+                case 'delete':
+                    cluecustomer_deltag(val).then(res => {
+                        if(res.result){
+                            this.getTagList()
+                        }
+                    })
+                    break;
+                default:
+                    break;
+            }
+        },
+        updateFun(){
+            this.detail.clueCustomerNo = this.id
+            cluecustomer_update(this.detail,true).then(res => {
+                if(res.result){
+                    this.$toast('更新成功')
+                }
+            })
         },
         openDialog(type){   //打开弹窗 (地址 and 备注)
             this.openType = type
-            if(type == 'address'){
-                this.dialogTitle = '地址'
-                this.dialogType = 'input'
-                this.dialogText = this.detail.address
-            }else{
-                this.dialogTitle = '备注'
-                this.dialogType = 'textarea'
-                this.dialogText = this.detail.remark
+            switch (type) {
+                case 'address':
+                    this.dialogTitle = '地址'
+                    this.dialogType = 'input'
+                    this.dialogText = this.detail.address
+                    this.dialog_address = true
+                    break;
+                case 'remark':
+                    this.dialogTitle = '备注'
+                    this.dialogType = 'textarea'
+                    this.dialogText = this.detail.remark
+                    this.dialog_address = true
+                    break;
+                case 'company':
+                    this.tagTitle = '企业标签'
+                    this.allComTagList = JSON.parse(JSON.stringify(this.allCompanyTagList))
+                    this.dialog_tag = true
+                    break;
+                case 'person':
+                    this.tagTitle = '个人标签'
+                    this.personTagList = JSON.parse(JSON.stringify(this.sourcePerTag))
+                    this.dialog_tag = true
+                    break;
+                default:
+                    break;
             }
-            this.dialog_address = true
         },
         confirmFun(val){   //弹窗确认 (地址 and 备注)
+            val = val.trim() ? val.trim() : ''
             if(this.openType == 'address'){
                 this.detail.address = val
             }else{
                 this.detail.remark = val
             }
+            this.updateFun()
         },
         openSelectDialog(type){     //打开选择弹窗
             this.pickerType = type
@@ -370,21 +502,29 @@ export default {
                 case 'source':  //客户来源
                     this.select.title = '客户来源'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.detail.sourceName
                     this.columns = this.customerList
                     break;
                 case 'type':  //客户类型
                     this.select.title = '客户类型'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.detail.customerTypeName
                     this.columns = this.customerTypeList
                     break;
                 case 'scale':  //企业规模
                     this.select.title = '企业规模'
                     this.select.isGetIndex = false
+                    this.select.indexList = null
+                    this.select.value = this.detail.cropscale
                     this.columns = this.scaleList
                     break;
                 case 'industry':  //所属行业
                     this.select.title = '所属行业'
                     this.select.isGetIndex = true
+                    this.select.value = null,
+                    this.select.indexList = this.detail.cropSubIndustry.split(',')
                     this.columns = this.industryList
                     break;
                 default:
@@ -398,27 +538,34 @@ export default {
                 case 'source':  //客户来源
                     console.log('客户来源',val[0].name)
                     this.detail.sourceName = val[0].name
-                    this.detail.source = val[0].type
+                    this.detail.source = val[0].value
                     break;
                 case 'type':  //客户类型
                     console.log('客户类型',val)
                     this.detail.customerTypeName = val[0].name
-                    this.detail.customerType = val[0].code
+                    this.detail.customerType = val[0].value
                     break;
                 case 'scale':  //企业规模
                     console.log('企业规模',val)
-                    this.detail.corpScaleName = val[0].name
+                    this.detail.cropscale = val[0].name
                     this.detail.corpScale = val[0].id
                     break;
                 case 'industry':  //所属行业
                     console.log('所属行业',val,this.industryList[val[0]])
                     let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
                     this.detail.industryName = str
-                    this.detail.industry = val
+                    this.detail.cropSubIndustry = val.join(',')
                     break;
                 default:
                     break;
             }
+            this.updateFun()
+        },
+        getTypeList(val){   //获取对应的列表
+            let list = this.commonList.filter(el => {
+                return el.type == val
+            })
+            return list
         },
     },
     filters: {
@@ -484,6 +631,9 @@ export default {
                     font-size: 24px;
                     line-height: 32px;
                     margin-left: 8px;
+                    &.green{
+                        color: @green;
+                    }
                 }
                 .gender{
                     width: 30px;
@@ -522,10 +672,26 @@ export default {
                 bottom: 0;
                 left: 0;
             }
+            .edit{
+                width: 40px;
+                height: 40px;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
             .tit{
                 font-size: 24px;
                 line-height: 32px;
                 color: @total;
+            }
+            .tag_wrap{
+                width: 100%;
+                max-height: 152px;
+                overflow: hidden;
+                &.more{
+                    max-height: inherit;
+                    overflow: inherit;
+                }
             }
             .tag_box{
                 width: 100%;
@@ -545,6 +711,14 @@ export default {
                     }
                 }
             }
+            .more{
+                text-align: center;
+                .icon{
+                    display: inline-block;
+                    width: 36px;
+                    height: 36px;
+                }
+            }
             .item_box{
                 width: 100%;
                 .item{
@@ -554,6 +728,9 @@ export default {
                     line-height: 36px;
                     color: @fontMain;
                     padding: 32px 0;
+                    &.lh{
+                        align-items: flex-start;
+                    }
                     .label{
                         width: 180px;
                         font-weight: bold;
@@ -561,8 +738,8 @@ export default {
                     .val{
                         width: calc(100% - 180px);
                         text-align: right;
-                        display: flex;
-                        justify-content: right;
+                        // display: flex;
+                        // justify-content: right;
                         .input{
                             width: 100%;
                             height: 100%;
@@ -570,12 +747,19 @@ export default {
                             text-align: right;
                         }
                         .icon_select{
-                            display: flex;
-                            align-items: center;
+                            // display: flex;
+                            // align-items: center;
+                            display: inline-block;
+                            span{
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
                             .icon{
                                 width: 32px;
                                 height: 32px;
                                 // margin-left: 12px;
+                                display: inline-block;
+                                vertical-align: middle;
                             }
                         }
                         .placeholder{
