@@ -79,6 +79,12 @@ export default {
       total: 0, //总共的数据条数
     };
   },
+      computed: {
+        userNo(){
+            return this.$store.getters.userNo
+        },
+    
+    },
   created() {
     this.page = 1
     this.getGroupList();
@@ -105,10 +111,10 @@ export default {
           page: 1,
           // limit: this.pageSize,
           name: this.inputValue,
-          owmer: "",
+          owmer: this.userNo,
           createTimeSta: "",
           createTimeEnd: "",
-          flag:"1"
+          // flag:"1"
         })
         .then((res) => {
           console.log(res);
@@ -141,10 +147,10 @@ export default {
           page: this.page,
           limit: this.pageSize,
           name: this.inputValue,
-          owmer: "",
+          owmer: this.userNo,
           createTimeSta: "",
           createTimeEnd: "",
-          flag:"1"
+          // flag:"1"
         })
         .then((res) => {
           console.log(res);
