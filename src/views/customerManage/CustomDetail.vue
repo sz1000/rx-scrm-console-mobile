@@ -1,5 +1,5 @@
 <template>
-    <div class="customer_wrap" :class="{'glass':dialog_xzr}">
+    <div class="customer_wrap">
         <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
         <TopCard :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
         <div class="nav_box">
@@ -71,15 +71,17 @@
         <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
         <!-- 商机详情 -->
         <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
-        <!-- 申请成为协助人 -->
-        <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
         <!-- 操作按钮弹窗面板 -->
-        <operation-btn-box ref="operationBtnBox"></operation-btn-box>
+        <operation-btn-box ref="operationBtnBox" :fromType="fromType" @doAction="doAction"></operation-btn-box>
+        <!-- 放弃警告 -->
+        <give-up-customer ref="giveUpCustomer" :fromType="fromType" @doGiveUp="doGiveUp"></give-up-customer>
+        <!-- 变更负责人 -->
+        <change-director ref="changeDirector" :fromType="fromType"></change-director>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard } from '../customer/components'
+import { Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 import {
     cluecustomer_getClueCustomerByid,
@@ -88,10 +90,13 @@ import {
     clueCustomerFollowUser_addCommentInfo,  //添加评论回复
     clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
     cluecustomer_addMessage,    //写跟进
+    cluecustomer_giveUpType, // 放弃
 } from '@/api/customer'
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
+import GiveUpCustomer from '@/components/CustomerManage/dialog/giveupCustomer'
+import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 export default {
     components: {
@@ -100,11 +105,12 @@ export default {
         Enclosure,
         DialogComment,
         OpportunityDialog,
-        ApplyHelp,
         TopCard,
         Opportunities,
         MessageBox,
         RemindersBox,
+        GiveUpCustomer,
+        ChangeDirector,
         OperationBtnBox
     },
     provide() {
@@ -119,6 +125,7 @@ export default {
     },
     data(){
         return {
+            fromType: this.$route.query.fromType,
             id: this.$route.query.id,
             code: this.$route.query.userNo,
             num: this.$route.query.num,
@@ -127,10 +134,6 @@ export default {
             dialog_xx: false,
             dialog_xgj: false,
             dialog_sj: false,
-            dialog_xzr: false,
-            isApply: false,     //是否已经申请成为协助人 且还未通过
-
-            applyData: {},
 
             navList: [
                 { name: '客户动态',code: 'dynamics'},
@@ -182,19 +185,6 @@ export default {
         this.getUserName()
     },
     methods: {
-        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据
-            this.dialog_xzr = Number(data.permFlag) ? false : true
-            this.isApply = data.isApply ? true : false
-            let directorList = data.directorList
-            let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
-            this.applyData = {
-                customerName: data.clueCustomerVO.name,
-                customerAvatar: data.clueCustomerVO.avatar,
-                createTime: data.clueCustomerVO.createTime,
-                directorName: directorList && directorList.length ? directorList[0].name + depName : '',
-                directorAvatar: directorList && directorList.length ? directorList[0].avatar : '',
-            }
-        },
         jumpFun(code){      //锚点跳转
             // console.log('code',code,document.querySelector(`#${code}`))
             const returnEle = document.querySelector(`#${code}`);  //productId是将要跳转区域的id
@@ -207,8 +197,7 @@ export default {
             cluecustomer_getClueCustomerByid(this.code).then(res => {
                 if(res.result){
                     let data = res.data
-                    this.isDirectorFun(data)
-                    // this.isApply = data.permFlag ? true : false
+
                     this.customerInfo = data.clueCustomerVO
                     this.userList = data.directorList
                     this.tagList = data.tagList.filter((el,index) => {
@@ -274,6 +263,37 @@ export default {
         // 打开操作弹窗面板
         showOperationBtnBox() {
             this.$refs.operationBtnBox.show()
+        },
+        // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除）
+        doAction(type) {
+            switch (type) {
+                case 'writeFollowUp':    // 写跟进
+                    this.openDialog('', 'follow')
+                    break;
+                case 'changeDirector':    // 变更负责人
+                    this.$refs.changeDirector.show(this.customerInfo.clueCustomerNo)
+                    break;
+                case 'giveUp':   // 放弃
+                    this.$refs.giveUpCustomer.show()
+                    break;
+                default:
+                    break;
+            }
+            this.$refs.operationBtnBox.hide()
+        },
+        // 放弃
+        doGiveUp() {
+            let params = {
+                clueCustomerNo: this.customerInfo.clueCustomerNo,
+                type: this.fromType,
+            }
+
+            cluecustomer_giveUpType(params).then((res) => {
+                if (res.result) {
+                    this.$router.go(-1)
+                    this.$toast('操作成功')
+                }
+            })
         },
         openDialog(id, type){  //打开回复弹窗
             this.rowId = id
@@ -592,9 +612,6 @@ export default {
   background: @white;
   position: relative;
   overflow: hidden;
-  &.glass{
-    filter: blur(4px); /* no */
-  }
   .bg{
     width: 100%;
     height: auto;

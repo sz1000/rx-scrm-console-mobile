@@ -157,7 +157,6 @@ export default {
                 corpScale: '', // 企业规模
                 corpScaleName: '', // 企业规模
                 industry: [], // 行业领域
-                industryIndex: [], // 行业领域
                 industryName: '', // 行业领域
                 address: '', // 办公地址
                 remark: '', // 备注
@@ -294,8 +293,8 @@ export default {
                 case 'industry':  // 行业领域
                     this.select.title = '行业领域'
                     this.select.isGetIndex = true
-                    this.select.value = null,
-                    this.select.indexList = this.form.industryIndex
+                    this.select.indexList = null
+                    this.select.value = null
                     this.columns = this.industryFieldOptions
                     break;
                 default:
@@ -303,7 +302,7 @@ export default {
             }
             this.dialog = true
         },
-        selectedFun(val){   // 筛选项确认
+        selectedFun(val, name){   // 筛选项确认
             let type = this.pickerType
             
             switch (type) {
@@ -325,10 +324,8 @@ export default {
                 case 'industry':  // 行业领域
                     console.log('所属行业', val, this.industryFieldOptions[val[0]])
 
-                    let str = this.industryFieldOptions[val[0]].name + '/' + this.industryFieldOptions[val[0]].children[val[1]].name
-                    this.form.industryName = str
-                    this.form.industryIndex = val
-                    this.form.industry = [this.industryFieldOptions[val[0]].id, this.industryFieldOptions[val[0]].children[val[1]].id]
+                    this.form.industryName = name.join('/')
+                    this.form.industry = val.join(',')
                     break;
                 default:
                     break;

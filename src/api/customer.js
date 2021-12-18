@@ -274,3 +274,19 @@ export function doAdd(data) {
         data,
     })
 }
+// 放弃
+export function cluecustomer_giveUpType(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/giveUpType',
+        method: 'get',
+        params: data,
+    })
+}
+// 变更负责人获取负责人选择列表
+export function cluecustomer_getuserList(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getuserList',
+        method: 'get',
+        params: data,
+    })
+}
