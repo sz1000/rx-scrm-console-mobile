@@ -8,13 +8,14 @@
             <div class="avatar_box">
                 <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
                 <div class="val">
-                    <!-- <van-popover get-container="avatar_box" v-model="showPopover" placement="bottom" theme="dark" trigger="click">
-                        <div class="name">{{detail.name}}</div>
+                    <!-- <van-popover v-model="showPopover" placement="bottom" theme="dark" trigger="click">
+                        <div class="pop_text">{{detail.name}}</div>
                         <template #reference>
                             <div class="name">{{detail.name}}</div>
                         </template>
                     </van-popover> -->
-                    <div class="name">{{detail.name}}</div>
+                    <span class="name_msg" :class="{'show':showMsg}">{{detail.name}}</span>
+                    <div class="name" @click="showMsg = !showMsg">{{detail.name}}</div>
                     <div class="alt" :class="{'green':detail.externalType == 1}">{{typeNameFun(detail.externalType)}}</div>
                     <img class="gender" :src="gender" alt="">
                 </div>
@@ -320,6 +321,7 @@ export default {
             industryId: null,
             isPersonMore: false,
             isCompanyMore: false,
+            showMsg: false,
 
             detail: {
                 clueCustomerNo: '',
@@ -488,6 +490,8 @@ export default {
                     cluecustomer_addtag(obj).then(res => {
                         if(res.result){
                             this.getTagList()
+                        }else{
+                            this.$toast(res.msg)
                         }
                     })
                     break;
@@ -642,11 +646,23 @@ export default {
             return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
         }
     },
+    watch: {
+        showMsg(val){
+            if(val){
+                setTimeout(() => {
+                    this.showMsg = false
+                },5000)
+            }
+        },
+    },
 }
 </script>
 
 <style lang="less" scoped>
 @import "~@/styles/color.less";
+.pop_text{
+    padding: 12px;
+}
 .detail_wrap{
     width: 100%;
     min-height: 100vh;
@@ -686,16 +702,16 @@ export default {
         width: 100%;
         padding: 32px;
         position: relative;
-        &::before{
-            content: '';
-            width: 100%;
-            height: 1px; /* no */
-            background: @lineColor;
-            transform: scaleY(.5);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+        // &::before{
+        //     content: '';
+        //     width: 100%;
+        //     height: 1px; /* no */
+        //     background: @lineColor;
+        //     transform: scaleY(.5);
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        // }
         &::after{
             content: '';
             width: 100%;
@@ -720,6 +736,36 @@ export default {
                 width: calc(100% - 124px);
                 display: flex;
                 align-items: flex-end;
+                position: relative;
+                .name_msg{
+                    color: @white;
+                    background: rgb(0,0,0);
+                    border-radius: 10px;
+                    padding: 12px;
+                    z-index: 0;
+                    opacity: 0;
+                    position: absolute;
+                    bottom: -16px;
+                    left: 0;
+                    transform: translateY(100%);
+                    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1); /* no */
+                    transition: all .2s;
+                    &.show{
+                        opacity: 1;
+                        z-index: 10;
+                    }
+                    &::before{
+                        content: '';
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent; 
+                        border-right: 10px solid transparent; 
+                        border-bottom: 15px solid rgb(0,0,0); 
+                        position: absolute;
+                        top: -12px;
+                        left: 20px;
+                    }
+                }
                 .name{
                     max-width: 60%;
                     color: @fontMain;
@@ -814,6 +860,9 @@ export default {
                     padding: 0 16px;
                     margin-right: 16px;
                     margin-bottom: 24px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     &:last-child{
                         margin-right: 0;
                     }

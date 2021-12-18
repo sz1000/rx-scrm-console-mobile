@@ -336,7 +336,7 @@ export default {
                                 }
                                 el.optName = el.optName + ' ' + str
                             }
-                            let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,28,36,44]
+                            let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,27,28,36,44]
                             if(dotList.indexOf(el.optType) > -1){
                                 el.class = 'dot'
                             }
@@ -454,6 +454,9 @@ export default {
                 case 26:
                     let name = obj.ossObjectname ? obj.ossObjectname : obj.context
                     str = `新增标签“${name}”`
+                    break;
+                case 27:
+                    str = `移除了标签“${obj.ossObjectname}”`
                     break;
                 case 28:
                     str = obj.context
