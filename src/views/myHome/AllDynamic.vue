@@ -1095,6 +1095,10 @@ export default {
           color: #3c4353;
           margin: 0 8px;
           font-weight: 600;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
+          max-width: 180px;
         }
           .weixin{
             font-weight: 400;
@@ -1105,6 +1109,10 @@ export default {
             color: #FFB020;
             font-size: 24px;
             font-weight: 400;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            max-width: 380px;
           }
         .weixin {
           display: inline-block;
