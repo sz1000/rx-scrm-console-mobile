@@ -229,6 +229,7 @@ export default {
       FormData: {
         sendMsg: '',
       },
+       userdataList:[],
       maxDate: new Date(),
       // minDate: new Date(2020, 0, 1),
       dataGroup: [],
@@ -813,6 +814,16 @@ export default {
     // 选择所在群聊接口
     staffsListChange(value) {
       console.log(value)
+
+       var groupData =[]
+         console.log(this.staffsList)
+         this.staffsList.forEach(el =>{
+           if(value.includes(el.userNo) ){
+                groupData.push(el)
+           }
+         })
+      console.log(groupData,"0000")
+        this.userdataList = groupData
       this.baseForm.staffs = value
       // this.groupStaffset();
       this.Screeningcustomer()
@@ -858,7 +869,7 @@ export default {
     Screeningcustomer() {
       this.$network
         .post('/customer-service/tagEstablishGroup/tagCustomerScreen', {
-          userList: this.baseForm.staffs,
+          userList: this.userdataList,//this.baseForm.staffs,
           gender: this.baseForm.cusSex, //性别
           addStarTime: this.baseForm.cusAddBeginTime,
           addEndTime: this.baseForm.cusAddEndTime,
@@ -871,7 +882,7 @@ export default {
             this.clueCustomerLists = res.data.clueCustomerList
             this.estimateCusNum = res.data.estimateNum
           } else {
-            Toast('请选择员工')
+            Toast('未获取到该成员下相关客户！')
           }
         })
     },
