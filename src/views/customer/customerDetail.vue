@@ -176,7 +176,7 @@
                     <div class="item">
                         <div class="label">邮箱</div>
                         <div class="val">
-                            <input type="text" class="input" v-model="detail.email" @change="updateFun" maxlength="20" placeholder="请输入">
+                            <input type="text" class="input" v-model="detail.email" @change="updateFun" @input="detail.email=detail.email.replace(/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]|[\s]/g,'')" placeholder="请输入">
                         </div>
                     </div>
                 </div>
