@@ -688,16 +688,16 @@ export default {
         width: 100%;
         padding: 32px;
         position: relative;
-        &::before{
-            content: '';
-            width: 100%;
-            height: 1px; /* no */
-            background: @lineColor;
-            transform: scaleY(.5);
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+        // &::before{
+        //     content: '';
+        //     width: 100%;
+        //     height: 1px; /* no */
+        //     background: @lineColor;
+        //     transform: scaleY(.5);
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        // }
         &::after{
             content: '';
             width: 100%;
