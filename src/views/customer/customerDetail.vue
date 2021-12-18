@@ -488,6 +488,8 @@ export default {
                     cluecustomer_addtag(obj).then(res => {
                         if(res.result){
                             this.getTagList()
+                        }else{
+                            this.$toast(res.msg)
                         }
                     })
                     break;
@@ -814,6 +816,9 @@ export default {
                     padding: 0 16px;
                     margin-right: 16px;
                     margin-bottom: 24px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     &:last-child{
                         margin-right: 0;
                     }

@@ -16,7 +16,7 @@
                 <span class="text">添加</span>
             </div>
             <div class="input_box" v-else>
-                <input type="text" class="input" v-model="msg" @input="msg=msg.replace(' ','')" @keyup.enter="confirmFun('add')" maxlength="30" placeholder="输入后回车">
+                <input type="text" class="input" v-model="msg" @input="msg=msg.replace(' ','')" @keyup.enter="confirmFun('add')" maxlength="20" placeholder="输入后回车">
                 <span class="btn" @click="isAdd = true">取消</span>
                 <span class="btn main" @click="confirmFun('add')">确定</span>
             </div>
