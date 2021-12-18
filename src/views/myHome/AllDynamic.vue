@@ -1056,6 +1056,10 @@ export default {
                 font-size: 28px;
                 color: #3c4353;
                 font-weight: bold;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+                max-width: 180px;
               }
               .creat_time {
                 color: #c0c4cc;
