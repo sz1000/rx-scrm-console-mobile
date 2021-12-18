@@ -46,7 +46,7 @@
                         <div class="client_message">
                              <div class="tite_name"> 
                                  <span class="name">{{item.customerCalled}}</span>
-                                 <span class="company" v-if="item.externalType != 0">{{item.cropFullName}}</span>
+                                 <span class="company" v-if="item.cropFullName ">@{{item.cropFullName}}</span>
                              </div>
                              <div class="time">{{item.createTime}}</div>
                              <div class="department"><span v-if="item.optUserName">[{{item.optUserName}}]</span>{{getTextFun(item)}} 
@@ -903,6 +903,7 @@ export default {
             .client_message{
                 margin-left: 16px;
                 .tite_name{
+                  display: flex;
                     .name{
                         font-size: 32px;    
                         color: #262626;
@@ -910,7 +911,7 @@ export default {
                         overflow: hidden;
                         text-overflow:ellipsis;
                         white-space: nowrap;
-                        width: 180px;
+                        max-width: 180px;
                         display: inline-block;
                     }
                     .company{
