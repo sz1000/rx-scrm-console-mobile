@@ -1,5 +1,5 @@
 <template>
-    <van-popup get-container="body" position="bottom" round v-model="dialog" :safe-area-inset-bottom="true">
+    <van-popup get-container="body" class="van_dialog" position="bottom" round v-model="dialog" :safe-area-inset-bottom="true">
         <div class="dialog_wrap">
             <div class="dialog_header">
                 <img class="close" @click="dialog = false" src="@/assets/svg/icon_close.svg" alt="">
