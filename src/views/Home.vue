@@ -1,6 +1,6 @@
 <template>
   <div class="settinWarp">
-    <div class="main-warp">
+    <div class="main-warp" v-if="showHome">
       <div class="warp_car">
         <!-- @click="FnToRouter('/customerManage/clues')" -->
           <div class="car_box client_color" >
@@ -178,10 +178,10 @@
       </div>
        </div>
     </div>
-    <!-- <div class="identity_page" v-else>
+    <div class="identity_page" v-else>
       <MyIndex></MyIndex>
-    </div> -->
-    <!-- <div class="btm-box">
+    </div>
+    <div class="btm-box">
       <div class="bottom-warp">
         <div class="routerbtn" @click="handelChangeHome(false)">
           <img src="../images/bg_y.png" alt="" v-show="showHome" />
@@ -194,7 +194,7 @@
           <span :class="showHome ? 'textname' : ''">工作面板</span>
         </div>
       </div>
-    </div> -->
+    </div>
     <van-overlay :show="show">
       <div class="wrapper" @click.stop>
         <div class="dialogImg" align="center">
@@ -245,10 +245,10 @@ export default {
     this.getUserName()
   },
   methods: {
-    // handelChangeHome(v) {
-    //   sessionStorage.setItem('showHome', v)
-    //   this.showHome = v
-    // },
+    handelChangeHome(v) {
+      sessionStorage.setItem('showHome', v)
+      this.showHome = v
+    },
     getHome() {
       cluecustomer_homedata().then((res) => {
         if (res.result) {
