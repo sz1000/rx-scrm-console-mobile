@@ -495,7 +495,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     padding-bottom: 15px;
-    justify-content: space-around;
+    // justify-content: space-around;
     a {
       // font-family: PingFangSC-Medium, PingFang SC;
     }
@@ -505,7 +505,10 @@ export default {
       font-weight: 500;
       color: #737373;
       text-align: center;
+       width: 171px;
+      // border: solid 1px;
       // width: 175px;
+      // margin-right: 60px;
       cursor: pointer;
       .nomaltext {
         color: #c0c4cc;
