@@ -17,12 +17,14 @@ import loadmore from './utils/directive.js' //下拉框滚动加载
 import { http } from './utils/request'
 import * as echarts from 'echarts'
 
+import bases from '@/utils/functions'
 import filters from '@/utils/filters'
 import globalComponents from '@/components/global/index.js'
 // import MintUI from 'mint-ui'
 // import 'mint-ui/lib/style.css'
 // Vue.use(MintUI)
 
+Vue.use(bases)
 Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]))
 Object.keys(globalComponents).forEach((g) =>
     Vue.component(g, globalComponents[g])

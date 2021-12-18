@@ -23,7 +23,7 @@ export default {
         },
         data: {
             type: Array,
-            default: () => {}
+            default: () => []
         },
         title: {
             type: String,
@@ -33,12 +33,12 @@ export default {
             type: String,
             default: ''
         },
-        isGetIndex: {   //返回的数据是否是对应的索引
+        isGetIndex: {   //返回的数据是否是对应的id
             type: Boolean,
             default: false
         },
         columnIndex: {    //设置对应列选中项的索引
-            type: [String,Number,Array],
+            type: [Array],
             default: null
         },
         columnValue: {    //设置对应列选中项的值
@@ -61,10 +61,22 @@ export default {
     },
     methods: {
         onConfirm() {
-            let data = this.isGetIndex ? this.$refs.picker.getIndexes() : this.$refs.picker.getValues()
+            let data = null,name = null
+            if(this.isGetIndex){
+                let arr = this.$refs.picker.getIndexes()
+                if(arr.length == 1){
+                    data = [this.data[arr[0].code]]
+                }else{
+                    data = [this.data[arr[0]].id,this.data[arr[0]].children[arr[1]].id]
+                    name = [this.data[arr[0]].name,this.data[arr[0]].children[arr[1]].name]
+                }
+            }else{
+                data = this.$refs.picker.getValues()
+            }
+            // let data = this.isGetIndex ? this.$refs.picker.getIndexes() : this.$refs.picker.getValues()
             this.dialog = false
             console.log(data)
-            this.$emit('confirm',data)
+            this.$emit('confirm',data,name)
         },
     },
     watch: {
