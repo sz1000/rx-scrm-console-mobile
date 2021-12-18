@@ -27,15 +27,15 @@
     </div>
     <div class="content_warp">
       <div class="statistical">
-        <div class="box" >
+        <div class="box"  @click="FnToRouter('/customerManage/clues')">
           <p>{{dataObj.clueSum}}</p>
           <p>线索</p>
         </div>
-        <div class="box"  >
+        <div class="box"  @click="FnToRouter('/customerManage/myCustomer')">
           <p>{{dataObj.customerSum}}</p>
           <p>客户</p>
         </div>
-        <div class="box" >
+        <div class="box" @click="FnToRouter('/customerManage/grouplist')">
           <p>{{dataObj.groupSum}}</p>
           <p>客户群</p>
         </div>
