@@ -16,9 +16,12 @@
             <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
         </div>
         <!-- 写跟进 -->
-        <div class="follow_up" v-if="navActive == 'dynamics'" @click="openDialog('','follow')">
-            <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+        <div class="operation-box">
+            <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
+                <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+            </div>
         </div>
+        
         <!-- 协助人消息输入框 -->
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
         <!-- 协助人选择弹窗 -->
@@ -70,6 +73,8 @@
         <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
         <!-- 申请成为协助人 -->
         <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
+        <!-- 操作按钮弹窗面板 -->
+        <operation-btn-box ref="operationBtnBox"></operation-btn-box>
     </div>
 </template>
 
@@ -87,10 +92,20 @@ import {
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
+import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 export default {
     components: {
-        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,
-        Opportunities,MessageBox,RemindersBox
+        Dynamics,
+        Group,
+        Enclosure,
+        DialogComment,
+        OpportunityDialog,
+        ApplyHelp,
+        TopCard,
+        Opportunities,
+        MessageBox,
+        RemindersBox,
+        OperationBtnBox
     },
     provide() {
         return {
@@ -256,7 +271,11 @@ export default {
                 }
             }
         },
-        openDialog(id,type){  //打开回复弹窗
+        // 打开操作弹窗面板
+        showOperationBtnBox() {
+            this.$refs.operationBtnBox.show()
+        },
+        openDialog(id, type){  //打开回复弹窗
             this.rowId = id
             switch (type) {
                 case 'comment':   //消息回复
@@ -629,21 +648,31 @@ export default {
         padding: 0;
     }
   }
-  .follow_up{
-    width: 76px;
-    height: 76px;
-    background: rgba(0, 0, 0, .4);
-    border-radius: 50%;
-    position: fixed;
-    right: 24px;
-    bottom: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .icon{
-        width: 40px;
-        height: 40px;
+    .operation-box {
+        width: 5rem;
+        height: 76px;
+        pointer-events: none;
+        position: fixed;
+        bottom: 200px;
+        left: 50%;
+        z-index: 9;
+        .follow_up{
+            width: 76px;
+            height: 76px;
+            background: rgba(0, 0, 0, .4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            position: absolute;
+            right: 24px;
+            top: 0;
+            .icon{
+                width: 40px;
+                height: 40px;
+            }
+        }
     }
-  }
 }
 </style>

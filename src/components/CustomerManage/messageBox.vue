@@ -5,16 +5,16 @@
                 <div class="top-box">
                     <div class="name-item" v-for="i in receiveUserInfo" :key="i.userNo">
                         {{ i.userName }}
-                        <span @click="deleteUser(i.userNo)">×</span>
+                        <span class="pointer" @click="deleteUser(i.userNo)">×</span>
                     </div>
                 </div>
             </div>
             <div class="bottom">
                 <div class="inp">
-                    <div class="icon" @click="showRemindersBox">@</div>
+                    <div class="icon pointer" @click="showRemindersBox">@</div>
                     <van-field v-model="message" class="inp-content" rows="1" autosize type="textarea" placeholder="请输入消息内容"/>
                 </div>
-                <div class="send" @click="messageNotificatio(receiveUserInfo, message)">发送</div>
+                <div class="send pointer" @click="messageNotificatio(receiveUserInfo, message)">发送</div>
             </div>
         </div>
     </div>
