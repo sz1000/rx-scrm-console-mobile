@@ -24,17 +24,17 @@
     </div>
     <div class="content_warp">
       <div class="statistical">
-        <div class="box" @click="FnToRouter('/customerManage/myCustomer')">
+        <div class="box" @click="FnToRouter('/customerManage/clues')">
+          <p>{{dataObj.clueSum}}</p>
+          <p>线索</p>
+        </div>
+        <div class="box"  @click="FnToRouter('/customerManage/grouplist')">
           <p>{{dataObj.customerSum}}</p>
           <p>客户</p>
         </div>
-        <div class="box"  @click="FnToRouter('/customerManage/grouplist')">
+        <div class="box" @click="FnToRouter('/customerManage/grouplist')">
           <p>{{dataObj.groupSum}}</p>
           <p>客户群</p>
-        </div>
-        <div class="box" @click="FnToRouter('/talkTool/circleFriend')">
-          <p>{{dataObj.friendSum}}</p>
-          <p>朋友圈</p>
         </div>
       </div>
       <!-- <div class="wait_warp">
@@ -208,6 +208,7 @@ export default {
         custometMassSum: '0',
         forReply: '0',
         forReplyCustomer: '0',
+        clueSum:'0'
       },
       userObj: {
         name: '',
