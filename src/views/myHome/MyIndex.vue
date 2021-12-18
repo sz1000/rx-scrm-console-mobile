@@ -20,19 +20,22 @@
       <!-- <div class="change_identity" @click="changeIdent">
         <img src="../../images/change_id.png" alt="">
         <span>切换身份</span>
+      @click="FnToRouter('/customerManage/clues')"
+      @click="FnToRouter('/customerManage/myCustomer')"
+      @click="FnToRouter('/customerManage/grouplist')"
       </div> -->
     </div>
     <div class="content_warp">
       <div class="statistical">
-        <div class="box" @click="FnToRouter('/customerManage/clues')">
+        <div class="box" >
           <p>{{dataObj.clueSum}}</p>
           <p>线索</p>
         </div>
-        <div class="box"  @click="FnToRouter('/customerManage/grouplist')">
+        <div class="box"  >
           <p>{{dataObj.customerSum}}</p>
           <p>客户</p>
         </div>
-        <div class="box" @click="FnToRouter('/customerManage/grouplist')">
+        <div class="box" >
           <p>{{dataObj.groupSum}}</p>
           <p>客户群</p>
         </div>

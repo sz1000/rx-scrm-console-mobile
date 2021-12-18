@@ -92,7 +92,8 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push("/home");
+         this.$router.go(-1)
+      // this.$router.push("/home");
     },
     // 获取输入群名称
     // groupName(value) {

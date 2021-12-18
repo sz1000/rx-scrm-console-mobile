@@ -2,21 +2,24 @@
   <div class="settinWarp">
     <div class="main-warp">
       <div class="warp_car">
-          <div class="car_box client_color" @click="FnToRouter('/customerManage/clues')">
+        <!-- @click="FnToRouter('/customerManage/clues')" -->
+          <div class="car_box client_color" >
               <div class="client ">
                  <img src="../assets/svg/clue.svg" alt="">
                  <span class="name">线索</span>
               </div>
               <p class="num">{{ clues }}</p>
           </div>
-            <div class="car_box  clients_color mg_auto" @click="FnToRouter('/customerManage/myCustomer')">
+          <!-- @click="FnToRouter('/customerManage/myCustomer')" -->
+            <div class="car_box  clients_color mg_auto" >
               <div class="client">
                  <img src="../assets/svg/client.svg" alt="">
                  <span class="name">客户</span>
               </div>
               <p class="num">{{ customer }}</p>
           </div>
-          <div class="car_box group_color" @click="FnToRouter('/customerManage/grouplist')">
+          <!-- @click="FnToRouter('/customerManage/grouplist')" -->
+          <div class="car_box group_color" >
               <div class="client">
                  <img class="img_group" src="../assets/svg/kehuqun.svg" alt="">
                  <span class="name">客户群</span>

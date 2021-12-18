@@ -904,6 +904,7 @@ export default {
                 margin-left: 16px;
                 .tite_name{
                   display: flex;
+                  align-items: center;
                     .name{
                         font-size: 32px;    
                         color: #262626;
@@ -917,6 +918,11 @@ export default {
                     .company{
                         font-size: 24px;
                         color: #FFB020;
+                        margin-left: 6px;
+                        width: 320px;
+                        overflow: hidden;
+                        text-overflow:ellipsis;
+                        white-space: nowrap;
                     }
                 }
                .time{
@@ -929,6 +935,7 @@ export default {
                    color: #737373;
                    margin-top: 16px;
                    width: 526px;
+                   word-break: break-all;
                }
             }
           }
