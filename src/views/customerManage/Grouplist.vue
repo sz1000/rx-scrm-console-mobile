@@ -80,8 +80,8 @@ export default {
     };
   },
       computed: {
-        userNo(){
-            return this.$store.getters.userNo
+        userId(){
+            return this.$store.getters.userId
         },
     
     },
@@ -102,7 +102,7 @@ export default {
     // },
     // 点击查询
     inquire() {
-      console.log(this.inputValue);
+   
       // this.page = 1;
       // this.getGroupList();
       // this.dataList = [];
@@ -111,27 +111,29 @@ export default {
           page: 1,
           // limit: this.pageSize,
           name: this.inputValue,
-          owmer: this.userNo,
+          owmer: "",
           createTimeSta: "",
           createTimeEnd: "",
-          // flag:"1"
+          // flag:"2"
         })
         .then((res) => {
           console.log(res);
           this.total = res.data.groupEntityPage.total;
           this.loading = false;
-          let tempList = res.data.groupEntityPage.records;
+             this.dataList =  res.data.groupEntityPage.records;
+          // let tempList = res.data.groupEntityPage.records;
           if (tempList == null || tempList.length === 0) {
             // 加载结束
             this.finished = true;
             return;
           }
-          tempList.forEach((item) => {
-            item.createTime = item.createTime
-              ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-              : "-";
-          });
           this.dataList = tempList;
+          // tempList.forEach((item) => {
+          //   item.createTime = item.createTime
+          //     ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
+          //     : "-";
+          // });
+          console.log(res.data.groupEntityPage.records,"11")
         });
     },
     onLoad() {
@@ -147,10 +149,10 @@ export default {
           page: this.page,
           limit: this.pageSize,
           name: this.inputValue,
-          owmer: this.userNo,
+          owmer:"",
           createTimeSta: "",
           createTimeEnd: "",
-          // flag:"1"
+          flag:"2"
         })
         .then((res) => {
           console.log(res);
