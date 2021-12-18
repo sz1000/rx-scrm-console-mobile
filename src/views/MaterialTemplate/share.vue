@@ -33,19 +33,16 @@ export default {
 
     this.userNo = userNo ? userNo : null
     this.corpId = corpId ? corpId : null
+    this.materialId = materialId
+    this.materialType = type
 
     if (isWeiXin()) {
       // 微信授权
       this.wechatLoad()
     }
-
-    this.materialId = materialId
-    this.materialType = type
-
     if (this.userNo) {
       this.getUsersInfo()
     }
-
     let params = {
       materialId,
       materialType: type,
@@ -59,13 +56,22 @@ export default {
     wechatLoad() {
       let { code } = this.$route.query
 
-      if (!code) {
+      this.sessionOpenId = sessionStorage.getItem("MATERIALTEMPLATE_OPENID")
+      this.sessionUnionId = sessionStorage.getItem("MATERIALTEMPLATE_UNIONId")
+
+      if (!code && !this.sessionOpenId) {
         getCode(encodeURIComponent(window.location.href))
       } else {
-        if (this.userNo) {
-          this.getCorpId().then(() => this.offiAccount(code))
-        } else if (this.corpId) {
-          this.offiAccount(code)
+        if (this.sessionOpenId) {
+          this.unionId = this.sessionUnionId
+          this.openId = this.sessionOpenId
+          this.materialOperation()
+        } else {
+          if (this.userNo) {
+            this.getCorpId().then(() => this.offiAccount(code))
+          } else if (this.corpId) {
+            this.offiAccount(code)
+          }
         }
       }
     },
@@ -81,8 +87,11 @@ export default {
 
         if (code === 'success') {
           const { unionid, openid } = data
+
           this.unionId = unionid
           this.openId = openid
+          sessionStorage.setItem("MATERIALTEMPLATE_OPENID", openid)
+          sessionStorage.setItem("MATERIALTEMPLATE_UNIONId", unionid)
           this.materialOperation()
         }
       })

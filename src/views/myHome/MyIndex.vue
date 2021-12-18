@@ -24,17 +24,17 @@
     </div>
     <div class="content_warp">
       <div class="statistical">
-        <div class="box" @click="FnToRouter('/customerManage/myCustomer')">
+        <div class="box" @click="FnToRouter('/customerManage/clues')">
+          <p>{{dataObj.clueSum}}</p>
+          <p>线索</p>
+        </div>
+        <div class="box"  @click="FnToRouter('/customerManage/grouplist')">
           <p>{{dataObj.customerSum}}</p>
           <p>客户</p>
         </div>
-        <div class="box"  @click="FnToRouter('/customerManage/grouplist')">
+        <div class="box" @click="FnToRouter('/customerManage/grouplist')">
           <p>{{dataObj.groupSum}}</p>
           <p>客户群</p>
-        </div>
-        <div class="box" @click="FnToRouter('/talkTool/circleFriend')">
-          <p>{{dataObj.friendSum}}</p>
-          <p>朋友圈</p>
         </div>
       </div>
       <!-- <div class="wait_warp">
@@ -208,6 +208,7 @@ export default {
         custometMassSum: '0',
         forReply: '0',
         forReplyCustomer: '0',
+        clueSum:'0'
       },
       userObj: {
         name: '',
@@ -434,20 +435,31 @@ export default {
         },
 
         getTimeFun(value){
-            let days = parseInt(value / (1000 * 60 * 60 * 24)),
-            hours = parseInt((value % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes = parseInt((value % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds = (value % (1000 * 60)) / 1000
-               if(seconds < 1){
-                  return 1 + "秒前"
-               }else if(  1<seconds< 60){
-                return parseInt(seconds) + "秒前"
-              }else if( 1 < minutes < 60){
-                return parseInt(seconds) + "分钟前"
-              }else if(1 < hours < 24){
-                 return parseInt(seconds) + "小时前"
-              }else if(1 < days < 30){
-                  return parseInt(seconds) + "天前"
+            // let days = parseInt(value / (1000 * 60 * 60 * 24)),
+            // hours = parseInt((value % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            // minutes = parseInt((value % (1000 * 60 * 60)) / (1000 * 60)),
+            // seconds =  parseInt((value % (1000 * 60)) / 1000)
+            // console.log(seconds,minutes,hours,days)
+            let s = 60*1000
+            let m = 60*60*1000
+            let h = 24*60*60*1000
+
+               if(value < 1000){
+                  return parseInt(1) + "秒前"
+               }
+               else if(value < (60*1000)){
+                 console.log("1111",parseInt(value/1000));
+                  return parseInt(value/1000) + "秒前"
+               }else if(value < (60*60*1000) ){
+                return parseInt(value/(60*1000)) + "分钟前"
+              }else if(value < (24*60*60*1000)){
+                return parseInt(value/(60*60*1000)) + "小时"
+              }else if(value < (30*24*60*60*1000)){
+                 return parseInt(value / (24*60*60*1000)) + "天前"
+              }else if(value < (12*30*24*60*60*1000)){
+                  return parseInt(value / (30*24*60*60*1000)) + "月前"
+              }else{
+                   return parseInt(value / (12*30*24*60*60*1000)) + "年前"
               }
         
           
