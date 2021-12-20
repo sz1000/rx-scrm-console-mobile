@@ -14,7 +14,7 @@
         <li @click="changeNav(3)" :class="{active: type == 3}" ><span>互动协同</span></li>
       </ul>
     <div class="searchInput">
-      <van-field v-model="value1" placeholder="客户名称/公司/手机号码">
+      <van-field v-model="value1" placeholder="关联客户名称/企业名称/…">
         <template #left-icon>
           <van-icon name="search"  @click="search" />
         </template>

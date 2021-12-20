@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">企微朋友圈</span>
+      <span class="textTitle">新建企微朋友圈</span>
       <div class="send" @click="sendMessage">
         <span>发表</span>
       </div>
