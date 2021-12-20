@@ -122,9 +122,9 @@
         </div>
 
         <div class="about_me about_shadow">
-        <span>企业朋友圈</span>
+        <span>企微朋友圈</span>
         <div class="reply_text"  @click="goToWait(1)">
-          <span>{{dataObj.friendSend}}条企业朋友圈待发表</span>
+          <span>{{dataObj.friendSend}}条企微朋友圈待发表</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
@@ -566,11 +566,17 @@ export default {
       })
     },
     goToAbout() {
+      // this.$router.push({
+      //   path: '/aboutme',
+      //   query: {
+      //     forReply: this.dataObj.forReply,
+      //     forReplyCustomer: this.dataObj.forReplyCustomer,
+      //   },
+      // })
       this.$router.push({
-        path: '/aboutme',
+        path: '/AllDynamic',
         query: {
-          forReply: this.dataObj.forReply,
-          forReplyCustomer: this.dataObj.forReplyCustomer,
+          type:3,
         },
       })
     },

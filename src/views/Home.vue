@@ -127,7 +127,7 @@
           <div class="huoma ongroup_bg">
              <img src="../assets/svg/pengyouquan.svg" alt="" /> 
           </div>
-          <p>朋友圈</p>
+          <p>企微朋友圈</p>
         </div>
         <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
           <img src="../images/card.png" alt="" />

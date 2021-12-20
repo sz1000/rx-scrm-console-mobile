@@ -250,7 +250,8 @@ export default {
       this.getList()
       this.getTotal(2)
       this.getTotal(3)
-     
+      this.type = this.$route.query.type || 1
+     console.log(this.$route.query.type,"00p---=")
     // })
   },
   mounted() {},

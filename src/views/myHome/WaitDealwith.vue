@@ -5,10 +5,10 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">待处理</span>
+      <span class="textTitle">企微朋友圈</span>
     </div>
     <div class="nav_tab">
-      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">朋友圈</div>
+      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">企微朋友圈</div>
       <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">群发</div>
     </div>
     <div class="tips_box">
