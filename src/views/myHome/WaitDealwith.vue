@@ -5,39 +5,35 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">待处理</span>
+      <span class="textTitle">朋友圈</span>
     </div>
     <div class="nav_tab">
-      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">朋友圈</div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">群发</div>
+      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人发表</div>
+      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业发表</div>
     </div>
-    <div class="tips_box">
-      <img src="../../images/ico_warning@2x.png" alt="">
-      <span v-if="tab ==1 ">请前往企微聊天面板-客户朋友圈进行发表</span>
-      <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
-    </div>
-    <div class="searchInput">
-      <div class="select_date" @click="showPicker=true">
-        <img src="../../images/date_pick.png" alt="">
-        <div v-if="startDate&&endDate" class="time_sty">
-          <span>{{startDate}}</span>
-          至
-          <span>{{endDate}}</span>
-        </div>
-        <div v-else class="time_sty">
-          <span>开始时间</span>
-          -
-          <span>结束时间</span>
-        </div>
-      </div>
-      <div class="select_box" @click="filterCard">
-        <span v-show="tab==1">{{tabName == 1 ? '已发表' :'未发表'}}</span>
-        <span v-show="tab==2">{{tabName == 1 ? '已发送' :'未发送'}}</span>
-        <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
-      </div>
-    </div>
-    <div class="total_box">共<span>{{cardList.length}}</span>条</div>
     <section v-if="tab==1">
+      <div class="searchInput">
+        <div class="search_title">
+          <van-field v-model="searchValue" left-icon="search" placeholder="标题/内容" />
+        </div>
+        <div class="select_date" @click="showPicker=true">
+          <img src="../../images/date_pick.png" alt="">
+          <div v-if="startDate&&endDate" class="time_sty">
+            <span>{{startDate}}</span>
+            至
+            <span>{{endDate}}</span>
+          </div>
+          <div v-else class="time_sty">
+            <span>开始时间</span>
+            -
+            <span>结束时间</span>
+          </div>
+        </div>
+      </div>
+      <div class="friend_warp">
+        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈</div>
+        <div class="published_btn" @click="shareToMoments">发表朋友圈</div>
+      </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <!-- 图片 -->
@@ -57,7 +53,7 @@
             <span class="text_image">{{item.content}}</span>
           </div>
           <!-- 链接 -->
-          <div class="top_content top_content_link" v-if="item.msgtype == 'link' || item.msgtype == 'pdf'">
+          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
               <img src="../../images/article.png" alt="">
@@ -78,6 +74,37 @@
       </div>
     </section>
     <section v-if="tab==2">
+      <div class="tips_box">
+        <img src="../../images/ico_warning@2x.png" alt="">
+        <span v-if="tab ==1 ">请前往企微聊天面板-客户朋友圈进行发表</span>
+        <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
+      </div>
+      <div class="search_company">
+        <van-field v-model="companyValue" left-icon="search" placeholder="标题/内容" />
+      </div>
+      <div class="searchInput search_tab2">
+        <div class="select_date" @click="showPicker=true">
+          <img src="../../images/date_pick.png" alt="">
+          <div v-if="startDate&&endDate" class="time_sty">
+            <span>{{startDate}}</span>
+            至
+            <span>{{endDate}}</span>
+          </div>
+          <div v-else class="time_sty">
+            <span>开始时间</span>
+            -
+            <span>结束时间</span>
+          </div>
+        </div>
+        <div class="select_box" @click="filterCard">
+          <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
+          <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
+        </div>
+      </div>
+      <div class="friend_warp">
+        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
+        <div class="published_btn" @click="creatFriend">创建朋友圈任务</div>
+      </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <!-- 链接 素材库-->
@@ -91,11 +118,6 @@
           </div>
           <div class="top_content_link top_content" v-if="Object.keys(item.sendContent).length == 0">
             <p>{{item.massContent}}</p>
-            <!-- <div class="link_warp">
-              <img :src="item.sendContent.value[0].picurl" alt="" v-if="item.sendContent.value[0].picurl" />
-              <img src="../../images/article.png" alt="" v-else />
-              <div class="lint_url">{{item.sendContent.value[0].url}}</div>
-            </div> -->
           </div>
           <div class="bot_content">
             <span>{{item.createTime}}</span>
@@ -137,36 +159,16 @@ export default {
       startDate: '',
       endDate: '',
       tab: this.$route.query.tab,
-      cardList: [
-        // {
-        //   avtar: '',
-        //   name: '哈哈哈哈',
-        //   score: '242',
-        //   phone: '123123213',
-        //   company: '黄金卡号的卡号',
-        //   createTime: '2021-9-12 12:30:20',
-        //   creatBy: '六打包',
-        //   status: 2,
-        //   gender: 1,
-        //   imgs: '',
-        // },
-        // {
-        //   avtar: '',
-        //   name: '哈哈哈哈',
-        //   score: '242',
-        //   phone: '123123213',
-        //   company: '黄金卡号的卡号',
-        //   createTime: '2021-9-12 12:30:20',
-        //   creatBy: '六打包',
-        //   status: 1,
-        //   gender: 2,
-        //   imgs: '',
-        // },
-      ],
+      cardList: [],
       showFilter: false,
-      actions: [],
+      actions: [
+        { name: '未发表', id: 0 },
+        { name: '已发表', id: 1 },
+      ],
       tabName: 0,
       depId: localStorage.getItem('depId'),
+      searchValue: '',
+      companyValue: '',
     }
   },
   computed: {
@@ -181,20 +183,23 @@ export default {
     if (this.tab == 1) {
       // 朋友圈
       this.getDataList()
-      this.actions = [
-        { name: '未发表', id: 0 },
-        { name: '已发表', id: 1 },
-      ]
     } else {
       // 群发
       this.getGroupList()
-      this.actions = [
-        { name: '未发送', id: 0 },
-        { name: '已发送', id: 1 },
-      ]
     }
   },
   methods: {
+    // 发送到朋友圈
+    shareToMoments() {
+      this.$router.push({
+        path: '/talkTool/mterialPage',
+        query: {
+          friendtype: 'person',
+        },
+      })
+    },
+    // 创建朋友圈任务
+    creatFriend() {},
     clickVideo(id) {
       var video1 = document.getElementById(id)
       if (video1.requestFullscreen) {
@@ -207,6 +212,9 @@ export default {
         video1.mozRequestFullScreen()
         video1.play()
       }
+    },
+    filterCard() {
+      this.showFilter = true
     },
     getDataList() {
       this.cardList = []
@@ -246,24 +254,16 @@ export default {
     },
     tabClick(v) {
       this.tab = v
+      this.startDate = ''
+      this.endDate = ''
       this.tabName = 0
       if (v == 1) {
         this.getDataList()
-        this.actions = [
-          { name: '未发表', id: 0 },
-          { name: '已发表', id: 1 },
-        ]
       } else {
         this.getGroupList()
-        this.actions = [
-          { name: '未发送', id: 0 },
-          { name: '已发送', id: 1 },
-        ]
       }
     },
-    filterCard() {
-      this.showFilter = true
-    },
+
     fnSelect(v) {
       this.tabName = v.id
       if (this.tab == 1) {
@@ -336,12 +336,25 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .search_title {
+      .van-cell {
+        padding: 16px;
+        width: 330px;
+        height: 68px;
+        background: #f7f7f7;
+        border-radius: 8px;
+        .van-field__label {
+          width: 0;
+        }
+      }
+    }
     .select_date {
-      padding: 20px 32px;
-      width: 424px;
+      padding: 20px 16px;
+      width: 332px;
       height: 68px;
-      background: #f7f8fa;
-      border-radius: 16px;
+
+      background: #f7f7f7;
+      border-radius: 8px;
       display: flex;
       .time_sty {
         margin-left: 16px;
@@ -357,24 +370,30 @@ export default {
         height: 28px;
       }
     }
-    .select_box {
-      display: flex;
-      align-items: center;
-      font-size: 28px;
-      color: #838a9d;
-      width: 230px;
-      height: 68px;
-      background: #f7f8fa;
-      border-radius: 16px;
-      justify-content: space-between;
-      padding: 0 32px;
-      .rotate {
-        transform: rotate(180deg);
-      }
-    }
+
     img {
       width: 40px;
       height: 40px;
+    }
+  }
+  .search_tab2 {
+    .select_date {
+      width: 432px;
+    }
+  }
+  .select_box {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    color: #838a9d;
+    width: 230px;
+    height: 68px;
+    background: #f7f8fa;
+    border-radius: 16px;
+    justify-content: space-between;
+    padding: 0 32px;
+    .rotate {
+      transform: rotate(180deg);
     }
   }
   .nav_tab {
@@ -405,12 +424,40 @@ export default {
       }
     }
   }
+  .friend_warp {
+    padding: 0 32px;
+    display: flex;
+    line-height: 64px;
+    justify-content: space-between;
+    border-bottom: 1px solid #e6e6e6;
+    .total_box {
+      padding-bottom: 18px;
+      // text-align: right;
+      color: #838a9d;
+      font-size: 24px;
+      span {
+        display: inline-block;
+        margin: 0 8px;
+        font-size: 28px;
+        color: #3c4353;
+      }
+    }
+    .published_btn {
+      width: 220px;
+      height: 64px;
+      background: #4168f6;
+      border-radius: 32px;
+      color: #fff;
+      font-size: 28px;
+      text-align: center;
+    }
+  }
   .tips_box {
     display: flex;
     background: #fffcea;
     border-radius: 16px;
     height: 72px;
-    margin: 16px 32px;
+    margin: 32px;
     padding: 20px 32px;
     align-items: center;
     span {
@@ -423,17 +470,17 @@ export default {
       margin-right: 24px;
     }
   }
-  .total_box {
-    padding: 0 32px 18px;
-    // text-align: right;
-    color: #838a9d;
-    font-size: 24px;
-    border-bottom: 1px solid #e6e6e6;
-    span {
-      display: inline-block;
-      margin: 0 8px;
-      font-size: 28px;
-      color: #3c4353;
+  .search_company {
+    .van-cell {
+      padding: 16px;
+      width: 686px;
+      height: 68px;
+      background: #f7f7f7;
+      border-radius: 8px;
+      margin: 0 auto;
+      .van-field__label {
+        width: 0;
+      }
     }
   }
   .custom_content {
