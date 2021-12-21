@@ -98,3 +98,11 @@ export function uploadTemporaryMaterial(data) {
         data: data,
     })
 }
+// 弹框内列表
+export function friendCircleUserList(data) {
+    return request({
+        url: MaterialService + '/friendCircle/friendCircleUserList',
+        method: 'get',
+        params: data,
+    })
+}

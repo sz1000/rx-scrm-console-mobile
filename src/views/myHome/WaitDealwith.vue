@@ -139,7 +139,7 @@
               <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
-          <div class="no_publish" @click="fnShowPublish" v-if="!tabName">
+          <div class="no_publish" @click="fnShowPublish(item)" v-if="!tabName">
             <div class="left">
               <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userList.slice(0,3)" :key="itemChi.id" v-show="itemChi.avatar">
               <div class="text_name" v-for="(itemChi,index) in item.userList.slice(0,3)" :key="index">
@@ -155,6 +155,7 @@
         </div>
       </div>
     </section>
+    <!-- 时间的弹窗 -->
     <div class="date_box">
       <van-popup v-model="showPicker" position="bottom" round>
         <van-date-picker show-toolbar v-model="currentDate" title="选择时间段" :min-date="minDate" :max-date="maxDate" @cancel="showPicker = false"
@@ -162,6 +163,7 @@
         </van-date-picker>
       </van-popup>
     </div>
+    <!-- 企业列表弹出 -->
     <div class="filter_box">
       <van-action-sheet v-model="showFilter" :actions="actions" cancel-text="取消" close-on-click-action @select='fnSelect' />
     </div>
@@ -174,14 +176,39 @@
             <span>全部员工</span>
             <span>({{popupList.length}})</span>
           </div>
+          <div class="search_popup">
+            <van-field v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
+            <div class="select_box_p" @click="popupSendShow">
+              <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
+              <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showPopupSelect}" />
+            </div>
+          </div>
+          <div class="one" v-for="list in popupList" :key="list.id">
+            <div class="left">
+              <img :src="list.cover" alt="" v-if="list.cover">
+              <img src="../../images/img_head.png" alt="" v-else>
+              <div class="name_warp">
+                <span>{{list.name}}-{{list.department}}</span>
+                <!-- <span>{{item.phone}}</span> -->
+              </div>
+            </div>
+            <div class="right" :class="popupname == 1 ? 'noRight':'yeRight'">
+              <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
+            </div>
+          </div>
+
         </div>
       </van-popup>
+      <!-- 内部弹出 -->
+      <div class="filter_box">
+        <van-action-sheet v-model="showPopupSelect" :actions="actions" cancel-text="取消" close-on-click-action @select='fnSelectPopup' />
+      </div>
     </div>
   </div>
 </template>
 <script>
 import VanDatePicker from './VanDate.vue'
-import { friendSend, groupSend } from '../../api/myHome'
+import { friendSend, groupSend, friendCircleUserList } from '../../api/myHome'
 export default {
   components: {
     VanDatePicker,
@@ -209,6 +236,10 @@ export default {
       personList: [],
       showPubish: true,
       popupList: [],
+      valPopup: '',
+      popupname: 0,
+      showPopupSelect: false,
+      itemObj: {},
     }
   },
   computed: {
@@ -231,8 +262,14 @@ export default {
   },
   methods: {
     // 打开未发表弹框
-    fnShowPublish() {
+    fnShowPublish(value) {
       this.showPubish = true
+      this.itemObj = value
+      this.getListPopup()
+    },
+    // 弹窗内的选择
+    popupSendShow() {
+      this.showPopupSelect = true
     },
     // 发送到朋友圈
     shareToMoments() {
@@ -258,9 +295,11 @@ export default {
         video1.play()
       }
     },
+
     filterCard() {
       this.showFilter = true
     },
+    // 外层列表
     getDataList() {
       this.cardList = []
       let params = {
@@ -279,7 +318,19 @@ export default {
         // }
       })
     },
-
+    // 弹窗内列表
+    getListPopup() {
+      let params = {
+        momentId: this.itemObj.momentId,
+        name: this.valPopup,
+        status: this.popupname,
+      }
+      friendCircleUserList(params).then((res) => {
+        if (res.result) {
+          this.popupList = res.data.records
+        }
+      })
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -297,7 +348,7 @@ export default {
       }
       this.getDataList()
     },
-
+    // 外层选择
     fnSelect(v) {
       this.tabName = v.id
       if (this.tab == 1) {
@@ -306,6 +357,11 @@ export default {
         this.type = ''
       }
       this.getDataList()
+    },
+    // 弹框选择
+    fnSelectPopup(el) {
+      this.popupname = el.id
+      this.getListPopup()
     },
     onConfirm(value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
@@ -670,8 +726,85 @@ export default {
       font-weight: 600;
       color: #262626;
     }
-    .popup_content {
+    .user_text {
+      margin-top: 48px;
+      margin-bottom: 24px;
+      color: #737373;
+      font-size: 28px;
     }
+    .search_popup {
+      display: flex;
+      .van-cell {
+        padding: 16px;
+        width: 432px;
+        height: 72px;
+        background: #f7f7f7;
+        border-radius: 8px;
+        margin: 0 auto;
+        .van-field__label {
+          width: 0;
+        }
+      }
+      .select_box_p {
+        display: flex;
+        align-items: center;
+        font-size: 28px;
+        color: #838a9d;
+        width: 230px;
+        height: 72px;
+        background: #f7f8fa;
+        border-radius: 16px;
+        justify-content: space-between;
+        padding: 0 32px;
+        .rotate {
+          transform: rotate(180deg);
+        }
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+    .one {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 32px 0;
+      .left {
+        display: flex;
+        .name_warp {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          span:nth-child(1) {
+            font-size: 28px;
+            color: #262626;
+          }
+          span:nth-child(2) {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 24px;
+            color: #b3b3b3;
+          }
+        }
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin-right: 16px;
+        }
+      }
+      .right {
+        border: 1px solid #e6e6e6;
+        color: #b3b3b3;
+        padding: 4px 16px;
+      }
+      .yeRight {
+        color: #ffb020;
+        border-color: #ffb020;
+      }
+    }
+
     /deep/.van-popup__close-icon {
       color: #262626;
     }
