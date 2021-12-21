@@ -1,15 +1,12 @@
 <template>
   <div class="material-template">
     <header-title v-if="isIndependent == 1 && !showUploadPoster && !showContentPreview && !showFileUpload" title="素材库"></header-title>
-    <div class="material-tab">
-      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人素材库</div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业素材库</div>
-    </div>
+
     <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
       <ul class="header-nav pointer">
-        <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章</span></li>
-        <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
-        <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
+        <li @click="changeNav(0)" :class="{active: type == 0}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
+        <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
+        <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
       </ul>
       <search ref="search" :type="type"></search>
       <ul class="list-box">
@@ -125,7 +122,6 @@ export default {
   },
   data() {
     return {
-      tab: 1,
       type: 0,
 
       articleList: [],
@@ -177,11 +173,6 @@ export default {
   },
   methods: {
     ...mapActions(['getCorpId']),
-    tabClick(val) {
-      this.tab = val
-      this.initPage(this.type)
-      this.getList()
-    },
     changeNav(type) {
       this.type = type
       this.initPage(this.type)
@@ -205,11 +196,7 @@ export default {
       this.getList()
     },
     getList(title) {
-      if (
-        (this.type == 0 && this.articleListPage == 1) ||
-        (this.type == 1 && this.saleListPage == 1) ||
-        (this.type == 2 && this.posterListPage == 1)
-      ) {
+      if (this.type == 0 && this.articleListPage == 1 || this.type == 1 && this.saleListPage == 1 || this.type == 2 && this.posterListPage == 1) {
         this.$toast.loading({
           message: '加载中...',
           forbidClick: true,
@@ -223,7 +210,6 @@ export default {
       let params = {
         pageSize: 10,
         corpId: this.corpId,
-        isPersonal: this.tab == 1 ? true : false,
       }
 
       if (this.type == 0) {
@@ -249,6 +235,7 @@ export default {
     },
     handleRes(res) {
       const { code, data, msg } = res
+
       this.$toast.clear()
       if (code === 'success') {
         this.getTotal(data)
@@ -436,19 +423,16 @@ export default {
   overflow-x: hidden;
   .header-nav {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 32px;
     width: 100%;
     height: 100px;
     border-bottom: 1px solid @lineColor;
     li {
-      width: 212px;
-      height: 64px;
-      background: #f7f7f7;
-      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      height: 100%;
+      line-height: 100px;
       text-align: center;
-      line-height: 64px;
       span {
         height: 100%;
         margin: 0 auto;
@@ -457,38 +441,9 @@ export default {
       }
     }
     .active {
-      background: @white;
-      border: 1px solid @main;
       span {
         color: @main;
-      }
-    }
-  }
-  .material-tab {
-    height: 88px;
-    line-height: 88px;
-    display: flex;
-    font-size: 28px;
-    justify-content: space-between;
-    border-bottom: 1px solid #e6e6e6;
-    .nomalText {
-      color: #838a9d;
-      width: 375px;
-      text-align: center;
-    }
-    .active {
-      color: #3c4353;
-      font-weight: bold;
-      position: relative;
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 43%;
-        width: 56px;
-        height: 8px;
-        background: #4168f6;
-        border-radius: 4px;
+        border-bottom: 4px solid @main;
       }
     }
   }
