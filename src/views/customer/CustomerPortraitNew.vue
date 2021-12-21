@@ -115,7 +115,7 @@ export default {
             dialog_xgj: false,
             dialog_sj: false,
             dialog_xzr: false,
-            dialog_card: true,
+            dialog_card: false,
             isApply: false,     //是否已经申请成为协助人 且还未通过
 
             applyData: {},
