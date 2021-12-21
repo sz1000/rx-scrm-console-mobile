@@ -2,7 +2,7 @@
     <div class="helper_wrap">
         <div class="top_back" @click="$router.go(-1)">
             <img class="icon" src="@/assets/svg/icon_back.svg" alt="">
-            <div class="title">协助人</div>
+            <div class="title">跟进人</div>
         </div>
         <div class="content">
             <div class="item_box" v-if="obj">
@@ -19,11 +19,11 @@
                 </div>
             </div>
             <div class="item_box">
-                <div class="opera_box" v-if="!showBtn">
+                <div class="opera_box" v-if="!showBtn && userNo == obj.userNo">
                     <img class="icon" @click="addDialog" src="@/assets/svg/icon_add_cir.svg" alt="">
                     <img class="icon" @click="showBtn = true" src="@/assets/svg/icon_ljt.svg" alt="">
                 </div>
-                <div class="opera_btn" @click="showBtn = false" v-else>完成</div>
+                <div class="opera_btn" @click="showBtn = false" v-if="showBtn && userNo == obj.userNo">完成</div>
                 <div class="tit">协助人</div>
                 <van-swipe-cell ref="swipercell" v-for="(item,index) in helperList" :key="index">
                     <div class="item" :class="{'trans':showBtn}">
@@ -68,6 +68,9 @@ export default {
     computed: {
         id(){
             return this.$route.query.id
+        },
+        userNo(){
+            return this.$store.getters.userNo
         },
         obj(){  //负责人obj
             let list = this.list.find(el => {

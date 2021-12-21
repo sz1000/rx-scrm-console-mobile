@@ -37,3 +37,6 @@ from './inputDialog.vue'
 /* 标签弹窗 (个人 and 企业) */
 export { default as TagDialog }
 from './tagDialog.vue'
+/* 同事名片弹窗 */
+export { default as BusinessCard }
+from './businessCard.vue'

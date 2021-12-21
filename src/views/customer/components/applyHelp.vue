@@ -125,6 +125,7 @@ export default {
         color: @fontMain;
         .label{
             width: 160px;
+            white-space: nowrap;
         }
         .val{
             width: calc(100% - 120px);
@@ -149,7 +150,7 @@ export default {
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    width: calc(100% - 200px);
+                    max-width: calc(100% - 200px);
                 }
             }
         }
