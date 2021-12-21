@@ -80,6 +80,8 @@ import ApplyHelp from '../views/notice/applyHelp'
 
 // w我的、待处理
 import WaitDealwith from '../views/myHome/WaitDealwith.vue'
+// 群发
+import GroupIndex from '../views/myHome/GroupIndex.vue'
 // 客户激活
 import CustomeActive from '../views/myHome/CustomeActive.vue'
 // @我
@@ -523,6 +525,11 @@ const routes = [{
         path: '/waitDealwith',
         name: 'waitDealwith',
         component: WaitDealwith,
+    },
+    {
+        path: '/groupIndex',
+        name: 'groupIndex',
+        component: GroupIndex,
     },
     // 客户激活
     {
