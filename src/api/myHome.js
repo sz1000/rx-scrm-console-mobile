@@ -98,3 +98,19 @@ export function uploadTemporaryMaterial(data) {
         data: data,
     })
 }
+// 群发
+export function getCustomerMassSend(data) {
+    return request({
+        url: CustomerService + '/cluecustomerMass/getCustomerMassSend',
+        method: 'get',
+        params: data,
+    })
+}
+// 群发
+export function getUserSendDetail(data) {
+    return request({
+        url: CustomerService + '/cluecustomerMass/getUserSendDetail',
+        method: 'get',
+        params: data,
+    })
+}
