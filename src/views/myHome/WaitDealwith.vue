@@ -189,7 +189,7 @@
               <img src="../../images/img_head.png" alt="" v-else>
               <div class="name_warp">
                 <span>{{list.name}}-{{list.department}}</span>
-                <!-- <span>{{item.phone}}</span> -->
+                <span>{{list.phone}}</span>
               </div>
             </div>
             <div class="right" :class="popupname == 1 ? 'noRight':'yeRight'">
@@ -271,7 +271,7 @@ export default {
     popupSendShow() {
       this.showPopupSelect = true
     },
-    // 发送到朋友圈
+    // 个人发送到朋友圈
     shareToMoments() {
       this.$router.push({
         path: '/talkTool/mterialPage',
@@ -280,8 +280,15 @@ export default {
         },
       })
     },
-    // 创建朋友圈任务
-    creatFriend() {},
+    // 企业创建朋友圈任务
+    creatFriend() {
+      this.$router.push({
+        path: '/talkTool/mterialPage',
+        query: {
+          friendtype: 'company',
+        },
+      })
+    },
     clickVideo(id) {
       var video1 = document.getElementById(id)
       if (video1.requestFullscreen) {
@@ -782,7 +789,7 @@ export default {
           }
           span:nth-child(2) {
             display: inline-block;
-            margin-top: 6px;
+            margin-top: 8px;
             font-size: 24px;
             color: #b3b3b3;
           }

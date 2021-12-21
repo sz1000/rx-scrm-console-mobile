@@ -7,7 +7,7 @@
       </div>
       <span class="textTitle">发表朋友圈</span>
       <div class="send" @click="sendMessage">
-        <span>发表</span>
+        <span>通知成员发表</span>
       </div>
     </div>
     <div class="explan" v-show="fnClose">
@@ -408,7 +408,7 @@ export default {
     //     this.$message.error(
     //       "上传头像图片只能是 JPG,PNG,JEPG 格式，大小不能超过 2MB!"
     //     );
-    //   }  
+    //   }
     //   // console.log(isJPG, isLt2M)
     //   return isJPG && isLt2M;
     // },
@@ -555,7 +555,8 @@ export default {
       text-align: center;
     }
     .send {
-      width: 114px;
+      // width: 114px;
+      padding: 0 24px;
       height: 56px;
       background: #4168f6;
       border-radius: 28px;
