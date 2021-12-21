@@ -90,3 +90,11 @@ export function queryFollowMsgPage(data) {
         data: data,
     })
 }
+// 获取mediaid
+export function uploadTemporaryMaterial(data) {
+    return request({
+        url: CustomerService + '/RedisMaterial/uploadTemporaryMaterial',
+        method: 'post',
+        data: data,
+    })
+}

@@ -8,10 +8,14 @@
         </div>
         <span class="textTitle">从素材库选择</span>
       </div>
+      <div class="material-tab">
+        <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人素材库</div>
+        <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业素材库</div>
+      </div>
       <ul class="header-nav">
-        <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
-        <li @click="changeNav(2)" :class="{active: type == 2}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
-        <li @click="changeNav(3)" :class="{active: type == 3}"><span>营销海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
+        <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章</span></li>
+        <li @click="changeNav(2)" :class="{active: type == 2}"><span>销售文件</span></li>
+        <li @click="changeNav(3)" :class="{active: type == 3}"><span>营销海报</span></li>
       </ul>
       <search ref="search" :type="type"></search>
       <ul class="list-box">
@@ -21,7 +25,9 @@
               <div class="flex_data right" @click="preview(i,indexp)">
                 <div class="right">
                   <div class="img">
-                    <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
+                    <span><img
+                           :src="i.cover ? i.cover : 'https://jizhoucrm.oss-cn-shanghai.aliyuncs.com/verbalTrick/verbal/image/20211221113202895032/default_article.png'"
+                           alt=""></span>
                   </div>
                   <div class="des">
                     <div>
@@ -118,6 +124,7 @@
 </template>
 <script>
 import { ArticleList, SaleDocumentList, PosterList } from '../../config/api'
+import { uploadTemporaryMaterial } from '../../api/myHome'
 import {
   sendChatMessage,
   byteConvert,
@@ -138,9 +145,10 @@ export default {
   name: 'materialTemplate',
   data() {
     return {
+      tab: 1,
       type: 1,
       centquer: {},
-      indexps: 1000000,
+      indexps: null,
       articleList: [],
       totalArticle: 0,
       articleListPage: 1,
@@ -197,6 +205,12 @@ export default {
     goBack() {
       this.$router.go(-1)
     },
+    tabClick(val) {
+      this.tab = val
+      this.type = 1
+      this.initPage(this.type)
+      this.getList()
+    },
     cancel() {
       this.$router.go(-1)
       //         this.$router.push({
@@ -208,27 +222,37 @@ export default {
       // })
     },
     determine() {
-      // console.log('000')
-      this.$router.push({
-        path: '/talkTool/circleFriend',
-        query: {
-          datalist: this.centquer,
-          tablable: 'material',
-        },
-      })
-      // let type = this.$route.query.friendtype
-      // if (type == 'person') {
-      //   this.sendChart()
-      // } else if (type == 'compony') {
-      // } else {
-      //   this.$router.push({
-      //     path: '/talkTool/circleFriend',
-      //     query: {
-      //       datalist: this.centquer,
-      //       tablable: 'material',
-      //     },
-      //   })
-      // }
+      console.log(this.centquer, 'ppppppp----------')
+      // this.$router.push({
+      //   path: '/talkTool/circleFriend',
+      //   query: {
+      //     datalist: this.centquer,
+      //     tablable: 'material',
+      //   },
+      // })
+      let { friendtype } = this.$route.query
+      if (Object.keys(this.centquer).length > 0) {
+        if (friendtype == 'person') {
+          // this.sendChart()
+          this.getMediaId(this.centquer)
+        } else if (friendtype == 'compony') {
+        } else {
+          this.$router.push({
+            path: '/talkTool/circleFriend',
+            query: {
+              datalist: this.centquer,
+              tablable: 'material',
+            },
+          })
+        }
+      }
+    },
+    getMediaId(val) {
+      let params = {
+        fileType: 'image',
+        fileUrl: val.cover ? val.cover : getFileDefaultCover(val.name),
+      }
+      uploadTemporaryMaterial().then((res) => {})
     },
     sendChart() {
       this.$network
@@ -244,7 +268,6 @@ export default {
             nonceStr: res.data.nonceStr,
             signature: res.data.signature,
             jsApiList: [
-              'sendChatMessage',
               'getContext',
               'invoke',
               'shareToExternalContact',
@@ -266,7 +289,6 @@ export default {
                 nonceStr: res.data.agent_config_data.noncestr,
                 signature: res.data.agent_config_data.signature,
                 jsApiList: [
-                  'sendChatMessage',
                   'getContext',
                   'invoke',
                   'shareToExternalContact',
@@ -277,7 +299,6 @@ export default {
                   'openExistedChatWithMsg',
                 ],
               },
-
               function (res) {
                 wx.invoke(
                   'shareToExternalMoments',
@@ -299,7 +320,7 @@ export default {
     },
 
     preview(item, val) {
-      console.log(item, val)
+      // console.log(item, val)
       this.centquer = item
       this.indexps = val
       this.$set(this.centquer, 'tab', this.type)
@@ -310,7 +331,6 @@ export default {
       //     userNo: this.userNo,
       //     data: item
       // }
-
       // this.$nextTick(() => {
       //     this.$refs.contentPreview.show(obj)
       // })
@@ -378,18 +398,25 @@ export default {
       this.getList()
     },
     getList(title) {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-        loadingType: 'spinner',
-      })
+      if (
+        (this.type == 1 && this.articleListPage == 1) ||
+        (this.type == 2 && this.saleListPage == 1) ||
+        (this.type == 3 && this.posterListPage == 1)
+      ) {
+        this.$toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 0,
+          loadingType: 'spinner',
+        })
+      }
 
       let ApiOpts = ArticleList
 
       let params = {
         pageSize: 10,
         corpId: this.corpId,
+        isPersonal: this.tab == 1 ? true : false,
       }
 
       if (this.type == 1) {
@@ -515,7 +542,7 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .material-template {
-//   height: 100%;
+  //   height: 100%;
   .but_warp {
     padding-left: 24px;
     width: 750px;
@@ -585,16 +612,19 @@ export default {
   }
   .header-nav {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
     width: 100%;
     height: 100px;
     border-bottom: 1px solid @lineColor;
     li {
-      display: flex;
-      align-items: center;
-      flex: 1;
-      height: 100%;
-      line-height: 100px;
+      width: 212px;
+      height: 64px;
+      background: #f7f7f7;
+      border-radius: 32px;
       text-align: center;
+      line-height: 64px;
       span {
         height: 100%;
         margin: 0 auto;
@@ -603,9 +633,38 @@ export default {
       }
     }
     .active {
+      background: @white;
+      border: 1px solid @main;
       span {
         color: @main;
-        border-bottom: 4px solid @main;
+      }
+    }
+  }
+  .material-tab {
+    height: 88px;
+    line-height: 88px;
+    display: flex;
+    font-size: 28px;
+    justify-content: space-between;
+    border-bottom: 1px solid #e6e6e6;
+    .nomalText {
+      color: #838a9d;
+      width: 375px;
+      text-align: center;
+    }
+    .active {
+      color: #3c4353;
+      font-weight: bold;
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 43%;
+        width: 56px;
+        height: 8px;
+        background: #4168f6;
+        border-radius: 4px;
       }
     }
   }

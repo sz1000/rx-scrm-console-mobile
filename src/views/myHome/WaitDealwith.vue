@@ -8,36 +8,32 @@
       <span class="textTitle">企微朋友圈</span>
     </div>
     <div class="nav_tab">
-      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">企微朋友圈</div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">群发</div>
+      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人发表</div>
+      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业发表</div>
     </div>
-    <div class="tips_box">
-      <img src="../../images/ico_warning@2x.png" alt="">
-      <span v-if="tab ==1 ">请前往企微聊天面板-客户朋友圈进行发表</span>
-      <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
-    </div>
-    <div class="searchInput">
-      <div class="select_date" @click="showPicker=true">
-        <img src="../../images/date_pick.png" alt="">
-        <div v-if="startDate&&endDate" class="time_sty">
-          <span>{{startDate}}</span>
-          至
-          <span>{{endDate}}</span>
-        </div>
-        <div v-else class="time_sty">
-          <span>开始时间</span>
-          -
-          <span>结束时间</span>
-        </div>
-      </div>
-      <div class="select_box" @click="filterCard">
-        <span v-show="tab==1">{{tabName == 1 ? '已发表' :'未发表'}}</span>
-        <span v-show="tab==2">{{tabName == 1 ? '已发送' :'未发送'}}</span>
-        <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
-      </div>
-    </div>
-    <div class="total_box">共<span>{{cardList.length}}</span>条</div>
     <section v-if="tab==1">
+      <div class="searchInput">
+        <div class="search_title">
+          <van-field v-model="searchValue" left-icon="search" placeholder="标题/内容" />
+        </div>
+        <div class="select_date" @click="showPicker=true">
+          <img src="../../images/date_pick.png" alt="">
+          <div v-if="startDate&&endDate" class="time_sty">
+            <span>{{startDate}}</span>
+            至
+            <span>{{endDate}}</span>
+          </div>
+          <div v-else class="time_sty">
+            <span>开始时间</span>
+            -
+            <span>结束时间</span>
+          </div>
+        </div>
+      </div>
+      <div class="friend_warp">
+        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈</div>
+        <div class="published_btn" @click="shareToMoments">发表朋友圈</div>
+      </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
           <!-- 图片 -->
@@ -57,14 +53,13 @@
             <span class="text_image">{{item.content}}</span>
           </div>
           <!-- 链接 -->
-          <div class="top_content top_content_link" v-if="item.msgtype == 'link' || item.msgtype == 'pdf'">
+          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
               <img src="../../images/article.png" alt="">
               <div class="lint_url">{{item.urls[0]}}</div>
             </div>
           </div>
-          <!-- 文件 -->
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
@@ -78,24 +73,62 @@
       </div>
     </section>
     <section v-if="tab==2">
+      <div class="tips_box">
+        <img src="../../images/ico_warning@2x.png" alt="">
+        <span v-if="tab ==1 ">请前往企微聊天面板-客户朋友圈进行发表</span>
+        <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
+      </div>
+      <div class="search_company">
+        <van-field v-model="companyValue" left-icon="search" placeholder="标题/内容" />
+      </div>
+      <div class="searchInput search_tab2">
+        <div class="select_date" @click="showPicker=true">
+          <img src="../../images/date_pick.png" alt="">
+          <div v-if="startDate&&endDate" class="time_sty">
+            <span>{{startDate}}</span>
+            至
+            <span>{{endDate}}</span>
+          </div>
+          <div v-else class="time_sty">
+            <span>开始时间</span>
+            -
+            <span>结束时间</span>
+          </div>
+        </div>
+        <div class="select_box" @click="filterCard">
+          <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
+          <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
+        </div>
+      </div>
+      <div class="friend_warp">
+        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
+        <div class="published_btn" @click="creatFriend">创建朋友圈任务</div>
+      </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index'>
-          <!-- 链接 素材库-->
-          <div class="top_content_link top_content" v-if="Object.keys(item.sendContent).length > 0">
-            <p>{{item.massContent}}</p>
-            <div class="link_warp" v-if="item.sendContent && item.sendContent.value">
-              <img :src="item.sendContent.value[0].picurl" alt="" v-if="item.sendContent.value[0].picurl" />
-              <img src="../../images/article.png" alt="" v-else />
-              <div class="lint_url">{{item.sendContent.value[0].url}}</div>
-            </div>
+          <!-- 图片 -->
+          <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length>0">
+            <img :src="item.urls[0]" alt="" v-if="item.urls" />
+            <span>{{item.content}}</span>
           </div>
-          <div class="top_content_link top_content" v-if="Object.keys(item.sendContent).length == 0">
-            <p>{{item.massContent}}</p>
-            <!-- <div class="link_warp">
-              <img :src="item.sendContent.value[0].picurl" alt="" v-if="item.sendContent.value[0].picurl" />
-              <img src="../../images/article.png" alt="" v-else />
-              <div class="lint_url">{{item.sendContent.value[0].url}}</div>
-            </div> -->
+          <!-- 视频 -->
+          <div class="top_content" v-if="item.msgtype == 'video'">
+            <div class="video_warp" @click="clickVideo('videoPlay' + index)">
+              <video :id="'videoPlay' + index" preload='auto' poster="../../images/videosq.png" :src="item.urls[0]" v-if="item.urls"></video>
+            </div>
+            <span>{{item.content}}</span>
+          </div>
+          <!-- 文本 -->
+          <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length == 0">
+            <span class="text_image">{{item.content}}</span>
+          </div>
+          <!-- 链接 -->
+          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
+            <p>{{item.content}}</p>
+            <div class="link_warp">
+              <img src="../../images/article.png" alt="">
+              <div class="lint_url">{{item.urls[0]}}</div>
+            </div>
           </div>
           <div class="bot_content">
             <span>{{item.createTime}}</span>
@@ -104,6 +137,19 @@
               <!-- <img src="../../images/ditu.png" alt=""> -->
               <span class="user_name">{{item.name}}</span>
               <span v-show="item.depId"> -{{item.depId}}</span>
+            </div>
+          </div>
+          <div class="no_publish" @click="fnShowPublish" v-if="!tabName">
+            <div class="left">
+              <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userList.slice(0,3)" :key="itemChi.id" v-show="itemChi.avatar">
+              <div class="text_name" v-for="(itemChi,index) in item.userList.slice(0,3)" :key="index">
+                <span>{{itemChi.name}}</span>
+                <span :class="'a'+index">、</span>
+              </div>
+              <p class="color73">等<span class="color26 font24"> {{item.userList.length}} </span>人未发表</p>
+            </div>
+            <div class="right">
+              <van-icon name="arrow" />
             </div>
           </div>
         </div>
@@ -119,6 +165,18 @@
     <div class="filter_box">
       <van-action-sheet v-model="showFilter" :actions="actions" cancel-text="取消" close-on-click-action @select='fnSelect' />
     </div>
+    <!-- 未发表弹框 -->
+    <div class="published_dialog">
+      <van-popup v-model="showPubish" closeable position="bottom" :style="{ height: '75%' }" round get-container=".wait_warp">
+        <div class="title_popup">朋友圈发表情况</div>
+        <div class="popup_content">
+          <div class="user_text">
+            <span>全部员工</span>
+            <span>({{popupList.length}})</span>
+          </div>
+        </div>
+      </van-popup>
+    </div>
   </div>
 </template>
 <script>
@@ -130,6 +188,7 @@ export default {
   },
   data() {
     return {
+      type: null,
       showPicker: false,
       minDate: new Date(2010, 5, 15),
       maxDate: new Date(2025, 10, 15),
@@ -137,36 +196,19 @@ export default {
       startDate: '',
       endDate: '',
       tab: this.$route.query.tab,
-      cardList: [
-        // {
-        //   avtar: '',
-        //   name: '哈哈哈哈',
-        //   score: '242',
-        //   phone: '123123213',
-        //   company: '黄金卡号的卡号',
-        //   createTime: '2021-9-12 12:30:20',
-        //   creatBy: '六打包',
-        //   status: 2,
-        //   gender: 1,
-        //   imgs: '',
-        // },
-        // {
-        //   avtar: '',
-        //   name: '哈哈哈哈',
-        //   score: '242',
-        //   phone: '123123213',
-        //   company: '黄金卡号的卡号',
-        //   createTime: '2021-9-12 12:30:20',
-        //   creatBy: '六打包',
-        //   status: 1,
-        //   gender: 2,
-        //   imgs: '',
-        // },
-      ],
+      cardList: [],
       showFilter: false,
-      actions: [],
+      actions: [
+        { name: '未发表', id: 0 },
+        { name: '已发表', id: 1 },
+      ],
       tabName: 0,
       depId: localStorage.getItem('depId'),
+      searchValue: '',
+      companyValue: '',
+      personList: [],
+      showPubish: true,
+      popupList: [],
     }
   },
   computed: {
@@ -179,22 +221,30 @@ export default {
   },
   created() {
     if (this.tab == 1) {
-      // 朋友圈
-      this.getDataList()
-      this.actions = [
-        { name: '未发表', id: 0 },
-        { name: '已发表', id: 1 },
-      ]
+      // 个人发表
+      this.type = 2
     } else {
-      // 群发
-      this.getGroupList()
-      this.actions = [
-        { name: '未发送', id: 0 },
-        { name: '已发送', id: 1 },
-      ]
+      // 企业发表
+      this.type = 1
     }
+    this.getDataList()
   },
   methods: {
+    // 打开未发表弹框
+    fnShowPublish() {
+      this.showPubish = true
+    },
+    // 发送到朋友圈
+    shareToMoments() {
+      this.$router.push({
+        path: '/talkTool/mterialPage',
+        query: {
+          friendtype: 'person',
+        },
+      })
+    },
+    // 创建朋友圈任务
+    creatFriend() {},
     clickVideo(id) {
       var video1 = document.getElementById(id)
       if (video1.requestFullscreen) {
@@ -208,9 +258,13 @@ export default {
         video1.play()
       }
     },
+    filterCard() {
+      this.showFilter = true
+    },
     getDataList() {
       this.cardList = []
       let params = {
+        type: this.type,
         status: this.tabName,
         createTimeSta: this.startDate ? this.startDate + ' 00:00:00' : '',
         createTimeEnd: this.endDate ? this.endDate + ' 23:59:59' : '',
@@ -218,59 +272,40 @@ export default {
 
       friendSend(params).then((res) => {
         this.cardList = res.data
+        // if (this.cardList.length > 0) {
+        //   this.cardList.forEach(item=>{
+
+        //   })
+        // }
       })
     },
-    getGroupList() {
-      this.cardList = []
-      let params = {
-        sendStatus: this.tabName,
-        createStartTime: this.startDate ? this.startDate + ' 00:00:00' : '',
-        createEndTime: this.endDate ? this.endDate + ' 23:59:59' : '',
-      }
-      groupSend(params).then((res) => {
-        let dataList = res.data
-        dataList.forEach((item) => {
-          if (
-            item.sendContent &&
-            item.sendContent.value &&
-            item.sendContent.type !== 'image'
-          ) {
-            item.sendContent.value = JSON.parse(item.sendContent.value)
-          }
-        })
-        this.cardList = dataList
-      })
-    },
+
     goBack() {
       this.$router.go(-1)
     },
     tabClick(v) {
       this.tab = v
+      this.startDate = ''
+      this.endDate = ''
       this.tabName = 0
-      if (v == 1) {
-        this.getDataList()
-        this.actions = [
-          { name: '未发表', id: 0 },
-          { name: '已发表', id: 1 },
-        ]
+      if (this.tab == 1) {
+        // 个人发表
+        this.type = 2
       } else {
-        this.getGroupList()
-        this.actions = [
-          { name: '未发送', id: 0 },
-          { name: '已发送', id: 1 },
-        ]
+        // 企业发表
+        this.type = ''
       }
+      this.getDataList()
     },
-    filterCard() {
-      this.showFilter = true
-    },
+
     fnSelect(v) {
       this.tabName = v.id
       if (this.tab == 1) {
-        this.getDataList()
+        this.type = 2
       } else {
-        this.getGroupList()
+        this.type = ''
       }
+      this.getDataList()
     },
     onConfirm(value, index) {
       console.log(`当前值：${value}, 当前索引：${index}`)
@@ -279,12 +314,12 @@ export default {
       // this.value = this.startDate + '至' + this.endDate
       this.showPicker = false
       if (this.tab == 1) {
-        this.getDataList()
+        this.type = 1
       } else {
-        this.getGroupList()
+        this.type = ''
       }
+      this.getDataList()
     },
-
     onChange(picker, value, index) {
       // console.log(`当前值：${value}, 当前索引：${index}`)
     },
@@ -336,12 +371,25 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    .search_title {
+      .van-cell {
+        padding: 16px;
+        width: 330px;
+        height: 68px;
+        background: #f7f7f7;
+        border-radius: 8px;
+        .van-field__label {
+          width: 0;
+        }
+      }
+    }
     .select_date {
-      padding: 20px 32px;
-      width: 424px;
+      padding: 20px 16px;
+      width: 332px;
       height: 68px;
-      background: #f7f8fa;
-      border-radius: 16px;
+
+      background: #f7f7f7;
+      border-radius: 8px;
       display: flex;
       .time_sty {
         margin-left: 16px;
@@ -357,24 +405,30 @@ export default {
         height: 28px;
       }
     }
-    .select_box {
-      display: flex;
-      align-items: center;
-      font-size: 28px;
-      color: #838a9d;
-      width: 230px;
-      height: 68px;
-      background: #f7f8fa;
-      border-radius: 16px;
-      justify-content: space-between;
-      padding: 0 32px;
-      .rotate {
-        transform: rotate(180deg);
-      }
-    }
+
     img {
       width: 40px;
       height: 40px;
+    }
+  }
+  .search_tab2 {
+    .select_date {
+      width: 432px;
+    }
+  }
+  .select_box {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    color: #838a9d;
+    width: 230px;
+    height: 68px;
+    background: #f7f8fa;
+    border-radius: 16px;
+    justify-content: space-between;
+    padding: 0 32px;
+    .rotate {
+      transform: rotate(180deg);
     }
   }
   .nav_tab {
@@ -405,12 +459,40 @@ export default {
       }
     }
   }
+  .friend_warp {
+    padding: 0 32px;
+    display: flex;
+    line-height: 64px;
+    justify-content: space-between;
+    border-bottom: 1px solid #e6e6e6;
+    .total_box {
+      padding-bottom: 18px;
+      // text-align: right;
+      color: #838a9d;
+      font-size: 24px;
+      span {
+        display: inline-block;
+        margin: 0 8px;
+        font-size: 28px;
+        color: #3c4353;
+      }
+    }
+    .published_btn {
+      width: 220px;
+      height: 64px;
+      background: #4168f6;
+      border-radius: 32px;
+      color: #fff;
+      font-size: 28px;
+      text-align: center;
+    }
+  }
   .tips_box {
     display: flex;
     background: #fffcea;
     border-radius: 16px;
     height: 72px;
-    margin: 16px 32px;
+    margin: 32px;
     padding: 20px 32px;
     align-items: center;
     span {
@@ -423,17 +505,17 @@ export default {
       margin-right: 24px;
     }
   }
-  .total_box {
-    padding: 0 32px 18px;
-    // text-align: right;
-    color: #838a9d;
-    font-size: 24px;
-    border-bottom: 1px solid #e6e6e6;
-    span {
-      display: inline-block;
-      margin: 0 8px;
-      font-size: 28px;
-      color: #3c4353;
+  .search_company {
+    .van-cell {
+      padding: 16px;
+      width: 686px;
+      height: 68px;
+      background: #f7f7f7;
+      border-radius: 8px;
+      margin: 0 auto;
+      .van-field__label {
+        width: 0;
+      }
     }
   }
   .custom_content {
@@ -530,11 +612,68 @@ export default {
           }
         }
       }
+      .no_publish {
+        padding: 32px 0 0;
+        margin-top: 32px;
+        border-top: 1px solid #e6e6e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .left {
+          display: flex;
+          align-items: center;
+          .img {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            border-radius: 50%;
+            &:nth-child(2) {
+              transform: translateX(-25%);
+            }
+            &:nth-child(3) {
+              transform: translateX(-50%);
+            }
+          }
+          .text_name {
+            font-size: 24px;
+            color: #737373;
+          }
+          .color73 {
+            color: #737373;
+            .color26 {
+              color: #262626;
+            }
+
+            .font24 {
+              font-size: 24px;
+            }
+          }
+          .a2 {
+            display: none;
+          }
+        }
+      }
     }
   }
   .filter_box {
     .van-action-sheet__item {
       border-bottom: 1px solid #e6e6e6;
+    }
+  }
+
+  .van-popup {
+    padding: 32px 32px 0;
+    .title_popup {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 600;
+      color: #262626;
+    }
+    .popup_content {
+    }
+    /deep/.van-popup__close-icon {
+      color: #262626;
     }
   }
 }
