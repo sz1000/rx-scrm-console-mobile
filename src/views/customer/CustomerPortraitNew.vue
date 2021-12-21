@@ -68,13 +68,15 @@
         <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
         <!-- 商机详情 -->
         <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+        <!-- 同事名片 -->
+        <BusinessCard v-model="dialog_card"></BusinessCard>
         <!-- 申请成为协助人 -->
         <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
     </div>
 </template>
 
 <script>
-import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard } from './components'
+import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,BusinessCard } from './components'
 import { user_getUserName } from '@/api/home'
 import {
     cluecustomer_getClueCustomerByid,
@@ -89,7 +91,7 @@ import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 export default {
     components: {
-        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,
+        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,BusinessCard,
         Opportunities,MessageBox,RemindersBox
     },
     provide() {
@@ -113,6 +115,7 @@ export default {
             dialog_xgj: false,
             dialog_sj: false,
             dialog_xzr: false,
+            dialog_card: true,
             isApply: false,     //是否已经申请成为协助人 且还未通过
 
             applyData: {},
