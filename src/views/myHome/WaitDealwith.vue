@@ -234,7 +234,7 @@ export default {
       searchValue: '',
       companyValue: '',
       personList: [],
-      showPubish: true,
+      showPubish: false,
       popupList: [],
       valPopup: '',
       popupname: 0,
