@@ -114,3 +114,11 @@ export function getUserSendDetail(data) {
         params: data,
     })
 }
+// 弹框借口
+export function friendCircleUserList(data) {
+    return request({
+        url: MaterialService + '/friendCircle/friendCircleUserList',
+        method: 'get',
+        params: data,
+    })
+}
