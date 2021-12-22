@@ -130,7 +130,7 @@
       </div>
         <div class="about_me about_shadow">
         <span>群发任务</span>
-        <div class="reply_text" @click="goToWait(1)">
+        <div class="reply_text" @click="goToWaits(1)"  v-if="length > 0">
           <span>你有群发任务待发送</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
@@ -184,6 +184,7 @@ import {
 } from './echartComponent/index.js'
 import { getMyInfo, getAllCharts,getMBTop10FollowMsgList } from '../../api/myHome'
 import router from '../../router/index.js'
+import { getCustomerMassSend } from '../../api/myHome'
 export default {
   components: {
     CustomAddChart,
@@ -234,12 +235,15 @@ export default {
       nicheTime: [],
       nicheData: {},
       scroll: true,
-      clientList:[]
+      clientList:[],
+      length:"",
     }
   },
   created() {
     this.getData()
     this.client()
+    this.getDataList()
+
   },
   mounted() {
     this.$nextTick(() => {
@@ -247,6 +251,23 @@ export default {
     })
   },
   methods: {
+
+   getDataList() {
+      this.cardList = []
+      let params = {
+        massType: 1,
+        sendStatus: 1,
+      
+      }
+      getCustomerMassSend(params).then((res) => {
+        this.length = res.data.newList.length
+        console.log(this.length,"PPP")
+  
+      })
+
+   },
+
+
        FnToRouter(path) {
       this.$router.push(path)
     },
@@ -539,6 +560,14 @@ export default {
       })
     },
     goToWait(v) {
+      this.$router.push({
+        path: '/waitDealwith',
+        query: {
+          tab: v,
+        },
+      })
+    },
+    goToWaits(v) {
       this.$router.push({
         path: '/groupIndex',
         query: {

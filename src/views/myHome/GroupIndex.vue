@@ -39,17 +39,18 @@
         </div>
       </div>
       <div class="friend_warp">
-        <div class="total_box">共<span class="num">{{cardList.length}}</span>条群发 <span class="num" v-if="SendNum != 0 ">{{SendNum}} <span class="numst"> 人未发送</span></span></div>
-        <div class="published_btn" @click="shareToMoments">客户群发</div>
+        <div class="total_box">共<span class="num">{{cardList.length}}</span>条群发 <span class="num" v-if="tabName == 1">{{SendNum}} <span class="numst"> 人未发送</span></span></div>
+        <div class="published_btn" @click="shareToMoments">创建群发任务</div>
       </div>
       <div class="custom_content">
 
           <div class="card_box" v-for="(item,index) in cardList" :key='index + "t"'>
 
             <div class="warp_list">
+                  <p class="content_mass">{{item.massContent}}</p>
               <!-- 链接 -->
                   <div class="top_content top_content_link" v-for="(el,index) in item.resourcesList" :key="index" v-show="el.type == 1">
-                      <p v-if="el.title">{{el.title}}</p>
+                      <!-- <p v-if="el.title">{{el.title}}</p> -->
                        <div class="link_warp">
                         <img :src="el.picurl" alt="" v-if="el.picurl">
                         <img src="../../images/article.png" alt="" v-else>
@@ -111,13 +112,19 @@
              
             </div>
           </div>
-          <div class="no_publish" @click="fnShowPublish(item)" v-if="item.userchooseList.length > 0">
+          <div class="no_publish" @click="fnShowPublish(item)" v-if="tabName == 1">
               <div class="left">
+                <div class="img_warp">
+
               <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userchooseList" :key="itemChi.id + 'g'">
+                </div>
+                <div class="data_list">
+                  
               <div class="text_name" v-for="(itemChi,indexs) in item.userchooseList" :key="indexs + 'h'">
                 <span>{{itemChi.name}}</span>
                 <span :class="'a'+index">、</span>
               </div>
+                </div>
               <p class="color73">等<span class="color26 font24"> {{item.userchooseList.length}} </span>人未发表</p>
             </div>
             <div class="right">
@@ -154,12 +161,16 @@
         </div>
       </div>
       <div class="friend_warp">
-        <div class="total_box">共<span class="num">{{cardList.length}}</span>条群发 <span class="num" v-if="SendNum != 0 ">{{SendNum}} <span class="numst"> 人未发送</span></span></div>
-        <div class="published_btn" @click="creatFriend">客户群群发</div>
+        <div class="total_box">共<span class="num">{{cardList.length}}</span>条群发 
+        <span class="num" v-if="tabName == 1">{{SendNum}} <span class="numst"> 人未发送</span></span>
+        </div>
+        <div class="published_btn" @click="creatFriend">创建群发任务</div>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='index + "k"'>
            <div class="warp_list">
+             <!--  -->
+             <p class="content_mass">{{item.massContent}}</p>
               <!-- 链接 -->
                   <div class="top_content top_content_link" v-for="(el,index) in item.resourcesList" :key="index" v-show="el.type == 1">
                       <p v-if="el.title">{{el.title}}</p>
@@ -198,12 +209,18 @@
               <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
-       <div class="no_publish" @click="fnShowPublish(item)" v-if="item.userchooseList.length > 0">
+       <div class="no_publish" @click="fnShowPublish(item)" v-if="tabName == 1">
               <div class="left">
+                     <div class="img_warp">
+
               <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userchooseList" :key="itemChi.id + 'g'">
+                </div>
+              <div class="data_list">
+
               <div class="text_name" v-for="(itemChi,indexs) in item.userchooseList" :key="indexs + 'h'">
                 <span>{{itemChi.name}}</span>
                 <span :class="'a'+index">、</span>
+              </div>
               </div>
               <p class="color73">等<span class="color26 font24"> {{item.userchooseList.length}} </span>人未发表</p>
             </div>
@@ -378,6 +395,7 @@ export default {
       }
 
       getCustomerMassSend(params).then((res) => {
+        localStorage.setItem("", res.data.newList.length);
         this.cardList = res.data.newList
         this.SendNum = res.data.noSendNum
         // this.cardList.forEach(item =>{
@@ -676,6 +694,11 @@ export default {
       .warp_list{
         max-height: 320px;
         overflow: auto;
+        .content_mass{
+            overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
       }
       .top_content {
         display: flex;
@@ -777,6 +800,20 @@ export default {
         .left {
           display: flex;
           align-items: center;
+          .img_warp{
+            max-width: 90px;
+            overflow: hidden;
+            display: flex;
+             white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .data_list{
+                max-width: 120px;
+            overflow: hidden;
+            display: flex;
+             white-space: nowrap;
+            text-overflow: ellipsis;
+          }
           .img {
             width: 32px;
             height: 32px;
@@ -793,6 +830,11 @@ export default {
           .text_name {
             font-size: 24px;
             color: #737373;
+              //  max-width: 120px;
+            // overflow: hidden;
+            // display: flex;
+             white-space: nowrap;
+            text-overflow: ellipsis;
           }
           .color73 {
             color: #737373;

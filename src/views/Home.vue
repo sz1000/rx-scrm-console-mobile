@@ -336,9 +336,9 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    // padding: 24px 0px 110px 24px;
-    padding: 40px 32px 0;
-    overflow-y: scroll;
+    padding: 24px 0px 110px 24px;
+    // padding: 40px 32px 0;
+    // overflow-y: scroll;
     scrollbar-width: 0;
     .drainage_warp{
       background: #fff;
