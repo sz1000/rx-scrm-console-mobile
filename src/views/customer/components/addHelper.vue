@@ -137,6 +137,7 @@ export default {
             let params = {
                 clueCustomerNo: this.id,
                 userList: this.oneList,
+                type: this.$route.query.type
             }
             clueCustomerFollowUser_addFollowUser(params).then(res => {
                 if(res.result){
