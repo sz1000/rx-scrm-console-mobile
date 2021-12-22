@@ -1,476 +1,152 @@
 <template>
-  <div class="clueWarp">
-    <div class="headerTitle">
-      <div class="backPage" @click="goBack">
-        <van-icon name="arrow-left" />
-        返回
-      </div>
-      <span class="textTitle">线索</span>
+    <div class="my-customer">
+        <template v-if="!ifShowScreen">
+            <header-title :navList="navList" :navActive="navActive" :showAdd="showAdd"></header-title>
+            <search ref="search" :customerType="customerType"></search>
+
+            <customer-list-box ref="customerListBox" :customerType="customerType" :jurisdictionList="jurisdictionList" :form="form" :searchParam="searchParam"></customer-list-box>
+        </template>
+
+        <screen v-else ref="screen" :customerType="customerType" @hideScreen="hideScreen"></screen>
     </div>
-    <div class="tabMenu">
-      <div class="tabBtn">
-        <span :class="{ active: tabClick == 1 }" class="mycule" @click="myclue(1)">我的线索</span>
-        <span :class="{ active: tabClick == 2 }" class="mycule" @click="myclue(2)">线索公海</span>
-      </div>
-      <span class="addBtn" @click="addCules" v-show="(tabClick == 1 && mylist.some(item=>item.enName =='add' ))">
-        <img src="../../images/icon_add@2x.png" alt="" />
-        新增
-      </span>
-      <span class="addBtn" @click="addCules" v-show="(tabClick == 2 && alllist.some(item=>item.enName =='add' ))">
-        <img src="../../images/icon_add@2x.png" alt="" />
-        新增
-      </span>
-    </div>
-    <div class="searchInput">
-      <input type="text" class="input" v-model="inputValue" placeholder="请输入姓名/公司/手机号" />
-      <span class="searchBtn" @click="inquire">查询</span>
-    </div>
-    <div class="cardWarp">
-      <van-list v-model="loading" :finished="finished" :immediate-check="false" finished-text="没有更多了" @load="onLoad" :offset="20">
-        <div class="topInfo" v-for="(item, index) in cardList" :key="index">
-          <div class="customInfo">
-            <div class="iconName">
-              <img :src="item.avatar" alt="" v-if="item.avatar" />
-              <div class="flag" v-else>{{ item.name.substr(0, 1) }}</div>
-              <div class="nameSex">
-                <span>{{ item.name }}</span>
-                <img src="../../images/icon_female@2x.png" alt="" v-show="item.gender == '2'" />
-                <img src="../../images/man.png" alt="" v-show="item.gender == '1'" />
-              </div>
-            </div>
-            <!-- <div class="detailBtn" @click="deleteCard(item, index)">
-            <van-icon name="delete-o" />
-            删除
-          </div> -->
-          </div>
-          <div class="detailInfo" @click="goDetail(item, index)">
-            <div class="left">
-              <div class="rowStyle">
-                <span>邮箱:</span>
-                <span>{{ item.email }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>来源:</span>
-                <span>{{ item.source }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>职务:</span>
-                <span>{{ item.position }}</span>
-              </div>
-            </div>
-            <div class="right">
-              <div class="rowStyle">
-                <span>手机号码:</span>
-                <span>{{ item.phone }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>企业名称:</span>
-                <span>{{ item.cropFullName }}</span>
-              </div>
-              <div class="rowStyle">
-                <span>所属行业:</span>
-                <span>{{ item.cropSubIndustry }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="tjry">
-            <div class="box">
-              <span class="label">添加人员:</span>
-              <span class="value">{{ item.createBy }}</span>
-            </div>
-            <div class="box1">
-              <span class="label">添加时间:</span>
-              <span class="value">{{
-                formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
-              }}</span>
-            </div>
-          </div>
-        </div>
-      </van-list>
-    </div>
-  </div>
 </template>
 <script>
-import { _throttle, formatDate } from '../../utils/tool'
-import MyMixin from '../../mixins/permissionsList'
-export default {
-  mixins: [MyMixin],
-  data() {
-    return {
-      tabClick: 1,
-      inputValue: '',
-      cardList: [],
-      loading: false,
-      finished: false,
-      page: 1, //请求第几页
-      pageSize: 10, //每页请求的数量
-      total: 0, //总共的数据条数
-      mylist: [],
-      alllist: [],
-    }
-  },
-  watch: {
-    inputValue(val) {
-      if (val == '') {
-        this.getData()
-      }
-    },
-  },
-  created() {
-    this.page = 1
-    this.getData()
-  },
-  mounted() {
-    for (var i in this.expandedKeys) {
-      if (this.expandedKeys[i].enName == 'myClew') {
-        this.mylist = this.expandedKeys[i].childrenList
-        console.log('---this.mylist', this.mylist)
-      } else {
-        this.alllist = this.expandedKeys[i].childrenList
-      }
-    }
-  },
-  methods: {
-    formatDate,
-    onLoad() {
-      this.page++
-      this.getData()
-    },
-    getData() {
-      // console.log(this.tabClick)
-      this.$toast.loading({
-        loadingType: 'spinner',
-        overlay: true,
-        duration: 0,
-      })
-      this.$network
-        .get('/customer-service/m/cluecustomer/getcluecustomerlist', {
-          page: this.page,
-          limit: this.pageSize,
-          type: this.tabClick,
-          allname: this.inputValue,
-        })
-        .then((res) => {
-          this.$toast.clear()
-          // this.cardList = res.data;
-          this.total = res.data.iPage.total
-          this.loading = false
-          let rows = res.data.iPage.records //请求返回当页的列表
-          if (rows == null || rows.length === 0) {
-            this.finished = true
-            return
-          }
-          let newSetArr = this.cardList.concat(rows)
-          this.cardList = this.unique(newSetArr)
-          if (this.cardList.length >= this.total) {
-            this.finished = true
-          } else {
-            this.onLoad()
-          }
-        })
-    },
-    unique(arr) {
-      const res = new Map()
-      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1))
-    },
-    goBack() {
-      this.$router.go(-1)
-      // this.$router.push('/home')
-    },
-    //新增
-    addCules() {
-      // console.log(this.tabClick)
-      localStorage.setItem('type', this.tabClick)
-      this.$router.push('addCules')
-      // this.$router.push({ path: 'addCules', query: { type: this.tabClick } })
-    },
+import MyMixin from '@/mixins/permissionsList'
+import HeaderTitle from '@/components/CustomerManage/headerTitle'
+import Search from '@/components/CustomerManage/search'
+import CustomerListBox from '@/components/CustomerManage/customerListBox'
+import Screen from '@/components/CustomerManage/screen'
+import { mapActions } from 'vuex'
 
-    //列表页面
-    myclue(v) {
-      console.log(v)
-      this.tabClick = v
-      this.cardList = []
-      this.page = 1
-      this.inputValue = ''
-      this.getData()
+export default {
+    mixins: [MyMixin],
+    data() {
+        return {
+            customerType: '1', // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            ifShowScreen: false,
+            navList: [{name: '我的线索', code: 'myClues'}, {name: '线索公海', code: 'cluesSea'}],
+            navActive: 'myClues',
+
+            form: {}, // 搜索筛选条件表单
+            searchParam: '', // 搜索框输入的内容
+            jurisdictionList: {}, // 按钮权限列表
+        }
     },
-    inquire: _throttle(function () {
-      this.page = 1
-      this.cardList = []
-      this.getData()
-    }, 3000),
-    deleteCard(item, index) {
-      this.$dialog
-        .confirm({
-          title: '温馨提示',
-          message: '删除后将不可恢复，是否确认删除？',
-          className: 'deleteBtn',
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          messageAlign: 'left',
-        })
-        .then(() => {
-          // on confirm
-        })
-        .catch(() => {
-          // on cancel
+    computed: {
+        showAdd() { // 是否显示新增按钮
+            return this.customerType == '1' && this.jurisdictionList.myClew && this.jurisdictionList.myClew.some(item => item.enName == 'add')
+        }
+    },
+    created() {
+        this.getCorpId()
+        this.$nextTick(() => {
+            this.getJurisdictionList()
+            this.$refs.customerListBox.getList()
         })
     },
-    goDetail(item, index) {
-      // console.log(item)
-      localStorage.setItem('detail', JSON.stringify(item))
-      if (this.tabClick == 1) {
-        this.$router.push({
-          path: 'detailCules',
-          query: { type: this.tabClick, mylist: JSON.stringify(this.mylist) },
-        })
-      } else if (this.tabClick == 2) {
-        this.$router.push({
-          path: 'CluesSeas',
-          query: { type: this.tabClick, alllist: JSON.stringify(this.alllist) },
-        })
-      }
+    provide() {
+        return {
+            goBack: this.goBack,
+            changeNav: this.changeNav,
+            doAdd: this.doAdd,
+            checkTable: this.checkTable,
+            showScreen: this.showScreen,
+        }
     },
-  },
+    methods: {
+        ...mapActions(["getCorpId"]),
+        // 获取按钮权限列表
+        getJurisdictionList() {
+            for (let i in this.expandedKeys) {
+                this.jurisdictionList[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
+            }
+            console.log('权限列表: ', this.jurisdictionList)
+        },
+        changeNav(code, type) {
+            if (code) {
+                this.navActive = code
+            } else {
+                switch(type) {
+                    case 0:
+                        this.navActive = 'myClues'
+                        break;
+                    case 1:
+                        this.navActive = 'cluesSea'
+                        break;
+                }
+            }
+
+            if (this.navActive == 'myClues') {
+                // 我的线索
+                this.customerType = '1'
+            } else if (this.navActive == 'cluesSea') {
+                // 线索公海
+                this.customerType = '2'
+            }
+            this.clearSearch()
+            this.getList()
+        },
+        clearSearch() {
+            this.form = {}
+            this.searchParam = ''
+            this.$nextTick(() => {
+                this.$refs.search.searchText = ''
+            })
+        },
+        getList() {
+            this.$nextTick(() => {
+                this.$refs.customerListBox.initData()
+                if (this.searchParam) {
+                    this.$refs.search.searchText = this.searchParam
+                }
+                this.$refs.customerListBox.getList()
+            })
+        },
+        // 新增客户
+        doAdd() {
+            this.$router.push({ path: '/customerManage/addCustomer', query: { fromType: this.customerType } })
+        },
+        // 搜索
+        checkTable(text) {
+            this.searchParam = text
+            console.log('最终筛选条件：', this.form)
+            this.getList()
+        },
+        goBack() {
+            this.$router.push('/home')
+        },
+        // 显示筛选面板
+        showScreen() {
+            this.ifShowScreen = true
+            this.$nextTick(() => {
+                this.$refs.screen.show(this.form)
+            })
+        },
+        hideScreen(data) {
+            const { optNum, params } = data
+            
+            if (optNum == 1 || optNum == 2) {
+                this.form = params
+            } else {
+                this.form = this.form ? this.form : params
+            }
+            this.ifShowScreen = false
+            this.checkTable(this.searchParam)
+        },    
+    },
+    components: {
+        HeaderTitle,
+        Search,
+        CustomerListBox,
+        Screen
+    },
 }
 </script>
 <style lang="less" scoped>
-.Clues {
-}
-.clueWarp {
-  height: 100%;
-  padding-top: 87px;
-  .headerTitle {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    z-index: 10;
-    width: 750px;
-    transform: translateX(-50%);
-    cursor: pointer;
-    background: #fff;
-    padding: 0 24px;
-    font-weight: 600;
-    display: flex;
-    height: 87px;
-    line-height: 87px;
-    font-size: 28px;
-    color: #3c4353;
-    border-top: 1px solid #f0f2f7;
-    border-bottom: 1px solid #f0f2f7;
-    .backPage {
-      width: 150px;
-      .van-icon {
-        vertical-align: -10%;
-        width: 28px;
-        height: 28px;
-      }
-    }
-    .textTitle {
-      flex: 1;
-      display: inline-block;
-      padding-left: 150px;
-    }
-  }
-  .tabMenu {
-    background: #fff;
-    padding: 0 24px;
-    box-sizing: border-box;
-    height: 115px;
-    font-size: 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #f0f2f7;
-    span {
-      display: inline-block;
-    }
-    .addBtn {
-      width: 124px;
-      height: 68px;
-      background: #ffffff;
-      border-radius: 6px;
-      border: 2px solid #d9dae4;
-      text-align: center;
-      line-height: 68px;
-      img {
-        display: inline-block;
-        width: 28px;
-        height: 28px;
-        vertical-align: -4%;
-      }
-    }
-    .tabBtn {
-      .mycule {
-        margin-right: 32px;
-      }
-      .active {
-        color: #4168f6;
-        position: relative;
-        &::after {
-          content: '';
-          width: 112px;
-          height: 4px;
-          background: #4168f6;
-          position: absolute;
-          bottom: -40px;
-          left: 0;
-        }
-      }
-    }
-  }
-  .searchInput {
-    background: #fff;
-    padding: 24px 24px;
-    .input {
-      width: 582px;
-      height: 80px;
-      border-radius: 8px;
-      border: 2px solid #d9dae4;
-      font-size: 28px;
-      padding-left: 24px;
-      box-sizing: border-box;
-    }
-    .searchBtn {
-      display: inline-block;
-      width: 104px;
-      height: 80px;
-      background: #4168f6;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 28px;
-      text-align: center;
-      line-height: 80px;
-      margin-left: 16px;
-    }
-  }
-  .cardWarp {
-    .topInfo {
-      margin-top: 24px;
-      height: 400px;
-      background: #fff;
-      padding: 24px 24px 0;
-      .customInfo {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .iconName {
-          display: flex;
-          img {
-            width: 88px;
-            height: 88px;
-          }
-          .flag {
-            width: 88px;
-            height: 88px;
-            background: #4168f6;
-            border-radius: 12px;
-            text-align: center;
-            line-height: 88px;
-            color: #fff;
-            font-size: 35px;
-          }
-          .nameSex {
-            margin-left: 16px;
-            span:nth-child(1) {
-              font-size: 28px;
-              font-weight: 600;
-            }
-            span:nth-child(2) {
-              font-size: 24px;
-              color: #ffb020;
-            }
-            span {
-              display: inline-block;
-            }
-            img {
-              margin-top: 21px;
-              width: 28px;
-              height: 28px;
-            }
-          }
-        }
-        .detailBtn {
-          font-size: 28px;
-          color: #838a9d;
-          .van-icon {
-            vertical-align: -11%;
-            width: 28px;
-            height: 28px;
-          }
-        }
-      }
-      .detailInfo {
-        display: flex;
-        margin-top: 21px;
-        .left,
-        .right {
-          width: 50%;
-          .rowStyle {
-            line-height: 40px;
-            font-size: 28px;
-            margin-bottom: 24px;
-            display: flex;
-            span {
-              display: inline-block;
-            }
-            span:nth-child(1) {
-              width: 84px;
-              color: #838a9d;
-              overflow: hidden;
-            }
-            span:nth-child(2) {
-              flex: 1;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              white-space: nowrap;
-              color: #3c4353;
-              font-weight: 400;
-            }
-          }
-        }
-        .right {
-          margin-left: 19px;
-          .rowStyle {
-            span:nth-child(1) {
-              width: 140px;
-            }
-          }
-        }
-      }
-      .tjry {
-        height: 87px;
-        border-top: 1px solid #f0f2f7;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 28px;
-        span {
-          display: inline-block;
-        }
-        .label {
-          width: 200px;
-          color: #838a9d;
-        }
-        .value {
-          width: 100%;
-          color: #3c4353;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        .box {
-          display: flex;
-          width: 50%;
-        }
-        .box1 {
-          display: flex;
-          width: 50%;
-          line-height: 87px;
-          margin-left: 29px;
-        }
-      }
-    }
-  }
+@import url('../../styles/color');
+.my-customer {
+    height: 100%;
+    min-height: 100vh;
+    background-color: @white;
 }
 </style>

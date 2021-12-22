@@ -44,6 +44,7 @@ export default {
     padding: 0 36px;
     background-color: @white;
     text-align: center;
+    z-index: 9;
     position: relative;
     left: 50%;
     transform: translateX(-50%);

@@ -1,105 +1,114 @@
 <template>
-    <div class="customer_wrap">
-        <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-        <TopCard :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
-        <div class="nav_box">
-            <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
-        </div>
-        <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
-            <!-- 客户动态 -->
-            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
-            <!-- 商机 -->
-            <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
-            <!-- 群聊 -->
-            <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
-            <!-- 附件 -->
-            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
-        </div>
-        <!-- 写跟进 -->
-        <div class="operation-box">
-            <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
-                <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+    <div class="custom-detail">
+        <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
+        <div class="customer_wrap">
+            <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
+            <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+            <div class="nav_box">
+                <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
             </div>
-        </div>
-        
-        <!-- 协助人消息输入框 -->
-        <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
-        <!-- 协助人选择弹窗 -->
-        <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
-        <!-- 群成员列表 -->
-        <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
-            <div class="dialog_wrap">
-                <div class="dialog_header">
-                    <div class="title">群成员列表</div>
-                    <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
-                    <div class="total_box">
-                        <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
-                        <div class="btn" @click="toGroupDetail">
-                            <span class="a">群聊详情</span>
-                            <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+            <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
+                <!-- 客户动态 -->
+                <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+                <!-- 商机 -->
+                <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
+                <!-- 群聊 -->
+                <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
+                <!-- 附件 -->
+                <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+            </div>
+            <!-- 打开操作按钮弹窗面板 -->
+            <div class="operation-box">
+                <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
+                    <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+                </div>
+            </div>
+            
+            <!-- 协助人消息输入框 -->
+            <message-box v-if="(fromType == 1 || fromType == 3) && navActive == 'dynamics'" ref="messageBox"></message-box>
+            <!-- 协助人选择弹窗 -->
+            <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
+            <!-- 群成员列表 -->
+            <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
+                <div class="dialog_wrap">
+                    <div class="dialog_header">
+                        <div class="title">群成员列表</div>
+                        <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
+                        <div class="total_box">
+                            <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
+                            <div class="btn" @click="toGroupDetail">
+                                <span class="a">群聊详情</span>
+                                <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="dialog_content">
-                    <div class="list">
-                        <div class="li" v-for="(item,index) in groupUserList" :key="index">
-                            <!-- <div class="avatar"></div> -->
-                            <img class="avatar" :src="item.avatar | $setAvatar" alt="">
-                            <div class="val">
-                                <div class="tit_box">
-                                    <div class="tit">{{item.name}}</div>
-                                    <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
-                                    <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
-                                    <div class="tag red" v-if="item.admintype == 1">群主</div>
-                                    <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
-                                    <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
-                                    <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                    <div class="dialog_content">
+                        <div class="list">
+                            <div class="li" v-for="(item,index) in groupUserList" :key="index">
+                                <!-- <div class="avatar"></div> -->
+                                <img class="avatar" :src="item.avatar | $setAvatar" alt="">
+                                <div class="val">
+                                    <div class="tit_box">
+                                        <div class="tit">{{item.name}}</div>
+                                        <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
+                                        <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
+                                        <div class="tag red" v-if="item.admintype == 1">群主</div>
+                                        <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
+                                        <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
+                                        <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                                    </div>
+                                    <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
+                                    <!-- <div class="opera_right">
+                                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                                    </div> -->
                                 </div>
-                                <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
-                                <!-- <div class="opera_right">
-                                    <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </van-popup>
-        <!-- 消息回复弹窗 -->
-        <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
-        <!-- 写跟进弹窗 -->
-        <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
-        <!-- 商机详情 -->
-        <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
-        <!-- 操作按钮弹窗面板 -->
-        <operation-btn-box ref="operationBtnBox" :fromType="fromType" @doAction="doAction"></operation-btn-box>
-        <!-- 放弃警告 -->
-        <give-up-customer ref="giveUpCustomer" :fromType="fromType" @doGiveUp="doGiveUp"></give-up-customer>
-        <!-- 变更负责人 -->
-        <change-director ref="changeDirector" :fromType="fromType"></change-director>
+            </van-popup>
+            <!-- 消息回复弹窗 -->
+            <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
+            <!-- 写跟进弹窗 -->
+            <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
+            <!-- 商机详情 -->
+            <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+            <!-- 操作按钮弹窗面板 -->
+            <operation-btn-box ref="operationBtnBox" :fromType="fromType" :jurisdictionList="jurisdictionList" :isWcCus="customerInfo && customerInfo.isWcCus" @doAction="doAction"></operation-btn-box>
+            <!-- 放弃或领取或删除 -->
+            <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
+            <!-- 变更负责人 -->
+            <change-director ref="changeDirector" :fromType="fromType"></change-director>
+        </div>
     </div>
 </template>
 
 <script>
 import { Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
+
+import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import {
     cluecustomer_getClueCustomerByid,
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
-    clueCustomerFollowUser_addCommentInfo,  //添加评论回复
+    clueCustomerFollowUser_addCommentInfo, //添加评论回复
     clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
-    cluecustomer_addMessage,    //写跟进
+    cluecustomer_addMessage, //写跟进
     cluecustomer_giveUpType, // 放弃
+    cluecustomer_getclue, // 领取
+    cluecustomer_delClueCustomer, // 删除
 } from '@/api/customer'
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
-import GiveUpCustomer from '@/components/CustomerManage/dialog/giveupCustomer'
+import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
+
 export default {
     components: {
+        HeaderTitle,
         Dynamics,
         Group,
         Enclosure,
@@ -109,7 +118,7 @@ export default {
         Opportunities,
         MessageBox,
         RemindersBox,
-        GiveUpCustomer,
+        GiveUpOrReceive,
         ChangeDirector,
         OperationBtnBox
     },
@@ -121,11 +130,13 @@ export default {
             showRemindersBox: this.showRemindersBox,
             messageNotificatio: this.messageNotificatio,
             getPeople: this.getPeople,
+            goBack: this.goBack
         }
     },
     data(){
         return {
-            fromType: this.$route.query.fromType,
+            fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            jurisdictionList: JSON.parse(this.$route.query.jurisdictionList), // 按钮权限列表
             id: this.$route.query.id,
             code: this.$route.query.userNo,
             num: this.$route.query.num,
@@ -134,13 +145,13 @@ export default {
             dialog_xx: false,
             dialog_xgj: false,
             dialog_sj: false,
+            optionType: '', // 操作类型
+            popContent: {
+                title: '',
+                btnList: [],
+                desList: []
+            },
 
-            navList: [
-                { name: '客户动态',code: 'dynamics'},
-                { name: '商机',code: 'niche',num: 0},
-                { name: '客户群',code: 'group',num: 0},
-                { name: '附件',code: 'enclosure',num: 0},
-            ],
             navActive: 'dynamics',
 
             customerInfo: {},
@@ -163,7 +174,7 @@ export default {
             sendUserInfo: {},
         }
     },
-     computed: {
+    computed: {
         bgY(){
             let y = 0
             if(this.tagList.length == 0){
@@ -179,12 +190,46 @@ export default {
             }
             return y
         },
+        headTitle() {
+            if (this.fromType == 1 || this.fromType == 2) {
+                return '线索画像'
+            }
+            if (this.fromType == 3 || this.fromType == 4) {
+                return '客户画像'
+            }
+            return ''
+        },
+        navList() {
+            if (this.fromType == 1 || this.fromType == 2) {
+                return [
+                    { name: '线索动态', code: 'dynamics'},
+                    { name: '附件', code: 'enclosure', num: 0},
+                ]
+            }
+            if (this.fromType == 3 || this.fromType == 4) {
+                return [
+                    { name: '客户动态', code: 'dynamics'},
+                    { name: '商机', code: 'niche', num: 0},
+                    { name: '客户群', code: 'group', num: 0},
+                    { name: '附件', code: 'enclosure', num: 0},
+                ]
+            }
+            return []
+        },
+    },
+    created() {
+        console.log('权限列表: ', this.jurisdictionList)
     },
     mounted(){
         this.getCustomerDetail()
         this.getUserName()
     },
     methods: {
+        goBack() {
+            let path = this.fromType == 3 || this.fromType == 4 ? '/customerManage/myCustomer' : '/customerManage/clues'
+            
+            this.$router.push({ path })
+        },
         jumpFun(code){      //锚点跳转
             // console.log('code',code,document.querySelector(`#${code}`))
             const returnEle = document.querySelector(`#${code}`);  //productId是将要跳转区域的id
@@ -195,7 +240,7 @@ export default {
         },
         getCustomerDetail(){    //获取客户详情
             cluecustomer_getClueCustomerByid(this.code).then(res => {
-                if(res.result){
+                if (res.result) {
                     let data = res.data
 
                     this.customerInfo = data.clueCustomerVO
@@ -214,6 +259,8 @@ export default {
                     })
 
                     this.getCustomerGroupList()
+                } else {
+                    this.$toast(res.msg)
                 }
             })
         },
@@ -266,32 +313,77 @@ export default {
         },
         // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除）
         doAction(type) {
+            this.optionType = type
             switch (type) {
-                case 'writeFollowUp':    // 写跟进
+                case 'writeFollowUp':    // 写跟进（我的客户、我的线索）
                     this.openDialog('', 'follow')
                     break;
-                case 'changeDirector':    // 变更负责人
-                    this.$refs.changeDirector.show(this.customerInfo.clueCustomerNo)
+                case 'transferCustomer':    // 转客户（我的线索）
+                    this.$router.push({
+                        path: 'turnCustomer',
+                        query: {
+                            fromType: this.fromType,
+                            clueCustomerNo: this.customerInfo.clueCustomerNo,
+                        },
+                    })
                     break;
-                case 'giveUp':   // 放弃
-                    this.$refs.giveUpCustomer.show()
+                case 'giveUp':   // 放弃（我的客户、我的线索）
+                    this.popContent.title = '放弃警告'
+                    this.popContent.btnList = ['是', '否']
+                    this.popContent.desList = ['是否放弃返回公海？', '* 放弃到公海后，此客户数据将属于公共资源，原归属人员不能再维护跟进和更新此客户数据。']
+                    this.$refs.giveUpOrReceive.show()
+                    break;
+                case 'changeDirector':    // 变更负责人（我的客户、我的线索）
+                case 'distribution':    // 分配（客户公海、线索公海）
+                    this.$refs.changeDirector.show(this.customerInfo.clueCustomerNo, type)
+                    break;
+                case 'receive':    // 领取（客户公海、线索公海）
+                    this.popContent.title = '领取提示'
+                    this.popContent.desList = [ this.fromType == 4 ? '是否确认领取所选择的客户？' : '是否确认领取所选择的线索？', '确认申领该条资源吗？']
+                    this.$refs.giveUpOrReceive.show()
+                    break;
+                case 'delete':    // 删除（ 客户没有删除，我的线索有删除（非微信好友可删除：isWcCus 为 1 即为好友））
+                    this.popContent.title = '温馨提示'
+                    this.popContent.btnList = ['确定', '取消']
+                    this.popContent.desList = [ '是否确认删除并返回？']
+                    this.$refs.giveUpOrReceive.show()
                     break;
                 default:
                     break;
             }
             this.$refs.operationBtnBox.hide()
         },
-        // 放弃
-        doGiveUp() {
+        // 操作确认
+        doNextOption() {
+            let ApiOpts = null, tips = ''
+
+            if (this.optionType == 'giveUp') {
+                // 放弃
+                ApiOpts = cluecustomer_giveUpType
+                tips = '操作成功'
+            } else if (this.optionType == 'receive') {
+                // 领取
+                ApiOpts = cluecustomer_getclue
+                tips = '领取成功'
+            } else if (this.optionType == 'delete') {
+                // 删除
+                ApiOpts = cluecustomer_delClueCustomer
+                tips = '已删除'
+            }
+
             let params = {
                 clueCustomerNo: this.customerInfo.clueCustomerNo,
                 type: this.fromType,
             }
 
-            cluecustomer_giveUpType(params).then((res) => {
-                if (res.result) {
+            ApiOpts(params).then(res => {
+                const { result, msg }  = res
+
+                if (result) {
                     this.$router.go(-1)
-                    this.$toast('操作成功')
+                    this.$toast(tips)
+                } else {
+                    this.$toast(msg)
                 }
             })
         },
@@ -328,16 +420,20 @@ export default {
             })
         },
         followUpFun(val){  //写跟进
-            console.log('val 写跟进',val)
             let data = {
                 clueCustomerNo: this.customerInfo.clueCustomerNo,
                 context: val,
             }
+            
             cluecustomer_addMessage(data).then(res => {
-                if(res.result){
+                const { result, msg }  = res
+
+                if(result) {
                     this.$toast('操作成功')
                     this.dialog_xgj = false
                     this.$refs.dynamic.searchFun()
+                } else {
+                    this.$toast(msg)
                 }
             })
         },
@@ -606,88 +702,89 @@ export default {
         }
     }
 }
-.customer_wrap {
-  width: 100%;
-  min-height: 100vh;
-  background: @white;
-  position: relative;
-  overflow: hidden;
-  .bg{
+.custom-detail {
     width: 100%;
-    height: auto;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  .nav_box{
-    width: 100%;
-    height: 88px;
-    display: flex;
-    text-align: center;
-    // border-bottom: 1px solid @lineColor; /*no*/
-    position: relative;
-    &::before{
-        content: '';
-        width: 100%;
-        height: 1px;   /*no*/
-        background: @lineColor;
-        transform: scaleY(.5);
-        position: absolute;
-        left: 0;
-        bottom: 0;
-    }
-    .nav{
-        color: @fontSub1;
-        font-size: 28px;
-        line-height: 88px;
-        flex: 1;
+    min-height: 100vh;
+    background: @white;
+    .customer_wrap {
         position: relative;
-        &.cur{
-            color: @main;
-            &::before{
-                content: '';
-                width: 40px;
-                height: 4px;
-                background: @main;
-                border-radius: 2px;
-                position: absolute;
-                left: 50%;
-                bottom: 0;
-                transform: translateX(-50%);
+        overflow: hidden;
+    .bg{
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 88px;
+        left: 0;
+    }
+    .nav_box{
+        width: 100%;
+        height: 88px;
+        display: flex;
+        text-align: center;
+        position: relative;
+        &::before{
+            content: '';
+            width: 100%;
+            height: 1px;   /*no*/
+            background: @lineColor;
+            transform: scaleY(.5);
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+        .nav{
+            color: @fontSub1;
+            font-size: 28px;
+            line-height: 88px;
+            flex: 1;
+            position: relative;
+            &.cur{
+                color: @main;
+                &::before{
+                    content: '';
+                    width: 40px;
+                    height: 4px;
+                    background: @main;
+                    border-radius: 2px;
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    transform: translateX(-50%);
+                }
             }
         }
     }
-  }
-  .content{
-    width: 100%;
-    padding: 32px;
-    &.pd0{
-        padding: 0;
+    .content{
+        width: 100%;
+        padding: 32px;
+        &.pd0{
+            padding: 0;
+        }
     }
-  }
-    .operation-box {
-        width: 5rem;
-        height: 76px;
-        pointer-events: none;
-        position: fixed;
-        bottom: 200px;
-        left: 50%;
-        z-index: 9;
-        .follow_up{
-            width: 76px;
+        .operation-box {
+            width: 5rem;
             height: 76px;
-            background: rgba(0, 0, 0, .4);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: auto;
-            position: absolute;
-            right: 24px;
-            top: 0;
-            .icon{
-                width: 40px;
-                height: 40px;
+            pointer-events: none;
+            position: fixed;
+            bottom: 200px;
+            left: 50%;
+            z-index: 9;
+            .follow_up{
+                width: 76px;
+                height: 76px;
+                background: rgba(0, 0, 0, .4);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                pointer-events: auto;
+                position: absolute;
+                right: 24px;
+                top: 0;
+                .icon{
+                    width: 40px;
+                    height: 40px;
+                }
             }
         }
     }

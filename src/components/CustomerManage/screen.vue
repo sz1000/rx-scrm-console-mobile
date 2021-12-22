@@ -4,38 +4,46 @@
         
         <ul class="screen-form">
             <li class="screen-item">
-                <h3 class="label">建档时间</h3>
+                <h3 class="label">{{ customerType == '1' || customerType == '2' ? '创建时间' : '建档时间' }}</h3>
                 <div class="content">
                     <span class="time pointer start" :class="{'placeholder': !form.createTimeStaShow}">
-                        <p class="text one-line" @click="showDateSelect(1)">{{ form.createTimeStaShow && formatDate(form.createTimeStaShow, "yyyy-MM-dd") | $textEmpty('开始时间')}}</p>
+                        <p class="text one-line" @click="showDateSelect(1, 'createTimeStaShow')">{{ form.createTimeStaShow && formatDate(form.createTimeStaShow, "yyyy-MM-dd") | $textEmpty('开始时间')}}</p>
                         <p v-if="form.createTimeStaShow" class="icon remove" @click="removeText('createTimeStaShow')"></p>
                     </span>
                     <span class="divider"></span>
                     <span class="time pointer end" :class="{'placeholder': !form.createTimeEndShow}">
-                        <p class="text one-line" @click="showDateSelect(2)">{{ form.createTimeEndShow && formatDate(form.createTimeEndShow, "yyyy-MM-dd") | $textEmpty('结束时间')}}</p>
+                        <p class="text one-line" @click="showDateSelect(2, 'createTimeEndShow')">{{ form.createTimeEndShow && formatDate(form.createTimeEndShow, "yyyy-MM-dd") | $textEmpty('结束时间')}}</p>
                         <p v-if="form.createTimeEndShow" class="icon remove" @click="removeText('createTimeEndShow')"></p>
                     </span>
                 </div>
             </li>
             <li class="screen-item tag-item">
-                <h3 class="label">客户来源</h3>
+                <h3 class="label">{{ customerType == '1' || customerType == '2' ? '线索来源' : '客户来源' }}</h3>
                 <div class="content">
                     <span v-for="i in sourceOptions" :key="i.id" class="tag pointer one-line" :class="{checked: i.value == form.source}" @click="choose('source', i)">{{ i.name }}</span>
                 </div>
             </li>
-            <li class="screen-item tag-item">
-                <h3 class="label">客户阶段</h3>
+            <template v-if="customerType == '3' || customerType == '4'">
+                <li class="screen-item tag-item">
+                    <h3 class="label">客户阶段</h3>
+                    <div class="content">
+                        <span v-for="i in customerStageOptions" :key="i.id" class="tag pointer one-line" :class="{checked: i.name == form.customerStage}" @click="choose('customerStage', i)">{{ i.name }}</span>
+                    </div>
+                </li>
+                <li class="screen-item tag-item">
+                    <h3 class="label">客户类型</h3>
+                    <div class="content">
+                        <span v-for="i in customerTypeOptions" :key="i.id" class="tag pointer one-line" :class="{checked: i.value == form.customerType}" @click="choose('customerType', i)">{{ i.name }}</span>
+                    </div>
+                </li>
+            </template>
+            <li v-if="customerType == '1' || customerType == '2'" class="screen-item tag-item">
+                <h3 class="label">线索类型</h3>
                 <div class="content">
-                    <span v-for="i in customerStageOptions" :key="i.id" class="tag pointer one-line" :class="{checked: i.name == form.customerStage}" @click="choose('customerStage', i)">{{ i.name }}</span>
+                    <span v-for="i in clueTypeOptions" :key="i.id" class="tag pointer one-line" :class="{checked: i.value == form.customerType}" @click="choose('customerType', i)">{{ i.name }}</span>
                 </div>
             </li>
-            <li class="screen-item tag-item">
-                <h3 class="label">客户类型</h3>
-                <div class="content">
-                    <span v-for="i in customerTypeOptions" :key="i.id" class="tag pointer one-line" :class="{checked: i.value == form.customerType}" @click="choose('customerType', i)">{{ i.name }}</span>
-                </div>
-            </li>
-            <template v-if="navActive == 'myCustomer'">
+            <template v-if="customerType == '1' || customerType == '3'">
                 <li class="screen-item tag-item">
                     <h3 class="label">负责类型</h3>
                     <div class="content">
@@ -43,7 +51,7 @@
                     </div>
                 </li>
                 <li class="screen-item">
-                    <h3 class="label">协助人</h3>
+                    <h3 class="label">跟进人</h3>
                     <div class="content">
                         <span class="select pointer" :class="{'placeholder': !form.chargeUserName}">
                             <p class="text one-line" @click="openSelectDialog('chargeUserNo')">{{form.chargeUserName | $textEmpty('负责人')}}</p>
@@ -55,22 +63,59 @@
                         </span>
                     </div>
                 </li>
-                <li class="screen-item tag-item">
-                    <h3 class="label">商机阶段</h3>
-                    <div class="content">
-                        <span v-for="i in stageOptions" :key="i.sortNo" class="tag pointer one-line" :class="{checked: form.stageNum && form.stageNum.indexOf(i.sortNo) > -1}" @click="choose('stageNum', i)">{{ i.name }}</span>
-                    </div>
-                </li>
-                <li class="screen-item">
-                    <h3 class="label">微信来源</h3>
-                    <div class="content">
-                        <span class="select pointer" :class="{'placeholder': !form.externalSourceName}">
-                            <p class="text one-line" @click="openSelectDialog('externalSource')">{{form.externalSourceName | $textEmpty('请选择')}}</p>
-                            <p class="icon" :class="{arrow: !form.externalSourceName, remove: form.externalSourceName}" @click="removeText('externalSource')"></p>
-                        </span>
-                    </div>
-                </li>
             </template>
+            <li v-if="customerType == '3'" class="screen-item tag-item">
+                <h3 class="label">商机阶段</h3>
+                <div class="content">
+                    <span v-for="i in stageOptions" :key="i.sortNo" class="tag pointer one-line" :class="{checked: form.stageNum && form.stageNum.indexOf(i.sortNo) > -1}" @click="choose('stageNum', i)">{{ i.name }}</span>
+                </div>
+            </li>
+            <li v-if="customerType == '2' || customerType == '4'" class="screen-item">
+                <h3 class="label">前负责人</h3>
+                <div class="content">
+                    <span class="select pointer" :class="{'placeholder': !form.beBelongByName}">
+                        <p class="text one-line" @click="openSelectDialog('beBelongBy')">{{form.beBelongByName | $textEmpty('负责人')}}</p>
+                        <p class="icon" :class="{arrow: !form.beBelongByName, remove: form.beBelongByName}" @click="removeText('beBelongBy')"></p>
+                    </span>
+                </div>
+            </li>
+            <li class="screen-item">
+                <h3 class="label">最后跟进时间</h3>
+                <div class="content">
+                    <span class="time pointer start" :class="{'placeholder': !form.followTimeStaShow}">
+                        <p class="text one-line" @click="showDateSelect(1, 'followTimeStaShow')">{{ form.followTimeStaShow && formatDate(form.followTimeStaShow, "yyyy-MM-dd") | $textEmpty('开始时间')}}</p>
+                        <p v-if="form.followTimeStaShow" class="icon remove" @click="removeText('followTimeStaShow')"></p>
+                    </span>
+                    <span class="divider"></span>
+                    <span class="time pointer end" :class="{'placeholder': !form.followTimeEndShow}">
+                        <p class="text one-line" @click="showDateSelect(2, 'followTimeEndShow')">{{ form.followTimeEndShow && formatDate(form.followTimeEndShow, "yyyy-MM-dd") | $textEmpty('结束时间')}}</p>
+                        <p v-if="form.followTimeEndShow" class="icon remove" @click="removeText('followTimeEndShow')"></p>
+                    </span>
+                </div>
+            </li>
+            <li v-if="customerType == '2' || customerType == '4'" class="screen-item">
+                <h3 class="label">回归公海时间</h3>
+                <div class="content">
+                    <span class="time pointer start" :class="{'placeholder': !form.recycleTimeStaShow}">
+                        <p class="text one-line" @click="showDateSelect(1, 'recycleTimeStaShow')">{{ form.recycleTimeStaShow && formatDate(form.recycleTimeStaShow, "yyyy-MM-dd") | $textEmpty('开始时间')}}</p>
+                        <p v-if="form.recycleTimeStaShow" class="icon remove" @click="removeText('recycleTimeStaShow')"></p>
+                    </span>
+                    <span class="divider"></span>
+                    <span class="time pointer end" :class="{'placeholder': !form.recycleTimeEndShow}">
+                        <p class="text one-line" @click="showDateSelect(2, 'recycleTimeEndShow')">{{ form.recycleTimeEndShow && formatDate(form.recycleTimeEndShow, "yyyy-MM-dd") | $textEmpty('结束时间')}}</p>
+                        <p v-if="form.recycleTimeEndShow" class="icon remove" @click="removeText('recycleTimeEndShow')"></p>
+                    </span>
+                </div>
+            </li>
+            <li v-if="customerType == '3'" class="screen-item">
+                <h3 class="label">微信来源</h3>
+                <div class="content">
+                    <span class="select pointer" :class="{'placeholder': !form.externalSourceName}">
+                        <p class="text one-line" @click="openSelectDialog('externalSource')">{{form.externalSourceName | $textEmpty('请选择')}}</p>
+                        <p class="icon" :class="{arrow: !form.externalSourceName, remove: form.externalSourceName}" @click="removeText('externalSource')"></p>
+                    </span>
+                </div>
+            </li>
             <li class="screen-item tag-item">
                 <h3 class="label">好友关系</h3>
                 <div class="content">
@@ -104,9 +149,8 @@ import { formatDate } from '@/utils/tool'
 export default {
     name: 'search',
     props: {
-        navActive: {
-            type: String,
-            default: ''
+        customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            default: '0'
         }
     },
     data() {
@@ -116,22 +160,40 @@ export default {
                 createTimeEndShow: null, // 建档时间（yyyy-MM-dd）
                 createTimeSta: '', // 建档时间（入参: yyyy-MM-dd hh:mm:ss）
                 createTimeEnd: '', // 建档时间（入参: yyyy-MM-dd hh:mm:ss）
+
+                followTimeStaShow: null, // 最后跟进时间（yyyy-MM-dd）
+                followTimeEndShow: null, // 最后跟进时间（yyyy-MM-dd）
+                followTimeSta: '', // 最后跟进时间（入参: yyyy-MM-dd hh:mm:ss）
+                followTimeEnd: '', // 最后跟进时间（入参: yyyy-MM-dd hh:mm:ss）
+
+                recycleTimeStaShow: null, // 回归公海时间（yyyy-MM-dd）
+                recycleTimeEndShow: null, // 回归公海时间（yyyy-MM-dd）
+                recycleTimeSta: '', // 回归公海时间（入参: yyyy-MM-dd hh:mm:ss）
+                recycleTimeEnd: '', // 回归公海时间（入参: yyyy-MM-dd hh:mm:ss）
+
                 source: '', //客户来源
                 customerStage: '', //客户阶段
                 customerType: '', //客户类型
                 followRole: '', // 负责类型：1: 我负责的 2: 我协助的
+
+                beBelongBy: '', // 前负责人
+                beBelongByName: '', // 前负责人
+
                 chargeUserNo: '', // 负责人
                 chargeUserName: '', // 负责人
                 collaborativeUserNo: '', // 协助人
                 collaborativeUserName: '', // 协助人
+
                 stageNum: [], // 选中的商机阶段（多选）
                 businessOpportunitiesStageNos: [], // 商机阶段1
                 businessOpportunitiesStageStatus: [], // 商机阶段2
+
                 externalSource: '', // 微信来源
                 externalSourceName: '', // 微信来源
                 isWcCus: '', // 仅查看微信 0: 不选中 1: 选中
             },
             customerTypeOptions: [], // 客户类型选择列表
+            clueTypeOptions: [], // 线索类型选择列表 
             stageOptions: [], // 商机阶段选择列表
             customerStageOptions: [], // 客户阶段选择列表
             sourceOptions: [], // 客户来源选择列表
@@ -144,6 +206,7 @@ export default {
 
             selectDatePopupShow: false,
             selectDateType: 0,
+            timeType: '',
             minDate: new Date(2011, 0, 1),
 
             dialog: false,
@@ -202,9 +265,9 @@ export default {
         // 获取商机阶段选择列表
         opportunitiesList() {
             opportunitiesList({ corpId: this.corpId }).then(res => {
-                let { code, data } = res
+                let { result, data } = res
 
-                if (code == 'success') {
+                if (result) {
                     this.stageOptions = data
                 }
             })
@@ -212,9 +275,9 @@ export default {
         // 获取各个选择列表
         getlistFiled() {
             getlistFiled({ corpId: this.corpId }).then(res => {
-                let { code, data } = res
+                let { result, data } = res
 
-                if (code == 'success') {
+                if (result) {
                     data.forEach((item) => {
                         if (item.type == 'stage') {
                             // 客户阶段
@@ -228,6 +291,9 @@ export default {
                         } else if (item.type == 'customer_type') {
                             // 客户类型
                             this.customerTypeOptions.push(item)
+                        } else if (item.type == 'clue_type') {
+                            // 客户类型
+                            this.clueTypeOptions.push(item)
                         }
                     })
                 }
@@ -236,45 +302,58 @@ export default {
         // 获取员工选择列表
         employeeList() {
             sop_employeeList().then(res => {
-                let { code, data } = res
+                let { result, data } = res
 
-                if (code == 'success') {
+                if (result) {
                     this.userOptions = data
                 }
             })
         },
         // 打开日期选择弹窗
-        showDateSelect(type) {
+        showDateSelect(type, timeType) {
             this.selectDateType = type
+            this.timeType = timeType
             this.selectDatePopupShow = true
         },
         // 选中建档时间
         dateConfirm(date) {
-            let type = this.selectDateType
+            let type = this.selectDateType, timeType = this.timeType
 
             if (!this.checkStartEndTime(type, date)) {
                 this.$toast("开始时间不能大于结束时间")
                 return
             }
-            if (type == 1) {
-                this.form.createTimeStaShow = date
-                this.form.createTimeSta = formatDate(date, "yyyy-MM-dd hh:mm:ss")
-            } else if (type == 2) {
-                this.form.createTimeEndShow = date
-                this.form.createTimeEnd = `${formatDate(date, "yyyy-MM-dd")} 23:59:59`
+            this.form[timeType] = date
+
+            if (timeType == 'createTimeStaShow' || timeType == 'createTimeEndShow') {
+                // 建档/创建时间
+                type == 1 ? this.form.createTimeSta = formatDate(date, "yyyy-MM-dd hh:mm:ss") : this.form.createTimeEnd = `${formatDate(date, "yyyy-MM-dd")} 23:59:59`
+            } else if (timeType == 'followTimeStaShow' || timeType == 'followTimeEndShow') {
+                // 最后跟进时间
+                type == 1 ? this.form.followTimeSta = formatDate(date, "yyyy-MM-dd hh:mm:ss") : this.form.followTimeEnd = `${formatDate(date, "yyyy-MM-dd")} 23:59:59`
+            } else if (timeType == 'recycleTimeStaShow' || timeType == 'recycleTimeEndShow') {
+                // 回归公海时间
+                type == 1 ? this.form.recycleTimeSta = formatDate(date, "yyyy-MM-dd hh:mm:ss") : this.form.recycleTimeEnd = `${formatDate(date, "yyyy-MM-dd")} 23:59:59`
             }
             this.selectDatePopupShow = false
         },
         // 开始时间不能大于结束时间
         checkStartEndTime(type, date) {
-            let dateNum = date.getTime()
+            let dateNum = date.getTime(), timeType = this.timeType, timeNum = null
 
-            if (this.form.createTimeEndShow || this.form.createTimeStaShow) {
-                let timeNum = type == 1 ? new Date(this.form.createTimeEndShow).getTime() : new Date(this.form.createTimeStaShow).getTime()
+            if ((timeType == 'createTimeStaShow' || timeType == 'createTimeEndShow') && (this.form.createTimeEndShow || this.form.createTimeStaShow)) {
+                // 建档/创建时间
+                timeNum = type == 1 ? new Date(this.form.createTimeEndShow).getTime() : new Date(this.form.createTimeStaShow).getTime()
+            } else if ((timeType == 'followTimeStaShow' || timeType == 'followTimeEndShow') && (this.form.followTimeEndShow || this.form.followTimeStaShow)) {
+                // 最后跟进时间
+                timeNum = type == 1 ? new Date(this.form.followTimeEndShow).getTime() : new Date(this.form.followTimeStaShow).getTime()
+            } else if ((timeType == 'recycleTimeStaShow' || timeType == 'recycleTimeEndShow') && (this.form.recycleTimeEndShow || this.form.recycleTimeStaShow)) {
+                // 回归公海时间
+                timeNum = type == 1 ? new Date(this.form.recycleTimeEndShow).getTime() : new Date(this.form.recycleTimeStaShow).getTime()
+            }
 
-                if (timeNum > 0 && (type == 1 && dateNum > timeNum || type == 2 && dateNum < timeNum)) {
-                    return false
-                }
+            if (timeNum > 0 && (type == 1 && dateNum > timeNum || type == 2 && dateNum < timeNum)) {
+                return false
             }
 
             return true
@@ -349,6 +428,12 @@ export default {
                     this.select.key = 'userName'
                     this.columns = this.userOptions
                     break;
+                case 'beBelongBy':  // 前负责人
+                    this.select.title = '前负责人'
+                    this.select.isGetIndex = false
+                    this.select.key = 'userName'
+                    this.columns = this.userOptions
+                    break;
                 case 'externalSource':  // 微信来源
                     this.select.title = '微信来源'
                     this.select.isGetIndex = false
@@ -362,33 +447,57 @@ export default {
         },
         // 选择弹窗列表选中确认
         selectedFun(val) {
-            switch (this.pickerType) {
-                case 'chargeUserNo':  // 负责人
-                    this.form.chargeUserName = val[0].userName
-                    this.form.chargeUserNo = val[0].userNo
-                    break;
-                case 'collaborativeUserNo':  // 协助人
-                    this.form.collaborativeUserName = val[0].userName
-                    this.form.collaborativeUserNo = val[0].userNo
-                    break;
-                case 'externalSource':  // 微信来源
-                    this.form.externalSourceName = val[0].name
-                    this.form.externalSource = val[0].value
-                    break;
-                default:
-                    break;
+            if (this.pickerType == 'externalSource') {
+                // 微信来源
+                const { name, value } = val[0]
+
+                this.form.externalSourceName = name
+                this.form.externalSource = value
+            } else {
+                const { userNo, userName } = val[0]
+
+                this.form[this.pickerType] = userNo
+                switch (this.pickerType) {
+                    case 'chargeUserNo':  // 负责人
+                        this.form.chargeUserName = userName
+                        break;
+                    case 'collaborativeUserNo':  // 协助人
+                        this.form.collaborativeUserName = userName
+                        break;
+                    case 'beBelongBy':  // 前负责人
+                        this.form.beBelongByName = userName
+                        break;
+                    default:
+                        break;
+                }
             }
         },
-        // 清楚选中数据
+        // 清除选中数据
         removeText(type) {
             switch (type) {
-                case 'createTimeStaShow':  // 建档开始时间
+                case 'createTimeStaShow':  // 建档/创建开始时间
                     this.form.createTimeStaShow = null
                     this.form.createTimeSta = ''
                     break;
-                case 'createTimeEndShow':  // 建档结束时间
+                case 'createTimeEndShow':  // 建档/创建结束时间
                     this.form.createTimeEndShow = null
                     this.form.createTimeEnd = ''
+                    break;
+                case 'followTimeStaShow':  // 最后跟进开始时间
+                    this.form.followTimeStaShow = null
+                    this.form.followTimeSta = ''
+                    break;
+                case 'followTimeEndShow':  // 最后跟进结束时间
+                    this.form.followTimeEndShow = null
+                    this.form.followTimeEnd = ''
+                    break;
+                case 'recycleTimeStaShow':  // 回归公海开始时间
+                    this.form.recycleTimeStaShow = null
+                    this.form.recycleTimeSta = ''
+                    break;
+                case 'recycleTimeEndShow':  // 回归公海结束时间
+                    this.form.recycleTimeEndShow = null
+                    this.form.recycleTimeEnd = ''
                     break;
                 case 'chargeUserNo':  // 负责人
                     this.form.chargeUserName = ''

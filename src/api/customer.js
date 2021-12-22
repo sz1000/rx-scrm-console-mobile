@@ -290,3 +290,35 @@ export function cluecustomer_getuserList(data) {
         params: data,
     })
 }
+// 变更负责人保存
+export function cluecustomer_turnBlon(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/turnBlon',
+        method: 'get',
+        params: data,
+    })
+}
+// 领取客户或线索
+export function cluecustomer_getclue(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getclue',
+        method: 'get',
+        params: data,
+    })
+}
+// 删除线索
+export function cluecustomer_delClueCustomer(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/delClueCustomer',
+        method: 'get',
+        params: data,
+    })
+}
+// 线索转客户
+export function cluecustomer_cluetocustomer(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/cluetocustomer',
+        method: 'post',
+        data,
+    })
+}

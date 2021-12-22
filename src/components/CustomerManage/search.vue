@@ -45,6 +45,12 @@ export default {
             let text = ''
 
             switch(type) {
+                case '1':
+                    text = '线索名称/企业名称/联系人/手机号码'
+                    break;
+                case '2':
+                    text = '线索名称/企业名称/联系人'
+                    break;
                 case '3':
                     text = '客户名称/企业名称/联系人/手机号码'
                     break;

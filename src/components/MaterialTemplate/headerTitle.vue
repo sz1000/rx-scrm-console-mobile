@@ -47,6 +47,7 @@ export default {
     background-color: @white;
     // border-top: 1px solid @lineColor;
     text-align: center;
+    z-index: 9;
     position: relative;
     left: 50%;
     transform: translateX(-50%);

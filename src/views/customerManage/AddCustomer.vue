@@ -5,7 +5,7 @@
         <div class="form-box">
             <div class="item">
                 <div class="label">
-                    <span>客户名称</span>
+                    <span>{{ fromType == 1 ? '线索名称' : '客户名称' }}</span>
                     <span class="require">*</span>
                 </div>
                 <div class="val">
@@ -33,7 +33,7 @@
             </div>
             <div class="item">
                 <div class="label">
-                    <span>客户来源</span>
+                    <span>{{ fromType == 1 ? '线索来源' : '客户来源' }}</span>
                     <span class="require">*</span>
                 </div>
                 <div class="val">
@@ -43,28 +43,30 @@
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>客户阶段</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('stage')">
-                        <span :class="{'placeholder':!form.stage}">{{form.stage | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+            <template v-if="fromType == 3">
+                <div class="item">
+                    <div class="label">
+                        <span>客户阶段</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="openSelectDialog('stage')">
+                            <span :class="{'placeholder':!form.stage}">{{form.stage | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>客户类型</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('customerType')">
-                        <span :class="{'placeholder':!form.customerTypeName}">{{form.customerTypeName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                <div class="item">
+                    <div class="label">
+                        <span>客户类型</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="openSelectDialog('customerType')">
+                            <span :class="{'placeholder':!form.customerTypeName}">{{form.customerTypeName | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
                     </div>
                 </div>
-            </div>
+            </template>
             <div class="item">
                 <div class="label">
                     <span>企业名称</span>
@@ -129,8 +131,7 @@ import { mapState } from 'vuex'
 export default {
     data() {
         return {
-            customerType: '',  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
-            headTitle: '',
+            fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
 
             dialog: false,
             dialog_address: false,
@@ -178,6 +179,15 @@ export default {
     },
     computed: {
         ...mapState(["corpId"]),
+        headTitle() {
+            if (this.fromType == 1 || this.fromType == 2) {
+                return '新增我的线索'
+            }
+            if (this.fromType == 3 || this.fromType == 4) {
+                return '新增我的客户'
+            }
+            return ''
+        },
     },
     created() {
         this.init()
@@ -189,19 +199,14 @@ export default {
     },
     methods: {
         init() {
-            const { customerType } = this.$route.query
-
-            this.customerType = customerType
-            this.headTitle = customerType == '3' ? '新增我的客户' : '新增客户'
-
             this.getAddFiled()
         },
         // 获取各个选择列表
         getAddFiled() {
             getAddFiled({ corpId: this.corpId }).then(res => {
-                let { code, data } = res
+                let { result, data } = res
 
-                if (code == 'success') {
+                if (result) {
                     const { comlist, commonList} = data
 
                     comlist.forEach(el => {
@@ -237,7 +242,9 @@ export default {
             })
         },
         goBack() {
-            this.$router.push({ path: '/customerManage/myCustomer' })
+            let path = this.fromType == 3 || this.fromType == 4 ? '/customerManage/myCustomer' : '/customerManage/clues'
+
+            this.$router.push({ path })
         },
         openDialog(type){   //打开弹窗 (地址 and 备注)
             this.openType = type
@@ -396,12 +403,12 @@ export default {
 
             let params = {
                 ...this.form,
-                type: this.customerType
+                type: this.fromType
             }
             
-            let { code, data, msg } = await doAdd(params)
+            let { result, data, msg } = await doAdd(params)
 
-            if (code == 'success') {
+            if (result) {
                 this.$toast(data)
                 setTimeout(() => {
                     this.goBack()

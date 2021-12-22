@@ -4,18 +4,18 @@
             <header-title :navList="navList" :navActive="navActive" :showAdd="showAdd"></header-title>
             <search ref="search" :customerType="customerType"></search>
 
-            <customer-list-box ref="customerListBox" :customerType="customerType" :form="form" :searchParam="searchParam"></customer-list-box>
+            <customer-list-box ref="customerListBox" :customerType="customerType" :jurisdictionList="jurisdictionList" :form="form" :searchParam="searchParam"></customer-list-box>
         </template>
 
-        <screen v-else ref="screen" :navActive="navActive" @hideScreen="hideScreen"></screen>
+        <screen v-else ref="screen" :customerType="customerType" @hideScreen="hideScreen"></screen>
     </div>
 </template>
 <script>
-import MyMixin from '../../mixins/permissionsList'
-import HeaderTitle from '../../components/CustomerManage/headerTitle'
-import Search from '../../components/CustomerManage/search'
-import CustomerListBox from '../../components/CustomerManage/customerListBox'
-import Screen from '../../components/CustomerManage/screen'
+import MyMixin from '@/mixins/permissionsList'
+import HeaderTitle from '@/components/CustomerManage/headerTitle'
+import Search from '@/components/CustomerManage/search'
+import CustomerListBox from '@/components/CustomerManage/customerListBox'
+import Screen from '@/components/CustomerManage/screen'
 import { mapActions } from 'vuex'
 
 export default {
@@ -26,15 +26,21 @@ export default {
             ifShowScreen: false,
             navList: [{name: '我的客户', code: 'myCustomer'}, {name: '客户公海', code: 'customerSea'}],
             navActive: 'myCustomer',
-            showAdd: true, // 是否显示新增按钮
 
             form: {}, // 搜索筛选条件表单
-            searchParam: '' // 搜索框输入的内容
+            searchParam: '', // 搜索框输入的内容
+            jurisdictionList: {}, // 按钮权限列表
+        }
+    },
+    computed: {
+        showAdd() { // 是否显示新增按钮
+            return this.customerType == '3' && this.jurisdictionList.myCustomer && this.jurisdictionList.myCustomer.some(item => item.enName == 'add')
         }
     },
     created() {
         this.getCorpId()
         this.$nextTick(() => {
+            this.getJurisdictionList()
             this.$refs.customerListBox.getList()
         })
     },
@@ -49,6 +55,13 @@ export default {
     },
     methods: {
         ...mapActions(["getCorpId"]),
+        // 获取按钮权限列表
+        getJurisdictionList() {
+            for (let i in this.expandedKeys) {
+                this.jurisdictionList[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
+            }
+            console.log('权限列表: ', this.jurisdictionList)
+        },
         changeNav(code, type) {
             if (code) {
                 this.navActive = code
@@ -66,11 +79,9 @@ export default {
             if (this.navActive == 'myCustomer') {
                 // 我的客户
                 this.customerType = '3'
-                this.showAdd = true
             } else if (this.navActive == 'customerSea') {
                 // 客户公海
                 this.customerType = '4'
-                this.showAdd = false
             }
             this.clearSearch()
             this.getList()
@@ -93,7 +104,7 @@ export default {
         },
         // 新增客户
         doAdd() {
-            this.$router.push({ path: '/customerManage/addCustomer', query: { customerType: this.customerType } })
+            this.$router.push({ path: '/customerManage/addCustomer', query: { fromType: this.customerType } })
         },
         // 搜索
         checkTable(text) {

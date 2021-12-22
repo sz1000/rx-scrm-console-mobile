@@ -3,25 +3,31 @@
     <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <div v-for="i in list" :key="i.id" class="list-item" @click="goDetail(i)">
         <div class="list-item-left">
-          <img :src="i.avatar | $setAvatar" alt="">
+          <img class="header-img" :src="i.avatar | $setAvatar" alt="">
+          <img v-if="i.isWcCus == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
+          <img v-if="i.isWcCus == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
         </div>
         <ul class="list-item-right">
           <li class="right-top">
             <div class="name-box">
               <h3 class="one-line">{{ i.name }}</h3>
-              <span v-if="i.cropFullName" class="crop-name one-line">@{{ i.cropFullName }}</span>
+              <span v-if="i.customerName" class="crop-name one-line">@{{ i.customerName }}</span>
             </div>
-            <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
+            <span class="time" :class="{'clues-time': customerType == '1' || customerType == '2'}">
+              {{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}
+              <span v-if="customerType == '1' || customerType == '2'">{{ i.createBy }}创建</span>
+            </span>
           </li>
           <li class="right-middle">
-            <span v-if="i.stage" :class="{first: i.stage == '沟通洽谈', second: i.stage == '合同签约', third: i.stage == '维护运营', fourth: i.stage == '暂停', fifth: i.stage == '终止'}">{{ i.stage }}</span>
-            <span v-if="i.source">{{ i.source }}</span>
+            <span v-if="(customerType == '3' || customerType == '4' ) && i.stage" :class="{first: i.stage == '沟通洽谈', second: i.stage == '合同签约', third: i.stage == '维护运营', fourth: i.stage == '暂停', fifth: i.stage == '终止'}">{{ i.stage }}</span>
+            <span v-if="i.source" :class="{first: customerType == '1' || customerType == '2'}">{{ i.source }}</span>
             <span v-if="i.customerType">{{ i.customerType }}</span>
             <span v-show="i.customerTagNames && i.customerTagNames.length" v-for="item in i.customerTagNames" :key="item">{{ item }}</span>
           </li>
-          <li v-if="customerType == '3'" class="right-bottom">
+          <li v-if="customerType == '1' || customerType == '3'" class="right-bottom">
             <span v-if="i.phone">{{ i.phone }}</span>
-            <span v-if="i.userNo">负责人：{{ i.userNo }}</span>
+            <span v-if="customerType == '1' && i.cropFullName">{{ i.cropFullName }}</span>
+            <span v-if="customerType == '3' && i.userNo">负责人：{{ i.userNo }}</span>
           </li>
         </ul>
       </div>
@@ -35,6 +41,11 @@ import { throttle, formatDate } from '@/utils/tool'
 export default {
   name: 'customerListBox',
   props: {
+    jurisdictionList: { // 按钮权限列表
+      default() {
+        return {}
+      }
+    },
     customerType: {  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
       default: 0,
     },
@@ -83,11 +94,11 @@ export default {
       }
 
       getcluecustomerlist(params).then(res => {
-        let { code, data, msg } = res
+        let { result, data, msg } = res
 
         this.$toast.clear()
         this.loading = false
-        if (code == 'success') {
+        if (result) {
           if (this.page == 1) {
             this.list = []
           }
@@ -107,9 +118,11 @@ export default {
     },
     // 去往客户详情
     goDetail(item) {
+      let type = this.customerType == '1' ? 'myClew' : this.customerType == '2' ? 'commonClew' : this.customerType == '3' ? 'myCustomer' : 'commonCustomer'
+
       this.$router.push({
         path: 'customDetail',
-        query: { fromType: this.customerType, userNo: item.clueCustomerNo },
+        query: { fromType: this.customerType, userNo: item.clueCustomerNo, jurisdictionList: JSON.stringify(this.jurisdictionList[type]) },
       })
     },
   },
@@ -138,11 +151,18 @@ export default {
       min-width: 80px;
       height: 80px;
       margin-right: 24px;
-      border-radius: 50%;
-      overflow: hidden;
-      img {
+      position: relative;
+      .header-img {
         width: 100%;
         height: 100%;
+        border-radius: 50%;
+      }
+      .icon {
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
       }
     }
     .list-item-right {
@@ -173,6 +193,9 @@ export default {
           text-align: right;
           color: @fontSub1;
           font-size: 24px;
+        }
+        .clues-time {
+          color: @total;
         }
       }
       .right-middle {

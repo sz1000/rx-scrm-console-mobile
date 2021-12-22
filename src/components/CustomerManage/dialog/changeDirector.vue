@@ -3,7 +3,7 @@
         <van-action-sheet v-model="visible" :title="title" :safe-area-inset-bottom="true">
             <div class="van-content">
                 <div class="change-content">
-                    <div class="now-user">
+                    <div v-if="optionType == 'changeDirector'" class="now-user">
                         <span>现有负责人:</span>
                         <span>{{ currentDirector }}</span>
                     </div>
@@ -14,18 +14,19 @@
                 </div>
                 <div class="btn-warp">
                     <span class="cancel" @click="hide">取消</span>
-                    <span class="save" @click="save">确定</span>
+                    <span class="save" @click="save">保存</span>
                 </div>
             </div>
         </van-action-sheet>
 
-        <van-action-sheet v-model="chooseVisible" title="选择负责人">
+        <van-action-sheet v-model="chooseVisible">
             <van-picker title="" show-toolbar :columns="options" @confirm="onConfirm" @cancel="onCancel" value-key="name"/>
         </van-action-sheet>
     </div>
 </template>
 <script>
-import { cluecustomer_getuserList } from '@/api/customer'
+import { cluecustomer_getuserList, cluecustomer_turnBlon } from '@/api/customer'
+import { throttle } from '@/utils/tool'
 
 export default {
     name: 'changeDirector',
@@ -41,6 +42,8 @@ export default {
     data(){
         return {
             visible: false,
+            optionType: '',
+            clueCustomerNo: '',
             currentDirector: '',
             options: [],
             chooseVisible: false,
@@ -49,11 +52,17 @@ export default {
         }
     },
     methods: {
-        show(clueCustomerNo){
+        show(clueCustomerNo, type){
+            this.clueCustomerNo = clueCustomerNo
+            this.optionType = type
             this.getUserList(clueCustomerNo)
             this.visible = true
         },
+        initData() {
+            Object.assign(this.$data, this.$options.data())
+        },
         hide() {
+            this.initData()
             this.visible = false
         },
         async getUserList(clueCustomerNo) {
@@ -61,9 +70,9 @@ export default {
                 clueCustomerNo
             }
 
-            let { code, data, msg } = await cluecustomer_getuserList(params)
+            let { result, data, msg } = await cluecustomer_getuserList(params)
 
-            if (code == 'success') {
+            if (result) {
                 const { userNo, list } = data
 
                 this.currentDirector = userNo
@@ -72,10 +81,8 @@ export default {
                 this.$toast(msg)
             }
         },
-        onConfirm(value, index) {
-            // console.log(`当前值：${value}, 当前索引：${index}`);
-            console.log(value)
-            const { userNo, name } = value
+        onConfirm(val) {
+            const { userNo, name } = val
 
             this.userNo = userNo
             this.chosedDirector = name
@@ -84,8 +91,25 @@ export default {
         onCancel() {
             this.chooseVisible = false
         },
-        save(data){
-            // this.$emit('save', data)
+        save(){
+            if(!throttle()) {
+                return
+            }
+
+            let params = {
+                cluecustomerno: this.clueCustomerNo,
+                user_no: this.userNo,
+                oldname: this.currentDirector,
+            }
+
+            cluecustomer_turnBlon(params).then(res => {
+                const { result, msg } = res
+
+                this.$toast(msg)
+                if (result) {
+                    this.$router.go(-1)
+                }
+            })
         },
     },
 }
@@ -153,6 +177,15 @@ export default {
                 color: @white;
             }
         }
+    }
+    /deep/.van-action-sheet__header {
+        height: 88px;
+        line-height: 88px;
+        background: #fafbff;
+        border-radius: 16px 16px 0px 0px;
+        font-size: 32px;
+        color: #3c4353;
+        font-weight: 600;
     }
 }
 </style>

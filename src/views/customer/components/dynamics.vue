@@ -117,6 +117,9 @@ import {
 export default {
     name: 'Dynamics',
     props: {
+        fromType: {
+            default: '0'
+        },
         id: {
             type: String,
             default: ''
@@ -129,7 +132,6 @@ export default {
     data(){
         return {
             num: this.$route.query.num,
-            navList: ['全部','客户动态','商机动态','互动沟通'],
             activeIndex: 0,
             fromUserNum: [6],
             helperNum: [18,19,20,39,44,46,47,48],
@@ -138,7 +140,7 @@ export default {
                 page: 1,
                 limit: 10,
                 clueCustomerNo: '',
-                punckStatus: '' // ''：全部动态，1：跟进动态，2：客户或线索动态，3：商机动态，4：互动协同
+                punckStatus: '' // ''：全部动态，3：商机动态，4：互动协同，5：群动态，6：线索动态
             },
             time: [],
             data: [],
@@ -153,6 +155,23 @@ export default {
     computed: {
         userNo(){
             return this.$store.getters.userNo
+        },
+
+        // 动态导航
+        navList() {
+            if (this.fromType == 1) {
+                return ['全部', '线索动态', '互动沟通']
+            }
+            if (this.fromType == 2) {
+                return ['全部', '线索动态']
+            }
+            if (this.fromType == 3) {
+                return ['全部', '客户动态', '商机动态', '互动沟通']
+            }
+            if (this.fromType == 4) {
+                return ['全部', '客户动态', '商机动态']
+            }
+            return ['全部', '客户动态', '商机动态', '互动沟通']
         },
         list(){
             let arr = this.data && this.data.length ? JSON.parse(JSON.stringify(this.data)): [],n = 0
@@ -300,7 +319,13 @@ export default {
             if(this.num){
                 this.followMsgSearch.limit = this.num * this.followMsgSearch.limit
             }
-            this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i 
+            this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i
+            
+            // 获取线索动态
+            if ((this.fromType == 1 || this.fromType == 2) && i == 2) {
+                this.followMsgSearch.punckStatus = 6
+            }
+            
             clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch,this.noListLoading).then(res => {
                 if(res.result){
                     let data = res.data
@@ -317,6 +342,7 @@ export default {
                              * 
                              * 40.浏览素材 41.添加企微好友 44.申请成为协助人 46.自动成为协助人
                              * 47.申请成为协助人已通过 48.申请成为协助人未通过
+                             * 50.线索创建 51.线索导入 52.企微同步 53.更新线索 55.分配线索 56.领取线索 57.放弃线索
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
@@ -486,8 +512,16 @@ export default {
                     str = '已自动成为协助人'
                     break;
                 case 47:
-                    break;
                 case 48:
+                    break;
+                case 50:
+                case 51:
+                case 52:
+                case 53:
+                case 55:
+                case 56:
+                case 57:
+                    str = obj.context
                     break;
                 default:
                     break;
