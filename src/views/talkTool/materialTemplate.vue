@@ -11,7 +11,15 @@
         <li @click="changeNav(1)" :class="{active: type == 1}"><span>销售文件</span></li>
         <li @click="changeNav(2)" :class="{active: type == 2}"><span>营销海报</span></li>
       </ul>
-      <search ref="search" :type="type"></search>
+      <div class="search_warp">
+        <search ref="search" :type="type"></search>
+        <div class="file_add">
+          <jzIcon class="iconAdd" @click.native.stop="fnAddMaterial(type)" type="icon-a-bianzu77"></jzIcon>
+          <file-upload :needFileInfo="true" v-show="type==1"></file-upload>
+          <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true" v-show="type==2"></img-upload>
+        </div>
+
+      </div>
       <ul class="list-box">
         <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 0">
           <van-list v-model="articleListLoading" :immediate-check="false" :finished="articleListFinished" finished-text="没有更多了" @load="onLoad">
@@ -72,18 +80,16 @@
           </van-list>
         </li>
       </ul>
-      <div class="position-box">
-        <!-- 转载公众号文章按钮 -->
+      <!-- 2:上传海报按钮  1:上传文件按钮  0:转载公众号文章按钮 -->
+      <!-- <div class="position-box">
         <div v-if="type == 0" class="reprint-box pointer" @click="goNextStep"></div>
-        <!-- 上传文件按钮 -->
         <div v-if="type == 1" class="poster-box">
           <file-upload :needFileInfo="true"></file-upload>
         </div>
-        <!-- 上传海报按钮 -->
         <div v-if="type == 2" class="poster-box">
           <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
         </div>
-      </div>
+      </div> -->
     </template>
 
     <img-preview ref="imgPreview"></img-preview>
@@ -181,6 +187,17 @@ export default {
       this.tab = val
       this.initPage(this.type)
       this.getList()
+    },
+    // 添加素材
+    fnAddMaterial(v) {
+      console.log(v)
+      // 去往转载公众号文章页面
+      if (v == 0) {
+        this.$router.push({
+          path: '/talkTool/reprint',
+          query: { isIndependent: this.isIndependent },
+        })
+      }
     },
     changeNav(type) {
       this.type = type
@@ -464,6 +481,25 @@ export default {
       }
     }
   }
+  .search_warp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 32px;
+    .iconAdd {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .file_add {
+      width: 100px;
+      height: 100px;
+      position: relative;
+    }
+  }
   .material-tab {
     height: 88px;
     line-height: 88px;
@@ -617,7 +653,7 @@ export default {
     box-shadow: 0 6px 34px 0 rgba(65, 104, 246, 0.3);
     position: absolute;
     right: 32px;
-    bottom: 0;
+    top: 0;
     &::before,
     &::after {
       content: '';

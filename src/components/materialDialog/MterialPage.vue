@@ -255,17 +255,9 @@ export default {
       } else {
         this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
       }
-
       this.sendChart(val)
-      // let params = {
-      //   fileType: 'image',
-      //   fileUrl: val.cover ? val.cover : getFileDefaultCover(val.name),
-      //   corpId: this.corpId,
-      // }
-      // uploadTemporaryMaterial(params).then((res) => {
-      //   this.sendChart(res)
-      // })
     },
+
     sendChart(mediaObj) {
       this.$network
         .get('/user-service/m/user/getinticket', {
@@ -274,7 +266,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: false,
+            debug: true,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -337,6 +329,7 @@ export default {
                     ],
                   },
                   function (res) {
+                    alert(JSON.stringify(res))
                     if (res.err_msg == 'shareToExternalMoments:ok') {
                     }
                   }
@@ -645,7 +638,7 @@ export default {
     padding: 0 32px;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid @lineColor;
+    border-bottom: 1px solid @lineColor; /* no */
     li {
       width: 212px;
       height: 64px;
@@ -662,7 +655,7 @@ export default {
     }
     .active {
       background: @white;
-      border: 1px solid @main;
+      border: 2px solid @main; /* no */
       span {
         color: @main;
       }

@@ -543,6 +543,7 @@ export default {
     .published_btn {
       width: 220px;
       height: 64px;
+      line-height: 64px;
       background: #4168f6;
       border-radius: 32px;
       color: #fff;

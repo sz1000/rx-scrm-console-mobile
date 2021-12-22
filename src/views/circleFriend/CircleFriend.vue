@@ -563,6 +563,8 @@ export default {
       line-height: 56px;
       text-align: center;
       color: #fff;
+      display: flex;
+      align-items: center;
     }
   }
   .explan {
