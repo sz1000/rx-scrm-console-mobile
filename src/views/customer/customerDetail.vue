@@ -199,7 +199,7 @@
                     </div>
                     <div class="item">
                         <div class="label">添加客户时间</div>
-                        <div class="val">{{detail.createTime}}</div>
+                        <div class="val">{{detail.createTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
                     </div>
                     <div class="item">
                         <div class="label">前负责人</div>
@@ -207,7 +207,7 @@
                     </div>
                     <div class="item">
                         <div class="label">转换时间</div>
-                        <div class="val">{{detail.turnTime}}</div>
+                        <div class="val">{{detail.turnTime | $time('YYYY-MM-DD')}}</div>
                     </div>
                 </div>
             </div>
@@ -248,7 +248,7 @@
                     </div>
                     <div class="item">
                         <div class="label">添加客户时间</div>
-                        <div class="val">{{detail.createTime}}</div>
+                        <div class="val">{{detail.createTime | $time('YYYY-MM-DD HH:mm:ss')}}</div>
                     </div>
                     <div class="item lh">
                         <div class="label">备注</div>
