@@ -511,6 +511,10 @@ export default {
                     this.form.externalSourceName = ''
                     this.form.externalSource = ''
                     break;
+                case 'beBelongBy':  // 前负责人
+                    this.form.beBelongByName = ''
+                    this.form.beBelongBy = ''
+                    break;
                 default:
                     break;
             }
