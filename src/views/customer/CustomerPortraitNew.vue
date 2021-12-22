@@ -432,7 +432,10 @@ export default {
             }
             this.$router.push({
                 name: name,
-                query: { id: this.customerInfo.clueCustomerNo },
+                query: { 
+                    id: this.customerInfo.clueCustomerNo,
+                    type: this.customerInfo.type
+                },
             })
         },
         toGroupDetail(){    //群聊详情
