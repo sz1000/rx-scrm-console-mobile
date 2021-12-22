@@ -144,13 +144,13 @@
           </div>
           <p>一键拉群</p>
         </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
+        <div class="commonBtn" @click="customerGroup" v-show="menulist.includes('customerSend')">
           <div class="huoma kehuqunfa_bg">
              <img src="../assets/svg/kehuqunfa.svg" alt="" /> 
           </div>
           <p>客户群发</p>
         </div>
-        <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
+        <div class="commonBtn" @click="CustomergroupPlaye" v-show="menulist.includes('groupSend')">
           <div class="huoma kehuqunfa_bg">
              <img  src="../assets/svg/kehuqunquqnfa.svg" alt="" /> 
           </div>
@@ -248,6 +248,12 @@ export default {
     handelChangeHome(v) {
       sessionStorage.setItem('showHome', v)
       this.showHome = v
+    },
+    customerGroup(){
+         this.$router.push({path:'/groupIndex',query:{tab:1}});
+    },
+    CustomergroupPlaye(){
+         this.$router.push({path:'/groupIndex',query:{tab:2}});
     },
     getHome() {
       cluecustomer_homedata().then((res) => {

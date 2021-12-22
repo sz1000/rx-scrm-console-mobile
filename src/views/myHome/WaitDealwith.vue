@@ -170,14 +170,14 @@
     <!-- 未发表弹框 -->
     <div class="published_dialog">
       <van-popup v-model="showPubish" closeable position="bottom" :style="{ height: '75%' }" round get-container=".wait_warp">
-        <div class="title_popup">朋友圈发表情况</div>
+        <div class="title_popup">员工发表情况</div>
         <div class="popup_content">
           <div class="user_text">
             <span>全部员工</span>
             <span>({{popupList.length}})</span>
           </div>
           <div class="search_popup">
-            <van-field v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
+            <van-field  v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
             <div class="select_box_p" @click="popupSendShow">
               <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
               <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showPopupSelect}" />

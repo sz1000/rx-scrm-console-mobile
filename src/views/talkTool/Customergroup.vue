@@ -279,6 +279,7 @@
 import { Toast } from 'vant'
 import { Notify } from 'vant'
 import { formatDate } from '../../utils/tool.js'
+import { addCustomerScreen } from '../../api/group'
 import Coumpontmaterial from '../../components/materialDialog/MterialPageGroup.vue'
 export default {
   components: {
@@ -886,20 +887,28 @@ export default {
             mediaList: mediaLink,
           }
 
-          this.$network
-            .post(
-              '/customer-service/cluecustomerMass/addCustomerScreen',
-              params
-            )
-            .then((res) => {
-              console.log(res)
-              if (res.result) {
+          addCustomerScreen(params).then(res =>{
+                if (res.result) {
                 this.$router.push({ path: '/home' })
                 Notify({ type: 'success', message: res.msg })
               } else {
                 Notify({ type: 'danger', message: res.msg })
               }
-            })
+          })
+          // this.$network
+          //   .post(
+          //     '/customer-service/cluecustomerMass/addCustomerScreen',
+          //     params
+          //   )
+          //   .then((res) => {
+          //     console.log(res)
+          //     if (res.result) {
+          //       this.$router.push({ path: '/home' })
+          //       Notify({ type: 'success', message: res.msg })
+          //     } else {
+          //       Notify({ type: 'danger', message: res.msg })
+          //     }
+          //   })
         } else {
           console.log('error submit!!')
           return false

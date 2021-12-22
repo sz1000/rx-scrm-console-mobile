@@ -130,7 +130,7 @@
       </div>
         <div class="about_me about_shadow">
         <span>群发任务</span>
-        <div class="reply_text" @click="goToWait(2)">
+        <div class="reply_text" @click="goToWait(1)">
           <span>你有群发任务待发送</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
@@ -540,7 +540,7 @@ export default {
     },
     goToWait(v) {
       this.$router.push({
-        path: '/waitDealwith',
+        path: '/groupIndex',
         query: {
           tab: v,
         },
