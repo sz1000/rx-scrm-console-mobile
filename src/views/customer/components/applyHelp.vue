@@ -134,7 +134,7 @@ export default {
             .info{
                 display: flex;
                 align-items: center;
-                justify-content: right;
+                justify-content: flex-end;
                 .avatar{
                     width: 30px;
                     height: 30px;

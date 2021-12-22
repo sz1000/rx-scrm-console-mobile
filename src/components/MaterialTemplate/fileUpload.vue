@@ -98,33 +98,34 @@ export default {
 <style lang="less" scoped>
 @import url('../../styles/color');
 .file-upload {
-  position: relative;
-  .reprint-box {
-    width: 104px;
-    height: 104px;
-    background-color: @main;
-    border-radius: 50%;
-    box-shadow: 0 6px 34px 0 rgba(65, 104, 246, 0.3);
-    position: relative;
-    &::before,
-    &::after {
-      content: '';
-      border-radius: 100px;
-      background-color: @white;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    &::before {
-      width: 44px;
-      height: 6px;
-    }
-    &::after {
-      width: 6px;
-      height: 44px;
-    }
-  }
+  // position: relative;
+  //   .reprint-box {
+  //     width: 104px;
+  //     height: 104px;
+  //     background-color: @main;
+  //     // display: none;
+  //     border-radius: 50%;
+  //     box-shadow: 0 6px 34px 0 rgba(65, 104, 246, 0.3);
+  //     position: relative;
+  //     &::before,
+  //     &::after {
+  //       content: '';
+  //       border-radius: 100px;
+  //       background-color: @white;
+  //       position: absolute;
+  //       top: 0;
+  //       right: 0;
+  //       transform: translate(-50%, -50%);
+  //     }
+  //     &::before {
+  //       width: 44px;
+  //       height: 6px;
+  //     }
+  //     &::after {
+  //       width: 6px;
+  //       height: 44px;
+  //     }
+  //   }
   .upload-inp {
     width: 104px;
     height: 104px;
@@ -133,7 +134,7 @@ export default {
     font-size: 0;
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
   }
 }
 </style>

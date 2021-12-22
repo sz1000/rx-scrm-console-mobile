@@ -1,6 +1,7 @@
 import request from '@/utils/requestNew'
 const CustomerService = '/customer-service'
 const MaterialService = '/material-service'
+const CommonService = '/common-service'
     // 首页
 export function getMyInfo() {
     return request({
@@ -93,7 +94,7 @@ export function queryFollowMsgPage(data) {
 // 获取mediaid
 export function uploadTemporaryMaterial(data) {
     return request({
-        url: CustomerService + '/RedisMaterial/uploadTemporaryMaterial',
+        url: CommonService + '/RedisMaterial/uploadTemporaryMaterial',
         method: 'post',
         data: data,
     })

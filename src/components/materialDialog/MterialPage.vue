@@ -177,6 +177,8 @@ export default {
       showContentPreview: false,
       showFileUpload: false, // 是否展示文件上传页面
       fileData: {}, // 上传的文件信息
+
+      shareUrlOrigin: '',
     }
   },
   computed: {
@@ -222,7 +224,6 @@ export default {
       // })
     },
     determine() {
-      console.log(this.centquer, 'ppppppp----------')
       // this.$router.push({
       //   path: '/talkTool/circleFriend',
       //   query: {
@@ -235,8 +236,7 @@ export default {
         if (friendtype == 'person') {
           // this.sendChart()
           this.getMediaId(this.centquer)
-        } else if (friendtype == 'compony') {
-        } else {
+        } else if (friendtype == 'company') {
           this.$router.push({
             path: '/talkTool/circleFriend',
             query: {
@@ -247,14 +247,18 @@ export default {
         }
       }
     },
+    // 获取mediaid
     getMediaId(val) {
-      let params = {
-        fileType: 'image',
-        fileUrl: val.cover ? val.cover : getFileDefaultCover(val.name),
+      console.log(val, 'ppppppp----------')
+      if (window.location.origin == 'https://console.jzcrm.com') {
+        this.shareUrlOrigin = 'https://h5.jzcrm.com'
+      } else {
+        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
       }
-      uploadTemporaryMaterial().then((res) => {})
+      this.sendChart(val)
     },
-    sendChart() {
+
+    sendChart(mediaObj) {
       this.$network
         .get('/user-service/m/user/getinticket', {
           url: location.href,
@@ -262,7 +266,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: false,
+            debug: true,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -278,7 +282,7 @@ export default {
               'openExistedChatWithMsg',
             ],
           })
-          var that = this
+
           wx.ready(function () {
             wx.invoke(
               'agentConfig',
@@ -300,16 +304,33 @@ export default {
                 ],
               },
               function (res) {
+                let that = this,
+                  url
+                if (mediaObj.tab == 1) {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                } else if (mediaObj.tab == 2) {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.documentId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                } else {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                }
                 wx.invoke(
                   'shareToExternalMoments',
                   {
-                    text: {
-                      content: '发到朋友圈', // 文本内容
-                    },
+                    attachments: [
+                      {
+                        msgtype: 'link', // 消息类型，必填
+                        link: {
+                          title: mediaObj.title, // H5消息标题
+                          imgUrl: mediaObj.cover, // H5消息封面图片URL
+                          // url: '', // H5消息页面url 必填
+                          url: url,
+                        },
+                      },
+                    ],
                   },
                   function (res) {
+                    alert(JSON.stringify(res))
                     if (res.err_msg == 'shareToExternalMoments:ok') {
-                      console.log('朋友圈=====', res)
                     }
                   }
                 )
@@ -617,7 +638,7 @@ export default {
     padding: 0 32px;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid @lineColor;
+    border-bottom: 1px solid @lineColor; /* no */
     li {
       width: 212px;
       height: 64px;
@@ -634,7 +655,7 @@ export default {
     }
     .active {
       background: @white;
-      border: 1px solid @main;
+      border: 2px solid @main; /* no */
       span {
         color: @main;
       }
