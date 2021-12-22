@@ -19,13 +19,13 @@
                 </div>
             </div>
             <div class="item_box">
-                <div class="opera_box" v-if="!showBtn && userNo == obj.userNo">
+                <div class="opera_box" v-if="!showBtn && (obj && userNo == obj.userNo)">
                     <img class="icon" @click="addDialog" src="@/assets/svg/icon_add_cir.svg" alt="">
                     <img class="icon" @click="showBtn = true" src="@/assets/svg/icon_ljt.svg" alt="">
                 </div>
                 <div class="opera_btn" @click="showBtn = false" v-if="showBtn && userNo == obj.userNo">完成</div>
                 <div class="tit">协助人</div>
-                <van-swipe-cell ref="swipercell" v-for="(item,index) in helperList" :key="index">
+                <van-swipe-cell ref="swipercell" :disabled="disabled" v-for="(item,index) in helperList" :key="index">
                     <div class="item" :class="{'trans':showBtn}">
                         <img class="red_btn" @click.stop="openFun(index)" src="@/assets/svg/icon_remove.svg" alt="">
                         <img class="avatar" :src="item.avatar | $setAvatar" alt="">
@@ -77,6 +77,9 @@ export default {
                 return el.flag == 1
             })
             return list
+        },
+        disabled(){
+            return this.userNo != this.obj.userNo ? true : false
         },
         helperList(){
             let list = this.list.filter(el => {
