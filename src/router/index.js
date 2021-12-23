@@ -21,6 +21,9 @@ import ChannelConfiguration from '../views/talkTool/ChannelConfiguration.vue'
 import verbalTrick from '../views/talkTool/verbalTrick.vue' // 包括话术库和内容素材
 import VerbalTrickConsole from '../views/talkTool/verbalTrickConsole' // 话术库（单独的）
 import ContentMaterial from '../views/talkTool/materialTemplate' // 内容素材（单独的）
+import MatiralDetail from '../views/talkTool/MatiralDetail.vue' // 素材详情
+import MaterialBrowseDetail from '../views/talkTool/MaterialBrowseDetail.vue' // 浏览详情
+
 import Reprint from '../views/talkTool/reprint' // 转载公众号文章
 import Added from '../views/talkTool/Added.vue'
 import CustomerGroup from '../views/talkTool/Customergroup.vue' //客户群发
@@ -63,6 +66,7 @@ import NoPermissions from '../views/404.vue'
 import Test from '../views/talkTool/test.vue'
 //素材列表
 import MaterialLibrary from '../views/customerManage/materialLibrary.vue'
+
 // 素材模板h5分享页面
 import MaterialTemplate from '../views/MaterialTemplate/share'
 
@@ -130,7 +134,6 @@ const routes = [{
         name: '404',
         component: NoPermissions,
     },
-
 
     // 客户画像
     {
@@ -248,6 +251,22 @@ const routes = [{
                     bodyClass: 'contentMaterial',
                 },
                 component: ContentMaterial,
+            },
+            // 素材详情
+            {
+                path: 'matiralDetail',
+                meta: {
+                    bodyClass: 'matiralDetail',
+                },
+                component: MatiralDetail,
+            },
+            // 浏览详情
+            {
+                path: 'materialBrowseDetail',
+                meta: {
+                    bodyClass: 'materialBrowseDetail',
+                },
+                component: MaterialBrowseDetail,
             },
             // 转载公众号文章
             {

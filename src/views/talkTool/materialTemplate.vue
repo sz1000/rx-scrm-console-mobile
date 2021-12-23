@@ -18,64 +18,103 @@
           <file-upload :needFileInfo="true" v-show="type==1"></file-upload>
           <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true" v-show="type==2"></img-upload>
         </div>
-
       </div>
       <ul class="list-box">
         <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 0">
           <van-list v-model="articleListLoading" :immediate-check="false" :finished="articleListFinished" finished-text="没有更多了" @load="onLoad">
-            <div class="item pointer" v-for="i in articleList" :key="i.articleId">
-              <div class="right" @click="preview(1, i)">
-                <div class="img">
-                  <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
-                </div>
-                <div class="des">
-                  <div>
-                    <h3 class="one-line">{{i.title}}</h3>
-                    <p class="one-line" v-html="i.contentAbstract"></p>
+            <div class=" pointer" v-for="i in articleList" :key="i.articleId">
+              <div class="item">
+                <!-- <div class="right" @click="fnMaterialDetail(i,type)"> -->
+                <div class="right" @click="preview(1, i)">
+                  <div class="img">
+                    <span><img :src="i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png'" alt=""></span>
+                  </div>
+                  <div class="des">
+                    <div>
+                      <h3 class="one-line">{{i.title}}</h3>
+                      <p class="one-line" v-html="i.contentAbstract"></p>
+                    </div>
                   </div>
                 </div>
+                <div v-show="isIndependent == 2" class="left"
+                     @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })">
+                  <img src="../../images/relay.png" alt="">
+                </div>
               </div>
-              <div v-show="isIndependent == 2" class="left"
-                   @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })">
-                <img src="../../images/relay.png" alt="">
+              <div class="li_bot">
+                <div class="browse" @click="fnMaterialDetail(i,type)">
+                  浏览次数 <span> {{i.openCount}} </span>
+                  <img src="../../images/arrow_right.png" alt="">
+                </div>
+                <div class="share_img">
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1" @click="fnShare(i,type)" />
+                  <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
+                </div>
               </div>
             </div>
           </van-list>
         </li>
         <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 1">
           <van-list v-model="saleListLoading" :immediate-check="false" :finished="saleListFinished" finished-text="没有更多了" @load="onLoad">
-            <div class="item pointer" v-for="i in saleList" :key="i.documentId">
-              <div class="right" @click="preview(2, i)">
-                <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
-                <div class="des">
-                  <div>
-                    <h3 class="one-line">{{i.name}}</h3>
-                    <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+            <div class="pointer" v-for="i in saleList" :key="i.documentId">
+              <div class="item">
+                <!-- <div class="right" @click="fnMaterialDetail(i,type)"> -->
+                <div class="right" @click="preview(2, i)">
+                  <img class="img" :src="i.cover ? i.cover : getFileDefaultCover(i.name)" alt="">
+                  <div class="des">
+                    <div>
+                      <h3 class="one-line">{{i.name}}</h3>
+                      <p class="one-line">{{i.fileSize ? byteConvert(i.fileSize) : ''}}</p>
+                    </div>
                   </div>
                 </div>
+                <div v-show="isIndependent == 2" class="left"
+                     @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
+                  <img src="../../images/relay.png" alt="">
+                </div>
               </div>
-              <div v-show="isIndependent == 2" class="left"
-                   @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
-                <img src="../../images/relay.png" alt="">
+              <div class="li_bot">
+                <div class="browse" @click="fnMaterialDetail(i,type)">
+                  浏览次数<span> {{i.openCount}} </span>
+                  <img src="../../images/arrow_right.png" alt="">
+                </div>
+                <div class="share_img">
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1" @click="fnShare(i,type)" />
+                  <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
+                </div>
               </div>
             </div>
           </van-list>
         </li>
         <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 2">
           <van-list v-model="posterListLoading" :immediate-check="false" :finished="posterListFinished" finished-text="没有更多了" @load="onLoad">
-            <div class="item pointer" v-for="i in posterList" :key="i.posterId">
-              <div class="right" @click="previewImg(i)">
-                <div class="img">
-                  <span><img :src="i.posterUrl" alt=""></span>
-                </div>
-                <div class="des">
-                  <div>
-                    <h3 class="one-line">{{i.posterName}}</h3>
+            <div class="pointer" v-for="i in posterList" :key="i.posterId">
+              <div class="item">
+                <!-- <div class="right" @click="fnMaterialDetail(i,type)"> -->
+                <div class="right" @click="previewImg(i)">
+                  <div class="img">
+                    <span><img :src="i.posterUrl" alt=""></span>
+                  </div>
+                  <div class="des">
+                    <div>
+                      <h3 class="one-line">{{i.posterName}}</h3>
+                    </div>
                   </div>
                 </div>
+                <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img
+                       src="../../images/relay.png" alt="">
+                </div>
               </div>
-              <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img src="../../images/relay.png"
-                     alt=""></div>
+              <div class="li_bot">
+                <div class="browse" @click="fnMaterialDetail(i,type)">
+                  浏览次数 <span> {{i.openCount}} </span>
+                  <img src="../../images/arrow_right.png" alt="">
+                </div>
+                <div class="share_img">
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1" @click="fnShare(i,type)" />
+                  <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
+                </div>
+              </div>
             </div>
           </van-list>
         </li>
@@ -91,7 +130,7 @@
         </div>
       </div> -->
     </template>
-
+    <!-- 图片预览 -->
     <img-preview ref="imgPreview"></img-preview>
 
     <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster"></upload-poster>
@@ -99,10 +138,31 @@
     <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
     <!-- 文件上传 -->
     <reprint-edit v-if="showFileUpload" ref="reprintEdit" :type="2" @doShowFileUpload="doShowFileUpload"></reprint-edit>
+    <!-- 分享弹窗 -->
+    <van-action-sheet v-model="showShare" cancel-text="取消" close-on-click-action @cancel="onCancel">
+      <div class="action_content pointer">
+        <div class="text">分享到</div>
+        <img src="../../images/shareWc.png" alt="" @click="sendChart">
+        <div class="wxCircle">微信朋友圈</div>
+      </div>
+    </van-action-sheet>
+    <!-- 复制的提示 -->
+    <div class="copy_area" v-if="showCopy && tab==2" @click="clickView">
+      <div class="icon_img">
+        <img src="../../images/bell_l.png" alt="">
+        <span>已复制到个人素材库</span>
+      </div>
+      <span>点击查看</span>
+    </div>
   </div>
 </template>
 <script>
-import { ArticleList, SaleDocumentList, PosterList } from '../../config/api'
+import {
+  ArticleList,
+  SaleDocumentList,
+  PosterList,
+  copy_material,
+} from '../../config/api'
 import {
   sendChatMessage,
   byteConvert,
@@ -133,6 +193,7 @@ export default {
     return {
       tab: 1,
       type: 0,
+      showShare: false,
 
       articleList: [],
       totalArticle: 0,
@@ -162,6 +223,8 @@ export default {
       showContentPreview: false,
       showFileUpload: false, // 是否展示文件上传页面
       fileData: {}, // 上传的文件信息
+      shareObj: {}, //分享信息
+      showCopy: false,
     }
   },
   computed: {
@@ -185,8 +248,56 @@ export default {
     ...mapActions(['getCorpId']),
     tabClick(val) {
       this.tab = val
+      this.type = 0
       this.initPage(this.type)
       this.getList()
+    },
+    // 去素材详情页
+    fnMaterialDetail(val, type) {
+      console.log(val, '----详情页----')
+      let id
+      if (type == 0) {
+        id = val.articleId
+      } else if (val == 1) {
+        id = val.documentId
+      } else {
+        id = val.posterId
+      }
+      this.$router.push({
+        path: '/talkTool/matiralDetail',
+        query: {
+          type: type + 1,
+          articleId: id,
+        },
+      })
+    },
+    //分享
+    fnShare(val, type) {
+      this.showShare = true
+      this.shareObj = val
+    },
+    onCancel() {
+      this.showShare = false
+    },
+    // 复制
+    fnCopy(val, type) {
+      this.shareObj = val
+      let id
+      if (type == 0) {
+        id = val.articleId
+      } else if (val == 1) {
+        id = val.documentId
+      } else {
+        id = val.posterId
+      }
+      copy_material({ materialId: id, materialType: type + 1 }).then((res) => {
+        if (res.result) {
+          this.showCopy = true
+          setTimeout(() => {
+            this.showCopy = false
+          }, 3000)
+        }
+      })
     },
     // 添加素材
     fnAddMaterial(v) {
@@ -432,6 +543,96 @@ export default {
         qwShare(false, shareTitle, url, imgUrl, desc)
       }
     },
+    // 分享朋友圈
+    sendChart() {
+      console.log(this.shareObj, '-------llll----')
+      this.$network
+        .get('/user-service/m/user/getinticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: true,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'getContext',
+              'invoke',
+              'shareToExternalContact',
+              'shareToExternalChat',
+              'navigateToAddCustomer',
+              'shareToExternalMoments',
+              'createChatWithMsg',
+              'openExistedChatWithMsg',
+            ],
+          })
+
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: [
+                  'getContext',
+                  'invoke',
+                  'shareToExternalContact',
+                  'shareToExternalChat',
+                  'navigateToAddCustomer',
+                  'shareToExternalMoments',
+                  'createChatWithMsg',
+                  'openExistedChatWithMsg',
+                ],
+              },
+              function (res) {
+                let that = this,
+                  url
+                if (mediaObj.tab == 1) {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                } else if (mediaObj.tab == 2) {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.documentId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                } else {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                }
+                wx.invoke(
+                  'shareToExternalMoments',
+                  {
+                    attachments: [
+                      {
+                        msgtype: 'link', // 消息类型，必填
+                        link: {
+                          title: mediaObj.title, // H5消息标题
+                          imgUrl: mediaObj.cover, // H5消息封面图片URL
+                          // url: '', // H5消息页面url 必填
+                          url: url,
+                        },
+                      },
+                    ],
+                  },
+                  function (res) {
+                    alert(JSON.stringify(res))
+                    if (res.err_msg == 'shareToExternalMoments:ok') {
+                    }
+                  }
+                )
+              }
+            )
+          })
+        })
+    },
+    // 返回个人素材
+    clickView() {
+      console.log(this.shareObj)
+      this.tab = 1
+      this.initPage(this.type)
+      this.getList()
+    },
   },
   components: {
     HeaderTitle,
@@ -451,6 +652,7 @@ export default {
   height: 100%;
   background-color: @white;
   overflow-x: hidden;
+  position: relative;
   .header-nav {
     display: flex;
     justify-content: space-between;
@@ -549,7 +751,7 @@ export default {
       .item {
         display: flex;
         align-items: center;
-        padding: 32px;
+        padding: 26px 32px;
         position: relative;
         .left {
           width: 48px;
@@ -564,6 +766,9 @@ export default {
         }
         .right {
           width: 88%;
+          background: #f7f7f7;
+          padding: 16px;
+          box-sizing: border-box;
           .img {
             display: inline-block;
             width: 100px;
@@ -603,6 +808,33 @@ export default {
             }
           }
         }
+      }
+      .li_bot {
+        padding: 0 32px 34px;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        .browse {
+          display: flex;
+          align-items: center;
+          line-height: 32px;
+          color: #b3b3b3;
+          font-size: 24px;
+          span {
+            display: inline-block;
+          }
+          img {
+            width: 32px;
+            height: 32px;
+          }
+        }
+        .share_img {
+          width: 36px;
+          height: 36px;
+          img {
+            width: 100%;
+          }
+        }
         &::after {
           content: '';
           height: 2px;
@@ -610,7 +842,7 @@ export default {
           transform: scaleY(0.5);
           position: absolute;
           right: 0;
-          left: 32px;
+          left: 0;
           bottom: 0;
         }
       }
@@ -627,7 +859,7 @@ export default {
         .right {
           width: 100%;
           .des {
-            max-width: 80%;
+            max-width: 78%;
           }
         }
       }
@@ -679,6 +911,56 @@ export default {
     position: absolute;
     right: 32px;
     bottom: 0;
+  }
+  .van-popup {
+    .van-action-sheet__content {
+      .action_content {
+        height: 316px;
+        font-size: 28px;
+        padding-top: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .text {
+          color: #b3b3b3;
+          margin-bottom: 40px;
+        }
+        img {
+          width: 100px;
+          height: 100px;
+        }
+        .wxCircle {
+          color: #262626;
+          margin-top: 16px;
+        }
+      }
+    }
+  }
+  .copy_area {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    width: 686px;
+    height: 104px;
+    // opacity: 0.7;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    font-size: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
+    cursor: pointer;
+    .icon_img {
+      display: flex;
+      align-items: center;
+    }
+    img {
+      width: 32px;
+      height: 32px;
+      margin-right: 8px;
+    }
   }
 }
 </style>
