@@ -175,7 +175,7 @@ export default {
         .name-box {
           display: flex;
           align-items: flex-end;
-          max-width: calc(100% - 130px);
+          max-width: calc(100% - 140px);
           h3 {
             max-width: 100%;
             color: @fontSub3;
