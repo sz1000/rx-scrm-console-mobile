@@ -41,6 +41,9 @@ export default {
 			type: String,
 			default: ''
 		},
+        detailType: {
+            default: ''
+        }
 	},
 	data() {
 		return {
@@ -81,7 +84,8 @@ export default {
 		},
         uploadFun(e){    //附件上传
 			let id = this.id || 'A280C994F2114D3ABFA02FAED9B8B081'
-            cluecustomeraccessory_upload(e,id).then(res => {
+
+            cluecustomeraccessory_upload(e, id, this.detailType).then(res => {
                 if(res.result){
 					this.getList()
                 }

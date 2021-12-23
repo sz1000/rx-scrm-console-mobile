@@ -13,7 +13,7 @@
             <!-- 群聊 -->
             <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
-            <enclosure :id="customerInfo.clueCustomerNo" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+            <enclosure :id="customerInfo.clueCustomerNo" :detailType="customerInfo.type" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
         </div>
         <!-- 写跟进 -->
         <div class="follow_up" v-if="navActive == 'dynamics'" @click="openDialog('','follow')">
@@ -423,20 +423,17 @@ export default {
             return true
         },
         toFun(val){
-            let name = ''
+            let name = '', query = { clueCustomerNo: this.customerInfo.clueCustomerNo }
+
             if(val == 'helper'){    //查看协助人
                 name = 'helper'
+                query.type = this.customerInfo.type
             }else if(val == 'detail'){    //详情
                 name = 'CustomerDetail'
+                query.fromType = '3'
                 // name = 'informationDetail'
             }
-            this.$router.push({
-                name: name,
-                query: { 
-                    id: this.customerInfo.clueCustomerNo,
-                    type: this.customerInfo.type
-                },
-            })
+            this.$router.push({ name, query })
         },
         toGroupDetail(){    //群聊详情
             this.$router.push({

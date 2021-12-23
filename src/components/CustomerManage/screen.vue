@@ -292,7 +292,7 @@ export default {
                             // 客户类型
                             this.customerTypeOptions.push(item)
                         } else if (item.type == 'clue_type') {
-                            // 客户类型
+                            // 线索类型
                             this.clueTypeOptions.push(item)
                         }
                     })

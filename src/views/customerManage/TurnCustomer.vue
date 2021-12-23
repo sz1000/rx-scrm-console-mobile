@@ -254,6 +254,7 @@ export default {
             dialogTitle: '',
             dialogType: '',
             dialogText: '',
+            openType: '',
 
             dialog: false,
             columns: [],
@@ -384,11 +385,23 @@ export default {
         initEchoData() {
             // 行业领域
             if (this.form && this.form.cropSubIndustry) {
-                let arr = clueCustomerEntity.cropSubIndustry.split(',')
+                let arr = this.form.cropSubIndustry.split(','), i = 0, j = 0
 
-                this.form.industry = arr.map(Number)
+                this.industryFieldOptions.forEach((el, index) => {
+                    if(el.id == arr[0]) {
+                        i = index
+                    }
+                    el.children.forEach((son,s) => {
+                        if(son.id == arr[1]){
+                            j = s
+                        }
+                    })
+                })
+                this.form.industry = [i,j]
+                this.form.industryName = this.industryFieldOptions[i].name + '/' + this.industryFieldOptions[i].children[j].name
             } else {
                 this.form.industry = []
+                this.form.industryName = ''
             }
             // 性别
             this.genderOptions.map(item => {
@@ -549,7 +562,7 @@ export default {
                     break;
                 case 'cropscale':  // 企业规模
                     this.form.cropscale = val[0].name
-                    this.form.corpScale = val[0].value
+                    this.form.corpScale = val[0].id
                     break;
                 case 'industry':  // 行业领域
                     this.form.industryName = name.join('/')

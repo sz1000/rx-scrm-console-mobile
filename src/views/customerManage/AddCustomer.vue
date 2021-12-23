@@ -157,6 +157,7 @@ export default {
                 cropFullName: '', // 企业名称
                 corpScale: '', // 企业规模
                 corpScaleName: '', // 企业规模
+                cropSubIndustry: '', // 行业领域
                 industry: [], // 行业领域
                 industryName: '', // 行业领域
                 address: '', // 办公地址
@@ -329,10 +330,9 @@ export default {
                     this.form.corpScale = val[0].id
                     break;
                 case 'industry':  // 行业领域
-                    console.log('所属行业', val, this.industryFieldOptions[val[0]])
-
                     this.form.industryName = name.join('/')
-                    this.form.industry = val.join(',')
+                    this.form.industry = val
+                    this.form.cropSubIndustry = val.join(',')
                     break;
                 default:
                     break;
