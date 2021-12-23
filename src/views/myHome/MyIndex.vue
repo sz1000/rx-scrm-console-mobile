@@ -13,8 +13,11 @@
         <img :src="userObj.avatar" alt="" v-if="userObj.avatar" />
         <img src="../../images/img_head.png" alt="" v-else />
         <div class="person_info">
-          <p>{{userObj.name}}</p>
-          <p>{{userObj.departments}}</p>
+          <div class="tite_warp">
+            <p class="name">{{userObj.name}}</p>
+            <p class="position_name" v-if="userObj.position">{{userObj.position}}</p>
+          </div>
+          <p class="departments">{{userObj.departments}}</p>
         </div>
       </div>
       <!-- <div class="change_identity" @click="changeIdent">
@@ -218,6 +221,7 @@ export default {
         name: '',
         avatar: '',
         departments:"",
+        position:"",
       },
       activeObj: {
         excedOne: '0',
