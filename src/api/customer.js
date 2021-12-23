@@ -131,11 +131,11 @@ export function clueCustomerFollowUser_getMBFollowUserList(id) { // 获取协助
         method: 'get'
     })
 }
-export function cluecustomeraccessory_upload(e,id,noLoading = false) { // 附件上传
+export function cluecustomeraccessory_upload(e, id, type, noLoading = false) { // 附件上传
     let formData = new FormData()
     formData.append('file', e.target.files[0])
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id,
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id + 'type=' + type,
         method: 'post',
         header: {
             noLoading: noLoading

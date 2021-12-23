@@ -292,7 +292,7 @@ export default {
                             // 客户类型
                             this.customerTypeOptions.push(item)
                         } else if (item.type == 'clue_type') {
-                            // 客户类型
+                            // 线索类型
                             this.clueTypeOptions.push(item)
                         }
                     })
@@ -609,7 +609,7 @@ export default {
                     height: 24px;
                     &::before, &::after {
                         content: '';
-                        border-radius: 50%;
+                        border-radius: 40px;
                         background-color: #ccc;
                         position: absolute;
                         top: 50%;
