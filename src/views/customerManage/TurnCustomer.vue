@@ -120,7 +120,7 @@
                     <span class="require">*</span>
                 </div>
                 <div class="val" @click="addressRequired && showInput('address') || !addressRequired && openDialog('address')">
-                    <span class="one-line" :class="{'placeholder':!form.address, tips: addressRequired}">{{addressRequired ? '未输入' : form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    <span class="block-span one-line" :class="{'placeholder':!form.address, tips: addressRequired}">{{addressRequired ? '未输入' : form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
                 </div>
             </div>
             <div class="item">
@@ -128,7 +128,7 @@
                     <span>备注</span>
                 </div>
                 <div class="val" @click="openDialog('remark')">
-                    <span class="text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                 </div>
             </div>
         </div>
@@ -732,6 +732,10 @@ export default {
                 .icon-select{
                     display: flex;
                     align-items: center;
+                    width: 100%;
+                    span {
+                        width: calc(100% - 32px);
+                    }
                     .icon{
                         width: 32px;
                         height: 32px;
@@ -746,6 +750,9 @@ export default {
                 }
                 .tips {
                     color: @red;
+                }
+                .block-span {
+                    width: 100%;
                 }
             }
         }

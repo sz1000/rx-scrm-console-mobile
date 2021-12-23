@@ -1,7 +1,7 @@
 <template>
   <div class="customer-list-box">
     <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <div v-for="i in list" :key="i.id" class="list-item" @click="goDetail(i)">
+      <div v-for="i in list" :key="i.id" class="list-item pointer" @click="goDetail(i)">
         <div class="list-item-left">
           <img class="header-img" :src="i.avatar | $setAvatar" alt="">
           <img v-if="i.isWcCus == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
