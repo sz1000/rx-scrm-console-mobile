@@ -999,7 +999,8 @@ export default {
       this.userdataList = groupData
       console.log(value)
       this.baseForm.staffs = value
-      this.groupStaffset()
+      // this.groupStaffset()
+        this.Screeningcustomer()
     },
     groupStaffset(value) {
       // let groutList = this.grouprst;
@@ -1048,9 +1049,14 @@ export default {
           lableList: this.highLightArr, //this.customerlistdata || [],
         })
         .then((res) => {
-          console.log(res)
-          this.clueCustomerLists = res.data.clueCustomerList
-          this.estimateCusNum = res.data.estimateNum
+          if(res.result){
+
+            console.log(res)
+            this.clueCustomerLists = res.data.clueCustomerList
+            this.estimateCusNum = res.data.estimateNum
+          }else{
+              this.estimateCusNum = 0
+          }
         })
     },
     // 选择客户
