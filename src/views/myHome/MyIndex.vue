@@ -359,6 +359,9 @@ export default {
                 case 3:
                     str =`${obj.customerCalled}从企微同步了`
                     break;
+                case 4:
+                    str = obj.context
+                    break;
                 case 5:
                     str =`更新${obj.customerCalled}的信息`
                     break;
