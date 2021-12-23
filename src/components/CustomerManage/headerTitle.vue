@@ -100,7 +100,7 @@ export default {
         position: relative;
         &::before, &::after{
             content: '';
-            border-radius: 50%;
+            border-radius: 40px;
             background-color: @fontSub3;
             position: absolute;
             left: 50%;

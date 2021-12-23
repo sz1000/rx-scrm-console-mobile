@@ -609,7 +609,7 @@ export default {
                     height: 24px;
                     &::before, &::after {
                         content: '';
-                        border-radius: 50%;
+                        border-radius: 40px;
                         background-color: #ccc;
                         position: absolute;
                         top: 50%;
