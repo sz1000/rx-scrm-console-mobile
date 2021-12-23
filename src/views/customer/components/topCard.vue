@@ -17,7 +17,7 @@
                     </div>
                     <div class="p">{{customerInfo.mobil}}</div>
                     <div class="p">{{customerInfo.cropFullName}}</div>
-                    <div class="person" @click.stop="toFun('helper')">
+                    <div v-if="fromType == '1' || fromType == '3'" class="person" @click.stop="toFun('helper')">
                         <div class="img_box" :class="`m${personList.length}`">
                             <img class="img" :src="item.avatar" v-for="(item,index) in personList" :key="index">
                         </div>
@@ -40,6 +40,9 @@
 export default {
     name: 'TopCard',
     props: {
+        fromType: {  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            default: '0'
+        },
         customerInfo: {
             type: Object,
             default: () => {}

@@ -105,7 +105,7 @@ export default {
     // 获取文章详情
     getDetails() {
       this.$toast.loading({
-        message: '加载中...',
+        message: '',
         forbidClick: true,
         duration: 0,
         loadingType: 'spinner',

@@ -1,446 +1,766 @@
 <template>
-  <div class="turnWarp">
-    <div class="headerTitle">
-      <div class="backPage" @click="goBack">
-        <van-icon name="arrow-left" />
-        返回
-      </div>
-      <span class="textTitle">转客户</span>
-    </div>
-    <div class="addForm">
-      <div class="custonInfo">
-        <img src="../../images/icon_label.png" alt="">
-        <span>客户信息</span>
-      </div>
-      <el-form ref="form" :model="formObj" label-position='right'>
-        <KehuTip :addChildForm="formObj" v-on:getacf="getacf"></KehuTip>
-        <!-- <el-form-item label="企业简称:"
-                      prop="customerName"
-                      :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
-          <el-input v-model="formObj.customerName"
-                    placeholder="请输入"
-                    maxlength="12"></el-input>
-        </el-form-item>-->
-        <el-form-item label="客户来源:" prop="source" :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
-          <el-select v-model="formObj.source" placeholder="请选择" @change="changeSource" clearable>
-            <el-option v-for="item in optionSource" :key="item.value" :label="item.name" :value="item.type">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="客户类型:" prop="customerType" :rules="[ { required: true, message: '请选择',trigger: 'change'}]">
-          <el-select v-model="formObj.customerType" placeholder="请选择" @change="changeCustom" clearable>
-            <el-option v-for="item in optionsCustom" :key="item.customerType" :label="item.label" :value="item.customerType">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="客户阶段:">
-          <el-select v-model="formObj.stage" placeholder="请选择" @change="changeCustom" clearable>
-            <el-option v-for="(item,index) in stageList" :key="index" :label="item.name" :value="item.name">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="电话:">
-          <el-input v-model="formObj.mobil" placeholder="请输入" maxlength="11"></el-input>
-        </el-form-item>
-        <!--<el-form-item label="企业名称:">
-          <el-input v-model="formObj.cropFullName"
-                    placeholder="请输入"
-                    maxlength="100"></el-input>
-        </el-form-item>-->
-        <GongsiTip :addChildForm="formObj" v-on:getgst="getgst"></GongsiTip>
-        <el-form-item label="所属行业:">
-          <el-cascader size="large" :props="{ expandTrigger: 'click',value:'id' ,label:'name'}" :options="optionsCreat" v-model="formObj.industry"
-                       @change="handleChange">
-          </el-cascader>
-        </el-form-item>
-        <el-form-item label="企业规模:">
-          <el-select v-model="formObj.corpScale" placeholder="请选择" @change="scaleChange" clearable>
-            <el-option v-for="item in optionsScale" :key="item.value" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="地址:">
-          <el-input v-model="formObj.address" maxlength="100" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="备注:" class="textareaInput">
-          <el-input type="textarea" v-model="formObj.remark" maxlength="200" placeholder="请输入文字(不得超过200个字符)" show-word-limit></el-input>
-        </el-form-item>
-        <div class="custonInfo">
-          <img src="../../images/icon_label.png" alt="">
-          <span>联系人信息</span>
+    <div class="turn-customer">
+        <header-title class="customer-title" title="线索转客户" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
+
+        <div class="form-box">
+            <div class="item title">基本信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>客户名称</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
+                    <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>客户来源</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
+                        <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>客户阶段</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="stageRequired && showInput('stage') || !stageRequired && openSelectDialog('stage')">
+                        <span :class="{'placeholder':!form.stage, tips: stageRequired}">{{stageRequired ? '未选择' : form.stage | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>客户类型</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="customerTypeRequired && showInput('customerType') || !customerTypeRequired && openSelectDialog('customerType')">
+                        <span :class="{'placeholder':!form.customerTypeName, tips: customerTypeRequired}">{{customerTypeRequired ? '未选择' : form.customerTypeName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>建档时间</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="showDateSelect('createTime')">
+                        <span :class="{'placeholder':!form.createTimeShow}">{{form.createTimeShow | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <div class="item title">企业信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>企业名称</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <input v-show="!cropFullNameRequired" type="text" ref="cropFullName" class="input" v-model.trim="form.cropFullName" maxlength="30" placeholder="请输入">
+                    <span v-show="cropFullNameRequired" class="input tips" @click="showInput('cropFullName')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>企业简称</span>
+                </div>
+                <div class="val">
+                    <input type="text" ref="name" class="input" v-model.trim="form.customerName" maxlength="30" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>企业规模</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="cropscaleRequired && showInput('cropscale') || !cropscaleRequired && openSelectDialog('cropscale')">
+                        <span :class="{'placeholder':!form.cropscale, tips: cropscaleRequired}">{{cropscaleRequired ? '未选择' : form.cropscale | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>行业领域</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="industryRequired && showInput('industry') || !industryRequired && openSelectDialog('industry')">
+                        <span :class="{'placeholder':!form.industryName, tips: industryRequired}">{{industryRequired ? '未选择' : form.industryName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>固定电话</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model="form.mobil" maxlength="13" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>办公地址</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val" @click="addressRequired && showInput('address') || !addressRequired && openDialog('address')">
+                    <span class="block-span one-line" :class="{'placeholder':!form.address, tips: addressRequired}">{{addressRequired ? '未输入' : form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>备注</span>
+                </div>
+                <div class="val" @click="openDialog('remark')">
+                    <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <div class="item title">联系人信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>联系人</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
+                    <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>手机号码</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <input v-show="!phoneRequired" type="text" ref="phone" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
+                    <span v-show="phoneRequired" class="input tips" @click="showInput('phone')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>微信昵称</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.wechatNickname" maxlength="20" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>微信号</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.weixin" maxlength="20" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>性别</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="showActionSheet('gender')">
+                        <span :class="{'placeholder':!form.genderName}">{{form.genderName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>职务</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.position" maxlength="20" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>邮箱</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.email" maxlength="60" placeholder="请输入">
+                </div>
+            </div>
+        </div>
+        <div class="form-box">
+            <div class="item title">自定义信息</div>
+            <div v-for="i in customColumns" :key="i.id" class="item">
+                <div class="label">
+                    <span>{{ i.columnName }}</span>
+                </div>
+                <div class="val">
+                    <!-- 文本 -->
+                    <input v-if="i.columnType == 1" type="text" class="input" v-model.trim="i.value" placeholder="请输入">
+                    <!-- 选择 -->
+                    <div v-if="i.columnType == 2" class="icon-select" @click="openSelectDialog(i, 'customColumns')">
+                        <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                    <!-- 时间 -->
+                    <div v-if="i.columnType == 3" class="icon-select" @click="showDateSelect(i.columnValue, 'customColumns')">
+                        <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <el-form-item label="头像:" class="upload_avatar">
-          <div class="demo-input-suffix">
-            <el-upload class="avatar-uploader" action="#" :show-file-list="false" :http-request="handleAvatarSuccess">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <div class="resetUpload" v-show="imageUrl">重新上传</div>
-            </el-upload>
-            <img src="../../images/dele.png" alt="" v-if="imageUrl" class="el-icon-circle-close" @click="deleteImg">
-          </div>
-        </el-form-item>
-
-        <el-form-item label="联系人:" prop="name" :rules="[ { required: true, message: '请输入姓名',trigger: 'blur'}]">
-          <el-input v-model="formObj.name" maxlength="15" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号:">
-          <el-input v-model="formObj.phone" maxlength="11" placeholder="请输入"></el-input>
-        </el-form-item>
-        <el-form-item label="性别:">
-          <el-select v-model="formObj.gender" placeholder="请选择">
-            <el-option label="未知" value="0"></el-option>
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="职务:">
-          <el-input v-model="formObj.position" placeholder="请输入" maxlength="20"></el-input>
-        </el-form-item>
-        <el-form-item label="微信号:">
-          <el-input v-model="formObj.weixin" placeholder="请输入" maxlength="20"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱:">
-          <el-input v-model="formObj.email" placeholder="请输入" maxlength="60"></el-input>
-        </el-form-item>
-        <el-form-item class="submitBtn">
-          <el-button type="primary" v-preventReClick @click="onSubmit('form')">提交</el-button>
-        </el-form-item>
-      </el-form>
+        <!-- 时间选择弹窗（日历） -->
+        <van-calendar v-model="selectDatePopupShow" :min-date="minDate" :show-confirm="false" color="#4168F6" @confirm="dateConfirm"/>
+        <!-- 客户来源 -->
+        <select-dialog v-model="dialog" :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" @confirm="selectedFun"></select-dialog>
+        <!-- 地址 and 备注 -->
+        <input-dialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></input-dialog>
+        <!-- 性别选择 -->
+        <van-action-sheet v-model="genderPopupShow" :actions="genderOptions" cancel-text="取消" close-on-click-action @select="genderConfirm" @cancel="hideGender"/>
     </div>
-  </div>
 </template>
 <script>
-import KehuTip from './comTip/kehuTip.vue'
-import GongsiTip from './comTip/gongsiTip.vue'
-import { uploadFile } from '../../api/friend'
+import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
+import { cluecustomer_toupdate, cluecustomer_cluetocustomer } from '@/api/customer'
+import { SelectDialog, InputDialog } from '../customer/components'
+import { throttle, formatDate } from '@/utils/tool'
+import { mapState } from 'vuex'
+
 export default {
-  components: {
-    KehuTip,
-    GongsiTip,
-  },
-  data() {
-    return {
-      stageList: [],
-      formObj: {
-        customerName: '',
-        mobil: '',
-        source: '',
-        customerType: '',
-        cropFullName: '',
-        corpScale: '',
-        industry: '',
-        address: '',
-        remark: '',
-        name: '',
-        phone: '',
-        gender: '',
-        position: '',
-        weixin: '',
-        email: '',
-      },
-      optionSource: [],
-      optionsCustom: [
-        { label: '微信用户', customerType: 1 },
-        { label: '企微用户', customerType: 2 },
-        { label: '未知', customerType: 0 },
-      ],
-      optionsScale: [],
-      optionsCreat: [],
-      imageUrl: '',
-    }
-  },
-  created() {
-    this.getDataList()
-  },
-  mounted() {
-    //this.optionsDouble()
-  },
-  methods: {
-    /*optionsDouble() {
-      this.$network
-        .post('/customer-service/clueCustomerFollowUser/selectUserDeptList')
-        .then((res) => {
-          console.log(res)
-          this.stageList = res.data.stage
-          console.log(this.stageList)
-        })
-    },*/
+    data() {
+        return {
+            fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            clueCustomerNo: this.$route.query.clueCustomerNo,
 
-    handleAvatarSuccess(request) {
-      // console.log('--2----', request)
-      this.$toast.loading({ duration: 0 })
-      if (this.beforeAvatarUpload(request.file)) {
-        let formData = new FormData()
-        formData.append('file', request.file)
-        formData.append('filetype', 'image')
-        formData.append('type', 'friend')
-        uploadFile(formData).then((res) => {
-          if (res.result) {
-            this.imageUrl = res.data.url
-            this.$toast.clear()
-          }
-        })
-      }
-    },
-    deleteImg() {
-      this.imageUrl = ''
-    },
-    beforeAvatarUpload(file) {
-      const isJPG =
-        file.type == 'image/jpeg' ||
-        file.type == 'image/jpg' ||
-        file.type == 'image/png'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG || !isLt2M) {
-        this.$message.error(
-          '上传头像图片只能是 JPG,PNG,JEPG 格式，大小不能超过 2MB!'
-        )
-      }
-      // console.log(isJPG, isLt2M)
-      return isJPG && isLt2M
-    },
+            selectDatePopupShow: false,
+            timeType: '',
+            minDate: new Date(2011, 0, 1),
 
-    getacf(acfValue) {
-      // acfValue就是子组件传过来的值
-      console.log('acfValue--->>', acfValue)
-      this.formObj.customerName = acfValue.customerName
-    },
-    getgst(gstValue) {
-      // gstValue就是子组件传过来的值
-      console.log('gstValue--->>', gstValue)
-      this.formObj.cropFullName = gstValue.cropFullName
-    },
-    getDataList() {
-      this.$network
-        .get('/customer-service/cluecustomer/toupdate', {
-          clueCustomerNo: this.$route.query.customno,
-        })
-        .then((res) => {
-          this.formObj = res.data.clueCustomerEntity
-          this.stageList = res.data.stageList
-          this.processTree(res.data.comlist)
-          this.optionSource = res.data.list
-          this.optionsScale = res.data.corpScaleList
-          if (res.data.clueCustomerEntity.cropSubIndustry) {
-            let arr = res.data.clueCustomerEntity.cropSubIndustry.split(',')
-            this.formObj.industry = arr.map(Number)
-          } else {
-            this.formObj.industry = []
-          }
-        })
-    },
-    processTree(data) {
-      data.forEach((item) => {
-        if (item.children.length) {
-          this.optionsCreat.push(item)
-          return this.processTree(item.children)
-        } else {
-          item.children = null
+            genderPopupShow: false,
+
+            dialog_address: false,
+            dialogTitle: '',
+            dialogType: '',
+            dialogText: '',
+
+            dialog: false,
+            columns: [],
+            pickerType: '',
+            select: {
+                key: 'name',
+                title: '客户来源',
+                isGetIndex: false,
+                indexList: null,
+                value: '',
+            },
+
+            form: {
+                createTimeShow: null, // 建档时间（yyyy-MM-dd）
+                createTime: '', // 建档时间（入参: yyyy-MM-dd hh:mm:ss）
+
+                customerCalled: '', // 客户名称
+                source: '', // 客户来源(val)
+                sourceName: '', // 客户来源(name)
+                customerType: '', // 客户类型(val)
+                customerTypeName: '', // 客户类型(name)
+                customerName: '', // 企业简称
+                cropFullName: '', // 企业名称
+                corpScale: '', // 企业规模(val)
+                cropscale: '', // 企业规模(name)
+                industry: [], // 行业领域
+                cropSubIndustry: '', // 行业领域(val-string)
+                industryName: '', // 行业领域(name-string)
+                address: '', // 办公地址
+                remark: '', // 备注
+                stage: '', // 客户阶段(name)
+                name: '', // 联系人
+                phone: '', // 手机号码
+                mobil: '', // 固定电话
+                gender: '', // 性别
+                genderName: '', // 性别
+                position: '', // 职务
+                email: '', // 邮箱
+                wechatNickname: '', // 微信昵称
+                weixin: '', // 微信号
+
+                corpCustomColumnMap: [], // 自定义信息
+            },
+            customColumns: [], // 自定义信息
+            customColumnsTime: '', // 自定义信息时间选择
+
+            customerTypeOptions: [], // 客户类型选择列表
+            customerStageOptions: [], // 客户阶段选择列表
+            sourceOptions: [], // 客户来源选择列表
+            scaleOptions: [], // 企业规模选择列表
+            industryFieldOptions: [], // 行业领域选择列表
+            genderOptions: [
+                { name: '男', value: 1 },
+                { name: '女', value: 2 },
+                { name: '未知', value: 0 },
+            ], // 性别选择列表
+
+            customerCalledRequired: false, // 客户名称
+            industryRequired: false, // 行业领域
+            nameRequired: false, // 联系人
+            phoneRequired: false, // 手机号
+            sourceRequired: false, // 客户来源
+            stageRequired: false, // 客户阶段
+            customerTypeRequired: false, // 客户类型
+            cropFullNameRequired: false, // 企业名称
+            cropscaleRequired: false, // 企业规模
+            addressRequired: false, // 地址
         }
-      })
     },
-    goBack() {
-      this.$router.go(-1)
+    computed: {
+        ...mapState(["corpId"]),
     },
-    changeCustom(val) {
-      console.log(val)
+    created() {
+        this.init()
     },
-    handleChange(val) {
-      console.log(val)
+    provide() {
+        return {
+            goBack: this.goBack
+        }
     },
-    scaleChange(val) {
-      console.log(val)
-    },
-    changeSource(val) {
-      console.log(val)
-    },
-    onSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          if (this.formObj.phone || this.formObj.weixin) {
-            let cropSubIndustry = this.formObj.industry.toString()
-            let params = {
-              ...this.formObj,
-              ...{
-                cropSubIndustry: cropSubIndustry,
-                type: this.$route.query.type,
-                avatar: this.imageUrl,
-              },
-            }
-            this.$network
-              .post('/customer-service/cluecustomer/cluetocustomer', params)
-              .then((res) => {
-                this.$router.push('/customerManage/clues')
-                this.$message({
-                  type: 'success',
-                  message: '操作成功',
-                })
-              })
-          } else {
-            this.$message({
-              type: 'error',
-              message: '手机号微信号请选填其一',
+    methods: {
+        init() {
+            this.getData()
+        },
+        getData() {
+            cluecustomer_toupdate(this.clueCustomerNo).then((res) => {
+                let { result, data, msg } = res
+
+                if (result) {
+                    let { clueCustomerEntity, stageList, comlist, commonList, corpScaleList, customColumns } = data
+
+                    // 获取各个选择列表
+                    comlist.forEach(el => {
+                        if(el.children.length == 0){
+                            el.children = null
+                        }else{
+                            el.children.forEach(son => {
+                                if(son.children.length == 0){
+                                    son.children = null
+                                }
+                            })
+                        }
+                    })
+
+                    this.customerStageOptions = stageList // 客户阶段
+                    this.industryFieldOptions = comlist  // 行业领域
+                    this.scaleOptions = corpScaleList // 企业规模
+                    this.customColumns = customColumns // 自定义信息
+
+                    commonList.forEach((item) => {
+                        if (item.type == 'source') {
+                            // 客户来源
+                            this.sourceOptions.push(item)
+                        } else if (item.type == 'customer_type') {
+                            // 客户类型
+                            this.customerTypeOptions.push(item)
+                        }
+                    })
+                    // 获取表单
+                    this.form = clueCustomerEntity
+                    this.initEchoData()
+                } else {
+                    this.$toast(msg)
+                }
             })
-          }
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+        },
+        // 初始化回显数据
+        initEchoData() {
+            // 行业领域
+            if (this.form && this.form.cropSubIndustry) {
+                let arr = clueCustomerEntity.cropSubIndustry.split(',')
+
+                this.form.industry = arr.map(Number)
+            } else {
+                this.form.industry = []
+            }
+            // 性别
+            this.genderOptions.map(item => {
+                if (item.value == this.form.gender) {
+                    this.form.genderName = item.name
+                }
+            })
+            // 自定义信息
+            let obj = this.form.corpCustomColumnMap
+
+            if (obj && obj.length) {
+                for (let i in obj) {
+                    this.customColumns.forEach(item => {
+                        if (item.columnValue == i) {
+                            item.value = obj[i]
+                        }
+                    })
+                }
+            }
+        },
+        goBack() {
+            this.$router.go(-1)
+        },
+        // 打开日期选择弹窗
+        showDateSelect(timeType, customColumns) {
+            this.timeType = timeType
+            this.customColumnsTime = customColumns
+            this.selectDatePopupShow = true
+        },
+        // 选中建档时间
+        dateConfirm(date) {
+            let timeType = this.timeType
+
+            if(this.customColumnsTime == 'customColumns') {
+                // 自定义信息
+                this.customColumns.forEach(item => {
+                    if (item.columnValue == timeType) {
+                        item.value = formatDate(date, "yyyy-MM-dd hh:mm:ss")
+                    }
+                })
+            } else {
+                this.form[timeType] = new Date(date).getTime()
+                this.form.createTimeShow = formatDate(date, "yyyy-MM-dd")
+            }
+            this.selectDatePopupShow = false
+        },
+        // 打开性别弹窗
+        showActionSheet(type) {
+            this.genderPopupShow = true
+        },
+        // 选中性别
+        genderConfirm(val) {
+            if (val) {
+                const { name, value } = val
+
+                this.form.genderName = name
+                this.form.gender = value
+            }
+            this.hideGender()
+            this.$forceUpdate()
+        },
+        // 关闭性别选择弹窗
+        hideGender() {
+            this.genderPopupShow = false
+        },
+        openDialog(type){   //打开弹窗 (地址 and 备注)
+            this.openType = type
+            if(type == 'address'){
+                this.dialogTitle = '办公地址'
+                this.dialogType = 'input'
+                this.dialogText = this.form.address
+            }else{
+                this.dialogTitle = '备注'
+                this.dialogType = 'textarea'
+                this.dialogText = this.form.remark
+            }
+            this.dialog_address = true
+        },
+        confirmFun(val){   //弹窗确认 (地址 and 备注)
+            if(this.openType == 'address'){
+                this.form.address = val
+            }else{
+                this.form.remark = val
+            }
+        },
+        openSelectDialog(type, customColumns){     //打开选择弹窗
+            if (customColumns == 'customColumns') {
+                // 自定义信息
+                const { columnValue, columnName, value, optionsVOList } = type
+
+                optionsVOList.forEach(item => {
+                    item.name = item.columnOption
+                })
+                this.pickerType = columnValue
+                this.select.title = columnName
+                this.select.isGetIndex = false
+                this.select.indexList = null
+                this.select.value = value
+                this.columns = optionsVOList
+            } else {
+                this.pickerType = type
+                switch (type) {
+                    case 'source':  // 客户来源
+                        this.select.title = '客户来源'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.sourceName
+                        this.columns = this.sourceOptions
+                        break;
+                    case 'stage':  // 客户阶段
+                        this.select.title = '客户阶段'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.stage
+                        this.columns = this.customerStageOptions
+                        break;
+                    case 'customerType':  // 客户类型
+                        this.select.title = '客户类型'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.customerTypeName
+                        this.columns = this.customerTypeOptions
+                        break;
+                    case 'cropscale':  // 企业规模
+                        this.select.title = '企业规模'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.cropscale
+                        this.columns = this.scaleOptions
+                        break;
+                    case 'industry':  // 行业领域
+                        this.select.title = '行业领域'
+                        this.select.isGetIndex = true
+                        this.select.indexList = null
+                        this.select.value = null
+                        this.columns = this.industryFieldOptions
+                        break;
+                    default:
+                        break;
+                }
+            }
+            this.dialog = true
+        },
+        selectedFun(val, name){   // 筛选项确认
+            let type = this.pickerType
+            
+            switch (type) {
+                case 'source':  // 客户来源
+                    this.form.sourceName = val[0].name
+                    this.form.source = val[0].value
+                    break;
+                case 'stage':  // 客户阶段
+                    this.form.stage = val[0].name
+                    break;
+                case 'customerType':  // 客户类型
+                    this.form.customerTypeName = val[0].name
+                    this.form.customerType = val[0].value
+                    break;
+                case 'cropscale':  // 企业规模
+                    this.form.cropscale = val[0].name
+                    this.form.corpScale = val[0].value
+                    break;
+                case 'industry':  // 行业领域
+                    this.form.industryName = name.join('/')
+                    this.form.industry = val
+                    this.form.cropSubIndustry = val.join(',')
+                    break;
+                default:
+                    // 自定义信息
+                    this.customColumns.forEach(item => {
+                        if (item.columnValue == type) {
+                            item.value = val[0].name
+                        }
+                    })
+                    break;
+            }
+        },
+        // 表单验证
+        checkForm() {
+            const { customerCalled, source, stage, customerType, cropFullName, cropscale, industry, address, name, phone } = this.form
+
+            let arrObj = { customerCalled, source, stage, customerType, cropFullName, cropscale, industry, address, name, phone }
+            
+            for (let i in arrObj) {
+                if (!arrObj[i] || arrObj[i] && !arrObj[i].length) {
+                    this[i + 'Required'] = true
+                    return false
+                }
+            }
+
+            return true
+        },
+        // 提示红字点击后聚焦input或打开选择框
+        showInput(type) {
+            this.initRequired(type)
+            switch (type) {
+                case 'customerCalled':  // 客户名称
+                    this.$nextTick(() => {
+                        this.$refs.customerCalled.focus()
+                    })
+                    break;
+                case 'cropFullName':  // 企业名称
+                    this.$nextTick(() => {
+                        this.$refs.cropFullName.focus()
+                    })
+                    break;
+                case 'name':  // 联系人
+                    this.$nextTick(() => {
+                        this.$refs.name.focus()
+                    })
+                    break;
+                case 'phone':  // 手机号码
+                    this.$nextTick(() => {
+                        this.$refs.phone.focus()
+                    })
+                    break;
+                case 'address':  // 地址
+                    this.openDialog(type)
+                    break;
+                case 'customerType':  // 客户类型
+                case 'stage':  // 客户阶段
+                case 'source':  // 客户来源
+                case 'cropscale': // 企业规模
+                case 'industry': // 行业领域
+                    this.openSelectDialog(type)
+                    break;
+                default:
+                    break;
+            }
+        },
+        // 取消红字提示
+        initRequired(type) {
+            this[type + 'Required'] = false
+        },
+        // 获取最终自定义信息
+        getCorpCustomColumn() {
+            let obj = {}
+
+            this.customColumns.map(item => {
+                obj[item.columnValue] = item.value
+            })
+
+            return JSON.stringify(obj)
+        },
+        // 表单提交
+        async doSubmit() {
+            if(!this.checkForm()) {
+                return
+            }
+
+            if(!throttle()) {
+                return
+            }
+
+            let params = {
+                ...this.form,
+                type: this.fromType,
+                clueCustomerNo: this.clueCustomerNo,
+                corpCustomColumn: this.getCorpCustomColumn()
+            }
+
+            let { result, msg } = await cluecustomer_cluetocustomer(params)
+
+            if (result) {
+                this.$toast("转换成功")
+                setTimeout(() => {
+                    this.$router.push('/customerManage/clues')
+                }, 500)
+            } else {
+                this.$toast(msg)
+            }
+        },
     },
-  },
+    components: {
+        HeaderTitle,
+        SelectDialog,
+        InputDialog
+    }
 }
 </script>
 <style lang="less" scoped>
-.TurnCustomer {
-}
-.turnWarp {
-  .headerTitle {
-    background: #fff;
-    padding: 0 24px;
-    font-weight: 600;
-    display: flex;
-    height: 87px;
-    line-height: 87px;
-    font-size: 28px;
-    color: #3c4353;
-    border-top: 1px solid #f0f2f7;
-    border-bottom: 1px solid #f0f2f7;
-    .backPage {
-      width: 150px;
-      .van-icon {
-        vertical-align: -10%;
-        width: 28px;
-        height: 28px;
-      }
+@import url('../../styles/color');
+.turn-customer {
+    min-height: 100vh;
+    padding: 88px 32px 0;
+    background-color: @white;
+    .customer-title {
+        position: fixed;
+        top: 0;
     }
-    .textTitle {
-      flex: 1;
-      display: inline-block;
-      padding-left: 150px;
-    }
-  }
-  .addForm {
-    background: #fff;
-    padding: 24px;
-    height: 100%;
-    font-size: 28px;
-    .custonInfo {
-      font-size: 28px;
-      font-weight: 600;
-      margin-bottom: 24px;
-      img {
-        width: 28px;
-        height: 28px;
-        vertical-align: -11%;
-        display: inline-block;
-        margin-right: 8px;
-      }
-    }
-    /deep/.el-form {
-      height: 100%;
-      .el-form-item {
-        display: flex;
-        margin-bottom: 60px;
-      }
-      .el-form-item__content {
-        width: 562px;
-        height: 80px;
-
-        .el-input__inner {
-          height: 80px;
-          width: 100%;
-          border-radius: 8px;
-          font-size: 28px;
-          border: 2px solid #d9dae4;
+    .form-box{
+        width: 100%;
+        position: relative;
+        &:first-child {
+            padding-top: 88px;
         }
-        .el-select,
-        .el-cascader {
-          width: 100%;
-          height: 80px;
+        &::after {
+            content: '';
+            height: 2px;
+            background-color: @lineColor;
+            transform: scaleY(.5);
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
-      }
-      .textareaInput {
-        height: 400px;
-        .el-textarea {
-          .el-textarea__inner {
-            height: 400px;
+        .item{
+            display: flex;
+            align-items: center;
             font-size: 28px;
-          }
+            line-height: 36px;
+            color: @fontMain;
+            padding: 32px 0;
+            .label{
+                display: flex;
+                align-items: center;
+                width: 180px;
+                span {
+                    font-weight: bold;
+                }
+                .require {
+                    width: 16px;
+                    height: 16px;
+                    line-height: 28px;
+                    margin-left: 16px;
+                    font-size: 28px;
+                    color: @red;
+                }
+            }
+            .val{
+                width: calc(100% - 180px);
+                text-align: right;
+                display: flex;
+                justify-content: right;
+                .input{
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    text-align: right;
+                }
+                .icon-select{
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    span {
+                        width: calc(100% - 32px);
+                    }
+                    .icon{
+                        width: 32px;
+                        height: 32px;
+                    }
+                }
+                .placeholder{
+                    color: @total;
+                }
+                .text {
+                    display: block;
+                    word-break: break-all;
+                }
+                .tips {
+                    color: @red;
+                }
+                .block-span {
+                    width: 100%;
+                }
+            }
         }
-      }
-      .submitBtn {
-        .el-button--primary {
-          font-size: 28px;
-          width: 702px;
-          height: 80px;
-          background: #4168f6;
-          border-radius: 8px;
+        .title {
+            padding: 32px 0 0;
+            color: @total;
+            font-size: 24px;
         }
-      }
-      .upload_avatar {
-        height: 182px;
-        .demo-input-suffix {
-          display: flex;
-          position: relative;
-        }
-        .avatar-uploader .el-upload {
-          border: 1px dashed #d9d9d9;
-          width: 182px;
-          height: 182px;
-          border-radius: 6px;
-          cursor: pointer;
-          overflow: hidden;
-        }
-        .avatar-uploader .el-upload:hover {
-          border-color: #409eff;
-        }
-        .avatar-uploader-icon {
-          font-size: 40px;
-          color: #8c939d;
-          line-height: 182px;
-          text-align: center;
-        }
-        .avatar {
-          width: 100%;
-          height: 100%;
-        }
-        .resetUpload {
-          position: absolute;
-          left: 206px;
-          bottom: 0;
-          font-size: 28px;
-          color: #4168f6;
-          cursor: pointer;
-        }
-        .el-icon-circle-close {
-          position: absolute;
-          left: 165px;
-          top: -8px;
-          cursor: pointer;
-          width: 28px;
-          height: 28px;
-        }
-        .imgTip {
-          font-size: 14px;
-          color: #c0c4cc;
-          letter-spacing: 0;
-          font-weight: 400;
-          position: absolute;
-          bottom: 0;
-          left: 144px;
-        }
-      }
     }
-  }
-}
-/deep/.el-form-item__label {
-  width: 155px;
-  font-size: 28px;
-  line-height: 80px;
-  margin: 0px 24px 0 0;
-  padding: 0;
 }
 </style>

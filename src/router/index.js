@@ -39,15 +39,15 @@ import ClockPage from '../views/clockPage/ClockPage.vue'
 // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
-import Clues from '../views/customerManage/Clues.vue'
+import Clues from '../views/customerManage/Clues.vue'  // 线索列表（线索/公海）
 import AddCules from '../views/customerManage/AddCules.vue'
 import DetailCules from '../views/customerManage/DetailCules.vue'
 import TurnCustomer from '../views/customerManage/TurnCustomer.vue'
 import CluesSeas from '../views/customerManage/CluesSeas.vue'
 // 客户
-import MyCustomer from '../views/customerManage/MyCustomer.vue'
-import AddCustomer from '../views/customerManage/AddCustomer.vue'
-import CustomDetail from '../views/customerManage/CustomDetail.vue'
+import MyCustomer from '../views/customerManage/MyCustomer.vue' // 客户列表（客户/公海）
+import AddCustomer from '../views/customerManage/AddCustomer.vue' // 新增客户（包括线索）
+import CustomDetail from '../views/customerManage/CustomDetail.vue' // 客户详情
 import CustomerSeas from '../views/customerManage/CustomerSeas.vue'
 import CustomDeepDetail from '../views/customerManage/CustomDeepDetail.vue'
 import CustomerDeepSeas from '../views/customerManage/CustomerDeepSeas.vue'

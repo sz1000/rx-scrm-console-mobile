@@ -13,13 +13,13 @@
                 <form action="/"><van-search v-model="searchText" class="search-box" placeholder="请输入搜索关键词" @input="doSearch"/></form>
 
                 <van-index-bar :index-list="indexList" highlight-color="#4168f6">
-                    <div v-if="peopleList && peopleList.length" class="all-people" @click="getPeople(allPeople)">
+                    <div v-if="peopleList && peopleList.length" class="all-people pointer" @click="getPeople(allPeople)">
                         <span class="img">
                             <img src="../../../assets/images/icon_peoples.png" alt="">
                         </span>
                         <span>所有人</span>
                     </div>
-                    <div class="item" v-for="i in peopleList" :key="i.id">
+                    <div class="item pointer" v-for="i in peopleList" :key="i.id">
                         <van-index-anchor :index="i.initials" />
                         <div class="item-content all-people" v-for="item in i.userInfoVos" :key="item.userNo" @click="getPeople(item)">    
                             <span class="img">
@@ -78,11 +78,7 @@ export default {
             _debounce(this.getList(), 1000)
         },
         async getList() {
-            this.$toast.loading({
-                overlay: true,
-                loadingType: 'spinner',
-                duration: 0,
-            })
+            this.$toast.loading()
 
             let params = {
                 customerNo: this.customerNo,

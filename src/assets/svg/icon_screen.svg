@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>切片</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="1_客户管理_我的客户" transform="translate(-311.000000, -158.000000)" fill-rule="nonzero" stroke="#737373" stroke-width="1.5">
+            <g id="编组" transform="translate(311.000000, 157.000000)">
+                <g id="icon/筛选" transform="translate(0.000000, 1.000000)">
+                    <path d="M6.29454772,11.75 L6.29454772,9 L2.59269305,4.22473417 C2.4330138,4.0187534 2.48479204,3.73250128 2.70834299,3.58537216 C2.79270736,3.5298481 2.89379218,3.5 2.99746785,3.5 L13.0025708,3.5 C13.2772934,3.5 13.5,3.70520282 13.5,3.95833333 C13.5,4.05386053 13.4676059,4.14700049 13.4073456,4.22473417 L9.70549092,9 L9.70549092,14.5"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
