@@ -13,8 +13,11 @@
         <img :src="userObj.avatar" alt="" v-if="userObj.avatar" />
         <img src="../../images/img_head.png" alt="" v-else />
         <div class="person_info">
-          <p>{{userObj.name}}</p>
-          <p>{{userObj.departments}}</p>
+          <div class="tite_warp">
+            <p class="name">{{userObj.name}}</p>
+            <p class="position_name" v-if="userObj.position">{{userObj.position}}</p>
+          </div>
+          <p class="departments">{{userObj.departments}}</p>
         </div>
       </div>
       <!-- <div class="change_identity" @click="changeIdent">
@@ -122,15 +125,15 @@
         </div>
 
         <div class="about_me about_shadow">
-        <span>企业朋友圈</span>
+        <span>企微朋友圈</span>
         <div class="reply_text"  @click="goToWait(1)">
-          <span>{{dataObj.friendSend}}条企业朋友圈待发表</span>
+          <span>{{dataObj.friendSend}}条企微朋友圈待发表</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
         <div class="about_me about_shadow">
         <span>群发任务</span>
-        <div class="reply_text" @click="goToWait(2)">
+        <div class="reply_text" @click="goToWaits(1)"  v-if="length > 0">
           <span>你有群发任务待发送</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
@@ -184,6 +187,7 @@ import {
 } from './echartComponent/index.js'
 import { getMyInfo, getAllCharts,getMBTop10FollowMsgList } from '../../api/myHome'
 import router from '../../router/index.js'
+import { getCustomerMassSend } from '../../api/myHome'
 export default {
   components: {
     CustomAddChart,
@@ -217,6 +221,7 @@ export default {
         name: '',
         avatar: '',
         departments:"",
+        position:"",
       },
       activeObj: {
         excedOne: '0',
@@ -234,12 +239,15 @@ export default {
       nicheTime: [],
       nicheData: {},
       scroll: true,
-      clientList:[]
+      clientList:[],
+      length:"",
     }
   },
   created() {
     this.getData()
     this.client()
+    this.getDataList()
+
   },
   mounted() {
     this.$nextTick(() => {
@@ -247,6 +255,23 @@ export default {
     })
   },
   methods: {
+
+   getDataList() {
+      this.cardList = []
+      let params = {
+        massType: 1,
+        sendStatus: 1,
+      
+      }
+      getCustomerMassSend(params).then((res) => {
+        this.length = res.data.newList.length
+        console.log(this.length,"PPP")
+  
+      })
+
+   },
+
+
        FnToRouter(path) {
       this.$router.push(path)
     },
@@ -337,6 +362,9 @@ export default {
                     break;
                 case 3:
                     str =`${obj.customerCalled}从企微同步了`
+                    break;
+                case 4:
+                    str = obj.context
                     break;
                 case 5:
                     str =`更新${obj.customerCalled}的信息`
@@ -546,6 +574,14 @@ export default {
         },
       })
     },
+    goToWaits(v) {
+      this.$router.push({
+        path: '/groupIndex',
+        query: {
+          tab: v,
+        },
+      })
+    },
     goToCustom(v) {
       this.$router.push({
         path: '/customeActive',
@@ -566,11 +602,17 @@ export default {
       })
     },
     goToAbout() {
+      // this.$router.push({
+      //   path: '/aboutme',
+      //   query: {
+      //     forReply: this.dataObj.forReply,
+      //     forReplyCustomer: this.dataObj.forReplyCustomer,
+      //   },
+      // })
       this.$router.push({
-        path: '/aboutme',
+        path: '/AllDynamic',
         query: {
-          forReply: this.dataObj.forReply,
-          forReplyCustomer: this.dataObj.forReplyCustomer,
+          type:3,
         },
       })
     },

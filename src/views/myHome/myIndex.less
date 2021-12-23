@@ -24,18 +24,38 @@
 
       .person_info {
         margin-left: 32px;
-
+        .tite_warp{
+          display: flex;
+          align-items: center;
+          .name{
+            font-size: 40px;
+            color: #fff;
+            margin-bottom: 8px;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .position_name{
+            background: #fff;
+            border-radius: 24px;
+            color: #4168F6;
+            padding: 6px 16px;
+            margin-left: 16px;
+            font-weight: 600;
+            font-size: 20px;
+          }
+        }
         p:nth-child(1) {
-          font-size: 40px;
-          color: #fff;
-          margin-bottom: 8px;
-          width: 200px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+       
         }
 
         p:nth-child(2) {
+          // font-size: 24px;
+          // color: #fff;
+          // opacity: 0.8;
+        }
+        .departments{
           font-size: 24px;
           color: #fff;
           opacity: 0.8;
@@ -165,7 +185,7 @@
             width: 482px;
             margin-left: 22px;
             .name{
-              margin-right: 8px;
+              // margin-right: 8px;
             }
           }
           .circle_line{

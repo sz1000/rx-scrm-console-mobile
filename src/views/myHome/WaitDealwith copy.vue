@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">待处理</span>
+      <span class="textTitle">企</span>
     </div>
     <div class="nav_tab">
       <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">朋友圈</div>
@@ -57,7 +57,7 @@
             <span class="text_image">{{item.content}}</span>
           </div>
           <!-- 链接 -->
-          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
+          <div class="top_content top_content_link" v-if="item.msgtype == 'link' || item.msgtype == 'pdf'">
             <p>{{item.content}}</p>
             <div class="link_warp">
               <img src="../../images/article.png" alt="">

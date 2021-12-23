@@ -5,13 +5,13 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">发表朋友圈</span>
+      <span class="textTitle">企微发表朋友圈</span>
       <div class="send" @click="sendMessage">
         <span>发表</span>
       </div>
     </div>
     <div class="explan" v-show="fnClose">
-      <span>每位客户的朋友圈每个月最多展示4条企业发表的内容</span>
+      <span>每位客户的企微朋友圈每个月最多展示4条企业发表的内容</span>
       <van-icon name="cross" @click="fnClose=false" />
     </div>
     <div class="friendtite">

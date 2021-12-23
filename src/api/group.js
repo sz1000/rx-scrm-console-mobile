@@ -1,7 +1,7 @@
 import request from '@/utils/requestNew'
 let BASE_Prefix = 'user-service'
 let BASE_GROUP_Prefix = 'customer-service'
-export function livecodegroup_getlist(data,loading = false) { //群活码列表
+export function livecodegroup_getlist(data, loading = false) { //群活码列表
     return request({
         url: BASE_Prefix + '/livecodegroup/getlist',
         method: 'get',
@@ -57,5 +57,13 @@ export function livecodegroup_getByNo(id) { //获取详情
     return request({
         url: BASE_Prefix + '/livecodegroup/getByNo?livecodeNo=' + id,
         method: 'get'
+    })
+}
+// 客户群发
+export function addCustomerScreen(data) { //删除活码
+    return request({
+        url: BASE_GROUP_Prefix + '/cluecustomerMass/addCustomerScreen',
+        method: 'post',
+        data: data
     })
 }

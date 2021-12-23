@@ -339,7 +339,7 @@ export default {
         (this.type == 2 && this.posterListPage == 1)
       ) {
         this.$toast.loading({
-          message: '加载中...',
+          message: '',
           forbidClick: true,
           duration: 0,
           loadingType: 'spinner',

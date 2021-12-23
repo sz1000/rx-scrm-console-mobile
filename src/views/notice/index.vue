@@ -17,7 +17,7 @@
             <div class="info">
               <div class="name">
                 {{ detail.customerContactName }}
-                <i v-if="taskType != 2 && !isAltWx">@{{ detail.customerCorpName }}</i>
+                <i v-if="taskType != 2 && !isAltWx && detail.customerCorpName">@{{ detail.customerCorpName }}</i>
                 <i v-if="taskType != 2 && isAltWx">{{ detail.customerType }}</i>
               </div>
               <!-- <div class="name" v-else>contractName

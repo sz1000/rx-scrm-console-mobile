@@ -131,11 +131,11 @@ export function clueCustomerFollowUser_getMBFollowUserList(id) { // 获取协助
         method: 'get'
     })
 }
-export function cluecustomeraccessory_upload(e,id,noLoading = false) { // 附件上传
+export function cluecustomeraccessory_upload(e, id, type, noLoading = false) { // 附件上传
     let formData = new FormData()
     formData.append('file', e.target.files[0])
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id,
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomeraccessory/upload?clueCustomerNo=' + id + 'type=' + type,
         method: 'post',
         header: {
             noLoading: noLoading
@@ -232,5 +232,93 @@ export function group_getGroupTodayDetail(id) {
     return request({
         url: BASE_CUSTOMER_SERVICE + '/group/getGroupTodayDetail?chatId=' + id,
         method: 'get'
+    })
+}
+// 客户线索列表
+export function getcluecustomerlist(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getcluecustomerlist',
+        method: 'post',
+        data: data
+    })
+}
+// 客户列表筛选条件商机阶段下拉列表数据
+export function opportunitiesList(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/business-opportunities/corpStage/list',
+        method: 'get',
+        params: data,
+    })
+}
+// 客户列表筛选条件下拉列表数据
+export function getlistFiled(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/common/getlist',
+        method: 'get',
+        params: data,
+    })
+}
+// 新增客户筛选条件下拉列表数据
+export function getAddFiled(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/toadd',
+        method: 'get',
+        params: data,
+    })
+}
+// 新增客户
+export function doAdd(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/addCul',
+        method: 'post',
+        data,
+    })
+}
+// 放弃
+export function cluecustomer_giveUpType(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/giveUpType',
+        method: 'get',
+        params: data,
+    })
+}
+// 变更负责人获取负责人选择列表
+export function cluecustomer_getuserList(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getuserList',
+        method: 'get',
+        params: data,
+    })
+}
+// 变更负责人保存
+export function cluecustomer_turnBlon(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/turnBlon',
+        method: 'get',
+        params: data,
+    })
+}
+// 领取客户或线索
+export function cluecustomer_getclue(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getclue',
+        method: 'get',
+        params: data,
+    })
+}
+// 删除线索
+export function cluecustomer_delClueCustomer(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/delClueCustomer',
+        method: 'get',
+        params: data,
+    })
+}
+// 线索转客户
+export function cluecustomer_cluetocustomer(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/cluetocustomer',
+        method: 'post',
+        data,
     })
 }

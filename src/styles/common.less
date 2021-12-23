@@ -447,7 +447,9 @@ html {
 .wait_warp,
 .about_warp,
 .custom_warp,
-.wrap {
+.customer_wrap,
+.wrap,
+.my-customer {
   .van-popup {
     left: 50%;
     width: 750px;
@@ -475,6 +477,16 @@ input::-moz-placeholder {
 
 input:-ms-input-placeholder {
   color: #C0C4CC;
+}
+
+input[type=search]::-webkit-search-cancel-button{
+  -webkit-appearance: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: url('../assets/svg/icon_search_clear.svg') no-repeat center;
+  background-size: 100% 100%;
+  position: relative;
 }
 
 // 提示框样式修改

@@ -5,18 +5,22 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">企微朋友圈</span>
+      <span class="textTitle">群发任务</span>
     </div>
     <div class="nav_tab">
-      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人发表</div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业发表</div>
+      <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">客户群发</div>
+      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">客户群群发</div>
     </div>
     <section v-if="tab==1">
-      <div class="searchInput">
-        <div class="search_title">
+        <div class="tips_box">
+        <img src="../../images/ico_warning@2x.png" alt="">
+        <span >请前往企微聊天面板-客户朋友圈进行发表</span>
+      </div>
+      <div class="searchInput search_tab2">
+        <!-- <div class="search_title">
           <van-field v-model="searchValue" left-icon="search" placeholder="标题/内容" />
-        </div>
-        <div class="select_date" @click="showPicker=true">
+        </div> -->
+      <div class="select_date" @click="showPicker=true">
           <img src="../../images/date_pick.png" alt="">
           <div v-if="startDate&&endDate" class="time_sty">
             <span>{{startDate}}</span>
@@ -29,37 +33,75 @@
             <span>结束时间</span>
           </div>
         </div>
+        <div class="select_box" @click="filterCard">
+          <span>{{tabName == 1 ? '未发送' :'已发送'}}</span>
+          <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
+        </div>
       </div>
       <div class="friend_warp">
-        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈</div>
-        <div class="published_btn" @click="shareToMoments">发表朋友圈</div>
+        <div class="total_box">共<span class="num">{{cardList.length}}</span>条群发 <span class="num" v-if="tabName == 1">{{SendNum}} <span class="numst"> 人未发送</span></span></div>
+        <div class="published_btn" @click="shareToMoments">创建群发任务</div>
       </div>
       <div class="custom_content">
-        <div class="card_box" v-for="(item,index) in cardList" :key='index'>
+
+          <div class="card_box" v-for="(item,index) in cardList" :key='index + "t"'>
+
+            <div class="warp_list">
+                  <p class="content_mass">{{item.massContent}}</p>
+              <!-- 链接 -->
+                  <div class="top_content top_content_link" v-for="(el,index) in item.resourcesList" :key="index" v-show="el.type == 1">
+                      <!-- <p v-if="el.title">{{el.title}}</p> -->
+                       <div class="link_warp">
+                        <img :src="el.picurl" alt="" v-if="el.picurl">
+                        <img src="../../images/article.png" alt="" v-else>
+                        <div class="lint_url">{{el.url}}</div>
+                      </div>
+                  </div>
+
+                  <!-- 文件 -->
+                  <div class="top_content" v-for="(el,index) in item.resourcesList" :key="index  + 'w'" v-show="el.type == 2">
+                      
+                       <div class="link_warp">
+                        <img :src="el.picurl" alt="" v-if="el.picurl">
+                        <img src="../../images/article.png" alt="" v-else>
+                          <span>{{el.title}}</span>
+                      </div>
+                  </div>
+
+                  <div class="top_content" v-for="(el,index) in item.resourcesList" :key="index + 'q'" v-show="el.type == 3">
+                      
+                       <div class="link_warp">
+                        <img :src="el.url" alt="" v-if="el.url">
+                        <img src="../../images/article.png" alt="" v-else>
+                          <span>{{el.title}}</span>
+                      </div>
+                  </div>
+            </div>
+            <!-- <div v-for="(el,index) in listData" :key="index"> -->
           <!-- 图片 -->
-          <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length>0">
+          <!-- <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length>0">
             <img :src="item.urls[0]" alt="" v-if="item.urls" />
             <span>{{item.content}}</span>
-          </div>
+          </div> -->
           <!-- 视频 -->
-          <div class="top_content" v-if="item.msgtype == 'video'">
+          <!-- <div class="top_content" v-if="item.msgtype == 'video'">
             <div class="video_warp" @click="clickVideo('videoPlay' + index)">
               <video :id="'videoPlay' + index" preload='auto' poster="../../images/videosq.png" :src="item.urls[0]" v-if="item.urls"></video>
             </div>
             <span>{{item.content}}</span>
-          </div>
+          </div> -->
           <!-- 文本 -->
-          <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length == 0">
+          <!-- <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length == 0">
             <span class="text_image">{{item.content}}</span>
-          </div>
+          </div> -->
           <!-- 链接 -->
-          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
+          <!-- <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
               <img src="../../images/article.png" alt="">
               <div class="lint_url">{{item.urls[0]}}</div>
             </div>
-          </div>
+          </div> -->
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
@@ -67,20 +109,38 @@
               <!-- <img src="../../images/ditu.png" alt=""> -->
               <span class="user_name">{{item.name}}</span>
               <span v-show="item.depId"> -{{item.depId}}</span>
+             
             </div>
           </div>
+          <div class="no_publish" @click="fnShowPublish(item)" v-if="tabName == 1">
+              <div class="left">
+                <div class="img_warp">
+
+              <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userchooseList" :key="itemChi.id + 'g'">
+                </div>
+                <div class="data_list">
+                  
+              <div class="text_name" v-for="(itemChi,indexs) in item.userchooseList" :key="indexs + 'h'">
+                <span>{{itemChi.name}}</span>
+                <span :class="'a'+index">、</span>
+              </div>
+                </div>
+              <p class="color73">等<span class="color26 font24"> {{item.userchooseList.length}} </span>人未发表</p>
+            </div>
+            <div class="right">
+              <van-icon name="arrow" />
+            </div>
+          </div>
+        <!-- </div> -->
         </div>
       </div>
     </section>
     <section v-if="tab==2">
       <div class="tips_box">
         <img src="../../images/ico_warning@2x.png" alt="">
-        <span v-if="tab ==1 ">请前往企微聊天面板-客户朋友圈进行发表</span>
-        <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
+         <span >请前往企微聊天面板-客户朋友圈进行发表</span>
       </div>
-      <div class="search_company">
-        <van-field v-model="companyValue" left-icon="search" placeholder="标题/内容" />
-      </div>
+ 
       <div class="searchInput search_tab2">
         <div class="select_date" @click="showPicker=true">
           <img src="../../images/date_pick.png" alt="">
@@ -96,40 +156,50 @@
           </div>
         </div>
         <div class="select_box" @click="filterCard">
-          <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
+          <span>{{tabName == 1 ? '未发送' :'已发送'}}</span>
           <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
         </div>
       </div>
       <div class="friend_warp">
-        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
-        <div class="published_btn" @click="creatFriend">创建朋友圈任务</div>
+        <div class="total_box">共<span class="num">{{cardList.length}}</span>条群发 
+        <span class="num" v-if="tabName == 1">{{SendNum}} <span class="numst"> 人未发送</span></span>
+        </div>
+        <div class="published_btn" @click="creatFriend">创建群发任务</div>
       </div>
       <div class="custom_content">
-        <div class="card_box" v-for="(item,index) in cardList" :key='index'>
-          <!-- 图片 -->
-          <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length>0">
-            <img :src="item.urls[0]" alt="" v-if="item.urls" />
-            <span>{{item.content}}</span>
-          </div>
-          <!-- 视频 -->
-          <div class="top_content" v-if="item.msgtype == 'video'">
-            <div class="video_warp" @click="clickVideo('videoPlay' + index)">
-              <video :id="'videoPlay' + index" preload='auto' poster="../../images/videosq.png" :src="item.urls[0]" v-if="item.urls"></video>
+        <div class="card_box" v-for="(item,index) in cardList" :key='index + "k"'>
+           <div class="warp_list">
+             <!--  -->
+             <p class="content_mass">{{item.massContent}}</p>
+              <!-- 链接 -->
+                  <div class="top_content top_content_link" v-for="(el,index) in item.resourcesList" :key="index" v-show="el.type == 1">
+                      <p v-if="el.title">{{el.title}}</p>
+                       <div class="link_warp">
+                        <img :src="el.picurl" alt="" v-if="el.picurl">
+                        <img src="../../images/article.png" alt="" v-else>
+                        <div class="lint_url">{{el.url}}</div>
+                      </div>
+                  </div>
+
+                  <!-- 文件 -->
+                  <div class="top_content" v-for="(el,index) in item.resourcesList" :key="index  + 'w'" v-show="el.type == 2">
+                      
+                       <div class="link_warp">
+                        <img :src="el.picurl" alt="" v-if="el.picurl">
+                        <img src="../../images/article.png" alt="" v-else>
+                          <span>{{el.title}}</span>
+                      </div>
+                  </div>
+
+                  <div class="top_content" v-for="(el,index) in item.resourcesList" :key="index + 'q'" v-show="el.type == 3">
+                      
+                       <div class="link_warp">
+                        <img :src="el.url" alt="" v-if="el.url">
+                        <img src="../../images/article.png" alt="" v-else>
+                          <span>{{el.title}}</span>
+                      </div>
+                  </div>
             </div>
-            <span>{{item.content}}</span>
-          </div>
-          <!-- 文本 -->
-          <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length == 0">
-            <span class="text_image">{{item.content}}</span>
-          </div>
-          <!-- 链接 -->
-          <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
-            <p>{{item.content}}</p>
-            <div class="link_warp">
-              <img src="../../images/article.png" alt="">
-              <div class="lint_url">{{item.urls[0]}}</div>
-            </div>
-          </div>
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
@@ -139,14 +209,20 @@
               <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
-          <div class="no_publish" @click="fnShowPublish(item)" v-if="!tabName">
-            <div class="left">
-              <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userList.slice(0,3)" :key="itemChi.id" v-show="itemChi.avatar">
-              <div class="text_name" v-for="(itemChi,index) in item.userList.slice(0,3)" :key="index">
+       <div class="no_publish" @click="fnShowPublish(item)" v-if="tabName == 1">
+              <div class="left">
+                     <div class="img_warp">
+
+              <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userchooseList" :key="itemChi.id + 'g'">
+                </div>
+              <div class="data_list">
+
+              <div class="text_name" v-for="(itemChi,indexs) in item.userchooseList" :key="indexs + 'h'">
                 <span>{{itemChi.name}}</span>
                 <span :class="'a'+index">、</span>
               </div>
-              <p class="color73">等<span class="color26 font24"> {{item.userList.length}} </span>人未发表</p>
+              </div>
+              <p class="color73">等<span class="color26 font24"> {{item.userchooseList.length}} </span>人未发表</p>
             </div>
             <div class="right">
               <van-icon name="arrow" />
@@ -177,23 +253,27 @@
             <span>({{popupList.length}})</span>
           </div>
           <div class="search_popup">
-            <van-field  v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
+            <van-field v-model="valPopup"  placeholder="员工姓名/手机号码" >
+             <template #right-icon>
+               <van-icon name="search"  @click="searchClick" />
+            </template>
+             </van-field>
             <div class="select_box_p" @click="popupSendShow">
-              <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
+              <span>{{popupname == 1 ? '未发送' :'已发送'}}</span>
               <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showPopupSelect}" />
             </div>
           </div>
-          <div class="one" v-for="list in popupList" :key="list.id">
+          <div class="one" v-for="list in popupList" :key="list.id + 'l'">
             <div class="left">
-              <img :src="list.cover" alt="" v-if="list.cover">
+              <img :src="list.avatar" alt="" v-if="list.avatar">
               <img src="../../images/img_head.png" alt="" v-else>
               <div class="name_warp">
-                <span>{{list.name}}-{{list.department}}</span>
+                <span>{{list.name}}-{{list.depId}}</span>
                 <span>{{list.phone}}</span>
               </div>
             </div>
             <div class="right" :class="popupname == 1 ? 'noRight':'yeRight'">
-              <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
+              <span>{{popupname == 1 ? '未发送' :'已发送'}}</span>
             </div>
           </div>
 
@@ -208,7 +288,7 @@
 </template>
 <script>
 import VanDatePicker from './VanDate.vue'
-import { friendSend, groupSend, friendCircleUserList } from '../../api/myHome'
+import { getCustomerMassSend,  getUserSendDetail } from '../../api/myHome'
 export default {
   components: {
     VanDatePicker,
@@ -225,11 +305,12 @@ export default {
       tab: this.$route.query.tab,
       cardList: [],
       showFilter: false,
+      SendNum:0,
       actions: [
-        { name: '未发表', id: 0 },
-        { name: '已发表', id: 1 },
+        { name: '未发送', id: 1 },
+        { name: '已发送', id: 2 },
       ],
-      tabName: 0,
+      tabName: 1,
       depId: localStorage.getItem('depId'),
       searchValue: '',
       companyValue: '',
@@ -237,9 +318,12 @@ export default {
       showPubish: false,
       popupList: [],
       valPopup: '',
-      popupname: 0,
+      popupname: 1,
       showPopupSelect: false,
       itemObj: {},
+
+      tapeNum:1,
+      massid:"",
     }
   },
   computed: {
@@ -265,29 +349,23 @@ export default {
     fnShowPublish(value) {
       this.showPubish = true
       this.itemObj = value
+      this.massid = value.massNo
+      console.log(value,"--==")
       this.getListPopup()
     },
     // 弹窗内的选择
     popupSendShow() {
       this.showPopupSelect = true
     },
-    // 个人发送到朋友圈
+    // 发送到朋友圈
     shareToMoments() {
       this.$router.push({
-        path: '/talkTool/mterialPage',
-        query: {
-          friendtype: 'person',
-        },
+        path: '/talkTool/customerGroup',
       })
     },
-    // 企业创建朋友圈任务
+    // 创建朋友圈任务
     creatFriend() {
-      this.$router.push({
-        path: '/talkTool/mterialPage',
-        query: {
-          friendtype: 'company',
-        },
-      })
+       this.$router.push({path:'/talkTool/CustomergroupPlaye'});
     },
     clickVideo(id) {
       var video1 = document.getElementById(id)
@@ -310,14 +388,23 @@ export default {
     getDataList() {
       this.cardList = []
       let params = {
-        type: this.type,
-        status: this.tabName,
+        massType: this.tapeNum,
+        sendStatus: this.tabName,
         createTimeSta: this.startDate ? this.startDate + ' 00:00:00' : '',
         createTimeEnd: this.endDate ? this.endDate + ' 23:59:59' : '',
       }
 
-      friendSend(params).then((res) => {
-        this.cardList = res.data
+      getCustomerMassSend(params).then((res) => {
+        localStorage.setItem("", res.data.newList.length);
+        this.cardList = res.data.newList
+        this.SendNum = res.data.noSendNum
+        // this.cardList.forEach(item =>{
+
+          // item.resourcesList.forEach(el =>{
+          //   this.listData = JSON.parse(el.value)
+          //    console.log(this.listData,"000p")
+          // })
+        // })
         // if (this.cardList.length > 0) {
         //   this.cardList.forEach(item=>{
 
@@ -325,16 +412,20 @@ export default {
         // }
       })
     },
+    searchClick(){
+       this.getListPopup()
+    },
     // 弹窗内列表
     getListPopup() {
       let params = {
-        momentId: this.itemObj.momentId,
-        name: this.valPopup,
-        status: this.popupname,
+        massNo: this.massid,
+        // momentId: this.itemObj.momentId,
+        namePhone: this.valPopup,
+        sendStatus: this.popupname,
       }
-      friendCircleUserList(params).then((res) => {
+      getUserSendDetail(params).then((res) => {
         if (res.result) {
-          this.popupList = res.data.records
+          this.popupList = res.data
         }
       })
     },
@@ -345,11 +436,13 @@ export default {
       this.tab = v
       this.startDate = ''
       this.endDate = ''
-      this.tabName = 0
+      this.tabName = 1
       if (this.tab == 1) {
         // 个人发表
+        this.tapeNum = 1
         this.type = 2
       } else {
+           this.tapeNum = 2
         // 企业发表
         this.type = ''
       }
@@ -357,6 +450,7 @@ export default {
     },
     // 外层选择
     fnSelect(v) {
+      console.log(v,"---")
       this.tabName = v.id
       if (this.tab == 1) {
         this.type = 2
@@ -539,11 +633,17 @@ export default {
         font-size: 28px;
         color: #3c4353;
       }
+      .num{
+        font-weight: 600;
+      }
+      .numst{
+         color: #838a9d;
+      font-size: 24px;
+      }
     }
     .published_btn {
       width: 220px;
       height: 64px;
-      line-height: 64px;
       background: #4168f6;
       border-radius: 32px;
       color: #fff;
@@ -591,8 +691,18 @@ export default {
       box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.04);
       border-radius: 16px;
       margin-top: 32px;
+      .warp_list{
+        max-height: 320px;
+        overflow: auto;
+        .content_mass{
+            overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
       .top_content {
         display: flex;
+        margin-top: 16px;
         span {
           display: inline-block;
           // margin-left: 24px;
@@ -610,6 +720,7 @@ export default {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          margin-bottom: 16px;
         }
         img {
           width: 100px;
@@ -643,6 +754,9 @@ export default {
             word-break: break-all;
             color: #3c4353;
             font-size: 24px;
+            overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
           }
         }
       }
@@ -686,6 +800,20 @@ export default {
         .left {
           display: flex;
           align-items: center;
+          .img_warp{
+            max-width: 90px;
+            overflow: hidden;
+            display: flex;
+             white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .data_list{
+                max-width: 120px;
+            overflow: hidden;
+            display: flex;
+             white-space: nowrap;
+            text-overflow: ellipsis;
+          }
           .img {
             width: 32px;
             height: 32px;
@@ -702,6 +830,11 @@ export default {
           .text_name {
             font-size: 24px;
             color: #737373;
+              //  max-width: 120px;
+            // overflow: hidden;
+            // display: flex;
+             white-space: nowrap;
+            text-overflow: ellipsis;
           }
           .color73 {
             color: #737373;
@@ -790,7 +923,7 @@ export default {
           }
           span:nth-child(2) {
             display: inline-block;
-            margin-top: 8px;
+            margin-top: 6px;
             font-size: 24px;
             color: #b3b3b3;
           }

@@ -34,7 +34,7 @@
         <p class="p_btn" v-if="list.includes(tabName)" @click="fnAvtiveList">一键激活</p>
       </div>
       <div class="custom_content">
-        <div class="card_box" v-for="(item,index) in cardList" :key='index'>
+        <div class="card_box" v-for="(item,index) in cardList" :key='index' @click="goCustomer(item)">
           <div class="left_msg">
             <div class="img_box">
               <img :src="item.avatar" alt="" v-if="item.avatar" />
@@ -92,7 +92,7 @@
         <p class="p_btn" v-if="tabName == '未寻回'" @click="fnReplayList">一键寻回</p>
       </div>
       <div class="custom_content">
-        <div class="card_box" v-for="(item,index) in cardList" :key='index'>
+        <div class="card_box" v-for="(item,index) in cardList" :key='index' @click="goCustomer(item)">
           <div class="left_msg">
             <div class="img_box">
               <img :src="item.avatar" alt="" v-if="item.avatar" />
@@ -203,6 +203,17 @@ export default {
     this.num1 = this.$route.query.monthCount || '0'
   },
   methods: {
+           goCustomer(val) {
+      console.log(val)
+      this.$router.push({
+        path: '/customerPortrait',
+        query: {
+          id: val.followId,
+          userNo: val.clueCustomerNo,
+          num: val.rowAt,
+        },
+      })
+    },
     getActive() {
       let params = {
         name: this.value1,

@@ -1,296 +1,433 @@
 <template>
-    <div class="detail_wrap">
-        <div class="top_back" @click="$router.go(-1)">
-            <img class="icon" src="@/assets/svg/icon_back.svg" alt="">
-            <div class="title">客户详情</div>
+    <div class="turn-customer">
+        <header-title class="customer-title" :title="headerTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
+        <!-- 头像昵称等信息 -->
+        <div class="avatar_box">
+            <img class="avatar" :src="form.avatar | $setAvatar" alt="">
+            <div class="val">
+                <span class="name_msg" :class="{'show':showMsg}">{{form.name}}</span>
+                <div class="name" @click="showMsg = !showMsg">{{form.name}}</div>
+                <div class="alt" :class="{'green':form.externalType == 1}">{{typeNameFun(form.externalType)}}</div>
+                <img class="gender" :src="gender" alt="">
+            </div>
         </div>
-        <div class="top_box">
-            <div class="avatar_box">
-                <img class="avatar" :src="detail.avatar | $setAvatar" alt="">
+        <!-- 个人/企业标签编辑 -->
+        <label-edit-box :clueCustomerNo="clueCustomerNo"></label-edit-box>
+        <!-- 基本信息 -->
+        <div class="form-box">
+            <div class="item title">基本信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>{{ fromType == 1 || fromType == 2 ? '线索名称' : '客户名称' }}</span>
+                    <span class="require">*</span>
+                </div>
                 <div class="val">
-                    <!-- <van-popover v-model="showPopover" placement="bottom" theme="dark" trigger="click">
-                        <div class="pop_text">{{detail.name}}</div>
-                        <template #reference>
-                            <div class="name">{{detail.name}}</div>
-                        </template>
-                    </van-popover> -->
-                    <span class="name_msg" :class="{'show':showMsg}">{{detail.name}}</span>
-                    <div class="name" @click="showMsg = !showMsg">{{detail.name}}</div>
-                    <div class="alt" :class="{'green':detail.externalType == 1}">{{typeNameFun(detail.externalType)}}</div>
-                    <img class="gender" :src="gender" alt="">
+                    <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
+                    <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>{{ fromType == 1 || fromType == 2 ? '线索来源' : '客户来源' }}</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
+                        <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <template v-if="fromType == 3 || fromType == 4">
+                <div class="item">
+                    <div class="label">
+                        <span>客户阶段</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="stageRequired && showInput('stage') || !stageRequired && openSelectDialog('stage')">
+                            <span :class="{'placeholder':!form.stage, tips: stageRequired}">{{stageRequired ? '未选择' : form.stage | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>客户类型</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="customerTypeRequired && showInput('customerType') || !customerTypeRequired && openSelectDialog('customerType')">
+                            <span :class="{'placeholder':!form.customerTypeName, tips: customerTypeRequired}">{{customerTypeRequired ? '未选择' : form.customerTypeName | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <div v-if="fromType == 1 || fromType == 2" class="item">
+                <div class="label">
+                    <span>线索类型</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="clueTypeRequired && showInput('clueType') || !clueTypeRequired && openSelectDialog('clueType')">
+                        <span :class="{'placeholder':!form.clueTypeName, tips: clueTypeRequired}">{{clueTypeRequired ? '未选择' : form.clueTypeName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>{{ fromType == 1 || fromType == 2 ? '创建时间' : '建档时间' }}</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
                 </div>
             </div>
         </div>
-        <div class="content">
-            <div class="row tag">
-                <div class="tit">企业标签</div>
-                <img class="edit" @click="openDialog('company')" src="@/assets/svg/icon_edit.svg" alt="">
-                <div class="tag_wrap" ref="companyTagWrap" :class="{'more':companyTagMore}">
-                    <div class="tag_box" ref="companyTagBox">
-                        <div class="tag" v-for="(item,index) in companyTagList" :key="index">{{item.name}}</div>
-                    </div>
+        <!-- 企业信息 -->
+        <div class="form-box">
+            <div class="item title">企业信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>企业名称</span>
+                    <span class="require">*</span>
                 </div>
-                <div class="more" v-if="isCompanyMore">
-                    <img class="icon" v-if="!companyTagMore" @click="companyTagMore = true" src="@/assets/svg/icon_down.svg" alt="">
-                    <img class="icon" v-else @click="companyTagMore = false" src="@/assets/svg/icon_up.svg" alt="">
-                </div>
-            </div>
-            <div class="row tag">
-                <div class="tit">个人标签</div>
-                <img class="edit" @click="openDialog('person')" src="@/assets/svg/icon_edit.svg" alt="">
-                <div class="tag_wrap" ref="personTagWrap" :class="{'more':personTagMore}">
-                    <div class="tag_box" ref="personTagBox">
-                        <div class="tag" v-for="(item,index) in personList" :key="index">{{item.name}}</div>
-                    </div>
-                </div>
-                <div class="more" v-if="isPersonMore">
-                    <img class="icon" v-if="!personTagMore" @click="personTagMore = true" src="@/assets/svg/icon_down.svg" alt="">
-                    <img class="icon" v-else @click="personTagMore = false" src="@/assets/svg/icon_up.svg" alt="">
+                <div class="val">
+                    <input v-show="!cropFullNameRequired" type="text" ref="cropFullName" class="input" v-model.trim="form.cropFullName" maxlength="30" placeholder="请输入">
+                    <span v-show="cropFullNameRequired" class="input tips" @click="showInput('cropFullName')">未输入</span>
                 </div>
             </div>
-            <div class="row">
-                <div class="tit">基本信息</div>
-                <div class="item_box">
-                    <div class="item">
-                        <div class="label">企业简称</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.customerName" @change="updateFun" maxlength="30" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">固定电话</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.mobil" @change="updateFun" @input="detail.mobil=detail.mobil.replace(/[^\d|\-]/g,'')" maxlength="20" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">客户来源</div>
-                        <div class="val">
-                            <div class="icon_select" @click="openSelectDialog('source')">
-                                <span :class="{'placeholder':!detail.sourceName}">{{detail.sourceName | $textEmpty('请选择')}}</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">客户类型</div>
-                        <div class="val">
-                            <div class="icon_select" @click="openSelectDialog('type')">
-                                <span :class="{'placeholder':!detail.customerTypeName}">{{detail.customerTypeName | $textEmpty('请选择')}}</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">客户阶段</div>
-                        <div class="val">
-                            <!-- <input type="text" class="input" v-model="detail.stage" placeholder="请输入"> -->
-                            <div class="icon_select" @click="openSelectDialog('stage')">
-                                <span :class="{'placeholder':!detail.stage}">{{detail.stage | $textEmpty('请选择')}}</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">企业名称</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.cropFullName" @change="updateFun" maxlength="30" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">企业规模</div>
-                        <div class="val">
-                            <div class="icon_select" @click="openSelectDialog('scale')">
-                                <span :class="{'placeholder':!detail.cropscale}">{{detail.cropscale | $textEmpty('请选择')}}</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">所属行业</div>
-                        <div class="val">
-                            <div class="icon_select" @click="openSelectDialog('industry')">
-                                <span :class="{'placeholder':!detail.industryName}">{{detail.industryName | $textEmpty('请选择')}}</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">地址</div>
-                        <div class="val" @click="openDialog('address')">
-                            <!-- <input type="text" class="input" v-model="detail.address" maxlength="200" placeholder="请输入" readonly> -->
-                            <span :class="{'placeholder':!detail.address}">{{detail.address | $textEmpty('请输入')}}</span>
-                        </div>
-                    </div>
-                    <div class="item lh">
-                        <div class="label">备注</div>
-                        <div class="val" @click="openDialog('remark')">
-                            <!-- <input type="text" class="input" v-model="detail.remark" maxlength="200" placeholder="请输入（不得超过200个字符）" readonly> -->
-                            <span :class="{'placeholder':!detail.remark}">{{detail.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
-                        </div>
+            <div class="item">
+                <div class="label">
+                    <span>企业简称</span>
+                </div>
+                <div class="val">
+                    <input type="text" ref="name" class="input" v-model.trim="form.customerName" maxlength="30" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>企业规模</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="cropscaleRequired && showInput('cropscale') || !cropscaleRequired && openSelectDialog('cropscale')">
+                        <span :class="{'placeholder':!form.cropscale, tips: cropscaleRequired}">{{cropscaleRequired ? '未选择' : form.cropscale | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="tit">联系人信息</div>
-                <div class="item_box">
-                    <div class="item">
-                        <div class="label">联系人</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.name" @change="updateFun" maxlength="20" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">性别</div>
-                        <div class="val">
-                            <div class="icon_select" @click="openSelectDialog('gender')">
-                                <span :class="{'placeholder':!detail.gender}">{{$gender(detail.gender)}}</span>
-                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">手机号</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.phone" @change="updateFun" @input="detail.phone=detail.phone.replace(/[^\d]/g,'')" maxlength="11" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">微信号</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.weixin" @change="updateFun" maxlength="20" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">微信昵称</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.wechatNickname" @change="updateFun" maxlength="20" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">职务</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.position" @change="updateFun" maxlength="20" placeholder="请输入">
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="label">邮箱</div>
-                        <div class="val">
-                            <input type="text" class="input" v-model="detail.email" @change="updateFun" @input="detail.email=detail.email.replace(/[\u4E00-\u9FA5]|[\uFE30-\uFFA0]|[\s]/g,'')" placeholder="请输入">
-                        </div>
+            <div class="item">
+                <div class="label">
+                    <span>行业领域</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="industryRequired && showInput('industry') || !industryRequired && openSelectDialog('industry')">
+                        <span :class="{'placeholder':!form.industryName, tips: industryRequired}">{{industryRequired ? '未选择' : form.industryName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
             </div>
-            <div class="row no" v-if="customList && customList.length">
-                <div class="tit">自定义信息</div>
-                <div class="item_box">
-                    <div class="item" v-for="item in customList" :key="item.id">
-                        <div class="label">{{item.columnName}}</div>
-                        <div class="val">{{item.value}}</div>
+            <div class="item">
+                <div class="label">
+                    <span>固定电话</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model="form.mobil" maxlength="13" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>办公地址</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val" @click="addressRequired && showInput('address') || !addressRequired && openDialog('address')">
+                    <span class="block-span one-line" :class="{'placeholder':!form.address, tips: addressRequired}">{{addressRequired ? '未输入' : form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>备注</span>
+                </div>
+                <div class="val" @click="openDialog('remark')">
+                    <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                </div>
+            </div>
+        </div>
+        <!-- 联系人信息 -->
+        <div class="form-box">
+            <div class="item title">联系人信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>联系人</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
+                    <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>手机号码</span>
+                    <span class="require">*</span>
+                </div>
+                <div class="val">
+                    <input v-show="!phoneRequired" type="text" ref="phone" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
+                    <span v-show="phoneRequired" class="input tips" @click="showInput('phone')">未输入</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>微信昵称</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.wechatNickname" maxlength="20" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>微信号</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.weixin" maxlength="20" placeholder="请输入">
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>性别</span>
+                </div>
+                <div class="val">
+                    <div class="icon-select" @click="showActionSheet('gender')">
+                        <span :class="{'placeholder':!form.genderName}">{{form.genderName | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
             </div>
-            <div class="row no">
-                <div class="tit">系统信息</div>
-                <div class="item_box">
-                    <div class="item">
-                        <div class="label">添加人员</div>
-                        <div class="val">{{detail.createBy}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">添加客户时间</div>
-                        <div class="val">{{detail.createTime}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">前负责人</div>
-                        <div class="val">{{detail.beBelongBy}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">转换时间</div>
-                        <div class="val">{{detail.turnTime}}</div>
-                    </div>
+            <div class="item">
+                <div class="label">
+                    <span>职务</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.position" maxlength="20" placeholder="请输入">
                 </div>
             </div>
-            <div class="row no">
-                <div class="tit">企微信息</div>
-                <div class="item_box">
-                    <div class="item">
-                        <div class="label">企业简称</div>
-                        <div class="val">{{detail.externalCorpName}}</div>
+            <div class="item">
+                <div class="label">
+                    <span>邮箱</span>
+                </div>
+                <div class="val">
+                    <input type="text" class="input" v-model.trim="form.email" maxlength="60" placeholder="请输入">
+                </div>
+            </div>
+        </div>
+        <!-- 自定义信息 -->
+        <div v-if="customColumns && customColumns.length" class="form-box">
+            <div class="item title">自定义信息</div>
+            <div v-for="i in customColumns" :key="i.id" class="item">
+                <div class="label">
+                    <span>{{ i.columnName }}</span>
+                </div>
+                <div class="val">
+                    <!-- 文本 -->
+                    <input v-if="i.columnType == 1" type="text" class="input" v-model.trim="i.value" placeholder="请输入">
+                    <!-- 选择 -->
+                    <div v-if="i.columnType == 2" class="icon-select" @click="openSelectDialog(i, 'customColumns')">
+                        <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
-                    <div class="item">
-                        <div class="label">客户来源</div>
-                        <div class="val">{{detail.externalSourceName}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">企业名称</div>
-                        <div class="val">{{detail.externalCorpFullName}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">客户类型</div>
-                        <div class="val">{{detail.externalType | $customerType}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">姓名</div>
-                        <div class="val">{{detail.externalName}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">性别</div>
-                        <div class="val">{{detail.externalGender | $gender}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">职务</div>
-                        <div class="val">{{detail.externalPosition}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">添加人员</div>
-                        <div class="val">{{detail.createBy}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="label">添加客户时间</div>
-                        <div class="val">{{detail.createTime}}</div>
-                    </div>
-                    <div class="item lh">
-                        <div class="label">备注</div>
-                        <div class="val">{{detail.remark}}</div>
+                    <!-- 时间 -->
+                    <div v-if="i.columnType == 3" class="icon-select" @click="showDateSelect(i.columnValue, 'customColumns')">
+                        <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
+                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 详细信息 -->
+        <div class="form-box">
+            <div class="item title">详细信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>添加人员</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.createBy }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>添加时间</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>前负责人</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.beBelongBy }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>最后跟进时间</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.followTime | $time('YYYY-MM-DD') }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>转客户时间</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.turnTime | $time('YYYY-MM-DD') }}</span>
+                </div>
+            </div>
+            <div v-if="fromType == 2 || fromType == 4" class="item">
+                <div class="label">
+                    <span>回归公海时间</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.recycleTime | $time('YYYY-MM-DD') }}</span>
+                </div>
+            </div>
+        </div>
+        <!-- 线索信息（由线索转换过来的客户才有此信息） -->
+        <div v-if="(fromType == 3 || fromType == 4) && (form.sourceStatus == 1 || form.sourceStatus == 2)" class="form-box">
+            <div class="item title">线索信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>线索名称</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.customerCalled }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>线索来源</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.sourceName }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>线索类型</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.clueTypeName }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>创建时间</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                </div>
+            </div>
+        </div>
+        <!-- 企微好友信息 -->
+        <div class="form-box">
+            <div class="item title">企微好友信息</div>
+            <div class="item">
+                <div class="label">
+                    <span>头像</span>
+                </div>
+                <div class="val">
+                    <div class="echo-img">
+                        <img :src="form.avatar | $setAvatar" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>性别</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.externalGender | $gender }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>职务</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.externalPosition }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>邮箱</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.email }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>添加人员</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.createBy }}</span>
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">
+                    <span>添加时间</span>
+                </div>
+                <div class="val">
+                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 时间选择弹窗（日历） -->
+        <van-calendar v-model="selectDatePopupShow" :min-date="minDate" :show-confirm="false" color="#4168F6" @confirm="dateConfirm"/>
         <!-- 客户来源 -->
-        <SelectDialog :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></SelectDialog>
+        <select-dialog v-model="dialog" :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" @confirm="selectedFun"></select-dialog>
         <!-- 地址 and 备注 -->
-        <InputDialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></InputDialog>
-        <!-- 企业标签 -->
-        <TagDialog :title="tagTitle" :type="openType" :companyList="allComTagList" :personList="personTagList" v-model="dialog_tag" @sure="tagUpdateFun"></TagDialog>
+        <input-dialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></input-dialog>
+        <!-- 性别选择 -->
+        <van-action-sheet v-model="genderPopupShow" :actions="genderOptions" cancel-text="取消" close-on-click-action @select="genderConfirm" @cancel="hideGender"/>
     </div>
 </template>
-
 <script>
-import { SelectDialog,InputDialog,TagDialog } from './components'
-import { genderType } from '@/utils/config'
-import {
-  cluecustomer_toupdate,
-  cluecustomer_update,
-  cluecustomer_gettag,
-  cluecustomer_addtag,
-  cluecustomer_updPertag,
-  cluecustomer_deltag,
-  cluecustomer_updCorptag,
-} from '@/api/customer'
+import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
+import LabelEditBox from '@/components/CustomerManage/labelEditBox'
+import { cluecustomer_toupdate, cluecustomer_update } from '@/api/customer'
+import { SelectDialog, InputDialog } from '../customer/components'
+import { throttle, formatDate } from '@/utils/tool'
+import { mapState } from 'vuex'
+
 export default {
-    components: {
-        SelectDialog,InputDialog,TagDialog
-    },
-    data(){
+    data() {
         return {
-            id: this.$route.query.id,
-            dialog: false,
+            fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            clueCustomerNo: this.$route.query.clueCustomerNo,
+
+            showMsg: false,
+
+            selectDatePopupShow: false,
+            timeType: '',
+            minDate: new Date(2011, 0, 1),
+
+            genderPopupShow: false,
+
             dialog_address: false,
-            dialog_tag: false,
-            personTagMore: false,
-            companyTagMore: false,
-            showPopover: false,
+            dialogTitle: '',
+            dialogType: '',
+            dialogText: '',
+            openType: '',
+
+            dialog: false,
             columns: [],
             pickerType: '',
             select: {
@@ -300,351 +437,85 @@ export default {
                 indexList: null,
                 value: '',
             },
-            openType: '',
-            dialogTitle: '',
-            dialogType: '',
-            dialogText: '',
-            tagTitle: '企业标签',
-            commonList: [],                  //所有列表(综合)
-            customerList:[],                 //客户来源
-            customerTypeList: [],            //客户类型
-            scaleList: [],                   //企业规模
-            stageList: [],                   //客户阶段
-            industryList: [],                //所属行业
-            allCompanyTagList: [],           //企业标签(all)
-            companyTagList: [],              //企业标签
-            personTagList: [],               //个人标签
-            customList: [],                  //自定义信息
-            genderList: genderType,
-            sourcePerTag: [],
-            allComTagList: [],
-            industryId: null,
-            isPersonMore: false,
-            isCompanyMore: false,
-            showMsg: false,
 
-            detail: {
-                clueCustomerNo: '',
-                avatar: '',
-                cropSubIndustry: '',
-                industryName: '',       //暂增
-                customerName: '',
-                source: '',
-                sourceName: '',         
-                customerType: '',
-                customerTypeName: '',   
-                mobil: '',
-                cropFullName: '',
-                corpScale: '',
-                cropscale: '',      
-                address: '',
-                remark: '',
-                describe: '',
-                name: '',
-                phone: '',
-                weixin: '',
-                gender: '',
-                position: '',
-                cropFullName: '',
-                cropSubIndustry: '',
-                source: '',
-                email: '',
-                stage: '',
+            form: {
+                createTime: '', // 建档时间（入参: yyyy-MM-dd hh:mm:ss）
+
+                customerCalled: '', // 客户名称
+                source: '', // 客户来源(val)
+                sourceName: '', // 客户来源(name)
+                sourceStatus: null, // 来源标识(1：手动由线索转换而来，2：自动由线索转换为客户，3：微信同步，4：文件导入，5：手动创建客户)
+                customerType: '', // 客户类型(val)
+                customerTypeName: '', // 客户类型(name)
+                clueType: '', // 线索类型(val)
+                clueTypeName: '', // 线索类型(name)
+                customerName: '', // 企业简称
+                cropFullName: '', // 企业名称
+                corpScale: '', // 企业规模(val)
+                cropscale: '', // 企业规模(name)
+                industry: [], // 行业领域
+                cropSubIndustry: '', // 行业领域(val-string)
+                industryName: '', // 行业领域(name-string)
+                address: '', // 办公地址
+                remark: '', // 备注
+                stage: '', // 客户阶段(name)
+                name: '', // 联系人
+                phone: '', // 手机号码
+                mobil: '', // 固定电话
+                gender: '', // 性别
+                genderName: '', // 性别
+                position: '', // 职务
+                email: '', // 邮箱
+                wechatNickname: '', // 微信昵称
+                weixin: '', // 微信号
+
+                corpCustomColumnMap: [], // 自定义信息
             },
+            customColumns: [], // 自定义信息
+            customColumnsTime: '', // 自定义信息时间选择
+
+            customerTypeOptions: [], // 客户类型选择列表
+            clueTypeOptions: [], // 线索类型选择列表
+            customerStageOptions: [], // 客户阶段选择列表
+            sourceOptions: [], // 客户来源选择列表
+            scaleOptions: [], // 企业规模选择列表
+            industryFieldOptions: [], // 行业领域选择列表
+            genderOptions: [
+                { name: '男', value: 1 },
+                { name: '女', value: 2 },
+                { name: '未知', value: 0 },
+            ], // 性别选择列表
+
+            customerCalledRequired: false, // 客户名称
+            industryRequired: false, // 行业领域
+            nameRequired: false, // 联系人
+            phoneRequired: false, // 手机号
+            sourceRequired: false, // 客户来源
+            stageRequired: false, // 客户阶段
+            customerTypeRequired: false, // 客户类型
+            cropFullNameRequired: false, // 企业名称
+            cropscaleRequired: false, // 企业规模
+            addressRequired: false, // 地址
+            clueTypeRequired: false, // 线索类型
         }
     },
     computed: {
+        ...mapState(["corpId"]),
+        headerTitle() {
+            if (this.fromType == 1 || this.fromType == 2) {
+                return '线索详情'
+            } else if (this.fromType == 3 || this.fromType == 4) {
+                return '客户详情'
+            }
+            return '客户详情'
+        },
         gender(){
-            let val = this.detail.gender,obj = {
+            let val = this.form.gender, obj = {
                 1: require('@/images/man.png'),
                 2: require('@/images/icon_female@2x.png'),
             }
             return val ? obj[val] : ''
         },
-        personList(){   //已使用个人标签
-            let list = this.sourcePerTag.filter(el => {
-                return el.isChecked
-            })
-            return list
-        },
-    },
-    mounted(){
-        this.getDetail()
-        this.getTagList()
-    },
-    methods: {
-        getTagList(){   //获取标签列表
-            cluecustomer_gettag(this.id).then(res => {
-                if(res.result){
-                    let data = res.data
-                    this.sourcePerTag = data.personTagList
-                    this.personTagList = JSON.parse(JSON.stringify(this.sourcePerTag))
-                    this.companyTagList = data.corpTagList
-                    data.tagCorpList.forEach(el => {
-                        el.children.forEach(son => {
-                            son.active = false
-                            data.corpTagList.forEach(item => {
-                                if(son.tagid == item.tagid){
-                                    son.active = true
-                                }
-                            })
-                        })
-                    })
-                    this.allCompanyTagList = data.tagCorpList
-
-                    this.getMoreState()
-                }
-            })
-        },
-        getDetail(){    //详情
-            cluecustomer_toupdate(this.id).then(res => {
-                if(res.result){
-                    let data = res.data
-                    this.detail = Object.assign(this.detail,data.clueCustomerEntity)
-                    this.commonList = data.commonList
-                    this.customerList = this.getTypeList('source')
-                    this.customerTypeList = this.getTypeList('customer_type')
-                    // this.customerList = data.list
-                    this.scaleList = this.getTypeList('scale')
-                    this.stageList = this.getTypeList('stage')
-                    // this.scaleList = data.corpScaleList
-                    data.comlist.forEach(el => {
-                        if(el.children.length == 0){
-                            el.children = null
-                        }else{
-                            el.children.forEach(son => {
-                                if(son.children.length == 0){
-                                    son.children = null
-                                }
-                            })
-                        }
-                    })
-                    this.industryList = data.comlist
-                    let tempColum = data.clueCustomerEntity.corpCustomColumnMap
-                    data.head.forEach(el => {
-                        el.value = tempColum ? tempColum[el.columnValue] : ''
-                    })
-                    this.customList =  data.head.filter(item => {
-                        return item.columnType
-                    })
-                    this.fixData(this.detail)
-                }
-            })
-        },
-        fixData(data){  //数据调整
-            let val = data.cropSubIndustry ? data.cropSubIndustry.split(',') : null
-            console.log('val',val)
-            if(val){
-                let i = 0,j = 0
-                this.industryList.forEach((el,index) => {
-                    if(el.id == val[0]){
-                        i = index
-                    }
-                    el.children.forEach((son,s) => {
-                        if(son.id == val[1]){
-                            j = s
-                        }
-                    })
-                })
-                this.industryId = [i,j]
-                data.industryName = this.industryList[i].name + '/' + this.industryList[i].children[j].name
-            }
-
-            this.getMoreState()
-        },
-        getMoreState(){     //获取more状态
-            this.$nextTick(() => {
-                let _wrap = this.$refs.personTagWrap.clientHeight
-                let _box = this.$refs.personTagBox.clientHeight
-                let _wrap1 = this.$refs.companyTagWrap.clientHeight
-                let _box1 = this.$refs.companyTagBox.clientHeight
-                this.isPersonMore = _box > _wrap ? true : false
-                this.isCompanyMore = _box1 > _wrap1 ? true : false
-                console.log(_wrap,_box,_wrap1,_box1)
-            })
-        },
-        tagUpdateFun(type,val){     //标签增减
-            console.log(type,val)
-            switch (type) {
-                case 'company':     //企业标签更改
-                    cluecustomer_updCorptag(this.id,val).then(res => {
-                        if(res.result){
-                            this.dialog_tag = false
-                            this.getTagList()
-                        }
-                    })
-                    break;
-                case 'person':  //个人标签更改
-                    cluecustomer_updPertag(val,this.id).then(res => {
-                        if(res.result){
-                            this.dialog_tag = false
-                            this.getTagList()
-                        }
-                    })
-                    break;
-                case 'add':     //新增个人标签
-                    let obj = {
-                        clueCustomerNo: this.id,
-                        name: val
-                    }
-                    cluecustomer_addtag(obj).then(res => {
-                        if(res.result){
-                            this.getTagList()
-                        }else{
-                            this.$toast(res.msg)
-                        }
-                    })
-                    break;
-                case 'delete':
-                    cluecustomer_deltag(val).then(res => {
-                        if(res.result){
-                            this.getTagList()
-                        }
-                    })
-                    break;
-                default:
-                    break;
-            }
-        },
-        updateFun(){
-            this.detail.clueCustomerNo = this.id
-            cluecustomer_update(this.detail,true).then(res => {
-                if(res.result){
-                    this.$toast('更新成功')
-                }
-            })
-        },
-        openDialog(type){   //打开弹窗 (地址 and 备注)
-            this.openType = type
-            switch (type) {
-                case 'address':
-                    this.dialogTitle = '地址'
-                    this.dialogType = 'input'
-                    this.dialogText = this.detail.address
-                    this.dialog_address = true
-                    break;
-                case 'remark':
-                    this.dialogTitle = '备注'
-                    this.dialogType = 'textarea'
-                    this.dialogText = this.detail.remark
-                    this.dialog_address = true
-                    break;
-                case 'company':
-                    this.tagTitle = '企业标签'
-                    this.allComTagList = JSON.parse(JSON.stringify(this.allCompanyTagList))
-                    this.dialog_tag = true
-                    break;
-                case 'person':
-                    this.tagTitle = '个人标签'
-                    this.personTagList = JSON.parse(JSON.stringify(this.sourcePerTag))
-                    this.dialog_tag = true
-                    break;
-                default:
-                    break;
-            }
-        },
-        confirmFun(val){   //弹窗确认 (地址 and 备注)
-            val = val.trim() ? val.trim() : ''
-            if(this.openType == 'address'){
-                this.detail.address = val
-            }else{
-                this.detail.remark = val
-            }
-            this.updateFun()
-        },
-        openSelectDialog(type){     //打开选择弹窗
-            this.pickerType = type
-            switch (type) {
-                case 'source':  //客户来源
-                    this.select.title = '客户来源'
-                    this.select.isGetIndex = false
-                    this.select.indexList = null
-                    this.select.value = this.detail.sourceName
-                    this.columns = this.customerList
-                    break;
-                case 'type':  //客户类型
-                    this.select.title = '客户类型'
-                    this.select.isGetIndex = false
-                    this.select.indexList = null
-                    this.select.value = this.detail.customerTypeName
-                    this.columns = this.customerTypeList
-                    break;
-                case 'scale':  //企业规模
-                    this.select.title = '企业规模'
-                    this.select.isGetIndex = false
-                    this.select.indexList = null
-                    this.select.value = this.detail.cropscale
-                    this.columns = this.scaleList
-                    break;
-                case 'stage':  //客户阶段
-                    this.select.title = '客户阶段'
-                    this.select.isGetIndex = false
-                    this.select.indexList = null
-                    this.select.value = this.detail.stage
-                    this.columns = this.stageList
-                    break;
-                case 'industry':  //所属行业
-                    this.select.title = '所属行业'
-                    this.select.isGetIndex = true
-                    this.select.value = null
-                    this.select.indexList = this.industryId
-                    this.columns = this.industryList
-                    break;
-                case 'gender':    //性别
-                    this.select.title = '性别'
-                    this.select.isGetIndex = false
-                    this.select.value = this.$gender(this.detail.gender)
-                    this.columns = this.genderList
-                default:
-                    break;
-            }
-            this.dialog = true
-        },
-        selectedFun(val,name){   //筛选项确认
-            let type = this.pickerType
-            switch (type) {
-                case 'source':  //客户来源
-                    console.log('客户来源',val[0].name)
-                    this.detail.sourceName = val[0].name
-                    this.detail.source = val[0].value
-                    break;
-                case 'type':  //客户类型
-                    console.log('客户类型',val)
-                    this.detail.customerTypeName = val[0].name
-                    this.detail.customerType = val[0].value
-                    break;
-                case 'scale':  //企业规模
-                    console.log('企业规模',val)
-                    this.detail.cropscale = val[0].name
-                    this.detail.corpScale = val[0].id
-                    break;
-                case 'stage':  //客户阶段
-                    console.log('客户阶段',val)
-                    this.detail.stage = val[0].name
-                    break;
-                case 'industry':  //所属行业
-                    // console.log('所属行业',val,this.industryList[val[0]])
-                    // let str = this.industryList[val[0]].name + '/' + this.industryList[val[0]].children[val[1]].name
-                    this.detail.industryName = name.join('/')
-                    this.detail.cropSubIndustry = val.join(',')
-                    break;
-                case 'gender':  //性别
-                    console.log('asd',val)
-                    this.detail.gender = val[0].code.toString()
-                default:
-                    break;
-            }
-            this.updateFun()
-        },
-        getTypeList(val){   //获取对应的列表
-            let list = this.commonList.filter(el => {
-                return el.type == val
-            })
-            return list
-        },
-        typeNameFun(val){
-            return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
-        }
     },
     watch: {
         showMsg(val){
@@ -655,276 +526,571 @@ export default {
             }
         },
     },
+    created() {
+        this.init()
+    },
+    provide() {
+        return {
+            goBack: this.goBack
+        }
+    },
+    methods: {
+        init() {
+            this.getData()
+        },
+        getData() {
+            cluecustomer_toupdate(this.clueCustomerNo).then((res) => {
+                let { result, data, msg } = res
+
+                if (result) {
+                    let { clueCustomerEntity, stageList, comlist, commonList, corpScaleList, customColumns } = data
+
+                    // 获取各个选择列表
+                    comlist.forEach(el => {
+                        if(el.children.length == 0){
+                            el.children = null
+                        }else{
+                            el.children.forEach(son => {
+                                if(son.children.length == 0){
+                                    son.children = null
+                                }
+                            })
+                        }
+                    })
+
+                    this.customerStageOptions = stageList // 客户阶段
+                    this.industryFieldOptions = comlist  // 行业领域
+                    this.scaleOptions = corpScaleList // 企业规模
+                    this.customColumns = customColumns // 自定义信息
+
+                    commonList.forEach((item) => {
+                        if (item.type == 'source') {
+                            // 客户来源
+                            this.sourceOptions.push(item)
+                        } else if (item.type == 'customer_type') {
+                            // 客户类型
+                            this.customerTypeOptions.push(item)
+                        } else if (item.type == 'clue_type') {
+                            // 线索类型
+                            this.clueTypeOptions.push(item)
+                        }
+                    })
+                    // 获取表单
+                    this.form = clueCustomerEntity
+                    this.initEchoData()
+                } else {
+                    this.$toast(msg)
+                }
+            })
+        },
+        // 初始化回显数据
+        initEchoData() {
+            // 行业领域
+            if (this.form && this.form.cropSubIndustry) {
+                let arr = this.form.cropSubIndustry.split(','), i = 0, j = 0
+
+                this.industryFieldOptions.forEach((el,index) => {
+                    if(el.id == arr[0]) {
+                        i = index
+                    }
+                    el.children.forEach((son,s) => {
+                        if(son.id == arr[1]){
+                            j = s
+                        }
+                    })
+                })
+                this.form.industry = [i,j]
+                this.form.industryName = this.industryFieldOptions[i].name + '/' + this.industryFieldOptions[i].children[j].name
+            } else {
+                this.form.industry = []
+                this.form.industryName = ''
+            }
+            // 性别
+            this.genderOptions.map(item => {
+                if (item.value == this.form.gender) {
+                    this.form.genderName = item.name
+                }
+            })
+            // 自定义信息
+            let obj = this.form.corpCustomColumnMap
+
+            if (obj) {
+                for (let i in obj) {
+                    this.customColumns.forEach(item => {
+                        if (item.columnValue == i) {
+                            item.value = obj[i]
+                        }
+                    })
+                }
+            }
+        },
+        typeNameFun(val){
+            return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
+        },
+        goBack() {
+            this.$router.go(-1)
+        },
+        // 打开日期选择弹窗
+        showDateSelect(timeType, customColumns) {
+            this.timeType = timeType
+            this.customColumnsTime = customColumns
+            this.selectDatePopupShow = true
+        },
+        // 选中建档时间
+        dateConfirm(date) {
+            let timeType = this.timeType
+
+            if(this.customColumnsTime == 'customColumns') {
+                // 自定义信息
+                this.customColumns.forEach(item => {
+                    if (item.columnValue == timeType) {
+                        item.value = formatDate(date, "yyyy-MM-dd hh:mm:ss")
+                    }
+                })
+            } else {
+                this.form[timeType] = new Date(date).getTime()
+            }
+            this.selectDatePopupShow = false
+        },
+        // 打开性别弹窗
+        showActionSheet(type) {
+            this.genderPopupShow = true
+        },
+        // 选中性别
+        genderConfirm(val) {
+            if (val) {
+                const { name, value } = val
+
+                this.form.genderName = name
+                this.form.gender = value
+            }
+            this.hideGender()
+            this.$forceUpdate()
+        },
+        // 关闭性别选择弹窗
+        hideGender() {
+            this.genderPopupShow = false
+        },
+        openDialog(type){   //打开弹窗 (地址 and 备注)
+            this.openType = type
+            switch (type) {
+                case 'address':
+                    this.dialogTitle = '办公地址'
+                    this.dialogType = 'input'
+                    this.dialogText = this.form.address
+                    break;
+                case 'remark':
+                    this.dialogTitle = '备注'
+                    this.dialogType = 'textarea'
+                    this.dialogText = this.form.remark
+                    break;
+                default:
+                    break;
+            }
+            this.dialog_address = true
+        },
+        confirmFun(val){   //弹窗确认 (地址 and 备注)
+            if(this.openType == 'address'){
+                this.form.address = val
+            }else{
+                this.form.remark = val
+            }
+        },
+        openSelectDialog(type, customColumns){     //打开选择弹窗
+            if (customColumns == 'customColumns') {
+                // 自定义信息
+                const { columnValue, columnName, value, optionsVOList } = type
+
+                optionsVOList.forEach(item => {
+                    item.name = item.columnOption
+                })
+                this.pickerType = columnValue
+                this.select.title = columnName
+                this.select.isGetIndex = false
+                this.select.indexList = null
+                this.select.value = value
+                this.columns = optionsVOList
+            } else {
+                this.pickerType = type
+                switch (type) {
+                    case 'source':  // 客户来源
+                        this.select.title = '客户来源'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.sourceName
+                        this.columns = this.sourceOptions
+                        break;
+                    case 'stage':  // 客户阶段
+                        this.select.title = '客户阶段'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.stage
+                        this.columns = this.customerStageOptions
+                        break;
+                    case 'customerType':  // 客户类型
+                        this.select.title = '客户类型'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.customerTypeName
+                        this.columns = this.customerTypeOptions
+                        break;
+                    case 'clueType':  // 线索类型
+                        this.select.title = '线索类型'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.clueTypeName
+                        this.columns = this.clueTypeOptions
+                        break;
+                    case 'cropscale':  // 企业规模
+                        this.select.title = '企业规模'
+                        this.select.isGetIndex = false
+                        this.select.indexList = null
+                        this.select.value = this.form.cropscale
+                        this.columns = this.scaleOptions
+                        break;
+                    case 'industry':  // 行业领域
+                        this.select.title = '行业领域'
+                        this.select.isGetIndex = true
+                        this.select.indexList = null
+                        this.select.value = null
+                        this.columns = this.industryFieldOptions
+                        break;
+                    default:
+                        break;
+                }
+            }
+            this.dialog = true
+        },
+        selectedFun(val, name){   // 筛选项确认
+            let type = this.pickerType
+            
+            switch (type) {
+                case 'source':  // 客户来源
+                    this.form.sourceName = val[0].name
+                    this.form.source = val[0].value
+                    break;
+                case 'stage':  // 客户阶段
+                    this.form.stage = val[0].name
+                    break;
+                case 'customerType':  // 客户类型
+                    this.form.customerTypeName = val[0].name
+                    this.form.customerType = val[0].value
+                    break;
+                case 'clueType':  // 线索类型
+                    this.form.clueTypeName = val[0].name
+                    this.form.clueType = val[0].value
+                    break;
+                case 'cropscale':  // 企业规模
+                    this.form.cropscale = val[0].name
+                    this.form.corpScale = val[0].id
+                    break;
+                case 'industry':  // 行业领域
+                    this.form.industryName = name.join('/')
+                    this.form.industry = val
+                    this.form.cropSubIndustry = val.join(',')
+                    break;
+                default:
+                    // 自定义信息
+                    this.customColumns.forEach(item => {
+                        if (item.columnValue == type) {
+                            item.value = val[0].name
+                        }
+                    })
+                    break;
+            }
+        },
+        // 表单验证
+        checkForm() {
+            const { customerCalled, source, stage, customerType, clueType, cropFullName, cropscale, industry, address, name, phone } = this.form
+
+            let arrObj = this.fromType == 1 || this.fromType == 2 ? { customerCalled, source, clueType, cropFullName, cropscale, industry, address, name, phone } : { customerCalled, source, stage, customerType, cropFullName, cropscale, industry, address, name, phone }
+            
+            for (let i in arrObj) {
+                if (!arrObj[i] || arrObj[i] && !arrObj[i].length) {
+                    this[i + 'Required'] = true
+                    return false
+                }
+            }
+
+            return true
+        },
+        // 提示红字点击后聚焦input或打开选择框
+        showInput(type) {
+            this.initRequired(type)
+            switch (type) {
+                case 'customerCalled':  // 客户名称
+                    this.$nextTick(() => {
+                        this.$refs.customerCalled.focus()
+                    })
+                    break;
+                case 'cropFullName':  // 企业名称
+                    this.$nextTick(() => {
+                        this.$refs.cropFullName.focus()
+                    })
+                    break;
+                case 'name':  // 联系人
+                    this.$nextTick(() => {
+                        this.$refs.name.focus()
+                    })
+                    break;
+                case 'phone':  // 手机号码
+                    this.$nextTick(() => {
+                        this.$refs.phone.focus()
+                    })
+                    break;
+                case 'address':  // 地址
+                    this.openDialog(type)
+                    break;
+                case 'customerType':  // 客户类型
+                case 'clueType':  // 线索类型
+                case 'stage':  // 客户阶段
+                case 'source':  // 客户来源
+                case 'cropscale': // 企业规模
+                case 'industry': // 行业领域
+                    this.openSelectDialog(type)
+                    break;
+                default:
+                    break;
+            }
+        },
+        // 取消红字提示
+        initRequired(type) {
+            this[type + 'Required'] = false
+        },
+        // 获取最终自定义信息
+        getCorpCustomColumn() {
+            let obj = {}
+
+            this.customColumns.map(item => {
+                obj[item.columnValue] = item.value
+            })
+
+            return JSON.stringify(obj)
+        },
+        // 表单提交
+        async doSubmit() {
+            if(!this.checkForm()) {
+                return
+            }
+
+            if(!throttle()) {
+                return
+            }
+
+            let params = {
+                ...this.form,
+                clueCustomerNo: this.clueCustomerNo,
+                corpCustomColumn: this.getCorpCustomColumn()
+            }
+
+            let { result, msg } = await cluecustomer_update(params)
+
+            if (result) {
+                this.$toast("更新成功")
+                setTimeout(() => {
+                    this.goBack()
+                }, 500)
+            } else {
+                this.$toast(msg)
+            }
+        },
+    },
+    components: {
+        HeaderTitle,
+        LabelEditBox,
+        SelectDialog,
+        InputDialog,
+    }
 }
 </script>
-
 <style lang="less" scoped>
-@import "~@/styles/color.less";
-.pop_text{
-    padding: 12px;
-}
-.detail_wrap{
-    width: 100%;
+@import url('@/styles/color');
+.turn-customer {
     min-height: 100vh;
-    background: @white;
-    .top_back{
-        width: 100%;
-        height: 88px;
-        position: relative;
-        text-align: center;
-        &::before{
-            content: '';
-            width: 100%;
-            height: 1px; /* no */
-            background: @lineColor;
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            transform: scaleY(.5);
-        }
-        .icon{
-            width: 32px;
-            height: 32px;
-            position: absolute;
-            left: 32px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .title{
-            display: inline-block;
-            line-height: 88px;
-            font-size: 28px;
-            font-weight: bold;
-            color: @fontMain;
-        }
+    padding: 88px 0 0;
+    background-color: @white;
+    .customer-title {
+        position: fixed;
+        top: 0;
     }
-    .top_box{
-        width: 100%;
+    .avatar_box{
+        display: flex;
+        align-items: center;
         padding: 32px;
         position: relative;
-        // &::before{
-        //     content: '';
-        //     width: 100%;
-        //     height: 1px; /* no */
-        //     background: @lineColor;
-        //     transform: scaleY(.5);
-        //     position: absolute;
-        //     top: 0;
-        //     left: 0;
-        // }
         &::after{
             content: '';
-            width: 100%;
-            height: 1px; /* no */
-            background: @lineColor;
+            height: 2px;
+            background-color: @lineColor;
             transform: scaleY(.5);
             position: absolute;
             bottom: 0;
             left: 0;
+            right: 0;
         }
-        .avatar_box{
+        .avatar{
+            width: 100px;
+            height: 100px;
+            background: rgba(0,0,0,.05);
+            border-radius: 50%;
+            margin-right: 24px;
+        }
+        .val{
+            width: calc(100% - 124px);
             display: flex;
-            align-items: center;
-            .avatar{
-                width: 100px;
-                height: 100px;
-                background: rgba(0,0,0,.05);
-                border-radius: 50%;
-                margin-right: 24px;
-            }
-            .val{
-                width: calc(100% - 124px);
-                display: flex;
-                align-items: flex-end;
-                position: relative;
-                .name_msg{
-                    color: @white;
-                    background: rgb(0,0,0);
-                    border-radius: 10px;
-                    padding: 12px;
-                    z-index: 0;
-                    opacity: 0;
+            align-items: flex-end;
+            position: relative;
+            .name_msg{
+                color: @white;
+                background: rgb(0,0,0);
+                border-radius: 10px;
+                padding: 12px;
+                z-index: 0;
+                opacity: 0;
+                position: absolute;
+                bottom: -16px;
+                left: 0;
+                transform: translateY(100%);
+                box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1); /* no */
+                transition: all .2s;
+                &.show{
+                    opacity: 1;
+                    z-index: 10;
+                }
+                &::before{
+                    content: '';
+                    width: 0;
+                    height: 0;
+                    border-left: 10px solid transparent; 
+                    border-right: 10px solid transparent; 
+                    border-bottom: 15px solid rgb(0,0,0); 
                     position: absolute;
-                    bottom: -16px;
-                    left: 0;
-                    transform: translateY(100%);
-                    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1); /* no */
-                    transition: all .2s;
-                    &.show{
-                        opacity: 1;
-                        z-index: 10;
-                    }
-                    &::before{
-                        content: '';
-                        width: 0;
-                        height: 0;
-                        border-left: 10px solid transparent; 
-                        border-right: 10px solid transparent; 
-                        border-bottom: 15px solid rgb(0,0,0); 
-                        position: absolute;
-                        top: -12px;
-                        left: 20px;
-                    }
+                    top: -12px;
+                    left: 20px;
                 }
-                .name{
-                    max-width: 60%;
-                    color: @fontMain;
-                    font-weight: bold;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    word-break: break-all;
-                    font-size: 36px;
-                    line-height: 48px;
+            }
+            .name{
+                max-width: 60%;
+                color: @fontMain;
+                font-weight: bold;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                word-break: break-all;
+                font-size: 36px;
+                line-height: 48px;
+            }
+            .alt{
+                color: @yellow;
+                font-size: 24px;
+                line-height: 32px;
+                margin-left: 8px;
+                &.green{
+                    color: @green;
                 }
-                .alt{
-                    color: @yellow;
-                    font-size: 24px;
-                    line-height: 32px;
-                    margin-left: 8px;
-                    &.green{
-                        color: @green;
-                    }
-                }
-                .gender{
-                    width: 30px;
-                    height: auto;
-                }
+            }
+            .gender{
+                width: 30px;
+                height: auto;
             }
         }
     }
-    .content{
+    .form-box{
         width: 100%;
-        padding: 32px;
-        .row{
-            width: 100%;
-            position: relative;
-            padding-bottom: 64px;
-            margin-bottom: 32px;
-            &.tag{
-                padding-bottom: 40px;
-                .tit{
-                    margin-bottom: 32px;
-                }
-            }
-            &.no .item_box .item .val{
-                color: @fontSub1;
-            }
-            &:last-child{
-                margin-bottom: 0;
-                &::after{
-                    display: none;
-                }
-            }
-            &::after{
-                content: '';
-                width: 100%;
-                height: 1px; /* no */
-                background: @lineColor;
-                transform: scaleY(.5);
-                position: absolute;
-                bottom: 0;
-                left: 0;
-            }
-            .edit{
-                width: 40px;
-                height: 40px;
-                position: absolute;
-                right: 0;
-                top: 0;
-            }
-            .tit{
-                font-size: 24px;
-                line-height: 32px;
-                color: @total;
-            }
-            .tag_wrap{
-                width: 100%;
-                max-height: 152px;
-                overflow: hidden;
-                &.more{
-                    max-height: inherit;
-                    overflow: inherit;
-                }
-            }
-            .tag_box{
-                width: 100%;
+        padding: 0 32px;
+        position: relative;
+        &:first-child {
+            padding-top: 88px;
+        }
+        &::after {
+            content: '';
+            height: 2px;
+            background-color: @lineColor;
+            transform: scaleY(.5);
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .item{
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            line-height: 36px;
+            color: @fontMain;
+            padding: 32px 0;
+            .label{
                 display: flex;
-                flex-wrap: wrap;
-                .tag{
-                    color: @fontSub1;
-                    line-height: 52px;
-                    height: 52px;
-                    background: @navBg;
-                    border-radius: 8px;
-                    padding: 0 16px;
-                    margin-right: 16px;
-                    margin-bottom: 24px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    &:last-child{
-                        margin-right: 0;
-                    }
+                align-items: center;
+                width: 180px;
+                span {
+                    font-weight: bold;
+                }
+                .require {
+                    width: 16px;
+                    height: 16px;
+                    line-height: 28px;
+                    margin-left: 16px;
+                    font-size: 28px;
+                    color: @red;
                 }
             }
-            .more{
-                text-align: center;
-                .icon{
-                    display: inline-block;
-                    width: 36px;
-                    height: 36px;
+            .val{
+                width: calc(100% - 180px);
+                text-align: right;
+                display: flex;
+                justify-content: right;
+                .input{
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    text-align: right;
                 }
-            }
-            .item_box{
-                width: 100%;
-                .item{
+                .icon-select{
                     display: flex;
                     align-items: center;
-                    font-size: 28px;
-                    line-height: 36px;
-                    color: @fontMain;
-                    padding: 32px 0;
-                    &.lh{
-                        align-items: flex-start;
+                    width: 100%;
+                    span {
+                        width: calc(100% - 32px);
                     }
-                    .label{
-                        width: 180px;
-                        font-weight: bold;
+                    .icon{
+                        width: 32px;
+                        height: 32px;
                     }
-                    .val{
-                        width: calc(100% - 180px);
-                        text-align: right;
-                        // display: flex;
-                        // justify-content: right;
-                        .input{
-                            width: 100%;
-                            height: 100%;
-                            border: none;
-                            text-align: right;
-                        }
-                        .icon_select{
-                            // display: flex;
-                            // align-items: center;
-                            display: inline-block;
-                            span{
-                                display: inline-block;
-                                vertical-align: middle;
-                            }
-                            .icon{
-                                width: 32px;
-                                height: 32px;
-                                // margin-left: 12px;
-                                display: inline-block;
-                                vertical-align: middle;
-                            }
-                        }
-                        .placeholder{
-                            color: @total;
-                        }
+                }
+                .placeholder{
+                    color: @total;
+                }
+                .text {
+                    display: block;
+                    word-break: break-all;
+                }
+                .tips {
+                    color: @red;
+                }
+                .block-span {
+                    width: 100%;
+                }
+                .echo-text {
+                    width: 100%;
+                    color: @fontSub1;
+                }
+                .echo-img {
+                    width: 100%;
+                    height: 64px;
+                    img {
+                        float: right;
+                        width: 64px;
+                        height: 64px;
+                        border-radius: 50%;
                     }
                 }
             }
+        }
+        .title {
+            padding: 32px 0 0;
+            color: @total;
+            font-size: 24px;
         }
     }
 }

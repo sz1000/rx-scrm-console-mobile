@@ -14,7 +14,7 @@
         <li @click="changeNav(3)" :class="{active: type == 3}" ><span>互动协同</span></li>
       </ul>
     <div class="searchInput">
-      <van-field v-model="value1" placeholder="客户名称/公司/手机号码">
+      <van-field v-model="value1" placeholder="关联客户名称/企业名称/…">
         <template #left-icon>
           <van-icon name="search"  @click="search" />
         </template>
@@ -250,7 +250,8 @@ export default {
       this.getList()
       this.getTotal(2)
       this.getTotal(3)
-     
+      this.type = this.$route.query.type || 1
+     console.log(this.$route.query.type,"00p---=")
     // })
   },
   mounted() {},
@@ -573,6 +574,9 @@ export default {
                     break;
                 case 3:
                     str = '从企微同步了'
+                    break;
+                     case 4:
+                    str = obj.context
                     break;
                 case 5:
                     str = '更新了客户信息'

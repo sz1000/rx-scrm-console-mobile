@@ -123,11 +123,11 @@
             </div>
             <p>话术库</p>
           </div>
-          <div class="commonBtn" @click="FnToRouter('/waitDealwith?tab=1')" v-show="menulist.includes('circle')">
+          <div class="commonBtn" @click="FnToRouter('/talkTool/circleFriend')" v-show="menulist.includes('circle')">
             <div class="huoma ongroup_bg">
               <img src="../assets/svg/pengyouquan.svg" alt="" />
             </div>
-            <p>朋友圈</p>
+            <p>企微朋友圈</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
             <img src="../images/card.png" alt="" />
@@ -144,13 +144,13 @@
             </div>
             <p>一键拉群</p>
           </div>
-          <div class="commonBtn" @click="FnToRouter('/talkTool/customerGroup')" v-show="menulist.includes('customerSend')">
+          <div class="commonBtn" @click="customerGroup" v-show="menulist.includes('customerSend')">
             <div class="huoma kehuqunfa_bg">
               <img src="../assets/svg/kehuqunfa.svg" alt="" />
             </div>
             <p>客户群发</p>
           </div>
-          <div class="commonBtn" @click="FnToRouter('/talkTool/CustomergroupPlaye')" v-show="menulist.includes('groupSend')">
+          <div class="commonBtn" @click="CustomergroupPlaye" v-show="menulist.includes('groupSend')">
             <div class="huoma kehuqunfa_bg">
               <img src="../assets/svg/kehuqunquqnfa.svg" alt="" />
             </div>
@@ -249,6 +249,12 @@ export default {
       sessionStorage.setItem('showHome', v)
       this.showHome = v
     },
+    customerGroup() {
+      this.$router.push({ path: '/groupIndex', query: { tab: 1 } })
+    },
+    CustomergroupPlaye() {
+      this.$router.push({ path: '/groupIndex', query: { tab: 2 } })
+    },
     getHome() {
       cluecustomer_homedata().then((res) => {
         if (res.result) {
@@ -330,9 +336,9 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    // padding: 24px 0px 110px 24px;
-    padding: 40px 32px 0;
-    overflow-y: scroll;
+    padding: 24px 0px 110px 24px;
+    // padding: 40px 32px 0;
+    // overflow-y: scroll;
     scrollbar-width: 0;
     .drainage_warp {
       background: #fff;
