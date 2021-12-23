@@ -593,12 +593,12 @@ export default {
               function (res) {
                 let that = this,
                   url
-                if (mediaObj.tab == 1) {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
-                } else if (mediaObj.tab == 2) {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.documentId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                if (that.type == 0) {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.articleId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
+                } else if (that.type == 1) {
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.documentId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
                 } else {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.articleId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
                 }
                 wx.invoke(
                   'shareToExternalMoments',
@@ -607,8 +607,8 @@ export default {
                       {
                         msgtype: 'link', // 消息类型，必填
                         link: {
-                          title: mediaObj.title, // H5消息标题
-                          imgUrl: mediaObj.cover, // H5消息封面图片URL
+                          title: that.shareObj.title, // H5消息标题
+                          imgUrl: that.shareObj.cover, // H5消息封面图片URL
                           // url: '', // H5消息页面url 必填
                           url: url,
                         },
