@@ -660,7 +660,7 @@ export default {
     padding: 0 32px;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid @lineColor;
+    border-bottom: 1px solid @lineColor; /* no */
     li {
       width: 212px;
       height: 64px;
@@ -677,7 +677,7 @@ export default {
     }
     .active {
       background: @white;
-      border: 1px solid @main;
+      border: 1px solid @main; /* no */
       span {
         color: @main;
       }
@@ -708,7 +708,7 @@ export default {
     display: flex;
     font-size: 28px;
     justify-content: space-between;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6; /* no */
     .nomalText {
       color: #838a9d;
       width: 375px;

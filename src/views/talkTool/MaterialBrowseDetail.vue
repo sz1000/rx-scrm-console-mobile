@@ -228,7 +228,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 0 32px 32px;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6; /* no */
     .left {
       display: flex;
       max-width: 80%;
@@ -261,21 +261,21 @@ export default {
           }
           .newClues {
             font-size: 20px;
-            border: 1px solid #fb8f28;
+            border: 1px solid #fb8f28; /* no */
             color: #fb8f28;
             padding: 2px 16px;
             border-radius: 21px;
           }
           .clues {
             font-size: 20px;
-            border: 1px solid #55a7fe;
+            border: 1px solid #55a7fe; /* no */
             color: #55a7fe;
             padding: 2px 16px;
             border-radius: 21px;
           }
           .customer {
             font-size: 20px;
-            border: 1px solid #4168f6;
+            border: 1px solid #4168f6; /* no */
             color: #4168f6;
             padding: 2px 16px;
             border-radius: 21px;
@@ -301,7 +301,7 @@ export default {
       display: flex;
       justify-content: space-between;
       padding: 32px;
-      border-bottom: 1px solid #e6e6e6;
+      border-bottom: 1px solid #e6e6e6; /* no */
       span:nth-child(1) {
         color: #262626;
       }

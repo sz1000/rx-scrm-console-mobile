@@ -267,7 +267,7 @@ export default {
     padding: 0 32px 32px;
     color: #b3b3b3;
     font-size: 24px;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6; /* no */
   }
   .tab_warp {
     display: flex;
@@ -275,7 +275,7 @@ export default {
     height: 96px;
     line-height: 96px;
     font-size: 28px;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6; /* no */
     .nomalText {
       color: #838a9d;
       // width: 375px;
@@ -335,21 +335,21 @@ export default {
           }
           .newClues {
             font-size: 20px;
-            border: 1px solid #fb8f28;
+            border: 1px solid #fb8f28; /* no */
             color: #fb8f28;
             padding: 2px 16px;
             border-radius: 21px;
           }
           .clues {
             font-size: 20px;
-            border: 1px solid #55a7fe;
+            border: 1px solid #55a7fe; /* no */
             color: #55a7fe;
             padding: 2px 16px;
             border-radius: 21px;
           }
           .customer {
             font-size: 20px;
-            border: 1px solid #4168f6;
+            border: 1px solid #4168f6; /* no */
             color: #4168f6;
             padding: 2px 16px;
             border-radius: 21px;
