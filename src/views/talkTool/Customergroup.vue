@@ -460,7 +460,7 @@ export default {
       if (obj.tab == 3) {
         this.appendixList[this.dataindex].mediatite = obj.posterName
         this.appendixList[this.dataindex].mediatype = obj.tab
-        this.appendixList[this.dataindex].urls = obj.posterUrl
+        this.appendixList[this.dataindex].urls = obj.mediaId
       }
     },
     showData(val) {
