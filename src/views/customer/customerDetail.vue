@@ -637,7 +637,7 @@ export default {
             }
         },
         typeNameFun(val){
-            return val ? val == 1 ? '@微信' : `@${this.detail.customerName}` : ''
+            return val ? val == 1 ? '@微信' : `@${this.form.customerName}` : ''
         },
         goBack() {
             this.$router.go(-1)

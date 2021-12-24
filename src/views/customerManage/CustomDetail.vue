@@ -323,6 +323,7 @@ export default {
                         query: {
                             fromType: this.fromType,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
+                            customerCalled: this.customerInfo.customerCalled
                         },
                     })
                     break;

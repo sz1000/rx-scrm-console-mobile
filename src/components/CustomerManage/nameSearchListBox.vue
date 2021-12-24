@@ -20,7 +20,7 @@
                             <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
                         </li>
                     </ul>
-                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i)"></div>
+                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i.clueCustomerNo)"></div>
                 </div>
             </template>
             <template v-if="list && list.length">
@@ -43,7 +43,7 @@
                                 <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
                             </li>
                         </ul>
-                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i)"></div>
+                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i.clueCustomerNo)"></div>
                     </div>
                 </van-list>
             </template>
@@ -80,7 +80,6 @@ export default {
             limit: 20,
             list: [], // 相似数据
             preciseData: [], // 相同数据
-            checkedItem: '', // 选中的客户
         }
     },
     computed: {
@@ -162,12 +161,14 @@ export default {
         },
         // 选中客户与否
         doCheck(item) {
-
+            this.$emit('getCheckedItem', item)
         },
     },
     filters: {
         optString(val){
-            return val.userName && val.deptName ? `${val.userName}-${val.deptName}` : val.userName
+            let result = val.userName ? val.deptName ? `${val.userName}-${val.deptName}` : val.userName : ''
+
+            return result ? val.userNo && val.userNo == this.userNo ? `${result}(我)` : result : ''
         },
     },
 }
