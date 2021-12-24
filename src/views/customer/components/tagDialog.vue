@@ -5,29 +5,29 @@
             <div class="dialog_item" v-for="(item,index) in companyList" :key="index">
                 <div class="label">{{item.name}}</div>
                 <div class="val">
-                    <div class="tag" @click="tagChangeFun(son)" :class="{'cur':son.active}" v-for="(son,i) in item.children" :key="i">{{son.name}}</div>
+                    <div class="tag pointer" @click="tagChangeFun(son)" :class="{'cur':son.active}" v-for="(son,i) in item.children" :key="i">{{son.name}}</div>
                 </div>
             </div>
         </div>
         <!-- 个人标签 -->
         <div class="dialog_row" v-if="type == 'person'">
-            <div class="add_btn" @click="addFun" v-if="isAdd">
+            <div class="add_btn pointer" @click="addFun" v-if="isAdd">
                 <img class="icon" src="@/assets/svg/icon_btn_add.svg" alt="">
                 <span class="text">添加</span>
             </div>
             <div class="input_box" v-else>
                 <input type="text" class="input" v-model="msg" @input="msg=msg.replace(' ','')" @keyup.enter="confirmFun('add')" maxlength="20" placeholder="输入后回车">
-                <span class="btn" @click="isAdd = true">取消</span>
-                <span class="btn main" @click="confirmFun('add')">确定</span>
+                <span class="btn pointer" @click="isAdd = true">取消</span>
+                <span class="btn main pointer" @click="confirmFun('add')">确定</span>
             </div>
             <div class="tag_box">
-                <div class="icon_tag" @click="tagChangeFun(item)" :class="{'cur':item.isChecked}" v-for="item in personList" :key="item.id">
+                <div class="icon_tag pointer" @click="tagChangeFun(item)" :class="{'cur':item.isChecked}" v-for="item in personList" :key="item.id">
                     <span class="text">{{item.name}}</span>
                     <jzIcon class="icon" @click.native.stop="confirmFun('delete',item)" type="icon-shanchu"></jzIcon>
                 </div>
             </div>
         </div>
-        <div class="opera_box" slot="footer_box">
+        <div class="opera_box pointer" slot="footer_box">
             <div class="btn" @click="confirmFun">确定</div>
         </div>
     </DialogDetail>

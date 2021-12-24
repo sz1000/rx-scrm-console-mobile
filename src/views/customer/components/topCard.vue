@@ -3,10 +3,10 @@
         <div class="customer_card" @click="toFun('detail')">
             <!-- <div class="score">7832分</div> -->
             <div class="info_box">
-                <div class="avatar">
+                <div class="avatar pointer">
                     <img class="img" :src="customerInfo.avatar | $setAvatar">
                 </div>
-                <div class="val">
+                <div class="val pointer">
                     <div class="name_box" v-if="customerInfo.name">
                         <div class="name">{{customerInfo.name}}</div>
                         <div class="alt" :class="{'green':customerInfo.externalType == 1}" v-if="customerInfo.externalType && customerInfo.name.length < 10">{{customerInfo.externalType == 1 ? '@微信' : `@${customerInfo.customerName || customerInfo.cropFullName}`}}</div>
@@ -17,7 +17,7 @@
                     </div>
                     <div class="p">{{customerInfo.mobil}}</div>
                     <div class="p">{{customerInfo.cropFullName}}</div>
-                    <div v-if="fromType == '1' || fromType == '3'" class="person" @click.stop="toFun('helper')">
+                    <div v-if="fromType == 1 || fromType == 3" class="person" @click.stop="toFun('helper')">
                         <div class="img_box" :class="`m${personList.length}`">
                             <img class="img" :src="item.avatar" v-for="(item,index) in personList" :key="index">
                         </div>
@@ -29,8 +29,12 @@
                     </div>
                 </div>
             </div>
-            <div class="tag_box" :class="{'opt0':tagList.length == 0}">
-                <div class="tag" v-for="(item,index) in tagList" :key="index">{{item.name | limitFilter}}</div>
+            <div class="tag_box" :class="{'opt0': !customerInfo.stage && !customerInfo.source && !customerInfo.customerType && tagList.length == 0}">
+                <div v-if="customerInfo.stage" class="tag first">{{ customerInfo.stage }}</div>
+                <div v-if="customerInfo.source" class="tag" :class="{first: !customerInfo.stage}">{{ customerInfo.source }}</div>
+                <div v-if="(fromType == 1 || fromType == 2) && customerInfo.clueTypeName" class="tag" :class="{first: !customerInfo.source}">{{ customerInfo.clueTypeName }}</div>
+                <div v-if="(fromType == 3 || fromType == 4) && customerInfo.customerTypeName" class="tag" :class="{first: !customerInfo.source}">{{ customerInfo.customerTypeName }}</div>
+                <div class="tag" v-for="(item, index) in tagList" v-show="item.name" :key="index">{{item.name | limitFilter}}</div>
             </div>
         </div>
     </div>
@@ -265,11 +269,11 @@ export default {
             }
         }
         .tag_box{
-            display: flex;
-            align-items: center;
-            padding-top: 24px;
-            // border-top: 1px solid @lineColor;   /*no*/
+            height: 86px;
+            padding: 24px 0 0 3px;
+            white-space: normal;
             position: relative;
+            overflow: hidden;
             &::before{
                 content: '';
                 width: 100%;
@@ -284,11 +288,11 @@ export default {
                 opacity: 0;
             }
             .tag{
+                display: inline-block;
                 height: 52px;
                 line-height: 52px;
                 padding: 0 16px;
-                border-radius: 26px;
-                // border: 1px solid @bdColor; /*no*/
+                margin-bottom: 12px;
                 white-space: nowrap;
                 font-size: 28px;
                 color: @fontSub1;
@@ -297,7 +301,7 @@ export default {
                     content: '';
                     width: 200%;
                     height: 200%;
-                    border-radius: 52px;
+                    border-radius: 4px;
                     border: 1px solid @bdColor; /*no*/
                     position: absolute;
                     left: 50%;
@@ -306,6 +310,13 @@ export default {
                 }
                 &+.tag{
                     margin-left: 16px;
+                }
+            }
+            .first {
+                background: rgba(65, 104, 246, 0.06);
+                color: @main;
+                &::before {
+                    border-color: @main;
                 }
             }
         }

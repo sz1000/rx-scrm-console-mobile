@@ -1,5 +1,7 @@
 import request from '@/utils/requestNew'
 let BASE_CUSTOMER_SERVICE = 'customer-service'
+let BASE_COMMON_SERVICE = 'common-service'
+
 export function cluecustomer_getClueCustomerByid(id) { //客户详情
     return request({
         url: BASE_CUSTOMER_SERVICE + '/m/cluecustomer/getClueCustomerByid?id=' + id,
@@ -319,6 +321,32 @@ export function cluecustomer_cluetocustomer(data) {
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/cluetocustomer',
         method: 'post',
+        data,
+    })
+}
+// 线索合并客户
+export function cluecustomer_clueMergeToCustomer(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/clueMergeToCustomer',
+        method: 'post',
+        data,
+    })
+}
+// 获取企业下的某个配置项及规则(客户自动去重settingItem: customer_duplicate_switch)
+export function cluecustomer_settingItem(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + `/generalSettings/settingItem/${data}`,
+        method: 'get',
+    })
+}
+// 获取客户名称相似列表
+export function cluecustomer_elasticSearch(data, loading = false) {
+    return request({
+        url: BASE_COMMON_SERVICE + '/elasticSearch/queryClueCustomerPage/customers',
+        method: 'post',
+        headers: {
+            noLoading: loading
+        },
         data,
     })
 }

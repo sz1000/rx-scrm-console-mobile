@@ -121,7 +121,7 @@ export default {
             applyData: {},
 
             navList: [
-                { name: '客户动态',code: 'dynamics'},
+                { name: '动态',code: 'dynamics'},
                 { name: '商机',code: 'niche',num: 0},
                 { name: '客户群',code: 'group',num: 0},
                 { name: '附件',code: 'enclosure',num: 0},
