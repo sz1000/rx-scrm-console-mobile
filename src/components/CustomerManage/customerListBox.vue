@@ -1,7 +1,7 @@
 <template>
   <div class="customer-list-box">
     <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <div v-for="i in list" :key="i.id" class="list-item pointer" @click="goDetail(i)">
+      <div v-for="(i, index) in list" :key="index + i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
         <div class="list-item-left">
           <img class="header-img" :src="i.avatar | $setAvatar" alt="">
           <img v-if="i.isWcCus == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
@@ -22,7 +22,7 @@
             <span v-if="(customerType == '3' || customerType == '4' ) && i.stage" :class="{first: i.stage == '沟通洽谈', second: i.stage == '合同签约', third: i.stage == '维护运营', fourth: i.stage == '暂停', fifth: i.stage == '终止'}">{{ i.stage }}</span>
             <span v-if="i.source" :class="{first: customerType == '1' || customerType == '2'}">{{ i.source }}</span>
             <span v-if="i.customerType">{{ i.customerType }}</span>
-            <span v-show="i.customerTagNames && i.customerTagNames.length" v-for="item in i.customerTagNames" :key="item">{{ item }}</span>
+            <span v-show="i.customerTagNames && i.customerTagNames.length" v-for="(item, index) in i.customerTagNames" :key="index + item">{{ item }}</span>
           </li>
           <li v-if="customerType == '1' || customerType == '3'" class="right-bottom">
             <span v-if="i.phone">{{ i.phone }}</span>

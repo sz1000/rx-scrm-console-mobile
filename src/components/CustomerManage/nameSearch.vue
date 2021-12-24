@@ -1,7 +1,7 @@
 <template>
-    <div class="name-search">
+    <div class="name-search" :class="{pt88: fromType == 2}">
         <header-title class="customer-title" :title="headerText" :needBackText="false" :needLine="true"></header-title>
-        <div class="search-box">
+        <div class="search-box" :class="{mlt0: fromType == 2}">
             <div class="search-inp">
                 <van-field v-model="searchParam" class="inp-box" placeholder="请输入客户名称" :border="false" @input="doSearch" @keyup.enter="doSearch"/>
                 <img class="remove pointer" :src="require('@/assets/svg/icon_search_clear.svg')" alt="" @click="doClear">
@@ -9,30 +9,33 @@
             <p v-if="hasPreciseData" class="tips">为了避免撞单，不允许添加完全相同名称的客户</p>
         </div>
 
-        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :searchParam="searchParam" @ifIsInvalid="ifIsInvalid" @ifHasPreciseData="ifHasPreciseData"></name-search-list-box>
+        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :searchParam="searchParam" @ifHasPreciseData="ifHasPreciseData"></name-search-list-box>
 
         <div class="btn-box pointer">
-            <div class="btn-item" :class="{invalid: this.isInvalid}">确认保存</div>
+            <div v-if="fromType == 1" class="btn-item" :class="{invalid: hasPreciseData && enableStatus}" @click="confirm(1)">确认保存</div>
+            <div v-if="fromType == 2" class="btn-item" :class="{invalid: !searchParam || (hasPreciseData && enableStatus)}" @click="confirm(2)">下一步</div>
         </div>
     </div>
 </template>
 <script>
-// import { cluecustomer_elasticSearch } from '@/api/customer'
+import { cluecustomer_settingItem } from '@/api/customer'
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import NameSearchListBox from './nameSearchListBox'
 
 export default {
     props: {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
-            type: Number,
+            default: 0
+        },
+        customerType: {// 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: 0
         }
     },
     data() {
         return {
             searchParam: '',
-            isInvalid: false,
-            hasPreciseData: false,
+            hasPreciseData: false, // 是否有相同信息
+            enableStatus: true, // 是否开启去重规则
         }
     },
     computed: {
@@ -53,17 +56,23 @@ export default {
         }
     },
     methods: {
-        show(data) {
+        async show(data) {
             this.searchParam = data
+            await this.getSettingItem()
             this.doSearch()
+        },
+        // 判断是否开启自动去重规则
+        async getSettingItem() {
+            let { result, data } = await cluecustomer_settingItem('customer_duplicate_switch')
+
+            if (result) {
+                this.enableStatus = data.enableStatus
+            }
         },
         doSearch() {
             this.$nextTick(() => {
                 this.$refs.nameSearchListBox.doSearch(this.searchParam)
             })
-        },
-        ifIsInvalid(data) {
-            this.isInvalid = data
         },
         ifHasPreciseData(data) {
             this.hasPreciseData = data
@@ -72,8 +81,23 @@ export default {
             this.searchParam = ''
             this.$refs.nameSearchListBox.initData()
         },
-        goBack(data) {
-            this.$emit('handleResult', data)
+        goBack() {
+            if (this.fromType == 1) {
+                this.$emit('hideNameSearch')
+            } else if (this.fromType == 2) {
+                let path = this.customerType == 3 || this.customerType == 4 ? '/customerManage/myCustomer' : '/customerManage/clues'
+            
+                this.$router.push({ path })
+            }
+        },
+        confirm(type) {
+            if ((type == 1 || type == 2) && this.hasPreciseData && this.enableStatus) {
+                return
+            }
+            if (type == 2 && !this.searchParam) {
+                return
+            }
+            this.$emit('handleResult', this.searchParam)
         },
     },
     components: {
@@ -137,6 +161,12 @@ export default {
                     background: rgba(65, 104, 246, .4);
                 }
             }
+        }
+    }
+    .pt88 {
+        padding-top: 88px;
+        .mlt0 {
+            margin: 32px 0 0;
         }
     }
 </style>

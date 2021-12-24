@@ -3,7 +3,7 @@
         <template v-if="preciseData && preciseData.length || list && list.length">
             <template v-if="preciseData && preciseData.length">
                 <div class="title">找到完全相同名称的客户：</div>
-                <div v-for="(i, index) in preciseData" :key="index" class="list-item pointer" @click="goDetail(i)">
+                <div v-for="i in preciseData" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
                     <div class="list-item-left">
                         <img class="header-img" :src="i.avatar | $setAvatar" alt="">
                         <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="@/assets/svg/icon_qiyeweixin.svg" alt="">
@@ -20,13 +20,13 @@
                             <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
                         </li>
                     </ul>
-                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check"></div>
+                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i)"></div>
                 </div>
             </template>
             <template v-if="list && list.length">
                 <div class="title">找到以下相似客户：</div>
                 <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                    <div v-for="i in list" :key="i.id" class="list-item pointer" @click="goDetail(i)">
+                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
                         <div class="list-item-left">
                             <img class="header-img" :src="i.avatar | $setAvatar" alt="">
                             <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
@@ -43,13 +43,13 @@
                                 <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
                             </li>
                         </ul>
-                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check"></div>
+                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i)"></div>
                     </div>
                 </van-list>
             </template>
         </template>
 
-        <div v-else class="no_data">
+        <div v-else-if="searchParam" class="no_data">
             <img class="img" src="@/assets/images/no_data1.png" alt="">
             <div class="no_text">没有找到相似客户</div>
         </div>
@@ -79,7 +79,8 @@ export default {
             page: 1,
             limit: 20,
             list: [], // 相似数据
-            preciseData: [] // 相同数据
+            preciseData: [], // 相同数据
+            checkedItem: '', // 选中的客户
         }
     },
     computed: {
@@ -94,10 +95,8 @@ export default {
             this.initData()
             this.getList()
         },
-        ifIsInvalid(data) {
-            this.$emit('ifIsInvalid', data)
-        },
         ifHasPreciseData(data) {
+            console.log("相同1：", data)
             this.$emit('ifHasPreciseData', data)
         },
         // 获取客户列表
@@ -138,12 +137,11 @@ export default {
                 } else {
                     this.$toast(msg)
                 }
+
                 if(this.preciseData && this.preciseData.length) {
-                    this.ifIsInvalid(true)
                     this.ifHasPreciseData(true)
-                }
-                if((!this.list || this.list && !this.list.length) && (!this.preciseData || this.preciseData && !this.preciseData.length)) {
-                    this.ifIsInvalid(false)
+                } else {
+                    this.ifHasPreciseData(false)
                 }
             })
         },
@@ -161,6 +159,10 @@ export default {
             //     path: 'customDetail',
             //     query: { fromType: this.customerType, userNo: item.clueCustomerNo, jurisdictionList: JSON.stringify(this.jurisdictionList[type]) },
             // })
+        },
+        // 选中客户与否
+        doCheck(item) {
+
         },
     },
     filters: {

@@ -396,7 +396,7 @@
             </div>
         </template>
         <!-- 名称搜索页 -->
-        <name-search v-else ref="nameSearch" :fromType="1" @handleResult="getResult"></name-search>
+        <name-search v-else ref="nameSearch" :fromType="1" @hideNameSearch="hideNameSearch" @handleResult="getResult"></name-search>
 
         <!-- 时间选择弹窗（日历） -->
         <van-calendar v-model="selectDatePopupShow" :min-date="minDate" :show-confirm="false" color="#4168F6" @confirm="dateConfirm"/>
@@ -649,8 +649,15 @@ export default {
                 this.$refs.nameSearch.show(this.form.customerCalled)
             })
         },
-        getResult() {
+        // 关闭名称搜索页
+        hideNameSearch() {
             this.showNameSearch = false
+        },
+        // 获取名称搜索页结果
+        getResult(data) {
+            console.log("客户名称", data)
+            this.form.customerCalled = data
+            this.hideNameSearch()
         },
         // 打开日期选择弹窗
         showDateSelect(timeType, customColumns) {
