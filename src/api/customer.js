@@ -2,9 +2,9 @@ import request from '@/utils/requestNew'
 let BASE_CUSTOMER_SERVICE = 'customer-service'
 let BASE_COMMON_SERVICE = 'common-service'
 
-export function cluecustomer_getClueCustomerByid(id) { //客户详情
+export function cluecustomer_getClueCustomerByid(id, clueCustomerNo) { //客户详情
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/m/cluecustomer/getClueCustomerByid?id=' + id,
+        url: BASE_CUSTOMER_SERVICE + '/m/cluecustomer/getClueCustomerByid?id=' + id + '&clueCustomerNo=' + clueCustomerNo,
         method: 'get'
     })
 }
@@ -237,10 +237,13 @@ export function group_getGroupTodayDetail(id) {
     })
 }
 // 客户线索列表
-export function getcluecustomerlist(data) {
+export function getcluecustomerlist(data, loading = false) {
     return request({
         url: BASE_CUSTOMER_SERVICE + '/cluecustomer/getcluecustomerlist',
         method: 'post',
+        headers: {
+            noLoading: loading
+        },
         data: data
     })
 }

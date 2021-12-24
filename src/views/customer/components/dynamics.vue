@@ -140,7 +140,7 @@ export default {
                 page: 1,
                 limit: 10,
                 clueCustomerNo: '',
-                punckStatus: '' // ''：全部动态，3：商机动态，4：互动协同，5：群动态，6：线索动态
+                punckStatus: '' // ''：全部动态，3：商机动态，4：互动协同（跟进记录），5：群动态，6：线索动态
             },
             time: [],
             data: [],
@@ -160,18 +160,18 @@ export default {
         // 动态导航
         navList() {
             if (this.fromType == 1) {
-                return ['全部', '线索动态', '互动沟通']
+                return ['全部', '线索动态', '跟进记录']
             }
             if (this.fromType == 2) {
                 return ['全部', '线索动态']
             }
             if (this.fromType == 3) {
-                return ['全部', '客户动态', '商机动态', '互动沟通']
+                return ['全部', '客户动态', '商机动态', '跟进记录']
             }
             if (this.fromType == 4) {
                 return ['全部', '客户动态', '商机动态']
             }
-            return ['全部', '客户动态', '商机动态', '互动沟通']
+            return ['全部', '客户动态', '商机动态', '跟进记录']
         },
         list(){
             let arr = this.data && this.data.length ? JSON.parse(JSON.stringify(this.data)): [],n = 0

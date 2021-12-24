@@ -140,7 +140,8 @@ export default {
             fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             jurisdictionList: JSON.parse(this.$route.query.jurisdictionList), // 按钮权限列表
             id: this.$route.query.id,
-            code: this.$route.query.userNo,
+            code: this.$route.query.userNo ? this.$route.query.userNo : '',
+            clueCustomerNo: this.$route.query.clueCustomerNo,
             num: this.$route.query.num,
             showPortraitType: 0,
             dialog_group: false,
@@ -240,7 +241,7 @@ export default {
             document.querySelector(`#${code}`).scrollIntoView(true); //这里的counter1是将要返回地方的id
         },
         getCustomerDetail(){    //获取客户详情
-            cluecustomer_getClueCustomerByid(this.code).then(res => {
+            cluecustomer_getClueCustomerByid(this.code, this.clueCustomerNo).then(res => {
                 if (res.result) {
                     let data = res.data
 
@@ -515,14 +516,13 @@ export default {
             return true
         },
         toFun(val){
-            let name = '', query = {}
+            let name = '', query = { fromType: this.fromType }
 
             if (val == 'helper') {    //查看协助人
                 name = 'helper'
                 query.id = this.customerInfo.clueCustomerNo
             } else if (val == 'detail') {    //详情
                 name = 'CustomerDetail'
-                query.fromType = this.fromType
                 query.clueCustomerNo = this.customerInfo.clueCustomerNo
             }
             this.$router.push({ name, query })

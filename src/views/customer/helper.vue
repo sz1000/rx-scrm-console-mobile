@@ -50,7 +50,8 @@
 
 <script>
 import { AddHelper } from './components'
-import { 
+import {
+    clueCustomerFollowUser_getFollowUserList,
     clueCustomerFollowUser_getMBFollowUserList,
     clueCustomerFollowUser_deleteFollowUsers,
 } from '@/api/customer'
@@ -68,6 +69,9 @@ export default {
     computed: {
         id(){
             return this.$route.query.id
+        },
+        fromType(){
+            return this.$route.query.fromType ? this.$route.query.fromType : ''
         },
         userNo(){
             return this.$store.getters.userNo
@@ -112,7 +116,9 @@ export default {
             })
         },
         getList(){  //获取协助人列表
-            clueCustomerFollowUser_getMBFollowUserList(this.id).then(res => {
+            let ApiOpts = this.fromType ? clueCustomerFollowUser_getFollowUserList : clueCustomerFollowUser_getMBFollowUserList
+
+            ApiOpts(this.id).then(res => {
                 if(res.result){
                     this.list = res.data
                 }
