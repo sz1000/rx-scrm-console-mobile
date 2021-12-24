@@ -1,78 +1,89 @@
 <template>
   <div class="matiral_detail">
-    <div class="header-title pointer">
-      <div class="back-page" @click="goBack">
-        <img src="../../images/arrow_left.png" alt="">
-      </div>
-      <span class="text-title">素材详情</span>
-    </div>
-    <div class="info_one">
-      <div class="left">
-        <img :src="formObj.cover" alt="" v-if="formObj.cover" />
-        <img src="../../images/img_head.png" alt="" v-else />
-        <div class="content_t">
-          <h3>{{formObj.materialName}}</h3>
-          <p>{{formObj.contentAbstract}}</p>
+    <template v-if="!showContentPreview">
+      <div class="header-title pointer">
+        <div class="back-page" @click="goBack">
+          <img src="../../images/arrow_left.png" alt="">
         </div>
+        <span class="text-title">素材详情</span>
       </div>
-      <!-- <div class="right pointer">
-        <img src="../../images/ckpre.png" alt="">
-      </div> -->
-    </div>
-    <div class="view_hour">
-      共 {{formObj.openCount}}次浏览,带来{{formObj.visitorsCount}}人,总时长{{secondToDate(formObj.browseDuration)}}
-    </div>
-    <div class="tab_warp">
-      <div class="nomalText" @click="changeNav(0)" :class="{active: indexLi == 0}">
-        <span>全部</span>
-      </div>
-      <div class="nomalText" @click="changeNav(3)" :class="{active: indexLi == 3}">
-        <span>新线索({{newTotal > 99 ? '99+' : newTotal}})</span>
-      </div>
-      <div class="nomalText" @click="changeNav(2)" :class="{active: indexLi == 2}">
-        <span>线索({{cluesTotal > 99 ? '99+' : cluesTotal}})</span>
-      </div>
-      <div class="nomalText" @click="changeNav(1)" :class="{active: indexLi == 1}">
-        <span>客户({{customerTotal > 99 ? '99+' : customerTotal}})</span>
-      </div>
-    </div>
-    <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了~" @load="onLoad">
-      <div class="one" v-for="list in popupList" :key="list.id">
+      <div class="info_one" @click="previewImg">
         <div class="left">
-          <img :src="list.avatar" alt="" v-if="list.avatar">
-          <img src="../../images/img_head.png" alt="" v-else>
-          <div class="name_warp">
-            <div class="top">
-              <span>{{list.customerName}}</span>
-              <span
-                    :class="list.externalType == 1 ? 'green': 'yellow'">{{list.externalType == 1 ? '@微信' : (list.externalCorpFullName || list.externalCorpName) ? `@${list.externalCorpFullName || list.externalCorpName}` : ''}}</span>
-              <span v-show="list.customerType == 3" class="newClues">新线索</span>
-              <span v-show="list.customerType == 2" class="clues">线索</span>
-              <span v-show="list.customerType == 1" class="customer">客户</span>
-            </div>
-            <p>共浏览{{list.openCount}}次，总时长{{secondToDate(list.duration)}}</p>
+          <img :src="formObj.cover" alt="" v-if="formObj.cover" />
+          <img src="../../images/img_head.png" alt="" v-else />
+          <div class="content_t">
+            <h3 class="one-line">{{formObj.materialName}}</h3>
+            <p>{{formObj.contentAbstract}}</p>
           </div>
         </div>
-        <div class="right">
-          <img src="../../images/arrow_right.png" alt="" @click="fnToBrowse(list)" />
+        <!-- <div class="right pointer">
+        <img src="../../images/ckpre.png" alt="">
+      </div> -->
+      </div>
+      <div class="view_hour">
+        共 {{formObj.openCount}}次浏览,带来{{formObj.visitorsCount}}人,总时长{{secondToDate(formObj.browseDuration)}}
+      </div>
+      <div class="tab_warp">
+        <div class="nomalText" @click="changeNav(0)" :class="{active: indexLi == 0}">
+          <span>全部</span>
+        </div>
+        <div class="nomalText" @click="changeNav(3)" :class="{active: indexLi == 3}">
+          <span>新线索({{newTotal > 99 ? '99+' : newTotal}})</span>
+        </div>
+        <div class="nomalText" @click="changeNav(2)" :class="{active: indexLi == 2}">
+          <span>线索({{cluesTotal > 99 ? '99+' : cluesTotal}})</span>
+        </div>
+        <div class="nomalText" @click="changeNav(1)" :class="{active: indexLi == 1}">
+          <span>客户({{customerTotal > 99 ? '99+' : customerTotal}})</span>
         </div>
       </div>
-    </van-list>
+      <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了~" @load="onLoad">
+        <div class="one" v-for="list in popupList" :key="list.id">
+          <div class="left">
+            <img :src="list.avatar" alt="" v-if="list.avatar">
+            <img src="../../images/img_head.png" alt="" v-else>
+            <div class="name_warp">
+              <div class="top">
+                <span>{{list.customerName}}</span>
+                <span
+                      :class="list.externalType == 1 ? 'green': 'yellow'">{{list.externalType == 1 ? '@微信' : (list.externalCorpFullName || list.externalCorpName) ? `@${list.externalCorpFullName || list.externalCorpName}` : ''}}</span>
+                <span v-show="list.customerType == 3" class="newClues">新线索</span>
+                <span v-show="list.customerType == 2" class="clues">线索</span>
+                <span v-show="list.customerType == 1" class="customer">客户</span>
+              </div>
+              <p>共浏览{{list.openCount}}次，总时长{{secondToDate(list.duration)}}</p>
+            </div>
+          </div>
+          <div class="right">
+            <img src="../../images/arrow_right.png" alt="" @click="fnToBrowse(list)" />
+          </div>
+        </div>
+      </van-list>
+    </template>
     <!-- 图片预览 -->
-    <!-- <img-preview ref="imgPreview"></img-preview> -->
+    <img-preview ref="imgPreview"></img-preview>
     <!-- 文章/文件预览 -->
-    <!-- <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview> -->
+    <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
   </div>
 </template>
 <script>
 import { material_operation_info } from '../../config/api'
 import ImgPreview from '../../components/MaterialTemplate/imgPreview'
 import ContentPreview from '../../components/MaterialTemplate/contentPreview'
-
+import {
+  sendChatMessage,
+  byteConvert,
+  getFileDefaultCover,
+  qwShare,
+} from '../../utils/tool'
+import { mapActions, mapState } from 'vuex'
 export default {
   components: {
     ImgPreview,
     ContentPreview,
+  },
+  computed: {
+    ...mapState(['corpId', 'userNo']),
   },
   data() {
     return {
@@ -89,6 +100,7 @@ export default {
       cluesTotal: '',
       customerTotal: '',
       popupList: [],
+      showContentPreview: false,
     }
   },
   created() {
@@ -122,7 +134,7 @@ export default {
       }
       material_operation_info(params).then((res) => {
         this.$toast.clear()
-        if (res.result) {
+        if (res.result && res.data) {
           this.formObj = res.data
           this.newTotal = res.data.newClueCount
           this.cluesTotal = res.data.clueCount
@@ -181,6 +193,71 @@ export default {
         }
       }
       return _str
+    },
+    previewImg() {
+      if (this.type == 3) {
+        this.$refs.imgPreview.show(1, [this.formObj.posterUrl])
+      } else {
+        this.ifShowFooter(false)
+        this.showContentPreview = true
+        let obj = {
+          type: this.type,
+          userNo: this.userNo,
+          data: this.formObj,
+        }
+        document.getElementsByClassName('matiral_detail')[0].scrollTop = 0
+
+        this.$nextTick(() => {
+          this.$refs.contentPreview.show(obj)
+        })
+
+        // this.doQwShare(true, this.type, this.formObj)
+      }
+    },
+    hideContentPreview(data) {
+      this.ifShowFooter(true)
+      this.showContentPreview = data
+      // this.doQwShare(false)
+    },
+    // doQwShare(showContentPreview, type, item) {
+    //   let shareTitle = '内容素材-极洲互动',
+    //     url = window.location.href,
+    //     imgUrl = 'https://test-h5.jzcrm.com/static/img/neirongsucai.png',
+    //     desc = '多种文章、文件及海报供你参阅'
+
+    //   if (showContentPreview) {
+    //     // 预览状态
+    //     if (type == 1) {
+    //       let { articleId, title, cover, contentAbstract } = item
+
+    //       url = `${window.location.origin}/materialTemplate?materialId=${articleId}&type=1&userNo=${this.userNo}`
+    //       shareTitle = title
+    //       imgUrl =
+    //         cover && cover.length
+    //           ? cover
+    //           : 'https://h5.jzcrm.com/static/img/default_article.png'
+    //       desc = contentAbstract ? contentAbstract : title
+    //     } else if (type == 2) {
+    //       let { documentId, name, cover, fileSize } = item
+
+    //       url = `${window.location.origin}/materialTemplate?materialId=${documentId}&type=2&userNo=${this.userNo}`
+    //       shareTitle = name
+    //       imgUrl =
+    //         cover && cover.length
+    //           ? cover
+    //           : 'https://h5.jzcrm.com/static/img/default_pdf.png'
+    //       desc = fileSize ? byteConvert(fileSize) : name
+    //     }
+    //     qwShare(true, shareTitle, url, imgUrl, desc)
+    //   } else {
+    //     qwShare(false, shareTitle, url, imgUrl, desc)
+    //   }
+    // },
+    // // 是否显示footer-nav
+    ifShowFooter(data) {
+      // if (this.isIndependent == 2) {
+      // }
+      this.$emit('ifShowFooter', data)
     },
   },
 }
@@ -242,13 +319,15 @@ export default {
         flex-direction: column;
         justify-content: center;
         margin-left: 16px;
-        h3 {
-          width: 100%;
+        .one-line {
+          width: 70%;
           font-size: 28px;
           color: #262626;
+          white-space: nowrap;
+          -webkit-line-clamp: 1;
           overflow: hidden;
           text-overflow: ellipsis;
-          white-space: nowrap;
+          -webkit-box-orient: vertical;
         }
       }
       img {

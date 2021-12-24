@@ -96,9 +96,11 @@ export default {
           let params = data.url
 
           if (this.needFileInfo) {
+            // console.log('data--size---', data)
             params = {
               url: data.url,
               name,
+              fileSize: data.size,
             }
           }
           this.getImgUrl(params)

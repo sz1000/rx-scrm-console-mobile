@@ -1,53 +1,67 @@
 <template>
   <div class="matiral_detail">
-    <div class="header-title pointer">
-      <div class="back-page" @click="goBack">
-        <img src="../../images/arrow_left.png" alt="">
-      </div>
-      <span class="text-title">浏览详情</span>
-    </div>
-    <div class="info_one">
-      <div class="left">
-        <img :src="materialObj.cover" alt="" v-if="materialObj.cover" />
-        <img src="../../images/img_head.png" alt="" v-else />
-        <div class="content_t">
-          <h3>{{materialObj.materialName}}</h3>
-          <p>{{materialObj.contentAbstract}}</p>
+    <template v-if="!showContentPreview">
+      <div class="header-title pointer">
+        <div class="back-page" @click="goBack">
+          <img src="../../images/arrow_left.png" alt="">
         </div>
+        <span class="text-title">浏览详情</span>
       </div>
-    </div>
-    <div class="one">
-      <div class="left">
-        <img :src="customerObj.avatar" alt="" v-if="customerObj.avatar">
-        <img src="../../images/img_head.png" alt="" v-else>
-        <div class="name_warp">
-          <div class="top">
-            <span>{{customerObj.customerName}}</span>
-            <span
-                  :class="customerObj.externalType == 1 ? 'green': 'yellow'">{{customerObj.externalType == 1 ? '@微信' : (customerObj.externalCorpFullName || customerObj.externalCorpName) ? `@${customerObj.externalCorpFullName || customerObj.externalCorpName}` : ''}}</span>
-            <span v-show="customerObj.customerType == 3" class="newClues">新线索</span>
-            <span v-show="customerObj.customerType == 2" class="clues">线索</span>
-            <span v-show="customerObj.customerType == 1" class="customer">客户</span>
+      <div class="info_one" @click="previewImg">
+        <div class="left">
+          <img :src="materialObj.cover" alt="" v-if="materialObj.cover" />
+          <img src="../../images/img_head.png" alt="" v-else />
+          <div class="content_t">
+            <h3>{{materialObj.materialName}}</h3>
+            <p>{{materialObj.contentAbstract}}</p>
           </div>
-          <p>共浏览{{customerObj.openCount}}次，总时长{{secondToDate(customerObj.duration)}}</p>
         </div>
       </div>
-    </div>
-    <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-      <ul class="brow_list">
-        <li v-for="item in browList" :key="item.id">
-          <span>浏览了{{secondToDate(item.duration)}}</span>
-          <span>{{item.endTime}}</span>
-        </li>
-      </ul>
-    </van-list>
-
+      <div class="one">
+        <div class="left">
+          <img :src="customerObj.avatar" alt="" v-if="customerObj.avatar">
+          <img src="../../images/img_head.png" alt="" v-else>
+          <div class="name_warp">
+            <div class="top">
+              <span>{{customerObj.customerName}}</span>
+              <span
+                    :class="customerObj.externalType == 1 ? 'green': 'yellow'">{{customerObj.externalType == 1 ? '@微信' : (customerObj.externalCorpFullName || customerObj.externalCorpName) ? `@${customerObj.externalCorpFullName || customerObj.externalCorpName}` : ''}}</span>
+              <span v-show="customerObj.customerType == 3" class="newClues">新线索</span>
+              <span v-show="customerObj.customerType == 2" class="clues">线索</span>
+              <span v-show="customerObj.customerType == 1" class="customer">客户</span>
+            </div>
+            <p>共浏览{{customerObj.openCount}}次，总时长{{secondToDate(customerObj.duration)}}</p>
+          </div>
+        </div>
+      </div>
+      <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
+        <ul class="brow_list">
+          <li v-for="item in browList" :key="item.id">
+            <span>浏览了{{secondToDate(item.duration)}}</span>
+            <span>{{item.endTime}}</span>
+          </li>
+        </ul>
+      </van-list>
+    </template>
+    <!-- 图片预览 -->
+    <img-preview ref="imgPreview"></img-preview>
+    <!-- 文章/文件预览 -->
+    <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
   </div>
 </template>
 <script>
 import { material_operation, material_operation_info } from '../../config/api'
+import ImgPreview from '../../components/MaterialTemplate/imgPreview'
+import ContentPreview from '../../components/MaterialTemplate/contentPreview'
+import { mapActions, mapState } from 'vuex'
 export default {
-  components: {},
+  components: {
+    ImgPreview,
+    ContentPreview,
+  },
+  computed: {
+    ...mapState(['corpId', 'userNo']),
+  },
   data() {
     return {
       type: this.$route.query.type || '',
@@ -61,6 +75,7 @@ export default {
       materialObj: {}, //素材信息
       customerObj: {},
       browList: [],
+      showContentPreview: false,
     }
   },
   created() {
@@ -148,6 +163,71 @@ export default {
       }
       return _str
     },
+    previewImg() {
+      if (this.type == 3) {
+        this.$refs.imgPreview.show(1, [this.materialObj.posterUrl])
+      } else {
+        this.ifShowFooter(false)
+        this.showContentPreview = true
+        let obj = {
+          type: this.type,
+          userNo: this.userNo,
+          data: this.materialObj,
+        }
+        document.getElementsByClassName('matiral_detail')[0].scrollTop = 0
+
+        this.$nextTick(() => {
+          this.$refs.contentPreview.show(obj)
+        })
+
+        // this.doQwShare(true, this.type, this.materialObj)
+      }
+    },
+    hideContentPreview(data) {
+      this.ifShowFooter(true)
+      this.showContentPreview = data
+      // this.doQwShare(false)
+    },
+    // doQwShare(showContentPreview, type, item) {
+    //   let shareTitle = '内容素材-极洲互动',
+    //     url = window.location.href,
+    //     imgUrl = 'https://test-h5.jzcrm.com/static/img/neirongsucai.png',
+    //     desc = '多种文章、文件及海报供你参阅'
+
+    //   if (showContentPreview) {
+    //     // 预览状态
+    //     if (type == 1) {
+    //       let { articleId, title, cover, contentAbstract } = item
+
+    //       url = `${window.location.origin}/materialTemplate?materialId=${articleId}&type=1&userNo=${this.userNo}`
+    //       shareTitle = title
+    //       imgUrl =
+    //         cover && cover.length
+    //           ? cover
+    //           : 'https://h5.jzcrm.com/static/img/default_article.png'
+    //       desc = contentAbstract ? contentAbstract : title
+    //     } else if (type == 2) {
+    //       let { documentId, name, cover, fileSize } = item
+
+    //       url = `${window.location.origin}/materialTemplate?materialId=${documentId}&type=2&userNo=${this.userNo}`
+    //       shareTitle = name
+    //       imgUrl =
+    //         cover && cover.length
+    //           ? cover
+    //           : 'https://h5.jzcrm.com/static/img/default_pdf.png'
+    //       desc = fileSize ? byteConvert(fileSize) : name
+    //     }
+    //     qwShare(true, shareTitle, url, imgUrl, desc)
+    //   } else {
+    //     qwShare(false, shareTitle, url, imgUrl, desc)
+    //   }
+    // },
+    // // 是否显示footer-nav
+    ifShowFooter(data) {
+      // if (this.isIndependent == 2) {
+      // }
+      this.$emit('ifShowFooter', data)
+    },
   },
 }
 </script>
@@ -208,7 +288,7 @@ export default {
         justify-content: center;
         margin-left: 16px;
         h3 {
-          width: 100%;
+          width: 70%;
           font-size: 28px;
           color: #262626;
           overflow: hidden;

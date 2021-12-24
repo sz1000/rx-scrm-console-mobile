@@ -124,7 +124,7 @@
 </template>
 <script>
 import { ArticleList, SaleDocumentList, PosterList } from '../../config/api'
-import { uploadTemporaryMaterial } from '../../api/myHome'
+import { addFriendCirclePerson } from '../../api/myHome'
 import {
   sendChatMessage,
   byteConvert,
@@ -255,6 +255,41 @@ export default {
       } else {
         this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
       }
+      let url,
+        cover,
+        titleName,
+        params = {}
+      if (val.tab == 1) {
+        url = `${this.shareUrlOrigin}/materialTemplate?materialId=${val.articleId}&type=${val.tab}&corpId=${this.corpId}`
+        titleName = val.title
+        cover = val.cover
+      } else if (val.tab == 2) {
+        url = `${this.shareUrlOrigin}/materialTemplate?materialId=${val.documentId}&type=${val.tab}&corpId=${this.corpId}`
+        titleName = val.name
+        cover = val.cover
+      } else {
+        url = `${this.shareUrlOrigin}/materialTemplate?materialId=${val.articleId}&type=${val.tab}&corpId=${this.corpId}`
+        titleName = val.posterName
+        cover = val.posterUrl
+      }
+      params = {
+        type: 2,
+        jobStatus: 0,
+        msgtype: 'material',
+        title: titleName,
+        urlList: [
+          {
+            url: url,
+            title: titleName,
+            cover: cover,
+            tab: val.tab,
+            contentAbstract: val.contentAbstract,
+            fileSize: val.fileSize || '',
+          },
+        ],
+      }
+
+      addFriendCirclePerson(params).then((res) => {})
       this.sendChart(val)
     },
 

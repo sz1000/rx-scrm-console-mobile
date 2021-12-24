@@ -225,6 +225,7 @@ export default {
       fileData: {}, // 上传的文件信息
       shareObj: {}, //分享信息
       showCopy: false,
+      shareUrlOrigin: '',
     }
   },
   computed: {
@@ -254,11 +255,11 @@ export default {
     },
     // 去素材详情页
     fnMaterialDetail(val, type) {
-      console.log(val, '----详情页----')
+      // console.log(val, '----详情页----')
       let id
       if (type == 0) {
         id = val.articleId
-      } else if (val == 1) {
+      } else if (type == 1) {
         id = val.documentId
       } else {
         id = val.posterId
@@ -282,10 +283,11 @@ export default {
     // 复制
     fnCopy(val, type) {
       this.shareObj = val
-      let id
+      console.log(val, type)
+      let id = null
       if (type == 0) {
         id = val.articleId
-      } else if (val == 1) {
+      } else if (type == 1) {
         id = val.documentId
       } else {
         id = val.posterId
@@ -479,6 +481,7 @@ export default {
       this.doQwShare(false)
     },
     preview(type, item) {
+      // console.log(item)
       this.ifShowFooter(false)
       this.showContentPreview = true
       let obj = {
@@ -496,6 +499,7 @@ export default {
       this.doQwShare(true, type, item)
     },
     previewImg(i) {
+      console.log(i)
       this.$refs.imgPreview.show(1, [i.posterUrl])
     },
     // 是否显示footer-nav
@@ -546,6 +550,11 @@ export default {
     // 分享朋友圈
     sendChart() {
       console.log(this.shareObj, '-------llll----')
+      if (window.location.origin == 'https://console.jzcrm.com') {
+        this.shareUrlOrigin = 'https://h5.jzcrm.com'
+      } else {
+        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
+      }
       this.$network
         .get('/user-service/m/user/getinticket', {
           url: location.href,
@@ -594,11 +603,17 @@ export default {
                 let that = this,
                   url
                 if (that.type == 0) {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.articleId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${
+                    that.shareObj.articleId
+                  }&type=${that.type + 1}&corpId=${that.corpId}`
                 } else if (that.type == 1) {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.documentId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${
+                    that.shareObj.documentId
+                  }&type=${that.type + 1}&corpId=${that.corpId}`
                 } else {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.articleId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${
+                    that.shareObj.articleId
+                  }&type=${that.type + 1}&corpId=${that.corpId}`
                 }
                 wx.invoke(
                   'shareToExternalMoments',
@@ -660,7 +675,7 @@ export default {
     padding: 0 32px;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid @lineColor; /* no */
+    // border-bottom: 1px solid @lineColor; /* no */
     li {
       width: 212px;
       height: 64px;
