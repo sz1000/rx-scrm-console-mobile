@@ -1,393 +1,402 @@
 <template>
     <div class="turn-customer">
-        <header-title class="customer-title" :title="headerTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
-        <!-- 头像昵称等信息 -->
-        <div class="avatar_box">
-            <img class="avatar" :src="form.avatar | $setAvatar" alt="">
-            <div class="val">
-                <span class="name_msg" :class="{'show':showMsg}">{{form.name}}</span>
-                <div class="name" @click="showMsg = !showMsg">{{form.name}}</div>
-                <div class="alt" :class="{'green':form.externalType == 1}">{{typeNameFun(form.externalType)}}</div>
-                <img class="gender" :src="gender" alt="">
-            </div>
-        </div>
-        <!-- 个人/企业标签编辑 -->
-        <label-edit-box :clueCustomerNo="clueCustomerNo"></label-edit-box>
-        <!-- 基本信息 -->
-        <div class="form-box">
-            <div class="item title">基本信息</div>
-            <div class="item">
-                <div class="label">
-                    <span>{{ fromType == 1 || fromType == 2 ? '线索名称' : '客户名称' }}</span>
-                    <span class="require">*</span>
-                </div>
+        <template v-if="!showNameSearch">
+            <header-title class="customer-title" :title="headerText" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
+            <!-- 头像昵称等信息 -->
+            <div class="avatar_box">
+                <img class="avatar" :src="form.avatar | $setAvatar" alt="">
                 <div class="val">
-                    <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
-                    <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
+                    <span class="name_msg" :class="{'show':showMsg}">{{form.name}}</span>
+                    <div class="name" @click="showMsg = !showMsg">{{form.name}}</div>
+                    <div class="alt" :class="{'green':form.externalType == 1}">{{typeNameFun(form.externalType)}}</div>
+                    <img class="gender" :src="gender" alt="">
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>{{ fromType == 1 || fromType == 2 ? '线索来源' : '客户来源' }}</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
-                        <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                    </div>
-                </div>
-            </div>
-            <template v-if="fromType == 3 || fromType == 4">
+            <!-- 个人/企业标签编辑 -->
+            <label-edit-box :clueCustomerNo="clueCustomerNo"></label-edit-box>
+            <!-- 基本信息 -->
+            <div class="form-box">
+                <div class="item title">基本信息</div>
                 <div class="item">
                     <div class="label">
-                        <span>客户阶段</span>
+                        <span>{{ fromType == 1 || fromType == 2 ? '线索名称' : '客户名称' }}</span>
                         <span class="require">*</span>
                     </div>
                     <div class="val">
-                        <div class="icon-select" @click="stageRequired && showInput('stage') || !stageRequired && openSelectDialog('stage')">
-                            <span :class="{'placeholder':!form.stage, tips: stageRequired}">{{stageRequired ? '未选择' : form.stage | $textEmpty('请选择')}}</span>
+                        <!-- 非微信好友修改名称需进入名称搜索页 -->
+                        <span v-if="form.isWcCus != 1" @click="goNameSearch">{{ form.customerCalled }}</span>
+                        <!-- 微信好友可直接修改名称 -->
+                        <template v-else>
+                            <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
+                            <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
+                        </template>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>{{ fromType == 1 || fromType == 2 ? '线索来源' : '客户来源' }}</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
+                            <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <template v-if="fromType == 3 || fromType == 4">
+                    <div class="item">
+                        <div class="label">
+                            <span>客户阶段</span>
+                            <span class="require">*</span>
+                        </div>
+                        <div class="val">
+                            <div class="icon-select" @click="stageRequired && showInput('stage') || !stageRequired && openSelectDialog('stage')">
+                                <span :class="{'placeholder':!form.stage, tips: stageRequired}">{{stageRequired ? '未选择' : form.stage | $textEmpty('请选择')}}</span>
+                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="label">
+                            <span>客户类型</span>
+                            <span class="require">*</span>
+                        </div>
+                        <div class="val">
+                            <div class="icon-select" @click="customerTypeRequired && showInput('customerType') || !customerTypeRequired && openSelectDialog('customerType')">
+                                <span :class="{'placeholder':!form.customerTypeName, tips: customerTypeRequired}">{{customerTypeRequired ? '未选择' : form.customerTypeName | $textEmpty('请选择')}}</span>
+                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <div v-if="fromType == 1 || fromType == 2" class="item">
+                    <div class="label">
+                        <span>线索类型</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="clueTypeRequired && showInput('clueType') || !clueTypeRequired && openSelectDialog('clueType')">
+                            <span :class="{'placeholder':!form.clueTypeName, tips: clueTypeRequired}">{{clueTypeRequired ? '未选择' : form.clueTypeName | $textEmpty('请选择')}}</span>
                             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="item">
                     <div class="label">
-                        <span>客户类型</span>
+                        <span>{{ fromType == 1 || fromType == 2 ? '创建时间' : '建档时间' }}</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 企业信息 -->
+            <div class="form-box">
+                <div class="item title">企业信息</div>
+                <div class="item">
+                    <div class="label">
+                        <span>企业名称</span>
                         <span class="require">*</span>
                     </div>
                     <div class="val">
-                        <div class="icon-select" @click="customerTypeRequired && showInput('customerType') || !customerTypeRequired && openSelectDialog('customerType')">
-                            <span :class="{'placeholder':!form.customerTypeName, tips: customerTypeRequired}">{{customerTypeRequired ? '未选择' : form.customerTypeName | $textEmpty('请选择')}}</span>
+                        <input v-show="!cropFullNameRequired" type="text" ref="cropFullName" class="input" v-model.trim="form.cropFullName" maxlength="30" placeholder="请输入">
+                        <span v-show="cropFullNameRequired" class="input tips" @click="showInput('cropFullName')">未输入</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>企业简称</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" ref="name" class="input" v-model.trim="form.customerName" maxlength="30" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>企业规模</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="cropscaleRequired && showInput('cropscale') || !cropscaleRequired && openSelectDialog('cropscale')">
+                            <span :class="{'placeholder':!form.cropscale, tips: cropscaleRequired}">{{cropscaleRequired ? '未选择' : form.cropscale | $textEmpty('请选择')}}</span>
                             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                         </div>
                     </div>
                 </div>
-            </template>
-            <div v-if="fromType == 1 || fromType == 2" class="item">
-                <div class="label">
-                    <span>线索类型</span>
-                    <span class="require">*</span>
+                <div class="item">
+                    <div class="label">
+                        <span>行业领域</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="industryRequired && showInput('industry') || !industryRequired && openSelectDialog('industry')">
+                            <span :class="{'placeholder':!form.industryName, tips: industryRequired}">{{industryRequired ? '未选择' : form.industryName | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                    </div>
                 </div>
-                <div class="val">
-                    <div class="icon-select" @click="clueTypeRequired && showInput('clueType') || !clueTypeRequired && openSelectDialog('clueType')">
-                        <span :class="{'placeholder':!form.clueTypeName, tips: clueTypeRequired}">{{clueTypeRequired ? '未选择' : form.clueTypeName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                <div class="item">
+                    <div class="label">
+                        <span>固定电话</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model="form.mobil" maxlength="13" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>办公地址</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val" @click="addressRequired && showInput('address') || !addressRequired && openDialog('address')">
+                        <span class="block-span one-line" :class="{'placeholder':!form.address, tips: addressRequired}">{{addressRequired ? '未输入' : form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>备注</span>
+                    </div>
+                    <div class="val" @click="openDialog('remark')">
+                        <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>{{ fromType == 1 || fromType == 2 ? '创建时间' : '建档时间' }}</span>
+            <!-- 联系人信息 -->
+            <div class="form-box">
+                <div class="item title">联系人信息</div>
+                <div class="item">
+                    <div class="label">
+                        <span>联系人</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
+                        <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
+                    </div>
                 </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                <div class="item">
+                    <div class="label">
+                        <span>手机号码</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <input v-show="!phoneRequired" type="text" ref="phone" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
+                        <span v-show="phoneRequired" class="input tips" @click="showInput('phone')">未输入</span>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <!-- 企业信息 -->
-        <div class="form-box">
-            <div class="item title">企业信息</div>
-            <div class="item">
-                <div class="label">
-                    <span>企业名称</span>
-                    <span class="require">*</span>
+                <div class="item">
+                    <div class="label">
+                        <span>微信昵称</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model.trim="form.wechatNickname" maxlength="20" placeholder="请输入">
+                    </div>
                 </div>
-                <div class="val">
-                    <input v-show="!cropFullNameRequired" type="text" ref="cropFullName" class="input" v-model.trim="form.cropFullName" maxlength="30" placeholder="请输入">
-                    <span v-show="cropFullNameRequired" class="input tips" @click="showInput('cropFullName')">未输入</span>
+                <div class="item">
+                    <div class="label">
+                        <span>微信号</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model.trim="form.weixin" maxlength="20" placeholder="请输入">
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>企业简称</span>
+                <div class="item">
+                    <div class="label">
+                        <span>性别</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="showActionSheet('gender')">
+                            <span :class="{'placeholder':!form.genderName}">{{form.genderName | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                    </div>
                 </div>
-                <div class="val">
-                    <input type="text" ref="name" class="input" v-model.trim="form.customerName" maxlength="30" placeholder="请输入">
+                <div class="item">
+                    <div class="label">
+                        <span>职务</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model.trim="form.position" maxlength="20" placeholder="请输入">
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>企业规模</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="cropscaleRequired && showInput('cropscale') || !cropscaleRequired && openSelectDialog('cropscale')">
-                        <span :class="{'placeholder':!form.cropscale, tips: cropscaleRequired}">{{cropscaleRequired ? '未选择' : form.cropscale | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                <div class="item">
+                    <div class="label">
+                        <span>邮箱</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model.trim="form.email" maxlength="60" placeholder="请输入">
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>行业领域</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="industryRequired && showInput('industry') || !industryRequired && openSelectDialog('industry')">
-                        <span :class="{'placeholder':!form.industryName, tips: industryRequired}">{{industryRequired ? '未选择' : form.industryName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+            <!-- 自定义信息 -->
+            <div v-if="customColumns && customColumns.length" class="form-box">
+                <div class="item title">自定义信息</div>
+                <div v-for="i in customColumns" :key="i.id" class="item">
+                    <div class="label">
+                        <span>{{ i.columnName }}</span>
+                    </div>
+                    <div class="val">
+                        <!-- 文本 -->
+                        <input v-if="i.columnType == 1" type="text" class="input" v-model.trim="i.value" placeholder="请输入">
+                        <!-- 选择 -->
+                        <div v-if="i.columnType == 2" class="icon-select" @click="openSelectDialog(i, 'customColumns')">
+                            <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                        <!-- 时间 -->
+                        <div v-if="i.columnType == 3" class="icon-select" @click="showDateSelect(i.columnValue, 'customColumns')">
+                            <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>固定电话</span>
+            <!-- 详细信息 -->
+            <div class="form-box">
+                <div class="item title">详细信息</div>
+                <div class="item">
+                    <div class="label">
+                        <span>添加人员</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.createBy }}</span>
+                    </div>
                 </div>
-                <div class="val">
-                    <input type="text" class="input" v-model="form.mobil" maxlength="13" placeholder="请输入">
+                <div class="item">
+                    <div class="label">
+                        <span>添加时间</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>办公地址</span>
-                    <span class="require">*</span>
+                <div class="item">
+                    <div class="label">
+                        <span>前负责人</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.beBelongBy }}</span>
+                    </div>
                 </div>
-                <div class="val" @click="addressRequired && showInput('address') || !addressRequired && openDialog('address')">
-                    <span class="block-span one-line" :class="{'placeholder':!form.address, tips: addressRequired}">{{addressRequired ? '未输入' : form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                <div class="item">
+                    <div class="label">
+                        <span>最后跟进时间</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.followTime | $time('YYYY-MM-DD') }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>备注</span>
+                <div class="item">
+                    <div class="label">
+                        <span>转客户时间</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.turnTime | $time('YYYY-MM-DD') }}</span>
+                    </div>
                 </div>
-                <div class="val" @click="openDialog('remark')">
-                    <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
-                </div>
-            </div>
-        </div>
-        <!-- 联系人信息 -->
-        <div class="form-box">
-            <div class="item title">联系人信息</div>
-            <div class="item">
-                <div class="label">
-                    <span>联系人</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
-                    <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>手机号码</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <input v-show="!phoneRequired" type="text" ref="phone" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
-                    <span v-show="phoneRequired" class="input tips" @click="showInput('phone')">未输入</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>微信昵称</span>
-                </div>
-                <div class="val">
-                    <input type="text" class="input" v-model.trim="form.wechatNickname" maxlength="20" placeholder="请输入">
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>微信号</span>
-                </div>
-                <div class="val">
-                    <input type="text" class="input" v-model.trim="form.weixin" maxlength="20" placeholder="请输入">
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>性别</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="showActionSheet('gender')">
-                        <span :class="{'placeholder':!form.genderName}">{{form.genderName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                <div v-if="fromType == 2 || fromType == 4" class="item">
+                    <div class="label">
+                        <span>回归公海时间</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.recycleTime | $time('YYYY-MM-DD') }}</span>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>职务</span>
-                </div>
-                <div class="val">
-                    <input type="text" class="input" v-model.trim="form.position" maxlength="20" placeholder="请输入">
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>邮箱</span>
-                </div>
-                <div class="val">
-                    <input type="text" class="input" v-model.trim="form.email" maxlength="60" placeholder="请输入">
-                </div>
-            </div>
-        </div>
-        <!-- 自定义信息 -->
-        <div v-if="customColumns && customColumns.length" class="form-box">
-            <div class="item title">自定义信息</div>
-            <div v-for="i in customColumns" :key="i.id" class="item">
-                <div class="label">
-                    <span>{{ i.columnName }}</span>
-                </div>
-                <div class="val">
-                    <!-- 文本 -->
-                    <input v-if="i.columnType == 1" type="text" class="input" v-model.trim="i.value" placeholder="请输入">
-                    <!-- 选择 -->
-                    <div v-if="i.columnType == 2" class="icon-select" @click="openSelectDialog(i, 'customColumns')">
-                        <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+            <!-- 线索信息（由线索转换过来的客户才有此信息） -->
+            <div v-if="(fromType == 3 || fromType == 4) && (form.sourceStatus == 1 || form.sourceStatus == 2)" class="form-box">
+                <div class="item title">线索信息</div>
+                <div class="item">
+                    <div class="label">
+                        <span>线索名称</span>
                     </div>
-                    <!-- 时间 -->
-                    <div v-if="i.columnType == 3" class="icon-select" @click="showDateSelect(i.columnValue, 'customColumns')">
-                        <span :class="{'placeholder':!i.value}">{{i.value | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                    <div class="val">
+                        <span class="echo-text">{{ form.customerCalled }}</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>线索来源</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.sourceName }}</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>线索类型</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.clueTypeName }}</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>创建时间</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- 详细信息 -->
-        <div class="form-box">
-            <div class="item title">详细信息</div>
-            <div class="item">
-                <div class="label">
-                    <span>添加人员</span>
+            <!-- 企微好友信息 -->
+            <div class="form-box">
+                <div class="item title">企微好友信息</div>
+                <div class="item">
+                    <div class="label">
+                        <span>头像</span>
+                    </div>
+                    <div class="val">
+                        <div class="echo-img">
+                            <img :src="form.avatar | $setAvatar" alt="">
+                        </div>
+                    </div>
                 </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.createBy }}</span>
+                <div class="item">
+                    <div class="label">
+                        <span>性别</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.externalGender | $gender }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>添加时间</span>
+                <div class="item">
+                    <div class="label">
+                        <span>职务</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.externalPosition }}</span>
+                    </div>
                 </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
+                <div class="item">
+                    <div class="label">
+                        <span>邮箱</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.email }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>前负责人</span>
+                <div class="item">
+                    <div class="label">
+                        <span>添加人员</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.createBy }}</span>
+                    </div>
                 </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.beBelongBy }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>最后跟进时间</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.followTime | $time('YYYY-MM-DD') }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>转客户时间</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.turnTime | $time('YYYY-MM-DD') }}</span>
-                </div>
-            </div>
-            <div v-if="fromType == 2 || fromType == 4" class="item">
-                <div class="label">
-                    <span>回归公海时间</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.recycleTime | $time('YYYY-MM-DD') }}</span>
-                </div>
-            </div>
-        </div>
-        <!-- 线索信息（由线索转换过来的客户才有此信息） -->
-        <div v-if="(fromType == 3 || fromType == 4) && (form.sourceStatus == 1 || form.sourceStatus == 2)" class="form-box">
-            <div class="item title">线索信息</div>
-            <div class="item">
-                <div class="label">
-                    <span>线索名称</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.customerCalled }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>线索来源</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.sourceName }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>线索类型</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.clueTypeName }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>创建时间</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
-                </div>
-            </div>
-        </div>
-        <!-- 企微好友信息 -->
-        <div class="form-box">
-            <div class="item title">企微好友信息</div>
-            <div class="item">
-                <div class="label">
-                    <span>头像</span>
-                </div>
-                <div class="val">
-                    <div class="echo-img">
-                        <img :src="form.avatar | $setAvatar" alt="">
+                <div class="item">
+                    <div class="label">
+                        <span>添加时间</span>
+                    </div>
+                    <div class="val">
+                        <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>性别</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.externalGender | $gender }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>职务</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.externalPosition }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>邮箱</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.email }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>添加人员</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.createBy }}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>添加时间</span>
-                </div>
-                <div class="val">
-                    <span class="echo-text">{{ form.createTime | $time('YYYY-MM-DD') }}</span>
-                </div>
-            </div>
-        </div>
+        </template>
+        <!-- 名称搜索页 -->
+        <name-search v-else ref="nameSearch" :fromType="1" @handleResult="getResult"></name-search>
 
         <!-- 时间选择弹窗（日历） -->
         <van-calendar v-model="selectDatePopupShow" :min-date="minDate" :show-confirm="false" color="#4168F6" @confirm="dateConfirm"/>
@@ -402,6 +411,7 @@
 <script>
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import LabelEditBox from '@/components/CustomerManage/labelEditBox'
+import NameSearch from '@/components/CustomerManage/nameSearch'
 import { cluecustomer_toupdate, cluecustomer_update } from '@/api/customer'
 import { SelectDialog, InputDialog } from '../customer/components'
 import { throttle, formatDate } from '@/utils/tool'
@@ -497,11 +507,13 @@ export default {
             cropscaleRequired: false, // 企业规模
             addressRequired: false, // 地址
             clueTypeRequired: false, // 线索类型
+
+            showNameSearch: false, // 是否显示名称搜索页
         }
     },
     computed: {
         ...mapState(["corpId"]),
-        headerTitle() {
+        headerText() {
             if (this.fromType == 1 || this.fromType == 2) {
                 return '线索详情'
             } else if (this.fromType == 3 || this.fromType == 4) {
@@ -629,6 +641,16 @@ export default {
         },
         goBack() {
             this.$router.go(-1)
+        },
+        // 打开名称搜索页面
+        goNameSearch() {
+            this.showNameSearch = true
+            this.$nextTick(() => {
+                this.$refs.nameSearch.show(this.form.customerCalled)
+            })
+        },
+        getResult() {
+            this.showNameSearch = false
         },
         // 打开日期选择弹窗
         showDateSelect(timeType, customColumns) {
@@ -900,15 +922,18 @@ export default {
         LabelEditBox,
         SelectDialog,
         InputDialog,
+        NameSearch
     }
 }
 </script>
 <style lang="less" scoped>
 @import url('@/styles/color');
 .turn-customer {
+    width: 100%;
     min-height: 100vh;
     padding: 88px 0 0;
     background-color: @white;
+    overflow-x: hidden;
     .customer-title {
         position: fixed;
         top: 0;

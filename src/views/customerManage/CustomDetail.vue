@@ -2,8 +2,10 @@
     <div class="custom-detail">
         <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
         <div class="customer_wrap">
-            <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-            <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+            <div class="top-box">
+                <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
+                <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+            </div>
             <div class="nav_box">
                 <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
             </div>
@@ -177,16 +179,15 @@ export default {
     computed: {
         bgY(){
             let y = 0
-            if(this.tagList.length == 0){
-                if(!this.customerInfo.mobil){
+
+            if (this.tagList.length == 0) {
+                if(!this.customerInfo.mobil) {
                     y = '70px'
-                }else{
+                } else {
                     y = '40px'
                 }
-            }else{
-                if(!this.customerInfo.mobil){
-                    y = '30px'
-                }
+            } else {
+                y = '60px'
             }
             return y
         },
@@ -202,13 +203,13 @@ export default {
         navList() {
             if (this.fromType == 1 || this.fromType == 2) {
                 return [
-                    { name: '线索动态', code: 'dynamics'},
+                    { name: '动态', code: 'dynamics'},
                     { name: '附件', code: 'enclosure', num: 0},
                 ]
             }
             if (this.fromType == 3 || this.fromType == 4) {
                 return [
-                    { name: '客户动态', code: 'dynamics'},
+                    { name: '动态', code: 'dynamics'},
                     { name: '商机', code: 'niche', num: 0},
                     { name: '客户群', code: 'group', num: 0},
                     { name: '附件', code: 'enclosure', num: 0},
@@ -245,9 +246,7 @@ export default {
 
                     this.customerInfo = data.clueCustomerVO
                     this.userList = data.directorList
-                    this.tagList = data.tagList.filter((el,index) => {
-                        return index < 3
-                    })
+                    this.tagList = data.tagList
                     this.navList.forEach(el => {
                         if(el.code == 'niche'){
                             el.num = data.mobileDataCount.busCount
@@ -515,13 +514,15 @@ export default {
             return true
         },
         toFun(val){
-            let name = '', query = { clueCustomerNo: this.customerInfo.clueCustomerNo }
+            let name = '', query = {}
 
             if (val == 'helper') {    //查看协助人
                 name = 'helper'
+                query.id = this.customerInfo.clueCustomerNo
             } else if (val == 'detail') {    //详情
                 name = 'CustomerDetail'
                 query.fromType = this.fromType
+                query.clueCustomerNo = this.customerInfo.clueCustomerNo
             }
             this.$router.push({ name, query })
         },
@@ -708,58 +709,58 @@ export default {
     .customer_wrap {
         position: relative;
         overflow: hidden;
-    .bg{
-        width: 100%;
-        height: auto;
-        position: absolute;
-        top: 88px;
-        left: 0;
-    }
-    .nav_box{
-        width: 100%;
-        height: 88px;
-        display: flex;
-        text-align: center;
-        position: relative;
-        &::before{
-            content: '';
+        .bg{
             width: 100%;
-            height: 1px;   /*no*/
-            background: @lineColor;
-            transform: scaleY(.5);
+            height: auto;
             position: absolute;
+            top: 88px;
             left: 0;
-            bottom: 0;
         }
-        .nav{
-            color: @fontSub1;
-            font-size: 28px;
-            line-height: 88px;
-            flex: 1;
+        .nav_box{
+            width: 100%;
+            height: 88px;
+            display: flex;
+            text-align: center;
             position: relative;
-            &.cur{
-                color: @main;
-                &::before{
-                    content: '';
-                    width: 40px;
-                    height: 4px;
-                    background: @main;
-                    border-radius: 2px;
-                    position: absolute;
-                    left: 50%;
-                    bottom: 0;
-                    transform: translateX(-50%);
+            &::before{
+                content: '';
+                width: 100%;
+                height: 1px;   /*no*/
+                background: @lineColor;
+                transform: scaleY(.5);
+                position: absolute;
+                left: 0;
+                bottom: 0;
+            }
+            .nav{
+                color: @fontSub1;
+                font-size: 28px;
+                line-height: 88px;
+                flex: 1;
+                position: relative;
+                &.cur{
+                    color: @main;
+                    &::before{
+                        content: '';
+                        width: 40px;
+                        height: 4px;
+                        background: @main;
+                        border-radius: 2px;
+                        position: absolute;
+                        left: 50%;
+                        bottom: 0;
+                        transform: translateX(-50%);
+                    }
                 }
             }
         }
-    }
-    .content{
-        width: 100%;
-        padding: 32px;
-        &.pd0{
-            padding: 0;
+        .content{
+            width: 100%;
+            padding: 32px;
+            &.pd0{
+                padding: 0;
+            }
         }
-    }
         .operation-box {
             width: 5rem;
             height: 76px;
