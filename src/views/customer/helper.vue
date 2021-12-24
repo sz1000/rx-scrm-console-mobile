@@ -5,7 +5,7 @@
             <div class="title">跟进人</div>
         </div>
         <div class="content">
-            <div class="item_box" v-if="obj">
+            <div class="item_box" v-if="!this.fromType && obj">
                 <div class="tit">负责人</div>
                 <div class="item trans">
                     <img class="avatar" :src="obj.avatar | $setAvatar" alt="">
@@ -51,7 +51,6 @@
 <script>
 import { AddHelper } from './components'
 import {
-    clueCustomerFollowUser_getFollowUserList,
     clueCustomerFollowUser_getMBFollowUserList,
     clueCustomerFollowUser_deleteFollowUsers,
 } from '@/api/customer'
@@ -116,9 +115,7 @@ export default {
             })
         },
         getList(){  //获取协助人列表
-            let ApiOpts = this.fromType ? clueCustomerFollowUser_getFollowUserList : clueCustomerFollowUser_getMBFollowUserList
-
-            ApiOpts(this.id).then(res => {
+            clueCustomerFollowUser_getMBFollowUserList(this.id).then(res => {
                 if(res.result){
                     this.list = res.data
                 }
