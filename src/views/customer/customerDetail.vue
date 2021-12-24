@@ -24,7 +24,7 @@
                     </div>
                     <div class="val">
                         <!-- 非微信好友修改名称需进入名称搜索页 -->
-                        <span v-if="form.isWcCus != 1" @click="goNameSearch">{{ form.customerCalled }}</span>
+                        <span v-if="form.isWcCus != 1" class="block-span" @click="goNameSearch">{{ form.customerCalled }}</span>
                         <!-- 微信好友可直接修改名称 -->
                         <template v-else>
                             <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
