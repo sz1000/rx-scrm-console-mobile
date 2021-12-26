@@ -8,6 +8,10 @@ import CustomerPortrait from '../views/customer/CustomerPortrait.vue'
 import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
 import Helper from '../views/customer/helper.vue' //协助人
+
+import Sop from '../views/customer/sop.vue'
+//群公告
+import GroupAnnouncement from '../views/customer/groupAnnouncement.vue'
 const CustomerDetail = () =>
     import ('../views/customer/customerDetail.vue')
 const Demo = () =>
@@ -172,6 +176,25 @@ const routes = [{
             bodyClass: 'demo',
         },
         component: Demo,
+    },
+    //sop
+    {
+        path: '/sop',
+        name: 'Sop',
+        meta: {
+            bodyClass: 'sop',
+        },
+        component: Sop,
+    },
+    //群公告
+    
+    {
+        path: '/groupAnnouncement',
+        name: 'GroupAnnouncement',
+        meta: {
+            bodyClass: 'groupAnnouncement',
+        },
+        component: GroupAnnouncement,
     },
     // 协助人
     {
