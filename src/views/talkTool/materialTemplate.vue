@@ -565,7 +565,6 @@ export default {
         type = this.type,
         shareUrlOrigin = this.shareUrlOrigin,
         corpId = this.corpId
-      console.log(shareObj, type, shareUrlOrigin, corpId, '-------llll----')
       this.$network
         .get('/user-service/m/user/getinticket', {
           url: location.href,
@@ -635,11 +634,10 @@ export default {
                         msgtype: 'link', // 消息类型，必填
                         link: {
                           title:
-                            that.shareObj.title ||
-                            that.shareObj.name ||
-                            that.shareObj.posterName, // H5消息标题
-                          imgUrl:
-                            that.shareObj.cover || that.shareObj.posterUrl, // H5消息封面图片URL
+                            shareObj.title ||
+                            shareObj.name ||
+                            shareObj.posterName, // H5消息标题
+                          imgUrl: shareObj.cover || shareObj.posterUrl, // H5消息封面图片URL
                           url: url,
                         },
                       },
