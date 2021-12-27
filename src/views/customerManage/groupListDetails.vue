@@ -3,29 +3,31 @@
     <TitleBack title="群画像"></TitleBack>
     <div class="groupDetails">
       <div class="groupDetailsTop">
-        <div
-          class="left"
-          @click="toFun(item.chatId)"
-          v-for="(item, index) in avatarList"
-          :key="index"
-        >
-          <img src="" alt="" />
+        <div class="left">
           <div
-            class="group_img"
-            :class="{
-              len5:
-                item.imgList &&
-                item.imgList.length > 4 &&
-                item.imgList.length < 7,
-            }"
+            class="leftImgs"
+            @click="toFun(item.chatId)"
+            v-for="(item, index) in avatarList"
+            :key="index"
           >
+            <img src="" alt="" />
             <div
-              class="img_box"
-              :class="{ w33: item.imgList && item.imgList.length > 4 }"
-              v-for="(url, i) in item.imgList"
-              :key="i"
+              class="group_img"
+              :class="{
+                len5:
+                  item.imgList &&
+                  item.imgList.length > 4 &&
+                  item.imgList.length < 7,
+              }"
             >
-              <img class="img" :src="url" alt="" />
+              <div
+                class="img_box"
+                :class="{ w33: item.imgList && item.imgList.length > 4 }"
+                v-for="(url, i) in item.imgList"
+                :key="i"
+              >
+                <img class="img" :src="url" alt="" />
+              </div>
             </div>
           </div>
         </div>
@@ -286,7 +288,7 @@ export default {
     };
   },
   mounted() {
-    this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.pageInfo.page = 1;
     this.getData();
   },
@@ -648,55 +650,59 @@ export default {
       }
       .left {
         // flex: 1;
+        width: 80px;
+        height: 80px;
         margin: 42px 32px;
-        .group_img {
-          width: 80px;
-          height: 80px;
-          background: @navBg;
-          margin-right: 24px;
-          display: flex;
-          flex-wrap: wrap-reverse;
-          justify-content: center;
-          align-items: center;
-          &.len5 {
-            padding: calc(80px / 6) 0;
-          }
-          .img_box {
-            // width: 33.33%;
-            // height: calc(80px / 3);
-            // background: chocolate;
-            border: 1px solid @white; /*no*/
-            text-align: center;
-            &:first-child:nth-last-child(2),
-            &:first-child:nth-last-child(2) ~ .img_box {
-              width: calc(80px / 2);
-              height: calc(80px / 2);
+        .leftImgs {
+          .group_img {
+            width: 80px;
+            height: 80px;
+            background: @navBg;
+            margin-right: 24px;
+            display: flex;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            align-items: center;
+            &.len5 {
+              padding: calc(80px / 6) 0;
             }
-            &:first-child:nth-last-child(3),
-            &:first-child:nth-last-child(3) ~ .img_box {
-              width: calc(80px / 2);
-              height: calc(80px / 2);
-            }
-            &:first-child:nth-last-child(4),
-            &:first-child:nth-last-child(4) ~ .img_box {
-              width: calc(80px / 2);
-              height: calc(80px / 2);
-            }
-            // &:first-child:nth-last-child(5),&:first-child:nth-last-child(5) ~ .img_box{
-            //     width: calc(80px / 3);
-            //     height: calc(80px / 3);
-            // }
-            // &:first-child:nth-last-child(6),&:first-child:nth-last-child(6) ~ .img_box{
-            //     width: calc(80px / 3);
-            //     height: calc(80px / 3);
-            // }
-            &.w33 {
-              width: calc(80px / 3);
-              height: calc(80px / 3);
-            }
-            .img {
-              width: 100%;
-              height: 100%;
+            .img_box {
+              // width: 33.33%;
+              // height: calc(80px / 3);
+              // background: chocolate;
+              border: 1px solid @white; /*no*/
+              text-align: center;
+              &:first-child:nth-last-child(2),
+              &:first-child:nth-last-child(2) ~ .img_box {
+                width: calc(80px / 2);
+                height: calc(80px / 2);
+              }
+              &:first-child:nth-last-child(3),
+              &:first-child:nth-last-child(3) ~ .img_box {
+                width: calc(80px / 2);
+                height: calc(80px / 2);
+              }
+              &:first-child:nth-last-child(4),
+              &:first-child:nth-last-child(4) ~ .img_box {
+                width: calc(80px / 2);
+                height: calc(80px / 2);
+              }
+              // &:first-child:nth-last-child(5),&:first-child:nth-last-child(5) ~ .img_box{
+              //     width: calc(80px / 3);
+              //     height: calc(80px / 3);
+              // }
+              // &:first-child:nth-last-child(6),&:first-child:nth-last-child(6) ~ .img_box{
+              //     width: calc(80px / 3);
+              //     height: calc(80px / 3);
+              // }
+              &.w33 {
+                width: calc(80px / 3);
+                height: calc(80px / 3);
+              }
+              .img {
+                width: 100%;
+                height: 100%;
+              }
             }
           }
         }

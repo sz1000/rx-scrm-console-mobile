@@ -648,6 +648,8 @@ export default {
       }
       .left {
         // flex: 1;
+        width: 80px;
+          height: 80px;
         margin: 42px 32px;
         .group_img {
           width: 80px;
