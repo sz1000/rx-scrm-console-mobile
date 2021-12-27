@@ -11,7 +11,7 @@
 
         <div v-if="fromType == 3" class="name-box">线索名称：{{ searchParam }}</div>
 
-        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :searchParam="searchParam" @ifHasPreciseData="ifHasPreciseData" @getCheckedItem="getCheckedItem"></name-search-list-box>
+        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :searchParam="searchParam" :checkedItem="checkedItem"></name-search-list-box>
 
         <div class="btn-box pointer">
             <div v-if="fromType == 1" class="btn-item" :class="{invalid: isInvalid}" @click="confirm(1)">确认保存</div>
@@ -45,6 +45,7 @@ export default {
             hasPreciseData: false, // 是否有相同信息
             enableStatus: true, // 是否开启去重规则
             checkedItem: '', // 选中的客户
+            isInvalid: true, // 是否禁止点击
         }
     },
     computed: {
@@ -61,18 +62,10 @@ export default {
             }
             return '编辑客户名称'
         },
-        // 是否禁止点击
-        isInvalid() {
-            if (this.fromType == 1) {
-                return this.hasPreciseData && this.enableStatus
-            } else if (this.fromType == 2 || this.fromType == 3) {
-                return !this.searchParam || (this.hasPreciseData && this.enableStatus)
-            }
-            return false
-        },
     },
     provide() {
         return {
+            doCheck: this.doCheck,
             goBack: this.goBack
         }
     },
@@ -97,6 +90,15 @@ export default {
         },
         ifHasPreciseData(data) {
             this.hasPreciseData = data
+            if (data) {
+                if (this.fromType == 1 && this.enableStatus || ((this.fromType == 2 || this.fromType == 3) && (!this.searchParam || this.enableStatus))) {
+                    this.isInvalid = true
+                } else {
+                    this.isInvalid = false
+                }
+            } else {
+                this.isInvalid = false
+            }
         },
         doClear() {
             this.searchParam = ''
@@ -113,21 +115,28 @@ export default {
                 this.$router.go(-1)
             }
         },
-        // 选中合并成某个客户
-        getCheckedItem(data) {
-            this.checkedItem = data
+        // 选中客户与否
+        doCheck(item) {
+            if (item == this.checkedItem) {
+                this.checkedItem = ''
+            } else {
+                this.checkedItem = item
+            }
         },
         // 提交
         confirm(type) {
-            if (this.isInvalid) {
-                return
-            }
             if(type == 1 || type == 2 || type == 3) {
+                if (this.isInvalid) {
+                    return
+                }
                 // 编辑客户名称、新增客户、线索转客户
                 this.$emit('handleResult', this.searchParam)
             } else if(type == 4) {
                 // 线索合并客户
                 console.log("选中的客户：", this.checkedItem)
+                if (!this.checkedItem) {
+                    return
+                }
                 this.doMerge()
             }
         },
@@ -193,7 +202,7 @@ export default {
             }
         }
         .name-box {
-            margin-top: 32px;
+            margin: 32px 32px 0;
             color: @fontSub3;
             font-size: 28px;
         }
