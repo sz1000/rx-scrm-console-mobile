@@ -129,7 +129,7 @@ export default {
     }
   }
   .reprint-box {
-    opacity: 0;
+    // opacity: 0;
     width: 104px;
     height: 104px;
     background-color: @main;
