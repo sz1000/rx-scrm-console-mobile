@@ -37,6 +37,10 @@ export default {
         },
         clueCustomerNo: {
             default: ''
+        },
+        userNo: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -66,6 +70,7 @@ export default {
     provide() {
         return {
             doCheck: this.doCheck,
+            ifHasPreciseData: this.ifHasPreciseData,
             goBack: this.goBack
         }
     },
