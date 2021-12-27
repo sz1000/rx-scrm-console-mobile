@@ -3,15 +3,16 @@
     <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <div v-for="(i, index) in list" :key="index + i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
         <div class="list-item-left">
-          <img class="header-img" :src="i.avatar | $setAvatar" alt="">
+          <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
+          <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
           <img v-if="i.isWcCus == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
           <img v-if="i.isWcCus == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
         </div>
         <ul class="list-item-right">
           <li class="right-top">
-            <div class="name-box">
-              <h3 class="one-line">{{ i.name }}</h3>
-              <span v-if="i.customerName" class="crop-name one-line">@{{ i.customerName }}</span>
+            <div class="name-box" :class="{'clues-name-box': customerType == '1' || customerType == '2'}">
+              <h3 class="one-line">{{ i.customerCalled }}</h3>
+              <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
             </div>
             <span class="time" :class="{'clues-time': customerType == '1' || customerType == '2'}">
               {{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}
@@ -61,6 +62,7 @@ export default {
   },
   data() {
     return {
+      pageLoading: false,
       loading: false,
       finished: false,
       page: 1,
@@ -80,7 +82,9 @@ export default {
       }
 
       if (this.page == 1) {
-        this.$toast.loading()
+        this.pageLoading = false
+      } else {
+        this.pageLoading = true
       }
 
       this.loading = true
@@ -93,10 +97,9 @@ export default {
         searchParam: this.searchParam
       }
 
-      getcluecustomerlist(params).then(res => {
+      getcluecustomerlist(params, this.pageLoading).then(res => {
         let { result, data, msg } = res
 
-        this.$toast.clear()
         this.loading = false
         if (result) {
           if (this.page == 1) {
@@ -122,7 +125,7 @@ export default {
 
       this.$router.push({
         path: 'customDetail',
-        query: { fromType: this.customerType, userNo: item.clueCustomerNo, jurisdictionList: JSON.stringify(this.jurisdictionList[type]) },
+        query: { fromType: this.customerType, userNo: item.externalUseridIn, clueCustomerNo: item.clueCustomerNo, jurisdictionList: JSON.stringify(this.jurisdictionList[type]) },
       })
     },
   },
@@ -152,10 +155,18 @@ export default {
       height: 80px;
       margin-right: 24px;
       position: relative;
-      .header-img {
+      .header-img, .default-img {
         width: 100%;
         height: 100%;
         border-radius: 50%;
+      }
+      .default-img {
+        display: block;
+        line-height: 80px;
+        color: @white;
+        font-size: 28px;
+        background-color: @main;
+        text-align: center;
       }
       .icon {
         width: 32px;
@@ -188,6 +199,9 @@ export default {
             font-size: 20px;
           }
         }
+        .clues-name-box {
+          max-width: calc(100% - 280px);
+        }
         .time {
           min-width: 130px;
           text-align: right;
@@ -195,6 +209,7 @@ export default {
           font-size: 24px;
         }
         .clues-time {
+          min-width: 240px;
           color: @total;
         }
       }
