@@ -4,7 +4,7 @@
     <div class="content">
       <div class="top">
         <div class="userIcon">
-          <img :src="src" alt="" />
+          <img :src="avatar" alt="" />
         </div>
         <div class="userInfo">
           <span>{{ name }}</span>
@@ -41,6 +41,7 @@ export default {
       src: "https://img0.baidu.com/it/u=2935589232,1367006843&fm=26&fmt=auto",
       name: "",
       createTime: "",
+      avatar:"",
     };
   },
   mounted() {
@@ -50,6 +51,7 @@ export default {
     this.createTime = this.$route.query.createTime;
     this.name = this.$route.query.owmerName;
     this.notice = this.$route.query.notice;
+    this.avatar= this.$route.query.avatar;
   },
   methods: {},
 };

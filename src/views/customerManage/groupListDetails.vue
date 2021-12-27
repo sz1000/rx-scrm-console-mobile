@@ -34,6 +34,7 @@
         <div class="right">
           <div class="rightTitle">
             <p class="title">{{ datatTite.name || "暂无" }}</p>
+            <!-- v-if="groupName.admintype == 1" -->
             <div v-if="groupName.admintype == 1" class="sop" @click="toSopPage">
               <span>SOP生效中</span>
               <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
@@ -112,7 +113,8 @@
                 </span>
               </div>
             </div>
-            <div class="btn" v-show="lableList.length > 10">
+            <!-- v-show="lableList.length > 10" -->
+            <div class="btn" ref="tags" v-show="lableList.length > 10">
               <!-- 
               @click="isShowPerson = !isShowPerson" -->
               <img
@@ -287,6 +289,7 @@ export default {
       avatarList: [],
     };
   },
+  updated() {},
   mounted() {
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.pageInfo.page = 1;
@@ -305,6 +308,7 @@ export default {
             createTime: this.groupName.createTime,
             notice: this.groupName.notice,
             owmerName: this.groupName.owmerName,
+            avatar: this.groupName.avatar,
           },
         });
       }
@@ -415,7 +419,7 @@ export default {
         console.log("获取头部信息接口 getGroupDetail " + res);
         if (res.result) {
           this.notice = res.data.notice;
-          // this.notice = "获取头部信息接口 getGroupDetail 获取头部asbbbbb信息接口 getGroupDetai获取头部信息接口 getGroupDetai";
+          // this.notice = "必要的财政支出规模，优化地方政府专项债券发行使用管理，开展全域无隐性债务试点，建立常态化财政资金直达机制并扩大范围，优化和落实减税降费政策，预计全年新增减税降费达到1万亿元。二是支持科技自立自强，加大对基础研究的支持，改革完善中央财政科研经费管理，打好关键核心技术攻坚战，启动支持专精特新中小企业高质量发展奖补政策，推动优化和稳定产业链供应链。";
           let len = this.getStrLen(this.notice);
           // console.log(len);
           if (len > 97) {
@@ -601,18 +605,25 @@ export default {
     -webkit-line-clamp: 2;
     overflow: hidden;
   }
+
   .btn {
     margin: 10px 0;
     color: #4168f6;
     text-align: center;
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    .van-icon {
-      vertical-align: -11%;
-      width: 28px;
-      height: 28px;
+    height: 40px;
+    position: relative;
+    img {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
     }
+    // .van-icon {
+    //   vertical-align: -11%;
+    //   width: 28px;
+    //   height: 28px;
+    // }
   }
   .tagBox {
     display: inline-block;

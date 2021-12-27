@@ -18,14 +18,19 @@
         :finished="finished"
         finished-text="没有更多了"
       >
-        <div class="li" v-for="(item, index) in dataList" :key="index">
+        <div
+          class="li"
+          v-for="(item, index) in dataList"
+          :key="index"
+          @click="toGroupDetail(item)"
+        >
           <!-- <div class="li"> -->
           <div class="userIcon">
             <img :src="item.avatar" alt="" />
           </div>
           <div class="userInfo">
             <div class="topInfo">
-              <span class="txt">{{ item.name }}</span>
+              <span class="txt groupName">{{ item.name }}</span>
               <span
                 class="txt type"
                 :class="[
@@ -47,7 +52,7 @@
 
             <p>{{ item.joinTime }}</p>
           </div>
-          <div class="link" v-if="item.status != 1">
+          <div class="link" v-if="false">
             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
           </div>
         </div>
@@ -134,10 +139,13 @@ export default {
   },
   computed: {},
   mounted() {
-    this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.getList();
   },
   methods: {
+    toGroupDetail(val) {
+      console.log(val);
+    },
     /**
      *  type: "1",//员工
         admintype: 0,//群主
@@ -151,15 +159,19 @@ export default {
       //查找符合条件值并存入新数组
       for (let i in this.dataList) {
         if (this.dataList[i].type == 1) {
+          //员工
           this.staffArray[a++] = this.dataList[i];
         }
-        if (this.dataList[i].externalType == "2") {
+        if (this.dataList[i].externalType == 2) {
+          //企业客户
           this.enterpriseArray[b++] = this.dataList[i];
         }
-        if (this.dataList[i].externalType == "1") {
+        if (this.dataList[i].externalType == 1) {
+          //客户
           this.customerArray[c++] = this.dataList[i];
         }
-        if (this.dataList[i].admintype == "1") {
+        if (this.dataList[i].admintype == 1) {
+          //群主
           this.leaderArray[d++] = this.dataList[i];
         }
       }
@@ -391,10 +403,11 @@ export default {
       }
       .link {
         width: 40px;
+        margin-right: 30px;
         position: relative;
         .icon {
-          width: 32px;
-          height: 32px;
+          width: 40px;
+          height: 40px;
           // margin-left: 12px;
           display: inline-block;
           vertical-align: middle;
@@ -405,13 +418,22 @@ export default {
         line-height: 48px;
         .topInfo {
           display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          line-height: 2;
           span {
             color: #262626;
-            font-weight: 600;
             font-size: 28px;
           }
           .txt {
             margin-right: 10px;
+          }
+          .groupName {
+            font-weight: 600;
+            max-width: 210px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           .corporName {
             flex: 1;
