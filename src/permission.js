@@ -121,6 +121,7 @@ router.beforeEach(async(to, from, next) => {
                         } else {
                             console.log(location.hostname, 'location.hostname ======')
                             let token = store.getters.token
+                                // window.location.href = `http://test-console.jzcrm.com/#/readme/main?token=${token}`
                             if (location.hostname == 'localhost') {
                                 window.location.href = `http://test-console.jzcrm.com/#/readme/main?token=${token}`
                             } else if (location.hostname == 'test-h5.jzcrm.com') {

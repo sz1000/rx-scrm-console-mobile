@@ -600,8 +600,9 @@ export default {
                 ],
               },
               function (res) {
-                let that = this,
-                  url
+                let that = this
+                let url = null
+                console.log(that.shareObj, that.type, '13213213123')
                 if (that.type == 0) {
                   url = `${that.shareUrlOrigin}/materialTemplate?materialId=${
                     that.shareObj.articleId
@@ -612,7 +613,7 @@ export default {
                   }&type=${that.type + 1}&corpId=${that.corpId}`
                 } else {
                   url = `${that.shareUrlOrigin}/materialTemplate?materialId=${
-                    that.shareObj.articleId
+                    that.shareObj.posterId
                   }&type=${that.type + 1}&corpId=${that.corpId}`
                 }
                 wx.invoke(
