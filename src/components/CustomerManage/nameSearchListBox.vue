@@ -17,7 +17,7 @@
                         </li>
                         <li class="right-bottom">
                             <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
-                            <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
+                            <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString(that) }}</span>
                         </li>
                     </ul>
                     <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i.clueCustomerNo)"></div>
@@ -40,7 +40,7 @@
                             </li>
                             <li class="right-bottom">
                                 <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
-                                <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
+                                <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString(that) }}</span>
                             </li>
                         </ul>
                         <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i.clueCustomerNo)"></div>
@@ -73,6 +73,7 @@ export default {
     },
     data() {
         return {
+            that: this,
             pageLoading: false,
             loading: false,
             finished: false,
@@ -80,6 +81,15 @@ export default {
             limit: 20,
             list: [], // 相似数据
             preciseData: [], // 相同数据
+        }
+    },
+    watch: {
+        preciseData(val) {
+            if (val && val.length) {
+                this.$emit('ifHasPreciseData', true)
+            } else {
+                this.$emit('ifHasPreciseData', false)
+            }
         }
     },
     computed: {
@@ -94,10 +104,10 @@ export default {
             this.initData()
             this.getList()
         },
-        ifHasPreciseData(data) {
-            console.log("相同1：", data)
-            this.$emit('ifHasPreciseData', data)
-        },
+        // ifHasPreciseData(data) {
+        //     console.log("相同1：", data)
+        //     this.$emit('ifHasPreciseData', data)
+        // },
         // 获取客户列表
         getList() {
             if (!this.searchParam) {
@@ -137,11 +147,13 @@ export default {
                     this.$toast(msg)
                 }
 
-                if(this.preciseData && this.preciseData.length) {
-                    this.ifHasPreciseData(true)
-                } else {
-                    this.ifHasPreciseData(false)
-                }
+                // if(this.preciseData && this.preciseData.length) {
+                //     this.ifHasPreciseData(true)
+                // } else {
+                //     this.ifHasPreciseData(false)
+                // }
+
+                console.log("this.preciseData", this.preciseData)
             })
         },
         onLoad() {
@@ -165,10 +177,10 @@ export default {
         },
     },
     filters: {
-        optString(val){
+        optString(val, that){
             let result = val.userName ? val.deptName ? `${val.userName}-${val.deptName}` : val.userName : ''
 
-            return result ? val.userNo && val.userNo == this.userNo ? `${result}(我)` : result : ''
+            return result ? val.userNo && val.userNo == that.userNo ? `${result}(我)` : result : ''
         },
     },
 }
