@@ -100,7 +100,11 @@ router.beforeEach(async(to, from, next) => {
                 getAuthInfo().then((res) => {
                     // console.log('success',res)
                     if (res.result) {
-                        if (phoneModel() === 'ios' || phoneModel() === 'android') {
+                        if (
+                            phoneModel() === 'ios' ||
+                            phoneModel() === 'android' ||
+                            groupList.indexOf(to.path) > -1
+                        ) {
                             if (type.length > 0) {
                                 // console.log('wx is',res,type)
                                 if (to.query.comeFrom == 'messageCard') {

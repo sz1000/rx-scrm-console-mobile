@@ -346,7 +346,7 @@ export default {
                 } else if (mediaObj.tab == 2) {
                   url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.documentId}&type=${mediaObj.tab}&corpId=${that.corpId}`
                 } else {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.posterId}&type=${mediaObj.tab}&corpId=${that.corpId}`
                 }
                 wx.invoke(
                   'shareToExternalMoments',
@@ -355,8 +355,11 @@ export default {
                       {
                         msgtype: 'link', // 消息类型，必填
                         link: {
-                          title: mediaObj.title, // H5消息标题
-                          imgUrl: mediaObj.cover, // H5消息封面图片URL
+                          title:
+                            mediaObj.title ||
+                            mediaObj.name ||
+                            mediaObj.posterName, // H5消息标题
+                          imgUrl: mediaObj.cover || mediaObj.posterUrl, // H5消息封面图片URL
                           // url: '', // H5消息页面url 必填
                           url: url,
                         },

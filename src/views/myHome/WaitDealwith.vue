@@ -60,8 +60,9 @@
           <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
-              <img src="../../images/article.png" alt="">
-              <div class="lint_url">{{item.urls[0]}}</div>
+              <img :src="item.urls[1]" alt="" v-if="item.urls[1]" />
+              <img src="../../images/article.png" alt="" v-else />
+              <div class="lint_url">{{item.urls[2]}}</div>
             </div>
           </div>
           <div class="bot_content">
@@ -131,8 +132,9 @@
           <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
-              <img src="../../images/article.png" alt="">
-              <div class="lint_url">{{item.urls[0]}}</div>
+              <img :src="item.urls[1]" alt="" v-if="item.urls[1]" />
+              <img src="../../images/article.png" alt="" v-else />
+              <div class="lint_url">{{item.urls[2]}}</div>
             </div>
           </div>
           <div class="bot_content">
@@ -471,8 +473,8 @@ export default {
     .select_date {
       padding: 20px 16px;
       width: 332px;
-      height: 68px;
-
+      // height: 68px;
+      // line-height: 68px;
       background: #f7f7f7;
       border-radius: 8px;
       display: flex;
@@ -482,6 +484,7 @@ export default {
         font-weight: 400;
         color: #c0c4cc;
         line-height: 28px;
+        height: 30px;
         overflow: hidden;
         white-space: nowrap;
       }
@@ -548,6 +551,7 @@ export default {
     padding: 0 32px;
     display: flex;
     line-height: 64px;
+    align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #e6e6e6;
     .total_box {
@@ -563,9 +567,10 @@ export default {
       }
     }
     .published_btn {
-      width: 220px;
-      height: 64px;
-      line-height: 64px;
+      // width: 220px;
+      // height: 64px;
+      // line-height: 64px;
+      padding: 0 32px;
       background: #4168f6;
       border-radius: 32px;
       color: #fff;
