@@ -342,7 +342,7 @@ export default {
                              * 
                              * 40.浏览素材 41.添加企微好友 44.申请成为协助人 46.自动成为协助人
                              * 47.申请成为协助人已通过 48.申请成为协助人未通过
-                             * 50.线索创建 51.线索导入 52.企微同步 53.更新线索 55.分配线索 56.领取线索 57.放弃线索
+                             * 4. 线索转客户 50.线索创建 51.线索导入 52.企微同步 53.更新线索 55.分配线索 56.领取线索 57.放弃线索
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
@@ -514,6 +514,7 @@ export default {
                 case 47:
                 case 48:
                     break;
+                case 4:
                 case 50:
                 case 51:
                 case 52:
