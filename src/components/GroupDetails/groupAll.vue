@@ -243,7 +243,7 @@ export default {
     },
   },
   mounted() {
-    this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     if (this.id) {
       this.getSelectFollowMsgList();
     }
