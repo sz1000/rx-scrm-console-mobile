@@ -433,8 +433,11 @@ export default {
           }
           .form {
             border: 1px solid;
-            border-radius: 20px;
-            padding: 5px 10px;
+            height: 42px;
+            font-size: 24px;
+            line-height: 40px;
+            padding: 0 16px;
+            border-radius: 26px;
           }
         }
 

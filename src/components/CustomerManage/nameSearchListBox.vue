@@ -3,7 +3,7 @@
         <template v-if="preciseData && preciseData.length || list && list.length">
             <template v-if="preciseData && preciseData.length">
                 <div class="title">找到完全相同名称的客户：</div>
-                <div v-for="i in preciseData" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
+                <div v-for="i in preciseData" :key="i.clueCustomerNo" class="list-item pointer">
                     <div class="list-item-left">
                         <img class="header-img" :src="i.avatar | $setAvatar" alt="">
                         <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="@/assets/svg/icon_qiyeweixin.svg" alt="">
@@ -17,16 +17,16 @@
                         </li>
                         <li class="right-bottom">
                             <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
-                            <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
+                            <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString(that) }}</span>
                         </li>
                     </ul>
-                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i.clueCustomerNo)"></div>
+                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click="doCheck(i.clueCustomerNo)"></div>
                 </div>
             </template>
             <template v-if="list && list.length">
                 <div class="title">找到以下相似客户：</div>
                 <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
+                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer">
                         <div class="list-item-left">
                             <img class="header-img" :src="i.avatar | $setAvatar" alt="">
                             <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
@@ -40,10 +40,10 @@
                             </li>
                             <li class="right-bottom">
                                 <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
-                                <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString }}</span>
+                                <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString(that) }}</span>
                             </li>
                         </ul>
-                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" @click="doCheck(i.clueCustomerNo)"></div>
+                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click="doCheck(i.clueCustomerNo)"></div>
                     </div>
                 </van-list>
             </template>
@@ -69,10 +69,15 @@ export default {
         searchParam: {
             type: String,
             default: ''
+        },
+        checkedItem: {
+            type: String,
+            default: ''
         }
     },
     data() {
         return {
+            that: this,
             pageLoading: false,
             loading: false,
             finished: false,
@@ -82,9 +87,19 @@ export default {
             preciseData: [], // 相同数据
         }
     },
+    watch: {
+        preciseData(val) {
+            if (val && val.length) {
+                this.$emit('ifHasPreciseData', true)
+            } else {
+                this.$emit('ifHasPreciseData', false)
+            }
+        }
+    },
     computed: {
         ...mapState(["corpId", "userNo"]),
     },
+    inject: ['doCheck'],
     methods: {
         formatDate,
         initData() {
@@ -93,10 +108,6 @@ export default {
         doSearch() {
             this.initData()
             this.getList()
-        },
-        ifHasPreciseData(data) {
-            console.log("相同1：", data)
-            this.$emit('ifHasPreciseData', data)
         },
         // 获取客户列表
         getList() {
@@ -137,11 +148,7 @@ export default {
                     this.$toast(msg)
                 }
 
-                if(this.preciseData && this.preciseData.length) {
-                    this.ifHasPreciseData(true)
-                } else {
-                    this.ifHasPreciseData(false)
-                }
+                console.log("this.preciseData", this.preciseData)
             })
         },
         onLoad() {
@@ -150,25 +157,12 @@ export default {
             }
             this.getList()
         },
-        // 去往客户详情
-        goDetail(item) {
-            // let type = this.customerType == '1' ? 'myClew' : this.customerType == '2' ? 'commonClew' : this.customerType == '3' ? 'myCustomer' : 'commonCustomer'
-
-            // this.$router.push({
-            //     path: 'customDetail',
-            //     query: { fromType: this.customerType, userNo: item.clueCustomerNo, jurisdictionList: JSON.stringify(this.jurisdictionList[type]) },
-            // })
-        },
-        // 选中客户与否
-        doCheck(item) {
-            this.$emit('getCheckedItem', item)
-        },
     },
     filters: {
-        optString(val){
+        optString(val, that){
             let result = val.userName ? val.deptName ? `${val.userName}-${val.deptName}` : val.userName : ''
 
-            return result ? val.userNo && val.userNo == this.userNo ? `${result}(我)` : result : ''
+            return result ? val.userNo && val.userNo == that.userNo ? `${result}(我)` : result : ''
         },
     },
 }
@@ -303,6 +297,22 @@ export default {
             height: 40px;
             border-radius: 50%;
             border: 2px solid @placeholder;
+            &.checked {
+                background-color: @main;
+                border-color: @main;
+                position: relative;
+                &::before{
+                    content: '';
+                    width: 8px;
+                    height: 15px;
+                    border-bottom: 6px solid @white;
+                    border-right: 6px solid @white;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) rotate(45deg);
+                }
+            }
         }
     }
     .no_data {

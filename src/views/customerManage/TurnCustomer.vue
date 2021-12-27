@@ -1,5 +1,5 @@
 <template>
-    <div class="turn-customer">
+    <div class="turn-customer" :class="{'turn-customer-search': showNameSearch}">
         <template v-if="!showNameSearch">
             <header-title class="customer-title" title="线索转客户" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
 
@@ -802,5 +802,8 @@ export default {
             font-size: 24px;
         }
     }
+}
+.turn-customer-search {
+    padding: 88px 0 0;
 }
 </style>
