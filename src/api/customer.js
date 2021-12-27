@@ -330,9 +330,8 @@ export function cluecustomer_cluetocustomer(data) {
 // 线索合并客户
 export function cluecustomer_clueMergeToCustomer(data) {
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/cluecustomer/clueMergeToCustomer',
+        url: BASE_CUSTOMER_SERVICE + `/cluecustomer/clueMergeToCustomer?clueNo=${data.clueNo}&customerNo=${data.customerNo}`,
         method: 'post',
-        data,
     })
 }
 // 获取企业下的某个配置项及规则(客户自动去重settingItem: customer_duplicate_switch)

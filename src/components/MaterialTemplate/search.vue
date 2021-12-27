@@ -45,7 +45,7 @@ export default {
 <style lang="less" scoped>
 .search {
   padding: 32px;
-  width: 606px;
+  width: 100%;
   .search-box {
     display: flex;
     align-items: center;
