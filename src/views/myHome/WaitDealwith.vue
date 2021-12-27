@@ -408,7 +408,9 @@ export default {
     // 确认发表
     surePublished(data) {
       console.log('----data---', data)
-      sure_confirm(data).then((res) => {})
+      sure_confirm(data).then((res) => {
+        this.getDataList()
+      })
     },
   },
 }

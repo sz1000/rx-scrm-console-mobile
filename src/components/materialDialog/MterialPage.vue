@@ -754,7 +754,7 @@ export default {
           width: 38px;
           height: 38px;
           background: #ffffff;
-          border: 1px solid #e6e6e6;
+          border: 1px solid #e6e6e6; /* no */
           display: inline-block;
           border-radius: 50%;
         }
