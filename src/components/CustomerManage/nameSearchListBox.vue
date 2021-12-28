@@ -67,6 +67,9 @@ export default {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
             default: 0
         },
+        customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            default: 0
+        },
         searchParam: {
             type: String,
             default: ''
@@ -127,7 +130,7 @@ export default {
                 searchParam: this.searchParam,
                 corpId: this.corpId,
                 isFriend: this.fromType == 2 ? '0' : '',
-                type: '3'
+                type: this.fromType == 3 ? '3' : this.customerType
             }
 
             cluecustomer_elasticSearch(params).then(res => {
