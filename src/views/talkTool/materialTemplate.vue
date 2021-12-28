@@ -3,7 +3,7 @@
     <header-title v-if="isIndependent == 1 && !showUploadPoster && !showContentPreview && !showFileUpload" title="素材库"></header-title>
     <div class="material-tab">
       <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人素材库</div>
-      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业素材库</div>
+      <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">公共素材库</div>
     </div>
     <template v-if="!showUploadPoster && !showContentPreview && !showFileUpload">
       <ul class="header-nav pointer">
@@ -77,7 +77,7 @@
               </div>
               <div class="li_bot">
                 <div class="browse" @click="fnMaterialDetail(i,type)">
-                  浏览次数<span> {{i.openCount}} </span>
+                  浏览次数<span> {{i.openCount || 0}} </span>
                   <img src="../../images/arrow_right.png" alt="">
                 </div>
                 <div class="share_img">
@@ -283,7 +283,7 @@ export default {
     fnShare(val, type) {
       this.showShare = true
       this.shareObj = val
-      console.log(val)
+      // console.log(val)
     },
     onCancel() {
       this.showShare = false
@@ -613,13 +613,13 @@ export default {
               function (res) {
                 let that = this,
                   url
-                console.log(
-                  shareObj,
-                  type,
-                  shareUrlOrigin,
-                  corpId,
-                  '13213213123'
-                )
+                // console.log(
+                //   shareObj,
+                //   type,
+                //   shareUrlOrigin,
+                //   corpId,
+                //   '13213213123'
+                // )
                 if (type == 0) {
                   url = `${shareUrlOrigin}/materialTemplate?materialId=${shareObj.articleId}&type=1&corpId=${corpId}`
                 } else if (type == 1) {
@@ -645,7 +645,7 @@ export default {
                     ],
                   },
                   function (res) {
-                    alert(JSON.stringify(res))
+                    // alert(JSON.stringify(res))
                     if (res.err_msg == 'shareToExternalMoments:ok') {
                     }
                   }

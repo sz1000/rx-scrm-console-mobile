@@ -5,7 +5,7 @@
         <div class="back-page" @click="goBack">
           <img src="../../images/arrow_left.png" alt="">
         </div>
-        <span class="text-title">浏览详情</span>
+        <span class="text-title">浏览记录</span>
       </div>
       <div class="info_one" @click="previewImg">
         <div class="left">
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="one">
-        <div class="left">
+        <div class="left" @click="goCustomer">
           <img :src="customerObj.avatar" alt="" v-if="customerObj.avatar">
           <img src="../../images/img_head.png" alt="" v-else>
           <div class="name_warp">
@@ -37,8 +37,17 @@
       <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <ul class="brow_list">
           <li v-for="item in browList" :key="item.id">
-            <span>浏览了{{secondToDate(item.duration)}}</span>
-            <span>{{item.endTime}}</span>
+            <div class="left_time">
+              <p>浏览了{{secondToDate(item.duration)}}</p>
+              <p>{{item.endTime}}</p>
+            </div>
+            <div class="right_user">
+              <p>素材分享人</p>
+              <p> <img :src="item.shareUserAvatar" alt="" v-if="item.shareUserAvatar" />
+                <img src="../../images/default_header.jpg" alt="" v-else />
+                <span>{{item.shareUserName | getNameLength}}</span>
+              </p>
+            </div>
           </li>
         </ul>
       </van-list>
@@ -83,6 +92,17 @@ export default {
     this.getHeaderTop()
   },
   methods: {
+    //到客户画像
+    goCustomer() {
+      console.log(this.customerObj)
+      this.$router.push({
+        path: '/customerPortrait',
+        query: {
+          // userNo: val.customerNo,
+          name: this.customerObj.externalUseridIn,
+        },
+      })
+    },
     goBack() {
       this.$router.go(-1)
     },
@@ -227,6 +247,16 @@ export default {
       // if (this.isIndependent == 2) {
       // }
       this.$emit('ifShowFooter', data)
+    },
+  },
+  filters: {
+    getNameLength(name) {
+      console.log(name)
+      if (name && name.length > 3) {
+        return name.slice(0, 3) + '...'
+      } else {
+        return
+      }
     },
   },
 }
@@ -380,13 +410,42 @@ export default {
       font-size: 24px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 32px;
       border-bottom: 1px solid #e6e6e6; /* no */
-      span:nth-child(1) {
-        color: #262626;
+      .left_time {
+        p:nth-child(1) {
+          color: #262626;
+        }
+        p:nth-child(2) {
+          margin-top: 16px;
+          font-size: 24px;
+          color: #b3b3b3;
+        }
       }
-      span:nth-child(2) {
-        color: #b3b3b3;
+      .right_user {
+        border-radius: 8px;
+        border: 2px solid #e6e6e6;
+        p:nth-child(1) {
+          // color: #4168f6;
+          background: #f7f7f7;
+          color: #b3b3b3;
+          padding: 0 8px;
+        }
+        p:nth-child(2) {
+          // margin-top: 16px;
+          display: flex;
+          align-items: center;
+          color: #262626;
+          padding: 0 8px 8px;
+          img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            vertical-align: -9%;
+            margin: 8px 8px 0 0;
+          }
+        }
       }
     }
   }

@@ -14,6 +14,16 @@ var useList = [
         '/talkTool/verbalTrick',
         '/talkTool/contentMaterial',
     ] //目前可使用页面路由
+var pcList = [
+        '/notice',
+        '/notice/daily',
+        '/notice/applyHelp',
+        '/Interactive',
+        '/customerPortrait',
+        '/informationDetail',
+        '/talkTool/verbalTrick',
+        '/talkTool/contentMaterial',
+    ] //禁止跳转pc
 
 router.beforeEach(async(to, from, next) => {
     let system = phoneModel()
@@ -103,7 +113,7 @@ router.beforeEach(async(to, from, next) => {
                         if (
                             phoneModel() === 'ios' ||
                             phoneModel() === 'android' ||
-                            groupList.indexOf(to.path) > -1
+                            pcList.indexOf(to.path) > -1
                         ) {
                             if (type.length > 0) {
                                 // console.log('wx is',res,type)

@@ -5,7 +5,7 @@
         <div class="back-page" @click="goBack">
           <img src="../../images/arrow_left.png" alt="">
         </div>
-        <span class="text-title">素材详情</span>
+        <span class="text-title">浏览详情</span>
       </div>
       <div class="info_one" @click="previewImg">
         <div class="left">
@@ -39,7 +39,7 @@
       </div>
       <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了~" @load="onLoad">
         <div class="one" v-for="list in popupList" :key="list.id">
-          <div class="left">
+          <div class="left" @click="goCustomer(list)">
             <img :src="list.avatar" alt="" v-if="list.avatar">
             <img src="../../images/img_head.png" alt="" v-else>
             <div class="name_warp">
@@ -164,6 +164,16 @@ export default {
           type: this.type,
           articleId: this.articleId,
           customerId: v.customerId,
+        },
+      })
+    },
+    //到客户画像
+    goCustomer(val) {
+      console.log(val)
+      this.$router.push({
+        path: '/customerPortrait',
+        query: {
+          name: val.externalUseridIn,
         },
       })
     },

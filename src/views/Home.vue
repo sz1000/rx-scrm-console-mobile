@@ -123,7 +123,7 @@
             </div>
             <p>话术库</p>
           </div>
-          <div class="commonBtn" @click="FnToRouter('/waitDealwith?tab=1')" v-show="menulist.includes('circle')">
+          <div class="commonBtn" @click="FnToRouter('/waitDealwith?tab=2')" v-show="menulist.includes('circle')">
             <div class="huoma ongroup_bg">
               <img src="../assets/svg/pengyouquan.svg" alt="" />
             </div>
