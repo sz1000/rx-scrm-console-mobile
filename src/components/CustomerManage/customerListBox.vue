@@ -22,7 +22,8 @@
           <li class="right-middle">
             <span v-if="(customerType == '3' || customerType == '4' ) && i.stage" :class="{first: i.stage == '沟通洽谈', second: i.stage == '合同签约', third: i.stage == '维护运营', fourth: i.stage == '暂停', fifth: i.stage == '终止'}">{{ i.stage }}</span>
             <span v-if="i.source" :class="{first: customerType == '1' || customerType == '2'}">{{ i.source }}</span>
-            <span v-if="i.customerType">{{ i.customerType }}</span>
+            <span v-if="(customerType == '1' || customerType == '2') && i.clueType">{{ i.clueType }}</span>
+            <span v-if="(customerType == '3' || customerType == '4') && i.customerType">{{ i.customerType }}</span>
             <span v-show="i.customerTagNames && i.customerTagNames.length" v-for="(item, index) in i.customerTagNames" :key="index + item">{{ item }}</span>
           </li>
           <li v-if="customerType == '1' || customerType == '3'" class="right-bottom">
