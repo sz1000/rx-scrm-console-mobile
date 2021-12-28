@@ -2,6 +2,7 @@
     <div class="top_box">
         <div class="customer_card" @click="toFun('detail')">
             <!-- <div class="score">7832分</div> -->
+            <div v-if="fromType == 1 && isPortrait" class="clue-tag">线索</div>
             <div class="info_box">
                 <div class="avatar pointer">
                     <img class="img" :src="customerInfo.avatar | $setAvatar">
@@ -59,6 +60,10 @@ export default {
             type: Array,
             default: () => []
         },
+        isPortrait: {   //是否是客户画像（侧边栏）
+            type: Boolean,
+            default: false
+        },
     },
     computed: {
         personList(){
@@ -104,7 +109,7 @@ export default {
         border-radius: 24px;
         padding: 40px 32px 24px 32px;
         position: relative;
-        .score{
+        .score, .clue-tag{
             width: 136px;
             height: 56px;
             background: linear-gradient(186deg, #76A1FB 0%, #4168F6 100%);
@@ -117,6 +122,9 @@ export default {
             position: absolute;
             top: 0;
             right: 0;
+        }
+        .clue-tag {
+            background: linear-gradient(to right, #FFC029, #FFE153);
         }
         .info_box{
             width: 100%;

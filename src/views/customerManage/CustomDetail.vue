@@ -2,10 +2,8 @@
     <div class="custom-detail">
         <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
         <div class="customer_wrap">
-            <div class="top-box">
-                <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-                <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
-            </div>
+            <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
+            <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
             <div class="nav_box">
                 <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
             </div>
