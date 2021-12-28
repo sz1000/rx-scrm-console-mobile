@@ -250,23 +250,33 @@ export default {
         isHelperTwo() {
             return this.roleObj && this.roleObj.flag == 2 && this.roleObj.permission == 2
         },
+        // 配置按钮权限列表
+        jurisdictionListData() {
+            return {
+                transferCustomer: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn'),
+                changeDirector: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'),
+                opportunityOperation: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business'),
+                giveUp: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'),
+                distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                receive: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'),
+            }
+        },
         // 操作面板弹窗操作按钮权限
         permission() {
             return {
                 writeFollowUp: (this.fromType == 1 || this.fromType == 3) && (this.isInCharge || this.isHelperOne) ? true : false, // 写跟进（type: 1 || 3, 负责人与写权限的协助人）
-                transferCustomer: this.fromType == 1 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn') && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）
-                changeDirector: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change') && this.isInCharge ? true : false, // 变更负责人（type: 1 || 3, 仅负责人）
-                opportunityOperation: this.fromType == 3 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business') && (this.isInCharge || this.isHelperOne) ? true : false, // 操作商机（新增, type: 3, 负责人与写权限的协助人）
-                giveUp: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup') && this.isInCharge ? true : false, // 放弃（type: 1 || 3, 仅负责人）
-                distribution: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot') ? true : false, // 分配（type: 2 || 4, 有按钮权限即可）
-                receive: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get') ? true : false, // 领取（type: 2 || 4, 有按钮权限即可）
+                transferCustomer: this.fromType == 1 && this.jurisdictionListData.transferCustomer && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）
+                changeDirector: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionListData.changeDirector && this.isInCharge ? true : false, // 变更负责人（type: 1 || 3, 仅负责人）
+                opportunityOperation: this.fromType == 3 && this.jurisdictionListData.opportunityOperation && (this.isInCharge || this.isHelperOne) ? true : false, // 操作商机（新增, type: 3, 负责人与写权限的协助人）
+                giveUp: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionListData.giveUp && this.isInCharge ? true : false, // 放弃（type: 1 || 3, 仅负责人）
+                distribution: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionListData.distribution ? true : false, // 分配（type: 2 || 4, 有按钮权限即可）
+                receive: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionListData.receive ? true : false, // 领取（type: 2 || 4, 有按钮权限即可）
                 delete: this.fromType == 1 && this.customerInfo.isWcCus != 1 && this.isInCharge ? true : false, // 删除（客户没有删除，线索有删除（仅负责人 非微信好友可删除））
             }
         },
     },
     mounted(){
         this.getCustomerDetail()
-        this.getUserName()
     },
     methods: {
         goBack() {
@@ -288,6 +298,9 @@ export default {
                     let data = res.data
 
                     this.customerInfo = data.clueCustomerVO
+
+                    this.getUserName()
+
                     this.userList = data.directorList
                     this.tagList = data.tagList
                     this.navList.forEach(el => {
@@ -331,6 +344,8 @@ export default {
             for (let i in this.expandedKeys) {
                 jurisdictionObj[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
             }
+
+            console.log("fromType000", this.fromType)
 
             let type = this.fromType == '1' ? 'myClew' : this.fromType == '2' ? 'commonClew' : this.fromType == '3' ? 'myCustomer' : 'commonCustomer'
 
