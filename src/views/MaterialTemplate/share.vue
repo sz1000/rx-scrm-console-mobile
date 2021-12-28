@@ -159,6 +159,7 @@ export default {
   position: relative;
   .top-fixed {
     width: 100%;
+    z-index: 9;
     position: fixed;
     top: 0;
     left: 0;
