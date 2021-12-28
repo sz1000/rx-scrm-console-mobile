@@ -74,7 +74,7 @@
             <!-- 商机详情 -->
             <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
             <!-- 操作按钮弹窗面板 -->
-            <operation-btn-box ref="operationBtnBox" :fromType="fromType" :permission="permission" @doAction="doAction"></operation-btn-box>
+            <operation-btn-box ref="operationBtnBox" :permission="permission" @doAction="doAction"></operation-btn-box>
             <!-- 放弃或领取或删除 -->
             <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
             <!-- 变更负责人 -->
@@ -252,8 +252,6 @@ export default {
         },
         // 操作面板弹窗操作按钮权限
         permission() {
-            console.log("权限：", this.jurisdictionList)
-            
             return {
                 writeFollowUp: (this.fromType == 1 || this.fromType == 3) && (this.isInCharge || this.isHelperOne) ? true : false, // 写跟进（type: 1 || 3, 负责人与写权限的协助人）
                 transferCustomer: this.fromType == 1 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn') && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）

@@ -22,22 +22,11 @@
 export default {
     name: 'operationBtnBox',
     props: {
-        fromType: {  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
-            default: '0'
-        },
         permission: {
             default() {
                 return {}
             }
         }
-        // jurisdictionList: { // 按钮权限列表
-        //     default() {
-        //         return []
-        //     }
-        // },
-        // isWcCus: { // 是否是企微或微信好友
-        //     default: 1
-        // }
     },
     data() {
         return {
@@ -46,16 +35,16 @@ export default {
     },
     computed: {
         actions() { // 操作按钮列表
-        console.log("权限列表：", this.permission)
+            console.log("权限列表：", this.permission)
             return [
-                { show: true, type: '3', name: '写跟进', code: 'writeFollowUp', iconName: 'writeFollowUp.svg' },
-                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn'), type: '1', name: '转客户', code: 'transferCustomer', iconName: 'transferCustomer.svg' },
-                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'), type: '3', name: '变更负责人', code: 'changeDirector', iconName: 'changeDirector.svg' },
-                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'), type: '3', name: '新增商机', code: 'opportunityOperation', iconName: 'opportunityOperation.svg' },  // 商机
-                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'), type: '3', name: '放弃', code: 'giveUp', iconName: 'giveUp.svg' },
-                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'), type: '4', name: '分配', code: 'distribution', iconName: 'distribution.svg' },
-                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'), type: '4', name: '领取', code: 'receive', iconName: 'receive.svg' },
-                { show: this.isWcCus != 1, type: '0', name: '删除', code: 'delete', iconName: 'delete.svg' },  // 客户没有删除，线索有删除（非微信好友可删除）
+                { type: '3', name: '写跟进', code: 'writeFollowUp', iconName: 'writeFollowUp.svg' },
+                { type: '1', name: '转客户', code: 'transferCustomer', iconName: 'transferCustomer.svg' },
+                { type: '3', name: '变更负责人', code: 'changeDirector', iconName: 'changeDirector.svg' },
+                { type: '3', name: '新增商机', code: 'opportunityOperation', iconName: 'opportunityOperation.svg' },  // 商机
+                { type: '3', name: '放弃', code: 'giveUp', iconName: 'giveUp.svg' },
+                { type: '4', name: '分配', code: 'distribution', iconName: 'distribution.svg' },
+                { type: '4', name: '领取', code: 'receive', iconName: 'receive.svg' },
+                { type: '0', name: '删除', code: 'delete', iconName: 'delete.svg' },  // 客户没有删除，线索有删除（非微信好友可删除）
             ]
         }
     },
