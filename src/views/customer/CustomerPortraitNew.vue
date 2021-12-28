@@ -334,7 +334,13 @@ export default {
         },
         // 获取按钮权限列表
         getJurisdictionList() {
-            this.setName(this.sendUserInfo.permissionList, "/customerManage/myCustomer")
+            let pathname = "/customerManage/myCustomer"
+
+            if (this.fromType == 1 || this.fromType == 2) {
+                pathname = "/customerManage/clues"
+            }
+
+            this.setName(this.sendUserInfo.permissionList, pathname)
 
             let jurisdictionObj = {}
 

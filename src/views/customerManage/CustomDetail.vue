@@ -18,7 +18,7 @@
                 <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
             </div>
             <!-- 打开操作按钮弹窗面板 -->
-            <div v-if="isInCharge || isHelperOne" class="operation-box">
+            <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
                 <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
                     <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
                 </div>
@@ -318,7 +318,13 @@ export default {
         },
         // 获取按钮权限列表
         getJurisdictionList() {
-            this.setName(this.sendUserInfo.permissionList, "/customerManage/myCustomer")
+            let pathname = "/customerManage/myCustomer"
+
+            if (this.fromType == 1 || this.fromType == 2) {
+                pathname = "/customerManage/clues"
+            }
+
+            this.setName(this.sendUserInfo.permissionList, pathname)
 
             let jurisdictionObj = {}
 
@@ -327,7 +333,7 @@ export default {
             }
 
             let type = this.fromType == '1' ? 'myClew' : this.fromType == '2' ? 'commonClew' : this.fromType == '3' ? 'myCustomer' : 'commonCustomer'
-            
+
             this.jurisdictionList = jurisdictionObj[type]
         },
         getCustomerGroupList(){     //获取客户群列表
