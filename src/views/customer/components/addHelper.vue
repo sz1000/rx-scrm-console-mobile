@@ -85,6 +85,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        obj: {
+          type: String,
+          default: ''
+        }
     },
     computed: {
         id(){
@@ -163,7 +167,9 @@ export default {
             }
             user_getUserList(params).then(res => {
                 if(res.result){
-                    this.heperList = res.data.user
+                    this.heperList = res.data.user.filter(item => {
+                      return item.userNo != this.obj.userNo
+                    })
                     this.isHelper = true
                     this.bumenPop = false
                     this.yuangongName = ''

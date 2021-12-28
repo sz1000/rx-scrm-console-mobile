@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- 添加协助人 -->
-        <AddHelper v-model="dialog_add" @sure="getList"></AddHelper>
+        <AddHelper v-model="dialog_add" :obj="obj" @sure="getList"></AddHelper>
     </div>
 </template>
 

@@ -17,7 +17,8 @@
                         </li>
                         <li class="right-bottom">
                             <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
-                            <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString(that) }}</span>
+                            <span v-if="(fromType == 1 || fromType == 3) && i.userName" class="charger one-line">负责人：{{ i | optString }}</span>
+                            <span>{{ i && fromType == 3 && i.userNo == userNo ? '(我)' : ''}}</span>
                         </li>
                     </ul>
                     <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click="doCheck(i.clueCustomerNo)"></div>
@@ -40,7 +41,8 @@
                             </li>
                             <li class="right-bottom">
                                 <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
-                                <span v-if="(fromType == 1 || fromType == 3) && i.userName">负责人：{{ i | optString(that) }}</span>
+                                <span v-if="(fromType == 1 || fromType == 3) && i.userName" class="charger one-line">负责人：{{ i | optString }}</span>
+                                <span>{{ i && fromType == 3 && i.userNo == userNo ? '(我)' : ''}}</span>
                             </li>
                         </ul>
                         <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click="doCheck(i.clueCustomerNo)"></div>
@@ -73,11 +75,10 @@ export default {
         checkedItem: {
             type: String,
             default: ''
-        }
+        },
     },
     data() {
         return {
-            that: this,
             pageLoading: false,
             loading: false,
             finished: false,
@@ -85,21 +86,22 @@ export default {
             limit: 20,
             list: [], // 相似数据
             preciseData: [], // 相同数据
+            that: this,
         }
     },
     watch: {
         preciseData(val) {
             if (val && val.length) {
-                this.$emit('ifHasPreciseData', true)
+                this.ifHasPreciseData(true)
             } else {
-                this.$emit('ifHasPreciseData', false)
+                this.ifHasPreciseData(false)
             }
         }
     },
     computed: {
         ...mapState(["corpId", "userNo"]),
     },
-    inject: ['doCheck'],
+    inject: ['doCheck', 'ifHasPreciseData'],
     methods: {
         formatDate,
         initData() {
@@ -147,8 +149,6 @@ export default {
                 } else {
                     this.$toast(msg)
                 }
-
-                console.log("this.preciseData", this.preciseData)
             })
         },
         onLoad() {
@@ -159,10 +159,8 @@ export default {
         },
     },
     filters: {
-        optString(val, that){
-            let result = val.userName ? val.deptName ? `${val.userName}-${val.deptName}` : val.userName : ''
-
-            return result ? val.userNo && val.userNo == that.userNo ? `${result}(我)` : result : ''
+        optString(val){
+            return val.userName ? val.deptName ? `${val.userName}-${val.deptName}` : val.userName : ''
         },
     },
 }
@@ -282,6 +280,7 @@ export default {
                 }
             }
             .right-bottom {
+                display: flex;
                 margin-top: 8px;
                 span {
                     color: @fontSub1;
@@ -289,6 +288,12 @@ export default {
                     &:first-child {
                         margin-right: 24px;
                     }
+                }
+                .time {
+                    min-width: 130px;
+                }
+                .charger {
+                    max-width: 300px;
                 }
             }
         }

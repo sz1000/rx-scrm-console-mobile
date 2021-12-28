@@ -219,9 +219,6 @@ export default {
             return []
         },
     },
-    created() {
-        console.log('权限列表: ', this.jurisdictionList)
-    },
     mounted(){
         this.getCustomerDetail()
         this.getUserName()
@@ -241,7 +238,9 @@ export default {
             document.querySelector(`#${code}`).scrollIntoView(true); //这里的counter1是将要返回地方的id
         },
         getCustomerDetail(){    //获取客户详情
-            cluecustomer_getClueCustomerByid(this.code, this.clueCustomerNo).then(res => {
+            let clueCustomerNo = this.clueCustomerNo ? this.clueCustomerNo : ''
+
+            cluecustomer_getClueCustomerByid(this.code, clueCustomerNo).then(res => {
                 if (res.result) {
                     let data = res.data
 

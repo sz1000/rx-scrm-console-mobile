@@ -7,7 +7,7 @@
         </div>
         <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
             <!-- 客户动态 -->
-            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="customerInfo.type" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
             <!-- 群聊 -->
@@ -15,10 +15,13 @@
             <!-- 附件 -->
             <enclosure :id="customerInfo.clueCustomerNo" :detailType="customerInfo.type" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
         </div>
-        <!-- 写跟进 -->
-        <div class="follow_up" v-if="navActive == 'dynamics'" @click="openDialog('','follow')">
-            <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+        <!-- 打开操作按钮弹窗面板 -->
+        <div class="operation-box">
+            <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
+                <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+            </div>
         </div>
+
         <!-- 协助人消息输入框 -->
         <message-box v-if="navActive == 'dynamics'" ref="messageBox"></message-box>
         <!-- 协助人选择弹窗 -->
@@ -72,6 +75,12 @@
         <BusinessCard v-model="dialog_card"></BusinessCard>
         <!-- 申请成为协助人 -->
         <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
+        <!-- 操作按钮弹窗面板 -->
+        <operation-btn-box ref="operationBtnBox" :fromType="customerInfo.type" :jurisdictionList="jurisdictionList" :isWcCus="customerInfo && customerInfo.isWcCus" @doAction="doAction"></operation-btn-box>
+        <!-- 放弃或领取或删除 -->
+        <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
+        <!-- 变更负责人 -->
+        <change-director ref="changeDirector" :fromType="customerInfo.type"></change-director>
     </div>
 </template>
 
@@ -89,10 +98,14 @@ import {
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import MessageBox from "@/components/CustomerManage/messageBox"
 import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
+import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
+import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
+import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
+
 export default {
     components: {
-        Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,BusinessCard,
-        Opportunities,MessageBox,RemindersBox
+        Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, ApplyHelp, TopCard, BusinessCard,
+        Opportunities, MessageBox, RemindersBox, GiveUpOrReceive, ChangeDirector, OperationBtnBox
     },
     provide() {
         return {
@@ -106,6 +119,9 @@ export default {
     },
     data(){
         return {
+            expandedKeys: [],
+            jurisdictionList: {}, // 按钮权限列表
+
             id: this.$route.query.id,
             code: this.$route.query.userNo,
             num: this.$route.query.num,
@@ -117,6 +133,13 @@ export default {
             dialog_xzr: false,
             dialog_card: false,
             isApply: false,     //是否已经申请成为协助人 且还未通过
+
+            optionType: '', // 操作类型
+            popContent: {
+                title: '',
+                btnList: [],
+                desList: []
+            },
 
             applyData: {},
 
@@ -187,6 +210,26 @@ export default {
         this.getUserName()
     },
     methods: {
+        // 获取按钮权限列表
+        getJurisdictionList() {
+            this.setName(this.sendUserInfo.permissionList)
+
+            for (let i in this.expandedKeys) {
+                this.jurisdictionList[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
+            }
+            console.log('权限列表111: ', this.jurisdictionList)
+        },
+        setName(datas) {
+            for (var i in datas) {
+                let url = location.pathname
+                if (datas[i].url == url) {
+                    this.expandedKeys = datas[i].childrenList
+                }
+                if (datas[i].childrenList) {
+                    this.setName(datas[i].childrenList)
+                }
+            }
+        },
         isDirectorFun(data){    //是否是相关负责人协助人 及相关数据
             this.dialog_xzr = Number(data.permFlag) ? false : true
             this.isApply = data.isApply ? true : false
@@ -262,6 +305,7 @@ export default {
                     let data = res.data
                     this.showSecret = !data.haveSecret
                     this.sendUserInfo = data && data.userEntity
+                    this.getJurisdictionList()
                 }
             })
         },
@@ -298,6 +342,87 @@ export default {
                     },200)
                 }
             }
+        },
+        // 打开操作弹窗面板
+        showOperationBtnBox() {
+            this.$refs.operationBtnBox.show()
+        },
+        // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除）
+        doAction(type) {
+            this.optionType = type
+            switch (type) {
+                case 'writeFollowUp':    // 写跟进（我的客户、我的线索）
+                    this.openDialog('', 'follow')
+                    break;
+                case 'transferCustomer':    // 转客户（我的线索）
+                    this.$router.push({
+                        path: 'turnCustomer',
+                        query: {
+                            fromType: this.customerInfo.type,
+                            clueCustomerNo: this.customerInfo.clueCustomerNo,
+                            customerCalled: this.customerInfo.customerCalled
+                        },
+                    })
+                    break;
+                case 'giveUp':   // 放弃（我的客户、我的线索）
+                    this.popContent.title = '放弃警告'
+                    this.popContent.btnList = ['是', '否']
+                    this.popContent.desList = ['是否放弃返回公海？', '* 放弃到公海后，此客户数据将属于公共资源，原归属人员不能再维护跟进和更新此客户数据。']
+                    this.$refs.giveUpOrReceive.show()
+                    break;
+                case 'changeDirector':    // 变更负责人（我的客户、我的线索）
+                case 'distribution':    // 分配（客户公海、线索公海）
+                    this.$refs.changeDirector.show(this.customerInfo.clueCustomerNo, type)
+                    break;
+                case 'receive':    // 领取（客户公海、线索公海）
+                    this.popContent.title = '领取提示'
+                    this.popContent.desList = [ this.customerInfo.type == 4 ? '是否确认领取所选择的客户？' : '是否确认领取所选择的线索？', '确认申领该条资源吗？']
+                    this.$refs.giveUpOrReceive.show()
+                    break;
+                case 'delete':    // 删除（ 客户没有删除，我的线索有删除（非微信好友可删除：isWcCus 为 1 即为好友））
+                    this.popContent.title = '温馨提示'
+                    this.popContent.btnList = ['确定', '取消']
+                    this.popContent.desList = [ '是否确认删除并返回？']
+                    this.$refs.giveUpOrReceive.show()
+                    break;
+                default:
+                    break;
+            }
+            this.$refs.operationBtnBox.hide()
+        },
+        // 操作确认
+        doNextOption() {
+            let ApiOpts = null, tips = ''
+
+            if (this.optionType == 'giveUp') {
+                // 放弃
+                ApiOpts = cluecustomer_giveUpType
+                tips = '操作成功'
+            } else if (this.optionType == 'receive') {
+                // 领取
+                ApiOpts = cluecustomer_getclue
+                tips = '领取成功'
+            } else if (this.optionType == 'delete') {
+                // 删除
+                ApiOpts = cluecustomer_delClueCustomer
+                tips = '已删除'
+            }
+
+            let params = {
+                clueCustomerNo: this.customerInfo.clueCustomerNo,
+                type: this.customerInfo.type,
+            }
+
+            ApiOpts(params).then(res => {
+                const { result, msg }  = res
+
+                if (result) {
+                    this.$router.go(-1)
+                    this.$toast(tips)
+                } else {
+                    this.$toast(msg)
+                }
+            })
         },
         openDialog(id,type){  //打开回复弹窗
             this.rowId = id
@@ -423,15 +548,14 @@ export default {
             return true
         },
         toFun(val){
-            let name = '', query = { id: this.customerInfo.clueCustomerNo }
+            let name = '', query = { fromType: this.customerInfo.type }
 
-            if(val == 'helper'){    //查看协助人
+            if (val == 'helper') {    //查看协助人
                 name = 'helper'
-                query.type = this.customerInfo.type
-            }else if(val == 'detail'){    //详情
+                query.id = this.customerInfo.clueCustomerNo
+            } else if (val == 'detail') {    //详情
                 name = 'CustomerDetail'
-                query.fromType = '3'
-                // name = 'informationDetail'
+                query.clueCustomerNo = this.customerInfo.clueCustomerNo
             }
             this.$router.push({ name, query })
         },
@@ -696,5 +820,31 @@ export default {
         height: 40px;
     }
   }
+  .operation-box {
+        width: 5rem;
+        height: 76px;
+        pointer-events: none;
+        position: fixed;
+        bottom: 200px;
+        left: 50%;
+        z-index: 9;
+        .follow_up{
+            width: 76px;
+            height: 76px;
+            background: rgba(0, 0, 0, .4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            position: absolute;
+            right: 24px;
+            top: 0;
+            .icon{
+                width: 40px;
+                height: 40px;
+            }
+        }
+    }
 }
 </style>
