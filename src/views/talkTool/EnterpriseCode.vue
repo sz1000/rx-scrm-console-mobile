@@ -645,12 +645,13 @@ export default {
         position: relative;
         &::after {
           content: '';
-          width: 112px;
-          height: 4px;
-          background: #4168f6;
           position: absolute;
           bottom: -40px;
-          left: 0;
+          left: 25%;
+          width: 56px;
+          height: 8px;
+          background: #4168f6;
+          border-radius: 4px;
         }
       }
     }

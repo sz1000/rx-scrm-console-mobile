@@ -3,36 +3,18 @@
     <div class="top_box">
       <TopTitle title="群活码"></TopTitle>
       <div class="nav_box">
-        <div
-          class="nav"
-          :class="{ cur: item.code == search.type }"
-          v-for="(item, index) in navList"
-          :key="index"
-          @click="navClickFun(item.code)"
-        >
+        <div class="nav" :class="{ cur: item.code == search.type }" v-for="(item, index) in navList" :key="index" @click="navClickFun(item.code)">
           {{ item.name }}
         </div>
         <div class="add_btn" @click="toFun('add')">新增</div>
       </div>
       <div class="search_box">
-        <input
-          class="search"
-          v-model="search.livename"
-          type="text"
-          placeholder="请输入活码名称"
-          @keyup.enter="searchFun"
-        />
+        <input class="search" v-model="search.livename" type="text" placeholder="请输入活码名称" @keyup.enter="searchFun" />
         <div class="search_btn" @click="searchFun">查询</div>
       </div>
     </div>
     <div class="content">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        :immediate-check="false"
-        @load="onLoad"
-      >
+      <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false" @load="onLoad">
         <div class="list">
           <div class="li" v-for="item in list" :key="item.id">
             <div class="li_top">
@@ -57,18 +39,9 @@
                   <img :src="item.address" alt="" />
                 </div>
                 <div class="img_box" :id="'Qrcode' + item.id" v-else>
-                  <VueQrcode
-                    :value="item.address"
-                    :ref="'Qrcode' + item.id"
-                    :options="{ width: '100%' }"
-                    class="qrcode"
-                  ></VueQrcode>
+                  <VueQrcode :value="item.address" :ref="'Qrcode' + item.id" :options="{ width: '100%' }" class="qrcode"></VueQrcode>
                 </div>
-                <div
-                  class="look_btn"
-                  v-if="item.switchStatus"
-                  @click="sendCode(item)"
-                >
+                <div class="look_btn" v-if="item.switchStatus" @click="sendCode(item)">
                   查看二维码
                 </div>
               </div>
@@ -113,11 +86,7 @@
                 <img :src="detail.address" alt="" />
               </div>
               <div class="img_box" v-else>
-                <VueQrcode
-                  :value="detail.address"
-                  :ref="'Qrcode' + detail.id"
-                  class="qrcode"
-                ></VueQrcode>
+                <VueQrcode :value="detail.address" :ref="'Qrcode' + detail.id" class="qrcode"></VueQrcode>
               </div>
             </div>
           </div>
@@ -171,9 +140,9 @@
 </template>
 
 <script>
-import TopTitle from "./components/topTitle.vue";
-import { livecodegroup_getlist, livecodegroup_delete } from "@/api/group";
-import VueQrcode from "@chenfengyuan/vue-qrcode";
+import TopTitle from './components/topTitle.vue'
+import { livecodegroup_getlist, livecodegroup_delete } from '@/api/group'
+import VueQrcode from '@chenfengyuan/vue-qrcode'
 export default {
   components: {
     TopTitle,
@@ -182,13 +151,13 @@ export default {
   data() {
     return {
       navList: [
-        { name: "全部活码", code: "" },
-        { name: "我的活码", code: "1" },
+        { name: '全部活码', code: '' },
+        { name: '我的活码', code: '1' },
       ],
       showAlt: false,
       search: {
-        type: "", //1 我的  '' 全部
-        livename: "",
+        type: '', //1 我的  '' 全部
+        livename: '',
         page: 1,
         limit: 10,
       },
@@ -200,79 +169,79 @@ export default {
       loading: false,
       noListLoading: false,
       dialog_code: false,
-      codeDialogAddress: "",
+      codeDialogAddress: '',
       nowData: {},
-    };
+    }
   },
   mounted() {
     // this.getList()
   },
   created() {
-    this.getList();
+    this.getList()
   },
   methods: {
     onLoad() {
-      console.log("load");
-      this.getList();
+      console.log('load')
+      this.getList()
     },
     navClickFun(id) {
-      this.search.type = id;
-      this.searchFun();
+      this.search.type = id
+      this.searchFun()
     },
     getList() {
       //获取活码列表
-      let _self = this;
+      let _self = this
       livecodegroup_getlist(this.search, this.noListLoading).then((res) => {
         if (res.result) {
-          console.log("getList", this.list, _self.list);
-          console.log("search.page", this.search.page, _self.search.page);
-          this.noListLoading = true;
+          console.log('getList', this.list, _self.list)
+          console.log('search.page', this.search.page, _self.search.page)
+          this.noListLoading = true
           let list = res.data.iPage.records,
-            total = res.data.iPage.total;
-          this.loading = false;
+            total = res.data.iPage.total
+          this.loading = false
           if (this.search.page == 1) {
-            this.list = [];
+            this.list = []
           }
-          this.search.page++;
-          this.list = this.list.concat(list);
-          this.total = total;
+          this.search.page++
+          this.list = this.list.concat(list)
+          this.total = total
           if (this.list.length >= total) {
-            this.finished = true;
+            this.finished = true
           } else {
-            this.finished = false;
+            this.finished = false
           }
         }
-      });
+      })
     },
     // 取消
     Clickcancel() {
-      this.showAlt = false;
+      this.showAlt = false
     },
 
     deleteFun(row) {
-      this.showAlt = true;
+      this.showAlt = true
       //删除活码
-        this.$dialog
-      .confirm({
-        title: "温馨提示",
-        message: "是否确认删除",
-      })
-      .then(() => {
-        console.log("yes");
-      let _data = {
-        livecodeNo: row.livecodeNo,
-      };
-        livecodegroup_delete(_data).then((res) => {
-          if (res.result) {
-            this.search.page--;
-            this.getList();
+      this.$dialog
+        .confirm({
+          title: '温馨提示',
+          message: '是否确认删除',
+        })
+        .then(() => {
+          console.log('yes')
+          let _data = {
+            livecodeNo: row.livecodeNo,
           }
-        });
-      })
-      .catch(() => {
-        // on cancel
-        console.log("cancel");
-      });
+          livecodegroup_delete(_data).then((res) => {
+            if (res.result) {
+              this.search.page--
+              this.getList()
+            }
+          })
+        })
+        .catch(() => {
+          // on cancel
+          console.log('cancel')
+        })
     },
     // 确定
     // Addconfirm() {
@@ -286,67 +255,67 @@ export default {
     // },
     openDetail(row) {
       //详情
-      this.detail = row;
-      this.dialog = true;
+      this.detail = row
+      this.dialog = true
     },
     sendCode(item) {
       //查看二维码
-      console.log("item", item);
-      var a = document.createElement("a");
-      a.download = "";
+      console.log('item', item)
+      var a = document.createElement('a')
+      a.download = ''
       if (item.switchStatus) {
-        a.href = item.address;
-        a.click();
+        a.href = item.address
+        a.click()
       } else {
-        let p = "Qrcode" + item.id;
-        let canvas = document.getElementById(p).getElementsByTagName("canvas");
-        a.href = canvas[0].toDataURL("img/png");
+        let p = 'Qrcode' + item.id
+        let canvas = document.getElementById(p).getElementsByTagName('canvas')
+        a.href = canvas[0].toDataURL('img/png')
         // console.log(canvas[0].toDataURL('img/png'))
         // a.download = '二维码'
-        a.click();
+        a.click()
       }
     },
     toFun(type, row) {
-      let _url = "",
-        _query = null;
+      let _url = '',
+        _query = null
       switch (type) {
-        case "add":
-          _url = "/talkTool/groupCodeAdd";
-          break;
-        case "edit":
-          _url = "/talkTool/groupCodeAdd";
+        case 'add':
+          _url = '/talkTool/groupCodeAdd'
+          break
+        case 'edit':
+          _url = '/talkTool/groupCodeAdd'
           _query = {
             id: row.livecodeNo,
-          };
-          localStorage.setItem("groupCodeDetail", JSON.stringify(row));
-          break;
-        case "delete":
-          _url = "";
-          break;
+          }
+          localStorage.setItem('groupCodeDetail', JSON.stringify(row))
+          break
+        case 'delete':
+          _url = ''
+          break
         default:
-          break;
+          break
       }
       this.$router.push({
         path: _url,
         query: _query,
-      });
+      })
     },
     searchFun() {
-      this.search.page = 1;
-      this.noListLoading = false;
-      this.getList();
+      this.search.page = 1
+      this.noListLoading = false
+      this.getList()
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
-@import "~@/styles/color.less";
+@import '~@/styles/color.less';
 
 .list_wrap {
-    .van_warp{
-        overflow: hidden;
-    }
+  .van_warp {
+    overflow: hidden;
+  }
   .alten_box {
     background: rgba(#000, 0.5);
     position: fixed;
@@ -509,12 +478,24 @@ export default {
         color: @fontSub2;
         padding: 37.5px 0;
         font-weight: 550;
+
         &:last-child {
           margin-right: 0;
         }
         &.cur {
+          position: relative;
           color: @main;
-          border-bottom: 4px solid @main;
+          // border-bottom: 4px solid @main;
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 56px;
+            height: 8px;
+            background: #4168f6;
+            border-radius: 4px;
+          }
         }
       }
     }
@@ -533,10 +514,10 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       &::before {
-        content: "";
+        content: '';
         width: 32px;
         height: 32px;
-        background: url("../../../images/icon_add@2x.png") no-repeat;
+        background: url('../../../images/icon_add@2x.png') no-repeat;
         background-size: 100%;
         position: absolute;
         left: 16px;
