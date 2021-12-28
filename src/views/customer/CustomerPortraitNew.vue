@@ -274,7 +274,7 @@ export default {
             // 'woyPDZEQAAWRYc71z2QntxYx_vCx96zg'  //跟进记录
             // 'woyPDZEQAA_MAhjlSBaGyeqbpxB2rkxA'  //拜访客户
             // 'woyPDZEQAAW1UxaUrQ1LIgmDZ_5YfNjw'  //商机
-            cluecustomer_getClueCustomerByid(id).then(res => {
+            cluecustomer_getClueCustomerByid(id, '').then(res => {
                 if(res.result){
                     let data = res.data
                     this.isDirectorFun(data)
@@ -553,6 +553,7 @@ export default {
             if (val == 'helper') {    //查看协助人
                 name = 'helper'
                 query.id = this.customerInfo.clueCustomerNo
+                query.isPortrait = true
             } else if (val == 'detail') {    //详情
                 name = 'CustomerDetail'
                 query.clueCustomerNo = this.customerInfo.clueCustomerNo

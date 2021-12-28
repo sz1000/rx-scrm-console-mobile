@@ -86,13 +86,12 @@ export default {
             default: false,
         },
         obj: {
-          type: String,
           default: ''
         }
     },
     computed: {
         id(){
-            let str = localStorage.getItem('customerId') ? localStorage.getItem('customerId') : ''
+            let str = this.$route.query.id ? this.$route.query.id : ''
             return str
         },
     },
@@ -141,7 +140,7 @@ export default {
             let params = {
                 clueCustomerNo: this.id,
                 userList: this.oneList,
-                type: this.$route.query.type
+                type: this.$route.query.fromType
             }
             clueCustomerFollowUser_addFollowUser(params).then(res => {
                 if(res.result){
