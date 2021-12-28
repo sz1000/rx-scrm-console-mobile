@@ -94,12 +94,12 @@ export default {
   methods: {
     //到客户画像
     goCustomer() {
-      console.log(this.customerObj)
+      // console.log(this.customerObj)
       this.$router.push({
-        path: '/customerPortrait',
+        path: '/customerManage/customDetail',
         query: {
-          // userNo: val.customerNo,
-          name: this.customerObj.externalUseridIn,
+          userNo: this.customerObj.externalUseridIn || '',
+          clueCustomerNo: this.customerObj.customerNo,
         },
       })
     },
@@ -318,7 +318,7 @@ export default {
         justify-content: center;
         margin-left: 16px;
         h3 {
-          width: 70%;
+          width: 538px;
           font-size: 28px;
           color: #262626;
           overflow: hidden;

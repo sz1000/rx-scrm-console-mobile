@@ -90,18 +90,19 @@
         <van-search v-model="searchValue" placeholder="标题/内容" @blur='fnSearch(2)' />
       </div>
       <div class="searchInput search_tab2">
-        <div class="select_date" @click="showPicker=true">
+        <div class="select_date">
           <img src="../../images/date_pick.png" alt="">
-          <div v-if="startDate&&endDate" class="time_sty">
+          <div v-if="startDate&&endDate" class="time_sty" @click="showPicker=true">
             <span>{{startDate}}</span>
             至
             <span>{{endDate}}</span>
           </div>
-          <div v-else class="time_sty">
+          <div v-else class="time_sty" @click="showPicker=true">
             <span>开始时间</span>
             -
             <span>结束时间</span>
           </div>
+          <img src="../../images/close.png" alt="" class="close_icon" v-if="startDate&&endDate" @click="clearTime" />
         </div>
         <div class="select_box" @click="filterCard">
           <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
@@ -284,6 +285,12 @@ export default {
     this.getDataList()
   },
   methods: {
+    // 清除时间
+    clearTime() {
+      this.startDate = ''
+      this.endDate = ''
+      this.getDataList()
+    },
     // 打开未发表弹框
     fnShowPublish(value) {
       this.showPubish = true
@@ -497,6 +504,7 @@ export default {
       border-radius: 8px;
       display: flex;
       align-items: center;
+      position: relative;
       .time_sty {
         margin-left: 16px;
         font-size: 28px;
@@ -514,6 +522,11 @@ export default {
       img {
         width: 28px;
         height: 28px;
+      }
+      .close_icon {
+        position: absolute;
+        right: 8px;
+        // display: none;
       }
     }
 
