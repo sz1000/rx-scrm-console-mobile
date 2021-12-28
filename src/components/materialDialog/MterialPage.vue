@@ -301,7 +301,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,

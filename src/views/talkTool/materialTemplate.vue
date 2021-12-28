@@ -117,7 +117,7 @@
                 <div class="share_img">
                   <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 1" @click="fnShare(i,type)" />
                   <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 2"
-                       @click="sendChatMessage('image', false, '', i.mediaId)" />
+                       @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.posterId}&type=2&userNo=${userNo}`, 'title': i.posterName, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.posterName, 'imgUrl': i.posterUrl ? i.posterUrl : 'https://h5.jzcrm.com/static/img/default_pdf.png' })" />
 
                   <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
                 </div>
@@ -283,6 +283,7 @@ export default {
     fnShare(val, type) {
       this.showShare = true
       this.shareObj = val
+      console.log(val)
     },
     onCancel() {
       this.showShare = false
@@ -572,7 +573,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -793,7 +794,8 @@ export default {
           }
         }
         .right {
-          width: 88%;
+          width: 100%;
+          // width: 88%;
           background: #f7f7f7;
           padding: 16px;
           box-sizing: border-box;
@@ -980,6 +982,7 @@ export default {
     align-items: center;
     padding: 0 32px;
     cursor: pointer;
+    z-index: 10;
     .icon_img {
       display: flex;
       align-items: center;

@@ -36,7 +36,9 @@
       </div>
       <div class="friend_warp">
         <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈</div>
-        <div class="published_btn" @click="shareToMoments">发表朋友圈</div>
+        <div class="published_btn" @click="shareToMoments">
+          <span>发表朋友圈</span>
+        </div>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='item.id'>
@@ -108,7 +110,9 @@
       </div>
       <div class="friend_warp">
         <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
-        <div class="published_btn" @click="creatFriend">创建朋友圈任务</div>
+        <div class="published_btn" @click="creatFriend">
+          <span>创建朋友圈任务</span>
+        </div>
       </div>
       <div class="custom_content">
         <div class="card_box" v-for="(item,index) in cardList" :key='item.id'>
@@ -473,22 +477,25 @@ export default {
       }
     }
     .select_date {
-      padding: 20px 16px;
+      padding: 0 16px;
       width: 332px;
-      // height: 68px;
-      // line-height: 68px;
       background: #f7f7f7;
       border-radius: 8px;
       display: flex;
+      align-items: center;
       .time_sty {
         margin-left: 16px;
         font-size: 28px;
         font-weight: 400;
         color: #c0c4cc;
-        line-height: 28px;
-        height: 30px;
+        line-height: 68px;
+        height: 68px;
         overflow: hidden;
         white-space: nowrap;
+        span {
+          display: inline-block;
+          line-height: 28px;
+        }
       }
       img {
         width: 28px;
@@ -571,13 +578,14 @@ export default {
     .published_btn {
       // width: 220px;
       // height: 64px;
-      // line-height: 64px;
+      display: flex;
+      align-items: center;
       padding: 0 32px;
       background: #4168f6;
       border-radius: 32px;
       color: #fff;
       font-size: 28px;
-      text-align: center;
+      // text-align: center;
     }
   }
   .inputPerson {
@@ -693,17 +701,25 @@ export default {
         }
         .right_btm {
           display: flex;
+          align-items: center;
           .sure_btn {
-            display: inline-block;
+            display: flex;
+            align-items: center;
             border: 1px solid #4168f6; /* no */
             color: #4168f6;
             font-size: 20px;
-            padding: 0 16px;
+            // height: 36px;
+            // line-height: 30px;
+            padding: 2px 6px;
           }
           .over_pub {
+            display: flex;
+            align-items: center;
+            // height: 36px;
+            // line-height: 36px;
             border: 1px solid #b3b3b3; /* no */
             font-size: 20px;
-            padding: 0 16px;
+            padding: 2px 16px;
           }
           .user_name {
             display: inline-block;
