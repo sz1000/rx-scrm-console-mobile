@@ -10,7 +10,7 @@
       </div>
       <div class="material-tab">
         <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人素材库</div>
-        <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业素材库</div>
+        <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">公共素材库</div>
       </div>
       <ul class="header-nav">
         <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章</span></li>
@@ -693,7 +693,7 @@ export default {
     }
     .active {
       background: @white;
-      border: 2px solid @main; /* no */
+      border: 1px solid @main; /* no */
       span {
         color: @main;
       }

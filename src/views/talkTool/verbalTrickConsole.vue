@@ -250,26 +250,68 @@
                 }}</i>条消息
               </div>
               <div class="pup_share_wrap">
-                <div class="share_box" v-for="(el, i) in item.promptList" :key="i">
-                  <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
-                  <div class="s_val" v-if="!el.url">
-                    <div class="des">{{ el.content }}</div>
-                  </div>
-                  <div class="s_val" v-if="el.fileName">
-                    <div class="img_row">
-                      <div class="img_box">
+                <div  v-for="(el, i) in item.promptList" :key="i">
+                  <div v-if="el.objectName == 1" class="share_box">
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                    <div class="s_val" v-if="!el.url">
+                      <div class="des">{{ el.content }}</div>
+                    </div>
+                    <div class="s_val" v-if="el.fileName">
+                      <div class="img_row">
+                        <div class="img_box">
                         <img :src="el.url" alt="" />
-                      </div>
-                      <div class="info_r">
-                        <div class="name">{{ el.fileName }}</div>
-                        <div class="size">{{ el.fileSize }}</div>
+                        </div>
+                        <div class="info_r">
+                          <div class="name">{{ el.fileName }}</div>
+                          <div class="size">{{ el.fileSize }}</div>
+                        </div>
                       </div>
                     </div>
+                    <div class="s_val" v-if="el.url && !el.fileName">
+                      <div class="share_link">{{ el.url }}</div>
+                    </div> -->
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                   <div class="s_val">
+                      <div class="img_row">
+                        <div class="img_box">
+                        <img :src="el.cover" alt="" />
+                        </div>
+                        <div class="info_r">
+                          <div class="name">{{ el.title }}</div>
+                          <!-- <div class="size">{{ el.fileSize }}</div> -->
+                        </div>
+                      </div>
                   </div>
-                  <div class="s_val" v-if="el.url && !el.fileName">
-                    <div class="share_link">{{ el.url }}</div>
+                 </div>
+                  <div v-if="el.objectName == 2" class="share_box">
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                     <div class="s_val">
+                      <div class="img_row">
+                        <div class="img_box">
+                        <img :src="el.cover" alt="" />
+                        </div>
+                        <div class="info_r">
+                          <div class="name">{{ el.title }}</div>
+                          <!-- <div class="size">{{ el.fileSize }}</div> -->
+                        </div>
+                      </div>
                   </div>
-                </div>
+                 </div>
+                  <div v-if="el.objectName == 3" class="share_box">
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                     <div class="s_val">
+                      <div class="img_row">
+                        <div class="img_box">
+                        <img :src="el.url" alt="" />
+                        </div>
+                        <div class="info_r">
+                          <div class="name">{{ el.fileName }}</div>
+                          <!-- <div class="size">{{ el.fileSize }}</div> -->
+                        </div>
+                      </div>
+                  </div>
+                 </div>
+                 </div>
               </div>
             </div>
           </div>
@@ -410,7 +452,7 @@ export default {
       if (this.userId) {
         m_cluecustomer_getClueCustomerByid(this.userId).then((res) => {
           if (res.result) {
-            let data = res.data.clueCustomerVO.id
+            let data = res.data.clueCustomerVO.id 
             this.getPersonalSopTip(data)
           }
           // this.getPersonalSopTip(1)
@@ -1039,7 +1081,7 @@ export default {
         margin-bottom: 24px;
         padding: 24px;
         &:last-child {
-          margin-bottom: 0;
+          // margin-bottom: 0;
         }
         .line_title {
           font-size: 28px;
@@ -1431,12 +1473,13 @@ export default {
       position: relative;
       &::after {
         content: '';
-        width: 112px;
-        height: 4px;
-        background: #4168f6;
         position: absolute;
         bottom: -40px;
-        left: 0;
+        left: 30%;
+        width: 56px;
+        height: 8px;
+        background: #4168f6;
+        border-radius: 4px;
       }
     }
   }

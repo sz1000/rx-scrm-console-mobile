@@ -123,7 +123,7 @@
             </div>
             <p>话术库</p>
           </div>
-          <div class="commonBtn" @click="FnToRouter('/waitDealwith?tab=1')" v-show="menulist.includes('circle')">
+          <div class="commonBtn" @click="FnToRouter('/waitDealwith?tab=2')" v-show="menulist.includes('circle')">
             <div class="huoma ongroup_bg">
               <img src="../assets/svg/pengyouquan.svg" alt="" />
             </div>
@@ -642,11 +642,12 @@ export default {
   width: 750px;
   padding-bottom:constant(safe-area-inset-bottom); 
   padding-bottom: env(safe-area-inset-bottom);
+  background-color: #fff;
 
 
   .bottom-warp {
-    border-top: 1px solid #e6e6e6;
-    border-bottom: 1px solid #f0f2f7;
+    // border-top: 1px solid #e6e6e6;
+    // border-bottom: 1px solid #f0f2f7;
     height: 112px;
     background: #fff;
     display: flex;

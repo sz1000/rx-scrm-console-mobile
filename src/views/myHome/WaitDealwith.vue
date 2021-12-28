@@ -7,10 +7,10 @@
       </div>
       <span class="textTitle">企微朋友圈</span>
     </div>
-    <div class="nav_tab">
+    <!-- <div class="nav_tab">
       <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人发表</div>
       <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业发表</div>
-    </div>
+    </div> -->
     <section v-if="tab==1">
       <div class="search_company inputPerson">
         <van-search v-model="searchValue" placeholder="标题/内容" @blur='fnSearch(1)' />
@@ -90,18 +90,19 @@
         <van-search v-model="searchValue" placeholder="标题/内容" @blur='fnSearch(2)' />
       </div>
       <div class="searchInput search_tab2">
-        <div class="select_date" @click="showPicker=true">
+        <div class="select_date">
           <img src="../../images/date_pick.png" alt="">
-          <div v-if="startDate&&endDate" class="time_sty">
+          <div v-if="startDate&&endDate" class="time_sty" @click="showPicker=true">
             <span>{{startDate}}</span>
             至
             <span>{{endDate}}</span>
           </div>
-          <div v-else class="time_sty">
+          <div v-else class="time_sty" @click="showPicker=true">
             <span>开始时间</span>
             -
             <span>结束时间</span>
           </div>
+          <img src="../../images/close.png" alt="" class="close_icon" v-if="startDate&&endDate" @click="clearTime" />
         </div>
         <div class="select_box" @click="filterCard">
           <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
@@ -109,7 +110,10 @@
         </div>
       </div>
       <div class="friend_warp">
-        <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
+        <div class="total_box" v-if="tabName == 0">
+          共<span>{{cardList.length}}</span>条朋友圈,<span>{{sendSum}}</span>人未发表
+        </div>
+        <div class="total_box" v-if="tabName == 1">共<span>{{cardList.length}}</span>条朋友圈</div>
         <div class="published_btn" @click="creatFriend">
           <span>创建朋友圈任务</span>
         </div>
@@ -188,7 +192,11 @@
             <span>({{popupList.length}})</span>
           </div>
           <div class="search_popup">
-            <van-field v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
+            <van-field v-model="valPopup" placeholder="员工姓名/手机号码" @keyup.enter='searchUser'>
+              <template #right-icon>
+                <van-icon name="search" @click="searchUser" />
+              </template>
+            </van-field>
             <div class="select_box_p" @click="popupSendShow">
               <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
               <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showPopupSelect}" />
@@ -237,6 +245,7 @@ export default {
       currentDate: new Date(),
       startDate: '',
       endDate: '',
+      // tab: 2,
       tab: this.$route.query.tab,
       cardList: [],
       showFilter: false,
@@ -254,6 +263,7 @@ export default {
       popupname: 0,
       showPopupSelect: false,
       itemObj: {},
+      sendSum: '',
     }
   },
   computed: {
@@ -275,6 +285,12 @@ export default {
     this.getDataList()
   },
   methods: {
+    // 清除时间
+    clearTime() {
+      this.startDate = ''
+      this.endDate = ''
+      this.getDataList()
+    },
     // 打开未发表弹框
     fnShowPublish(value) {
       this.showPubish = true
@@ -333,7 +349,8 @@ export default {
 
       friendSend(params).then((res) => {
         // this.cardList = res.data.page.records
-        this.cardList = res.data
+        this.cardList = res.data.voList
+        this.sendSum = res.data.sendSum
         // if (this.cardList.length > 0) {
         //   this.cardList.forEach(item=>{
 
@@ -353,6 +370,10 @@ export default {
           this.popupList = res.data.records
         }
       })
+    },
+    // 弹框内查询
+    searchUser() {
+      this.getListPopup()
     },
     goBack() {
       this.$router.go(-1)
@@ -483,6 +504,7 @@ export default {
       border-radius: 8px;
       display: flex;
       align-items: center;
+      position: relative;
       .time_sty {
         margin-left: 16px;
         font-size: 28px;
@@ -500,6 +522,11 @@ export default {
       img {
         width: 28px;
         height: 28px;
+      }
+      .close_icon {
+        position: absolute;
+        right: 8px;
+        // display: none;
       }
     }
 
