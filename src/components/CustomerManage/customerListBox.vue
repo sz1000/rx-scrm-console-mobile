@@ -43,11 +43,6 @@ import { throttle, formatDate } from '@/utils/tool'
 export default {
   name: 'customerListBox',
   props: {
-    jurisdictionList: { // 按钮权限列表
-      default() {
-        return {}
-      }
-    },
     customerType: {  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
       default: 0,
     },
@@ -122,11 +117,9 @@ export default {
     },
     // 去往客户详情
     goDetail(item) {
-      let type = this.customerType == '1' ? 'myClew' : this.customerType == '2' ? 'commonClew' : this.customerType == '3' ? 'myCustomer' : 'commonCustomer'
-
       this.$router.push({
         path: 'customDetail',
-        query: { fromType: this.customerType, userNo: item.externalUseridIn, clueCustomerNo: item.clueCustomerNo, jurisdictionList: JSON.stringify(this.jurisdictionList[type]) },
+        query: { userNo: item.externalUseridIn, clueCustomerNo: item.clueCustomerNo},
       })
     },
   },
