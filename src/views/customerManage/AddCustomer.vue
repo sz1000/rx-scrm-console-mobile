@@ -183,6 +183,12 @@ export default {
             sourceRequired: false,
 
             showNameSearch: true, // 是否显示名称搜索页
+
+            tips: { 
+                customerCalled: '请输入客户名称', 
+                source: '请选择客户来源',
+                name: '请输入联系人',
+            }
         }
     },
     computed: {
@@ -367,17 +373,14 @@ export default {
         checkForm() {
             const { customerCalled, name, source } = this.form
 
-            if (!customerCalled) {
-                this.customerCalledRequired = true
-                return false
-            }
-            if (!name) {
-                this.nameRequired = true
-                return false
-            }
-            if (!source) {
-                this.sourceRequired = true
-                return false
+            let arrObj = { customerCalled, name, source }
+
+            for (let i in arrObj) {
+                if (!arrObj[i] || arrObj[i] && !arrObj[i].length) {
+                    this[i + 'Required'] = true
+                    this.$toast(this.tips[i])
+                    return false
+                }
             }
 
             return true
