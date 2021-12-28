@@ -154,7 +154,7 @@
               <span v-show="item.depId"> -{{item.depId}}</span>
             </div>
           </div>
-          <div class="no_publish" @click="fnShowPublish(item)" v-if="!tabName">
+          <div class="no_publish" @click="fnShowPublish(item)">
             <div class="left">
               <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userList.slice(0,3)" :key="itemChi.id" v-show="itemChi.avatar">
               <div class="text_name" v-for="(itemChi,index) in item.userList.slice(0,3)" :key="itemChi.corpId">
