@@ -8,6 +8,10 @@
         </div>
         <span class="textTitle">从素材库选择</span>
       </div>
+       <div class="material-tab">
+        <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人素材库</div>
+        <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业素材库</div>
+      </div>
       <ul class="header-nav">
         <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
         <li @click="changeNav(2)" :class="{active: type == 2}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
@@ -138,6 +142,7 @@ export default {
   data() {
     return {
       type: 1,
+      tab: 1,
       centquer: {},
       indexps: 1000000,
       articleList: [],
@@ -193,6 +198,12 @@ export default {
   methods: {
     goBack() {
       this.$emit('sureTab', 0)
+    },
+    tabClick(val) {
+      this.tab = val
+      this.type = 1
+      this.initPage(this.type)
+      this.getList()
     },
     cancel() {
       this.$emit('sureTab', 0)
@@ -284,13 +295,18 @@ export default {
       this.getList()
     },
     getList(title) {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 0,
-        loadingType: 'spinner',
-      })
-
+      if (
+        (this.type == 1 && this.articleListPage == 1) ||
+        (this.type == 2 && this.saleListPage == 1) ||
+        (this.type == 3 && this.posterListPage == 1)
+      ) {
+        this.$toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 0,
+          loadingType: 'spinner',
+        })
+      }
       let ApiOpts = ArticleList
 
       let params = {
@@ -513,6 +529,34 @@ export default {
       span {
         color: @main;
         border-bottom: 4px solid @main;
+      }
+    }
+  }
+    .material-tab {
+    height: 88px;
+    line-height: 88px;
+    display: flex;
+    font-size: 28px;
+    justify-content: space-between;
+    border-bottom: 1px solid #e6e6e6;
+    .nomalText {
+      color: #838a9d;
+      width: 375px;
+      text-align: center;
+    }
+    .active {
+      color: #3c4353;
+      font-weight: bold;
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 43%;
+        width: 56px;
+        height: 8px;
+        background: #4168f6;
+        border-radius: 4px;
       }
     }
   }

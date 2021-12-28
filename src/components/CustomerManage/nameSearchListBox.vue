@@ -16,7 +16,7 @@
                             </div>
                         </li>
                         <li class="right-bottom">
-                            <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
+                            <span class="time">{{ i.createTime | $time('YYYY-MM-DD') }}</span>
                             <span v-if="(fromType == 1 || fromType == 3) && i.userName" class="charger one-line">负责人：{{ i | optString }}</span>
                             <span>{{ i && fromType == 3 && i.userNo == userNo ? '(我)' : ''}}</span>
                         </li>
@@ -40,7 +40,7 @@
                                 </div>
                             </li>
                             <li class="right-bottom">
-                                <span class="time">{{ i.createTime ? formatDate(i.createTime, 'yyyy-MM-dd') : '' }}</span>
+                                <span class="time">{{ i.createTime | $time('YYYY-MM-DD') }}</span>
                                 <span v-if="(fromType == 1 || fromType == 3) && i.userName" class="charger one-line">负责人：{{ i | optString }}</span>
                                 <span>{{ i && fromType == 3 && i.userNo == userNo ? '(我)' : ''}}</span>
                             </li>
@@ -59,13 +59,15 @@
 </template>
 <script>
 import { cluecustomer_elasticSearch } from '@/api/customer'
-import { throttle, formatDate } from '@/utils/tool'
 import { mapState } from 'vuex'
 
 export default {
     name: 'customerListBox',
     props: {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
+            default: 0
+        },
+        customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: 0
         },
         searchParam: {
@@ -103,7 +105,6 @@ export default {
     },
     inject: ['doCheck', 'ifHasPreciseData'],
     methods: {
-        formatDate,
         initData() {
             Object.assign(this.$data, this.$options.data())
         },
@@ -129,6 +130,7 @@ export default {
                 searchParam: this.searchParam,
                 corpId: this.corpId,
                 isFriend: this.fromType == 2 ? '0' : '',
+                type: this.fromType == 3 ? '3' : this.customerType
             }
 
             cluecustomer_elasticSearch(params).then(res => {
@@ -281,6 +283,7 @@ export default {
             }
             .right-bottom {
                 display: flex;
+                align-items: center;
                 margin-top: 8px;
                 span {
                     color: @fontSub1;

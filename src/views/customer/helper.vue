@@ -5,7 +5,7 @@
             <div class="title">跟进人</div>
         </div>
         <div class="content">
-            <div class="item_box" v-if="!this.fromType && obj">
+            <div class="item_box" v-if="obj">
                 <div class="tit">负责人</div>
                 <div class="item trans">
                     <img class="avatar" :src="obj.avatar | $setAvatar" alt="">

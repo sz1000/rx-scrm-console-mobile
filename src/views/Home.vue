@@ -186,12 +186,12 @@
         <div class="routerbtn" @click="handelChangeHome(false)">
           <img src="../images/bg_y.png" alt="" v-show="showHome" />
           <img src="../images/bg_gy.png" alt="" v-show="!showHome" />
-          <span :class="showHome ? '' : 'textname'">互动助手</span>
+          <span :class="showHome ? '' : 'textname'">工作面板</span>
         </div>
         <div class="routerbtn" @click="handelChangeHome(true)">
           <img src="../images/bg_g.png" alt="" v-show="!showHome" />
           <img src="../images/bg_m.png" alt="" v-show="showHome" />
-          <span :class="showHome ? 'textname' : ''">工作面板</span>
+          <span :class="showHome ? 'textname' : ''">应用中心</span>
         </div>
       </div>
     </div>
@@ -640,6 +640,11 @@ export default {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   width: 750px;
+  padding-bottom:constant(safe-area-inset-bottom); 
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: #fff;
+
+
   .bottom-warp {
     border-top: 1px solid #e6e6e6;
     border-bottom: 1px solid #f0f2f7;

@@ -1,7 +1,7 @@
 <template>
     <div class="customer_wrap" :class="{'glass':dialog_xzr}">
         <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-        <TopCard :fromType="customerInfo.type" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+        <TopCard :fromType="customerInfo.type" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" isPortrait @jump="toFun"></TopCard>
         <div class="nav_box">
             <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
         </div>
@@ -274,7 +274,7 @@ export default {
             // 'woyPDZEQAAWRYc71z2QntxYx_vCx96zg'  //跟进记录
             // 'woyPDZEQAA_MAhjlSBaGyeqbpxB2rkxA'  //拜访客户
             // 'woyPDZEQAAW1UxaUrQ1LIgmDZ_5YfNjw'  //商机
-            cluecustomer_getClueCustomerByid(id).then(res => {
+            cluecustomer_getClueCustomerByid(id, '').then(res => {
                 if(res.result){
                     let data = res.data
                     this.isDirectorFun(data)

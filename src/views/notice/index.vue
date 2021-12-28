@@ -13,7 +13,10 @@
         <div class="item_title">{{ taskType == 2 ? "客户群" : "客户" }}</div>
         <div class="item_val">
           <div class="info_box">
-            <div class="avatar">{{ avatar }}</div>
+             <div  class="avatar" v-if="detail.customerPortrait">
+               <img :src="detail.customerPortrait" alt="">
+             </div>
+            <div class="avatar" v-else>{{ avatar }}</div>
             <div class="info">
               <div class="name">
                 {{ detail.customerContactName }}
@@ -40,11 +43,11 @@
         <div class="item_val">
           <div class="file_box">
             <div class="img_box">
-              <img src="@/assets/images/icon_link.png" alt="" />
+              <img :src="detail.materialCover" alt="" />
             </div>
             <div class="val">
               <div class="tit">{{ detail.materialTitle }}</div>
-              <div class="sub_tit">{{ detail.materialUrl }}</div>
+              <!-- <div class="sub_tit">{{ detail.materialUrl }}</div> -->
             </div>
           </div>
         </div>
@@ -53,10 +56,10 @@
         <div class="item_title">推送内容</div>
         <div class="item_val">
           <div class="share_box" v-for="(el, index) in list" :key="index">
-            <div class="s_val" v-if="!el.url">
+            <!-- <div class="s_val" v-if="!el.url">
               <div class="des">{{ el.attachmentName }}</div>
             </div>
-            <div class="s_val" v-if="el.fileName">
+             <div class="s_val" v-if="el.fileName">
               <div class="img_row">
                 <div class="img_box">
                   <img :src="el.url" alt="" />
@@ -69,7 +72,46 @@
             </div>
             <div class="s_val" v-if="el.url && !el.fileName">
               <div class="share_link">{{ el.url }}</div>
+            </div> -->
+            <div class="s_val" v-if="!el.objectName">
+              <div class="des">{{ el.attachmentName }}</div>
             </div>
+             <div class="s_val" v-if="el.objectName == 1">
+              <div class="img_row">
+                <div class="img_box">
+                  <img :src="el.cover" alt="" />
+                </div>
+                <div class="info_r">
+                  <div class="name">{{ el.url }}</div>
+                  <!-- <div class="size">{{ el.fileSize }}</div> -->
+                </div>
+              </div>
+            </div>
+             <div class="s_val" v-if="el.objectName == 2">
+              <div class="img_row">
+                <div class="img_box">
+                  <img :src="el.cover" alt="" />
+                </div>
+                <div class="info_r">
+                  <div class="name">{{ el.title }}</div>
+                  <!-- <div class="size">{{ el.fileSize }}</div> -->
+                </div>
+              </div>
+            </div>
+             <div class="s_val" v-if="el.objectName == 3">
+              <div class="img_row">
+                <div class="img_box">
+                  <img :src="el.url" alt="" />
+                </div>
+                <div class="info_r">
+                  <div class="name">{{ el.fileName }}</div>
+                  <!-- <div class="size">{{ el.fileSize }}</div> -->
+                </div>
+              </div>
+            </div>
+            <!-- <div class="s_val" v-if="el.url && !el.fileName">
+              <div class="share_link">{{ el.url }}</div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -82,8 +124,8 @@ import { notice_getNoticeDetail } from "@/api/notice";
 export default {
   data() {
     return {
-      id: this.$route.query.noticeId, // || 114
-      taskType: this.$route.query.taskType, // || 2  1-个人SOP，2-群SOP，3-客户群发，4-客户群群发，5-数据日报，6-客户浏览素材，7-客户浏览名片
+      id: this.$route.query.noticeId || 11193,//10901 ,
+      taskType: this.$route.query.taskType || 2, // || 2  1-个人SOP，2-群SOP，3-客户群发，4-客户群群发，5-数据日报，6-客户浏览素材，7-客户浏览名片
       detail: {},
       copeHref:'',
     };
@@ -235,6 +277,9 @@ export default {
             font-weight: bold;
             color: @white;
             margin-right: 16px;
+           img{
+              border-radius: 8px;
+           }
           }
           .info {
             width: calc(100% - 200px);
@@ -246,7 +291,8 @@ export default {
               margin-bottom: 16px;
               i {
                 font-style: normal;
-                color: @yellow;
+                // color: @yellow;
+                color: @green;
               }
             }
             .time {

@@ -11,7 +11,7 @@
 
         <div v-if="fromType == 3" class="name-box">线索名称：{{ searchParam }}</div>
 
-        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :searchParam="searchParam" :checkedItem="checkedItem"></name-search-list-box>
+        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :customerType="customerType" :searchParam="searchParam" :checkedItem="checkedItem"></name-search-list-box>
 
         <div class="btn-box pointer">
             <div v-if="fromType == 1" class="btn-item" :class="{invalid: isInvalid}" @click="confirm(1)">确认保存</div>

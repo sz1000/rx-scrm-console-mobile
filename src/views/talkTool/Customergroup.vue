@@ -448,7 +448,7 @@ export default {
       //    item.materialList[] = obj
       // })
       this.appendixList[this.dataindex].materialList = obj
-      this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract
+      this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract 
       this.appendixList[this.dataindex].meiapicul = obj.cover
       this.appendixList[this.dataindex].mediatite = obj.title
       this.appendixList[this.dataindex].mediatype = obj.tab
@@ -456,11 +456,14 @@ export default {
       if (obj.tab == 2) {
         this.appendixList[this.dataindex].mediatite = obj.name
         this.appendixList[this.dataindex].mediatype = obj.tab
+         this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract || (obj.fileSize/1024/1024).toFixed(2) + "kb"
       }
       if (obj.tab == 3) {
         this.appendixList[this.dataindex].mediatite = obj.posterName
         this.appendixList[this.dataindex].mediatype = obj.tab
         this.appendixList[this.dataindex].urls = obj.posterUrl
+         this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract || (obj.fileSize/1024/1024).toFixed(2) + "kb"
+        
       }
     },
     showData(val) {
@@ -803,7 +806,7 @@ export default {
               ...item.objList,
             },
           ]
-          console.log(imgArr, '---l素材 ', this.shareUrlOrigin)
+          
         } else if (item.objList.tab == 2) {
           imgArr = [
             {
@@ -862,7 +865,6 @@ export default {
           mediaLink.push(obj)
         }
       })
-      console.log(this.urlList, '-------------this.urlList')
       this.$refs['form'].validate((valid) => {
         // if (this.appendixList.length >= 1) {
         //   Toast("请上传素材内容");
