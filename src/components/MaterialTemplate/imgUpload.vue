@@ -96,9 +96,11 @@ export default {
           let params = data.url
 
           if (this.needFileInfo) {
+            // console.log('data--size---', data)
             params = {
               url: data.url,
               name,
+              fileSize: data.size,
             }
           }
           this.getImgUrl(params)
@@ -127,7 +129,7 @@ export default {
     }
   }
   .reprint-box {
-    opacity: 0;
+    // opacity: 0;
     width: 104px;
     height: 104px;
     background-color: @main;

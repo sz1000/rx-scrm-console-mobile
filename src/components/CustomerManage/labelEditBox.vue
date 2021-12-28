@@ -2,7 +2,7 @@
     <div class="label-edit-box">
         <div class="row tag">
             <div class="tit">企业标签</div>
-            <img class="edit" @click="openDialog('company')" src="@/assets/svg/icon_edit.svg" alt="">
+            <img class="edit pointer" @click="openDialog('company')" src="@/assets/svg/icon_edit.svg" alt="">
             <div class="tag_wrap" ref="companyTagWrap" :class="{'more':companyTagMore}">
                 <div class="tag_box" ref="companyTagBox">
                     <div class="tag" v-for="(item, index) in companyTagList" :key="index">{{item.name}}</div>
@@ -15,7 +15,7 @@
         </div>
         <div class="row tag">
             <div class="tit">个人标签</div>
-            <img class="edit" @click="openDialog('person')" src="@/assets/svg/icon_edit.svg" alt="">
+            <img class="edit pointer" @click="openDialog('person')" src="@/assets/svg/icon_edit.svg" alt="">
             <div class="tag_wrap" ref="personTagWrap" :class="{'more':personTagMore}">
                 <div class="tag_box" ref="personTagBox">
                     <div class="tag" v-for="(item,index) in personList" :key="index">{{item.name}}</div>
@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-import TagDialog from '../../views/customer/components/tagDialog'
+import TagDialog from '@/views/customer/components/tagDialog'
 import {
   cluecustomer_gettag,
   cluecustomer_addtag,

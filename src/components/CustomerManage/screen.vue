@@ -519,7 +519,26 @@ export default {
                     break;
             }
         },
+        // 获取最终商机阶段参数
+        getLastStage() {
+            let arr = this.form.stageNum
+
+            if (arr && arr.length) {
+                arr.map(item => {
+                    if (typeof item == 'string') {
+                        this.form.businessOpportunitiesStageStatus.push(item)
+                    } else if (typeof item == 'number') {
+                        this.form.businessOpportunitiesStageNos.push(item)
+                    }
+                })
+            } else {
+                this.form.businessOpportunitiesStageStatus = []
+                this.form.businessOpportunitiesStageNos = []
+            }
+        },
         goBack(ifConfirm) {
+            this.getLastStage()
+
             let optNum = ifConfirm, params = {}
 
             if (optNum != 1 || !optNum) {

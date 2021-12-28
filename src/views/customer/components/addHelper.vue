@@ -85,10 +85,13 @@ export default {
             type: Boolean,
             default: false,
         },
+        obj: {
+          default: ''
+        }
     },
     computed: {
         id(){
-            let str = localStorage.getItem('customerId') ? localStorage.getItem('customerId') : ''
+            let str = this.$route.query.id ? this.$route.query.id : ''
             return str
         },
     },
@@ -137,7 +140,7 @@ export default {
             let params = {
                 clueCustomerNo: this.id,
                 userList: this.oneList,
-                type: this.$route.query.type
+                type: this.$route.query.fromType
             }
             clueCustomerFollowUser_addFollowUser(params).then(res => {
                 if(res.result){
@@ -163,7 +166,9 @@ export default {
             }
             user_getUserList(params).then(res => {
                 if(res.result){
-                    this.heperList = res.data.user
+                    this.heperList = res.data.user.filter(item => {
+                      return item.userNo != this.obj.userNo
+                    })
                     this.isHelper = true
                     this.bumenPop = false
                     this.yuangongName = ''

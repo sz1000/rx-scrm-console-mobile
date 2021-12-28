@@ -1,7 +1,7 @@
 <template>
   <div v-if="formData" class="material-content">
     <template v-if="materialType == 1">
-      <h2 class="title">{{formData.title}}</h2>
+      <h2 class="title">{{formData.title || formData.materialName}}</h2>
       <div v-if="formData.author || formData.pushTime" class="info">
         <span class="author">{{formData.author}}</span>
         <span v-if="formData.isTimeShow" class="time">{{formData.pushTime ? formatDate(formData.pushTime, "yyyy-MM-dd") : ''}}</span>
@@ -92,6 +92,7 @@ export default {
     formatDate,
     // 预览获取详情
     getPreviewDetails(params) {
+      console.log('---params---', params)
       const { materialType } = params
 
       this.materialType = materialType

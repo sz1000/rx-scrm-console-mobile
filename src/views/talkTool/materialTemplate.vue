@@ -13,11 +13,11 @@
       </ul>
       <div class="search_warp">
         <search ref="search" :type="type"></search>
-        <div class="file_add">
+        <!-- <div class="file_add">
           <jzIcon class="iconAdd" @click.native.stop="fnAddMaterial(type)" type="icon-a-bianzu77"></jzIcon>
           <file-upload :needFileInfo="true" v-show="type==1"></file-upload>
           <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true" v-show="type==2"></img-upload>
-        </div>
+        </div> -->
       </div>
       <ul class="list-box">
         <li class="item-box" :class="{'is-independent': isIndependent == 1}" v-if="type == 0">
@@ -36,10 +36,10 @@
                     </div>
                   </div>
                 </div>
-                <div v-show="isIndependent == 2" class="left"
+                <!-- <div v-show="isIndependent == 2" class="left"
                      @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })">
                   <img src="../../images/relay.png" alt="">
-                </div>
+                </div> -->
               </div>
               <div class="li_bot">
                 <div class="browse" @click="fnMaterialDetail(i,type)">
@@ -47,7 +47,9 @@
                   <img src="../../images/arrow_right.png" alt="">
                 </div>
                 <div class="share_img">
-                  <img src="../../images/shareimg.png" alt="" v-show="tab==1" @click="fnShare(i,type)" />
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 1" @click="fnShare(i,type)" />
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 2"
+                       @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.articleId}&type=1&userNo=${userNo}`, 'title': i.title, 'desc': i.contentAbstract ? i.contentAbstract : i.title, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_article.png' })" />
                   <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
                 </div>
               </div>
@@ -68,10 +70,10 @@
                     </div>
                   </div>
                 </div>
-                <div v-show="isIndependent == 2" class="left"
+                <!-- <div v-show="isIndependent == 2" class="left"
                      @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })">
                   <img src="../../images/relay.png" alt="">
-                </div>
+                </div> -->
               </div>
               <div class="li_bot">
                 <div class="browse" @click="fnMaterialDetail(i,type)">
@@ -79,7 +81,9 @@
                   <img src="../../images/arrow_right.png" alt="">
                 </div>
                 <div class="share_img">
-                  <img src="../../images/shareimg.png" alt="" v-show="tab==1" @click="fnShare(i,type)" />
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 1" @click="fnShare(i,type)" />
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 2"
+                       @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.documentId}&type=2&userNo=${userNo}`, 'title': i.name, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.name, 'imgUrl': i.cover ? i.cover : 'https://h5.jzcrm.com/static/img/default_pdf.png' })" />
                   <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
                 </div>
               </div>
@@ -101,9 +105,9 @@
                     </div>
                   </div>
                 </div>
-                <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img
+                <!-- <div v-show="isIndependent == 2" class="left" @click="sendChatMessage('image', false, '', i.mediaId)"><img
                        src="../../images/relay.png" alt="">
-                </div>
+                </div> -->
               </div>
               <div class="li_bot">
                 <div class="browse" @click="fnMaterialDetail(i,type)">
@@ -111,7 +115,10 @@
                   <img src="../../images/arrow_right.png" alt="">
                 </div>
                 <div class="share_img">
-                  <img src="../../images/shareimg.png" alt="" v-show="tab==1" @click="fnShare(i,type)" />
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 1" @click="fnShare(i,type)" />
+                  <img src="../../images/shareimg.png" alt="" v-show="tab==1 && isIndependent == 2"
+                       @click="sendChatMessage('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${i.posterId}&type=2&userNo=${userNo}`, 'title': i.posterName, 'desc': i.fileSize ? byteConvert(i.fileSize) : i.posterName, 'imgUrl': i.posterUrl ? i.posterUrl : 'https://h5.jzcrm.com/static/img/default_pdf.png' })" />
+
                   <img src="../../images/sharecopy.png" alt="" v-show="tab==2" @click="fnCopy(i,type)" />
                 </div>
               </div>
@@ -120,7 +127,7 @@
         </li>
       </ul>
       <!-- 2:上传海报按钮  1:上传文件按钮  0:转载公众号文章按钮 -->
-      <!-- <div class="position-box">
+      <div class="position-box">
         <div v-if="type == 0" class="reprint-box pointer" @click="goNextStep"></div>
         <div v-if="type == 1" class="poster-box">
           <file-upload :needFileInfo="true"></file-upload>
@@ -128,7 +135,7 @@
         <div v-if="type == 2" class="poster-box">
           <img-upload :isCustomize="true" :customizeType="3" :needFileInfo="true"></img-upload>
         </div>
-      </div> -->
+      </div>
     </template>
     <!-- 图片预览 -->
     <img-preview ref="imgPreview"></img-preview>
@@ -225,6 +232,7 @@ export default {
       fileData: {}, // 上传的文件信息
       shareObj: {}, //分享信息
       showCopy: false,
+      shareUrlOrigin: '',
     }
   },
   computed: {
@@ -254,11 +262,11 @@ export default {
     },
     // 去素材详情页
     fnMaterialDetail(val, type) {
-      console.log(val, '----详情页----')
+      // console.log(val, '----详情页----')
       let id
       if (type == 0) {
         id = val.articleId
-      } else if (val == 1) {
+      } else if (type == 1) {
         id = val.documentId
       } else {
         id = val.posterId
@@ -275,6 +283,7 @@ export default {
     fnShare(val, type) {
       this.showShare = true
       this.shareObj = val
+      console.log(val)
     },
     onCancel() {
       this.showShare = false
@@ -282,10 +291,11 @@ export default {
     // 复制
     fnCopy(val, type) {
       this.shareObj = val
-      let id
+      console.log(val, type)
+      let id = null
       if (type == 0) {
         id = val.articleId
-      } else if (val == 1) {
+      } else if (type == 1) {
         id = val.documentId
       } else {
         id = val.posterId
@@ -300,16 +310,16 @@ export default {
       })
     },
     // 添加素材
-    fnAddMaterial(v) {
-      console.log(v)
-      // 去往转载公众号文章页面
-      if (v == 0) {
-        this.$router.push({
-          path: '/talkTool/reprint',
-          query: { isIndependent: this.isIndependent },
-        })
-      }
-    },
+    // fnAddMaterial(v) {
+    //   console.log(v)
+    //   // 去往转载公众号文章页面
+    //   if (v == 0) {
+    //     this.$router.push({
+    //       path: '/talkTool/reprint',
+    //       query: { isIndependent: this.isIndependent },
+    //     })
+    //   }
+    // },
     changeNav(type) {
       this.type = type
       this.initPage(this.type)
@@ -479,6 +489,7 @@ export default {
       this.doQwShare(false)
     },
     preview(type, item) {
+      // console.log(item)
       this.ifShowFooter(false)
       this.showContentPreview = true
       let obj = {
@@ -496,6 +507,7 @@ export default {
       this.doQwShare(true, type, item)
     },
     previewImg(i) {
+      console.log(i)
       this.$refs.imgPreview.show(1, [i.posterUrl])
     },
     // 是否显示footer-nav
@@ -545,7 +557,15 @@ export default {
     },
     // 分享朋友圈
     sendChart() {
-      console.log(this.shareObj, '-------llll----')
+      if (window.location.origin == 'https://console.jzcrm.com') {
+        this.shareUrlOrigin = 'https://h5.jzcrm.com'
+      } else {
+        this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
+      }
+      let shareObj = this.shareObj,
+        type = this.type,
+        shareUrlOrigin = this.shareUrlOrigin,
+        corpId = this.corpId
       this.$network
         .get('/user-service/m/user/getinticket', {
           url: location.href,
@@ -553,7 +573,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -593,12 +613,19 @@ export default {
               function (res) {
                 let that = this,
                   url
-                if (that.type == 0) {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.articleId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
-                } else if (that.type == 1) {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.documentId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
-                } else {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${that.shareObj.articleId}&type=${that.shareObj.tab}&corpId=${that.corpId}`
+                console.log(
+                  shareObj,
+                  type,
+                  shareUrlOrigin,
+                  corpId,
+                  '13213213123'
+                )
+                if (type == 0) {
+                  url = `${shareUrlOrigin}/materialTemplate?materialId=${shareObj.articleId}&type=1&corpId=${corpId}`
+                } else if (type == 1) {
+                  url = `${shareUrlOrigin}/materialTemplate?materialId=${shareObj.documentId}&type=2&corpId=${corpId}`
+                } else if (type == 2) {
+                  url = `${shareUrlOrigin}/materialTemplate?materialId=${shareObj.posterId}&type=3&corpId=${corpId}`
                 }
                 wx.invoke(
                   'shareToExternalMoments',
@@ -607,9 +634,11 @@ export default {
                       {
                         msgtype: 'link', // 消息类型，必填
                         link: {
-                          title: that.shareObj.title, // H5消息标题
-                          imgUrl: that.shareObj.cover, // H5消息封面图片URL
-                          // url: '', // H5消息页面url 必填
+                          title:
+                            shareObj.title ||
+                            shareObj.name ||
+                            shareObj.posterName, // H5消息标题
+                          imgUrl: shareObj.cover || shareObj.posterUrl, // H5消息封面图片URL
                           url: url,
                         },
                       },
@@ -660,7 +689,7 @@ export default {
     padding: 0 32px;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid @lineColor; /* no */
+    // border-bottom: 1px solid @lineColor; /* no */
     li {
       width: 212px;
       height: 64px;
@@ -687,7 +716,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 32px;
+    // padding-right: 32px;
     .iconAdd {
       width: 40px;
       height: 40px;
@@ -697,9 +726,9 @@ export default {
       transform: translate(-50%, -50%);
     }
     .file_add {
-      width: 100px;
-      height: 100px;
-      position: relative;
+      // width: 100px;
+      // height: 100px;
+      // position: relative;
     }
   }
   .material-tab {
@@ -765,7 +794,8 @@ export default {
           }
         }
         .right {
-          width: 88%;
+          width: 100%;
+          // width: 88%;
           background: #f7f7f7;
           padding: 16px;
           box-sizing: border-box;
@@ -952,6 +982,7 @@ export default {
     align-items: center;
     padding: 0 32px;
     cursor: pointer;
+    z-index: 10;
     .icon_img {
       display: flex;
       align-items: center;

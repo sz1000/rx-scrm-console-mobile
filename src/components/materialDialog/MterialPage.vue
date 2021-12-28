@@ -124,7 +124,7 @@
 </template>
 <script>
 import { ArticleList, SaleDocumentList, PosterList } from '../../config/api'
-import { uploadTemporaryMaterial } from '../../api/myHome'
+import { addFriendCirclePerson } from '../../api/myHome'
 import {
   sendChatMessage,
   byteConvert,
@@ -255,6 +255,41 @@ export default {
       } else {
         this.shareUrlOrigin = 'https://test-h5.jzcrm.com'
       }
+      let url,
+        cover,
+        titleName,
+        params = {}
+      if (val.tab == 1) {
+        url = `${this.shareUrlOrigin}/materialTemplate?materialId=${val.articleId}&type=${val.tab}&corpId=${this.corpId}`
+        titleName = val.title
+        cover = val.cover
+      } else if (val.tab == 2) {
+        url = `${this.shareUrlOrigin}/materialTemplate?materialId=${val.documentId}&type=${val.tab}&corpId=${this.corpId}`
+        titleName = val.name
+        cover = val.cover
+      } else {
+        url = `${this.shareUrlOrigin}/materialTemplate?materialId=${val.articleId}&type=${val.tab}&corpId=${this.corpId}`
+        titleName = val.posterName
+        cover = val.posterUrl
+      }
+      params = {
+        type: 2,
+        jobStatus: 0,
+        msgtype: 'material',
+        title: titleName,
+        urlList: [
+          {
+            url: url,
+            title: titleName,
+            cover: cover,
+            tab: val.tab,
+            contentAbstract: val.contentAbstract,
+            fileSize: val.fileSize || '',
+          },
+        ],
+      }
+
+      addFriendCirclePerson(params).then((res) => {})
       this.sendChart(val)
     },
 
@@ -266,7 +301,7 @@ export default {
         .then((res) => {
           wx.config({
             beta: true,
-            debug: true,
+            debug: false,
             appId: res.data.corpId,
             timestamp: res.data.timestamp,
             nonceStr: res.data.nonceStr,
@@ -311,7 +346,7 @@ export default {
                 } else if (mediaObj.tab == 2) {
                   url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.documentId}&type=${mediaObj.tab}&corpId=${that.corpId}`
                 } else {
-                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.articleId}&type=${mediaObj.tab}&corpId=${that.corpId}`
+                  url = `${that.shareUrlOrigin}/materialTemplate?materialId=${mediaObj.posterId}&type=${mediaObj.tab}&corpId=${that.corpId}`
                 }
                 wx.invoke(
                   'shareToExternalMoments',
@@ -320,8 +355,11 @@ export default {
                       {
                         msgtype: 'link', // 消息类型，必填
                         link: {
-                          title: mediaObj.title, // H5消息标题
-                          imgUrl: mediaObj.cover, // H5消息封面图片URL
+                          title:
+                            mediaObj.title ||
+                            mediaObj.name ||
+                            mediaObj.posterName, // H5消息标题
+                          imgUrl: mediaObj.cover || mediaObj.posterUrl, // H5消息封面图片URL
                           // url: '', // H5消息页面url 必填
                           url: url,
                         },
@@ -716,7 +754,7 @@ export default {
           width: 38px;
           height: 38px;
           background: #ffffff;
-          border: 1px solid #e6e6e6;
+          border: 1px solid #e6e6e6; /* no */
           display: inline-block;
           border-radius: 50%;
         }

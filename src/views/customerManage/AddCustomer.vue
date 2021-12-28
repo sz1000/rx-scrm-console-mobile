@@ -1,128 +1,133 @@
 <template>
     <div class="add-customer">
-        <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
+        <template v-if="!showNameSearch">
+            <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true" btnText="确定" @doSubmit="doSubmit"></header-title>
 
-        <div class="form-box">
-            <div class="item">
-                <div class="label">
-                    <span>{{ fromType == 1 ? '线索名称' : '客户名称' }}</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
-                    <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>联系人</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
-                    <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>手机号码</span>
-                </div>
-                <div class="val">
-                    <input type="text" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>{{ fromType == 1 ? '线索来源' : '客户来源' }}</span>
-                    <span class="require">*</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
-                        <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                    </div>
-                </div>
-            </div>
-            <template v-if="fromType == 3">
+            <div class="form-box">
                 <div class="item">
                     <div class="label">
-                        <span>客户阶段</span>
+                        <span>{{ fromType == 1 ? '线索名称' : '客户名称' }}</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val" @click.stop="goNameSearch">
+                        <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
+                        <span v-show="customerCalledRequired" class="input tips" @click="showInput('customerCalled')">未输入</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>联系人</span>
+                        <span class="require">*</span>
                     </div>
                     <div class="val">
-                        <div class="icon-select" @click="openSelectDialog('stage')">
-                            <span :class="{'placeholder':!form.stage}">{{form.stage | $textEmpty('请选择')}}</span>
+                        <input v-show="!nameRequired" type="text" ref="name" class="input" v-model.trim="form.name" maxlength="30" placeholder="请输入">
+                        <span v-show="nameRequired" class="input tips" @click="showInput('name')">未输入</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>手机号码</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model="form.phone" maxlength="11" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>{{ fromType == 1 ? '线索来源' : '客户来源' }}</span>
+                        <span class="require">*</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="sourceRequired && showInput('source') || !sourceRequired && openSelectDialog('source')">
+                            <span :class="{'placeholder': !form.sourceName, tips: sourceRequired}">{{sourceRequired ? '未选择' : form.sourceName | $textEmpty('请选择')}}</span>
+                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <template v-if="fromType == 3">
+                    <div class="item">
+                        <div class="label">
+                            <span>客户阶段</span>
+                        </div>
+                        <div class="val">
+                            <div class="icon-select" @click="openSelectDialog('stage')">
+                                <span :class="{'placeholder':!form.stage}">{{form.stage | $textEmpty('请选择')}}</span>
+                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="label">
+                            <span>客户类型</span>
+                        </div>
+                        <div class="val">
+                            <div class="icon-select" @click="openSelectDialog('customerType')">
+                                <span :class="{'placeholder':!form.customerTypeName}">{{form.customerTypeName | $textEmpty('请选择')}}</span>
+                                <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <div class="item">
+                    <div class="label">
+                        <span>企业名称</span>
+                    </div>
+                    <div class="val">
+                        <input type="text" class="input" v-model="form.cropFullName" maxlength="30" placeholder="请输入">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="label">
+                        <span>企业规模</span>
+                    </div>
+                    <div class="val">
+                        <div class="icon-select" @click="openSelectDialog('corpScale')">
+                            <span :class="{'placeholder':!form.corpScaleName}">{{form.corpScaleName | $textEmpty('请选择')}}</span>
                             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="item">
                     <div class="label">
-                        <span>客户类型</span>
+                        <span>行业领域</span>
                     </div>
                     <div class="val">
-                        <div class="icon-select" @click="openSelectDialog('customerType')">
-                            <span :class="{'placeholder':!form.customerTypeName}">{{form.customerTypeName | $textEmpty('请选择')}}</span>
+                        <div class="icon-select" @click="openSelectDialog('industry')">
+                            <span :class="{'placeholder':!form.industryName}">{{form.industryName | $textEmpty('请选择')}}</span>
                             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
                         </div>
                     </div>
                 </div>
-            </template>
-            <div class="item">
-                <div class="label">
-                    <span>企业名称</span>
+                <div class="item">
+                    <div class="label">
+                        <span>办公地址</span>
+                    </div>
+                    <div class="val" @click="openDialog('address')">
+                        <span class="block-span one-line" :class="{'placeholder':!form.address}">{{form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
+                    </div>
                 </div>
-                <div class="val">
-                    <input type="text" class="input" v-model="form.cropFullName" maxlength="30" placeholder="请输入">
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>企业规模</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('corpScale')">
-                        <span :class="{'placeholder':!form.corpScaleName}">{{form.corpScaleName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                <div class="item">
+                    <div class="label">
+                        <span>备注</span>
+                    </div>
+                    <div class="val" @click="openDialog('remark')">
+                        <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="label">
-                    <span>行业领域</span>
-                </div>
-                <div class="val">
-                    <div class="icon-select" @click="openSelectDialog('industry')">
-                        <span :class="{'placeholder':!form.industryName}">{{form.industryName | $textEmpty('请选择')}}</span>
-                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>办公地址</span>
-                </div>
-                <div class="val" @click="openDialog('address')">
-                    <span class="block-span one-line" :class="{'placeholder':!form.address}">{{form.address | $textEmpty('请输入（不得超过200个字符）')}}</span>
-                </div>
-            </div>
-            <div class="item">
-                <div class="label">
-                    <span>备注</span>
-                </div>
-                <div class="val" @click="openDialog('remark')">
-                    <span class="block-span text" :class="{'placeholder':!form.remark}">{{form.remark | $textEmpty('请输入（不得超过200个字符）')}}</span>
-                </div>
-            </div>
-        </div>
+        </template>
+        <!-- 名称搜索页 -->
+        <name-search v-else ref="nameSearch" :fromType="2" :customerType="fromType" @hideNameSearch="hideNameSearch" @handleResult="getResult"></name-search>
 
         <!-- 客户来源 -->
-        <select-dialog :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" v-model="dialog" @confirm="selectedFun"></select-dialog>
+        <select-dialog v-model="dialog" :data="columns" :keys="select.key" :columnValue="select.value" :columnIndex="select.indexList" :isGetIndex="select.isGetIndex" :title="select.title" @confirm="selectedFun"></select-dialog>
         <!-- 地址 and 备注 -->
         <input-dialog v-model="dialog_address" :title="dialogTitle" :type="dialogType" :text="dialogText" @confirm="confirmFun"></input-dialog>
     </div>
 </template>
 <script>
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
+import NameSearch from '@/components/CustomerManage/nameSearch'
 import { getAddFiled, doAdd } from '@/api/customer'
 import { SelectDialog, InputDialog } from '../customer/components'
 import { throttle } from '@/utils/tool'
@@ -175,7 +180,9 @@ export default {
 
             customerCalledRequired: false,
             nameRequired: false,
-            sourceRequired: false
+            sourceRequired: false,
+
+            showNameSearch: true, // 是否显示名称搜索页
         }
     },
     computed: {
@@ -200,6 +207,7 @@ export default {
     },
     methods: {
         init() {
+            this.goNameSearch()
             this.getAddFiled()
         },
         // 获取各个选择列表
@@ -246,6 +254,23 @@ export default {
             let path = this.fromType == 3 || this.fromType == 4 ? '/customerManage/myCustomer' : '/customerManage/clues'
 
             this.$router.push({ path })
+        },
+        // 打开名称搜索页面
+        goNameSearch() {
+            this.showNameSearch = true
+            this.$nextTick(() => {
+                this.$refs.nameSearch.show(this.form.customerCalled)
+            })
+        },
+        // 关闭名称搜索页
+        hideNameSearch() {
+            this.showNameSearch = false
+        },
+        // 获取名称搜索页结果
+        getResult(data) {
+            console.log("客户名称", data)
+            this.form.customerCalled = data
+            this.hideNameSearch()
         },
         openDialog(type){   //打开弹窗 (地址 and 备注)
             this.openType = type
@@ -421,7 +446,8 @@ export default {
     components: {
         HeaderTitle,
         SelectDialog,
-        InputDialog
+        InputDialog,
+        NameSearch
     }
 }
 </script>

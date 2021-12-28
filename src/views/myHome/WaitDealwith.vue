@@ -12,10 +12,10 @@
       <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业发表</div>
     </div>
     <section v-if="tab==1">
-      <div class="searchInput">
-        <div class="search_title">
-          <van-field v-model="searchValue" left-icon="search" placeholder="标题/内容" />
-        </div>
+      <div class="search_company inputPerson">
+        <van-search v-model="searchValue" placeholder="标题/内容" @blur='fnSearch(1)' />
+      </div>
+      <div class="searchInput search_tab2">
         <div class="select_date" @click="showPicker=true">
           <img src="../../images/date_pick.png" alt="">
           <div v-if="startDate&&endDate" class="time_sty">
@@ -29,13 +29,19 @@
             <span>结束时间</span>
           </div>
         </div>
+        <div class="select_box" @click="filterCard">
+          <span>{{tabName == 1 ? '已发表' :'未发表'}}</span>
+          <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showFilter}" />
+        </div>
       </div>
       <div class="friend_warp">
         <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈</div>
-        <div class="published_btn" @click="shareToMoments">发表朋友圈</div>
+        <div class="published_btn" @click="shareToMoments">
+          <span>发表朋友圈</span>
+        </div>
       </div>
       <div class="custom_content">
-        <div class="card_box" v-for="(item,index) in cardList" :key='index'>
+        <div class="card_box" v-for="(item,index) in cardList" :key='item.id'>
           <!-- 图片 -->
           <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length>0">
             <img :src="item.urls[0]" alt="" v-if="item.urls" />
@@ -56,17 +62,19 @@
           <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
-              <img src="../../images/article.png" alt="">
-              <div class="lint_url">{{item.urls[0]}}</div>
+              <img :src="item.urls[1]" alt="" v-if="item.urls[1]" />
+              <img src="../../images/article.png" alt="" v-else />
+              <div class="lint_url">{{item.urls[2]}}</div>
             </div>
           </div>
           <div class="bot_content">
             <span>{{item.createTime}}</span>
             <div class="right_btm">
-              <img :src="item.avatar" alt="">
-              <!-- <img src="../../images/ditu.png" alt=""> -->
+              <!-- <img :src="item.avatar" alt="">
               <span class="user_name">{{item.name}}</span>
-              <span v-show="item.depId"> -{{item.depId}}</span>
+              <span v-show="item.depId"> -{{item.depId}}</span> -->
+              <span class="sure_btn" @click="surePublished(item)" v-if="item.jobStatus == 0">确认已发表</span>
+              <span class="over_pub" v-else>已发表</span>
             </div>
           </div>
         </div>
@@ -79,7 +87,7 @@
         <span v-else>请前往企微聊天面板-应用通知进行相关操作</span>
       </div>
       <div class="search_company">
-        <van-field v-model="companyValue" left-icon="search" placeholder="标题/内容" />
+        <van-search v-model="searchValue" placeholder="标题/内容" @blur='fnSearch(2)' />
       </div>
       <div class="searchInput search_tab2">
         <div class="select_date" @click="showPicker=true">
@@ -102,10 +110,12 @@
       </div>
       <div class="friend_warp">
         <div class="total_box">共<span>{{cardList.length}}</span>条朋友圈,<span>{{cardList.length}}</span>人未发表</div>
-        <div class="published_btn" @click="creatFriend">创建朋友圈任务</div>
+        <div class="published_btn" @click="creatFriend">
+          <span>创建朋友圈任务</span>
+        </div>
       </div>
       <div class="custom_content">
-        <div class="card_box" v-for="(item,index) in cardList" :key='index'>
+        <div class="card_box" v-for="(item,index) in cardList" :key='item.id'>
           <!-- 图片 -->
           <div class="top_content" v-if="item.msgtype == 'image' && item.urls.length>0">
             <img :src="item.urls[0]" alt="" v-if="item.urls" />
@@ -126,8 +136,9 @@
           <div class="top_content top_content_link" v-if="item.msgtype == 'link'">
             <p>{{item.content}}</p>
             <div class="link_warp">
-              <img src="../../images/article.png" alt="">
-              <div class="lint_url">{{item.urls[0]}}</div>
+              <img :src="item.urls[1]" alt="" v-if="item.urls[1]" />
+              <img src="../../images/article.png" alt="" v-else />
+              <div class="lint_url">{{item.urls[2]}}</div>
             </div>
           </div>
           <div class="bot_content">
@@ -142,7 +153,7 @@
           <div class="no_publish" @click="fnShowPublish(item)" v-if="!tabName">
             <div class="left">
               <img class="img" :src="itemChi.avatar" v-for="(itemChi) in item.userList.slice(0,3)" :key="itemChi.id" v-show="itemChi.avatar">
-              <div class="text_name" v-for="(itemChi,index) in item.userList.slice(0,3)" :key="index">
+              <div class="text_name" v-for="(itemChi,index) in item.userList.slice(0,3)" :key="itemChi.corpId">
                 <span>{{itemChi.name}}</span>
                 <span :class="'a'+index">、</span>
               </div>
@@ -177,7 +188,7 @@
             <span>({{popupList.length}})</span>
           </div>
           <div class="search_popup">
-            <van-field  v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
+            <van-field v-model="valPopup" right-icon="search" placeholder="员工姓名/手机号码" />
             <div class="select_box_p" @click="popupSendShow">
               <span>{{popupname == 1 ? '已发表' :'未发表'}}</span>
               <img src="../../images/arrow_down.png" alt="" :class="{'rotate' : showPopupSelect}" />
@@ -208,7 +219,11 @@
 </template>
 <script>
 import VanDatePicker from './VanDate.vue'
-import { friendSend, groupSend, friendCircleUserList } from '../../api/myHome'
+import {
+  friendSend,
+  friendCircleUserList,
+  sure_confirm,
+} from '../../api/myHome'
 export default {
   components: {
     VanDatePicker,
@@ -232,7 +247,6 @@ export default {
       tabName: 0,
       depId: localStorage.getItem('depId'),
       searchValue: '',
-      companyValue: '',
       personList: [],
       showPubish: false,
       popupList: [],
@@ -312,11 +326,13 @@ export default {
       let params = {
         type: this.type,
         status: this.tabName,
+        title: this.searchValue,
         createTimeSta: this.startDate ? this.startDate + ' 00:00:00' : '',
         createTimeEnd: this.endDate ? this.endDate + ' 23:59:59' : '',
       }
 
       friendSend(params).then((res) => {
+        // this.cardList = res.data.page.records
         this.cardList = res.data
         // if (this.cardList.length > 0) {
         //   this.cardList.forEach(item=>{
@@ -346,13 +362,19 @@ export default {
       this.startDate = ''
       this.endDate = ''
       this.tabName = 0
+      this.searchValue = ''
       if (this.tab == 1) {
         // 个人发表
         this.type = 2
       } else {
         // 企业发表
-        this.type = ''
+        this.type = 1
       }
+      this.getDataList()
+    },
+    // 搜索
+    fnSearch(val) {
+      this.tab = val
       this.getDataList()
     },
     // 外层选择
@@ -361,7 +383,7 @@ export default {
       if (this.tab == 1) {
         this.type = 2
       } else {
-        this.type = ''
+        this.type = 1
       }
       this.getDataList()
     },
@@ -385,6 +407,14 @@ export default {
     },
     onChange(picker, value, index) {
       // console.log(`当前值：${value}, 当前索引：${index}`)
+    },
+
+    // 确认发表
+    surePublished(data) {
+      console.log('----data---', data)
+      sure_confirm(data).then((res) => {
+        this.getDataList()
+      })
     },
   },
 }
@@ -447,21 +477,25 @@ export default {
       }
     }
     .select_date {
-      padding: 20px 16px;
+      padding: 0 16px;
       width: 332px;
-      height: 68px;
-
       background: #f7f7f7;
       border-radius: 8px;
       display: flex;
+      align-items: center;
       .time_sty {
         margin-left: 16px;
         font-size: 28px;
         font-weight: 400;
         color: #c0c4cc;
-        line-height: 28px;
+        line-height: 68px;
+        height: 68px;
         overflow: hidden;
         white-space: nowrap;
+        span {
+          display: inline-block;
+          line-height: 28px;
+        }
       }
       img {
         width: 28px;
@@ -526,6 +560,7 @@ export default {
     padding: 0 32px;
     display: flex;
     line-height: 64px;
+    align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #e6e6e6;
     .total_box {
@@ -541,15 +576,20 @@ export default {
       }
     }
     .published_btn {
-      width: 220px;
-      height: 64px;
-      line-height: 64px;
+      // width: 220px;
+      // height: 64px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
       background: #4168f6;
       border-radius: 32px;
       color: #fff;
       font-size: 28px;
-      text-align: center;
+      // text-align: center;
     }
+  }
+  .inputPerson {
+    margin-top: 32px;
   }
   .tips_box {
     display: flex;
@@ -661,6 +701,26 @@ export default {
         }
         .right_btm {
           display: flex;
+          align-items: center;
+          .sure_btn {
+            display: flex;
+            align-items: center;
+            border: 1px solid #4168f6; /* no */
+            color: #4168f6;
+            font-size: 20px;
+            // height: 36px;
+            // line-height: 30px;
+            padding: 2px 6px;
+          }
+          .over_pub {
+            display: flex;
+            align-items: center;
+            // height: 36px;
+            // line-height: 36px;
+            border: 1px solid #b3b3b3; /* no */
+            font-size: 20px;
+            padding: 2px 16px;
+          }
           .user_name {
             display: inline-block;
             white-space: nowrap;

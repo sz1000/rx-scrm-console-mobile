@@ -123,3 +123,22 @@ export function friendCircleUserList(data) {
         params: data,
     })
 }
+
+// 发送朋友圈
+
+export function addFriendCirclePerson(data) {
+    return request({
+        url: MaterialService + '/friendCircle/addFriendCirclePerson',
+        method: 'post',
+        data: data,
+    })
+}
+// 确认已发表
+
+export function sure_confirm(data) {
+    return request({
+        url: MaterialService + `/friendCircle/${data.id}/confirm`,
+        method: 'post',
+        data: data,
+    })
+}

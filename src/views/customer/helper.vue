@@ -5,7 +5,7 @@
             <div class="title">跟进人</div>
         </div>
         <div class="content">
-            <div class="item_box" v-if="obj">
+            <div class="item_box" v-if="this.isPortrait && obj">
                 <div class="tit">负责人</div>
                 <div class="item trans">
                     <img class="avatar" :src="obj.avatar | $setAvatar" alt="">
@@ -44,13 +44,13 @@
             </div>
         </div>
         <!-- 添加协助人 -->
-        <AddHelper v-model="dialog_add" @sure="getList"></AddHelper>
+        <AddHelper v-model="dialog_add" :obj="obj" @sure="getList"></AddHelper>
     </div>
 </template>
 
 <script>
 import { AddHelper } from './components'
-import { 
+import {
     clueCustomerFollowUser_getMBFollowUserList,
     clueCustomerFollowUser_deleteFollowUsers,
 } from '@/api/customer'
@@ -68,6 +68,12 @@ export default {
     computed: {
         id(){
             return this.$route.query.id
+        },
+        fromType(){
+            return this.$route.query.fromType ? this.$route.query.fromType : ''
+        },
+        isPortrait() { // 是否是客户画像过来的
+            return this.$route.query.isPortrait ? this.$route.query.isPortrait : false
         },
         userNo(){
             return this.$store.getters.userNo
