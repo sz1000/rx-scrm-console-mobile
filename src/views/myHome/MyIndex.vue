@@ -75,7 +75,17 @@
           </div>
         </div>
         <div class="task_msg">
-        <vue-seamless-scroll :data="clientList" :class-option="optionLeft"  >
+          <!-- <van-swipe  vertical >
+             <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
+               <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
+                <span class="circle_line"></span>
+                <span class="circle_lines"></span>
+                <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
+               </div>
+             </van-swipe-item>
+             </van-swipe> -->
+        <vueSeamlessScroll :data="clientList" :class-option="optionLeft"  >
            <ul>
              <li class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
                 <span class="circle_line"></span>
@@ -84,7 +94,8 @@
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
              </li>
            </ul>
-        </vue-seamless-scroll>
+          
+        </vueSeamlessScroll>
         </div>
       </div>
       <div class="about_me about_shadow">
@@ -189,6 +200,7 @@ import {
 import { getMyInfo, getAllCharts,getMBTop10FollowMsgList } from '../../api/myHome'
 import router from '../../router/index.js'
 import { getCustomerMassSend } from '../../api/myHome'
+import vueSeamlessScroll from 'vue-seamless-scroll'
 export default {
   components: {
     CustomAddChart,
@@ -196,6 +208,7 @@ export default {
     TopBarCharts,
     SaleCharts,
     NicheCharts,
+    vueSeamlessScroll
   },
   computed: {
     scaleTotal() {
@@ -209,13 +222,13 @@ export default {
         return {
             step: 0.4, //数值越大速度滚动越快
             limitMoveNum: 5, //开始无缝滚动的数据量  //this.fourDatata.length
-            hoverStop: false, //是否开启鼠标悬停stop
+            hoverStop: true, //是否开启鼠标悬停stop
             direction: 1, // 0向下 1向上 2向左 3向右
             openWatch: true, //开启数据实时监控刷新dom
             singleHeight: 0, //单步运动停止的高度(默认值0是无缝不停止的滚动) direction => 0/1
             singleWidth: 0, //单步运动停止的宽度(默认值0是无缝不停止的滚动) direction => 2/3
-            waitTime: 1000 //单步运动停止的时间(默认值1000ms)
-                
+            waitTime: 1000,//单步运动停止的时间(默认值1000ms)
+            direction:1,    
         }
       }
   },
@@ -307,12 +320,19 @@ export default {
     },
         goCustomer(val) {
       console.log(val)
-      this.$router.push({
-        path: '/customerPortrait',
+      // this.$router.push({
+      //   path: '/customerPortrait',
+      //   query: {
+      //     id: val.followId,
+      //     userNo: val.clueCustomerNo,
+      //     num: val.rowAt,
+      //   },
+      // })
+       this.$router.push({
+        path: '/customerManage/customDetail',
         query: {
-          id: val.followId,
-          userNo: val.clueCustomerNo,
-          num: val.rowAt,
+          userNo: val.createBy,
+          clueCustomerNo: val.clueCustomerNo
         },
       })
     },
@@ -491,6 +511,9 @@ export default {
                     break;
                 case 60:
                    str = `删除了${obj.customerCalled}的企微好友`
+                    break;
+                case 72:
+                   str = obj.context
                     break;
                 default:
                     break;

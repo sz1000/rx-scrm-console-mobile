@@ -23,8 +23,8 @@ import globalComponents from '@/components/global/index.js'
 // import MintUI from 'mint-ui'
 // import 'mint-ui/lib/style.css'
 // Vue.use(MintUI)
-import scroll from 'vue-seamless-scroll'
-Vue.use(scroll)
+// import scroll from 'vue-seamless-scroll'
+// Vue.use(scroll)
 
 Vue.use(bases)
 Object.keys(filters).forEach((k) => Vue.filter(k, filters[k]))

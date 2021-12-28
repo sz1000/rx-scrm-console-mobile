@@ -514,17 +514,29 @@ export default {
     }
   }
   .header-nav {
-    display: flex;
+     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 32px;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid @lineColor;
+    // display: flex;
+    // width: 100%;
+    // height: 100px;
+    // border-bottom: 1px solid @lineColor;
     li {
-      display: flex;
-      align-items: center;
-      flex: 1;
-      height: 100%;
-      line-height: 100px;
+      // display: flex;
+      // align-items: center;
+      // flex: 1;
+      // height: 100%;
+      // line-height: 100px;
+      // text-align: center;
+       width: 212px;
+      height: 64px;
+      background: #f7f7f7;
+      border-radius: 32px;
       text-align: center;
+      line-height: 64px;
       span {
         height: 100%;
         margin: 0 auto;
@@ -533,9 +545,10 @@ export default {
       }
     }
     .active {
+      background: @white;
+      border: 1px solid @main; /* no */
       span {
         color: @main;
-        border-bottom: 4px solid @main;
       }
     }
   }
