@@ -50,6 +50,7 @@
                 <span v-show="list.customerType == 3" class="newClues">新线索</span>
                 <span v-show="list.customerType == 2" class="clues">线索</span>
                 <span v-show="list.customerType == 1" class="customer">客户</span>
+                <!-- <span>{{ list.externalType | getType }}</span> -->
               </div>
               <p>共浏览{{list.openCount}}次，总时长{{secondToDate(list.duration)}}</p>
             </div>
@@ -105,6 +106,17 @@ export default {
   },
   created() {
     this.getDetailList()
+  },
+  filters: {
+    getType(type) {
+      if (type == 1) {
+        return '客户'
+      } else if (type == 2) {
+        return '线索'
+      } else if (type == 3) {
+        return '新线索'
+      }
+    },
   },
   methods: {
     goBack() {
@@ -171,9 +183,10 @@ export default {
     goCustomer(val) {
       console.log(val)
       this.$router.push({
-        path: '/customerPortrait',
+        path: '/customerManage/customDetail',
         query: {
-          name: val.externalUseridIn,
+          userNo: val.externalUseridIn || '',
+          clueCustomerNo: val.customerNo,
         },
       })
     },
@@ -330,7 +343,7 @@ export default {
         justify-content: center;
         margin-left: 16px;
         .one-line {
-          width: 70%;
+          width: 538px;
           font-size: 28px;
           color: #262626;
           white-space: nowrap;
