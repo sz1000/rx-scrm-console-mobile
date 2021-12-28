@@ -10,12 +10,12 @@
       </div>
       <div class="material-tab">
         <div :class="{'active' : tab == 1}" class="nomalText" @click="tabClick(1)">个人素材库</div>
-        <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">企业素材库</div>
+        <div :class="{'active' : tab == 2}" class="nomalText" @click="tabClick(2)">公共素材库</div>
       </div>
       <ul class="header-nav">
-        <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章({{articleListTotal > 99 ? '99+' : articleListTotal}})</span></li>
-        <li @click="changeNav(2)" :class="{active: type == 2}"><span>销售文件({{saleListTotal > 99 ? '99+' : saleListTotal}})</span></li>
-        <li @click="changeNav(3)" :class="{active: type == 3}"><span>营销海报({{posterListTotal > 99 ? '99+' : posterListTotal}})</span></li>
+        <li @click="changeNav(1)" :class="{active: type == 1}"><span>种草文章</span></li>
+        <li @click="changeNav(2)" :class="{active: type == 2}"><span>销售文件</span></li>
+        <li @click="changeNav(3)" :class="{active: type == 3}"><span>营销海报</span></li>
       </ul>
       <search ref="search" :type="type"></search>
       <ul class="list-box">
