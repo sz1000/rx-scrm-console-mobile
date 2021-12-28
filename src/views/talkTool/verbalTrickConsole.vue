@@ -250,8 +250,8 @@
                 }}</i>条消息
               </div>
               <div class="pup_share_wrap">
-                <div class="share_box" v-for="(el, i) in item.promptList" :key="i">
-                  <div v-if="el.objectName == 1">
+                <div  v-for="(el, i) in item.promptList" :key="i">
+                  <div v-if="el.objectName == 1" class="share_box">
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                     <div class="s_val" v-if="!el.url">
                       <div class="des">{{ el.content }}</div>
@@ -283,7 +283,7 @@
                       </div>
                   </div>
                  </div>
-                  <div v-if="el.objectName == 2">
+                  <div v-if="el.objectName == 2" class="share_box">
                     <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                      <div class="s_val">
                       <div class="img_row">
@@ -297,7 +297,7 @@
                       </div>
                   </div>
                  </div>
-                  <div v-if="el.objectName == 3">
+                  <div v-if="el.objectName == 3" class="share_box">
                     <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                      <div class="s_val">
                       <div class="img_row">
