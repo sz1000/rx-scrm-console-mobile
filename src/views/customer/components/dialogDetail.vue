@@ -97,7 +97,7 @@ export default {
         height: calc(100% - 104px);
         overflow-y: scroll;
         &.opera{
-            height: calc(60vh - 248px);
+            // height: calc(60vh - 248px);
             padding-top: 32px;
         }
         &.tag{

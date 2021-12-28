@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon/16px/警告</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="12_客户画像_无权限查看" transform="translate(-160.000000, -460.000000)">
+            <g id="编组-8备份" transform="translate(0.000000, 384.000000)">
+                <g id="编组-7" transform="translate(-0.000000, 52.000000)">
+                    <g id="icon/16px/警告" transform="translate(160.000000, 24.000000)">
+                        <circle id="R" fill="#FFB020" cx="28" cy="28" r="28"></circle>
+                        <path d="M28,35 C29.9329966,35 31.5,36.5670034 31.5,38.5 C31.5,40.4329966 29.9329966,42 28,42 C26.0670034,42 24.5,40.4329966 24.5,38.5 C24.5,36.5670034 26.0670034,35 28,35 Z M28,12.25 C29.4497475,12.25 30.625,13.4252525 30.625,14.875 L30.625,28.875 C30.625,30.3247475 29.4497475,31.5 28,31.5 C26.5502525,31.5 25.375,30.3247475 25.375,28.875 L25.375,14.875 C25.375,13.4252525 26.5502525,12.25 28,12.25 Z" id="R" fill="#FFFFFF"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
