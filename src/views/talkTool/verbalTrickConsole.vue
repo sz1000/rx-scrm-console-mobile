@@ -1081,7 +1081,7 @@ export default {
         margin-bottom: 24px;
         padding: 24px;
         &:last-child {
-          margin-bottom: 0;
+          // margin-bottom: 0;
         }
         .line_title {
           font-size: 28px;
