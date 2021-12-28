@@ -1,7 +1,7 @@
 <template>
     <div class="customer_wrap" :class="{'glass':dialog_xzr}">
         <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-        <TopCard :fromType="customerInfo.type" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+        <TopCard :fromType="customerInfo.type" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" isPortrait @jump="toFun"></TopCard>
         <div class="nav_box">
             <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
         </div>
@@ -553,7 +553,6 @@ export default {
             if (val == 'helper') {    //查看协助人
                 name = 'helper'
                 query.id = this.customerInfo.clueCustomerNo
-                query.isPortrait = true
             } else if (val == 'detail') {    //详情
                 name = 'CustomerDetail'
                 query.clueCustomerNo = this.customerInfo.clueCustomerNo
