@@ -509,6 +509,20 @@ export default {
             clueTypeRequired: false, // 线索类型
 
             showNameSearch: false, // 是否显示名称搜索页
+
+            tips: { 
+                customerCalled: '请输入客户名称', 
+                source: '请选择客户来源', 
+                stage: '请选择客户阶段', 
+                customerType: '请选择客户类型', 
+                clueType: '请选择线索类型', 
+                cropFullName: '请输入企业名称', 
+                cropscale: '请选择企业规模', 
+                industry: '请选择行业领域', 
+                address: '请输入办公地址', 
+                name: '请输入联系人', 
+                phone: '请输入手机号码' 
+            }
         }
     },
     computed: {
@@ -837,6 +851,7 @@ export default {
             for (let i in arrObj) {
                 if (!arrObj[i] || arrObj[i] && !arrObj[i].length) {
                     this[i + 'Required'] = true
+                    this.$toast(this.tips[i])
                     return false
                 }
             }
