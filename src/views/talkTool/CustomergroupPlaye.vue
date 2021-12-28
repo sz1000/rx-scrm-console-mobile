@@ -489,11 +489,13 @@ export default {
       if (obj.tab == 2) {
         this.appendixList[this.dataindex].mediatite = obj.name
         this.appendixList[this.dataindex].mediatype = obj.tab
+         this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract || (obj.fileSize/1024/1024).toFixed(2) + "kb"
       }
       if (obj.tab == 3) {
         this.appendixList[this.dataindex].mediatite = obj.posterName
         this.appendixList[this.dataindex].mediatype = obj.tab
-        this.appendixList[this.dataindex].urls = obj.mediaId
+        this.appendixList[this.dataindex].urls = obj.posterUrl
+                 this.appendixList[this.dataindex].mediaDesc = obj.contentAbstract || (obj.fileSize/1024/1024).toFixed(2) + "kb"
       }
     },
     showData(val) {

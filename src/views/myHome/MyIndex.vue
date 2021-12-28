@@ -126,14 +126,14 @@
 
         <div class="about_me about_shadow">
         <span>企微朋友圈</span>
-        <div class="reply_text"  @click="goToWait(1)">
+        <div class="reply_text"  @click="goToWait(2)">
           <span>{{dataObj.friendSend}}条企微朋友圈待发表</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
         <div class="about_me about_shadow">
         <span>群发任务</span>
-        <div class="reply_text" @click="goToWaits(1)"  v-if="length > 0">
+        <div class="reply_text" @click="goToWaits(1)"  v-if="length > 0  || lengths > 0">
           <span>你有群发任务待发送</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
@@ -241,12 +241,14 @@ export default {
       scroll: true,
       clientList:[],
       length:"",
+      lengths:"",
     }
   },
   created() {
     this.getData()
     this.client()
     this.getDataList()
+    this.getDataLists()
 
   },
   mounted() {
@@ -266,6 +268,20 @@ export default {
       getCustomerMassSend(params).then((res) => {
         this.length = res.data.newList.length
         console.log(this.length,"PPP")
+  
+      })
+
+   },
+   getDataLists() {
+      this.cardList = []
+      let params = {
+        massType: 2,
+        sendStatus: 1,
+      
+      }
+      getCustomerMassSend(params).then((res) => {
+        this.lengths = res.data.newList.length
+        // console.log(this.length,"PPP")
   
       })
 
@@ -458,6 +474,9 @@ export default {
                 case 47:
                     break;
                 case 48:
+                    break;
+                case 60:
+                   str = `删除了${obj.customerCalled}的企微好友`
                     break;
                 default:
                     break;
