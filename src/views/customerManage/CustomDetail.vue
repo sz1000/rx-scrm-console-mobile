@@ -15,10 +15,10 @@
                 <!-- 群聊 -->
                 <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
                 <!-- 附件 -->
-                <enclosure :id="customerInfo.clueCustomerNo" :detailType="customerInfo.type" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+                <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
             </div>
             <!-- 打开操作按钮弹窗面板 -->
-            <div class="operation-box">
+            <div v-if="isInCharge || isHelperOne" class="operation-box">
                 <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
                     <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
                 </div>
@@ -74,7 +74,7 @@
             <!-- 商机详情 -->
             <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
             <!-- 操作按钮弹窗面板 -->
-            <operation-btn-box ref="operationBtnBox" :fromType="fromType" :jurisdictionList="jurisdictionList" :isWcCus="customerInfo && customerInfo.isWcCus" @doAction="doAction"></operation-btn-box>
+            <operation-btn-box ref="operationBtnBox" :fromType="fromType" :permission="permission" @doAction="doAction"></operation-btn-box>
             <!-- 放弃或领取或删除 -->
             <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
             <!-- 变更负责人 -->
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import MyMixin from '@/mixins/permissionsList'
 import { Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 
@@ -107,6 +108,7 @@ import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 
 export default {
+    mixins: [MyMixin],
     components: {
         HeaderTitle,
         Dynamics,
@@ -135,11 +137,12 @@ export default {
     },
     data(){
         return {
-            fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
-            jurisdictionList: JSON.parse(this.$route.query.jurisdictionList), // 按钮权限列表
             id: this.$route.query.id,
             code: this.$route.query.userNo ? this.$route.query.userNo : '',
-            clueCustomerNo: this.$route.query.clueCustomerNo,
+            clueCustomerNo: this.$route.query.clueCustomerNo ? this.$route.query.clueCustomerNo : '',
+
+            jurisdictionList: [], // 按钮权限列表
+
             num: this.$route.query.num,
             showPortraitType: 0,
             dialog_group: false,
@@ -176,6 +179,12 @@ export default {
         }
     },
     computed: {
+        fromType() { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            return this.customerInfo && this.customerInfo.type
+        },
+        userNo(){
+            return this.$store.getters.userNo
+        },
         bgY(){
             let y = 0
 
@@ -216,6 +225,46 @@ export default {
             }
             return []
         },
+        // 获取当前登录客户的角色与权限
+        roleObj() {
+            let obj = {}
+
+            this.userList.map(item => {
+                if (item.userNo == this.userNo) {
+                    obj.flag = item.flag  // 1: 负责人 2: 协助人
+                    obj.permission = item.permission // 1: 读写 2: 只读
+                }
+            })
+
+            return obj
+        },
+        // 是否是负责人
+        isInCharge() {
+            return this.roleObj && this.roleObj.flag == 1
+        },
+        // 是否是协助人（读写）
+        isHelperOne() {
+            return this.roleObj && this.roleObj.flag == 2 && this.roleObj.permission == 1
+        },
+        // 是否是协助人（只读）
+        isHelperTwo() {
+            return this.roleObj && this.roleObj.flag == 2 && this.roleObj.permission == 2
+        },
+        // 操作面板弹窗操作按钮权限
+        permission() {
+            console.log("权限：", this.jurisdictionList)
+            
+            return {
+                writeFollowUp: (this.fromType == 1 || this.fromType == 3) && (this.isInCharge || this.isHelperOne) ? true : false, // 写跟进（type: 1 || 3, 负责人与写权限的协助人）
+                transferCustomer: this.fromType == 1 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn') && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）
+                changeDirector: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change') && this.isInCharge ? true : false, // 变更负责人（type: 1 || 3, 仅负责人）
+                opportunityOperation: this.fromType == 3 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business') && (this.isInCharge || this.isHelperOne) ? true : false, // 操作商机（新增, type: 3, 负责人与写权限的协助人）
+                giveUp: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup') && this.isInCharge ? true : false, // 放弃（type: 1 || 3, 仅负责人）
+                distribution: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot') ? true : false, // 分配（type: 2 || 4, 有按钮权限即可）
+                receive: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get') ? true : false, // 领取（type: 2 || 4, 有按钮权限即可）
+                delete: this.fromType == 1 && this.customerInfo.isWcCus != 1 && this.isInCharge ? true : false, // 删除（客户没有删除，线索有删除（仅负责人 非微信好友可删除））
+            }
+        },
     },
     mounted(){
         this.getCustomerDetail()
@@ -236,9 +285,7 @@ export default {
             document.querySelector(`#${code}`).scrollIntoView(true); //这里的counter1是将要返回地方的id
         },
         getCustomerDetail(){    //获取客户详情
-            let clueCustomerNo = this.clueCustomerNo ? this.clueCustomerNo : ''
-
-            cluecustomer_getClueCustomerByid(this.code, clueCustomerNo).then(res => {
+            cluecustomer_getClueCustomerByid(this.code, this.clueCustomerNo).then(res => {
                 if (res.result) {
                     let data = res.data
 
@@ -267,8 +314,23 @@ export default {
                     let data = res.data
                     this.showSecret = !data.haveSecret
                     this.sendUserInfo = data && data.userEntity
+                    this.getJurisdictionList()
                 }
             })
+        },
+        // 获取按钮权限列表
+        getJurisdictionList() {
+            this.setName(this.sendUserInfo.permissionList, "/customerManage/myCustomer")
+
+            let jurisdictionObj = {}
+
+            for (let i in this.expandedKeys) {
+                jurisdictionObj[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
+            }
+
+            let type = this.fromType == '1' ? 'myClew' : this.fromType == '2' ? 'commonClew' : this.fromType == '3' ? 'myCustomer' : 'commonCustomer'
+            
+            this.jurisdictionList = jurisdictionObj[type]
         },
         getCustomerGroupList(){     //获取客户群列表
             this.searchGroup.customerNo = this.customerInfo.clueCustomerNo
@@ -761,23 +823,24 @@ export default {
         }
         .operation-box {
             width: 5rem;
-            height: 76px;
+            height: 104px;
             pointer-events: none;
             position: fixed;
             bottom: 200px;
             left: 50%;
             z-index: 9;
             .follow_up{
-                width: 76px;
-                height: 76px;
-                background: rgba(0, 0, 0, .4);
+                width: 104px;
+                height: 104px;
+                background-color: @main;
+                box-shadow: 0 6px 34px 0 rgba(65, 104, 246, 0.3);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 pointer-events: auto;
                 position: absolute;
-                right: 24px;
+                right: 32px;
                 top: 0;
                 .icon{
                     width: 40px;

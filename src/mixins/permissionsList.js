@@ -10,10 +10,15 @@ export default {
         this.setName(permissionsList)
     },
     methods: {
-        setName(datas) {
+        setName(datas, pathname) {
             // console.log(datas)
             for (var i in datas) {
                 let url = location.pathname
+
+                if (pathname) {
+                    url = pathname
+                }
+
                 if (datas[i].url == url) {
                     this.expandedKeys = datas[i].childrenList
                     console.log('---expandedKeys---', this.expandedKeys)

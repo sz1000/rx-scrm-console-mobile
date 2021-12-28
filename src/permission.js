@@ -10,6 +10,7 @@ var useList = [
         '/home',
         '/Interactive',
         '/customerPortrait',
+        '/customerManage/customDetail',
         '/informationDetail',
         '/talkTool/verbalTrick',
         '/talkTool/contentMaterial',

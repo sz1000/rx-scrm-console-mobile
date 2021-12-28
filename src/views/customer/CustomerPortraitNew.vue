@@ -1,22 +1,22 @@
 <template>
     <div class="customer_wrap" :class="{'glass':dialog_xzr}">
         <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-        <TopCard :fromType="customerInfo.type" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" isPortrait @jump="toFun"></TopCard>
+        <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" isPortrait @jump="toFun"></TopCard>
         <div class="nav_box">
             <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
         </div>
         <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
             <!-- 客户动态 -->
-            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="customerInfo.type" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+            <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
             <!-- 商机 -->
             <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
             <!-- 群聊 -->
             <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
             <!-- 附件 -->
-            <enclosure :id="customerInfo.clueCustomerNo" :detailType="customerInfo.type" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+            <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
         </div>
         <!-- 打开操作按钮弹窗面板 -->
-        <div class="operation-box">
+        <div v-if="isInCharge || isHelperOne" class="operation-box">
             <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
                 <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
             </div>
@@ -76,15 +76,16 @@
         <!-- 申请成为协助人 -->
         <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
         <!-- 操作按钮弹窗面板 -->
-        <operation-btn-box ref="operationBtnBox" :fromType="customerInfo.type" :jurisdictionList="jurisdictionList" :isWcCus="customerInfo && customerInfo.isWcCus" @doAction="doAction"></operation-btn-box>
+        <operation-btn-box ref="operationBtnBox" :fromType="fromType" :permission="permission" :isWcCus="customerInfo && customerInfo.isWcCus" @doAction="doAction"></operation-btn-box>
         <!-- 放弃或领取或删除 -->
         <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
         <!-- 变更负责人 -->
-        <change-director ref="changeDirector" :fromType="customerInfo.type"></change-director>
+        <change-director ref="changeDirector" :fromType="fromType"></change-director>
     </div>
 </template>
 
 <script>
+import MyMixin from '@/mixins/permissionsList'
 import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,BusinessCard } from './components'
 import { user_getUserName } from '@/api/home'
 import {
@@ -103,6 +104,7 @@ import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 
 export default {
+    mixins: [MyMixin],
     components: {
         Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, ApplyHelp, TopCard, BusinessCard,
         Opportunities, MessageBox, RemindersBox, GiveUpOrReceive, ChangeDirector, OperationBtnBox
@@ -119,8 +121,7 @@ export default {
     },
     data(){
         return {
-            expandedKeys: [],
-            jurisdictionList: {}, // 按钮权限列表
+            jurisdictionList: [], // 按钮权限列表
 
             id: this.$route.query.id,
             code: this.$route.query.userNo,
@@ -188,6 +189,9 @@ export default {
             let list = this.userList
             return list && list.length ? list.slice(0,3) : ''
         },
+        fromType() { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            return this.customerInfo && this.customerInfo.type
+        },
         bgY(){
             let y = 0
             if(this.tagList.length == 0){
@@ -203,6 +207,46 @@ export default {
             }
             return y
         },
+        // 获取当前登录客户的角色与权限
+        roleObj() {
+            let obj = {}
+
+            this.userList.map(item => {
+                if (item.userNo == this.userNo) {
+                    obj.flag = item.flag  // 1: 负责人 2: 协助人
+                    obj.permission = item.permission // 1: 读写 2: 只读
+                }
+            })
+
+            return obj
+        },
+        // 是否是负责人
+        isInCharge() {
+            return this.roleObj && this.roleObj.flag == 1
+        },
+        // 是否是协助人（读写）
+        isHelperOne() {
+            return this.roleObj && this.roleObj.flag == 2 && this.roleObj.permission == 1
+        },
+        // 是否是协助人（只读）
+        isHelperTwo() {
+            return this.roleObj && this.roleObj.flag == 2 && this.roleObj.permission == 2
+        },
+        // 操作面板弹窗操作按钮权限
+        permission() {
+            console.log("权限：", this.jurisdictionList)
+            
+            return {
+                writeFollowUp: (this.fromType == 1 || this.fromType == 3) && (this.isInCharge || this.isHelperOne) ? true : false, // 写跟进（type: 1 || 3, 负责人与写权限的协助人）
+                transferCustomer: this.fromType == 1 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn') && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）
+                changeDirector: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change') && this.isInCharge ? true : false, // 变更负责人（type: 1 || 3, 仅负责人）
+                opportunityOperation: this.fromType == 3 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business') && (this.isInCharge || this.isHelperOne) ? true : false, // 操作商机（新增, type: 3, 负责人与写权限的协助人）
+                giveUp: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup') && this.isInCharge ? true : false, // 放弃（type: 1 || 3, 仅负责人）
+                distribution: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot') ? true : false, // 分配（type: 2 || 4, 有按钮权限即可）
+                receive: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get') ? true : false, // 领取（type: 2 || 4, 有按钮权限即可）
+                delete: this.fromType == 1 && this.customerInfo.isWcCus != 1 && this.isInCharge ? true : false, // 删除（客户没有删除，线索有删除（仅负责人 非微信好友可删除））
+            }
+        },
     },
     mounted(){
         console.log('asd',this.$route.query.name)
@@ -210,27 +254,7 @@ export default {
         this.getUserName()
     },
     methods: {
-        // 获取按钮权限列表
-        getJurisdictionList() {
-            this.setName(this.sendUserInfo.permissionList)
-
-            for (let i in this.expandedKeys) {
-                this.jurisdictionList[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
-            }
-            console.log('权限列表111: ', this.jurisdictionList)
-        },
-        setName(datas) {
-            for (var i in datas) {
-                let url = location.pathname
-                if (datas[i].url == url) {
-                    this.expandedKeys = datas[i].childrenList
-                }
-                if (datas[i].childrenList) {
-                    this.setName(datas[i].childrenList)
-                }
-            }
-        },
-        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据
+        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读)
             this.dialog_xzr = Number(data.permFlag) ? false : true
             this.isApply = data.isApply ? true : false
             let directorList = data.directorList
@@ -277,8 +301,7 @@ export default {
             cluecustomer_getClueCustomerByid(id, '').then(res => {
                 if(res.result){
                     let data = res.data
-                    this.isDirectorFun(data)
-                    // this.isApply = data.permFlag ? true : false
+                    // this.isDirectorFun(data)
                     this.customerInfo = data.clueCustomerVO
                     this.userList = data.directorList
                     this.tagList = data.tagList.filter((el,index) => {
@@ -308,6 +331,22 @@ export default {
                     this.getJurisdictionList()
                 }
             })
+        },
+        // 获取按钮权限列表
+        getJurisdictionList() {
+            this.setName(this.sendUserInfo.permissionList, "/customerManage/myCustomer")
+
+            let jurisdictionObj = {}
+
+            for (let i in this.expandedKeys) {
+                jurisdictionObj[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
+            }
+
+            let type = this.fromType == '1' ? 'myClew' : this.fromType == '2' ? 'commonClew' : this.fromType == '3' ? 'myCustomer' : 'commonCustomer'
+            
+            this.jurisdictionList = jurisdictionObj[type]
+
+            console.log('权限列表111: ', this.jurisdictionList)
         },
         getCustomerGroupList(){     //获取客户群列表
             this.searchGroup.customerNo = this.customerInfo.clueCustomerNo
@@ -358,7 +397,7 @@ export default {
                     this.$router.push({
                         path: 'turnCustomer',
                         query: {
-                            fromType: this.customerInfo.type,
+                            fromType: this.fromType,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
@@ -376,7 +415,7 @@ export default {
                     break;
                 case 'receive':    // 领取（客户公海、线索公海）
                     this.popContent.title = '领取提示'
-                    this.popContent.desList = [ this.customerInfo.type == 4 ? '是否确认领取所选择的客户？' : '是否确认领取所选择的线索？', '确认申领该条资源吗？']
+                    this.popContent.desList = [ this.fromType == 4 ? '是否确认领取所选择的客户？' : '是否确认领取所选择的线索？', '确认申领该条资源吗？']
                     this.$refs.giveUpOrReceive.show()
                     break;
                 case 'delete':    // 删除（ 客户没有删除，我的线索有删除（非微信好友可删除：isWcCus 为 1 即为好友））
@@ -410,7 +449,7 @@ export default {
 
             let params = {
                 clueCustomerNo: this.customerInfo.clueCustomerNo,
-                type: this.customerInfo.type,
+                type: this.fromType,
             }
 
             ApiOpts(params).then(res => {
@@ -548,7 +587,7 @@ export default {
             return true
         },
         toFun(val){
-            let name = '', query = { fromType: this.customerInfo.type }
+            let name = '', query = { fromType: this.fromType }
 
             if (val == 'helper') {    //查看协助人
                 name = 'helper'
@@ -804,41 +843,26 @@ export default {
         padding: 0;
     }
   }
-  .follow_up{
-    width: 76px;
-    height: 76px;
-    background: rgba(0, 0, 0, .4);
-    border-radius: 50%;
-    position: fixed;
-    right: 24px;
-    bottom: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .icon{
-        width: 40px;
-        height: 40px;
-    }
-  }
   .operation-box {
         width: 5rem;
-        height: 76px;
+        height: 104px;
         pointer-events: none;
         position: fixed;
         bottom: 200px;
         left: 50%;
         z-index: 9;
         .follow_up{
-            width: 76px;
-            height: 76px;
-            background: rgba(0, 0, 0, .4);
+            width: 104px;
+            height: 104px;
+            background-color: @main;
+            box-shadow: 0 6px 34px 0 rgba(65, 104, 246, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: auto;
             position: absolute;
-            right: 24px;
+            right: 32px;
             top: 0;
             .icon{
                 width: 40px;

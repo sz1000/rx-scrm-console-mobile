@@ -4,7 +4,7 @@
             <div class="content">
                 <ul class="btn-box">
                     <template v-for="i in actions">
-                        <li v-if="i.show && (i.type == fromType || fromType == '1' && i.type == '3' || fromType == '2' && i.type == '4' || (fromType == '1' || fromType == '2') && i.type == '0')" :key="i.code" class="btn-item pointer" @click="doAction(i.code)">
+                        <li v-if="permission[i.code]" :key="i.code" class="btn-item pointer" @click="doAction(i.code)">
                             <div class="icon" :class="i.code">
                                 <img class="icon-svg" :src="require(`@/assets/svg/${i.iconName}`)" alt="">
                             </div>
@@ -25,14 +25,19 @@ export default {
         fromType: {  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: '0'
         },
-        jurisdictionList: { // 按钮权限列表
+        permission: {
             default() {
-                return []
+                return {}
             }
-        },
-        isWcCus: { // 是否是企微或微信好友
-            default: 1
         }
+        // jurisdictionList: { // 按钮权限列表
+        //     default() {
+        //         return []
+        //     }
+        // },
+        // isWcCus: { // 是否是企微或微信好友
+        //     default: 1
+        // }
     },
     data() {
         return {
@@ -41,15 +46,16 @@ export default {
     },
     computed: {
         actions() { // 操作按钮列表
-        console.log("权限列表：", this.jurisdictionList)
+        console.log("权限列表：", this.permission)
             return [
                 { show: true, type: '3', name: '写跟进', code: 'writeFollowUp', iconName: 'writeFollowUp.svg' },
                 { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn'), type: '1', name: '转客户', code: 'transferCustomer', iconName: 'transferCustomer.svg' },
                 { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'), type: '3', name: '变更负责人', code: 'changeDirector', iconName: 'changeDirector.svg' },
+                { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'), type: '3', name: '新增商机', code: 'opportunityOperation', iconName: 'opportunityOperation.svg' },  // 商机
                 { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'), type: '3', name: '放弃', code: 'giveUp', iconName: 'giveUp.svg' },
                 { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'), type: '4', name: '分配', code: 'distribution', iconName: 'distribution.svg' },
                 { show: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'), type: '4', name: '领取', code: 'receive', iconName: 'receive.svg' },
-                { show: this.isWcCus != 1, type: '0', name: '删除', code: 'delete', iconName: 'delete.svg' }  // 客户没有删除，线索有删除（非微信好友可删除）
+                { show: this.isWcCus != 1, type: '0', name: '删除', code: 'delete', iconName: 'delete.svg' },  // 客户没有删除，线索有删除（非微信好友可删除）
             ]
         }
     },
@@ -90,19 +96,22 @@ export default {
                     height: 48px;
                 }
                 &.writeFollowUp, &.distribution {
-                    background: linear-gradient(to right, #4390FF, #4168F6);
+                    background: linear-gradient(to right, #4168F6, #4390FF);
                 }
                 &.transferCustomer {
                     background: linear-gradient(to right, #8D95F0, #5360FF);
                 }
                 &.changeDirector, &.receive {
-                    background: linear-gradient(to right, #55A7FE, #55BBFE);
+                    background: linear-gradient(to right, #55BBFE, #55A7FE);
                 }
                 &.giveUp {
-                    background: linear-gradient(to right, #FFAE20, #FFC96A);
+                    background: linear-gradient(to right, #FFC96A, #FFAE20);
                 }
                 &.delete {
                     background: linear-gradient(to right, #EA7878, #D14343);
+                }
+                &.opportunityOperation {
+                    background: linear-gradient(to right, #3FE0C5, #36B39E);
                 }
             }
             p {
