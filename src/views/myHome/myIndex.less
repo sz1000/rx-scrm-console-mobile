@@ -3,9 +3,9 @@
   background: #F0F2F5;
 
   .page_title {
-    height: 260px;
-    background: #5880f5;
-    border-radius: 0 0 32px 32px;
+    height: 254px;
+    background: #fff;
+    // border-radius: 0 0 32px 32px;
     padding: 42px 32px 0;
     display: flex;
     justify-content: space-between;
@@ -15,7 +15,8 @@
       display: flex;
       align-items: center;
       width: 100%;
-
+     
+   
       img {
         width: 112px;
         height: 112px;
@@ -29,7 +30,7 @@
           align-items: center;
           .name{
             font-size: 40px;
-            color: #fff;
+            color: #262626;
             margin-bottom: 8px;
             max-width: 200px;
             overflow: hidden;
@@ -37,9 +38,9 @@
             white-space: nowrap;
           }
           .position_name{
-            background: #fff;
+            background: #4168F6;
             border-radius: 24px;
-            color: #4168F6;
+            color: #fff;
             padding: 6px 16px;
             margin-left: 16px;
             font-weight: 600;
@@ -57,7 +58,7 @@
         }
         .departments{
           font-size: 24px;
-          color: #fff;
+          color: #B3B3B3;
           opacity: 0.8;
         }
       }
@@ -86,7 +87,56 @@
   .content_warp {
     padding: 0 32px;
     margin-top: -74px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F0F2F5 20%, #F0F2F5 100%);
+    .warp_car {
+      display: flex;
+      justify-content: space-around;
+      .client_color {
+        background: linear-gradient(315deg, #ffae20 0%, #ffc96a 100%);
+      }
+      .group_color {
+        background: linear-gradient(137deg, #4390ff 0%, #4168f6 100%);
+      }
+      .clients_color {
+        background: linear-gradient(315deg, #55a7fe 0%, #55bbfe 100%);
+      }
+      .mg_auto {
+        margin: 0 10px;
+      }
+      .car_box {
+        width: 214px;
+        height: 140px;
+        // box-shadow: 0px 3px 12px 0px rgba(67, 144, 255, 0.3);
+        border-radius: 8px;
+        padding: 20px 16px 20px;
 
+        .client {
+          display: flex;
+          align-items: center;
+          .img_group {
+            width: 32px;
+            height: 32px;
+          }
+          img {
+            width: 28px;
+            height: 28px;
+            margin-right: 8px;
+          }
+          .name {
+            font-size: 24px;
+            font-weight: 500;
+            color: #ffffff;
+          }
+        }
+        .num {
+          font-size: 48px;
+          font-weight: bold;
+          color: #ffffff;
+          margin-top: 10px;
+          text-align: center;
+        }
+      }
+    }
 
 
     .arrow_right {
@@ -97,7 +147,14 @@
     .text_wait {
       display: flex;
       justify-content: space-between;
-
+    .dynamic-tite{
+           display: flex;
+           img{
+             width: 44px;
+             height: 44px;
+             margin-right: 16px;
+           }
+         }
       .cilck_area {
         width: 100px;
         position: relative;
@@ -148,8 +205,10 @@
       border-radius: 16px;
       padding: 32px;
       // box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.05);
-
-      .task_msg {
+      .task_outo{
+        overflow: auto !important;
+      }
+      .task_msg  {
         max-height: 300px;
         overflow: hidden;
         margin-top: 24px;
@@ -163,13 +222,71 @@
           border-left: 2px solid #E4E7ED;
           display:block;
         }
+        .dat_list{
+           margin-bottom: 20px;
+        
+        }
         .dynamic_list{
           display: flex;
           // justify-content: space-between;
           // margin-bottom: 24px;
           height: 58px;
           align-items: center;
-        
+          .cent_data{
+            display: flex;
+          
+            .warp{
+              display: flex;
+              margin-left: 36px;
+              width: 410px;
+          
+            }
+            .head_img{
+              width: 40px;
+              height: 40px;
+            
+              position: relative;
+              .img_tx{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+              }
+              .weix_img{
+                position: absolute;
+                right: 0;
+                bottom: -4px;
+                .img{
+                  width: 16px;
+                  height: 16px;
+                }
+              }
+            }
+            .name_tite{
+              color: #3C4353;
+              font-weight: 400;          
+              font-size: 28px;
+              margin-left: 16px;
+              margin-right: 6px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              // width: 420px;
+            }
+            .enterprise{
+              font-size: 20px;        
+              color: #FFB020;
+            }
+            .wechat{
+              font-size: 20px;     
+              color: #52BD94;
+            }
+            .tite_nane{
+              font-size: 24px;      
+              color: #B3B3B3;
+              width: 150px;
+              text-align: right;
+            }
+          }
           .dot{
             position: absolute;
             left: 4px;
@@ -191,7 +308,7 @@
           .circle_line{
             width: 12px;
             height: 12px;
-            background: #4168F6;
+            background: #d9dadb;
             border-radius: 50%;
             position: relative;
             // z-index: 99999;
@@ -200,7 +317,7 @@
               position: absolute;
               top: -20px;
               left: 5px;
-              height: 50px;
+              height: 80px;
               width: 1px;
               // z-index:-1;
               // background: #CCCCCC;
@@ -210,7 +327,7 @@
           .circle_lines{
             width: 4px;
             height: 12px;
-            background: #4168F6;
+            background: #d9dadb;
             // border-radius: 50%;
             position: relative;
             left: -8px;
@@ -291,7 +408,14 @@
     }
 
     .about_shadow {
-
+      .dynamic-tite{
+        display: flex;
+        img{
+          width: 44px;
+          height: 44px;
+          margin-right: 16px;
+        }
+      }
       // box-shadow: 0px 4px 24px 0px rgba(0, 0, 0, 0.05);
     }
 
