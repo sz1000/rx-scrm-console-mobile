@@ -5,7 +5,8 @@
             <div v-if="fromType == 1 && isPortrait" class="clue-tag">线索</div>
             <div class="info_box">
                 <div class="avatar pointer">
-                    <img class="img" :src="customerInfo.avatar | $setAvatar">
+                    <img v-if="customerInfo.avatar" class="img" :src="customerInfo.avatar" alt="">
+                    <span v-else class="default-img">{{ customerInfo.customerCalled ? customerInfo.customerCalled.slice(0, 1) :  ''}}</span>
                 </div>
                 <div class="val pointer">
                     <div class="name_box" v-if="customerInfo.customerCalled">
@@ -139,10 +140,18 @@ export default {
             background: rgba(@placeholder,.2);
             margin-right: 32px;
             font-size: 0;
-            .img{
+            .img, .default-img{
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+            }
+            .default-img {
+                display: block;
+                line-height: 120px;
+                color: @white;
+                font-size: 36px;
+                background-color: @main;
+                text-align: center;
             }
         }
         .val{

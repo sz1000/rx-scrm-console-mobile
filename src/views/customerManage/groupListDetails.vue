@@ -35,7 +35,7 @@
           <div class="rightTitle">
             <p class="title">{{ datatTite.name || "暂无" }}</p>
             <!-- v-if="groupName.admintype == 1" -->
-            <div v-if="groupName.admintype == 1" class="sop" @click="toSopPage">
+            <div v-if="!isGroup" class="sop" @click="toSopPage">
               <span>SOP生效中</span>
               <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
             </div>
@@ -53,7 +53,7 @@
       </div>
       <div class="content">
         <!-- 群公告 -->
-        <div class="row tag" @click="toGroupAnnouncement">
+        <!-- <div class="row tag" @click="toGroupAnnouncement">
           <div class="groupTxt">群公告</div>
           <div class="tag_wrap notice">
             <p>
@@ -66,7 +66,7 @@
               alt=""
             />
           </div>
-        </div>
+        </div> -->
         <!-- 群标签 -->
         <div class="row lable_box">
           <!-- lable_top -->
@@ -151,17 +151,19 @@
         </ul>
 
         <!-- 群动态 -->
-        <GroupAll
-          v-if="contentType == 0"
-          ref="dynamic"
-          :comeType="1"
-          :isPortrait="1"
-        ></GroupAll>
-
+        <keep-alive>
+          <GroupAll
+            v-if="contentType == 0"
+            ref="dynamic"
+            :comeType="1"
+            :isPortrait="1"
+          ></GroupAll>
+        </keep-alive>
         <!-- 群成员 -->
-        <div v-if="contentType == 1">
-          <GroupMembers :isPortrait="1"></GroupMembers>
-        </div>
+        <keep-alive>
+            <GroupMembers v-if="contentType == 1" :isPortrait="1"></GroupMembers>
+      
+        </keep-alive>
       </div>
       <!-- 群标签 -->
       <van-popup
@@ -247,6 +249,7 @@ export default {
       groupName: {
         admintype: 0,
       },
+      isGroup: false,
       datatTite: {
         name: "",
         usersum: "",
@@ -290,6 +293,14 @@ export default {
     };
   },
   updated() {},
+  computed: {
+    // chatId() {
+    //   return this.$store.getters.chatId;
+    // },
+    userId() {
+      return this.$store.getters.userId;
+    },
+  },
   mounted() {
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.pageInfo.page = 1;
@@ -398,6 +409,16 @@ export default {
         console.log(res.data);
         if (res.result) {
           this.groupName = res.data.group;
+          let owmer = res.data.group.owmer;
+          // 判断是不是群主
+          console.log("判断是不是群主 " + this.$store.getters.userId);
+          console.log(sessionStorage.getItem("userId"));
+          console.log(owmer);
+          if (owmer == this.$store.getters.userId) {
+            this.isGroup = true;
+          } else {
+            this.isGroup = false;
+          }
           console.log("groupName 123");
           console.log(this.groupName);
           this.groupNameList = res.data.groupUserEntityList;
@@ -412,12 +433,12 @@ export default {
         }
       });
     },
-
     getGroupDetail() {
       group_getGroupDetail(this.$route.query.id).then((res) => {
         console.log(res);
         console.log("获取头部信息接口 getGroupDetail " + res);
         if (res.result) {
+          sessionStorage.setItem("userId",res.data.userId)
           this.notice = res.data.notice;
           // this.notice = "必要的财政支出规模，优化地方政府专项债券发行使用管理，开展全域无隐性债务试点，建立常态化财政资金直达机制并扩大范围，优化和落实减税降费政策，预计全年新增减税降费达到1万亿元。二是支持科技自立自强，加大对基础研究的支持，改革完善中央财政科研经费管理，打好关键核心技术攻坚战，启动支持专精特新中小企业高质量发展奖补政策，推动优化和稳定产业链供应链。";
           let len = this.getStrLen(this.notice);
@@ -431,7 +452,7 @@ export default {
           // this.finished = true;
           this.groupId = res.data.id;
           if (res.data.owmer == res.data.userId) {
-            // console.log("我是群主");
+            console.log("我是群主");
             this.isOwmer = true;
             this.getSopList();
           }
@@ -497,7 +518,7 @@ export default {
       });
     },
     toSopPage() {
-      this.$router.push("sop");
+      this.$router.push("/sop");
     },
     // 导航切换
     changeNav(index) {
@@ -1168,7 +1189,7 @@ export default {
         .group-title {
           height: 68px;
           line-height: 68px;
-          width: 112px;
+          width: 420px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

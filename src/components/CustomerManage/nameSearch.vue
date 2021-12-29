@@ -11,7 +11,7 @@
 
         <div v-if="fromType == 3" class="name-box">线索名称：{{ searchParam }}</div>
 
-        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :customerType="customerType" :searchParam="searchParam" :checkedItem="checkedItem"></name-search-list-box>
+        <name-search-list-box ref="nameSearchListBox" :fromType="fromType" :isWcCus="isWcCus" :customerType="customerType" :searchParam="searchParam" :checkedItem="checkedItem"></name-search-list-box>
 
         <div class="btn-box pointer">
             <div v-if="fromType == 1" class="btn-item" :class="{invalid: isInvalid}" @click="confirm(1)">确认保存</div>
@@ -31,6 +31,9 @@ export default {
     props: {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
             default: 0
+        },
+        isWcCus: { // 1: 好友 0: 非好友
+            default: ''
         },
         customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: 0

@@ -263,10 +263,14 @@ export default {
         },
         // 打开名称搜索页面
         goNameSearch() {
-            this.showNameSearch = true
-            this.$nextTick(() => {
-                this.$refs.nameSearch.show(this.form.customerCalled)
-            })
+            if (this.fromType == 1 || this.fromType == 2) {
+                this.showNameSearch = false
+            } else {
+                this.showNameSearch = true
+                this.$nextTick(() => {
+                    this.$refs.nameSearch.show(this.form.customerCalled)
+                })
+            }
         },
         // 关闭名称搜索页
         hideNameSearch() {

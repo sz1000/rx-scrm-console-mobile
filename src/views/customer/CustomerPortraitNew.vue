@@ -35,7 +35,7 @@
                     <div class="total_box">
                         <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
                         <div class="btn" @click="toGroupDetail">
-                            <span class="a">群聊详情</span>
+                            <span class="a">群画像</span>
                             <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
                         </div>
                     </div>
@@ -232,16 +232,27 @@ export default {
         isHelperTwo() {
             return this.roleObj && this.roleObj.flag == 2 && this.roleObj.permission == 2
         },
+        // 配置按钮权限列表
+        jurisdictionListData() {
+            return {
+                transferCustomer: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn'),
+                changeDirector: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'),
+                opportunityOperation: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business'),
+                giveUp: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'),
+                distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                receive: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'),
+            }
+        },
         // 操作面板弹窗操作按钮权限
         permission() {
             return {
                 writeFollowUp: (this.fromType == 1 || this.fromType == 3) && (this.isInCharge || this.isHelperOne) ? true : false, // 写跟进（type: 1 || 3, 负责人与写权限的协助人）
-                transferCustomer: this.fromType == 1 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'turn') && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）
-                changeDirector: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change') && this.isInCharge ? true : false, // 变更负责人（type: 1 || 3, 仅负责人）
-                opportunityOperation: this.fromType == 3 && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business') && (this.isInCharge || this.isHelperOne) ? true : false, // 操作商机（新增, type: 3, 负责人与写权限的协助人）
-                giveUp: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup') && this.isInCharge ? true : false, // 放弃（type: 1 || 3, 仅负责人）
-                distribution: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot') ? true : false, // 分配（type: 2 || 4, 有按钮权限即可）
-                receive: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get') ? true : false, // 领取（type: 2 || 4, 有按钮权限即可）
+                transferCustomer: this.fromType == 1 && this.jurisdictionListData.transferCustomer && this.isInCharge ? true : false, // 转客户（type: 1, 仅负责人）
+                changeDirector: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionListData.changeDirector && this.isInCharge ? true : false, // 变更负责人（type: 1 || 3, 仅负责人）
+                opportunityOperation: this.fromType == 3 && this.jurisdictionListData.opportunityOperation && (this.isInCharge || this.isHelperOne) ? true : false, // 操作商机（新增, type: 3, 负责人与写权限的协助人）
+                giveUp: (this.fromType == 1 || this.fromType == 3) && this.jurisdictionListData.giveUp && this.isInCharge ? true : false, // 放弃（type: 1 || 3, 仅负责人）
+                distribution: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionListData.distribution ? true : false, // 分配（type: 2 || 4, 有按钮权限即可）
+                receive: (this.fromType == 2 || this.fromType == 4) && this.jurisdictionListData.receive ? true : false, // 领取（type: 2 || 4, 有按钮权限即可）
                 delete: this.fromType == 1 && this.customerInfo.isWcCus != 1 && this.isInCharge ? true : false, // 删除（客户没有删除，线索有删除（仅负责人 非微信好友可删除））
             }
         },
@@ -249,7 +260,6 @@ export default {
     mounted(){
         console.log('asd',this.$route.query.name)
         this.getCustomerDetail()
-        this.getUserName()
     },
     methods: {
         isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读)
@@ -303,6 +313,9 @@ export default {
                     let data = res.data
                     this.isDirectorFun(data)
                     this.customerInfo = data.clueCustomerVO
+
+                    this.getUserName()
+
                     this.userList = data.directorList
                     this.tagList = data.tagList.filter((el,index) => {
                         return index < 3
@@ -402,6 +415,7 @@ export default {
                         path: 'turnCustomer',
                         query: {
                             fromType: this.fromType,
+                            isWcCus: this.customerInfo.isWcCus,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
@@ -602,13 +616,21 @@ export default {
             }
             this.$router.push({ name, query })
         },
-        toGroupDetail(){    //群聊详情
-            this.$router.push({
-                path: '/customerManage/groupListDetails',
-                query: {
-                    id: this.groupChatId
-                }
-            })
+        toGroupDetail(){    //群画像
+                    if(this.groupUserData.total>20){
+                        this.$router.push({
+                            path: '/customerManage/groupListDetails',
+                            query: {
+                                id: this.groupChatId
+                            }
+                        })
+                    }
+            // this.$router.push({
+            //     path: '/customerManage/groupListDetails',
+            //     query: {
+            //         id: this.groupChatId
+            //     }
+            // })
         },
     },
     filters: {

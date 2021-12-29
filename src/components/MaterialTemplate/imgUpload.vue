@@ -61,15 +61,15 @@ export default {
         blob = fileData
       } else {
         console.info('浏览器支持图片压缩')
-        if (fileData.size > 2 * 1024 * 1024) {
+        if (fileData.size > 10 * 1024 * 1024) {
           blob = await getImgBlob(fileData, fileData.type, 1000, 1000)
         } else {
           blob = fileData
         }
       }
       console.log('blob:', blob)
-      if (blob.size > 2 * 1024 * 1024) {
-        this.$toast(`请选择小于 2M 的图片`)
+      if (blob.size > 10 * 1024 * 1024) {
+        this.$toast(`请选择小于 10M 的图片`)
         return false
       }
 
