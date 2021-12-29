@@ -1,85 +1,91 @@
 <template>
     <div class="custom-detail">
-        <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
-        <div class="customer_wrap">
-            <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
-            <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
-            <div class="nav_box">
-                <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
-            </div>
-            <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
-                <!-- 客户动态 -->
-                <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics>
-                <!-- 商机 -->
-                <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
-                <!-- 群聊 -->
-                <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
-                <!-- 附件 -->
-                <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
-            </div>
-            <!-- 打开操作按钮弹窗面板 -->
-            <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
-                <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
-                    <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+        <template v-if="!showFollowUpBox">
+            <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
+            <div class="customer_wrap">
+                <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
+                <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
+                <div class="nav_box">
+                    <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
                 </div>
-            </div>
-            
-            <!-- 协助人消息输入框 -->
-            <message-box v-if="(fromType == 1 || fromType == 3) && navActive == 'dynamics'" ref="messageBox"></message-box>
-            <!-- 协助人选择弹窗 -->
-            <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box>
-            <!-- 群成员列表 -->
-            <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
-                <div class="dialog_wrap">
-                    <div class="dialog_header">
-                        <div class="title">群成员列表</div>
-                        <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
-                        <div class="total_box">
-                            <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
-                            <div class="btn" @click="toGroupDetail">
-                                <span class="a">群聊详情</span>
-                                <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+                <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
+                    <!-- 客户动态 -->
+                    <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+                    <!-- <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics> -->
+                    <!-- 商机 -->
+                    <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
+                    <!-- 群聊 -->
+                    <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
+                    <!-- 附件 -->
+                    <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
+                </div>
+                <!-- 打开操作按钮弹窗面板 -->
+                <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
+                    <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
+                        <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
+                    </div>
+                </div>
+                
+                <!-- 协助人消息输入框 -->
+                <!-- <message-box v-if="(fromType == 1 || fromType == 3) && navActive == 'dynamics'" ref="messageBox"></message-box> -->
+                <!-- 协助人选择弹窗 -->
+                <!-- <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box> -->
+                <!-- 群成员列表 -->
+                <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
+                    <div class="dialog_wrap">
+                        <div class="dialog_header">
+                            <div class="title">群成员列表</div>
+                            <img class="close" @click="dialog_group = false" src="@/assets/svg/icon_close.svg" alt="">
+                            <div class="total_box">
+                                <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
+                                <div class="btn" @click="toGroupDetail">
+                                    <span class="a">群聊详情</span>
+                                    <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="dialog_content">
-                        <div class="list">
-                            <div class="li" v-for="(item,index) in groupUserList" :key="index">
-                                <!-- <div class="avatar"></div> -->
-                                <img class="avatar" :src="item.avatar | $setAvatar" alt="">
-                                <div class="val">
-                                    <div class="tit_box">
-                                        <div class="tit">{{item.name}}</div>
-                                        <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
-                                        <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
-                                        <div class="tag red" v-if="item.admintype == 1">群主</div>
-                                        <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
-                                        <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
-                                        <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                        <div class="dialog_content">
+                            <div class="list">
+                                <div class="li" v-for="(item,index) in groupUserList" :key="index">
+                                    <!-- <div class="avatar"></div> -->
+                                    <img class="avatar" :src="item.avatar | $setAvatar" alt="">
+                                    <div class="val">
+                                        <div class="tit_box">
+                                            <div class="tit">{{item.name}}</div>
+                                            <div class="alt" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">@微信</div>
+                                            <div class="alt yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">{{item.corpName}}</div>
+                                            <div class="tag red" v-if="item.admintype == 1">群主</div>
+                                            <div class="tag" v-if="item.admintype != 1 && item.type == 1">员工</div>
+                                            <div class="tag green" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 1">客户</div>
+                                            <div class="tag yellow" v-if="item.admintype != 1 && item.type == 2 && item.customerType == 2">企业客户</div>
+                                        </div>
+                                        <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
+                                        <!-- <div class="opera_right">
+                                            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
+                                        </div> -->
                                     </div>
-                                    <div class="time">{{item.joinTime | $time('YYYY-MM-DD HH:mm')}} <span v-if="item.admintype != 1">{{item.joinScene | joinType}}</span></div>
-                                    <!-- <div class="opera_right">
-                                        <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="">
-                                    </div> -->
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </van-popup>
-            <!-- 消息回复弹窗 -->
-            <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
-            <!-- 写跟进弹窗 -->
-            <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment>
-            <!-- 商机详情 -->
-            <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
-            <!-- 操作按钮弹窗面板 -->
-            <operation-btn-box ref="operationBtnBox" :permission="permission" @doAction="doAction"></operation-btn-box>
-            <!-- 放弃或领取或删除 -->
-            <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
-            <!-- 变更负责人 -->
-            <change-director ref="changeDirector" :fromType="fromType"></change-director>
-        </div>
+                </van-popup>
+                <!-- 消息回复弹窗 -->
+                <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
+                <!-- 写跟进弹窗 -->
+                <!-- <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment> -->
+                <!-- 商机详情 -->
+                <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+                <!-- 操作按钮弹窗面板 -->
+                <operation-btn-box ref="operationBtnBox" :permission="permission" @doAction="doAction"></operation-btn-box>
+                <!-- 放弃或领取或删除 -->
+                <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
+                <!-- 变更负责人 -->
+                <change-director ref="changeDirector" :fromType="fromType"></change-director>
+            </div>
+        </template>
+
+        <!-- 写跟进 -->
+        <follow-up-box v-else ref="followUpBox" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" :sendUserInfo="sendUserInfo" @doHideFollowUpBox="doHideFollowUpBox"></follow-up-box>
     </div>
 </template>
 
@@ -94,18 +100,19 @@ import {
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo, //添加评论回复
-    clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
-    cluecustomer_addMessage, //写跟进
+    // clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
+    // cluecustomer_addMessage, //写跟进
     cluecustomer_giveUpType, // 放弃
     cluecustomer_getclue, // 领取
     cluecustomer_delClueCustomer, // 删除
 } from '@/api/customer'
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
-import MessageBox from "@/components/CustomerManage/messageBox"
-import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
+// import MessageBox from "@/components/CustomerManage/messageBox"
+// import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
+import FollowUpBox from '@/components/CustomerManage/followUpBox'
 
 export default {
     mixins: [MyMixin],
@@ -118,20 +125,21 @@ export default {
         OpportunityDialog,
         TopCard,
         Opportunities,
-        MessageBox,
-        RemindersBox,
+        // MessageBox,
+        // RemindersBox,
         GiveUpOrReceive,
         ChangeDirector,
-        OperationBtnBox
+        OperationBtnBox,
+        FollowUpBox
     },
     provide() {
         return {
             goDetail: this.goDetail,
             showCompany: this.showCompany,
             showGuideBox: this.showGuideBox,
-            showRemindersBox: this.showRemindersBox,
+            // showRemindersBox: this.showRemindersBox,
             messageNotificatio: this.messageNotificatio,
-            getPeople: this.getPeople,
+            // getPeople: this.getPeople,
             goBack: this.goBack
         }
     },
@@ -147,7 +155,7 @@ export default {
             showPortraitType: 0,
             dialog_group: false,
             dialog_xx: false,
-            dialog_xgj: false,
+            // dialog_xgj: false,
             dialog_sj: false,
             optionType: '', // 操作类型
             popContent: {
@@ -176,6 +184,8 @@ export default {
 
             showSecret: false,
             sendUserInfo: {},
+
+            showFollowUpBox: false, // 是否显示写跟进页面
         }
     },
     computed: {
@@ -473,11 +483,20 @@ export default {
                     this.dialog_sj = true
                     break;
                 case 'follow':    //写跟进
-                    this.dialog_xgj = true
+                    // this.dialog_xgj = true
+                    this.doShowFollowUpBox()
                     break;
                 default:
                     break;
             }
+        },
+        // 显示写跟进页面
+        doShowFollowUpBox() {
+            this.showFollowUpBox = true
+        },
+        // 关闭写跟进页面
+        doHideFollowUpBox() {
+            this.showFollowUpBox = false
         },
         addCommentFun(val){    //添加评论回复
             let data = {
@@ -495,24 +514,24 @@ export default {
                 }
             })
         },
-        followUpFun(val){  //写跟进
-            let data = {
-                clueCustomerNo: this.customerInfo.clueCustomerNo,
-                context: val,
-            }
+        // followUpFun(val){  //写跟进
+        //     let data = {
+        //         clueCustomerNo: this.customerInfo.clueCustomerNo,
+        //         context: val,
+        //     }
             
-            cluecustomer_addMessage(data).then(res => {
-                const { result, msg }  = res
+        //     cluecustomer_addMessage(data).then(res => {
+        //         const { result, msg }  = res
 
-                if(result) {
-                    this.$toast('操作成功')
-                    this.dialog_xgj = false
-                    this.$refs.dynamic.searchFun()
-                } else {
-                    this.$toast(msg)
-                }
-            })
-        },
+        //         if(result) {
+        //             this.$toast('操作成功')
+        //             this.dialog_xgj = false
+        //             this.$refs.dynamic.searchFun()
+        //         } else {
+        //             this.$toast(msg)
+        //         }
+        //     })
+        // },
         navClickFun(code){
             this.navActive = code
             switch (code) {
@@ -532,64 +551,64 @@ export default {
                     break;
             }
         },
-        showRemindersBox() {
-            this.$refs.remindersBox.show()
-        },
-        getPeople(data) {
-            let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
+        // showRemindersBox() {
+        //     this.$refs.remindersBox.show()
+        // },
+        // getPeople(data) {
+        //     let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
 
-            arr.push(data)
-            this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
-            this.$refs.remindersBox.hide()
-        },
-        resetReceiveUserInfo(arr) {
-            let newArr = []
-            for (let i = 0; i < arr.length; i++) {
-                if (this.noHas(newArr, arr[i].userNo)) {
-                    newArr.push(arr[i])
-                }
-            }
-            return newArr
-        },
-        noHas(arr, userNo) {
-            let result = arr.filter((item) =>{
-                return item.userNo == userNo;
-            })
-            return result.length == 0 ? true : false;
-        },
-        messageNotificatio(receiveUserInfo, message) {
-            if (!this.checkBeforeSend(receiveUserInfo, message)) {
-                return
-            }
-            const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
+        //     arr.push(data)
+        //     this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
+        //     this.$refs.remindersBox.hide()
+        // },
+        // resetReceiveUserInfo(arr) {
+        //     let newArr = []
+        //     for (let i = 0; i < arr.length; i++) {
+        //         if (this.noHas(newArr, arr[i].userNo)) {
+        //             newArr.push(arr[i])
+        //         }
+        //     }
+        //     return newArr
+        // },
+        // noHas(arr, userNo) {
+        //     let result = arr.filter((item) =>{
+        //         return item.userNo == userNo;
+        //     })
+        //     return result.length == 0 ? true : false;
+        // },
+        // messageNotificatio(receiveUserInfo, message) {
+        //     if (!this.checkBeforeSend(receiveUserInfo, message)) {
+        //         return
+        //     }
+        //     const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
 
-            let params = {
-                content: message,
-                customerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
-                receiveUserInfo,
-                sendUserInfo: {
-                    avatar,
-                    userName: name,
-                    userNo
-                }
-            }
-            clueCustomerFollowUser_message_notificatio(params).then(res => {
-                if(res.result){
-                    this.$refs.messageBox.initData()
-                    this.$refs.dynamic.searchFun()
-                }
-            })
-        },
-        checkBeforeSend(receiveUserInfo, message) {
-            if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
-                this.$toast('接收人不能为空')
-                return false
-            } else if (!message) {
-                this.$toast('消息内容不能为空')
-                return false
-            }
-            return true
-        },
+        //     let params = {
+        //         content: message,
+        //         customerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
+        //         receiveUserInfo,
+        //         sendUserInfo: {
+        //             avatar,
+        //             userName: name,
+        //             userNo
+        //         }
+        //     }
+        //     clueCustomerFollowUser_message_notificatio(params).then(res => {
+        //         if(res.result){
+        //             this.$refs.messageBox.initData()
+        //             this.$refs.dynamic.searchFun()
+        //         }
+        //     })
+        // },
+        // checkBeforeSend(receiveUserInfo, message) {
+        //     if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
+        //         this.$toast('接收人不能为空')
+        //         return false
+        //     } else if (!message) {
+        //         this.$toast('消息内容不能为空')
+        //         return false
+        //     }
+        //     return true
+        // },
         toFun(val){
             let name = '', query = { fromType: this.fromType }
 
