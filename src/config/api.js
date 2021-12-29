@@ -133,7 +133,7 @@ export const PosterLists = (data) => {
     return http.post(`${customerServiceApi}/my/queryFollowMsgPage`, data)
 }
 
-// 获取个人浏览详情
+// 获取个人浏览记录
 export const material_operation = (data) => {
         return request({
             url: materialServiceApi +
