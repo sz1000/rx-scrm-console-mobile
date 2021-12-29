@@ -24,6 +24,7 @@ var pcList = [
         '/informationDetail',
         '/talkTool/verbalTrick',
         '/talkTool/contentMaterial',
+        '/customerManage/customDetail',
     ] //禁止跳转pc
 
 router.beforeEach(async(to, from, next) => {
