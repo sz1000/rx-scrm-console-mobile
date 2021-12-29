@@ -396,7 +396,7 @@
             </div>
         </template>
         <!-- 名称搜索页 -->
-        <name-search v-else ref="nameSearch" :fromType="1" @hideNameSearch="hideNameSearch" @handleResult="getResult"></name-search>
+        <name-search v-else ref="nameSearch" :fromType="1" :customerType="fromType" @hideNameSearch="hideNameSearch" @handleResult="getResult"></name-search>
 
         <!-- 时间选择弹窗（日历） -->
         <van-calendar v-model="selectDatePopupShow" :min-date="minDate" :show-confirm="false" color="#4168F6" @confirm="dateConfirm"/>

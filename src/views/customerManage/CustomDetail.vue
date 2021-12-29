@@ -345,8 +345,6 @@ export default {
                 jurisdictionObj[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
             }
 
-            console.log("fromType000", this.fromType)
-
             let type = this.fromType == '1' ? 'myClew' : this.fromType == '2' ? 'commonClew' : this.fromType == '3' ? 'myCustomer' : 'commonCustomer'
 
             this.jurisdictionList = jurisdictionObj[type]
@@ -401,6 +399,7 @@ export default {
                         path: 'turnCustomer',
                         query: {
                             fromType: this.fromType,
+                            isWcCus: this.customerInfo.isWcCus,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
