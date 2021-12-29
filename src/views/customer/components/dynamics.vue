@@ -68,7 +68,10 @@
                                 <div class="img_box">
                                     <img :src="item.optAvatar | $setAvatar" alt="">
                                 </div>
-                                <div class="name">{{item.optUserName}}<span>{{isMeFun(item.createBy)}}</span></div>
+                                <div class="name">
+                                    <span class="name-text one-line">{{item.optUserName}}</span>
+                                    <span>{{isMeFun(item.createBy)}}</span>
+                                </div>
                             </div>
                             <div class="time">{{item.createTime | $time('YYYY-MM-DD HH:mm')}}</div>
                             <div class="text">
@@ -976,18 +979,26 @@ export default {
                         .img_box{
                             width: 48px;
                             height: 48px;
-                            background: rgba(0, 0, 0, .05);
+                            // background: rgba(0, 0, 0, .05);
                             margin-right: 8px;
                             img{
                                 border-radius: 50%;
                             }
                         }
                         .name{
-                            font-size: 28px;
-                            line-height: 40px;
-                            font-weight: bold;
-                            color: @fontMain;
+                            max-width: calc(100% - 200px);
                             padding: 0;
+                            span {
+                                display: inline-block;
+                                vertical-align: middle;
+                                line-height: 40px;
+                                font-weight: bold;
+                                color: @fontMain;
+                                font-size: 28px;
+                            }
+                            .name-text {
+                                max-width: 75%;
+                            }
                         }
                     }
                 }
