@@ -104,7 +104,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg">
+        <div class="task_msg" v-if="clientList">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -137,7 +137,8 @@
           </div>
        
         <div class="reply_text" @click="goToAbout">
-          <span>今日新增{{dataObj.forReply}}条,关联{{dataObj.forReplyCustomer}}个客户</span>
+          <span v-if="dataObj.forReply">今日新增{{dataObj.forReply}}条,关联{{dataObj.forReplyCustomer}}个客户</span>
+          <span v-else>今日暂无记录</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
@@ -151,7 +152,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo">
+        <div class="task_msg task_outo" v-if="cluesList">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -202,7 +203,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo">
+        <div class="task_msg task_outo" v-if="cluesLists">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -562,7 +563,11 @@ export default {
       })
     },
     client(){
-       getMBTop10FollowMsgList().then((res)=>{
+          let params = {
+            queryFlag:4
+          }
+
+       getMBTop10FollowMsgList(params).then((res)=>{
               console.log(res.data,"------客户动态")
               this.clientList = res.data
              
