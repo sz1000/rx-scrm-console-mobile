@@ -184,13 +184,13 @@
     <div class="btm-box">
       <div class="bottom-warp">
         <div class="routerbtn" @click="handelChangeHome(false)">
-          <img src="../images/bg_y.png" alt="" v-show="showHome" />
-          <img src="../images/bg_gy.png" alt="" v-show="!showHome" />
+           <img src="../images/bg_g.png" alt="" v-show="showHome" />
+          <img src="../images/gz_xz.png" alt="" v-show="!showHome" />
           <span :class="showHome ? '' : 'textname'">工作面板</span>
         </div>
         <div class="routerbtn" @click="handelChangeHome(true)">
-          <img src="../images/bg_g.png" alt="" v-show="!showHome" />
-          <img src="../images/bg_m.png" alt="" v-show="showHome" />
+          <img src="../images/yu_wxz.png" alt="" v-show="!showHome" />
+          <img src="../images/yu_xz.png" alt="" v-show="showHome" />
           <span :class="showHome ? 'textname' : ''">应用中心</span>
         </div>
       </div>
