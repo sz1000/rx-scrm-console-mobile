@@ -1,11 +1,12 @@
 <template>
     <div class="name-search-list-box">
         <template v-if="preciseData && preciseData.length || list && list.length">
-            <template v-if="preciseData && preciseData.length">
+            <template v-if="preciseData && preciseData.length && (!isWcCus || (isWcCus == 1 && preciseData.some(item => item.isFriend == 0)))">
                 <div class="title">找到完全相同名称的客户：</div>
-                <div v-for="i in preciseData" :key="i.clueCustomerNo" class="list-item pointer">
+                <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click="goDetail(i)">
                     <div class="list-item-left">
-                        <img class="header-img" :src="i.avatar | $setAvatar" alt="">
+                        <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
+                        <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
                         <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="@/assets/svg/icon_qiyeweixin.svg" alt="">
                         <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="@/assets/svg/icon_weixin.svg" alt="">
                     </div>
@@ -13,6 +14,7 @@
                         <li class="right-top">
                             <div class="name-box">
                                 <h3 class="one-line active" v-html="i.customerCalled"></h3>
+                                <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
                             </div>
                         </li>
                         <li class="right-bottom">
@@ -27,9 +29,10 @@
             <template v-if="list && list.length">
                 <div class="title">找到以下相似客户：</div>
                 <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer">
+                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
                         <div class="list-item-left">
-                            <img class="header-img" :src="i.avatar | $setAvatar" alt="">
+                            <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
+                            <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
                             <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
                             <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
                         </div>
@@ -37,6 +40,7 @@
                             <li class="right-top">
                                 <div class="name-box">
                                     <h3 class="one-line" v-html="i.customerCalled"></h3>
+                                    <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
                                 </div>
                             </li>
                             <li class="right-bottom">
@@ -66,6 +70,9 @@ export default {
     props: {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
             default: 0
+        },
+        isWcCus: { // 1: 好友 0: 非好友
+            default: ''
         },
         customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: 0
@@ -159,6 +166,13 @@ export default {
             }
             this.getList()
         },
+        // 去往客户详情
+        goDetail(item) {
+            this.$router.push({
+                path: '/customerManage/customDetail',
+                query: { clueCustomerNo: item.clueCustomerNo},
+            })
+        },
     },
     filters: {
         optString(val){
@@ -197,10 +211,18 @@ export default {
             height: 80px;
             margin-right: 24px;
             position: relative;
-            .header-img {
+            .header-img, .default-img {
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
+            }
+            .default-img {
+                display: block;
+                line-height: 80px;
+                color: @white;
+                font-size: 28px;
+                background-color: @main;
+                text-align: center;
             }
             .icon {
                 width: 32px;
@@ -218,6 +240,8 @@ export default {
                 justify-content: space-between;
                 max-width: 100%;
                 .name-box {
+                    display: flex;
+                    align-items: flex-end;
                     max-width: calc(100% - 140px);
                     h3 {
                         max-width: 100%;
@@ -227,6 +251,11 @@ export default {
                     }
                     .active {
                         color: @main;
+                    }
+                    .crop-name {
+                        margin-left: 10px;
+                        color: @yellow;
+                        font-size: 20px;
                     }
                 }
                 .time {

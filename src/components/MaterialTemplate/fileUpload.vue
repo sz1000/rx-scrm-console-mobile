@@ -31,7 +31,7 @@ export default {
       ) {
         return false
       }
-      if (file.size / 1024 / 1024 >= 20) {
+      if (file.size / 1024 / 1024 >= 10) {
         return false
       }
       return true
@@ -58,7 +58,7 @@ export default {
           input.value = ''
           this.$toast.clear()
           this.$toast(
-            '上传文件格式为ppt、pptx、doc、docx、xls、xlsx、pdf、MP4, 大小不能超过20MB!'
+            '上传文件格式为ppt、pptx、doc、docx、xls、xlsx、pdf、MP4, 大小不能超过10MB!'
           )
           return
         }

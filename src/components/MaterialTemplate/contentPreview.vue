@@ -48,6 +48,7 @@ export default {
     },
     getUsersInfo() {
       UsersInfo(this.userNo).then((res) => {
+        // console.log(res)
         const { code, data } = res
         if (code === 'success') {
           this.userData = data

@@ -204,7 +204,7 @@
           </div>
           <div class="one" v-for="list in popupList" :key="list.id">
             <div class="left">
-              <img :src="list.cover" alt="" v-if="list.cover">
+              <img :src="list.avatar" alt="" v-if="list.avatar">
               <img src="../../images/img_head.png" alt="" v-else>
               <div class="name_warp">
                 <span>{{list.name}}-{{list.department}}</span>
@@ -294,6 +294,7 @@ export default {
     // 打开未发表弹框
     fnShowPublish(value) {
       this.showPubish = true
+      this.popupname = this.tabName
       this.itemObj = value
       this.getListPopup()
     },

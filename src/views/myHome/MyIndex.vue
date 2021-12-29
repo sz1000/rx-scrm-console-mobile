@@ -29,7 +29,34 @@
       </div> -->
     </div>
     <div class="content_warp">
-      <div class="statistical">
+        <div class="warp_car">
+        <!-- @click="FnToRouter('/customerManage/clues')" -->
+        <div class="car_box client_color" @click="FnToRouter('/customerManage/clues')">
+          <div class="client ">
+            <img src="../../assets/svg/clue.svg" alt="">
+            <span class="name">线索</span>
+          </div>
+          <p class="num">{{dataObj.clueSum}}</p>
+        </div>
+        <!-- @click="FnToRouter('/customerManage/myCustomer')" -->
+        <div class="car_box  clients_color mg_auto" @click="FnToRouter('/customerManage/myCustomer')">
+          <div class="client">
+            <img src="../../assets/svg/client.svg" alt="">
+            <span class="name">客户</span>
+          </div>
+          <p class="num">{{dataObj.customerSum}}</p>
+        </div>
+        <!-- @click="FnToRouter('/customerManage/grouplist')" -->
+        <div class="car_box group_color" @click="FnToRouter('/customerManage/grouplist')">
+          <div class="client">
+            <img class="img_group" src="../../assets/svg/kehuqun.svg" alt="">
+            <span class="name">客户群</span>
+          </div>
+          <p class="num">{{dataObj.groupSum}}</p>
+        </div>
+
+      </div>
+      <!-- <div class="statistical">
         <div class="box"  @click="FnToRouter('/customerManage/clues')">
           <p>{{dataObj.clueSum}}</p>
           <p>线索</p>
@@ -42,7 +69,7 @@
           <p>{{dataObj.groupSum}}</p>
           <p>客户群</p>
         </div>
-      </div>
+      </div> -->
       <!-- <div class="wait_warp">
         <div class="text_wait">
           <span>待处理</span>
@@ -69,7 +96,10 @@
       </div> -->
            <div class="wait_warp">
         <div class="text_wait">
-          <span>客户动态</span>
+          <div class="dynamic-tite">
+            <img src="../../assets/images/dynamic.png" alt="">
+             <span>全部动态</span>
+          </div>
           <div @click="dynamicFn" class="cilck_area">
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
@@ -86,26 +116,133 @@
              </van-swipe-item>
              </van-swipe> -->
         <vueSeamlessScroll :data="clientList" :class-option="optionLeft"  >
-           <ul>
-             <li class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
+           <!-- <ul> -->
+             <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
                 <span class="circle_line"></span>
                 <span class="circle_lines"></span>
-                <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="title">
+                  <span class="name" v-if="item.optType != 72 && item.optType != 36">{{item.optUserName}}</span>
+                  {{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
-             </li>
-           </ul>
+             </div>
+           <!-- </ul> -->
           
         </vueSeamlessScroll>
         </div>
       </div>
       <div class="about_me about_shadow">
-        <span>互动协同</span>
+          <div class="dynamic-tite">
+            <img src="../../assets/images/record.png" alt="">
+             <span>跟进记录</span>
+          </div>
+       
         <div class="reply_text" @click="goToAbout">
-          <span>{{dataObj.forReply}}条待回复,关联{{dataObj.forReplyCustomer}}个客户</span>
+          <span>今日新增{{dataObj.forReply}}条,关联{{dataObj.forReplyCustomer}}个客户</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
-      <div class="custom_r">
+      <div class="wait_warp">
+        <div class="text_wait">
+          <div class="dynamic-tite">
+            <img src="../../assets/images/clues.png" alt="">
+             <span>我的线索</span>
+          </div>
+          <div  @click="FnToRouter('/customerManage/clues')" class="cilck_area">
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+          </div>
+        </div>
+        <div class="task_msg task_outo">
+          <!-- <van-swipe  vertical >
+             <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
+               <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
+                <span class="circle_line"></span>
+                <span class="circle_lines"></span>
+                <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
+               </div>
+             </van-swipe-item>
+             </van-swipe> -->
+        <!-- <vueSeamlessScroll :data="clientList" :class-option="optionLeft"  > -->
+           <!-- <ul> -->
+             <div class="dynamic_list dat_list" v-for="item in cluesList" :key="item.id" @click="goCustomer(item)" >
+                <span class="circle_line"></span>
+                <span class="circle_lines"></span>
+                <div class="cent_data">
+                  <div class="warp">
+                    <div class="head_img">
+                       <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
+                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else>
+                        <div class="weix_img">
+                          <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
+                          <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
+                        </div>
+                    </div>
+                     <p class="name_tite">{{item.customerCalled}}</p>
+                     <p class="enterprise" v-if="item.externalType == 1">@企业</p>
+                     <p class="wechat" v-if="item.externalType == 2">@微信</p>
+                  </div>
+                    <div class="tite_nane">{{item.clueType}}</div>
+                </div>
+                <!-- <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p> -->
+             </div>
+           <!-- </ul> -->
+          
+        <!-- </vueSeamlessScroll> -->
+        </div>
+      </div>
+
+          <div class="wait_warp">
+        <div class="text_wait">
+          <div class="dynamic-tite">
+            <img src="../../assets/images/kehu.png" alt="">
+             <span>我的客户</span>
+          </div>
+          <div  @click="FnToRouter('/customerManage/myCustomer')" class="cilck_area">
+          <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
+          </div>
+        </div>
+        <div class="task_msg task_outo">
+          <!-- <van-swipe  vertical >
+             <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
+               <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
+                <span class="circle_line"></span>
+                <span class="circle_lines"></span>
+                <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
+               </div>
+             </van-swipe-item>
+             </van-swipe> -->
+        <!-- <vueSeamlessScroll :data="clientList" :class-option="optionLeft"  > -->
+           <!-- <ul> -->
+             <div class="dynamic_list dat_list" v-for="item in cluesLists" :key="item.id" @click="goCustomer(item)" >
+                <span class="circle_line"></span>
+                <span class="circle_lines"></span>
+                <div class="cent_data">
+                  <div class="warp">
+                    <div class="head_img">
+                       <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
+                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else>
+                        <div class="weix_img">
+                          <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
+                          <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
+                        </div>
+                    </div>
+                     <p class="name_tite">{{item.customerCalled}}</p>
+                     <p class="enterprise" v-if="item.externalType == 1">@企业</p>
+                     <p class="wechat" v-if="item.externalType == 2">@微信</p>
+                  </div>
+                    <div class="tite_nane">{{item.clueType}}</div>
+                </div>
+                <!-- <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p> -->
+             </div>
+           <!-- </ul> -->
+          
+        <!-- </vueSeamlessScroll> -->
+        </div>
+      </div>
+      <!-- <div class="custom_r">
         <div class="cust_activate">
           <div class="text_wait">
             <span>客户激活</span>
@@ -150,9 +287,9 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
-      </div>
+      </div> -->
       <!-- 图表 -->
-      <section>
+      <!-- <section>
         <div class="custom_add">
           <CustomAddChart :options='customer' v-if="Object.keys(customer).length>0"></CustomAddChart>
           <img src="../../images/nodae.png" alt="" v-else />
@@ -173,7 +310,7 @@
           <NicheCharts :time="nicheTime" :data="nicheData" v-if="Object.keys(nicheData).length>0 "></NicheCharts>
           <img src="../../images/nodae.png" alt="" v-else />
         </div>
-      </section>
+      </section> -->
     </div>
     <section class="popup_warp">
       <van-popup v-model="showIdent">
@@ -201,6 +338,7 @@ import { getMyInfo, getAllCharts,getMBTop10FollowMsgList } from '../../api/myHom
 import router from '../../router/index.js'
 import { getCustomerMassSend } from '../../api/myHome'
 import vueSeamlessScroll from 'vue-seamless-scroll'
+import { getcluecustomerlist } from '@/api/customer'
 export default {
   components: {
     CustomAddChart,
@@ -269,6 +407,8 @@ export default {
       clientList:[],
       length:"",
       lengths:"",
+      cluesList:[],
+      cluesLists:[],
     }
   },
   created() {
@@ -276,7 +416,8 @@ export default {
     this.client()
     this.getDataList()
     this.getDataLists()
-
+    this.clastList()
+    this.clastLists()
   },
   mounted() {
     this.$nextTick(() => {
@@ -284,7 +425,36 @@ export default {
     })
   },
   methods: {
+   clastList(){
+       let params = {
+        page: 1,
+        limit: 10,
+        type: 1,
+      }
 
+      getcluecustomerlist(params).then(res => {
+        let { result, data, msg } = res
+        if (result) {
+            this.cluesList = data.iPage.records
+            console.log(data.iPage.records,"-------==")
+        }
+      })
+   },
+   clastLists(){
+       let params = {
+        page: 1,
+        limit: 10,
+        type: 3,
+      }
+
+      getcluecustomerlist(params).then(res => {
+        let { result, data, msg } = res
+        if (result) {
+            this.cluesLists = data.iPage.records
+            console.log(data.iPage.records,"-------==")
+        }
+      })
+   },
    getDataList() {
       this.cardList = []
       let params = {
@@ -489,7 +659,7 @@ export default {
                     str = obj.context
                     break;
                 case 40:
-                    str = obj.context
+                    str = `${obj.customerCalled}预览了 《${obj.ossObjectname}》`
                     break;
                 case 41:
                     str =`添加 ${obj.customerCalled} 为企业微信好友`
@@ -623,6 +793,12 @@ export default {
         path: './AllDynamic',
       })
     },
+    mydynamicFn(){
+       this.$router.push({
+        path: './AllDynamic',
+      })
+    },
+
     goToWait(v) {
       this.$router.push({
         path: '/waitDealwith',
@@ -667,9 +843,9 @@ export default {
       //   },
       // })
       this.$router.push({
-        path: '/AllDynamic',
+        path: '/follrecords',
         query: {
-          type:3,
+          type:1,
         },
       })
     },

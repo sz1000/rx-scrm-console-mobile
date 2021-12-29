@@ -6,12 +6,12 @@
           <van-icon name="arrow-left" />
           返回
         </div>
-        <span class="textTitle">全部动态</span>
+        <span class="textTitle">跟进记录</span>
       </div>
       <ul class="header-nav">
-        <li @click="changeNav(1)" :class="{active: type == 1}" ><span>线索动态</span></li>
+        <li @click="changeNav(1)" :class="{active: type == 1}" ><span>线索跟进</span></li>
         <!-- <li @click="changeNav(2)" :class="{active: type == 2}" ><span>商机动态</span></li> -->
-        <li @click="changeNav(3)" :class="{active: type == 3}" ><span>客户动态</span></li>
+        <li @click="changeNav(3)" :class="{active: type == 3}" ><span>客户跟进</span></li>
       </ul>
     <div class="searchInput">
       <van-field v-model="value1" placeholder="关联客户名称/企业名称/…">

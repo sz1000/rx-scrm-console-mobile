@@ -7,6 +7,10 @@
           <img src="../../images/arrow_right.png" alt="">
         </div>
         <div v-if="customizeType == 3" class="reprint-box"></div>
+        <div v-if="customizeType == 4" class="follow-up-box">
+          <img src="@/assets/svg/icon-follow-pic.svg" alt="">
+          <span>上传图片</span>
+        </div>
       </van-uploader>
     </div>
     <div v-else>
@@ -61,15 +65,15 @@ export default {
         blob = fileData
       } else {
         console.info('浏览器支持图片压缩')
-        if (fileData.size > 2 * 1024 * 1024) {
+        if (fileData.size > 10 * 1024 * 1024) {
           blob = await getImgBlob(fileData, fileData.type, 1000, 1000)
         } else {
           blob = fileData
         }
       }
       console.log('blob:', blob)
-      if (blob.size > 2 * 1024 * 1024) {
-        this.$toast(`请选择小于 2M 的图片`)
+      if (blob.size > 10 * 1024 * 1024) {
+        this.$toast(`请选择小于 10M 的图片`)
         return false
       }
 
@@ -153,6 +157,23 @@ export default {
     &::after {
       width: 6px;
       height: 44px;
+    }
+  }
+  .follow-up-box {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    margin-right: 16px;
+    border-radius: 22px;
+    border: 2px solid @lineColor;
+    img {
+        width: 32px;
+        height: 32px;
+    }
+    span {
+        margin-left: 8px;
+        font-size: 20px;
+        color: @fontSub1;
     }
   }
   /deep/ .van-uploader__input {

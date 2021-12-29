@@ -312,6 +312,7 @@ export default {
       let params = {
         pageSize: 10,
         corpId: this.corpId,
+        isPersonal: this.tab == 1 ? true : false,
       }
 
       if (this.type == 1) {
