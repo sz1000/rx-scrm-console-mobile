@@ -11,9 +11,9 @@
                 </div>
             </div>
             <van-field v-model="message" class="inp-content" rows="1" autosize type="textarea" maxlength="200" show-word-limit :border="false" placeholder="记录好跟进，多签单呦～" @input="doInput"/>
-            <div class="img-box">
+            <div class="img-box" @click.stop="previewImg(imgData)">
                 <img v-if="imgData" :src="imgData" alt="">
-                <div v-if="imgData" class="close" @click="clearImg"></div>
+                <div v-if="imgData" class="close" @click.prevent="clearImg"></div>
             </div>
         </div>
         <ul class="btn-box">
@@ -26,7 +26,10 @@
             </li>
         </ul>
 
+        <!-- 选择@员工 -->
         <choose-at-person ref="chooseAtPerson" :fromType="fromType" :customerNo="customerNo"></choose-at-person>
+        <!-- 图片预览 -->
+        <img-preview ref="imgPreview"></img-preview>
     </div>
 </template>
 <script>
@@ -36,6 +39,7 @@ import {
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import ChooseAtPerson from '@/components/CustomerManage/dialog/chooseAtPerson'
 import ImgUpload from '@/components/MaterialTemplate/imgUpload'
+import ImgPreview from '@/components/MaterialTemplate/imgPreview'
 import { throttle } from '@/utils/tool'
 
 export default {
@@ -122,8 +126,10 @@ export default {
                 imageUrl: this.imgData,
             }
             clueCustomerFollowUser_message_notificatio(params).then(res => {
-                if(res.result){
+                if(res.result) {
                     this.goBack()
+                } else {
+                    this.$toast(res.msg)
                 }
             })
         },
@@ -138,11 +144,15 @@ export default {
         goBack() {
             this.$emit('doHideFollowUpBox')
         },
+        previewImg(i) {
+            this.$refs.imgPreview.show(1, [i])
+        },
     },
     components: {
         HeaderTitle,
         ChooseAtPerson,
-        ImgUpload
+        ImgUpload,
+        ImgPreview
     }
 }
 </script>

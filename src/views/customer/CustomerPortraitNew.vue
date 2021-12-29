@@ -68,7 +68,10 @@
             <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
             <!-- 变更负责人 -->
             <change-director ref="changeDirector" :fromType="fromType"></change-director>
+            <!-- 新建/编辑商机 -->
+            <edit-opportunity ref="editOpportunity" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" @sure="callbackFun"></edit-opportunity>
         </template>
+
         <!-- 写跟进 -->
         <follow-up-box v-else ref="followUpBox" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" :sendUserInfo="sendUserInfo" @doHideFollowUpBox="doHideFollowUpBox"></follow-up-box>
     </div>
@@ -90,6 +93,7 @@ import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 import FollowUpBox from '@/components/CustomerManage/followUpBox'
+import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
     mixins: [MyMixin],
@@ -103,7 +107,8 @@ export default {
         GiveUpOrReceive, 
         ChangeDirector, 
         OperationBtnBox, 
-        FollowUpBox
+        FollowUpBox,
+        EditOpportunity
     },
     data(){
         return {
@@ -283,8 +288,13 @@ export default {
             cluecustomer_getClueCustomerByid(id, '').then(res => {
                 if (res.result) {
                     let data = res.data
-                    this.isDirectorFun(data)
+
                     this.customerInfo = data.clueCustomerVO
+
+                    // 我的客户和我的线索有无权限弹窗
+                    if (this.fromType == 1 || this.fromType == 3) {
+                        this.isDirectorFun(data)
+                    }
 
                     this.getUserName()
 
@@ -396,6 +406,8 @@ export default {
                     this.popContent.desList = [ '是否确认删除并返回？']
                     this.$refs.giveUpOrReceive.show()
                     break;
+                case 'opportunityOperation':   // 新增商机（我的客户）
+                    this.$refs.editOpportunity.show(data)
                 default:
                     break;
             }
@@ -434,6 +446,10 @@ export default {
                     this.$toast(msg)
                 }
             })
+        },
+        // 关闭新建商机
+        callbackFun() {
+            this.$refs.editOpportunity.hide()
         },
         openDialog(id,type){  //打开回复弹窗
             this.rowId = id
