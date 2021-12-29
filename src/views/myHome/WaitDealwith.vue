@@ -161,7 +161,7 @@
                 <span>{{itemChi.name}}</span>
                 <span :class="'a'+index">、</span>
               </div>
-              <p class="color73">等<span class="color26 font24"> {{item.userList.length}} </span>人未发表</p>
+              <p class="color73">等<span class="color26 font24"> {{item.userList.length}} </span>人{{tabName == 1 ? '已':'未' }}发表</p>
             </div>
             <div class="right">
               <van-icon name="arrow" />
