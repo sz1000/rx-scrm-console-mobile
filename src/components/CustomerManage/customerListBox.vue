@@ -118,7 +118,7 @@ export default {
     // 去往客户详情
     goDetail(item) {
       this.$router.push({
-        path: 'customDetail',
+        path: '/customerManage/customDetail',
         query: { userNo: item.externalUseridIn, clueCustomerNo: item.clueCustomerNo},
       })
     },
