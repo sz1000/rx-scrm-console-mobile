@@ -161,7 +161,7 @@ export default {
                 if(!this.customerInfo.mobil) {
                     y = '70px'
                 } else {
-                    y = '40px'
+                    y = '45px'
                 }
             } else {
                 y = '60px'
