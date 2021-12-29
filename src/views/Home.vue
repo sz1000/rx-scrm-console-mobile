@@ -139,7 +139,7 @@
             <div class="huoma kehuqunfa_bg">
               <img src="../assets/svg/mingpian.svg" alt="" />
             </div>
-            <p>客户群群发</p>
+            <p>智能名片</p>
           </div>
            <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
             <div class="huoma huoma_bg">

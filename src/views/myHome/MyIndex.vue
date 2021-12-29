@@ -137,7 +137,7 @@
           </div>
        
         <div class="reply_text" @click="goToAbout">
-          <span v-if="dataObj.forReply">今日新增{{dataObj.forReply}}条,关联{{dataObj.forReplyCustomer}}个客户</span>
+          <span v-if="dataObj.newFollowCount">今日新增{{dataObj.newFollowCount}}条</span>
           <span v-else>今日暂无记录</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
@@ -381,7 +381,8 @@ export default {
         custometMassSum: '0',
         forReply: '0',
         forReplyCustomer: '0',
-        clueSum:'0'
+        clueSum:'0',
+        newFollowCount:'0'
       },
       userObj: {
         name: '',
@@ -509,38 +510,38 @@ export default {
       })
     },
     getAllChartList() {
-      getAllCharts().then((res) => {
-        //饼图
-        this.getMaterialPie(res.data.materialMap)
-        // 商机报告
-        this.setLineChart(res.data)
-        //优质内容top10
-        let arr1 = [],
-          arr = []
-        res.data.materialMap.materialTOP.data.forEach((el) => {
-          let obj = {
-            name: Object.keys(el)[0],
-            value: this.percentageFun(el[Object.keys(el)[0]]),
-          }
-          arr1.push(obj)
-        })
-        this.topSortData = arr1
-        // 商机漏斗
-        res.data.sales.forEach((el) => {
-          let list = el.split('_')
-          let obj = {
-            name: list[0],
-            id: Number(list[0].split('stage')[1]),
-            num: Number(list[1]),
-          }
-          arr.push(obj)
-        })
-        arr.sort((a, b) => {
-          return a.id - b.id
-        })
-        this.scaleData = arr
-        this.scroll = false
-      })
+      // getAllCharts().then((res) => {
+      //   //饼图
+      //   this.getMaterialPie(res.data.materialMap)
+      //   // 商机报告
+      //   this.setLineChart(res.data)
+      //   //优质内容top10
+      //   let arr1 = [],
+      //     arr = []
+      //   res.data.materialMap.materialTOP.data.forEach((el) => {
+      //     let obj = {
+      //       name: Object.keys(el)[0],
+      //       value: this.percentageFun(el[Object.keys(el)[0]]),
+      //     }
+      //     arr1.push(obj)
+      //   })
+      //   this.topSortData = arr1
+      //   // 商机漏斗
+      //   res.data.sales.forEach((el) => {
+      //     let list = el.split('_')
+      //     let obj = {
+      //       name: list[0],
+      //       id: Number(list[0].split('stage')[1]),
+      //       num: Number(list[1]),
+      //     }
+      //     arr.push(obj)
+      //   })
+      //   arr.sort((a, b) => {
+      //     return a.id - b.id
+      //   })
+      //   this.scaleData = arr
+      //   this.scroll = false
+      // })
     },
     getData() {
       this.$toast.loading({
