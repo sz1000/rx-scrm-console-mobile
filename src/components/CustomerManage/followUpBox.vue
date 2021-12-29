@@ -78,7 +78,6 @@ export default {
         },
         // 上传图片地址获取
         getImgUrl(data) {
-            console.log("图：", data)
             this.imgData = data
         },
         clearImg() {
@@ -86,15 +85,12 @@ export default {
         },
         // 获取最终选中的人
         getPeople(data) {
-            console.log("最终选中人：", data)
             this.receiveUserInfo = this.receiveUserInfo.concat(...data)
             let arr = this.receiveUserInfo
 
             this.receiveUserInfo = this.$refs.chooseAtPerson.resetCheckedList(arr)
 
             this.$refs.chooseAtPerson.hide()
-
-            console.log("receiveUserInfo最终选中人：", this.receiveUserInfo)
         },
         deleteUser(userNo) {
             this.receiveUserInfo.map((item, index) => {

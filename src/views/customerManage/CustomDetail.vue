@@ -122,10 +122,6 @@ export default {
     },
     provide() {
         return {
-            goDetail: this.goDetail,
-            showCompany: this.showCompany,
-            showGuideBox: this.showGuideBox,
-            messageNotificatio: this.messageNotificatio,
             goBack: this.goBack
         }
     },

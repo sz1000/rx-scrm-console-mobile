@@ -1,12 +1,12 @@
 <template>
     <div class="name-search-list-box">
         <template v-if="preciseData && preciseData.length || list && list.length">
-            <template v-if="preciseData && preciseData.length">
+            <template v-if="preciseData && preciseData.length && (!isWcCus || (isWcCus == 1 && preciseData.some(item => item.isFriend == 0)))">
                 <div class="title">找到完全相同名称的客户：</div>
                 <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click="goDetail(i)">
                     <div class="list-item-left">
                         <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
-                        <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
+                        <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
                         <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="@/assets/svg/icon_qiyeweixin.svg" alt="">
                         <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="@/assets/svg/icon_weixin.svg" alt="">
                     </div>
@@ -14,6 +14,7 @@
                         <li class="right-top">
                             <div class="name-box">
                                 <h3 class="one-line active" v-html="i.customerCalled"></h3>
+                                <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
                             </div>
                         </li>
                         <li class="right-bottom">
@@ -31,7 +32,7 @@
                     <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
                         <div class="list-item-left">
                             <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
-                            <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
+                            <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
                             <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
                             <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
                         </div>
@@ -39,6 +40,7 @@
                             <li class="right-top">
                                 <div class="name-box">
                                     <h3 class="one-line" v-html="i.customerCalled"></h3>
+                                    <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
                                 </div>
                             </li>
                             <li class="right-bottom">
@@ -238,6 +240,8 @@ export default {
                 justify-content: space-between;
                 max-width: 100%;
                 .name-box {
+                    display: flex;
+                    align-items: flex-end;
                     max-width: calc(100% - 140px);
                     h3 {
                         max-width: 100%;
@@ -247,6 +251,11 @@ export default {
                     }
                     .active {
                         color: @main;
+                    }
+                    .crop-name {
+                        margin-left: 10px;
+                        color: @yellow;
+                        font-size: 20px;
                     }
                 }
                 .time {

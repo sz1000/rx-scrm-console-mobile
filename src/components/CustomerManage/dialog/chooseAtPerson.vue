@@ -112,13 +112,12 @@ export default {
             } else {
                 this.checkedUserNo.push(item.userNo)
             }
-            console.log("选中的数据：", this.checkedUserNo)
         },
         confirm() {
             let arr = this.checkedList
 
             this.checkedList = this.resetCheckedList(arr)
-            console.log("信息全的选中人", this.checkedList)
+            
             this.checkedList.map(item => {
                 this.checkedUserNo.map(i => {
                     if (item.userNo == i) {
