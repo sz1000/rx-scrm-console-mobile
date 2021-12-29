@@ -73,9 +73,9 @@ export default {
     },
     // 获取客户列表
     getList() {
-      if(this.customerType == '3' && !throttle()) {
-        return
-      }
+      // if(this.customerType == '3' && !throttle()) {
+      //   return
+      // }
 
       if (this.page == 1) {
         this.pageLoading = false
