@@ -220,7 +220,7 @@ export default {
     },
      optionLeft () {  
         return {
-            step: 0.4, //数值越大速度滚动越快
+            step: .4, //数值越大速度滚动越快
             limitMoveNum: 5, //开始无缝滚动的数据量  //this.fourDatata.length
             hoverStop: true, //是否开启鼠标悬停stop
             direction: 1, // 0向下 1向上 2向左 3向右
@@ -331,8 +331,9 @@ export default {
        this.$router.push({
         path: '/customerManage/customDetail',
         query: {
-          userNo: val.createBy,
+          userNo:  "",
           clueCustomerNo: val.clueCustomerNo
+          
         },
       })
     },

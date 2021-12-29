@@ -1,7 +1,7 @@
 <template>
   <div class="dynamics_box">
     <div class="type_box">
-      <div
+      <!-- <div
         class="type"
         @click="navClickFun(index)"
         :class="{ cur: activeIndex == index }"
@@ -9,7 +9,7 @@
         :key="index"
       >
         {{ item }}
-      </div>
+      </div> -->
     </div>
     <div class="time_list">
       <van-list

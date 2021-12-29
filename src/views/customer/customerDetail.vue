@@ -24,7 +24,7 @@
                     </div>
                     <div class="val">
                         <!-- 非微信好友修改名称需进入名称搜索页 -->
-                        <span v-if="form.isWcCus != 1" class="block-span" @click="goNameSearch">{{ form.customerCalled }}</span>
+                        <span v-if="(fromType == 3 || fromType == 4) && form.isWcCus != 1" class="block-span" @click="goNameSearch">{{ form.customerCalled }}</span>
                         <!-- 微信好友可直接修改名称 -->
                         <template v-else>
                             <input v-show="!customerCalledRequired" type="text" ref="customerCalled" class="input" v-model.trim="form.customerCalled" maxlength="30" placeholder="请输入">
@@ -658,10 +658,14 @@ export default {
         },
         // 打开名称搜索页面
         goNameSearch() {
-            this.showNameSearch = true
-            this.$nextTick(() => {
-                this.$refs.nameSearch.show(this.form.customerCalled)
-            })
+            if (this.fromType == 1 || this.fromType == 2) {
+                this.showNameSearch = false
+            } else {
+                this.showNameSearch = true
+                this.$nextTick(() => {
+                    this.$refs.nameSearch.show(this.form.customerCalled)
+                })
+            }
         },
         // 关闭名称搜索页
         hideNameSearch() {

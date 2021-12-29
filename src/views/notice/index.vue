@@ -82,7 +82,7 @@
                   <img :src="el.cover" alt="" />
                 </div>
                 <div class="info_r">
-                  <div class="name">{{ el.url }}</div>
+                  <div class="name">{{ el.title }}</div>
                   <!-- <div class="size">{{ el.fileSize }}</div> -->
                 </div>
               </div>
@@ -124,7 +124,7 @@ import { notice_getNoticeDetail } from "@/api/notice";
 export default {
   data() {
     return {
-      id: this.$route.query.noticeId || 11193,//10901 ,
+      id: this.$route.query.noticeId || 11271,//10901 ,
       taskType: this.$route.query.taskType || 2, // || 2  1-个人SOP，2-群SOP，3-客户群发，4-客户群群发，5-数据日报，6-客户浏览素材，7-客户浏览名片
       detail: {},
       copeHref:'',
