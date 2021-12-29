@@ -6,7 +6,7 @@
                 <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click="goDetail(i)">
                     <div class="list-item-left">
                         <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
-                        <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
+                        <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
                         <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="@/assets/svg/icon_qiyeweixin.svg" alt="">
                         <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="@/assets/svg/icon_weixin.svg" alt="">
                     </div>
@@ -32,7 +32,7 @@
                     <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
                         <div class="list-item-left">
                             <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
-                            <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
+                            <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
                             <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
                             <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
                         </div>
