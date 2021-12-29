@@ -4,9 +4,9 @@
     <div class="groupDetails">
       <div class="groupDetailsTop">
         <div class="left">
+          <!-- @click="toFun(item.chatId)" -->
           <div
             class="leftImgs"
-            @click="toFun(item.chatId)"
             v-for="(item, index) in avatarList"
             :key="index"
           >

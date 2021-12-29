@@ -3,7 +3,10 @@
         <div class="type_box">
             <div class="type" @click="navClickFun(index)" :class="{'cur':activeIndex == index,'dot':index == 3 && isPoint}" v-for="(item,index) in navList" :key="index">{{item}}</div>
         </div>
-        <div class="time_list">
+
+        <group v-if="activeIndex == 3" :data="groupList" @sure="getGroupUserList"></group>
+
+        <div v-else class="time_list">
             <van-list
                 v-model="loading"
                 :finished="finished"
@@ -15,7 +18,7 @@
                         <img class="icon" v-if="item.class == 'day'" src="@/assets/svg/icon_time.svg" alt="">
                         <img class="icon" v-if="item.class == 'dot'" src="@/assets/svg/icon_cir.svg" alt="">
                         <img class="icon" v-if="item.optType == 1" src="@/assets/svg/icon_jd.svg" alt="">
-                        <img class="icon" v-if="item.optType == 21" src="@/assets/svg/icon_gt.svg" alt="">
+                        <img class="icon" v-if="item.optType == 21" src="@/assets/svg/icon_genjin.svg" alt="">
                         <img class="icon" v-if="item.optType == 15 || item.optType == 16 || item.optType == 17" src="@/assets/svg/icon_sj.svg" alt="">
                         <img class="icon" v-if="helperNum.indexOf(item.optType) > -1" src="@/assets/svg/icon_xzr.svg" alt="">
                         <img class="icon" v-if="item.optType == 29 || item.optType == 30" src="@/assets/svg/icon_jh.svg" alt="">
@@ -62,7 +65,7 @@
                         </div>
                         <div class="card" v-if="item.class == 'opera'" :class="{'hide':!item.more,'no': !item.commentCount}">
                             <div class="info">
-                                <div class="img_box" @click="fillMessage(item.context.sendUserInfo)">
+                                <div class="img_box">
                                     <img :src="item.optAvatar | $setAvatar" alt="">
                                 </div>
                                 <div class="name">{{item.optUserName}}<span>{{isMeFun(item.createBy)}}</span></div>
@@ -74,8 +77,8 @@
                             </div>
                             <div class="opera_right">
                                 <div class="icon_btn" @click="addFabulous(item)">
-                                    <img class="iconfont" v-if="item.dzFlag" src="@/assets/svg/icon_dz_red.svg" alt="">
-                                    <img class="iconfont" v-else src="@/assets/svg/icon_dz.svg" alt="">
+                                    <img class="iconfont" v-if="item.dzFlag" src="@/assets/svg/icon_dianzan_red.svg" alt="">
+                                    <img class="iconfont" v-else src="@/assets/svg/icon_dianzan.svg" alt="">
                                     <div class="num" :class="{'hide':!item.praise}">{{item.praise}}</div>
                                 </div>
                                 <div class="icon_btn" @click="openDialog(item,'comment')">
@@ -113,7 +116,10 @@ import {
     clueCustomerFollowUser_giveTheThumbsUp, //点赞
     clueCustomerFollowUser_queryCommentInfoList,  //回复
     clueCustomerFollowUser_approveHelperpplication,     //协助人审批
+    group_getMobileCustomerGroupPage // 获取客户群列表
 } from '@/api/customer'
+import Group from './group'
+
 export default {
     name: 'Dynamics',
     props: {
@@ -140,7 +146,8 @@ export default {
                 page: 1,
                 limit: 10,
                 clueCustomerNo: '',
-                punckStatus: '' // ''：全部动态，3：商机动态，4：互动协同（跟进记录），5：群动态，6：线索动态
+                punckStatus: 0, // ''：全部动态，3：商机动态，4：互动协同（跟进记录），5：群动态，6：线索动态
+                queryFlag: '' // ''：全部，1：客户/线索动态，2：跟进记录，3：其他
             },
             time: [],
             data: [],
@@ -150,6 +157,13 @@ export default {
             
             isAdd: true,
             isPoint: false, //是否有新消息 红色圆点展示
+
+            searchGroup: {
+                page: 1,
+                limit: 10,
+                customerNo: '',
+            },
+            groupList: [],
         }
     },
     computed: {
@@ -159,19 +173,10 @@ export default {
 
         // 动态导航
         navList() {
-            if (this.fromType == 1) {
-                return ['全部', '线索动态', '跟进记录']
+            if (this.fromType == 1 || this.fromType == 2) {
+                return ['全部', '线索动态', '跟进记录', '客户群', '其他' ]
             }
-            if (this.fromType == 2) {
-                return ['全部', '线索动态']
-            }
-            if (this.fromType == 3) {
-                return ['全部', '客户动态', '商机动态', '跟进记录']
-            }
-            if (this.fromType == 4) {
-                return ['全部', '客户动态', '商机动态']
-            }
-            return ['全部', '客户动态', '商机动态', '跟进记录']
+            return ['全部', '客户动态', '跟进记录', '客户群', '其他' ]
         },
         list(){
             let arr = this.data && this.data.length ? JSON.parse(JSON.stringify(this.data)): [],n = 0
@@ -202,6 +207,7 @@ export default {
             this.getSelectFollowMsgList()
         }
     },
+    inject: ['getGroupUserList'],
     methods: {
         onLoad() {
             console.log("load");
@@ -286,9 +292,15 @@ export default {
         },2000),
         navClickFun(i){
             this.activeIndex = i
-            this.followMsgSearch.page = 1
-            this.noListLoading = false
-            this.getSelectFollowMsgList()
+
+            if (i == 3) {
+                // 客户群
+                this.getCustomerGroupList()
+            } else {
+                this.followMsgSearch.page = 1
+                this.noListLoading = false
+                this.getSelectFollowMsgList()
+            }
         },
         searchFun(){
             this.followMsgSearch.page = 1
@@ -296,37 +308,33 @@ export default {
             this.getSelectFollowMsgList()
         },
         // @接收人
-        fillMessage(data) {
-            this.$emit('fillMessage', data)
-        },
+        // fillMessage(data) {
+        //     this.$emit('fillMessage', data)
+        // },
         isMeFun(by){    //是否自己
             return this.userNo == by ? '(我)' : ''
         },
-        userMessageReceive(){    //是否有新消息
-            clueCustomerFollowUser_message(this.id).then(res => {
-                if(res.result){
-                    this.isPoint = res.data
-                }
-            })
-        },
+        // userMessageReceive(){    //是否有新消息
+        //     clueCustomerFollowUser_message(this.id).then(res => {
+        //         if(res.result){
+        //             this.isPoint = res.data
+        //         }
+        //     })
+        // },
         getSelectFollowMsgList(){   //获取客户跟进信息
-            let i = this.activeIndex + 1
-            console.log('get list',i)
-            if(i != 4){
-                this.userMessageReceive()
-            }
+            // let i = this.activeIndex + 1
+
+            // console.log('get list',i)
+            // if(i != 4){
+            //     this.userMessageReceive()
+            // }
             this.followMsgSearch.clueCustomerNo = this.id
-            if(this.num){
+            if(this.num) {
                 this.followMsgSearch.limit = this.num * this.followMsgSearch.limit
             }
-            this.followMsgSearch.punckStatus = i == 1 || !i ? '' : i
+            this.followMsgSearch.queryFlag = this.activeIndex == 0 ? '' : this.activeIndex == 4 ? 3 : this.activeIndex
             
-            // 获取线索动态
-            if ((this.fromType == 1 || this.fromType == 2) && i == 2) {
-                this.followMsgSearch.punckStatus = 6
-            }
-            
-            clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch,this.noListLoading).then(res => {
+            clueCustomerFollowUser_selectFollowMsgList(this.followMsgSearch, this.noListLoading).then(res => {
                 if(res.result){
                     let data = res.data
                     let list = data.dataList.records
@@ -362,7 +370,8 @@ export default {
                                 }
                                 el.optName = el.optName + ' ' + str
                             }
-                            let dotList = [0,3,5,6,7,8,9,11,12,13,14,26,27,28,36,44]
+                            let dotList = [0,3,4,5,6,7,8,9,11,12,13,14,26,27,28,36,44,50,51,52,53,55,56,57,58,59,60,61,62,70,71,72]
+                            
                             if(dotList.indexOf(el.optType) > -1){
                                 el.class = 'dot'
                             }
@@ -395,6 +404,18 @@ export default {
                     this.$nextTick(() => {
                         this.$emit('load',true)
                     })
+                }
+            })
+        },
+        // 获取客户群列表
+        getCustomerGroupList(){
+            this.searchGroup.customerNo = this.id
+            
+            group_getMobileCustomerGroupPage(this.searchGroup).then(res => {
+                if(res.result){
+                    let data = res.data
+
+                    this.groupList = data.records
                 }
             })
         },
@@ -522,6 +543,14 @@ export default {
                 case 55:
                 case 56:
                 case 57:
+                case 58:
+                case 59:
+                case 60:
+                case 61:
+                case 62:
+                case 70:
+                case 71:
+                case 72:
                     str = obj.context
                     break;
                 default:
@@ -567,6 +596,9 @@ export default {
             return arr && arr.length ? arr.join('、') : ''
         },
     },
+    components: {
+        Group
+    }
 }
 </script>
 
@@ -577,26 +609,40 @@ export default {
     padding-bottom: 90px;
     .type_box{
         width: 100%;
+        height: 88px;
         display: flex;
-        margin-bottom: 32px;
+        text-align: center;
+        justify-content: space-between;
+        margin-bottom: 40px;
+        position: relative;
+        &::before{
+            content: '';
+            height: 2px;
+            background: @lineColor;
+            transform: scaleY(.5);
+            position: absolute;
+            left: -32px;
+            right: -32px;
+            bottom: 0;
+        }
         .type{
-            height: 52px;
             color: @fontSub1;
-            font-size: 24px;
-            line-height: 50px;
-            padding: 0 26px;
-            border: 1px solid @navBg; /*no*/
-            background: @navBg;
-            border-radius: 26px;
-            margin-right: 24px;
+            font-size: 28px;
+            line-height: 88px;
             position: relative;
-            &:last-child{
-                margin-right: 0;
-            }
             &.cur{
-                background: @white;
-                border-color: @main;
                 color: @main;
+                &::before{
+                    content: '';
+                    width: 40px;
+                    height: 4px;
+                    background: @main;
+                    border-radius: 2px;
+                    position: absolute;
+                    left: 50%;
+                    bottom: 0;
+                    transform: translateX(-50%);
+                }
             }
             &.dot::before{
                 content: '';
