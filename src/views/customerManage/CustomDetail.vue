@@ -26,10 +26,6 @@
                     </div>
                 </div>
                 
-                <!-- 协助人消息输入框 -->
-                <!-- <message-box v-if="(fromType == 1 || fromType == 3) && navActive == 'dynamics'" ref="messageBox"></message-box> -->
-                <!-- 协助人选择弹窗 -->
-                <!-- <reminders-box ref="remindersBox" :customerNo="customerInfo && customerInfo.clueCustomerNo"></reminders-box> -->
                 <!-- 群成员列表 -->
                 <van-popup position="bottom" round v-model="dialog_group" :safe-area-inset-bottom="true">
                     <div class="dialog_wrap">
@@ -71,8 +67,6 @@
                 </van-popup>
                 <!-- 消息回复弹窗 -->
                 <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
-                <!-- 写跟进弹窗 -->
-                <!-- <DialogComment v-model="dialog_xgj" title="写跟进" @sure="followUpFun"></DialogComment> -->
                 <!-- 商机详情 -->
                 <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
                 <!-- 操作按钮弹窗面板 -->
@@ -100,15 +94,11 @@ import {
     group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo, //添加评论回复
-    // clueCustomerFollowUser_message_notificatio, //添加消息回复 （@）
-    // cluecustomer_addMessage, //写跟进
     cluecustomer_giveUpType, // 放弃
     cluecustomer_getclue, // 领取
     cluecustomer_delClueCustomer, // 删除
 } from '@/api/customer'
 import Opportunities from '@/components/BusinessOpportunities/opportunities'
-// import MessageBox from "@/components/CustomerManage/messageBox"
-// import RemindersBox from '@/components/CustomerManage/dialog/remindersBox'
 import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
@@ -125,8 +115,6 @@ export default {
         OpportunityDialog,
         TopCard,
         Opportunities,
-        // MessageBox,
-        // RemindersBox,
         GiveUpOrReceive,
         ChangeDirector,
         OperationBtnBox,
@@ -137,9 +125,7 @@ export default {
             goDetail: this.goDetail,
             showCompany: this.showCompany,
             showGuideBox: this.showGuideBox,
-            // showRemindersBox: this.showRemindersBox,
             messageNotificatio: this.messageNotificatio,
-            // getPeople: this.getPeople,
             goBack: this.goBack
         }
     },
@@ -155,7 +141,6 @@ export default {
             showPortraitType: 0,
             dialog_group: false,
             dialog_xx: false,
-            // dialog_xgj: false,
             dialog_sj: false,
             optionType: '', // 操作类型
             popContent: {
@@ -483,7 +468,6 @@ export default {
                     this.dialog_sj = true
                     break;
                 case 'follow':    //写跟进
-                    // this.dialog_xgj = true
                     this.doShowFollowUpBox()
                     break;
                 default:
@@ -514,24 +498,6 @@ export default {
                 }
             })
         },
-        // followUpFun(val){  //写跟进
-        //     let data = {
-        //         clueCustomerNo: this.customerInfo.clueCustomerNo,
-        //         context: val,
-        //     }
-            
-        //     cluecustomer_addMessage(data).then(res => {
-        //         const { result, msg }  = res
-
-        //         if(result) {
-        //             this.$toast('操作成功')
-        //             this.dialog_xgj = false
-        //             this.$refs.dynamic.searchFun()
-        //         } else {
-        //             this.$toast(msg)
-        //         }
-        //     })
-        // },
         navClickFun(code){
             this.navActive = code
             switch (code) {
@@ -551,64 +517,6 @@ export default {
                     break;
             }
         },
-        // showRemindersBox() {
-        //     this.$refs.remindersBox.show()
-        // },
-        // getPeople(data) {
-        //     let arr = JSON.parse(JSON.stringify(this.$refs.messageBox.receiveUserInfo))
-
-        //     arr.push(data)
-        //     this.$refs.messageBox.receiveUserInfo = this.resetReceiveUserInfo(arr)
-        //     this.$refs.remindersBox.hide()
-        // },
-        // resetReceiveUserInfo(arr) {
-        //     let newArr = []
-        //     for (let i = 0; i < arr.length; i++) {
-        //         if (this.noHas(newArr, arr[i].userNo)) {
-        //             newArr.push(arr[i])
-        //         }
-        //     }
-        //     return newArr
-        // },
-        // noHas(arr, userNo) {
-        //     let result = arr.filter((item) =>{
-        //         return item.userNo == userNo;
-        //     })
-        //     return result.length == 0 ? true : false;
-        // },
-        // messageNotificatio(receiveUserInfo, message) {
-        //     if (!this.checkBeforeSend(receiveUserInfo, message)) {
-        //         return
-        //     }
-        //     const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
-
-        //     let params = {
-        //         content: message,
-        //         customerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
-        //         receiveUserInfo,
-        //         sendUserInfo: {
-        //             avatar,
-        //             userName: name,
-        //             userNo
-        //         }
-        //     }
-        //     clueCustomerFollowUser_message_notificatio(params).then(res => {
-        //         if(res.result){
-        //             this.$refs.messageBox.initData()
-        //             this.$refs.dynamic.searchFun()
-        //         }
-        //     })
-        // },
-        // checkBeforeSend(receiveUserInfo, message) {
-        //     if (!receiveUserInfo || receiveUserInfo && !receiveUserInfo.length) {
-        //         this.$toast('接收人不能为空')
-        //         return false
-        //     } else if (!message) {
-        //         this.$toast('消息内容不能为空')
-        //         return false
-        //     }
-        //     return true
-        // },
         toFun(val){
             let name = '', query = { fromType: this.fromType }
 

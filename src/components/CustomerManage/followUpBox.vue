@@ -12,8 +12,8 @@
             </div>
             <van-field v-model="message" class="inp-content" rows="1" autosize type="textarea" maxlength="200" show-word-limit :border="false" placeholder="记录好跟进，多签单呦～" @input="doInput"/>
             <div class="img-box">
-                <img v-if="imgData && imgData.url" :src="imgData.url" alt="">
-                <div v-if="imgData && imgData.url" class="close" @click="clearImg"></div>
+                <img v-if="imgData" :src="imgData" alt="">
+                <div v-if="imgData" class="close" @click="clearImg"></div>
             </div>
         </div>
         <ul class="btn-box">
@@ -21,8 +21,8 @@
                 <img src="@/assets/svg/icon-follow-at.svg" alt="">
                 <span>提及同事</span>
             </li>
-            <li v-if="!(imgData && imgData.url)">
-                <img-upload :isCustomize="true" :customizeType="4" :needFileInfo="true"></img-upload>
+            <li v-if="!imgData">
+                <img-upload :isCustomize="true" :customizeType="4"></img-upload>
             </li>
         </ul>
 
@@ -55,7 +55,7 @@ export default {
     data() {
         return {
             message: '',
-            imgData: {}, // 上传图片信息
+            imgData: '', // 上传图片信息
             receiveUserInfo: []
         }
     },
@@ -71,7 +71,7 @@ export default {
             Object.assign(this.$data, this.$options.data())
         },
         doInput() {
-            console.log("输入的值：", this.message)
+            // console.log("输入的值：", this.message)
         },
         showPop() {
             this.$refs.chooseAtPerson.show()
@@ -109,20 +109,21 @@ export default {
                 return
             }
 
-            if (!this.checkBeforeSend(this.receiveUserInfo, this.message)) {
+            if (!this.checkBeforeSend(this.message)) {
                 return
             }
             const { avatar = '', name = '', userNo = '' } = this.sendUserInfo
 
             let params = {
                 content: this.message,
-                customerNo: this.customerInfo && this.customerInfo.clueCustomerNo,
+                customerNo: this.customerNo,
                 receiveUserInfo: this.receiveUserInfo,
                 sendUserInfo: {
                     avatar,
                     userName: name,
                     userNo
-                }
+                },
+                imageUrl: this.imgData,
             }
             clueCustomerFollowUser_message_notificatio(params).then(res => {
                 if(res.result){
@@ -131,12 +132,9 @@ export default {
             })
         },
         // 提交前验证
-        checkBeforeSend(receiveUserInfo, message) {
-            if (!(receiveUserInfo && receiveUserInfo.length)) {
-                this.$toast('接收人不能为空')
-                return false
-            } else if (!message) {
-                this.$toast('消息内容不能为空')
+        checkBeforeSend(message) {
+            if (!message) {
+                this.$toast('跟进内容不能为空')
                 return false
             }
             return true

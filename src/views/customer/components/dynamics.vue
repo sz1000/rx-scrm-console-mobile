@@ -855,6 +855,9 @@ export default {
                         font-size: 24px;
                         line-height: 40px;
                         color: @fontSub1;
+                        span {
+                            word-break: break-all;
+                        }
                         &.tips{
                             padding-left: 32px;
                             position: relative;
