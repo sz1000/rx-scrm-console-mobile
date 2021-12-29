@@ -46,7 +46,7 @@ import ClockPage from '../views/clockPage/ClockPage.vue'
 // 客户管理
 import CustomerManage from '../views/customerManage/index.vue'
 //线索
-import Clues from '../views/customerManage/Clues.vue'  // 线索列表（线索/公海）
+import Clues from '../views/customerManage/Clues.vue' // 线索列表（线索/公海）
 import AddCules from '../views/customerManage/AddCules.vue'
 import DetailCules from '../views/customerManage/DetailCules.vue'
 import TurnCustomer from '../views/customerManage/TurnCustomer.vue'
@@ -96,6 +96,7 @@ import CustomeActive from '../views/myHome/CustomeActive.vue'
 import AboutComponent from '../views/myHome/AboutMe.vue'
 //客户动态
 import AllDynamic from '../views/myHome/AllDynamic.vue'
+import Follrecords from '../views/myHome/follrecords.vue'
 
 Vue.use(VueRouter)
 const originalPush = VueRouter.prototype.push
@@ -192,7 +193,7 @@ const routes = [{
         component: Sop,
     },
     //群公告
-    
+
     {
         path: '/groupAnnouncement',
         name: 'GroupAnnouncement',
@@ -590,6 +591,11 @@ const routes = [{
         path: '/alldynamic',
         name: 'alldynamic',
         component: AllDynamic,
+    },
+    {
+        path: '/follrecords',
+        name: 'follrecords',
+        component: Follrecords,
     },
 ]
 

@@ -120,7 +120,9 @@
              <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
                 <span class="circle_line"></span>
                 <span class="circle_lines"></span>
-                <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
+                <p class="title">
+                  <span class="name" v-if="item.optType != 72 && item.optType != 36">{{item.optUserName}}</span>
+                  {{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
              </div>
            <!-- </ul> -->
@@ -145,7 +147,7 @@
             <img src="../../assets/images/clues.png" alt="">
              <span>我的线索</span>
           </div>
-          <div @click="dynamicFn" class="cilck_area">
+          <div  @click="FnToRouter('/customerManage/clues')" class="cilck_area">
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
@@ -196,7 +198,7 @@
             <img src="../../assets/images/kehu.png" alt="">
              <span>我的客户</span>
           </div>
-          <div @click="dynamicFn" class="cilck_area">
+          <div  @click="FnToRouter('/customerManage/myCustomer')" class="cilck_area">
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
@@ -791,6 +793,12 @@ export default {
         path: './AllDynamic',
       })
     },
+    mydynamicFn(){
+       this.$router.push({
+        path: './AllDynamic',
+      })
+    },
+
     goToWait(v) {
       this.$router.push({
         path: '/waitDealwith',
@@ -835,9 +843,9 @@ export default {
       //   },
       // })
       this.$router.push({
-        path: '/AllDynamic',
+        path: '/follrecords',
         query: {
-          type:3,
+          type:1,
         },
       })
     },
