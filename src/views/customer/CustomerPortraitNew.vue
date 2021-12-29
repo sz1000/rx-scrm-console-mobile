@@ -253,8 +253,7 @@ export default {
             let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
             this.applyData = {
                 customerName: data.clueCustomerVO.name,
-                cropFullName: "aaa",
-                // cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
+                cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
                 customerAvatar: data.clueCustomerVO.avatar,
                 createTime: data.clueCustomerVO.createTime,
                 directorName: directorList && directorList.length ? directorList[0].name + depName : '',

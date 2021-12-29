@@ -74,7 +74,7 @@
                             <div class="text">
                                 <a class="link alt mr8">{{item.context.receiveUserInfo | alt}}</a>
                                 <span>{{item.context.content}}</span>
-                                <div class="follow-img" @click="previewImg(item.context.imageUrl)">
+                                <div v-if="item.context.imageUrl" class="follow-img" @click="previewImg(item.context.imageUrl)">
                                     <img :src="item.context.imageUrl" alt="">
                                 </div>
                             </div>
