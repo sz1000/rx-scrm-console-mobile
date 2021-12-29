@@ -35,7 +35,7 @@
                     <div class="total_box">
                         <div class="total">共 {{groupUserData.total}} 个群成员，{{groupUserData.cusCount}} 个客户，{{groupUserData.ygCount}}个企业内部成员</div>
                         <div class="btn" @click="toGroupDetail">
-                            <span class="a">群聊详情</span>
+                            <span class="a">群画像</span>
                             <img class="icon" src="@/assets/svg/icon_next_blue.svg" alt="">
                         </div>
                     </div>
@@ -615,13 +615,21 @@ export default {
             }
             this.$router.push({ name, query })
         },
-        toGroupDetail(){    //群聊详情
-            this.$router.push({
-                path: '/customerManage/groupListDetails',
-                query: {
-                    id: this.groupChatId
-                }
-            })
+        toGroupDetail(){    //群画像
+                    if(this.groupUserData.total>20){
+                        this.$router.push({
+                            path: '/customerManage/groupListDetails',
+                            query: {
+                                id: this.groupChatId
+                            }
+                        })
+                    }
+            // this.$router.push({
+            //     path: '/customerManage/groupListDetails',
+            //     query: {
+            //         id: this.groupChatId
+            //     }
+            // })
         },
     },
     filters: {

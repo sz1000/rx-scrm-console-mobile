@@ -37,6 +37,7 @@ export default {
   },
   data() {
     return {
+      notice:'',
       groupName: {},
       src: "https://img0.baidu.com/it/u=2935589232,1367006843&fm=26&fmt=auto",
       name: "",
