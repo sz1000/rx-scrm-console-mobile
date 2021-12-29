@@ -280,9 +280,7 @@ export default {
     },
     methods: {
         goBack() {
-            let path = this.fromType == 3 || this.fromType == 4 ? '/customerManage/myCustomer' : '/customerManage/clues'
-            
-            this.$router.push({ path })
+            this.$router.go(-1)
         },
         jumpFun(code){      //锚点跳转
             // console.log('code',code,document.querySelector(`#${code}`))

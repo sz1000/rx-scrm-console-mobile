@@ -3,7 +3,7 @@
         <template v-if="preciseData && preciseData.length || list && list.length">
             <template v-if="preciseData && preciseData.length">
                 <div class="title">找到完全相同名称的客户：</div>
-                <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer">
+                <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click="goDetail(i)">
                     <div class="list-item-left">
                         <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
                         <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
@@ -28,7 +28,7 @@
             <template v-if="list && list.length">
                 <div class="title">找到以下相似客户：</div>
                 <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer">
+                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
                         <div class="list-item-left">
                             <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
                             <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
@@ -163,6 +163,13 @@ export default {
                 return
             }
             this.getList()
+        },
+        // 去往客户详情
+        goDetail(item) {
+            this.$router.push({
+                path: '/customerManage/customDetail',
+                query: { clueCustomerNo: item.clueCustomerNo},
+            })
         },
     },
     filters: {
