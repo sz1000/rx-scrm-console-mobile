@@ -1,8 +1,8 @@
 <template>
   <div class="settinWarp">
     <div class="main-warp" v-if="showHome">
-      <div class="warp_car">
-        <!-- @click="FnToRouter('/customerManage/clues')" -->
+      <!-- <div class="warp_car">
+        @click="FnToRouter('/customerManage/clues')"
         <div class="car_box client_color" @click="FnToRouter('/customerManage/clues')">
           <div class="client ">
             <img src="../assets/svg/clue.svg" alt="">
@@ -10,7 +10,7 @@
           </div>
           <p class="num">{{ clues }}</p>
         </div>
-        <!-- @click="FnToRouter('/customerManage/myCustomer')" -->
+        @click="FnToRouter('/customerManage/myCustomer')"
         <div class="car_box  clients_color mg_auto" @click="FnToRouter('/customerManage/myCustomer')">
           <div class="client">
             <img src="../assets/svg/client.svg" alt="">
@@ -18,7 +18,7 @@
           </div>
           <p class="num">{{ customer }}</p>
         </div>
-        <!-- @click="FnToRouter('/customerManage/grouplist')" -->
+        @click="FnToRouter('/customerManage/grouplist')"
         <div class="car_box group_color" @click="FnToRouter('/customerManage/grouplist')">
           <div class="client">
             <img class="img_group" src="../assets/svg/kehuqun.svg" alt="">
@@ -27,7 +27,7 @@
           <p class="num">{{groupNum}}</p>
         </div>
 
-      </div>
+      </div> -->
       <!-- <div class="customAccont">客户统计</div>
       <div class="statiStical">
         <div class="numResult afterLine">
@@ -336,7 +336,7 @@ export default {
     -webkit-overflow-scrolling: touch;
     height: 100%;
     box-sizing: border-box;
-    padding: 24px 0px 110px 24px;
+    padding: 24px 24px 110px 24px;
     // padding: 40px 32px 0;
     // overflow-y: scroll;
     scrollbar-width: 0;
@@ -344,7 +344,7 @@ export default {
       background: #fff;
       padding-top: 32px;
       // padding-bottom: 10px;
-      margin-top: 48px;
+      margin-bottom: 48px;
       border-radius: 8px;
     }
     &::-webkit-scrollbar {

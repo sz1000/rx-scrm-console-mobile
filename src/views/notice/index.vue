@@ -11,7 +11,7 @@
       </div>
       <div class="item_wrap">
         <div class="item_title">{{ taskType == 2 ? "客户群" : "客户" }}</div>
-        <div class="item_val">
+        <div class="item_val" @click="groupListFn">
           <div class="info_box">
              <div  class="avatar" v-if="detail.customerPortrait">
                <img :src="detail.customerPortrait" alt="">
@@ -181,6 +181,18 @@ export default {
     this.getDetail();
   },
   methods: {
+    groupListFn(){
+          if(this.taskType == 2){
+              this.$router.push({
+              path: '/customerManage/customDetail',
+              query: {
+              userNo:'',
+              clueCustomerNo: this.detail.customerNo,
+              },
+      })
+          }
+    },
+
     getDetail() {
       //获取通知详情
       console.log(this.$route.query.noticeId,"id")

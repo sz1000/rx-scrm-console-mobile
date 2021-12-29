@@ -7,6 +7,10 @@
           <img src="../../images/arrow_right.png" alt="">
         </div>
         <div v-if="customizeType == 3" class="reprint-box"></div>
+        <div v-if="customizeType == 4" class="follow-up-box">
+          <img src="@/assets/svg/icon-follow-pic.svg" alt="">
+          <span>上传图片</span>
+        </div>
       </van-uploader>
     </div>
     <div v-else>
@@ -153,6 +157,23 @@ export default {
     &::after {
       width: 6px;
       height: 44px;
+    }
+  }
+  .follow-up-box {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    margin-right: 16px;
+    border-radius: 22px;
+    border: 2px solid @lineColor;
+    img {
+        width: 32px;
+        height: 32px;
+    }
+    span {
+        margin-left: 8px;
+        font-size: 20px;
+        color: @fontSub1;
     }
   }
   /deep/ .van-uploader__input {
