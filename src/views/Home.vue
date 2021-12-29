@@ -55,18 +55,22 @@
             <div class="huoma huoma_bg">
               <img src="../assets/svg/huoma.svg" alt="" />
             </div>
-            <p>我的活码</p>
+            <p>企微活码</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
             <!-- <img src="../images/qhm.png" alt="" /> -->
             <div class="huoma huoma_bg">
               <img src="../assets/svg/laqunhuoma.svg" alt="" />
             </div>
-            <p>企微活码</p>
+            <p>拉群活码</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/channelConfiguration')" v-show="menulist.includes('channle')">
-            <img src="../images/qudao.png" alt="" />
-            <span>渠道配置</span>
+            <!-- <img src="../images/qudao.png" alt="" />
+            <span>渠道配置</span> -->
+            <div class="huoma kehuqunfa_bg">
+              <img src="../assets/svg/setting.svg" alt="" />
+            </div>
+            <p>渠道配置</p>
           </div>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
@@ -130,8 +134,12 @@
             <p>企微朋友圈</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
-            <img src="../images/card.png" alt="" />
-            <span>智能名片</span>
+            <!-- <img src="../images/card.png" alt="" />
+            <span>智能名片</span> -->
+            <div class="huoma kehuqunfa_bg">
+              <img src="../assets/svg/mingpian.svg" alt="" />
+            </div>
+            <p>客户群群发</p>
           </div>
            <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
             <div class="huoma huoma_bg">

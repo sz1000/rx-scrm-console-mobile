@@ -228,7 +228,7 @@ export default {
         selectId:'',
         types:1,
         fromUserNum: [6],
-        
+        queryFlag:5
     }
   },
   computed: {
@@ -350,6 +350,7 @@ export default {
           this.value1 = ""
           this.tabName = "全部"
            this.selectId = 0
+           this.queryFlag = 5
         // this.indexps = 1000000
       } else if (type == 2) {
           this.types = 3
@@ -363,6 +364,7 @@ export default {
            this.value1 = ""
            this.tabName = "全部"
              this.selectId = 0
+             this.queryFlag = 4
       }
       this.type = type
       this.initPage(this.type)
@@ -434,7 +436,8 @@ export default {
          limit: 10,
          isMang:this.selectId || 0,
          searchParam:this.value1,
-         punckStatus:this.types
+         punckStatus:this.queryFlag,//this.types,
+         queryFlag:0
         // corpId: this.corpId,
       }
 

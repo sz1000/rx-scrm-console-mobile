@@ -104,7 +104,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg" v-if="clientList.length > 0">
+        <div class="task_msg" v-if="clientList">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -152,7 +152,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo" v-if="cluesList.length > 0">
+        <div class="task_msg task_outo" v-if="cluesList">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -203,7 +203,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo" v-if="cluesLists.length > 0">
+        <div class="task_msg task_outo" v-if="cluesLists">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -564,7 +564,7 @@ export default {
     },
     client(){
           let params = {
-            queryFlag:1
+            queryFlag:4
           }
 
        getMBTop10FollowMsgList(params).then((res)=>{
