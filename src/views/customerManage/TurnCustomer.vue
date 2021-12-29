@@ -223,7 +223,7 @@
             </div>
         </template>
         <!-- 名称搜索页 -->
-        <name-search v-else ref="nameSearch" :fromType="3" :customerType="fromType" :clueCustomerNo="clueCustomerNo" @hideNameSearch="hideNameSearch" @handleResult="getResult"></name-search>
+        <name-search v-else ref="nameSearch" :fromType="3" :customerType="fromType" :isWcCus="isWcCus" :clueCustomerNo="clueCustomerNo" @hideNameSearch="hideNameSearch" @handleResult="getResult"></name-search>
 
         <!-- 时间选择弹窗（日历） -->
         <van-calendar v-model="selectDatePopupShow" :min-date="minDate" :show-confirm="false" color="#4168F6" @confirm="dateConfirm"/>
@@ -247,6 +247,7 @@ export default {
     data() {
         return {
             fromType: this.$route.query.fromType,  // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
+            isWcCus: this.$route.query.isWcCus,  // 1: 好友 0: 非好友
             clueCustomerNo: this.$route.query.clueCustomerNo, // 客户id
             customerCalled: this.$route.query.customerCalled, // 客户名称
 
