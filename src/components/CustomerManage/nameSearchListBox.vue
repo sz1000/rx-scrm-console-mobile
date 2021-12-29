@@ -5,7 +5,8 @@
                 <div class="title">找到完全相同名称的客户：</div>
                 <div v-for="i in preciseData" :key="i.clueCustomerNo" class="list-item pointer">
                     <div class="list-item-left">
-                        <img class="header-img" :src="i.avatar | $setAvatar" alt="">
+                        <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
+                        <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
                         <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="@/assets/svg/icon_qiyeweixin.svg" alt="">
                         <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="@/assets/svg/icon_weixin.svg" alt="">
                     </div>
@@ -29,7 +30,8 @@
                 <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
                     <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer">
                         <div class="list-item-left">
-                            <img class="header-img" :src="i.avatar | $setAvatar" alt="">
+                            <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
+                            <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
                             <img v-if="i.isFriend == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
                             <img v-if="i.isFriend == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
                         </div>
@@ -197,10 +199,18 @@ export default {
             height: 80px;
             margin-right: 24px;
             position: relative;
-            .header-img {
+            .header-img, .default-img {
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
+            }
+            .default-img {
+                display: block;
+                line-height: 80px;
+                color: @white;
+                font-size: 28px;
+                background-color: @main;
+                text-align: center;
             }
             .icon {
                 width: 32px;
