@@ -78,6 +78,7 @@
 
 <script>
 import MyMixin from '@/mixins/permissionsList'
+import opportunityMixin from '@/mixins/opportunity'
 import { Dynamics, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 
@@ -97,7 +98,7 @@ import FollowUpBox from '@/components/CustomerManage/followUpBox'
 import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
-    mixins: [MyMixin],
+    mixins: [MyMixin, opportunityMixin],
     components: {
         HeaderTitle,
         Dynamics,
@@ -113,7 +114,9 @@ export default {
     provide() {
         return {
             getGroupUserList: this.getGroupUserList,
-            goBack: this.goBack
+            goBack: this.goBack,
+            opportunitiesList: this.opportunitiesList,
+            opportunitiesStageList: this.opportunitiesStageList,
         }
     },
     data(){
@@ -361,7 +364,7 @@ export default {
                     this.$refs.giveUpOrReceive.show()
                     break;
                 case 'opportunityOperation':   // 新增商机（我的客户）
-                    this.$refs.editOpportunity.show(data)
+                    this.$refs.editOpportunity.show()
                 default:
                     break;
             }

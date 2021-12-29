@@ -9,7 +9,7 @@
                 <!-- <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics> -->
             </div>
             <!-- 打开操作按钮弹窗面板 -->
-            <div v-if="isInCharge || isHelperOne" class="operation-box">
+            <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
                 <div class="follow_up pointer" @click="showOperationBtnBox()">
                     <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
                 </div>
@@ -79,6 +79,7 @@
 
 <script>
 import MyMixin from '@/mixins/permissionsList'
+import opportunityMixin from '@/mixins/opportunity'
 import { Dynamics, DialogComment, OpportunityDialog, ApplyHelp, TopCard, BusinessCard } from './components'
 import { user_getUserName } from '@/api/home'
 import {
@@ -96,7 +97,7 @@ import FollowUpBox from '@/components/CustomerManage/followUpBox'
 import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
-    mixins: [MyMixin],
+    mixins: [MyMixin, opportunityMixin],
     components: {
         Dynamics, 
         DialogComment, 
@@ -248,6 +249,8 @@ export default {
     provide() {
         return {
             getGroupUserList: this.getGroupUserList,
+            opportunitiesList: this.opportunitiesList,
+            opportunitiesStageList: this.opportunitiesStageList,
         }
     },
     methods: {
