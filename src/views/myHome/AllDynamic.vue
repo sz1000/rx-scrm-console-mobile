@@ -9,9 +9,9 @@
         <span class="textTitle">全部动态</span>
       </div>
       <ul class="header-nav">
-        <li @click="changeNav(1)" :class="{active: type == 1}" ><span>客户动态</span></li>
-        <li @click="changeNav(2)" :class="{active: type == 2}" ><span>商机动态</span></li>
-        <li @click="changeNav(3)" :class="{active: type == 3}" ><span>互动协同</span></li>
+        <li @click="changeNav(1)" :class="{active: type == 1}" ><span>线索动态</span></li>
+        <!-- <li @click="changeNav(2)" :class="{active: type == 2}" ><span>商机动态</span></li> -->
+        <li @click="changeNav(3)" :class="{active: type == 3}" ><span>客户动态</span></li>
       </ul>
     <div class="searchInput">
       <van-field v-model="value1" placeholder="关联客户名称/企业名称/…">
@@ -115,7 +115,7 @@
         <li class="item-box" v-if="type == 3">
           <van-list v-model="posterListLoading" :immediate-check="false" :finished="posterListFinished" finished-text="没有更多了" @load="onLoad">
               <p class="tite_num"> 共 <span class="num">{{postertotal}}</span><span>条互动协同消息，关联</span> <span class="num">{{postercusCount}}</span>个客户</p>
-            <div class="custom_content" v-for="(item,indexs) in posterList" :key="indexs">
+            <div class="custom_content" v-for="(item,indexs) in posterList" :key="indexs" @click="goCustomer(item)" >
                 <div class="card_box" >
                 <div class="chat_warp">
                     <div class="chat_one" >
@@ -131,7 +131,7 @@
                         </div>
                         </div>
                     </div>
-                    <img src="../../images/ico_pl.png" alt="" class="talk" @click="goCustomer(item)" />
+                    <!-- <img src="../../images/ico_pl.png" alt="" class="talk" @click="goCustomer(item)" /> -->
                     </div>
                 </div>
                 <div class="custom_msg">
@@ -258,12 +258,20 @@ export default {
   methods: {
           goCustomer(val) {
       console.log(val)
-      this.$router.push({
-        path: '/customerPortrait',
+      // this.$router.push({
+      //   path: '/customerPortrait',
+      //   query: {
+      //     id: val.followId,
+      //     userNo: val.clueCustomerNo,
+      //     num: val.rowAt,
+      //   },
+      // })
+          this.$router.push({
+        path: '/customerManage/customDetail',
         query: {
-          id: val.followId,
-          userNo: val.clueCustomerNo,
-          num: val.rowAt,
+          userNo:  "",
+          clueCustomerNo: val.clueCustomerNo
+          
         },
       })
     },
@@ -816,15 +824,18 @@ export default {
       height: 100%;
       line-height: 100px;
       text-align: center;
+      color: #737373;
       span {
         height: 100%;
         margin: 0 auto;
-        color: #262626;
+        // color: #262626;
+        
         font-size: 28px;
       }
     }
     .active {
-         color: #3c4353;
+        //  color: #3c4353;
+         color: #4168F6;
       font-weight: bold;
       position: relative;
            &::after {
