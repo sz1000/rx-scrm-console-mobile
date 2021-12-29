@@ -114,6 +114,9 @@ export default {
             }
         },
         confirm() {
+            if (!(this.checkedUserNo && this.checkedUserNo.length)) {
+                return
+            }
             let arr = this.checkedList
 
             this.checkedList = this.resetCheckedList(arr)
