@@ -74,6 +74,9 @@
                             <div class="text">
                                 <a class="link alt mr8">{{item.context.receiveUserInfo | alt}}</a>
                                 <span>{{item.context.content}}</span>
+                                <div class="follow-img" @click="previewImg(item.context.imageUrl)">
+                                    <img :src="item.context.imageUrl" alt="">
+                                </div>
                             </div>
                             <div class="opera_right">
                                 <div class="icon_btn" @click="addFabulous(item)">
@@ -105,6 +108,9 @@
                 </div>
             </van-list>
         </div>
+
+        <!-- 图片预览 -->
+        <img-preview ref="imgPreview"></img-preview>
     </div>
 </template>
 
@@ -119,6 +125,7 @@ import {
     group_getMobileCustomerGroupPage // 获取客户群列表
 } from '@/api/customer'
 import Group from './group'
+import ImgPreview from '@/components/MaterialTemplate/imgPreview'
 
 export default {
     name: 'Dynamics',
@@ -558,6 +565,9 @@ export default {
             }
             return str
         },
+        previewImg(i) {
+            this.$refs.imgPreview.show(1, [i])
+        },
     },
     watch: {
         id(){
@@ -597,7 +607,8 @@ export default {
         },
     },
     components: {
-        Group
+        Group,
+        ImgPreview
     }
 }
 </script>
@@ -927,6 +938,17 @@ export default {
                         // margin-left: 8px;
                         &.alt{
                             font-weight: 400;
+                        }
+                    }
+                    .follow-img {
+                        width: 160px;
+                        height: 160px;
+                        margin-top: 16px;
+                        border-radius: 22px;
+                        overflow: hidden;
+                        img {
+                            max-width: 100%;
+                            max-height: 100%;
                         }
                     }
                     .apply_opera{
