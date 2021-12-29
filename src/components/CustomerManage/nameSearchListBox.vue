@@ -240,6 +240,8 @@ export default {
                 justify-content: space-between;
                 max-width: 100%;
                 .name-box {
+                    display: flex;
+                    align-items: flex-end;
                     max-width: calc(100% - 140px);
                     h3 {
                         max-width: 100%;
