@@ -1,7 +1,7 @@
 <template>
     <div class="name-search-list-box">
         <template v-if="preciseData && preciseData.length || list && list.length">
-            <template v-if="preciseData && preciseData.length">
+            <template v-if="preciseData && preciseData.length && (!isWcCus || (isWcCus == 1 && preciseData.some(item => item.isFriend == 0)))">
                 <div class="title">找到完全相同名称的客户：</div>
                 <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click="goDetail(i)">
                     <div class="list-item-left">
@@ -14,6 +14,7 @@
                         <li class="right-top">
                             <div class="name-box">
                                 <h3 class="one-line active" v-html="i.customerCalled"></h3>
+                                <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
                             </div>
                         </li>
                         <li class="right-bottom">
@@ -39,6 +40,7 @@
                             <li class="right-top">
                                 <div class="name-box">
                                     <h3 class="one-line" v-html="i.customerCalled"></h3>
+                                    <span v-if="(i.customerName || i.cropFullName) && i.externalType != 0" class="crop-name one-line">@{{ i.customerName || i.cropFullName }}</span>
                                 </div>
                             </li>
                             <li class="right-bottom">
@@ -247,6 +249,11 @@ export default {
                     }
                     .active {
                         color: @main;
+                    }
+                    .crop-name {
+                        margin-left: 10px;
+                        color: @yellow;
+                        font-size: 20px;
                     }
                 }
                 .time {
