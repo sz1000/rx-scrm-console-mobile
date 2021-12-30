@@ -1,5 +1,5 @@
 <template>
-    <div class="custom-detail">
+    <div class="custom-detail" :class="{'glass':dialog_xzr}">
         <template v-if="!showFollowUpBox">
             <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
             <div class="customer_wrap">
@@ -60,6 +60,8 @@
                 <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
                 <!-- 商机详情 -->
                 <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+                <!-- 申请成为协助人 -->
+                <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
                 <!-- 操作按钮弹窗面板 -->
                 <operation-btn-box ref="operationBtnBox" :permission="permission" @doAction="doAction"></operation-btn-box>
                 <!-- 放弃或领取或删除 -->
@@ -79,7 +81,7 @@
 <script>
 import MyMixin from '@/mixins/permissionsList'
 import opportunityMixin from '@/mixins/opportunity'
-import { Dynamics, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
+import { Dynamics, DialogComment, OpportunityDialog, ApplyHelp, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
@@ -104,6 +106,7 @@ export default {
         Dynamics,
         DialogComment,
         OpportunityDialog,
+        ApplyHelp,
         TopCard,
         GiveUpOrReceive,
         ChangeDirector,
@@ -138,6 +141,10 @@ export default {
                 btnList: [],
                 desList: []
             },
+
+            dialog_xzr: false,
+            isApply: false,     //是否已经申请成为协助人 且还未通过
+            applyData: {},
 
             customerInfo: {},
             userList: [],
@@ -239,6 +246,20 @@ export default {
         this.getCustomerDetail()
     },
     methods: {
+        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读)
+            this.dialog_xzr = Number(data.permFlag) ? false : true
+            this.isApply = data.isApply ? true : false
+            let directorList = data.directorList
+            let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
+            this.applyData = {
+                customerName: data.clueCustomerVO.name,
+                cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
+                customerAvatar: data.clueCustomerVO.avatar,
+                createTime: data.clueCustomerVO.createTime,
+                directorName: directorList && directorList.length ? directorList[0].name + depName : '',
+                directorAvatar: directorList && directorList.length ? directorList[0].avatar : '',
+            }
+        },
         goBack() {
             this.$router.go(-1)
         },
@@ -256,6 +277,11 @@ export default {
                     let data = res.data
 
                     this.customerInfo = data.clueCustomerVO
+
+                    // 我的客户和我的线索有无权限弹窗
+                    if (this.fromType == 1 || this.fromType == 3) {
+                        this.isDirectorFun(data)
+                    }
 
                     this.getUserName()
 
@@ -337,7 +363,6 @@ export default {
                         path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
-                            isWcCus: this.customerInfo.isWcCus,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
@@ -492,6 +517,9 @@ export default {
     height: 60vh;
     background: @white;
     position: relative;
+    &.glass{
+        filter: blur(4px);
+    }
     .dialog_header{
         width: 100%;
         min-height: 104px;
