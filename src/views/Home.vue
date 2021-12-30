@@ -55,7 +55,7 @@
             <div class="huoma huoma_bg">
               <img src="../assets/svg/huoma.svg" alt="" />
             </div>
-            <p>客户活码</p>
+            <p>企微活码</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/groupCodeList')" v-show="menulist.includes('groupLivecode')">
             <!-- <img src="../images/qhm.png" alt="" /> -->
@@ -65,8 +65,12 @@
             <p>拉群活码</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/channelConfiguration')" v-show="menulist.includes('channle')">
-            <img src="../images/qudao.png" alt="" />
-            <span>渠道配置</span>
+            <!-- <img src="../images/qudao.png" alt="" />
+            <span>渠道配置</span> -->
+            <div class="huoma kehuqunfa_bg">
+              <img src="../assets/svg/setting.svg" alt="" />
+            </div>
+            <p>渠道配置</p>
           </div>
         </div>
         <!-- <div class="commonBtn" @click="showMsg">
@@ -109,7 +113,7 @@
       </div>
        </div> -->
       <div class="drainage_warp">
-        <div class="customAccont manage">营销互动</div>
+        <div class="customAccont manage">客户运营</div>
         <div class="btnRouter custom">
           <div class="commonBtn" @click="FnToRouter('/talkTool/contentMaterial')" v-show="menulist.includes('material')">
             <div class="huoma centsucai_bg">
@@ -130,12 +134,34 @@
             <p>企微朋友圈</p>
           </div>
           <div class="commonBtn" @click="FnToRouter('/talkTool/myCard')" v-show="menulist.includes('business')">
-            <img src="../images/card.png" alt="" />
-            <span>智能名片</span>
+            <!-- <img src="../images/card.png" alt="" />
+            <span>智能名片</span> -->
+            <div class="huoma kehuqunfa_bg">
+              <img src="../assets/svg/mingpian.svg" alt="" />
+            </div>
+            <p>智能名片</p>
+          </div>
+           <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
+            <div class="huoma huoma_bg">
+              <img src="../assets/svg/ongroup.svg" alt="" />
+            </div>
+            <p>一键拉群</p>
+          </div>
+            <div class="commonBtn" @click="customerGroup" v-show="menulist.includes('customerSend')">
+            <div class="huoma kehuqunfa_bg">
+              <img src="../assets/svg/kehuqunfa.svg" alt="" />
+            </div>
+            <p>客户群发</p>
+          </div>
+             <div class="commonBtn" @click="CustomergroupPlaye" v-show="menulist.includes('groupSend')">
+            <div class="huoma kehuqunfa_bg">
+              <img src="../assets/svg/kehuqunquqnfa.svg" alt="" />
+            </div>
+            <p>客户群群发</p>
           </div>
         </div>
       </div>
-      <div class="drainage_warp" v-show="menulist.includes('labelGroup') ||  menulist.includes('customerSend') || menulist.includes('groupSend')">
+      <!-- <div class="drainage_warp" v-show="menulist.includes('labelGroup') ||  menulist.includes('customerSend') || menulist.includes('groupSend')">
         <div class="customAccont manage">精细运营</div>
         <div class="btnRouter custom">
           <div class="commonBtn" @click="FnToRouter('/talkTool/lableDataGroup')" v-show="menulist.includes('labelGroup')">
@@ -156,14 +182,14 @@
             </div>
             <p>客户群群发</p>
           </div>
-          <!-- <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
+          <div class="commonBtn" @click="FnToRouter('/punchCard')" v-show="menulist.includes('punchCode')">
            <div class="huoma handshake_bg">
              <img src="../assets/svg/handshake.svg" alt="" /> 
           </div>
             <p>拜访客户</p>
           
-        </div> -->
-          <!-- <div class="commonBtn" @click="showMsg">
+        </div>
+          <div class="commonBtn" @click="showMsg">
           <img src="../images/bfjh.png" alt="" />
           <span class="nomaltext">拜访计划</span>
         </div>
@@ -174,9 +200,9 @@
         <div class="commonBtn" @click="showMsg">
           <img src="../images/wdbb2.png" alt="" />
           <span class="nomaltext">我的报表</span>
-        </div> -->
         </div>
-      </div>
+        </div>
+      </div> -->
     </div>
     <div class="identity_page" v-else>
       <MyIndex></MyIndex>
@@ -510,7 +536,7 @@ export default {
     }
     .commonBtn {
       font-size: 28px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       font-weight: 500;
       color: #737373;
       text-align: center;

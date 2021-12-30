@@ -5,23 +5,14 @@
             <div class="customer_wrap">
                 <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
                 <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" @jump="toFun"></TopCard>
-                <div class="nav_box">
-                    <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
-                </div>
-                <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
-                    <!-- 客户动态 -->
-                    <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+                
+                <div class="content">
+                    <dynamics ref="dynamic" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @openDialog="openDialog" @load="listLoadFun"></dynamics>
                     <!-- <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics> -->
-                    <!-- 商机 -->
-                    <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
-                    <!-- 群聊 -->
-                    <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
-                    <!-- 附件 -->
-                    <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
                 </div>
                 <!-- 打开操作按钮弹窗面板 -->
                 <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
-                    <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
+                    <div class="follow_up pointer" @click="showOperationBtnBox()">
                         <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
                     </div>
                 </div>
@@ -75,6 +66,8 @@
                 <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
                 <!-- 变更负责人 -->
                 <change-director ref="changeDirector" :fromType="fromType"></change-director>
+                <!-- 新建/编辑商机 -->
+                <edit-opportunity ref="editOpportunity" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" @sure="callbackFun"></edit-opportunity>
             </div>
         </template>
 
@@ -85,44 +78,45 @@
 
 <script>
 import MyMixin from '@/mixins/permissionsList'
-import { Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
+import opportunityMixin from '@/mixins/opportunity'
+import { Dynamics, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import {
     cluecustomer_getClueCustomerByid,
-    group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo, //添加评论回复
     cluecustomer_giveUpType, // 放弃
     cluecustomer_getclue, // 领取
     cluecustomer_delClueCustomer, // 删除
 } from '@/api/customer'
-import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 import FollowUpBox from '@/components/CustomerManage/followUpBox'
+import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
-    mixins: [MyMixin],
+    mixins: [MyMixin, opportunityMixin],
     components: {
         HeaderTitle,
         Dynamics,
-        Group,
-        Enclosure,
         DialogComment,
         OpportunityDialog,
         TopCard,
-        Opportunities,
         GiveUpOrReceive,
         ChangeDirector,
         OperationBtnBox,
-        FollowUpBox
+        FollowUpBox,
+        EditOpportunity
     },
     provide() {
         return {
-            goBack: this.goBack
+            getGroupUserList: this.getGroupUserList,
+            goBack: this.goBack,
+            opportunitiesList: this.opportunitiesList,
+            opportunitiesStageList: this.opportunitiesStageList,
         }
     },
     data(){
@@ -134,7 +128,7 @@ export default {
             jurisdictionList: [], // 按钮权限列表
 
             num: this.$route.query.num,
-            showPortraitType: 0,
+
             dialog_group: false,
             dialog_xx: false,
             dialog_sj: false,
@@ -145,19 +139,10 @@ export default {
                 desList: []
             },
 
-            navActive: 'dynamics',
-
             customerInfo: {},
             userList: [],
             tagList: [],
 
-            searchGroup: {
-                page: 1,
-                limit: 10,
-                customerNo: '',
-            },
-            groupList: [],
-            groupTotal: 0,
             groupUserData: {},
             groupUserList: [],
             groupChatId: '',
@@ -183,7 +168,7 @@ export default {
                 if(!this.customerInfo.mobil) {
                     y = '70px'
                 } else {
-                    y = '40px'
+                    y = '45px'
                 }
             } else {
                 y = '60px'
@@ -198,23 +183,6 @@ export default {
                 return '客户画像'
             }
             return ''
-        },
-        navList() {
-            if (this.fromType == 1 || this.fromType == 2) {
-                return [
-                    { name: '动态', code: 'dynamics'},
-                    { name: '附件', code: 'enclosure', num: 0},
-                ]
-            }
-            if (this.fromType == 3 || this.fromType == 4) {
-                return [
-                    { name: '动态', code: 'dynamics'},
-                    { name: '商机', code: 'niche', num: 0},
-                    { name: '客户群', code: 'group', num: 0},
-                    { name: '附件', code: 'enclosure', num: 0},
-                ]
-            }
-            return []
         },
         // 获取当前登录客户的角色与权限
         roleObj() {
@@ -248,7 +216,8 @@ export default {
                 changeDirector: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'),
                 opportunityOperation: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business'),
                 giveUp: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'),
-                distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                // distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                distribution: false,
                 receive: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'),
             }
         },
@@ -292,17 +261,12 @@ export default {
 
                     this.userList = data.directorList
                     this.tagList = data.tagList
-                    this.navList.forEach(el => {
-                        if(el.code == 'niche'){
-                            el.num = data.mobileDataCount.busCount
-                        }else if(el.code == 'group'){
-                            el.num = data.mobileDataCount.groupCount
-                        }else if(el.code == 'enclosure'){
-                            el.num = data.mobileDataCount.encCount
-                        }
-                    })
 
-                    this.getCustomerGroupList()
+                    let { comeFrom } = this.$route.query
+
+                    if(comeFrom == 'messageCard'){
+                        this.$refs.dynamic.navClickFun(3)
+                    }
                 } else {
                     this.$toast(res.msg)
                 }
@@ -338,21 +302,6 @@ export default {
 
             this.jurisdictionList = jurisdictionObj[type]
         },
-        getCustomerGroupList(){     //获取客户群列表
-            this.searchGroup.customerNo = this.customerInfo.clueCustomerNo
-            group_getMobileCustomerGroupPage(this.searchGroup).then(res => {
-                if(res.result){
-                    let data = res.data
-                    this.groupList = data.records
-                    this.groupTotal = data.total
-
-                    let { comeFrom } = this.$route.query
-                    if(comeFrom == 'messageCard'){
-                        this.$refs.dynamic.navClickFun(3)
-                    }
-                }
-            })
-        },
         getGroupUserList(id){   //获取群群员列表
             this.groupChatId = id
             group_getMobileGroupUserlist(id).then(res => {
@@ -376,7 +325,7 @@ export default {
         showOperationBtnBox() {
             this.$refs.operationBtnBox.show()
         },
-        // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除）
+        // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除，新增商机）
         doAction(type) {
             this.optionType = type
             switch (type) {
@@ -385,7 +334,7 @@ export default {
                     break;
                 case 'transferCustomer':    // 转客户（我的线索）
                     this.$router.push({
-                        path: 'turnCustomer',
+                        path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
                             isWcCus: this.customerInfo.isWcCus,
@@ -415,6 +364,8 @@ export default {
                     this.popContent.desList = [ '是否确认删除并返回？']
                     this.$refs.giveUpOrReceive.show()
                     break;
+                case 'opportunityOperation':   // 新增商机（我的客户）
+                    this.$refs.editOpportunity.show()
                 default:
                     break;
             }
@@ -453,6 +404,10 @@ export default {
                     this.$toast(msg)
                 }
             })
+        },
+        // 关闭新建商机
+        callbackFun() {
+            this.$refs.editOpportunity.hide()
         },
         openDialog(id, type){  //打开回复弹窗
             this.rowId = id
@@ -494,25 +449,6 @@ export default {
                 }
             })
         },
-        navClickFun(code){
-            this.navActive = code
-            switch (code) {
-                case 'dynamics':    //客户动态
-                    // this.getSelectFollowMsgList()
-                    break;
-                case 'niche':   //商机
-                    
-                    break;
-                case 'group':   //客户群
-                    this.getCustomerGroupList()
-                    break;
-                case 'enclosure':   //附件
-                    
-                    break;
-                default:
-                    break;
-            }
-        },
         toFun(val){
             let name = '', query = { fromType: this.fromType }
 
@@ -526,12 +462,14 @@ export default {
             this.$router.push({ name, query })
         },
         toGroupDetail(){    //群聊详情
-            this.$router.push({
-                path: '/customerManage/groupListDetails',
-                query: {
-                    id: this.groupChatId
-                }
-            })
+            if (this.groupUserData.total > 20) {
+                this.$router.push({
+                    path: '/customerManage/groupListDetails',
+                    query: {
+                        id: this.groupChatId
+                    }
+                })
+            }
         },
     },
     filters: {
@@ -715,44 +653,44 @@ export default {
             top: 88px;
             left: 0;
         }
-        .nav_box{
-            width: 100%;
-            height: 88px;
-            display: flex;
-            text-align: center;
-            position: relative;
-            &::before{
-                content: '';
-                width: 100%;
-                height: 1px;   /*no*/
-                background: @lineColor;
-                transform: scaleY(.5);
-                position: absolute;
-                left: 0;
-                bottom: 0;
-            }
-            .nav{
-                color: @fontSub1;
-                font-size: 28px;
-                line-height: 88px;
-                flex: 1;
-                position: relative;
-                &.cur{
-                    color: @main;
-                    &::before{
-                        content: '';
-                        width: 40px;
-                        height: 4px;
-                        background: @main;
-                        border-radius: 2px;
-                        position: absolute;
-                        left: 50%;
-                        bottom: 0;
-                        transform: translateX(-50%);
-                    }
-                }
-            }
-        }
+        // .nav_box{
+        //     width: 100%;
+        //     height: 88px;
+        //     display: flex;
+        //     text-align: center;
+        //     position: relative;
+        //     &::before{
+        //         content: '';
+        //         width: 100%;
+        //         height: 1px;   /*no*/
+        //         background: @lineColor;
+        //         transform: scaleY(.5);
+        //         position: absolute;
+        //         left: 0;
+        //         bottom: 0;
+        //     }
+        //     .nav{
+        //         color: @fontSub1;
+        //         font-size: 28px;
+        //         line-height: 88px;
+        //         flex: 1;
+        //         position: relative;
+        //         &.cur{
+        //             color: @main;
+        //             &::before{
+        //                 content: '';
+        //                 width: 40px;
+        //                 height: 4px;
+        //                 background: @main;
+        //                 border-radius: 2px;
+        //                 position: absolute;
+        //                 left: 50%;
+        //                 bottom: 0;
+        //                 transform: translateX(-50%);
+        //             }
+        //         }
+        //     }
+        // }
         .content{
             width: 100%;
             padding: 32px;

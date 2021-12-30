@@ -251,6 +251,9 @@
               </div>
               <div class="pup_share_wrap">
                 <div  v-for="(el, i) in item.promptList" :key="i">
+                 <div v-if="el.content" class="share_box">
+                    <div class="des">{{ el.content }}</div>
+                 </div>
                   <div v-if="el.objectName == 1" class="share_box">
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                     <div class="s_val" v-if="!el.url">

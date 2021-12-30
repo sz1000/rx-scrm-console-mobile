@@ -272,7 +272,7 @@
                 <span>{{list.phone}}</span>
               </div>
             </div>
-            <div class="right" :class="popupname == 1 ? 'noRight':'yeRight'">
+            <div class="right" :class="popupname == 2 ? 'noRight':'yeRight'">
               <span>{{popupname == 1 ? '未发送' :'已发送'}}</span>
             </div>
           </div>
