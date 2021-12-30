@@ -26,11 +26,12 @@ export default {
       userNo: null,
       corpId: null,
       initiate: true,
+      createUserNo: '',
     }
   },
   created() {
-    const { materialId, type, userNo, corpId } = this.$route.query
-
+    const { materialId, type, userNo, corpId, createUserNo } = this.$route.query
+    this.createUserNo = createUserNo ? createUserNo : ''
     this.userNo = userNo ? userNo : null
     this.corpId = corpId ? corpId : null
     this.materialId = materialId
@@ -105,6 +106,7 @@ export default {
           openId: this.openId,
           userNo: this.userNo ? this.userNo : '',
           initiate: this.initiate,
+          createUserNo: this.createUserNo ? this.createUserNo : '',
         },
       }
 
