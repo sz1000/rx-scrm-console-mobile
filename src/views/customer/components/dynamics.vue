@@ -44,15 +44,18 @@
                                     <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
                                     <span>{{item.fromUser | optString}}</span>
                                 </div>
+
                                 <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
                                 <div class="name" v-if="item.optType && item.toUser && item.optType == 6">
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
                                     <span>{{item.toUser | optString}}</span>
                                 </div>
-                                <div class="name" v-if="(item.cropFullName || item.customerCalled) && item.optType == 41">
+
+                                <div class="name name-41" v-if="(item.cropFullName || item.customerCalled) && item.optType == 41">
                                     <span>{{item.cropFullName || item.customerCalled}}</span>
                                 </div>
                                 <span class="mr8" v-if="item.optType == 41">{{ item.cropFullName || item.customerCalled ? '为企业微信好友' : '企业微信好友' }}</span>
+                                
                                 <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length && item.toUser[0]">
                                     <div class="name" v-for="(us,ri) in item.toUser" :key="ri">
                                         <img class="avatar" :src="us.avatar | $setAvatar" alt="">
@@ -927,6 +930,9 @@ export default {
                             top: 50%;
                             transform: translateY(-50%);
                         }
+                    }
+                    .name-41 {
+                        padding-left: 0;
                     }
                     .text{
                         font-size: 24px;
