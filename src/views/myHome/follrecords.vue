@@ -114,7 +114,7 @@
         </li>
         <li class="item-box" v-if="type == 3">
           <van-list v-model="posterListLoading" :immediate-check="false" :finished="posterListFinished" finished-text="没有更多了" @load="onLoad">
-              <p class="tite_num"> 共 <span class="num">{{postertotal}}</span><span>条互动协同消息，关联</span> <span class="num">{{postercusCount}}</span>个客户</p>
+              <p class="tite_num"> 共 <span class="num">{{postertotal}}</span><span>跟进记录，关联</span> <span class="num">{{postercusCount}}</span>个客户</p>
             <div class="custom_content" v-for="(item,indexs) in posterList" :key="indexs" @click="goCustomer(item)" >
                 <div class="card_box" >
                 <div class="chat_warp">
