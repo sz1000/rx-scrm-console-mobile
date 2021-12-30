@@ -68,6 +68,9 @@ export default {
       type: String,
       default: '',
     },
+    isPublic: {
+      type: Number || String,
+    },
   },
   data() {
     return {
@@ -214,8 +217,8 @@ export default {
       this.type == 1
         ? (this.form.corpId = this.corpId)
         : (this.fileForm.corpId = this.corpId)
-
-      ApiOpts(params).then((res) => {
+      let isPublic = this.isPublic == 1 ? false : true
+      ApiOpts({ isPublic: isPublic, ...params }).then((res) => {
         const { code, msg } = res
 
         this.$toast.clear()

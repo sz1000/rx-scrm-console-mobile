@@ -10,8 +10,8 @@
                     </div>
                 </div>
             </div>
-            <van-field v-model="message" class="inp-content" rows="1" autosize type="textarea" maxlength="200" show-word-limit :border="false" placeholder="记录好跟进，多签单呦～" @input="doInput"/>
-            <div class="img-box" @click.stop="previewImg(imgData)">
+            <van-field v-model="message" class="inp-content" ref="inpContent" rows="1" autosize type="textarea" maxlength="200" show-word-limit :border="false" placeholder="记录好跟进，多签单呦～" @input="doInput"/>
+            <div class="img-box" :class="{'bg-color': imgData}" @click.stop="previewImg(imgData)">
                 <img v-if="imgData" :src="imgData" alt="">
                 <div v-if="imgData" class="close" @click.stop.prevent="clearImg"></div>
             </div>
@@ -76,6 +76,7 @@ export default {
         },
         doInput() {
             if (this.message.substr(this.message.length - 1, 1) == '@') {
+                this.$refs.inpContent.blur()
                 this.showPop()
             }
         },
@@ -97,6 +98,11 @@ export default {
             this.receiveUserInfo = this.$refs.chooseAtPerson.resetCheckedList(arr)
 
             this.$refs.chooseAtPerson.hide()
+
+            if (data && data.length && this.message.substr(this.message.length - 1, 1) == '@') {
+                this.message = this.message.substring(0, this.message.length - 1)
+                this.$refs.inpContent.focus()
+            }
         },
         deleteUser(userNo) {
             this.receiveUserInfo.map((item, index) => {
@@ -216,12 +222,17 @@ export default {
                 }
             }
             .img-box {
+                display: flex;
+                align-items: center;
                 width: 200px;
                 height: 200px;
                 margin: 32px 32px 80px;
                 border-radius: 20px;
                 overflow: hidden;
                 position: relative;
+                &.bg-color {
+                    background-color: @navBg;
+                }
                 img {
                     max-width: 100%;
                     max-height: 100%;

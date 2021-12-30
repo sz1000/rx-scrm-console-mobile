@@ -236,7 +236,7 @@
                       <p class="enterprise" v-if="item.externalType == 2 && item.customerName">@{{item.customerName}}</p>
                      <p class="wechat" v-if="item.externalType == 1">@微信</p>
                   </div>
-                    <div class="tite_nane">{{item.clueType}}</div>
+                    <div class="tite_nane">{{item.stage}}</div>
                 </div>
                 <!-- <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p> -->
@@ -655,6 +655,9 @@ export default {
                     let name = obj.ossObjectname ? obj.ossObjectname : obj.context
                     str = `新增标签“${name}”`
                     break;
+                case 27:
+                    str = `移除了标签“${obj.ossObjectname}”`
+                    break;
                 case 28:
                     str = obj.context
                     break;
@@ -700,14 +703,36 @@ export default {
                 case 50:
                     str = obj.context
                     break;
+               case 57:
+                    str = '放弃线索，线索回到公海。'
+                    break;
                 case 60:
                    str = `删除了${obj.customerCalled}的企微好友`
+                    break;
+                case 70:
+                   str = obj.context
                     break;
                 case 71:
                    str = obj.context
                     break;
                 case 72:
                    str = obj.context
+                    break;
+                case 4:
+                case 51:
+                case 52:
+                case 53:
+                case 55:
+                case 56:
+                case 57:
+                case 58:
+                case 59:
+                case 60:
+                case 61:
+                case 62:
+                case 70:
+                case 71:
+                    str = obj.context
                     break;
                 default:
                     break;
@@ -734,7 +759,7 @@ export default {
                }else if(value < (60*60*1000) ){
                 return parseInt(value/(60*1000)) + "分钟前"
               }else if(value < (24*60*60*1000)){
-                return parseInt(value/(60*60*1000)) + "小时"
+                return parseInt(value/(60*60*1000)) + "小时前"
               }else if(value < (30*24*60*60*1000)){
                  return parseInt(value / (24*60*60*1000)) + "天前"
               }else if(value < (12*30*24*60*60*1000)){
