@@ -236,7 +236,7 @@
                       <p class="enterprise" v-if="item.externalType == 2 && item.customerName">@{{item.customerName}}</p>
                      <p class="wechat" v-if="item.externalType == 1">@微信</p>
                   </div>
-                    <div class="tite_nane">{{item.clueType}}</div>
+                    <div class="tite_nane">{{item.stage}}</div>
                 </div>
                 <!-- <p class="title"><span class="name">{{item.optUserName}}</span>{{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p> -->
