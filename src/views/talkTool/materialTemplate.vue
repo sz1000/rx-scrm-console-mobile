@@ -140,11 +140,11 @@
     <!-- 图片预览 -->
     <img-preview ref="imgPreview"></img-preview>
 
-    <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster"></upload-poster>
+    <upload-poster v-if="showUploadPoster" :formData="posterData" @doShowUploadPoster="doShowUploadPoster" :isPublic='tab'></upload-poster>
     <!-- 文章/文件预览 -->
     <content-preview v-show="showContentPreview" ref="contentPreview" @hideContentPreview="hideContentPreview"></content-preview>
     <!-- 文件上传 -->
-    <reprint-edit v-if="showFileUpload" ref="reprintEdit" :type="2" @doShowFileUpload="doShowFileUpload"></reprint-edit>
+    <reprint-edit v-if="showFileUpload" ref="reprintEdit" :type="2" @doShowFileUpload="doShowFileUpload" :isPublic='tab'></reprint-edit>
     <!-- 分享弹窗 -->
     <van-action-sheet v-model="showShare" cancel-text="取消" close-on-click-action @cancel="onCancel">
       <div class="action_content pointer">
