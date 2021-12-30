@@ -487,7 +487,12 @@ export default {
       });
     },
     toSopPage() {
-      this.$router.push("/sop");
+      // chatId
+      console.log("id  "+this.$route.query.id,"grouid   "+this.$route.query.grouid)
+      this.$router.push({
+        path: '/sop',
+        query: { id: this.$route.query.id,grouid:this.$route.query.grouid},
+      });
     },
     // 导航切换
     changeNav(index) {
