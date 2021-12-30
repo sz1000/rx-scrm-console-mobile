@@ -1,9 +1,58 @@
 <template>
   <div class="group_wrap">
-    <TitleBack title="sop"></TitleBack>
+    <TitleBack title="群详情"></TitleBack>
+    <div class="groupDetailsTop">
+        <div class="left">
+          <!-- @click="toFun(item.chatId)" -->
+          <div
+            class="leftImgs"
+            v-for="(item, index) in avatarList"
+            :key="index"
+          >
+            <img src="" alt="" />
+            <div
+              class="group_img"
+              :class="{
+                len5:
+                  item.imgList &&
+                  item.imgList.length > 4 &&
+                  item.imgList.length < 7,
+              }"
+            >
+              <div
+                class="img_box"
+                :class="{ w33: item.imgList && item.imgList.length > 4 }"
+                v-for="(url, i) in item.imgList.slice(0, 9)"
+                :key="i"
+              >
+                <img class="img" :src="url | $setAvatar" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right" @click="toSopPage">
+          <div class="rightTitle">
+            <p class="title">{{ datatTite.name || "暂无" }}</p>
+            <!-- v-if="groupName.admintype == 1" -->
+            <div class="sop">
+              <!-- <span>群详情</span> -->
+              <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
+            </div>
+          </div>
+          <div class="rightInfo">
+            <p>
+              共<span></span
+              >{{ datatTite.usersum || "0" }}位群成员，今日新增<span>{{
+                datatTite.joinsum || "0"
+              }}</span
+              >人
+            </p>
+          </div>
+        </div>
+      </div>
     <div class="content">
-
-      <!-- <div class="row tag" @click="toGroupAnnouncement">
+      <!-- 群公告 -->
+      <div class="row tag" @click="toGroupAnnouncement">
         <div class="groupTxt">群公告</div>
         <div class="tag_wrap notice">
           <p>
@@ -17,6 +66,7 @@
           />
         </div>
       </div>
+      <!-- 群标签 -->
       <div class="row lable_box">
         <div class="tag lable_top">
           <div class="tit">群标签</div>
@@ -56,11 +106,11 @@
             />
           </div>
         </div>
-      </div> -->
+      </div>
 
-      <div class="item" v-for="(item, index) in sopList" :key="index">
+      <!-- <div class="item" v-for="(item, index) in sopList" :key="index">
         <div class="item_top">
-          <p>{{ item.userNames }}</p>
+          <p>{{ item.groupNames }}</p>
           <div>
             定时推送：<span>{{ item.createTimeStr }}</span>
           </div>
@@ -106,6 +156,7 @@
           </div>
         </div>
       </div>
+       -->
     </div>
 
     <!-- 群标签 -->
@@ -261,6 +312,17 @@ export default {
   },
   methods: {
     formatDate,
+    toSopPage() {
+      // chatId
+      console.log(
+        "id  " + this.$route.query.id,
+        "grouid   " + this.$route.query.grouid
+      );
+      this.$router.push({
+        path: "/sop",
+        query: { id: this.$route.query.id, grouid: this.$route.query.grouid },
+      });
+    },
     clickSign(list, index) {
       var result = this.highLightArr.findIndex((item) => {
         return item.tagid == list.tagid;
@@ -506,6 +568,124 @@ export default {
   width: 100%;
   min-height: 100vh;
   background: @white;
+  .groupDetailsTop {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 164px;
+      position: relative;
+      &::before {
+        content: "";
+        width: 100%;
+        height: 1px; /* no */
+        background: @lineColor;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        transform: scaleY(0.5);
+      }
+      .left {
+        // flex: 1;
+        width: 80px;
+        height: 80px;
+        margin: 42px 32px;
+        .leftImgs {
+          .group_img {
+            width: 80px;
+            height: 80px;
+            background: @navBg;
+            margin-right: 24px;
+            display: flex;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            align-items: center;
+            &.len5 {
+              padding: calc(80px / 6) 0;
+            }
+            .img_box {
+              // width: 33.33%;
+              // height: calc(80px / 3);
+              // background: chocolate;
+              border: 1px solid @white; /*no*/
+              text-align: center;
+              &:first-child:nth-last-child(2),
+              &:first-child:nth-last-child(2) ~ .img_box {
+                width: calc(80px / 2);
+                height: calc(80px / 2);
+              }
+              &:first-child:nth-last-child(3),
+              &:first-child:nth-last-child(3) ~ .img_box {
+                width: calc(80px / 2);
+                height: calc(80px / 2);
+              }
+              &:first-child:nth-last-child(4),
+              &:first-child:nth-last-child(4) ~ .img_box {
+                width: calc(80px / 2);
+                height: calc(80px / 2);
+              }
+              // &:first-child:nth-last-child(5),&:first-child:nth-last-child(5) ~ .img_box{
+              //     width: calc(80px / 3);
+              //     height: calc(80px / 3);
+              // }
+              // &:first-child:nth-last-child(6),&:first-child:nth-last-child(6) ~ .img_box{
+              //     width: calc(80px / 3);
+              //     height: calc(80px / 3);
+              // }
+              &.w33 {
+                width: calc(80px / 3);
+                height: calc(80px / 3);
+              }
+              .img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
+      .right {
+        flex: 1;
+        .rightTitle {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          height: 48px;
+          line-height: 48px;
+          .title {
+            width: 450px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 32px;
+            color: #262626;
+            font-weight: 600;
+          }
+          .sop {
+            margin-right: 30px;
+            position: relative;
+            width: 40px;
+            span {
+              margin-right: 30px;
+              color: #262626;
+            }
+            .icon {
+              width: 32px;
+              height: 32px;
+              position: absolute;
+              right: 0;
+              top: 24px;
+              transform: translateY(-50%);
+            }
+          }
+        }
+        .rightInfo {
+          font-size: 24px;
+          line-height: 32px;
+          color: #b3b3b3;
+        }
+      }
+    }
   .content {
     padding: 24px;
     .item {
@@ -513,7 +693,7 @@ export default {
         margin: 20px 0;
 
         p {
-          width: 320px;
+          width: 720px;
           font-size: 32px;
           line-height: 48px;
           font-weight: 600;

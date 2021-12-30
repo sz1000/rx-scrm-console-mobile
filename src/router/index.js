@@ -9,6 +9,7 @@ import CustomerPortraitNew from '../views/customer/index.vue'
 import InformationDetail from '../views/customer/InformationDetail.vue'
 import Helper from '../views/customer/helper.vue' //协助人
 
+import GroupDetail from '../views/customer/groupDetail.vue'
 import Sop from '../views/customer/sop.vue'
 //群公告
 import GroupAnnouncement from '../views/customer/groupAnnouncement.vue'
@@ -182,6 +183,15 @@ const routes = [{
             bodyClass: 'demo',
         },
         component: Demo,
+    },
+    //groupDetail
+    {
+        path: '/groupDetail',
+        name: 'GroupDetail',
+        meta: {
+            bodyClass: 'groupDetail',
+        },
+        component: GroupDetail,
     },
     //sop
     {
