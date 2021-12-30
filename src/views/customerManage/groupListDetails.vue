@@ -506,7 +506,7 @@ export default {
         "grouid   " + this.$route.query.grouid
       );
       this.$router.push({
-        path: "/sop",
+        path: "/groupDetail",
         query: { id: this.$route.query.id, grouid: this.$route.query.grouid },
       });
     },

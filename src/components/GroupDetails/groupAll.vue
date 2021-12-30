@@ -78,12 +78,12 @@
 
             <div class="card recordBox">
               <div class="descTxt">
-                <span class="add">加入群聊</span>
+                <span class="add"> {{item.isDelete == "0" ?  '加入群聊' : '退出群聊'}}</span>
                 <span class="time_right">
-                  {{ formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss") }}</span
+                  {{ formatDate(item.updateTime, "yyyy-MM-dd hh:mm:ss") }}</span
                 >
               </div>
-              <div class="inLineTwo">
+              <div class="inLineTwo" v-if="item.isDelete == '0'" >
                 <span class="methods">{{ item.name }} </span>
                 通过
                 <span class="methods" v-if="item.joinScene == 1"
