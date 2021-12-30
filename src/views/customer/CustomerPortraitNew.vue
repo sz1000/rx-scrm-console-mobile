@@ -9,7 +9,7 @@
                 <!-- <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics> -->
             </div>
             <!-- 打开操作按钮弹窗面板 -->
-            <div v-if="isInCharge || isHelperOne" class="operation-box">
+            <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
                 <div class="follow_up pointer" @click="showOperationBtnBox()">
                     <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
                 </div>
@@ -68,7 +68,10 @@
             <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
             <!-- 变更负责人 -->
             <change-director ref="changeDirector" :fromType="fromType"></change-director>
+            <!-- 新建/编辑商机 -->
+            <edit-opportunity ref="editOpportunity" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" @sure="callbackFun"></edit-opportunity>
         </template>
+
         <!-- 写跟进 -->
         <follow-up-box v-else ref="followUpBox" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" :sendUserInfo="sendUserInfo" @doHideFollowUpBox="doHideFollowUpBox"></follow-up-box>
     </div>
@@ -76,6 +79,7 @@
 
 <script>
 import MyMixin from '@/mixins/permissionsList'
+import opportunityMixin from '@/mixins/opportunity'
 import { Dynamics, DialogComment, OpportunityDialog, ApplyHelp, TopCard, BusinessCard } from './components'
 import { user_getUserName } from '@/api/home'
 import {
@@ -90,9 +94,10 @@ import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 import FollowUpBox from '@/components/CustomerManage/followUpBox'
+import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
-    mixins: [MyMixin],
+    mixins: [MyMixin, opportunityMixin],
     components: {
         Dynamics, 
         DialogComment, 
@@ -103,7 +108,8 @@ export default {
         GiveUpOrReceive, 
         ChangeDirector, 
         OperationBtnBox, 
-        FollowUpBox
+        FollowUpBox,
+        EditOpportunity
     },
     data(){
         return {
@@ -218,7 +224,8 @@ export default {
                 changeDirector: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'),
                 opportunityOperation: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business'),
                 giveUp: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'),
-                distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                // distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                distribution: false,
                 receive: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'),
             }
         },
@@ -243,6 +250,8 @@ export default {
     provide() {
         return {
             getGroupUserList: this.getGroupUserList,
+            opportunitiesList: this.opportunitiesList,
+            opportunitiesStageList: this.opportunitiesStageList,
         }
     },
     methods: {
@@ -283,8 +292,13 @@ export default {
             cluecustomer_getClueCustomerByid(id, '').then(res => {
                 if (res.result) {
                     let data = res.data
-                    this.isDirectorFun(data)
+
                     this.customerInfo = data.clueCustomerVO
+
+                    // 我的客户和我的线索有无权限弹窗
+                    if (this.fromType == 1 || this.fromType == 3) {
+                        this.isDirectorFun(data)
+                    }
 
                     this.getUserName()
 
@@ -366,7 +380,7 @@ export default {
                     break;
                 case 'transferCustomer':    // 转客户（我的线索）
                     this.$router.push({
-                        path: 'turnCustomer',
+                        path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
                             isWcCus: this.customerInfo.isWcCus,
@@ -396,6 +410,8 @@ export default {
                     this.popContent.desList = [ '是否确认删除并返回？']
                     this.$refs.giveUpOrReceive.show()
                     break;
+                case 'opportunityOperation':   // 新增商机（我的客户）
+                    this.$refs.editOpportunity.show(data)
                 default:
                     break;
             }
@@ -434,6 +450,10 @@ export default {
                     this.$toast(msg)
                 }
             })
+        },
+        // 关闭新建商机
+        callbackFun() {
+            this.$refs.editOpportunity.hide()
         },
         openDialog(id,type){  //打开回复弹窗
             this.rowId = id

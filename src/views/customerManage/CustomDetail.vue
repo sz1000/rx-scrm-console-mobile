@@ -66,6 +66,8 @@
                 <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
                 <!-- 变更负责人 -->
                 <change-director ref="changeDirector" :fromType="fromType"></change-director>
+                <!-- 新建/编辑商机 -->
+                <edit-opportunity ref="editOpportunity" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" @sure="callbackFun"></edit-opportunity>
             </div>
         </template>
 
@@ -76,6 +78,7 @@
 
 <script>
 import MyMixin from '@/mixins/permissionsList'
+import opportunityMixin from '@/mixins/opportunity'
 import { Dynamics, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 
@@ -92,9 +95,10 @@ import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 import FollowUpBox from '@/components/CustomerManage/followUpBox'
+import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
-    mixins: [MyMixin],
+    mixins: [MyMixin, opportunityMixin],
     components: {
         HeaderTitle,
         Dynamics,
@@ -104,12 +108,15 @@ export default {
         GiveUpOrReceive,
         ChangeDirector,
         OperationBtnBox,
-        FollowUpBox
+        FollowUpBox,
+        EditOpportunity
     },
     provide() {
         return {
             getGroupUserList: this.getGroupUserList,
-            goBack: this.goBack
+            goBack: this.goBack,
+            opportunitiesList: this.opportunitiesList,
+            opportunitiesStageList: this.opportunitiesStageList,
         }
     },
     data(){
@@ -209,7 +216,8 @@ export default {
                 changeDirector: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'),
                 opportunityOperation: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business'),
                 giveUp: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'),
-                distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                // distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                distribution: false,
                 receive: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'),
             }
         },
@@ -317,7 +325,7 @@ export default {
         showOperationBtnBox() {
             this.$refs.operationBtnBox.show()
         },
-        // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除）
+        // 操作事件（客户相关和线索相关：写跟进，变更负责人，放弃，分配，领取，删除，新增商机）
         doAction(type) {
             this.optionType = type
             switch (type) {
@@ -326,7 +334,7 @@ export default {
                     break;
                 case 'transferCustomer':    // 转客户（我的线索）
                     this.$router.push({
-                        path: 'turnCustomer',
+                        path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
                             isWcCus: this.customerInfo.isWcCus,
@@ -356,6 +364,8 @@ export default {
                     this.popContent.desList = [ '是否确认删除并返回？']
                     this.$refs.giveUpOrReceive.show()
                     break;
+                case 'opportunityOperation':   // 新增商机（我的客户）
+                    this.$refs.editOpportunity.show()
                 default:
                     break;
             }
@@ -394,6 +404,10 @@ export default {
                     this.$toast(msg)
                 }
             })
+        },
+        // 关闭新建商机
+        callbackFun() {
+            this.$refs.editOpportunity.hide()
         },
         openDialog(id, type){  //打开回复弹窗
             this.rowId = id
