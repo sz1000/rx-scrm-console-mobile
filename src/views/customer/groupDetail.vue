@@ -2,54 +2,48 @@
   <div class="group_wrap">
     <TitleBack title="群详情"></TitleBack>
     <div class="groupDetailsTop">
-        <div class="left">
-          <!-- @click="toFun(item.chatId)" -->
+      <div class="left">
+        <!-- @click="toFun(item.chatId)" -->
+        <div class="leftImgs" v-for="(item, index) in avatarList" :key="index">
+          <img src="" alt="" />
           <div
-            class="leftImgs"
-            v-for="(item, index) in avatarList"
-            :key="index"
+            class="group_img"
+            :class="{
+              len5:
+                item.imgList &&
+                item.imgList.length > 4 &&
+                item.imgList.length < 7,
+            }"
           >
-            <img src="" alt="" />
             <div
-              class="group_img"
-              :class="{
-                len5:
-                  item.imgList &&
-                  item.imgList.length > 4 &&
-                  item.imgList.length < 7,
-              }"
+              class="img_box"
+              :class="{ w33: item.imgList && item.imgList.length > 4 }"
+              v-for="(url, i) in item.imgList.slice(0, 9)"
+              :key="i"
             >
-              <div
-                class="img_box"
-                :class="{ w33: item.imgList && item.imgList.length > 4 }"
-                v-for="(url, i) in item.imgList.slice(0, 9)"
-                :key="i"
-              >
-                <img class="img" :src="url | $setAvatar" alt="" />
-              </div>
+              <img class="img" :src="url | $setAvatar" alt="" />
             </div>
-          </div>
-        </div>
-        <div class="right" @click="datatTite.name && toSopPage()">
-          <div class="rightTitle">
-            <p class="title">{{ datatTite.name || "暂无" }}</p>
-            <!-- v-if="groupName.admintype == 1" -->
-            <div class="sop">
-              <!-- <span>群详情</span> -->
-              <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
-            </div>
-          </div>
-          <div class="rightInfo">
-            <p>
-              共<span></span
-              >{{ datatTite.usersum || "0" }}位群成员，今日新增<span>{{
-                datatTite.joinsum || "0"
-              }}</span
-              >人
-            </p>
           </div>
         </div>
       </div>
+      <div class="right" @click="flag && toSopPage()">
+        <div class="rightTitle">
+          <p class="title">{{ datatTite.name || "暂无" }}</p>
+          <!-- v-if="groupName.admintype == 1" -->
+          <div class="sop" v-if="flag">
+            <!-- <span>群详情</span> -->
+            <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
+          </div>
+        </div>
+        <div class="rightInfo">
+          <p>
+            共<span></span>{{ datatTite.usersum || "0" }}位群成员，今日新增<span
+              >{{ datatTite.joinsum || "0" }}</span
+            >人
+          </p>
+        </div>
+      </div>
+    </div>
     <div class="content">
       <!-- 群公告 -->
       <div class="row tag" @click="notice && toGroupAnnouncement()">
@@ -60,6 +54,7 @@
           </p>
           <!-- v-if="flag" -->
           <img
+            v-if="notice"
             class="icon"
             src="@/assets/svg/icon_next_gray.svg"
             alt=""
@@ -236,6 +231,7 @@ export default {
       groupName: {},
       group: this.$route.query.grouid,
       sopList: [],
+      flag: false,
       list: [
         {
           groupNames: "这是规则名称哈哈哈哈哈哈哈",
@@ -309,7 +305,6 @@ export default {
     this.getSopList();
     this.groupList();
     this.getGroupDetailtop();
-    
   },
   methods: {
     formatDate,
@@ -363,7 +358,9 @@ export default {
       this.groupListadd();
     },
     groupListadd() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       let data = {
         chatId: id,
         tagidList: this.highLightArr,
@@ -376,7 +373,9 @@ export default {
     },
     // 群标签
     groupList() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       groupUserTag_list(id).then((res) => {
         console.log(res);
         console.log("获取 群标签接口+ " + res);
@@ -413,7 +412,9 @@ export default {
       return str.replace(/[\u0391-\uFFE5]/g, "aa").length; //先把中文替换成两个字节的英文，在计算长度
     },
     getGroupDetail() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       group_getGroupDetail(id).then((res) => {
         console.log("获取群公告2222222222222222222222");
         console.log(res);
@@ -449,7 +450,9 @@ export default {
       });
     },
     getGroupDetailtop() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       group_getGroupTodayDetail(id).then((res) => {
         console.log(res);
         console.log("获取top接口 getGroupDetailtop + " + res);
@@ -503,6 +506,12 @@ export default {
         if (res.result) {
           let list = res.data;
           this.sopList = list;
+          if (this.sopList.length > 0) {
+            this.flag = true;
+          } else {
+            this.flag = false;
+          }
+          console.log(this.sopList.length);
         }
       });
     },
@@ -570,123 +579,123 @@ export default {
   min-height: 100vh;
   background: @white;
   .groupDetailsTop {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 164px;
+    position: relative;
+    &::before {
+      content: "";
       width: 100%;
-      height: 164px;
-      position: relative;
-      &::before {
-        content: "";
-        width: 100%;
-        height: 1px; /* no */
-        background: @lineColor;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        transform: scaleY(0.5);
-      }
-      .left {
-        // flex: 1;
-        width: 80px;
-        height: 80px;
-        margin: 42px 32px;
-        .leftImgs {
-          .group_img {
-            width: 80px;
-            height: 80px;
-            background: @navBg;
-            margin-right: 24px;
-            display: flex;
-            flex-wrap: wrap-reverse;
-            justify-content: center;
-            align-items: center;
-            &.len5 {
-              padding: calc(80px / 6) 0;
-            }
-            .img_box {
-              // width: 33.33%;
-              // height: calc(80px / 3);
-              // background: chocolate;
-              border: 1px solid @white; /*no*/
-              text-align: center;
-              &:first-child:nth-last-child(2),
-              &:first-child:nth-last-child(2) ~ .img_box {
-                width: calc(80px / 2);
-                height: calc(80px / 2);
-              }
-              &:first-child:nth-last-child(3),
-              &:first-child:nth-last-child(3) ~ .img_box {
-                width: calc(80px / 2);
-                height: calc(80px / 2);
-              }
-              &:first-child:nth-last-child(4),
-              &:first-child:nth-last-child(4) ~ .img_box {
-                width: calc(80px / 2);
-                height: calc(80px / 2);
-              }
-              // &:first-child:nth-last-child(5),&:first-child:nth-last-child(5) ~ .img_box{
-              //     width: calc(80px / 3);
-              //     height: calc(80px / 3);
-              // }
-              // &:first-child:nth-last-child(6),&:first-child:nth-last-child(6) ~ .img_box{
-              //     width: calc(80px / 3);
-              //     height: calc(80px / 3);
-              // }
-              &.w33 {
-                width: calc(80px / 3);
-                height: calc(80px / 3);
-              }
-              .img {
-                width: 100%;
-                height: 100%;
-              }
-            }
-          }
-        }
-      }
-      .right {
-        flex: 1;
-        .rightTitle {
+      height: 1px; /* no */
+      background: @lineColor;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      transform: scaleY(0.5);
+    }
+    .left {
+      // flex: 1;
+      width: 80px;
+      height: 80px;
+      margin: 42px 32px;
+      .leftImgs {
+        .group_img {
+          width: 80px;
+          height: 80px;
+          background: @navBg;
+          margin-right: 24px;
           display: flex;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          height: 48px;
-          line-height: 48px;
-          .title {
-            width: 450px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 32px;
-            color: #262626;
-            font-weight: 600;
+          flex-wrap: wrap-reverse;
+          justify-content: center;
+          align-items: center;
+          &.len5 {
+            padding: calc(80px / 6) 0;
           }
-          .sop {
-            margin-right: 30px;
-            position: relative;
-            width: 40px;
-            span {
-              margin-right: 30px;
-              color: #262626;
+          .img_box {
+            // width: 33.33%;
+            // height: calc(80px / 3);
+            // background: chocolate;
+            border: 1px solid @white; /*no*/
+            text-align: center;
+            &:first-child:nth-last-child(2),
+            &:first-child:nth-last-child(2) ~ .img_box {
+              width: calc(80px / 2);
+              height: calc(80px / 2);
             }
-            .icon {
-              width: 32px;
-              height: 32px;
-              position: absolute;
-              right: 0;
-              top: 24px;
-              transform: translateY(-50%);
+            &:first-child:nth-last-child(3),
+            &:first-child:nth-last-child(3) ~ .img_box {
+              width: calc(80px / 2);
+              height: calc(80px / 2);
+            }
+            &:first-child:nth-last-child(4),
+            &:first-child:nth-last-child(4) ~ .img_box {
+              width: calc(80px / 2);
+              height: calc(80px / 2);
+            }
+            // &:first-child:nth-last-child(5),&:first-child:nth-last-child(5) ~ .img_box{
+            //     width: calc(80px / 3);
+            //     height: calc(80px / 3);
+            // }
+            // &:first-child:nth-last-child(6),&:first-child:nth-last-child(6) ~ .img_box{
+            //     width: calc(80px / 3);
+            //     height: calc(80px / 3);
+            // }
+            &.w33 {
+              width: calc(80px / 3);
+              height: calc(80px / 3);
+            }
+            .img {
+              width: 100%;
+              height: 100%;
             }
           }
-        }
-        .rightInfo {
-          font-size: 24px;
-          line-height: 32px;
-          color: #b3b3b3;
         }
       }
     }
+    .right {
+      flex: 1;
+      .rightTitle {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        height: 48px;
+        line-height: 48px;
+        .title {
+          width: 450px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 32px;
+          color: #262626;
+          font-weight: 600;
+        }
+        .sop {
+          margin-right: 30px;
+          position: relative;
+          width: 40px;
+          span {
+            margin-right: 30px;
+            color: #262626;
+          }
+          .icon {
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            right: 0;
+            top: 24px;
+            transform: translateY(-50%);
+          }
+        }
+      }
+      .rightInfo {
+        font-size: 24px;
+        line-height: 32px;
+        color: #b3b3b3;
+      }
+    }
+  }
   .content {
     padding: 24px;
     .item {
@@ -783,10 +792,11 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding:10px 0;
+        padding: 10px 0;
         position: relative;
         .groupTag {
-          color: #B3B3B3;
+          font-size: 32px;
+          color: #b3b3b3;
         }
         .edit {
           width: 40px;
@@ -922,7 +932,7 @@ export default {
       &.tag {
         padding-bottom: 40px;
         .tit {
-          color: #B3B3B3;
+          color: #b3b3b3;
           // margin-bottom: 32px;
         }
       }
@@ -953,8 +963,9 @@ export default {
         top: 0;
       }
       .groupTxt {
+        font-size: 32px;
         margin-bottom: 20px;
-        color: #B3B3B3;
+        color: #b3b3b3;
         // font-size: 24px;
         // line-height: 32px;
         // color: @total;

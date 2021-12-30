@@ -2,7 +2,6 @@
   <div class="group_wrap">
     <TitleBack class="title" title="SOP"></TitleBack>
     <div class="content">
-
       <!-- <div class="row tag" @click="toGroupAnnouncement">
         <div class="groupTxt">群公告</div>
         <div class="tag_wrap notice">
@@ -96,7 +95,7 @@
                       <img :src="item.cover" alt="" />
                     </div>
                     <div class="rightText">
-                      <p>{{ item.title }}</p>
+                      <p class="title">{{ item.title }}</p>
                       <span>{{ item.url }}</span>
                     </div>
                   </div>
@@ -300,7 +299,9 @@ export default {
       this.groupListadd();
     },
     groupListadd() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       let data = {
         chatId: id,
         tagidList: this.highLightArr,
@@ -313,7 +314,9 @@ export default {
     },
     // 群标签
     groupList() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       groupUserTag_list(id).then((res) => {
         console.log(res);
         console.log("获取 群标签接口+ " + res);
@@ -350,7 +353,9 @@ export default {
       return str.replace(/[\u0391-\uFFE5]/g, "aa").length; //先把中文替换成两个字节的英文，在计算长度
     },
     getGroupDetail() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       group_getGroupDetail(id).then((res) => {
         console.log("获取群公告2222222222222222222222");
         console.log(res);
@@ -386,7 +391,9 @@ export default {
       });
     },
     getGroupDetailtop() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       group_getGroupTodayDetail(id).then((res) => {
         console.log(res);
         console.log("获取top接口 getGroupDetailtop + " + res);
@@ -575,6 +582,15 @@ export default {
                   }
                   .rightText {
                     width: 360px;
+                    .title {
+                      word-break: break-all;
+                      text-overflow: ellipsis;
+                      overflow: hidden;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                      font-size: 18px;
+                    }
                     span {
                       display: inline-block;
                       color: #262626;
