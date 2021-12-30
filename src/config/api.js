@@ -50,7 +50,7 @@ export const SaleDocumentDetail = (data) => {
     // 获取海报详情
 export const PosterDetail = (data) => {
     return request({
-        url: materialServiceApi + `/sale-poster-entity/${salePosterId}/detail`,
+        url: materialServiceApi + `/sale-poster-entity/${data}/detail`,
         method: 'get',
         params: data,
     })
