@@ -48,10 +48,11 @@ export function group_getMobileCustomerGroupPage(data) { // 获取客户群列�
         params: data
     })
 }
-export function group_getMobileGroupUserlist(id) { // 获取群群员列表
+export function group_getMobileGroupUserlist2(data) { // 获取群群员列表
     return request({
-        url: BASE_CUSTOMER_SERVICE + '/group/getMobileGroupUserlist?chatId=' + id,
-        method: 'get'
+        url: BASE_CUSTOMER_SERVICE + '/group/getMobileGroupUserlist2',
+        method: 'get',
+        params: data
     })
 }
 export function clueCustomerFollowUser_addCommentInfo(data) { // 添加评论回复

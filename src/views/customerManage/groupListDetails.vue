@@ -133,7 +133,12 @@
         </keep-alive>
         <!-- 群成员 -->
         <!-- <keep-alive> -->
-          <GroupMembers v-if="contentType == 1" @clickBack="backFn" @childFn="getChildArr" :isPortrait="1"></GroupMembers>
+        <GroupMembers
+          v-if="contentType == 1"
+          @clickBack="backFn"
+          @childFn="getChildArr"
+          :isPortrait="1"
+        ></GroupMembers>
         <!-- </keep-alive> -->
       </div>
       <!-- 群标签 -->
@@ -253,7 +258,7 @@ export default {
       cusSignList: [],
       highLightArr: [],
       avatarList: [],
-      groupArr:[],
+      groupArr: [],
     };
   },
   updated() {},
@@ -265,19 +270,41 @@ export default {
       return this.$store.getters.userId;
     },
   },
+  watch: {
+    $route(to, from) {
+      console.log("route", to, from);
+    },
+  },
+  onLoad() {
+      // console.log("屏幕滚动");
+      this.pageInfo.page += 1;
+      this.getList();
+    },
   mounted() {
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.pageInfo.page = 1;
     this.getData();
+
+        let to = localStorage.getItem("to_path");
+        let from = localStorage.getItem("from_path");
+        console.log("to 111" + to, "form 222" + from);
+        console.log(to == "/customerManage/groupListDetails" &&
+          from == "customerManage/customDetail")
+        if (
+          to == "/customerManage/groupListDetails" &&
+          from == "/customerManage/customDetail"
+        ) {
+          this.contentType = 1;
+        }
   },
   methods: {
     getStrLen(str) {
       return str.replace(/[\u0391-\uFFE5]/g, "aa").length; //先把中文替换成两个字节的英文，在计算长度
     },
     formatDate,
-    backFn(index){
-      console.log('fffffffffffffffffffffffffff')
-this.contentType = index;
+    backFn(index) {
+      console.log("fffffffffffffffffffffffffff");
+      this.contentType = index;
     },
     toGroupAnnouncement() {
       if (this.flag) {
@@ -515,14 +542,15 @@ this.contentType = index;
         query: { id: this.$route.query.id, grouid: this.$route.query.grouid },
       });
     },
-    getChildArr(load){
-this.groupArr= load
-console.log(123990+"123333333")
-console.log(load)
+    getChildArr(load) {
+      this.groupArr = load;
+      console.log(123990 + "123333333");
+      console.log(load);
     },
     // 导航切换
     changeNav(index) {
       this.contentType = index;
+      
       // console.log(index);
     },
     getMoreState() {
@@ -599,11 +627,6 @@ console.log(load)
       console.log(this.allComTagList);
       this.dialog_tag = true;
     },
-  },
-  watch: {
-    $route(to,from){
-      console.log('route',to,from)
-    }
   },
 };
 </script>
@@ -1003,6 +1026,7 @@ console.log(load)
         }
         .groupTxt {
           margin-bottom: 20px;
+          color: #B3B3B3;
           // font-size: 24px;
           // line-height: 32px;
           // color: @total;
