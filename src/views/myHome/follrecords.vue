@@ -40,7 +40,8 @@
                      <div  class="client_img">
                          <div class="user_img">
                              <img :src="item.avatar" alt="" v-if="item.avatar">
-                             <img src="../../images/nomal_avt.png" alt="" v-else>
+                             <!-- <img src="../../images/nomal_avt.png" alt="" v-else> -->
+                             <p v-else class="active_bg">{{item.customerCalled.charAt(0)}}</p>
                          </div>
                      </div>
                         <div class="client_message">
@@ -136,10 +137,11 @@
                 </div>
                 <div class="custom_msg">
                     <!-- <img :src="item.avatar" alt="" v-if="item.avatar" /> -->
-                    <img :src="item.avatar" alt=""  />
+                    <img v-if='item.avatar' :src="item.avatar" alt=""  />
+                    <p class="active_b" v-else>{{item.customerCalled.charAt(0)}}</p>
                     <div class="name_text">{{item.customerCalled}}</div>
                     <span class="weixin" v-if="item.externalType == 1">@微信</span>
-                    <span class="company_name" v-else> @{{item.customerName || item.cropFullName }}</span>
+                    <span class="company_name" v-if="item.externalType == 2 && item.customerName"> @{{item.customerName || item.cropFullName }}</span>
                 </div>
                 </div>
             </div>
@@ -916,6 +918,16 @@ export default {
                    height: 80px;
                    border-radius: 50% ;
                }
+               .active_bg{
+                 background-color: #4168F6;
+                 text-align: center;
+                   width: 80px;
+                   height: 80px;
+                   border-radius: 50% ;
+                   font-size: 24px;
+                   color: #fff;
+                   line-height: 80px;
+               }
             }
              }
             .client_message{
@@ -1148,6 +1160,15 @@ export default {
           width: 48px;
           height: 48px;
           border-radius: 50%;
+        }
+        .active_b{
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: #4168F6;
+          color: #fff;
+          line-height: 48px;
+          text-align: center;
         }
       }
     }

@@ -703,6 +703,9 @@ export default {
                 case 60:
                    str = `删除了${obj.customerCalled}的企微好友`
                     break;
+                case 70:
+                   str = obj.context
+                    break;
                 case 71:
                    str = obj.context
                     break;
