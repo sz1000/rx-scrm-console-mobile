@@ -324,7 +324,7 @@ export default {
     },
     groupListadd() {
       let data = {
-        chatId: this.$route.query.id ? this.$route.query.id : this.chatId,
+        chatId: this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId,
         tagidList: this.highLightArr,
       };
       groupUserTag_addGroupTag(data).then((res) => {
@@ -436,8 +436,9 @@ export default {
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     getList() {
+      cinsole.log("this.$store.getters.chatId "+ this.$store.getters.chatId)
       let obj = {
-        chatId: this.$route.query.id ? this.$route.query.id : this.chatId,
+        chatId: this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId,
         ...this.pageInfo,
       };
       group_getGroupUserPage(obj).then((res) => {
