@@ -92,7 +92,7 @@
                   <p class="left"></p>
                   <div class="right">
                     <div class="leftImg">
-                      <img :src="item.cover" alt="" />
+                      <img :src="item.cover ? item.cover : null" alt="" />
                     </div>
                     <div class="rightText">
                       <p class="title">{{ item.title }}</p>
