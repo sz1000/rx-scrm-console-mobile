@@ -27,9 +27,9 @@
             <div class="item">
                 <div class="label">当前负责人</div>
                 <div class="val">
-                    <div class="info">
+                    <div class="info director">
                         <img class="avatar" :src="data.directorAvatar | $setAvatar" alt="">
-                        <div class="name">{{data.directorName}}</div>
+                        <div class="name one-line">{{data.directorName}}</div>
                     </div>
                 </div>
             </div>
@@ -174,6 +174,11 @@ export default {
                     max-width: calc(100% - 300px);
                     font-size: 24px;
                     color: @yellow;
+                }
+            }
+            .director {
+                .name {
+                    max-width: calc(100% - 50px);
                 }
             }
         }
