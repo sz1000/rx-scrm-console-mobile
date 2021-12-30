@@ -300,8 +300,9 @@ export default {
       this.groupListadd();
     },
     groupListadd() {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
       let data = {
-        chatId: this.$route.query.id,
+        chatId: id,
         tagidList: this.highLightArr,
       };
       groupUserTag_addGroupTag(data).then((res) => {
@@ -312,7 +313,8 @@ export default {
     },
     // 群标签
     groupList() {
-      groupUserTag_list(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      groupUserTag_list(id).then((res) => {
         console.log(res);
         console.log("获取 群标签接口+ " + res);
         if (res.result) {
@@ -348,7 +350,8 @@ export default {
       return str.replace(/[\u0391-\uFFE5]/g, "aa").length; //先把中文替换成两个字节的英文，在计算长度
     },
     getGroupDetail() {
-      group_getGroupDetail(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      group_getGroupDetail(id).then((res) => {
         console.log("获取群公告2222222222222222222222");
         console.log(res);
         console.log("获取头部信息接口 getGroupDetail " + res);
@@ -383,7 +386,8 @@ export default {
       });
     },
     getGroupDetailtop() {
-      group_getGroupTodayDetail(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      group_getGroupTodayDetail(id).then((res) => {
         console.log(res);
         console.log("获取top接口 getGroupDetailtop + " + res);
         console.log(res.data);

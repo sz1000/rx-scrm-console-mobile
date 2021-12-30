@@ -251,11 +251,11 @@ export default {
   },
   filters: {
     getNameLength(name) {
-      console.log(name)
+      // console.log(name)
       if (name && name.length > 3) {
         return name.slice(0, 3) + '...'
       } else {
-        return
+        return name
       }
     },
   },
