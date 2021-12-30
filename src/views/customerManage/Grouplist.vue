@@ -270,8 +270,8 @@ export default {
     // },
     //获取群id跳转
     clickChatid(id) {
-      // console.log(id.chatId);
-      // console.log(id.id);
+      console.log(id.chatId);
+      console.log(id.id);
       this.$router.push({
         path: "./groupListDetails",
         query: { id: id.chatId, grouid: id.id },

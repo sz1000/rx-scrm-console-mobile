@@ -26,7 +26,7 @@
           <!-- item.externalType==1等于客户跳转客户画像页面 -->
           <div
             class="userInfo"
-            @click="item.externalType == 1 && toCustomerPage(item)"
+            @click="item.externalType && toCustomerPage(item)"
           >
             <div class="topInfo">
               <span class="txt groupName">{{ item.name }}</span>
@@ -66,7 +66,7 @@
               </div>
             </div>
           </div>
-          <div class="link" v-if="item.externalType == 1">
+          <div class="link" v-if="item.externalType">
             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
           </div>
         </div>
@@ -447,7 +447,6 @@ export default {
       }
       .userInfo {
         flex: 1;
-        line-height: 48px;
 
         .topInfo {
           display: flex;
@@ -455,8 +454,7 @@ export default {
           // align-items: center;
           padding: 8px 0;
           // line-height: 2;
-          // background: chartreuse;
-
+line-height: 1.5;
           span {
             color: #262626;
             font-size: 28px;
@@ -491,8 +489,8 @@ export default {
             color: #fb8f28;
           }
           .form {
-            height: 40px;
-            line-height: 40px;
+            height: 32px;
+            line-height: 32px;
             margin: 6px 0;
             border: 1px solid;
             font-size: 24px;

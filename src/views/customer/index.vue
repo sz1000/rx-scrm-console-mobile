@@ -4,7 +4,7 @@
 
 <script>
 import CustomerPortrait from './CustomerPortraitNew.vue'
-import GroupPortrait from './Groupportrait.vue'
+import GroupPortrait from './groupListDetails.vue'
 export default {
     components: {
         CustomerPortrait,
