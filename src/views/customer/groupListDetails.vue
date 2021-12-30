@@ -324,7 +324,9 @@ export default {
     },
     groupListadd() {
       let data = {
-        chatId: this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId,
+        chatId: this.$route.query.id
+          ? this.$route.query.id
+          : this.$store.getters.chatId,
         tagidList: this.highLightArr,
       };
       groupUserTag_addGroupTag(data).then((res) => {
@@ -349,7 +351,9 @@ export default {
     },
     // 群标签
     groupList() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       groupUserTag_list(id).then((res) => {
         console.log(res);
         console.log("获取 群标签接口+ " + res);
@@ -367,7 +371,9 @@ export default {
       });
     },
     getGroupDetailtop() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       group_getGroupTodayDetail(id).then((res) => {
         console.log(res);
         console.log("获取top接口 getGroupDetailtop + " + res);
@@ -399,7 +405,9 @@ export default {
       });
     },
     getGroupDetail() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       group_getGroupDetail(id).then((res) => {
         console.log(res);
         console.log("获取头部信息接口 getGroupDetail " + res);
@@ -439,9 +447,11 @@ export default {
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     getList() {
-      console.log("this.$store.getters.chatId "+ this.$store.getters.chatId)
+      console.log("this.$store.getters.chatId " + this.$store.getters.chatId);
       let obj = {
-        chatId: this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId,
+        chatId: this.$route.query.id
+          ? this.$route.query.id
+          : this.$store.getters.chatId,
         ...this.pageInfo,
       };
       group_getGroupUserPage(obj).then((res) => {
@@ -481,7 +491,6 @@ export default {
           this.dataList = this.unique(newSetArr);
           // this.dataList = tempList;
 
-          
           // console.log(this.dataList);
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
@@ -492,10 +501,13 @@ export default {
     },
     toSopPage() {
       // chatId
-      console.log("id  "+this.$route.query.id,"grouid   "+this.$route.query.grouid)
+      console.log(
+        "id  " + this.$route.query.id,
+        "grouid   " + this.$route.query.grouid
+      );
       this.$router.push({
-        path: '/sop',
-        query: { id: this.$route.query.id,grouid:this.$route.query.grouid},
+        path: "/sop",
+        query: { id: this.$route.query.id, grouid: this.$route.query.grouid },
       });
     },
     // 导航切换
@@ -726,6 +738,10 @@ export default {
           height: 48px;
           line-height: 48px;
           .title {
+            width: 450px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             font-size: 32px;
             color: #262626;
             font-weight: 600;
