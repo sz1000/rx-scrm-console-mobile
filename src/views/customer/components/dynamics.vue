@@ -227,7 +227,10 @@ export default {
     inject: ['getGroupUserList'],
     methods: {
         onLoad() {
-            console.log("load");
+            console.log("load")
+            if (this.followMsgSearch.page <= 1) {
+                return
+            }
             this.getSelectFollowMsgList()
         },
         async addFabulous(row){
