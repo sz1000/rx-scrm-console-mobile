@@ -175,13 +175,13 @@
                       <p class="img_txt"  v-else>{{item.customerCalled.charAt(0)}}</p>
                        <!-- <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar"> -->
                         <div class="weix_img">
-                          <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
-                          <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
+                          <img class="img" v-if="item.externalType == 1" src="../../assets/images/weix_icon.png" alt="">
+                          <img class="img" v-if="item.externalType == 2" src="../../assets/images/qiye_icon.png" alt="">
                         </div>
                     </div>
                      <p class="name_tite">{{item.customerCalled}}</p>
-                     <p class="enterprise" v-if="item.externalType == 1">@{{item.customerName}}</p>
-                     <p class="wechat" v-if="item.externalType == 2">@微信</p>
+                     <p class="enterprise" v-if="item.externalType == 2 && item.customerName">@{{item.customerName}}</p>
+                     <p class="wechat" v-if="item.externalType == 1">@微信</p>
                   </div>
                     <div class="tite_nane">{{item.clueType}}</div>
                 </div>
@@ -233,8 +233,8 @@
                         </div>
                     </div>
                      <p class="name_tite">{{item.customerCalled}}</p>
-                     <p class="enterprise" v-if="item.externalType == 1">@企业</p>
-                     <p class="wechat" v-if="item.externalType == 2">@微信</p>
+                      <p class="enterprise" v-if="item.externalType == 2 && item.customerName">@{{item.customerName}}</p>
+                     <p class="wechat" v-if="item.externalType == 1">@微信</p>
                   </div>
                     <div class="tite_nane">{{item.clueType}}</div>
                 </div>
@@ -702,6 +702,9 @@ export default {
                     break;
                 case 60:
                    str = `删除了${obj.customerCalled}的企微好友`
+                    break;
+                case 71:
+                   str = obj.context
                     break;
                 case 72:
                    str = obj.context
