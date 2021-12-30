@@ -354,6 +354,12 @@ export default {
                 if(res.result){
                     this.groupUserData = res.data.dataCount
                     this.groupUserList = res.data.allList
+
+                    if (this.groupUserData.total > 20) {
+                        this.toGroupDetail()
+                        return
+                    }
+
                     this.dialog_group = true
                 }
             })
@@ -507,20 +513,12 @@ export default {
             this.$router.push({ name, query })
         },
         toGroupDetail(){    //群画像
-            if (this.groupUserData.total > 20) {
-                this.$router.push({
-                    path: '/customerManage/groupListDetails',
-                    query: {
-                        id: this.groupChatId
-                    }
-                })
-            }
-            // this.$router.push({
-            //     path: '/customerManage/groupListDetails',
-            //     query: {
-            //         id: this.groupChatId
-            //     }
-            // })
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
         },
     },
     filters: {
