@@ -286,7 +286,7 @@
                     <div class="s_val" v-if="el.url && !el.fileName">
                       <div class="share_link">{{ el.url }}</div>
                     </div> -->
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.articleId}&type=1&userNo=${userNo}`, 'title': el.title, 'desc': el.contentAbstract ? el.contentAbstract : el.title, 'imgUrl': el.cover ? el.cover :  getFileDefaultCover(el.title) }))" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.articleId}&type=1&userNo=${this.userNo}`, 'title': el.title, 'desc': el.contentAbstract ? el.contentAbstract : el.title, 'imgUrl': el.cover ? el.cover :  getFileDefaultCover(el.title) }))" alt="" v-preventReClick />
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
                    <div class="s_val">
                       <div class="img_row">
@@ -300,7 +300,7 @@
                   </div>
                  </div>
                   <div v-if="el.objectName == 2" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.documentId}&type=2&userNo=${userNo}`, 'title': el.name, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.name, 'imgUrl': el.cover ? el.cover : getFileDefaultCover(el.name) }))" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.documentId}&type=2&userNo=${this.userNo}`, 'title': el.name, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.name, 'imgUrl': el.cover ? el.cover : getFileDefaultCover(el.name) }))" alt="" v-preventReClick />
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
                      <div class="s_val">
                       <div class="img_row">
@@ -315,7 +315,7 @@
                   </div>
                  </div>
                   <div v-if="el.objectName == 3" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=3&userNo=${userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : getFileDefaultCover(el.posterName) }))" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=3&userNo=${this.userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : getFileDefaultCover(el.posterName) }))" alt="" v-preventReClick />
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
                       <div class="s_val">
                       <div class="img_row">
@@ -418,9 +418,7 @@ export default {
       showSecret: false,
     }
   },
-   computed: {
-    ...mapState(['corpId', 'userNo']),
-  },
+
   computed: {
     chatId() {
       return this.$store.getters.chatId
@@ -431,6 +429,9 @@ export default {
     entry() {
       return this.$store.getters.entry
     },
+  userNo() {
+      return this.$store.getters.userNo;
+    },
     sopType() {
       let str = '[个人SOP]'
       if (this.entry == 'group_chat_tools') {
