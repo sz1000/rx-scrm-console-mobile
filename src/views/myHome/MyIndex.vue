@@ -121,7 +121,7 @@
                 <span class="circle_line"></span>
                 <span class="circle_lines"></span>
                 <p class="title">
-                  <span class="name" v-if="item.optType != 72 && item.optType != 36">{{item.optUserName}}</span>
+                  <span class="name" v-if="item.optType != 72 && item.optType != 36 && item.optType != 50">{{item.optUserName}}</span>
                   {{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
              </div>
@@ -693,6 +693,9 @@ export default {
                 case 47:
                     break;
                 case 48:
+                    break;
+                case 50:
+                    str = obj.context
                     break;
                 case 60:
                    str = `删除了${obj.customerCalled}的企微好友`
