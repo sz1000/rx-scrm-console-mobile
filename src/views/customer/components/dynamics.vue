@@ -49,6 +49,10 @@
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
                                     <span>{{item.toUser | optString}}</span>
                                 </div>
+                                <div class="name" v-if="(item.cropFullName || item.customerCalled) && item.optType == 41">
+                                    <span>{{item.cropFullName || item.customerCalled}}</span>
+                                </div>
+                                <span class="mr8" v-if="item.optType == 41">{{ item.cropFullName || item.customerCalled ? '为企业微信好友' : '企业微信好友' }}</span>
                                 <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length && item.toUser[0]">
                                     <div class="name" v-for="(us,ri) in item.toUser" :key="ri">
                                         <img class="avatar" :src="us.avatar | $setAvatar" alt="">
@@ -530,6 +534,9 @@ export default {
                 case 40:
                     str = obj.context
                     break;
+                case 41:
+                    str = '添加了'
+                    break;
                 case 44:
                     let _str = ''
                     if(obj.optResult == 1){
@@ -552,7 +559,6 @@ export default {
                     str = '导入了客户'
                     break;
                 case 4:
-                case 41:
                 case 51:
                 case 52:
                 case 53:

@@ -61,7 +61,7 @@
                 <!-- 商机详情 -->
                 <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
                 <!-- 申请成为协助人 -->
-                <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData" :isApply="isApply"></ApplyHelp>
+                <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData"></ApplyHelp>
                 <!-- 操作按钮弹窗面板 -->
                 <operation-btn-box ref="operationBtnBox" :permission="permission" @doAction="doAction"></operation-btn-box>
                 <!-- 放弃或领取或删除 -->
@@ -143,7 +143,7 @@ export default {
             },
 
             dialog_xzr: false,
-            isApply: false,     //是否已经申请成为协助人 且还未通过
+            // isApply: false,     //是否已经申请成为协助人 且还未通过
             applyData: {},
 
             customerInfo: {},
@@ -246,11 +246,12 @@ export default {
         this.getCustomerDetail()
     },
     methods: {
-        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读)
-            this.dialog_xzr = Number(data.permFlag) ? false : true
-            this.isApply = data.isApply ? true : false
+        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读; isShow: 0: 无权限 1: 有权限)
+            this.dialog_xzr = Number(data.isShow) ? false : true
+            // this.isApply = data.isApply ? true : false
             let directorList = data.directorList
             let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
+            
             this.applyData = {
                 customerName: data.clueCustomerVO.name,
                 cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
