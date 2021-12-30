@@ -13,7 +13,7 @@
             <van-field v-model="message" class="inp-content" rows="1" autosize type="textarea" maxlength="200" show-word-limit :border="false" placeholder="记录好跟进，多签单呦～" @input="doInput"/>
             <div class="img-box" @click.stop="previewImg(imgData)">
                 <img v-if="imgData" :src="imgData" alt="">
-                <div v-if="imgData" class="close" @click.prevent="clearImg"></div>
+                <div v-if="imgData" class="close" @click.stop.prevent="clearImg"></div>
             </div>
         </div>
         <ul class="btn-box">
@@ -85,7 +85,7 @@ export default {
             this.imgData = data
         },
         clearImg() {
-            this.imgData = {}
+            this.imgData = ''
         },
         // 获取最终选中的人
         getPeople(data) {

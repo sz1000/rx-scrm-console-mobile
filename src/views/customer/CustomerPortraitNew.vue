@@ -380,7 +380,7 @@ export default {
                     break;
                 case 'transferCustomer':    // 转客户（我的线索）
                     this.$router.push({
-                        path: 'turnCustomer',
+                        path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
                             isWcCus: this.customerInfo.isWcCus,
