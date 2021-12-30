@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <div class="list" style="margin: 30px 0">
+      <div class="list" style="margin: 30px 15px">
         <div>{{ notice }}</div>
         <!-- <div style="margin-bottom:20px;">本群主要为极洲互动用户提供交流平台和相关资源。严禁乱发广告、游戏小程序、无关链接和引战言论（包括但不限于）。</div>
           <div style="margin-bottom:20px;">进群后按“昵称-地区”修改群昵称，如：阿中-北京</div>
