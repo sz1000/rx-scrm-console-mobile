@@ -287,7 +287,7 @@
                       <div class="share_link">{{ el.url }}</div>
                     </div> -->
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${el.url}`, 'title': el.title, 'desc': el.contentAbstract ? el.contentAbstract : el.title, 'imgUrl': el.cover ? el.cover :  getFileDefaultCover(el.title) }))" alt="" v-preventReClick /> -->
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShares(el, 'sop')" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                    <div class="s_val">
                       <div class="img_row">
                       <div class="img_box">
@@ -301,7 +301,7 @@
                  </div>
                   <div v-if="el.objectName == 2" class="share_box">
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${el.url}`, 'title': el.title, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.title, 'imgUrl': el.cover ? el.cover : getFileDefaultCover(el.name) }))" alt="" v-preventReClick /> -->
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShares(el, 'sop')" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                      <div class="s_val">
                       <div class="img_row">
                       <div class="img_box">
@@ -316,7 +316,7 @@
                  </div>
                   <div v-if="el.objectName == 3" class="share_box">
                     <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=3&userNo=${this.userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : getFileDefaultCover(el.posterName) }))" alt="" v-preventReClick /> -->
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShares(el, 'sop')" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                       <div class="s_val">
                       <div class="img_row">
                       <div class="img_box">

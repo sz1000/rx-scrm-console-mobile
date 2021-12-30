@@ -83,6 +83,12 @@
                   {{ formatDate(item.updateTime, "yyyy-MM-dd hh:mm:ss") }}</span
                 >
               </div>
+              <div class="inLineTwo" v-if="item.isDelete == '1'" >
+                <span class="methods">{{ item.name }} </span>
+                <span class="methods"
+                  >退出群聊</span
+                >
+              </div>
               <div class="inLineTwo" v-if="item.isDelete == '0'" >
                 <span class="methods">{{ item.name }} </span>
                 通过

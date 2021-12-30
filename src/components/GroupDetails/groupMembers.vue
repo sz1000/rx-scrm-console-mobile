@@ -17,6 +17,7 @@
         :immediate-check="false"
         :finished="finished"
         finished-text="没有更多了"
+        @load="onLoad"
       >
         <div class="li" v-for="(item, index) in dataList" :key="index">
           <!-- <div class="li"> -->
@@ -85,7 +86,7 @@ import {
   group_getGroupDetail,
   group_getGroupTodayDetail,
   group_getGroupUserPage,
-  group_getMobileGroupUserlist,
+  group_getMobileGroupUserlist2,
 } from "@/api/customer";
 export default {
   name: "Dynamics",
@@ -149,14 +150,30 @@ export default {
       list: [],
       activeIndex: 0,
       loading: false,
+      pageInfo: {
+        page: 1,
+        limit: 10,
+      },
     };
   },
   computed: {},
+
   mounted() {
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    this.pageInfo.page = 1;
     this.getList();
   },
+  watch: {
+    $router(to, from) {
+      console.log("route", to, from);
+    },
+  },
   methods: {
+    onLoad() {
+      // console.log("屏幕滚动");
+      this.pageInfo.page += 1;
+      this.getList();
+    },
     click() {
       this.$emit("childFn", this.dataList);
     },
@@ -164,7 +181,7 @@ export default {
       console.log(val);
       this.$router.push({
         path: "/customerManage/customDetail",
-        query: { userNo: val.userid },
+        query: { userNo: val.userid, index: 1 },
       });
     },
     toGroupDetail(val) {
@@ -341,36 +358,75 @@ export default {
       };
       // group_getMobileGroupUserlist
       // group_getGroupUserPage
-      group_getMobileGroupUserlist(id).then((res) => {
+      group_getMobileGroupUserlist2(obj).then((res) => {
         console.log(res);
         console.log("获取接口 getList + " + res);
 
         if (res.result) {
-          // let tempList = res.data.data.records; //请求返回当页的列表
-          //  this.total = res.data.data.total;
-          let tempList = res.data.allList;
-          this.total = res.data.dataCount.total;
-          // this.loading = false;
-          this.dataList = tempList;
+          let tempList = res.data.records; //请求返回当页的列表
+          this.loading = false;
+          this.total = res.data.total;
           if (tempList == null || tempList.length === 0) {
             // 加载结束
             this.finished = true;
             return;
           }
 
-          let arr = this.dataList.sort(function (a, b) {
-            console.log(a);
-            console.log(128900000);
-            console.log(b);
-            return b.admintype - a.admintype;
-          });
-          console.log(arr);
-          console.log(128900000);
-          this.dataList = arr;
-
+          // tempList.forEach((item) => {
+          //   item.joinTime = item.joinTime
+          //     ? formatDate(item.joinTime, "yyyy-MM-dd hh:mm:ss")
+          //     : "-";
+          //   item.type = item.type == "1" ? "企业成员" : "外部联系人";
+          //   if (item.joinScene == "1") {
+          //     item.joinScene = "直接邀请入群";
+          //   } else if (item.joinScene == "2") {
+          //     item.joinScene = "通过邀请链接入群";
+          //   } else {
+          //     item.joinScene = "通过扫描群二维码入群";
+          //   }
+          //   item.showName = item.showName ? item.showName : item.name;
+          //   // console.log(item.id);
+          // });
+          // 将新数据与老数据进行合并
+          let newSetArr = this.dataList.concat(tempList);
+          // this.dataList = this.dataList.concat(tempList);
+          this.dataList = newSetArr;
+          console.log("gggggggggggggggggggggggggggggggg");
+          console.log(this.dataList);
+          console.log(this.total);
+          // this.dataList = tempList;
+          // console.log(this.dataList);
+          //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
             this.finished = true;
           }
+
+          // let tempList = res.data.records; //请求返回当页的列表
+          //  this.total = res.data.total;
+          // // let tempList = res.data.allList;
+          // // this.total = res.data.dataCount.total;
+          // this.loading = false;
+          // // this.dataList = tempList;
+          // if (tempList == null || tempList.length === 0) {
+          //   // 加载结束
+          //   this.finished = true;
+          //   return;
+          // }
+
+          // // 将新数据与老数据进行合并
+          // let newSetArr = this.dataList.concat(tempList);
+          // // this.dataList = this.dataList.concat(tempList);
+          // this.dataList = this.unique(newSetArr);
+
+          let arr = this.dataList.sort(function (a, b) {
+            return b.admintype - a.admintype;
+          });
+          this.dataList = arr;
+
+          // //如果列表数据条数>=总条数，不再触发滚动加载
+          // if (this.dataList.length >= this.total) {
+          //   this.finished = true;
+          // }
         }
       });
     },

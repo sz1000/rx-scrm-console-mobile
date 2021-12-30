@@ -30,7 +30,7 @@
             </div>
           </div>
         </div>
-        <div class="right" @click="toSopPage">
+        <div class="right" @click="datatTite.name && toSopPage()">
           <div class="rightTitle">
             <p class="title">{{ datatTite.name || "暂无" }}</p>
             <!-- v-if="groupName.admintype == 1" -->
@@ -52,7 +52,7 @@
       </div>
     <div class="content">
       <!-- 群公告 -->
-      <div class="row tag" @click="toGroupAnnouncement">
+      <div class="row tag" @click="notice && toGroupAnnouncement()">
         <div class="groupTxt">群公告</div>
         <div class="tag_wrap notice">
           <p>
@@ -69,7 +69,7 @@
       <!-- 群标签 -->
       <div class="row lable_box">
         <div class="tag lable_top">
-          <div class="tit">群标签</div>
+          <div class="groupTag">群标签</div>
           <img
             class="edit"
             @click="chooseCusSign = true"
@@ -783,9 +783,11 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        // padding: 0 24px;
+        padding:10px 0;
         position: relative;
-
+        .groupTag {
+          color: #B3B3B3;
+        }
         .edit {
           width: 40px;
           height: 40px;
@@ -920,6 +922,7 @@ export default {
       &.tag {
         padding-bottom: 40px;
         .tit {
+          color: #B3B3B3;
           // margin-bottom: 32px;
         }
       }
@@ -951,6 +954,7 @@ export default {
       }
       .groupTxt {
         margin-bottom: 20px;
+        color: #B3B3B3;
         // font-size: 24px;
         // line-height: 32px;
         // color: @total;

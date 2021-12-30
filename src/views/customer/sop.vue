@@ -1,6 +1,6 @@
 <template>
   <div class="group_wrap">
-    <TitleBack title="sop"></TitleBack>
+    <TitleBack class="title" title="SOP"></TitleBack>
     <div class="content">
 
       <!-- <div class="row tag" @click="toGroupAnnouncement">
@@ -506,6 +506,9 @@ export default {
   width: 100%;
   min-height: 100vh;
   background: @white;
+  /deep/.title {
+    font-size: 32px;
+  }
   .content {
     padding: 24px;
     .item {

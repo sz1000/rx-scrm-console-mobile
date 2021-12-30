@@ -159,6 +159,8 @@ router.beforeEach(async(to, from, next) => {
 router.afterEach(async(to, from, next) => {
     if (process.env.NODE_ENV) {
         console.log('to:', to.path, 'from:', from.path)
+        localStorage.setItem('to_path',to.path)
+        localStorage.setItem('from_path',from.path)
     }
     // finish progress bar
 })
