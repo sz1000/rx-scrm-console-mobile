@@ -18,17 +18,16 @@
         :finished="finished"
         finished-text="没有更多了"
       >
-        <div
-          class="li"
-          v-for="(item, index) in dataList"
-          :key="index"
-          @click="toGroupDetail(item)"
-        >
+        <div class="li" v-for="(item, index) in dataList" :key="index">
           <!-- <div class="li"> -->
           <div class="userIcon">
             <img :src="item.avatar" alt="" />
           </div>
-          <div class="userInfo">
+          <!-- item.externalType==1等于客户跳转客户画像页面 -->
+          <div
+            class="userInfo"
+            @click="item.externalType == 1 && toCustomerPage(item)"
+          >
             <div class="topInfo">
               <span class="txt groupName">{{ item.name }}</span>
               <span
@@ -50,9 +49,24 @@
               >
             </div>
 
-            <p>{{ item.joinTime }}</p>
+            <div class="groupType">
+              <span class="grouptime">{{ item.joinTime }}</span>
+              <div class="status">
+                <span class="methods" v-if="item.joinScene == 1"
+                  >直接邀请入群</span
+                >
+                <span class="methods" v-if="item.joinScene == 2"
+                  >邀请链接入群</span
+                >
+                <span
+                  class="methods"
+                  v-if="item.joinScene != 1 && item.joinScene != 2"
+                  >扫描群二维码入群</span
+                >
+              </div>
+            </div>
           </div>
-          <div class="link" v-if="false">
+          <div class="link" v-if="item.externalType == 1">
             <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
           </div>
         </div>
@@ -143,6 +157,13 @@ export default {
     this.getList();
   },
   methods: {
+    toCustomerPage(val) {
+      console.log(val)
+      this.$router.push({
+        path: '/customerManage/customDetail',
+        query: { userNo: val.userid},
+      });
+    },
     toGroupDetail(val) {
       console.log(val);
     },
@@ -330,6 +351,17 @@ export default {
             this.finished = true;
             return;
           }
+
+          let arr = this.dataList.sort(function (a, b) {
+            console.log(a);
+            console.log(128900000);
+            console.log(b);
+            return b.admintype - a.admintype;
+          });
+          console.log(arr);
+          console.log(128900000);
+          this.dataList = arr;
+
           if (this.dataList.length >= this.total) {
             this.finished = true;
           }
@@ -416,11 +448,15 @@ export default {
       .userInfo {
         flex: 1;
         line-height: 48px;
+
         .topInfo {
           display: flex;
           justify-content: flex-start;
-          align-items: center;
-          line-height: 2;
+          // align-items: center;
+          padding: 8px 0;
+          // line-height: 2;
+          // background: chartreuse;
+
           span {
             color: #262626;
             font-size: 28px;
@@ -436,7 +472,8 @@ export default {
             white-space: nowrap;
           }
           .corporName {
-            flex: 1;
+            // flex: 1;
+            max-width: 210px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -454,12 +491,27 @@ export default {
             color: #fb8f28;
           }
           .form {
-            border: 1px solid;
-            height: 42px;
-            font-size: 24px;
+            height: 40px;
             line-height: 40px;
+            margin: 6px 0;
+            border: 1px solid;
+            font-size: 24px;
             padding: 0 16px;
             border-radius: 26px;
+          }
+        }
+        .groupType {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .grouptime {
+            flex: 1;
+            color: #b3b3b3;
+          }
+          .status {
+            flex: 1;
+            margin-right: 20px;
+            color: #b3b3b3;
           }
         }
 

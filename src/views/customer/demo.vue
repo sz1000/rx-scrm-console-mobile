@@ -286,7 +286,7 @@ export default {
     };
   },
   mounted() {
-    this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.pageInfo.page = 1;
     this.getData();
   },

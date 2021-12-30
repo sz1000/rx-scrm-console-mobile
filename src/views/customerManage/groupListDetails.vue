@@ -23,20 +23,20 @@
               <div
                 class="img_box"
                 :class="{ w33: item.imgList && item.imgList.length > 4 }"
-                v-for="(url, i) in item.imgList"
+                v-for="(url, i) in item.imgList.slice(0, 9)"
                 :key="i"
               >
-                <img class="img" :src="url" alt="" />
+                <img class="img" :src="url | $setAvatar" alt="" />
               </div>
             </div>
           </div>
         </div>
-        <div class="right">
+        <div class="right" @click="toSopPage">
           <div class="rightTitle">
             <p class="title">{{ datatTite.name || "暂无" }}</p>
             <!-- v-if="groupName.admintype == 1" -->
-            <div v-if="!isGroup" class="sop" @click="toSopPage">
-              <span>SOP生效中</span>
+            <div class="sop">
+              <!-- <span>群详情</span> -->
               <img class="icon" src="@/assets/svg/icon_next_gray.svg" alt="" />
             </div>
           </div>
@@ -68,8 +68,7 @@
           </div>
         </div> -->
         <!-- 群标签 -->
-        <div class="row lable_box">
-          <!-- lable_top -->
+        <!-- <div class="row lable_box">
           <div class="tag lable_top">
             <div class="tit">群标签</div>
             <img
@@ -78,24 +77,7 @@
               src="@/assets/svg/icon_edit.svg"
               alt=""
             />
-            <!-- <div class="setting_btn" @click="chooseCusSign = true">编辑</div> -->
           </div>
-          <!-- <div class="lable_list">
-        <div class="lable_li">
-          <span class="name_item" v-for="item in lableList" :key="item.id">
-            {{ item.name }}
-            <img
-              src="../../assets/images/delte.png"
-              alt=""
-              @click="lableDelet(item.tagid)"
-            />
-          </span>
-        </div>
-        <div class="btn" @click="isShowPerson = !isShowPerson" v-show="lableList.length >5">
-          {{ isShowPerson ? "收起" : "展开" }}
-          <van-icon name="arrow-down" />
-        </div>
-      </div> -->
           <div class="b_content">
             <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
               <div ref="spanBox">
@@ -105,18 +87,10 @@
                   :key="item.id"
                 >
                   {{ item.name }}
-                  <!-- <img
-              src="../../assets/images/delte.png"
-              alt=""
-              @click="lableDelet(item.tagid)"
-            /> -->
                 </span>
               </div>
             </div>
-            <!-- v-show="lableList.length > 10" -->
             <div class="btn" ref="tags" v-show="lableList.length > 10">
-              <!-- 
-              @click="isShowPerson = !isShowPerson" -->
               <img
                 class="icon"
                 v-if="!isShowPerson"
@@ -131,11 +105,9 @@
                 src="@/assets/svg/icon_up.svg"
                 alt=""
               />
-              <!-- {{ isShowPerson ? "收起" : "展开" }} -->
-              <!-- <van-icon name="arrow-down" /> -->
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
       <!-- 群动态 -->
       <div class="infoContent">
@@ -161,12 +133,11 @@
         </keep-alive>
         <!-- 群成员 -->
         <keep-alive>
-            <GroupMembers v-if="contentType == 1" :isPortrait="1"></GroupMembers>
-      
+          <GroupMembers v-if="contentType == 1" :isPortrait="1"></GroupMembers>
         </keep-alive>
       </div>
       <!-- 群标签 -->
-      <van-popup
+      <!-- <van-popup
         v-model="chooseCusSign"
         round
         class="choose-warp-popup"
@@ -183,17 +154,11 @@
             src="@/assets/svg/icon_close.svg"
             alt=""
           />
-          <!-- <div class="setting_btn" @click="chooseCusSign = true">编辑</div> -->
-          <!-- <div class="fill" @click=" = false">
-          <i class="el-icon-close"></i>
-        </div> -->
         </div>
-        <!-- 标签组 -->
         <div class="_center">
           <div class="_item" v-for="(item, index) in cusSignList" :key="index">
             <div class="group-title">{{ item.name }}</div>
             <div class="group-label">
-              <!--   :class="[signItm.checked ? 'active' : '']" -->
               <div
                 class="label-item"
                 :class="{
@@ -211,12 +176,10 @@
             </div>
           </div>
         </div>
-        <!-- 底部按钮 -->
         <div class="_bottom">
-          <!-- <div class="_button cancel" @click="chooseCusSign = false">取消</div> -->
           <div class="_button save" @click="saveCus">保存</div>
         </div>
-      </van-popup>
+      </van-popup> -->
     </div>
   </div>
 </template>
@@ -438,7 +401,7 @@ export default {
         console.log(res);
         console.log("获取头部信息接口 getGroupDetail " + res);
         if (res.result) {
-          sessionStorage.setItem("userId",res.data.userId)
+          sessionStorage.setItem("userId", res.data.userId);
           this.notice = res.data.notice;
           // this.notice = "必要的财政支出规模，优化地方政府专项债券发行使用管理，开展全域无隐性债务试点，建立常态化财政资金直达机制并扩大范围，优化和落实减税降费政策，预计全年新增减税降费达到1万亿元。二是支持科技自立自强，加大对基础研究的支持，改革完善中央财政科研经费管理，打好关键核心技术攻坚战，启动支持专精特新中小企业高质量发展奖补政策，推动优化和稳定产业链供应链。";
           let len = this.getStrLen(this.notice);
@@ -454,7 +417,7 @@ export default {
           if (res.data.owmer == res.data.userId) {
             console.log("我是群主");
             this.isOwmer = true;
-            this.getSopList();
+            // this.getSopList();
           }
           this.datatTite.name = res.data.name;
           this.datatTite.usersum = res.data.usersum;
@@ -467,6 +430,10 @@ export default {
           this.datatTite.leavesum = res.data.leavesum;
         }
       });
+    },
+    unique(arr) {
+      const res = new Map();
+      return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     getList() {
       let obj = {
@@ -509,6 +476,8 @@ export default {
           // this.dataList = this.dataList.concat(tempList);
           this.dataList = this.unique(newSetArr);
           // this.dataList = tempList;
+
+          
           // console.log(this.dataList);
           //如果列表数据条数>=总条数，不再触发滚动加载
           if (this.dataList.length >= this.total) {
@@ -755,6 +724,7 @@ export default {
           .sop {
             margin-right: 30px;
             position: relative;
+            width: 40px;
             span {
               margin-right: 30px;
               color: #262626;
@@ -779,7 +749,7 @@ export default {
 
     .content {
       width: 100%;
-      padding: 32px;
+      // padding: 32px;
       .lable_box {
         width: 100%;
         min-height: 120px;

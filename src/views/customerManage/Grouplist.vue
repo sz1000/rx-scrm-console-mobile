@@ -13,8 +13,9 @@
           type="text"
           v-model="inputValue"
           prefix-icon="el-icon-search"
-          placeholder="请输入群名称"
-          @focus="inquire"
+          placeholder="请输入群名称/群成员名称"
+          :changeValue="changeValue"
+          @change="inquire"
         />
         <!-- <span class="searchBtn" @click="inquire">查询</span> -->
       </div>
@@ -92,7 +93,7 @@
             <div class="rightInfo">
               <div class="groupTime">
                 <span>建群时间：</span>
-                <span>{{ item.createTime }}</span>
+                <span>{{ item.createTime.substring(0, 10) }}</span>
               </div>
               <div class="name">
                 <img :src="item.avatar ? item.avatar : ''" alt="" />
@@ -155,11 +156,18 @@ export default {
     userId() {
       return this.$store.getters.userId;
     },
+    changeValue() {
+      this.inquire(this.inputValue);
+      return this.inputValue;
+    },
   },
   created() {
     this.page = 1;
     this.getGroupList();
     console.log(this.$route.query.userId, "pppppolk");
+  },
+  mounted() {
+    this.inquire();
   },
   methods: {
     goBack() {
@@ -178,24 +186,27 @@ export default {
       // this.getGroupList();
       // this.dataList = [];
       this.$network
-        .get("/customer-service/group/list", {
-          page: 1,
-          // limit: this.pageSize,
+        .get("/customer-service/group/list2", {
+          // page: 1,
+          // // limit: this.pageSize,
           name: this.inputValue,
-          owmer: "",
-          createTimeSta: "",
-          createTimeEnd: "",
+          // owmer: "",
+          // createTimeSta: "",
+          // createTimeEnd: "",
           // flag:"2"
         })
         .then((res) => {
           console.log("9999999999999999999");
           console.log(res);
-          this.total = res.data.groupEntityPage.total;
+          // this.total = res.data.groupEntityPage.total;
           this.loading = false;
-          this.dataList = res.data.groupEntityPage.records;
+          // this.dataList = res.data.groupEntityPage.records;
+          this.dataList = res.data
+          this.total =res.data.length;
           console.log("9999999999999999999");
           console.log(this.dataList);
-          let tempList = res.data.groupEntityPage.records;
+          let tempList = res.data
+          // let tempList = res.data.groupEntityPage.records;
           if (tempList == null || tempList.length === 0) {
             // 加载结束
             this.finished = true;
@@ -207,7 +218,7 @@ export default {
           //     ? formatDate(item.createTime, "yyyy-MM-dd hh:mm:ss")
           //     : "-";
           // });
-          console.log(res.data.groupEntityPage.records, "11");
+          // console.log(res.data.groupEntityPage.records, "11");
         });
     },
     onLoad() {
@@ -410,17 +421,17 @@ export default {
         .name {
           display: flex;
           flex: 1;
-          margin-right: 30px;
+          margin-right: 8px;
           justify-content: right;
           align-items: center;
           img {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            margin-right: 20px;
+            margin-right: 4px;
           }
           .deptName {
-            width: 85px;
+            width: 180px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

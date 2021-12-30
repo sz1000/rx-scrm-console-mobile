@@ -334,6 +334,12 @@ export default {
                 if(res.result){
                     this.groupUserData = res.data.dataCount
                     this.groupUserList = res.data.allList
+
+                    if (this.groupUserData.total > 20) {
+                        this.toGroupDetail()
+                        return
+                    }
+                    
                     this.dialog_group = true
                 }
             })
@@ -487,14 +493,12 @@ export default {
             this.$router.push({ name, query })
         },
         toGroupDetail(){    //群聊详情
-            if (this.groupUserData.total > 20) {
-                this.$router.push({
-                    path: '/customerManage/groupListDetails',
-                    query: {
-                        id: this.groupChatId
-                    }
-                })
-            }
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
         },
     },
     filters: {
@@ -517,9 +521,6 @@ export default {
     height: 60vh;
     background: @white;
     position: relative;
-    &.glass{
-        filter: blur(4px);
-    }
     .dialog_header{
         width: 100%;
         min-height: 104px;
@@ -671,6 +672,9 @@ export default {
     width: 100%;
     min-height: 100vh;
     background: @white;
+    &.glass{
+        filter: blur(4px);
+    }
     .customer_wrap {
         position: relative;
         overflow: hidden;
@@ -681,44 +685,6 @@ export default {
             top: 88px;
             left: 0;
         }
-        // .nav_box{
-        //     width: 100%;
-        //     height: 88px;
-        //     display: flex;
-        //     text-align: center;
-        //     position: relative;
-        //     &::before{
-        //         content: '';
-        //         width: 100%;
-        //         height: 1px;   /*no*/
-        //         background: @lineColor;
-        //         transform: scaleY(.5);
-        //         position: absolute;
-        //         left: 0;
-        //         bottom: 0;
-        //     }
-        //     .nav{
-        //         color: @fontSub1;
-        //         font-size: 28px;
-        //         line-height: 88px;
-        //         flex: 1;
-        //         position: relative;
-        //         &.cur{
-        //             color: @main;
-        //             &::before{
-        //                 content: '';
-        //                 width: 40px;
-        //                 height: 4px;
-        //                 background: @main;
-        //                 border-radius: 2px;
-        //                 position: absolute;
-        //                 left: 50%;
-        //                 bottom: 0;
-        //                 transform: translateX(-50%);
-        //             }
-        //         }
-        //     }
-        // }
         .content{
             width: 100%;
             padding: 32px;
