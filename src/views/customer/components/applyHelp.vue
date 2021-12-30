@@ -44,9 +44,9 @@
 <script>
 import { _throttle } from '@/utils/tool'
 import { DialogDetail } from '../components'
-import {
-    clueCustomerFollowUser_applyFollowUser,     //申请成为协助人
-} from '@/api/customer'
+// import {
+//     clueCustomerFollowUser_applyFollowUser,     //申请成为协助人
+// } from '@/api/customer'
 export default {
     name: 'ApplyHelp',
     components: {
@@ -65,27 +65,27 @@ export default {
             type: Object,
             default: () => {}
         },
-        isApply: {  //是否已经申请过
-            type: Boolean,
-            default: false,
-        },
+        // isApply: {  //是否已经申请过
+        //     type: Boolean,
+        //     default: false,
+        // },
     },
     data(){
         return {
             dialog: false,
-            applyState: false,
+            // applyState: false,
         }
     },
     methods: {
-        submitFun:_throttle(function(){    //申请成为协助人
-            if(this.isApply || this.applyState){return false}
-            clueCustomerFollowUser_applyFollowUser(this.id).then(res => {
-                if(res.result){
-                    this.$toast('申请成功')
-                    this.applyState = true
-                }
-            })
-        },2000),
+        // submitFun:_throttle(function(){    //申请成为协助人
+        //     if(this.isApply || this.applyState){return false}
+        //     clueCustomerFollowUser_applyFollowUser(this.id).then(res => {
+        //         if(res.result){
+        //             this.$toast('申请成功')
+        //             this.applyState = true
+        //         }
+        //     })
+        // },2000),
     },
     watch:{
         value(val){
