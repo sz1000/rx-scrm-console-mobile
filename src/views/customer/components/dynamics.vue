@@ -47,7 +47,7 @@
                                 <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
                                 <div class="name" v-if="item.optType && item.toUser && item.optType == 6">
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
-                                    <span>{{item.toUser | optToString}}</span>
+                                    <span>{{item.toUser | optString}}</span>
                                 </div>
                                 <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length && item.toUser[0]">
                                     <div class="name" v-for="(us,ri) in item.toUser" :key="ri">
@@ -548,7 +548,11 @@ export default {
                 case 50:
                     str = '建立了客户线索'
                     break
+                case 72:
+                    str = '导入了客户'
+                    break;
                 case 4:
+                case 41:
                 case 51:
                 case 52:
                 case 53:
@@ -562,7 +566,6 @@ export default {
                 case 62:
                 case 70:
                 case 71:
-                case 72:
                     str = obj.context
                     break;
                 default:
@@ -601,13 +604,19 @@ export default {
         },
         optToString(val){
             let arr = []
+
+            console.log("val", val)
+
             if(val && val.length){
                 let str = ''
+
                 val.forEach(el => {
                     str = el.name && el.depId ? `${el.name}-${el.depId}` : el.name
                 })
+                console.log("str", str)
                 arr.push(str)
             }
+            console.log("arr", arr)
             return arr && arr.length ? arr.join('、') : ''
         },
     },
