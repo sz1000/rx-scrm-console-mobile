@@ -33,6 +33,9 @@ export default {
     methods: {
         submit() {
             this.$emit('doSubmit')
+        },
+        back(){
+            this.$emit('clickBack',1)
         }
     }
 }

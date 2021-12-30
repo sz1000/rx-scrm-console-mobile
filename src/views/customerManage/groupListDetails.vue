@@ -132,9 +132,9 @@
           ></GroupAll>
         </keep-alive>
         <!-- 群成员 -->
-        <keep-alive>
-          <GroupMembers v-if="contentType == 1" @childFn="getChildArr" :isPortrait="1"></GroupMembers>
-        </keep-alive>
+        <!-- <keep-alive> -->
+          <GroupMembers v-if="contentType == 1" @clickBack="backFn" @childFn="getChildArr" :isPortrait="1"></GroupMembers>
+        <!-- </keep-alive> -->
       </div>
       <!-- 群标签 -->
       <!-- <van-popup
@@ -275,6 +275,10 @@ export default {
       return str.replace(/[\u0391-\uFFE5]/g, "aa").length; //先把中文替换成两个字节的英文，在计算长度
     },
     formatDate,
+    backFn(index){
+      console.log('fffffffffffffffffffffffffff')
+this.contentType = index;
+    },
     toGroupAnnouncement() {
       if (this.flag) {
         this.$router.push({
@@ -595,6 +599,11 @@ console.log(load)
       console.log(this.allComTagList);
       this.dialog_tag = true;
     },
+  },
+  watch: {
+    $route(to,from){
+      console.log('route',to,from)
+    }
   },
 };
 </script>

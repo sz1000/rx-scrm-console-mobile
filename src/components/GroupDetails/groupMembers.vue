@@ -156,6 +156,11 @@ export default {
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.getList();
   },
+  watch: {
+    $route(to,from){
+      console.log('route',to,from)
+    }
+  },
   methods: {
     click() {
       this.$emit("childFn", this.dataList);
@@ -164,8 +169,9 @@ export default {
       console.log(val);
       this.$router.push({
         path: "/customerManage/customDetail",
-        query: { userNo: val.userid },
+        query: { userNo: val.userid,index:1 },
       });
+      
     },
     toGroupDetail(val) {
       console.log(val);
@@ -357,15 +363,9 @@ export default {
             this.finished = true;
             return;
           }
-
           let arr = this.dataList.sort(function (a, b) {
-            console.log(a);
-            console.log(128900000);
-            console.log(b);
             return b.admintype - a.admintype;
           });
-          console.log(arr);
-          console.log(128900000);
           this.dataList = arr;
 
           if (this.dataList.length >= this.total) {
