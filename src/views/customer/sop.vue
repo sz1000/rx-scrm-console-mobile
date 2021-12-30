@@ -17,6 +17,47 @@
             />
           </div>
         </div>
+        <!-- 群标签 -->
+        <div class="row lable_box">
+          <div class="tag lable_top">
+            <div class="tit">群标签</div>
+            <img
+              class="edit"
+              @click="chooseCusSign = true"
+              src="@/assets/svg/icon_edit.svg"
+              alt=""
+            />
+          </div>
+          <div class="b_content">
+            <div :class="{ 'over-hidden': !isShowPerson }" ref="textBox">
+              <div ref="spanBox">
+                <span
+                  class="name_item tagBox"
+                  v-for="item in lableList"
+                  :key="item.id"
+                >
+                  {{ item.name }}
+                </span>
+              </div>
+            </div>
+            <div class="btn" ref="tags" v-show="lableList.length > 10">
+              <img
+                class="icon"
+                v-if="!isShowPerson"
+                @click="isShowPerson = true"
+                src="@/assets/svg/icon_down.svg"
+                alt=""
+              />
+              <img
+                class="icon"
+                v-else
+                @click="isShowPerson = false"
+                src="@/assets/svg/icon_up.svg"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
       <div class="item" v-for="(item, index) in sopList" :key="index">
         <div class="item_top">
           <p>{{ item.groupNames }}</p>
@@ -66,6 +107,52 @@
         </div>
       </div>
     </div>
+
+    <!-- 群标签 -->
+      <van-popup
+        v-model="chooseCusSign"
+        round
+        class="choose-warp-popup"
+        position="bottom"
+        :style="{ height: '70%' }"
+      >
+        <div class="_top">
+          <div class="fill"></div>
+          <div class="title">群标签</div>
+          <img
+            class="icon setting_btn"
+            v-if="!isShowPerson"
+            @click="chooseCusSign = false"
+            src="@/assets/svg/icon_close.svg"
+            alt=""
+          />
+        </div>
+        <div class="_center">
+          <div class="_item" v-for="(item, index) in cusSignList" :key="index">
+            <div class="group-title">{{ item.name }}</div>
+            <div class="group-label">
+              <div
+                class="label-item"
+                :class="{
+                  active:
+                    highLightArr.findIndex((item) => {
+                      return item.tagid == signItm.tagid;
+                    }) > -1,
+                }"
+                @click="clickSign(signItm, signItm.tagid)"
+                v-for="(signItm, signIdx) in item.children"
+                :key="`${index} - ${signIdx}`"
+              >
+                {{ signItm.name }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="_bottom">
+          <div class="_button save" @click="saveCus">保存</div>
+        </div>
+      </van-popup>
+
   </div>
 </template>
 
@@ -89,8 +176,13 @@ export default {
     return {
       avatarList: [],
       datatTite:{},
+      chooseCusSign: false, // 选择客户标签
+      cusSignList: [],
+      highLightArr: [],
       notice:'',
       flag:false,
+      isShowPerson: false,
+      lableList: [],
       groupName: {
       },
       group: this.$route.query.grouid,
@@ -163,12 +255,97 @@ export default {
   },
   mounted() {
     this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    this.getTagList();
     this.getSopList();
+    this.groupList();
     this.getGroupDetailtop();
      this.getGroupDetail();
   },
   methods: {
     formatDate,
+    clickSign(list, index) {
+      var result = this.highLightArr.findIndex((item) => {
+        return item.tagid == list.tagid;
+      });
+      console.log(result);
+      if (result > -1) {
+        this.highLightArr.forEach((item, index) => {
+          if (item.tagid == list.tagid) {
+            this.highLightArr.splice(index, 1);
+          } else {
+          }
+        });
+      } else {
+        this.highLightArr.push(list);
+      }
+
+      let obj = {};
+
+      let peon = this.highLightArr.reduce((cur, next) => {
+        obj[next.tagid] ? "" : (obj[next.tagid] = true && cur.push(next));
+        return cur;
+      }, []); //设置cur默认类型为数组，并且初始值为空的数组
+      this.datatupList = peon;
+    },
+    // 保存客户标签
+    saveCus() {
+      let obj = {};
+      let peon = this.highLightArr.reduce((cur, next) => {
+        obj[next.tagid] ? "" : (obj[next.tagid] = true && cur.push(next));
+        return cur;
+      }, []); //设置cur默认类型为数组，并且初始值为空的数组
+      // console.log(peon);
+      this.highLightArr = peon;
+
+      // console.log(this.highLightArr, "点击保存---获取标签内容222");
+      this.chooseCusSign = false;
+      this.groupListadd();
+    },
+    groupListadd() {
+      let data = {
+        chatId: this.$route.query.id,
+        tagidList: this.highLightArr,
+      };
+      groupUserTag_addGroupTag(data).then((res) => {
+        if (res.result) {
+          this.groupList();
+        }
+      });
+    },
+    // 群标签
+    groupList() {
+      groupUserTag_list(this.$route.query.id).then((res) => {
+        console.log(res);
+        console.log("获取 群标签接口+ " + res);
+        if (res.result) {
+          let obj = {};
+          let peon = res.data.reduce((cur, next) => {
+            obj[next.tagid] ? "" : (obj[next.tagid] = true && cur.push(next));
+            return cur;
+          }, []);
+          this.lableList = peon;
+          this.lableList.forEach((item) => {
+            this.highLightArr.push(item);
+          });
+        }
+      });
+    },
+    //客户标签列表
+    getTagList() {
+      this.highLightArr = [];
+      this.namelabutArr = [];
+      grouptag_list().then((res) => {
+        console.log(res);
+        console.log("获取客户标签接口+ " + res);
+        if (res.result) {
+          this.cusSignList = res.data;
+          let allChildTag = res.data.map((item) => {
+            return item.children;
+          });
+          this.namelabutArr = [].concat.apply([], allChildTag);
+        }
+      });
+    },
     getStrLen(str) {
       return str.replace(/[\u0391-\uFFE5]/g, "aa").length; //先把中文替换成两个字节的英文，在计算长度
     },
@@ -269,6 +446,59 @@ export default {
 
 <style lang="less" scoped>
 @import "~@/styles/color.less";
+
+@main: #4168f6;
+@white: #fff;
+@fontMain: #3c4353;
+@fontSub2: #838a9d;
+@bdColor: #d9dae4;
+@dashedColor: #f0f2f7;
+/deep/.van-overlay {
+  // background-color: rgba(0, 0, 0, 0.3);
+}
+/deep/ .van-loading {
+  // top: 50%;
+  // left: 50%;
+}
+.b_content {
+  .over-hidden {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .btn {
+    margin: 10px 0;
+    color: #4168f6;
+    text-align: center;
+    height: 40px;
+    position: relative;
+    img {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+    }
+    // .van-icon {
+    //   vertical-align: -11%;
+    //   width: 28px;
+    //   height: 28px;
+    // }
+  }
+  .tagBox {
+    display: inline-block;
+    background: #fafbff;
+    border-radius: 8px;
+    border: 2px solid #d9dae4;
+    color: #838a9d;
+    padding: 14px 16px;
+    margin-right: 16px;
+    margin-top: 16px;
+    position: relative;
+  }
+}
 .group_wrap {
   width: 100%;
   min-height: 100vh;
@@ -354,6 +584,145 @@ export default {
         }
       }
     }
+
+    .lable_box {
+        width: 100%;
+        min-height: 120px;
+        background: @white;
+        // margin-top: 24px;
+        padding: 40px 0;
+        .lable_top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          // padding: 0 24px;
+          position: relative;
+
+          .edit {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            right: 0;
+            top: 0;
+          }
+          .lable_title {
+            font-size: 28px;
+            line-height: 40px;
+            font-weight: bold;
+            color: @fontMain;
+            padding-left: 20px;
+            position: relative;
+            // &::before {
+            //   content: "";
+            //   width: 8px;
+            //   height: 28px;
+            //   background: @main;
+            //   position: absolute;
+            //   left: 0;
+            //   top: 50%;
+            //   transform: translateY(-50%);
+            // }
+          }
+          .icon {
+            width: 32px;
+            height: 32px;
+            // margin-left: 12px;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          // .setting_btn {
+          //   width: 124px;
+          //   height: 68px;
+          //   font-size: 28px;
+          //   line-height: 66px;
+          //   border: 1px solid @bdColor;
+          //   border-radius: 8px;
+          //   color: @fontSub2;
+          //   padding-left: 52px;
+          //   position: relative;
+          //   cursor: pointer;
+          //   &::before {
+          //     content: "";
+          //     width: 32px;
+          //     height: 32px;
+          //     background: url("../../assets/images/edit.png") no-repeat;
+          //     background-size: 100%;
+          //     position: absolute;
+          //     left: 16px;
+          //     top: 50%;
+          //     transform: translateY(-50%);
+          //   }
+          // }
+          .redact_btn {
+            width: 124px;
+            height: 68px;
+            font-size: 28px;
+            line-height: 66px;
+            border: 1px solid @bdColor;
+            border-radius: 8px;
+            color: @fontSub2;
+            padding-left: 52px;
+            position: relative;
+            cursor: pointer;
+            &::before {
+              content: "";
+              width: 32px;
+              height: 32px;
+              background: url("../../assets/images/icon_setting.png") no-repeat;
+              background-size: 100%;
+              position: absolute;
+              left: 16px;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+          }
+        }
+        .lable_list {
+          .btn {
+            color: #4168f6;
+            text-align: right;
+            font-size: 28px;
+            .van-icon {
+              vertical-align: -11%;
+              width: 28px;
+              height: 28px;
+            }
+          }
+          .lable_li {
+            // display: -webkit-box;
+            // -webkit-box-orient: vertical;
+            // -webkit-line-clamp: 2;
+            // overflow: hidden;
+            display: flex;
+            // height: 300px;
+            // overflow: hidden;
+            flex-wrap: wrap;
+            .name_item {
+              margin-right: 16px;
+              margin-top: 16px;
+              padding: 0 16px;
+              height: 68px;
+              line-height: 68px;
+              background: #fafbff;
+              border-radius: 8px;
+              border: 1px solid #d9dae4;
+              font-weight: 400;
+              color: #838a9d;
+              font-size: 28px;
+              position: relative;
+
+              img {
+                width: 28px;
+                width: 28px;
+                position: absolute;
+                right: -15px;
+                top: -12px;
+                background: #fff;
+              }
+            }
+          }
+        }
+      }
 
      .row {
         width: 100%;
@@ -508,6 +877,120 @@ export default {
           }
         }
       }
+  }
+  .choose-warp-popup {
+    border-radius: 16px 16px 0 0;
+    ._top {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      padding: 0 24px;
+      justify-content: space-between;
+      height: 88px;
+      background: #fafbff;
+      border-radius: 16px 16px 0 0;
+      line-height: 88px;
+      text-align: center;
+      font-size: 28px;
+      color: #3c4353;
+      letter-spacing: 0;
+      text-align: center;
+      font-weight: 500;
+      position: relative;
+      border-bottom: 1px solid #f0f2f7;
+      .title {
+        font-weight: 600;
+      }
+      .fill {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        font-size: 32px;
+      }
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    ._center {
+      box-sizing: border-box;
+      padding: 24px;
+      // min-height: 740px;
+      height: 78%;
+      overflow: auto;
+      ._item {
+        // display: flex;
+        // align-items: flex-start;
+        margin-bottom: 12px;
+        .group-title {
+          height: 68px;
+          line-height: 68px;
+          width: 420px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-size: 28px;
+          color: #3c4353;
+          font-weight: 600;
+          margin-right: 32px;
+        }
+        .group-label {
+          flex: 1;
+          display: flex;
+          flex-wrap: wrap;
+          .label-item {
+            box-sizing: border-box;
+            margin-bottom: 16px;
+            height: 68px;
+            background: #fafbff;
+            border: 1px solid #d9dae4;
+            border-radius: 8px;
+            line-height: 68px;
+            padding: 0 16px;
+            font-size: 28px;
+            color: #838a9d;
+            font-weight: 400;
+            margin-right: 16px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            //  width: 120px;
+            max-width: 260px;
+            overflow: hidden;
+            text-align: center;
+            &.active {
+              background: #4168f6;
+              border: 1px solid !important;
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+    ._bottom {
+      padding: 0 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      ._button {
+        width: calc((100% - 24px) / 1);
+        height: 80px;
+        box-sizing: border-box;
+        line-height: 80px;
+        font-size: 28px;
+        text-align: center;
+        border-radius: 8px;
+        font-weight: 400;
+        &.cancel {
+          border: 1px solid #4168f6;
+          color: #4168f6;
+        }
+        &.save {
+          color: #fff;
+          background: #4168f6;
+        }
+      }
+    }
   }
 }
 </style>
