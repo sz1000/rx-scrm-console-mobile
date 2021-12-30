@@ -75,7 +75,6 @@ export default {
             Object.assign(this.$data, this.$options.data())
         },
         doInput() {
-            console.log("输入的值：", this.message)
             if (this.message.substr(this.message.length - 1, 1) == '@') {
                 this.showPop()
             }
