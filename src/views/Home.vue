@@ -536,7 +536,7 @@ export default {
     }
     .commonBtn {
       font-size: 28px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
       font-weight: 500;
       color: #737373;
       text-align: center;
