@@ -133,7 +133,7 @@
         </keep-alive>
         <!-- 群成员 -->
         <keep-alive>
-          <GroupMembers v-if="contentType == 1" :isPortrait="1"></GroupMembers>
+          <GroupMembers v-if="contentType == 1" @childFn="getChildArr" :isPortrait="1"></GroupMembers>
         </keep-alive>
       </div>
       <!-- 群标签 -->
@@ -253,6 +253,7 @@ export default {
       cusSignList: [],
       highLightArr: [],
       avatarList: [],
+      groupArr:[],
     };
   },
   updated() {},
@@ -506,9 +507,14 @@ export default {
         "grouid   " + this.$route.query.grouid
       );
       this.$router.push({
-        path: "/sop",
+        path: "/groupDetail",
         query: { id: this.$route.query.id, grouid: this.$route.query.grouid },
       });
+    },
+    getChildArr(load){
+this.groupArr= load
+console.log(123990+"123333333")
+console.log(load)
     },
     // 导航切换
     changeNav(index) {

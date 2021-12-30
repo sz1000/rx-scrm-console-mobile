@@ -286,8 +286,8 @@
                     <div class="s_val" v-if="el.url && !el.fileName">
                       <div class="share_link">{{ el.url }}</div>
                     </div> -->
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.articleId}&type=1&userNo=${this.userNo}`, 'title': el.title, 'desc': el.contentAbstract ? el.contentAbstract : el.title, 'imgUrl': el.cover ? el.cover :  getFileDefaultCover(el.title) }))" alt="" v-preventReClick />
-                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${el.url}`, 'title': el.title, 'desc': el.contentAbstract ? el.contentAbstract : el.title, 'imgUrl': el.cover ? el.cover :  getFileDefaultCover(el.title) }))" alt="" v-preventReClick /> -->
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShares(el, 'sop')" alt="" v-preventReClick />
                    <div class="s_val">
                       <div class="img_row">
                       <div class="img_box">
@@ -300,8 +300,8 @@
                   </div>
                  </div>
                   <div v-if="el.objectName == 2" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.documentId}&type=2&userNo=${this.userNo}`, 'title': el.name, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.name, 'imgUrl': el.cover ? el.cover : getFileDefaultCover(el.name) }))" alt="" v-preventReClick />
-                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${el.url}`, 'title': el.title, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.title, 'imgUrl': el.cover ? el.cover : getFileDefaultCover(el.name) }))" alt="" v-preventReClick /> -->
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShares(el, 'sop')" alt="" v-preventReClick />
                      <div class="s_val">
                       <div class="img_row">
                       <div class="img_box">
@@ -315,8 +315,8 @@
                   </div>
                  </div>
                   <div v-if="el.objectName == 3" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=3&userNo=${this.userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : getFileDefaultCover(el.posterName) }))" alt="" v-preventReClick />
-                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=3&userNo=${this.userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : getFileDefaultCover(el.posterName) }))" alt="" v-preventReClick /> -->
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShares(el, 'sop')" alt="" v-preventReClick />
                       <div class="s_val">
                       <div class="img_row">
                       <div class="img_box">
@@ -865,6 +865,69 @@ export default {
                   }
                 })
               }
+            )
+          })
+        })
+    },
+    //分享子列表
+
+      firstShares(v) {
+      console.log('----分享分组----', v)
+      this.$network
+        .get('/user-service/m/user/getinticket', {
+          url: location.href,
+        })
+        .then((res) => {
+          wx.config({
+            beta: true,
+            debug: false,
+            appId: res.data.corpId,
+            timestamp: res.data.timestamp,
+            nonceStr: res.data.nonceStr,
+            signature: res.data.signature,
+            jsApiList: [
+              'sendChatMessage',
+              'invoke',
+              'shareToExternalChat',
+              'checkJsApi',
+              'agentConfig',
+              'shareToExternalChat'
+            ],
+          })
+          var that = this
+          wx.ready(function () {
+            wx.invoke(
+              'agentConfig',
+              {
+                corpid: res.data.corpId,
+                agentid: res.data.agent_id + '',
+                timestamp: res.data.agent_config_data.timestamp,
+                nonceStr: res.data.agent_config_data.noncestr,
+                signature: res.data.agent_config_data.signature,
+                jsApiList: ['sendChatMessage', 'getContext', 'agentConfig','invoke','shareToExternalChat'],
+              },
+              function (res) {
+                // for (let i = 0; i < v.contentList.length; i++) {
+                wx.invoke(
+                  'shareToExternalChat',
+                  {
+                    msgtype: 'link', //消息类型，必填
+                    // enterChat: true,
+                     link: {
+                        title: v.title,        // H5消息标题
+                        imgUrl: v.cover,    // H5消息封面图片URL
+                        desc: v.urlAbstract || v.title,    // H5消息摘要
+                        url:v.url, 
+                     }
+                  },
+                  function (res) {
+                    if (res.err_msg == 'sendChatMessage:ok') {
+                      //发送成功
+                    }
+                  }
+                )
+              }
+              // }
             )
           })
         })
