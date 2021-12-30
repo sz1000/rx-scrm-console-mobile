@@ -975,10 +975,13 @@ export default {
                         }
                     }
                     .follow-img {
+                        display: flex;
+                        align-items: center;
                         width: 160px;
                         height: 160px;
                         margin-top: 16px;
                         border-radius: 22px;
+                        background-color: @navBg;
                         overflow: hidden;
                         img {
                             max-width: 100%;
