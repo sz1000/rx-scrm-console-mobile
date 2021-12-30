@@ -413,7 +413,7 @@ export default {
                 case 'delete':    // 删除（ 客户没有删除，我的线索有删除（非微信好友可删除：isWcCus 为 1 即为好友））
                     this.popContent.title = '温馨提示'
                     this.popContent.btnList = ['确定', '取消']
-                    this.popContent.desList = [ '是否确认删除并返回？']
+                    this.popContent.desList = [ '是否确认删除？']
                     this.$refs.giveUpOrReceive.show()
                     break;
                 case 'opportunityOperation':   // 新增商机（我的客户）
