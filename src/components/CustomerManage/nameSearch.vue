@@ -22,18 +22,16 @@
     </div>
 </template>
 <script>
-import { cluecustomer_settingItem, cluecustomer_clueMergeToCustomer } from '@/api/customer'
+import { cluecustomer_settingItem, cluecustomer_clueMergeToCustomer, cluecustomer_isWcCus } from '@/api/customer'
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
 import NameSearchListBox from './nameSearchListBox'
 import { throttle } from '@/utils/tool'
+import { mapState } from 'vuex'
 
 export default {
     props: {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
             default: 0
-        },
-        isWcCus: { // 1: 好友 0: 非好友
-            default: ''
         },
         customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: 0
@@ -41,10 +39,6 @@ export default {
         clueCustomerNo: {
             default: ''
         },
-        userNo: {
-            type: String,
-            default: ''
-        }
     },
     data() {
         return {
@@ -53,9 +47,11 @@ export default {
             enableStatus: true, // 是否开启去重规则
             checkedItem: '', // 选中的客户
             isInvalid: true, // 是否禁止点击
+            isWcCus: false,
         }
     },
     computed: {
+        ...mapState(["corpId", "userNo"]),
         headerText() {
             if (this.fromType == 1) {
                 return '编辑客户名称'
@@ -81,7 +77,7 @@ export default {
         async show(data) {
             this.searchParam = data
             await this.getSettingItem()
-            this.doSearch()
+            this.getIsWcCus()
         },
         // 判断是否开启自动去重规则
         async getSettingItem() {
@@ -90,6 +86,24 @@ export default {
             if (result) {
                 this.enableStatus = data.enableStatus
             }
+        },
+        // 是否是微信好友
+        getIsWcCus() {
+            let params = {
+                userNo: this.userNo,
+                customerNo: this.clueCustomerNo ? this.clueCustomerNo : '',
+                corpId: this.corpId
+            }
+
+            cluecustomer_isWcCus(params).then((res) => {
+                const { result, data } = res
+                
+                if(result) {
+                    this.isWcCus = data
+                }
+
+                this.doSearch()
+            }).catch(err => { console.log('err => ', err) })
         },
         doSearch() {
             this.$nextTick(() => {

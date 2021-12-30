@@ -3,7 +3,7 @@
         <template v-if="preciseData && preciseData.length || list && list.length">
             <template v-if="preciseData && preciseData.length && (!isWcCus || (isWcCus == 1 && preciseData.some(item => item.isFriend == 0)))">
                 <div class="title">找到完全相同名称的客户：</div>
-                <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click="goDetail(i)">
+                <div v-for="i in preciseData" :key="i.clueCustomerNo" v-show="isWcCus == 1 && i.isFriend == 0 || !isWcCus" class="list-item pointer" @click.stop.prevent="goDetail(i)">
                     <div class="list-item-left">
                         <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
                         <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
@@ -23,13 +23,13 @@
                             <span>{{ i && fromType == 3 && i.userNo == userNo ? '(我)' : ''}}</span>
                         </li>
                     </ul>
-                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click="doCheck(i.clueCustomerNo)"></div>
+                    <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click.stop.prevent="doCheck(i.clueCustomerNo)"></div>
                 </div>
             </template>
             <template v-if="list && list.length">
                 <div class="title">找到以下相似客户：</div>
                 <van-list v-model="loading" :immediate-check="false" :finished="finished" finished-text="没有更多了" @load="onLoad">
-                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click="goDetail(i)">
+                    <div v-for="i in list" :key="i.clueCustomerNo" class="list-item pointer" @click.stop.prevent="goDetail(i)">
                         <div class="list-item-left">
                             <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
                             <span v-else class="default-img">{{ i.oldCusName ? i.oldCusName.slice(0, 1) :  ''}}</span>
@@ -49,7 +49,7 @@
                                 <span>{{ i && fromType == 3 && i.userNo == userNo ? '(我)' : ''}}</span>
                             </li>
                         </ul>
-                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click="doCheck(i.clueCustomerNo)"></div>
+                        <div v-if="fromType == 3 && i.userNo == userNo" class="list-item-check" :class="{checked: checkedItem == i.clueCustomerNo}" @click.stop.prevent="doCheck(i.clueCustomerNo)"></div>
                     </div>
                 </van-list>
             </template>
@@ -71,11 +71,11 @@ export default {
         fromType: { // 1：编辑客户名称 2：新增客户 3：线索转客户
             default: 0
         },
-        isWcCus: { // 1: 好友 0: 非好友
-            default: ''
-        },
         customerType: { // 1: 线索 2: 公海线索 3: 客户 4: 公海客户
             default: 0
+        },
+        isWcCus: {
+            default: false
         },
         searchParam: {
             type: String,
@@ -95,7 +95,6 @@ export default {
             limit: 20,
             list: [], // 相似数据
             preciseData: [], // 相同数据
-            that: this,
         }
     },
     watch: {
@@ -130,13 +129,13 @@ export default {
             }
 
             this.loading = true
-
+            
             let params = {
                 page: this.page,
                 limit: this.limit,
                 searchParam: this.searchParam,
                 corpId: this.corpId,
-                isFriend: this.fromType == 2 ? '0' : '',
+                isFriend: this.fromType == 2 || this.fromType == 3 && this.isWcCus ? '0' : '',
                 type: this.fromType == 3 ? '3' : this.customerType
             }
 

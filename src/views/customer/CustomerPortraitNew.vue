@@ -383,7 +383,6 @@ export default {
                         path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
-                            isWcCus: this.customerInfo.isWcCus,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
