@@ -723,6 +723,10 @@ export default {
           height: 48px;
           line-height: 48px;
           .title {
+            width: 450px;
+            overflow: hidden;
+text-overflow:ellipsis;
+white-space: nowrap;
             font-size: 32px;
             color: #262626;
             font-weight: 600;

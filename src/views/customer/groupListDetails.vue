@@ -366,7 +366,8 @@ export default {
       });
     },
     getGroupDetailtop() {
-      group_getGroupTodayDetail(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      group_getGroupTodayDetail(id).then((res) => {
         console.log(res);
         console.log("获取top接口 getGroupDetailtop + " + res);
         console.log(res.data);
@@ -397,7 +398,8 @@ export default {
       });
     },
     getGroupDetail() {
-      group_getGroupDetail(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      group_getGroupDetail(id).then((res) => {
         console.log(res);
         console.log("获取头部信息接口 getGroupDetail " + res);
         if (res.result) {
