@@ -34,7 +34,7 @@
         <li class="item-box" v-if="type == 1">
            <!-- v-for="(i,indexp) in articleList" :key="indexp" -->
           <van-list v-model="articleListLoading" :immediate-check="false" :finished="articleListFinished" finished-text="没有更多了" @load="onLoad">
-               <p class="tite_num"> 共 <span class="num">{{articletotal}}</span><span>客户动态，关联</span> <span class="num">{{articlecusCount}}</span>个客户</p>
+               <p class="tite_num"> 共 <span class="num">{{articletotal}}</span><span>跟进记录，关联</span> <span class="num">{{articlecusCount}}</span>个线索</p>
             <div   class="client_list" v-for="(item ,index) in articleList" :key="index">
                  <div class="client_item" @click="goCustomer(item)" >
                      <div  class="client_img">
@@ -74,7 +74,7 @@
         <li class="item-box" v-if="type == 2">
           <van-list v-model="saleListLoading" :immediate-check="false" :finished="saleListFinished" finished-text="没有更多了" @load="onLoad">
             <!-- <div class="item" v-for="(i,indext) in saleList" :key="indext"> -->
-                 <p class="tite_num"> 共 <span class="num">{{saletotal}}</span><span>条商机动态，关联</span> <span class="num">{{salecusCount}}</span>个客户</p>
+                 <p class="tite_num"> 共 <span class="num">{{saletotal}}</span><span>跟进记录，关联</span> <span class="num">{{salecusCount}}</span>个线索</p>
             <div   class="client_list" v-for="(item,indext) in saleList" :key="indext">
                  <div class="client_item" @click="goCustomer(item)" >
                      <div  class="client_img">

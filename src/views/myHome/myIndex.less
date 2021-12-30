@@ -214,6 +214,7 @@
         margin-top: 24px;
         margin-left: 6px;
         // display: flex;
+        
         // justify-content: space-between;
         .ul::before{
           content:'';
@@ -243,14 +244,25 @@
           
             }
             .head_img{
-              width: 40px;
-              height: 40px;
+              // width: 40px;
+              // height: 40px;
             
               position: relative;
               .img_tx{
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
+             
+              }
+              .img_txt{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #4168F6;
+                color: #fff;
+                // padding: 5px;
+                text-align: center;
+                line-height: 40px;
               }
               .weix_img{
                 position: absolute;
@@ -276,6 +288,9 @@
             .enterprise{
               font-size: 20px;        
               color: #FFB020;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
             }
             .wechat{
               font-size: 20px;     

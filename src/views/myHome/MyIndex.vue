@@ -104,7 +104,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg" v-if="clientList">
+        <div class="task_msg" v-if="clientList.length">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -152,7 +152,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo" v-if="cluesList">
+        <div class="task_msg task_outo" v-if="cluesList.length ">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -172,14 +172,15 @@
                   <div class="warp">
                     <div class="head_img">
                        <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
-                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else>
+                      <p class="img_txt"  v-else>{{item.customerCalled.charAt(0)}}</p>
+                       <!-- <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar"> -->
                         <div class="weix_img">
                           <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
                           <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
                         </div>
                     </div>
                      <p class="name_tite">{{item.customerCalled}}</p>
-                     <p class="enterprise" v-if="item.externalType == 1">@企业</p>
+                     <p class="enterprise" v-if="item.externalType == 1">@{{item.customerName}}</p>
                      <p class="wechat" v-if="item.externalType == 2">@微信</p>
                   </div>
                     <div class="tite_nane">{{item.clueType}}</div>
@@ -203,7 +204,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo" v-if="cluesLists">
+        <div class="task_msg task_outo" v-if="cluesLists.length">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -223,7 +224,9 @@
                   <div class="warp">
                     <div class="head_img">
                        <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
-                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else>
+                      <p class="img_txt"  v-else>{{item.customerCalled.charAt(0)}}</p>
+                       <!-- <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
+                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else> -->
                         <div class="weix_img">
                           <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
                           <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
@@ -665,7 +668,12 @@ export default {
                     str = obj.context
                     break;
                 case 40:
-                    str = `${obj.customerCalled}预览了 《${obj.ossObjectname}》`
+                     if(obj.ossObjectname){
+                       str = `${obj.customerCalled}预览了 《${obj.ossObjectname}》`
+                     }else{
+                        str = `${obj.customerCalled}预览了`
+                     }
+                   
                     break;
                 case 41:
                     str =`添加 ${obj.customerCalled} 为企业微信好友`
