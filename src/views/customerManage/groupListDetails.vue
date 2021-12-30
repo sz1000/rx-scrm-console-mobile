@@ -265,6 +265,7 @@ export default {
     },
   },
   mounted() {
+     console.log("this.$store.getters.chatId "+ this.$store.getters.chatId)
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
     this.pageInfo.page = 1;
     this.getData();
