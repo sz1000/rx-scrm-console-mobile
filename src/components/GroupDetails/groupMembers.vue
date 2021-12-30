@@ -157,11 +157,14 @@ export default {
     this.getList();
   },
   methods: {
+    click() {
+      this.$emit("childFn", this.dataList);
+    },
     toCustomerPage(val) {
-      console.log(val)
+      console.log(val);
       this.$router.push({
-        path: '/customerManage/customDetail',
-        query: { userNo: val.userid},
+        path: "/customerManage/customDetail",
+        query: { userNo: val.userid },
       });
     },
     toGroupDetail(val) {
@@ -329,7 +332,9 @@ export default {
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     getList() {
-      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      let id = this.$route.query.id
+        ? this.$route.query.id
+        : this.$store.getters.chatId;
       let obj = {
         chatId: id,
         ...this.pageInfo,
@@ -455,7 +460,7 @@ export default {
           // align-items: center;
           padding: 8px 0;
           // line-height: 2;
-line-height: 1.5;
+          line-height: 1.5;
           span {
             color: #262626;
             font-size: 28px;

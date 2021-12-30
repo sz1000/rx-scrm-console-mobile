@@ -58,8 +58,8 @@
           <p>
             {{ notice || "暂无内容" }}
           </p>
+          <!-- v-if="flag" -->
           <img
-            v-if="flag"
             class="icon"
             src="@/assets/svg/icon_next_gray.svg"
             alt=""
@@ -304,11 +304,12 @@ export default {
   },
   mounted() {
     // this.$route.query.id = "wryPDZEQAA05rnMG9OBERqw7eABOW5sQ";
+    this.getGroupDetail();
     this.getTagList();
     this.getSopList();
     this.groupList();
     this.getGroupDetailtop();
-    this.getGroupDetail();
+    
   },
   methods: {
     formatDate,
