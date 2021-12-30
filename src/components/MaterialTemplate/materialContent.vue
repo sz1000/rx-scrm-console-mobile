@@ -20,10 +20,17 @@
       <iframe class="file-box" :class="{h2: !userNo}" :src="'https://view.xdocin.com/view?src=' + encodeURIComponent(formData.documentUrl)"
               width="100%" height="auto"></iframe>
     </div>
+    <div v-if="materialType == 3" class="img_preview">
+      <img :src="formData.posterUrl" alt="">
+    </div>
   </div>
 </template>
 <script>
-import { ArticleDetail, SaleDocumentDetail } from '../../config/api'
+import {
+  ArticleDetail,
+  SaleDocumentDetail,
+  PosterDetail,
+} from '../../config/api'
 
 import { formatDate, wxShare, byteConvert } from '../../utils/tool'
 
@@ -37,7 +44,7 @@ export default {
   data() {
     return {
       formData: {},
-      materialType: '', // 1: 文章, 2: 文件
+      materialType: '', // 1: 文章, 2: 文件,3海报
     }
   },
   methods: {
@@ -51,6 +58,8 @@ export default {
         ApiOpts = ArticleDetail
       } else if (params.materialType == 2) {
         ApiOpts = SaleDocumentDetail
+      } else if (params.materialType == 3) {
+        ApiOpts = PosterDetail
       }
       ApiOpts(params.materialId).then((res) => {
         const { code, data, msg } = res
@@ -164,6 +173,11 @@ export default {
     }
     section {
       max-width: 100%;
+    }
+  }
+  .img_preview {
+    img {
+      width: 100%;
     }
   }
 }
