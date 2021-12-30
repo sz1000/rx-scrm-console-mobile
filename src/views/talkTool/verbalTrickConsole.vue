@@ -256,7 +256,8 @@
                       <div class="des">{{ el.content }}</div>
                   </div> -->
                   <div v-if="!el.objectName" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                                        <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=2&userNo=${userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : 'https://h5.jzcrm.com/static/img/default_pdf.png' }))" alt="" v-preventReClick /> -->
                      <div class="s_val">
                       <div class="img_row">
                         <div class="info_r">
@@ -285,43 +286,46 @@
                     <div class="s_val" v-if="el.url && !el.fileName">
                       <div class="share_link">{{ el.url }}</div>
                     </div> -->
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.articleId}&type=1&userNo=${userNo}`, 'title': el.title, 'desc': el.contentAbstract ? el.contentAbstract : el.title, 'imgUrl': el.cover ? el.cover :  getFileDefaultCover(el.title) }))" alt="" v-preventReClick />
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
                    <div class="s_val">
                       <div class="img_row">
-                        <div class="img_box">
-                        <img :src="el.cover" alt="" />
-                        </div>
-                        <div class="info_r">
-                          <div class="name">{{ el.title }}</div>
-                        </div>
+                      <div class="img_box">
+                      <img :src="el.cover" alt="" />
+                      </div>
+                      <div class="info_r">
+                      <div class="name">{{ el.title }}</div>
+                      </div>
                       </div>
                   </div>
                  </div>
                   <div v-if="el.objectName == 2" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.documentId}&type=2&userNo=${userNo}`, 'title': el.name, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.name, 'imgUrl': el.cover ? el.cover : getFileDefaultCover(el.name) }))" alt="" v-preventReClick />
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
                      <div class="s_val">
                       <div class="img_row">
-                        <div class="img_box">
-                        <img :src="el.cover" alt="" />
-                        </div>
-                        <div class="info_r">
-                          <div class="name">{{ el.title }}</div>
+                      <div class="img_box">
+                      <img :src="el.cover" alt="" />
+                      </div>
+                      <div class="info_r">
+                      <div class="name">{{ el.title }}</div>
                           <!-- <div class="size">{{ el.fileSize }}</div> -->
-                        </div>
+                      </div>
                       </div>
                   </div>
                  </div>
                   <div v-if="el.objectName == 3" class="share_box">
-                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
-                     <div class="s_val">
+                    <img class="s_icon" src="@/assets/images/icon_share.png" @click="sendChatMessage(('news', false, { 'link': `${originUrl}/materialTemplate?materialId=${el.posterId}&type=3&userNo=${userNo}`, 'title': el.posterName, 'desc': el.fileSize ? byteConvert(el.fileSize) : el.posterName, 'imgUrl': el.posterUrl ? el.posterUrl : getFileDefaultCover(el.posterName) }))" alt="" v-preventReClick />
+                    <!-- <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick /> -->
+                      <div class="s_val">
                       <div class="img_row">
-                        <div class="img_box">
-                        <img :src="el.url" alt="" />
-                        </div>
-                        <div class="info_r">
-                          <div class="name">{{ el.fileName }}</div>
+                      <div class="img_box">
+                      <img :src="el.url" alt="" />
+                      </div>
+                      <div class="info_r">
+                      <div class="name">{{ el.fileName }}</div>
                           <!-- <div class="size">{{ el.fileSize }}</div> -->
-                        </div>
+                      </div>
                       </div>
                   </div>
                  </div>
@@ -346,7 +350,7 @@
 import SelectTree from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import commonFun from '../../utils/commonToken'
-import { _throttle, formatDate } from '../../utils/tool'
+import { _throttle, formatDate,sendChatMessage,byteConvert,getFileDefaultCover } from '../../utils/tool'
 import {
   sop_prompt_personal,
   m_cluecustomer_getClueCustomerByid,
@@ -355,7 +359,7 @@ import {
   sopSendDetail_tag,
 } from '@/api/sop'
 import HeaderTitle from '../../components/MaterialTemplate/headerTitle'
-
+import { mapState } from 'vuex'
 export default {
   components: {
     SelectTree,
@@ -382,7 +386,7 @@ export default {
       wordTitle: '',
       dialogVisible: false,
       groupingId: '', //分组id
-
+      originUrl: location.origin,
       newshow: false, //新增弹框
       rename: false, //重命名
       tablist: 1, //弹框tab列表
@@ -414,6 +418,9 @@ export default {
       showSecret: false,
     }
   },
+   computed: {
+    ...mapState(['corpId', 'userNo']),
+  },
   computed: {
     chatId() {
       return this.$store.getters.chatId
@@ -443,7 +450,10 @@ export default {
     }
   },
   methods: {
+    sendChatMessage,
     formatDate,
+     byteConvert,
+     getFileDefaultCover,
     getUserName() {
       this.$network
         .get('/user-service/user/getUserName', { endPoint: 'mobile' })
@@ -778,7 +788,7 @@ export default {
     },
     //分享子列表
     firstShare(v, type) {
-      // console.log('分享话术----', v)
+      console.log('分享话术----', v)
       // alert(JSON.parse(JSON.stringify(v)))
       if (!v.value) {
         //sop分享用

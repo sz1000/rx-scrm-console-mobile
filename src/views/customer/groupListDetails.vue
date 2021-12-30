@@ -324,7 +324,7 @@ export default {
     },
     groupListadd() {
       let data = {
-        chatId: this.$route.query.id,
+        chatId: this.$route.query.id ? this.$route.query.id : this.chatId,
         tagidList: this.highLightArr,
       };
       groupUserTag_addGroupTag(data).then((res) => {
@@ -437,7 +437,7 @@ export default {
     },
     getList() {
       let obj = {
-        chatId: this.$route.query.id,
+        chatId: this.$route.query.id ? this.$route.query.id : this.chatId,
         ...this.pageInfo,
       };
       group_getGroupUserPage(obj).then((res) => {
