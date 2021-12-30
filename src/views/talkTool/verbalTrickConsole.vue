@@ -259,9 +259,6 @@
                     <img class="s_icon" src="@/assets/images/icon_share.png" @click="firstShare(el, 'sop')" alt="" v-preventReClick />
                      <div class="s_val">
                       <div class="img_row">
-                        <div class="img_box">
-                        <img :src="el.url" alt="" />
-                        </div>
                         <div class="info_r">
                           <div class="name">{{ el.content }}</div>
                           <!-- <div class="size">{{ el.fileSize }}</div> -->
@@ -1130,7 +1127,7 @@ export default {
             display: flex;
             align-items: center;
             &:last-child {
-              margin-bottom: 0;
+              // margin-bottom: 0;
             }
             .s_icon {
               width: 26px;
