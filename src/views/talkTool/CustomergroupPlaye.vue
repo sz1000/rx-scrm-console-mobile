@@ -467,6 +467,11 @@ export default {
     this.getTagList() //标签接口
     this.chooseCustomerMass() //选择员工接口
   },
+   computed: {
+    userNo() {
+      return this.$store.getters.userNo
+    }
+  },
   methods: {
     goToMaterial() {
       this.sucai = 1
@@ -799,7 +804,7 @@ export default {
                 item.objList.articleId
               }&type=${item.objList.tab}&corpId=${localStorage.getItem(
                 'corpId'
-              )}`,
+              )}&createUserNo=${this.userNo}`,
               ...item.objList,
             },
           ]
@@ -811,7 +816,7 @@ export default {
                 item.objList.documentId
               }&type=${item.objList.tab}&corpId=${localStorage.getItem(
                 'corpId'
-              )}`,
+              )}&createUserNo=${this.userNo}`,
               ...item.objList,
             },
           ]
