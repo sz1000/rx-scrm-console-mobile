@@ -35,6 +35,9 @@ export default {
         return {}
       },
     },
+    isPublic: {
+      type: Object || String,
+    },
   },
   computed: {
     ...mapState(['corpId']),
@@ -81,8 +84,8 @@ export default {
         duration: 0,
         loadingType: 'spinner',
       })
-
-      AddPoster(this.form).then((res) => {
+      let isPublic = this.isPublic == 1 ? false : true
+      AddPoster({ isPublic: isPublic, ...this.form }).then((res) => {
         const { code, msg } = res
 
         this.$toast.clear()
