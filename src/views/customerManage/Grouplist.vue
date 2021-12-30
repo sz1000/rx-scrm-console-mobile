@@ -410,18 +410,20 @@ export default {
       }
       .rightInfo {
         display: flex;
+        justify-content: space-between;
         font-size: 24px;
         line-height: 32px;
         color: #b3b3b3;
         .groupTime {
-          display: flex;
-          justify-content: left;
-          align-items: center;
+          flex: 1;
+          // display: flex;
+          // justify-content: left;
+          // align-items: center;
         }
         .name {
           display: flex;
           flex: 1;
-          margin-right: 8px;
+          // margin-right: 10px;
           justify-content: right;
           align-items: center;
           img {
@@ -431,7 +433,7 @@ export default {
             margin-right: 4px;
           }
           .deptName {
-            width: 180px;
+            width: 120px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
