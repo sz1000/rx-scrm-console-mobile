@@ -545,8 +545,10 @@ export default {
                 case 47:
                 case 48:
                     break;
-                case 4:
                 case 50:
+                    str = '建立了客户线索'
+                    break
+                case 4:
                 case 51:
                 case 52:
                 case 53:
