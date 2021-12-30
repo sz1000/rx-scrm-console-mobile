@@ -121,7 +121,7 @@
                 <span class="circle_line"></span>
                 <span class="circle_lines"></span>
                 <p class="title">
-                  <span class="name" v-if="item.optType != 72 && item.optType != 36 && item.optType != 50">{{item.optUserName}}</span>
+                  <span class="name" v-if="item.optType != 72 && item.optType != 36 && item.optType != 50 && item.optType != 18">{{item.optUserName}}</span>
                   {{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
              </div>
@@ -638,15 +638,15 @@ export default {
                     str = '删除了商机'
                     break;
                 case 18:
-                    if(obj.optUserName){
-                        if(obj.createBy){
-                            str = '新增协作人'
-                        }else{
-                            str = obj.context
-                        }
-                    }else{
+                    // if(obj.optUserName){
+                    //     if(obj.createBy){
+                    //         str = '新增协作人'
+                    //     }else{
+                    //         str = obj.context
+                    //     }
+                    // }else{
                         str = obj.context
-                    }
+                    // }
                     break;
                 case 20:
                     str = '删除了协作人'
@@ -666,6 +666,9 @@ export default {
                     break;
                 case 36:
                     str = obj.context
+                    break;
+                case 39:
+                    str = "更新协助人信息"
                     break;
                 case 40:
                      if(obj.ossObjectname){

@@ -27,9 +27,9 @@
             <div class="item">
                 <div class="label">当前负责人</div>
                 <div class="val">
-                    <div class="info">
+                    <div class="info director">
                         <img class="avatar" :src="data.directorAvatar | $setAvatar" alt="">
-                        <div class="name">{{data.directorName}}</div>
+                        <div class="name one-line">{{data.directorName}}</div>
                     </div>
                 </div>
             </div>
@@ -44,9 +44,9 @@
 <script>
 import { _throttle } from '@/utils/tool'
 import { DialogDetail } from '../components'
-import {
-    clueCustomerFollowUser_applyFollowUser,     //申请成为协助人
-} from '@/api/customer'
+// import {
+//     clueCustomerFollowUser_applyFollowUser,     //申请成为协助人
+// } from '@/api/customer'
 export default {
     name: 'ApplyHelp',
     components: {
@@ -65,27 +65,27 @@ export default {
             type: Object,
             default: () => {}
         },
-        isApply: {  //是否已经申请过
-            type: Boolean,
-            default: false,
-        },
+        // isApply: {  //是否已经申请过
+        //     type: Boolean,
+        //     default: false,
+        // },
     },
     data(){
         return {
             dialog: false,
-            applyState: false,
+            // applyState: false,
         }
     },
     methods: {
-        submitFun:_throttle(function(){    //申请成为协助人
-            if(this.isApply || this.applyState){return false}
-            clueCustomerFollowUser_applyFollowUser(this.id).then(res => {
-                if(res.result){
-                    this.$toast('申请成功')
-                    this.applyState = true
-                }
-            })
-        },2000),
+        // submitFun:_throttle(function(){    //申请成为协助人
+        //     if(this.isApply || this.applyState){return false}
+        //     clueCustomerFollowUser_applyFollowUser(this.id).then(res => {
+        //         if(res.result){
+        //             this.$toast('申请成功')
+        //             this.applyState = true
+        //         }
+        //     })
+        // },2000),
     },
     watch:{
         value(val){
@@ -174,6 +174,11 @@ export default {
                     max-width: calc(100% - 300px);
                     font-size: 24px;
                     color: @yellow;
+                }
+            }
+            .director {
+                .name {
+                    max-width: calc(100% - 50px);
                 }
             }
         }

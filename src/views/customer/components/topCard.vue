@@ -34,8 +34,8 @@
             <div class="tag_box" :class="{'opt0': !customerInfo.stage && !customerInfo.source && !customerInfo.customerType && tagList.length == 0}">
                 <div v-if="customerInfo.stage" class="tag first">{{ customerInfo.stage }}</div>
                 <div v-if="customerInfo.sourceName" class="tag" :class="{first: !customerInfo.stage}">{{ customerInfo.sourceName }}</div>
-                <div v-if="(fromType == 1 || fromType == 2) && customerInfo.clueTypeName" class="tag" :class="{first: !customerInfo.sourceName}">{{ customerInfo.clueTypeName }}</div>
-                <div v-if="(fromType == 3 || fromType == 4) && customerInfo.customerTypeName" class="tag" :class="{first: !customerInfo.sourceName}">{{ customerInfo.customerTypeName }}</div>
+                <div v-if="(fromType == 1 || fromType == 2) && customerInfo.clueTypeName" class="tag" :class="{first: !customerInfo.stage && !customerInfo.sourceName}">{{ customerInfo.clueTypeName }}</div>
+                <div v-if="(fromType == 3 || fromType == 4) && customerInfo.customerTypeName" class="tag" :class="{first: !customerInfo.stage && !customerInfo.sourceName}">{{ customerInfo.customerTypeName }}</div>
                 <div class="tag" v-for="(item, index) in tagList" v-show="item.name" :key="index">{{item.name | limitFilter}}</div>
             </div>
         </div>

@@ -44,11 +44,18 @@
                                     <img class="avatar" :src="item.fromUser.avatar | $setAvatar" alt="">
                                     <span>{{item.fromUser | optString}}</span>
                                 </div>
+
                                 <span class="mr8" v-if="item.optType && item.toUser && item.optType == 6">变更为</span>
                                 <div class="name" v-if="item.optType && item.toUser && item.optType == 6">
                                     <img class="avatar" :src="item.toUser.avatar | $setAvatar" alt="">
-                                    <span>{{item.toUser | optToString}}</span>
+                                    <span>{{item.toUser | optString}}</span>
                                 </div>
+
+                                <div class="name name-41" v-if="(item.cropFullName || item.customerCalled) && item.optType == 41">
+                                    <span>{{item.cropFullName || item.customerCalled}}</span>
+                                </div>
+                                <span class="mr8" v-if="item.optType == 41">{{ item.cropFullName || item.customerCalled ? '为企业微信好友' : '企业微信好友' }}</span>
+                                
                                 <div class="name_box" v-if="item.optType && item.toUser && item.toUser.length && item.toUser[0]">
                                     <div class="name" v-for="(us,ri) in item.toUser" :key="ri">
                                         <img class="avatar" :src="us.avatar | $setAvatar" alt="">
@@ -220,7 +227,10 @@ export default {
     inject: ['getGroupUserList'],
     methods: {
         onLoad() {
-            console.log("load");
+            console.log("load")
+            if (this.followMsgSearch.page <= 1) {
+                return
+            }
             this.getSelectFollowMsgList()
         },
         async addFabulous(row){
@@ -360,7 +370,9 @@ export default {
                              * 
                              * 40.浏览素材 41.添加企微好友 44.申请成为协助人 46.自动成为协助人
                              * 47.申请成为协助人已通过 48.申请成为协助人未通过
-                             * 4. 线索转客户 50.线索创建 51.线索导入 52.企微同步 53.更新线索 55.分配线索 56.领取线索 57.放弃线索
+                             * 4. 线索转客户 50.线索创建 51.线索导入 52.企微同步 53.更新线索 55.分配线索 56.领取线索 57.放弃线索 58.删除线索
+                             * 59.删除微信好友 60.删除企微好友 61.自动删除微信好友 62.自动删除企微好友 
+                             * 70.客户入群 71.客户退群 72.线索合并客户
                              * 0. 老数据
                              * -end-*/ 
                             el.fromUser = el.fromUser ? JSON.parse(el.fromUser) : el.fromUser
@@ -530,6 +542,9 @@ export default {
                 case 40:
                     str = obj.context
                     break;
+                case 41:
+                    str = '添加了'
+                    break;
                 case 44:
                     let _str = ''
                     if(obj.optResult == 1){
@@ -545,8 +560,16 @@ export default {
                 case 47:
                 case 48:
                     break;
-                case 4:
                 case 50:
+                    str = '建立了客户线索'
+                    break
+                case 57:
+                    str = '放弃线索，线索回到公海。'
+                    break;
+                case 72:
+                    str = '将该客户与相关线索进行了合并'
+                    break;
+                case 4:
                 case 51:
                 case 52:
                 case 53:
@@ -560,7 +583,6 @@ export default {
                 case 62:
                 case 70:
                 case 71:
-                case 72:
                     str = obj.context
                     break;
                 default:
@@ -599,13 +621,19 @@ export default {
         },
         optToString(val){
             let arr = []
+
+            console.log("val", val)
+
             if(val && val.length){
                 let str = ''
+
                 val.forEach(el => {
                     str = el.name && el.depId ? `${el.name}-${el.depId}` : el.name
                 })
+                console.log("str", str)
                 arr.push(str)
             }
+            console.log("arr", arr)
             return arr && arr.length ? arr.join('、') : ''
         },
     },
@@ -910,6 +938,9 @@ export default {
                             top: 50%;
                             transform: translateY(-50%);
                         }
+                    }
+                    .name-41 {
+                        padding-left: 0;
                     }
                     .text{
                         font-size: 24px;

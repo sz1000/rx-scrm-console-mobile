@@ -229,6 +229,11 @@ export default {
       this.tab = this.$route.query.tablable || 'image'
     }
   },
+   computed: {
+    userNo() {
+      return this.$store.getters.userNo;
+    },
+  },
   methods: {
     goToMaterials(val) {
       this.tab = val
@@ -305,7 +310,7 @@ export default {
                 this.materialList.articleId
               }&type=${this.materialList.tab}&corpId=${localStorage.getItem(
                 'corpId'
-              )}`,
+              )}&createUserNo=${this.userNo}`,
               ...this.materialList,
             },
           ]
@@ -317,7 +322,7 @@ export default {
                 this.materialList.documentId
               }&type=${this.materialList.tab}&corpId=${localStorage.getItem(
                 'corpId'
-              )}`,
+              )}&createUserNo=${this.userNo}`,
               ...this.materialList,
             },
           ]

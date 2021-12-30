@@ -1,5 +1,5 @@
 <template>
-    <div class="custom-detail">
+    <div class="custom-detail" :class="{'glass':dialog_xzr}">
         <template v-if="!showFollowUpBox">
             <header-title class="customer-title" :title="headTitle" :needBackText="false" :needLine="true"></header-title>
             <div class="customer_wrap">
@@ -60,6 +60,8 @@
                 <DialogComment v-model="dialog_xx" @sure="addCommentFun" isComment></DialogComment>
                 <!-- 商机详情 -->
                 <OpportunityDialog v-model="dialog_sj"></OpportunityDialog>
+                <!-- 申请成为协助人 -->
+                <ApplyHelp v-model="dialog_xzr" :id="customerInfo.clueCustomerNo" :data="applyData"></ApplyHelp>
                 <!-- 操作按钮弹窗面板 -->
                 <operation-btn-box ref="operationBtnBox" :permission="permission" @doAction="doAction"></operation-btn-box>
                 <!-- 放弃或领取或删除 -->
@@ -79,7 +81,7 @@
 <script>
 import MyMixin from '@/mixins/permissionsList'
 import opportunityMixin from '@/mixins/opportunity'
-import { Dynamics, DialogComment, OpportunityDialog, TopCard } from '../customer/components'
+import { Dynamics, DialogComment, OpportunityDialog, ApplyHelp, TopCard } from '../customer/components'
 import { user_getUserName } from '@/api/home'
 
 import HeaderTitle from '@/components/MaterialTemplate/headerTitle'
@@ -104,6 +106,7 @@ export default {
         Dynamics,
         DialogComment,
         OpportunityDialog,
+        ApplyHelp,
         TopCard,
         GiveUpOrReceive,
         ChangeDirector,
@@ -138,6 +141,10 @@ export default {
                 btnList: [],
                 desList: []
             },
+
+            dialog_xzr: false,
+            // isApply: false,     //是否已经申请成为协助人 且还未通过
+            applyData: {},
 
             customerInfo: {},
             userList: [],
@@ -239,6 +246,21 @@ export default {
         this.getCustomerDetail()
     },
     methods: {
+        isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读; isShow: 0: 无权限 1: 有权限)
+            this.dialog_xzr = Number(data.isShow) ? false : true
+            // this.isApply = data.isApply ? true : false
+            let directorList = data.directorList
+            let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
+            
+            this.applyData = {
+                customerName: data.clueCustomerVO.name,
+                cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
+                customerAvatar: data.clueCustomerVO.avatar,
+                createTime: data.clueCustomerVO.createTime,
+                directorName: directorList && directorList.length ? directorList[0].name + depName : '',
+                directorAvatar: directorList && directorList.length ? directorList[0].avatar : '',
+            }
+        },
         goBack() {
             this.$router.go(-1)
         },
@@ -256,6 +278,11 @@ export default {
                     let data = res.data
 
                     this.customerInfo = data.clueCustomerVO
+
+                    // 我的客户和我的线索有无权限弹窗
+                    if (this.fromType == 1 || this.fromType == 3) {
+                        this.isDirectorFun(data)
+                    }
 
                     this.getUserName()
 
@@ -308,6 +335,12 @@ export default {
                 if(res.result){
                     this.groupUserData = res.data.dataCount
                     this.groupUserList = res.data.allList
+
+                    if (this.groupUserData.total > 20) {
+                        this.toGroupDetail()
+                        return
+                    }
+                    
                     this.dialog_group = true
                 }
             })
@@ -337,7 +370,6 @@ export default {
                         path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
-                            isWcCus: this.customerInfo.isWcCus,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
@@ -462,14 +494,12 @@ export default {
             this.$router.push({ name, query })
         },
         toGroupDetail(){    //群聊详情
-            if (this.groupUserData.total > 20) {
-                this.$router.push({
-                    path: '/customerManage/groupListDetails',
-                    query: {
-                        id: this.groupChatId
-                    }
-                })
-            }
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
         },
     },
     filters: {
@@ -643,6 +673,9 @@ export default {
     width: 100%;
     min-height: 100vh;
     background: @white;
+    &.glass{
+        filter: blur(4px);
+    }
     .customer_wrap {
         position: relative;
         overflow: hidden;
@@ -653,44 +686,6 @@ export default {
             top: 88px;
             left: 0;
         }
-        // .nav_box{
-        //     width: 100%;
-        //     height: 88px;
-        //     display: flex;
-        //     text-align: center;
-        //     position: relative;
-        //     &::before{
-        //         content: '';
-        //         width: 100%;
-        //         height: 1px;   /*no*/
-        //         background: @lineColor;
-        //         transform: scaleY(.5);
-        //         position: absolute;
-        //         left: 0;
-        //         bottom: 0;
-        //     }
-        //     .nav{
-        //         color: @fontSub1;
-        //         font-size: 28px;
-        //         line-height: 88px;
-        //         flex: 1;
-        //         position: relative;
-        //         &.cur{
-        //             color: @main;
-        //             &::before{
-        //                 content: '';
-        //                 width: 40px;
-        //                 height: 4px;
-        //                 background: @main;
-        //                 border-radius: 2px;
-        //                 position: absolute;
-        //                 left: 50%;
-        //                 bottom: 0;
-        //                 transform: translateX(-50%);
-        //             }
-        //         }
-        //     }
-        // }
         .content{
             width: 100%;
             padding: 32px;

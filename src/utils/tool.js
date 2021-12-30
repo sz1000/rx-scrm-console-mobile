@@ -41,29 +41,29 @@ export function _throttle(fn, interval) {
 /**
  * 事件节流
  */
- let lastClickTime = 0
+let lastClickTime = 0
 
- export function throttle(delay = 1000, key = null) {
-     const currentTime = new Date().getTime()
- 
-     if (key) {
-         const event = this.events[key]
- 
-         if (event) {
-             if (currentTime >= event + delay) {
-                 this.events[key] = currentTime
-                 return true
-             }
-         } else {
-             this.events[key] = 0
-         }
-     } else {
-         if (currentTime >= lastClickTime + delay) {
-             lastClickTime = currentTime
-             return true
-         }
-     }
-     return false
+export function throttle(delay = 1000, key = null) {
+    const currentTime = new Date().getTime()
+
+    if (key) {
+        const event = this.events[key]
+
+        if (event) {
+            if (currentTime >= event + delay) {
+                this.events[key] = currentTime
+                return true
+            }
+        } else {
+            this.events[key] = 0
+        }
+    } else {
+        if (currentTime >= lastClickTime + delay) {
+            lastClickTime = currentTime
+            return true
+        }
+    }
+    return false
 }
 //深复制
 export function deepClone(obj) {
@@ -201,6 +201,7 @@ export function handleMoney(num) {
 
 // 分享消息到当前会话
 export function sendChatMessage(msgtype, enterChat, content, imageId) {
+    console.log(msgtype, enterChat, content, imageId, "---------")
     Getticket({ url: location.href }).then((res) => {
         Toast.loading({
             message: '',
