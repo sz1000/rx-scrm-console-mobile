@@ -228,8 +228,8 @@
                        <!-- <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
                        <img class="img_tx" src="../../images/img_head.png" alt="" v-else> -->
                         <div class="weix_img">
-                          <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
-                          <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
+                          <img class="img" v-if="item.externalType == 1" src="../../assets/images/weix_icon.png" alt="">
+                          <img class="img" v-if="item.externalType == 2" src="../../assets/images/qiye_icon.png" alt="">
                         </div>
                     </div>
                      <p class="name_tite">{{item.customerCalled}}</p>
