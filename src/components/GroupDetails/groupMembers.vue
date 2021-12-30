@@ -329,13 +329,14 @@ export default {
       return arr.filter((arr) => !res.has(arr.id) && res.set(arr.id, 1));
     },
     getList() {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
       let obj = {
-        chatId: this.$route.query.id,
+        chatId: id,
         ...this.pageInfo,
       };
       // group_getMobileGroupUserlist
       // group_getGroupUserPage
-      group_getMobileGroupUserlist(this.$route.query.id).then((res) => {
+      group_getMobileGroupUserlist(id).then((res) => {
         console.log(res);
         console.log("获取接口 getList + " + res);
 

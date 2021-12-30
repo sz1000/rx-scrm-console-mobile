@@ -256,7 +256,8 @@ export default {
       this.getSelectFollowMsgList();
     },
     getGroupDetailtop() {
-      group_getGroupTodayDetail(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      group_getGroupTodayDetail(id).then((res) => {
         console.log(999999999999999);
         console.log(res.data.groupUserEntityList);
         if (res.result) {
@@ -364,8 +365,9 @@ export default {
       this.followMsgSearch.punckStatus = i == 1 || !i ? "" : i;
       // group_getGroupTodayDetail
       //   clueCustomerFollowUser_selectFollowMsgList
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
       group_getGroupTodayDetail(
-        this.$route.query.id
+        id
         // this.followMsgSearch,
         // this.noListLoading
       ).then((res) => {

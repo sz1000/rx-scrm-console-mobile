@@ -349,7 +349,8 @@ export default {
     },
     // 群标签
     groupList() {
-      groupUserTag_list(this.$route.query.id).then((res) => {
+      let id = this.$route.query.id ? this.$route.query.id : this.$store.getters.chatId
+      groupUserTag_list(id).then((res) => {
         console.log(res);
         console.log("获取 群标签接口+ " + res);
         if (res.result) {
