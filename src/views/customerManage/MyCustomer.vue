@@ -60,7 +60,6 @@ export default {
             for (let i in this.expandedKeys) {
                 this.jurisdictionList[this.expandedKeys[i].enName] = this.expandedKeys[i].childrenList
             }
-            console.log('权限列表: ', this.jurisdictionList)
         },
         changeNav(code, type) {
             if (code) {

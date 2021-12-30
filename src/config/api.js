@@ -47,6 +47,15 @@ export const SaleDocumentList = (data) => {
 export const SaleDocumentDetail = (data) => {
         return http.get(`${materialServiceApi}/sale_document/${data}/detail`)
     } // 获取文件详情
+    // 获取海报详情
+export const PosterDetail = (data) => {
+    return request({
+        url: materialServiceApi + `/sale-poster-entity/${salePosterId}/detail`,
+        method: 'get',
+        params: data,
+    })
+}
+
 export const AddSaleDocument = (data) => {
         return http.post(`${materialServiceApi}/sale_document`, data)
     } // 新增文件

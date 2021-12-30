@@ -114,12 +114,12 @@
           display: flex;
           align-items: center;
           .img_group {
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
           }
           img {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             margin-right: 8px;
           }
           .name {
@@ -212,7 +212,9 @@
         max-height: 300px;
         overflow: hidden;
         margin-top: 24px;
+        margin-left: 6px;
         // display: flex;
+        
         // justify-content: space-between;
         .ul::before{
           content:'';
@@ -242,14 +244,25 @@
           
             }
             .head_img{
-              width: 40px;
-              height: 40px;
+              // width: 40px;
+              // height: 40px;
             
               position: relative;
               .img_tx{
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
+             
+              }
+              .img_txt{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #4168F6;
+                color: #fff;
+                // padding: 5px;
+                text-align: center;
+                line-height: 43px;
               }
               .weix_img{
                 position: absolute;
@@ -270,11 +283,14 @@
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
-              // width: 420px;
+              max-width: 120px;
             }
             .enterprise{
               font-size: 20px;        
               color: #FFB020;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
             }
             .wechat{
               font-size: 20px;     

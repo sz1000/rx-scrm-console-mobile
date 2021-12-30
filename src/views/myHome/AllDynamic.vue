@@ -34,7 +34,7 @@
         <li class="item-box" v-if="type == 1">
            <!-- v-for="(i,indexp) in articleList" :key="indexp" -->
           <van-list v-model="articleListLoading" :immediate-check="false" :finished="articleListFinished" finished-text="没有更多了" @load="onLoad">
-               <p class="tite_num"> 共 <span class="num">{{articletotal}}</span><span>客户动态，关联</span> <span class="num">{{articlecusCount}}</span>个客户</p>
+               <p class="tite_num"> 共 <span class="num">{{articletotal}}</span><span>线索动态，关联</span> <span class="num">{{articlecusCount}}</span>个线索</p>
             <div   class="client_list" v-for="(item ,index) in articleList" :key="index">
                  <div class="client_item" @click="goCustomer(item)" >
                      <div  class="client_img">
@@ -114,7 +114,7 @@
         </li>
         <li class="item-box" v-if="type == 3">
           <van-list v-model="posterListLoading" :immediate-check="false" :finished="posterListFinished" finished-text="没有更多了" @load="onLoad">
-              <p class="tite_num"> 共 <span class="num">{{postertotal}}</span><span>条互动协同消息，关联</span> <span class="num">{{postercusCount}}</span>个客户</p>
+              <p class="tite_num"> 共 <span class="num">{{postertotal}}</span><span>条客户动态，关联</span> <span class="num">{{postercusCount}}</span>个客户</p>
             <div class="custom_content" v-for="(item,indexs) in posterList" :key="indexs" @click="goCustomer(item)" >
                 <div class="card_box" >
                 <div class="chat_warp">
@@ -228,7 +228,7 @@ export default {
         selectId:'',
         types:1,
         fromUserNum: [6],
-        
+        queryFlag:5,
     }
   },
   computed: {
@@ -320,6 +320,7 @@ export default {
         }else{
              this.posterListPage = 1
             this.getList()
+            
         }
     //   this.getList()
     },
@@ -349,20 +350,22 @@ export default {
           this.types = 1
           this.value1 = ""
           this.tabName = "全部"
-           this.selectId = 0
+          this.selectId = 0,
+          this.queryFlag = 5
         // this.indexps = 1000000
       } else if (type == 2) {
           this.types = 3
           this.value1 = ""
           this.tabName = "全部"
-            this.selectId = 0
+          this.selectId = 0
         // this.indexps = 1000000
       } else {
         // this.indexps = 1000000
          this.types = 4
-           this.value1 = ""
-           this.tabName = "全部"
-             this.selectId = 0
+         this.value1 = ""
+         this.tabName = "全部"
+         this.selectId = 0
+         this.queryFlag = 4
       }
       this.type = type
       this.initPage(this.type)
@@ -434,7 +437,8 @@ export default {
          limit: 10,
          isMang:this.selectId || 0,
          searchParam:this.value1,
-         punckStatus:this.types
+         punckStatus:0,//this.types,
+         queryFlag:this.queryFlag
         // corpId: this.corpId,
       }
 

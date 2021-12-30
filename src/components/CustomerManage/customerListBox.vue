@@ -5,8 +5,8 @@
         <div class="list-item-left">
           <img v-if="i.avatar" class="header-img" :src="i.avatar" alt="">
           <span v-else class="default-img">{{ i.customerCalled ? i.customerCalled.slice(0, 1) :  ''}}</span>
-          <img v-if="i.isWcCus == 1 && i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
-          <img v-if="i.isWcCus == 1 && i.externalType == 1" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
+          <img v-if="i.externalType == 2" class="icon" src="../../assets/svg/icon_qiyeweixin.svg" alt="">
+          <img v-if="i.externalType == 1" class="icon" src="../../assets/svg/icon_weixin.svg" alt="">
         </div>
         <ul class="list-item-right">
           <li class="right-top">
@@ -73,9 +73,9 @@ export default {
     },
     // 获取客户列表
     getList() {
-      if(this.customerType == '3' && !throttle()) {
-        return
-      }
+      // if(this.customerType == '3' && !throttle()) {
+      //   return
+      // }
 
       if (this.page == 1) {
         this.pageLoading = false

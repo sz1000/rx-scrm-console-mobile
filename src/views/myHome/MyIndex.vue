@@ -104,7 +104,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg">
+        <div class="task_msg" v-if="clientList.length">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -121,7 +121,7 @@
                 <span class="circle_line"></span>
                 <span class="circle_lines"></span>
                 <p class="title">
-                  <span class="name" v-if="item.optType != 72 && item.optType != 36">{{item.optUserName}}</span>
+                  <span class="name" v-if="item.optType != 72 && item.optType != 36 && item.optType != 50 && item.optType != 18">{{item.optUserName}}</span>
                   {{getTextFun(item)}}</p>
                 <p class="time_tite">{{getTimeFun(item.timeInterval)}}</p>
              </div>
@@ -137,7 +137,8 @@
           </div>
        
         <div class="reply_text" @click="goToAbout">
-          <span>今日新增{{dataObj.forReply}}条,关联{{dataObj.forReplyCustomer}}个客户</span>
+          <span v-if="dataObj.newFollowCount">今日新增{{dataObj.newFollowCount}}条</span>
+          <span v-else>今日暂无记录</span>
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
         </div>
       </div>
@@ -151,7 +152,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo">
+        <div class="task_msg task_outo" v-if="cluesList.length ">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -171,14 +172,15 @@
                   <div class="warp">
                     <div class="head_img">
                        <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
-                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else>
+                      <p class="img_txt"  v-else>{{item.customerCalled.charAt(0)}}</p>
+                       <!-- <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar"> -->
                         <div class="weix_img">
                           <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
                           <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
                         </div>
                     </div>
                      <p class="name_tite">{{item.customerCalled}}</p>
-                     <p class="enterprise" v-if="item.externalType == 1">@企业</p>
+                     <p class="enterprise" v-if="item.externalType == 1">@{{item.customerName}}</p>
                      <p class="wechat" v-if="item.externalType == 2">@微信</p>
                   </div>
                     <div class="tite_nane">{{item.clueType}}</div>
@@ -202,7 +204,7 @@
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
           </div>
         </div>
-        <div class="task_msg task_outo">
+        <div class="task_msg task_outo" v-if="cluesLists.length">
           <!-- <van-swipe  vertical >
              <van-swipe-item style="height:30px" v-for="item in clientList" :key="item.id" @click="goCustomer(item)">
                <div class="dynamic_list" v-for="item in clientList" :key="item.id" @click="goCustomer(item)" >
@@ -222,7 +224,9 @@
                   <div class="warp">
                     <div class="head_img">
                        <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
-                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else>
+                      <p class="img_txt"  v-else>{{item.customerCalled.charAt(0)}}</p>
+                       <!-- <img class="img_tx" :src="item.avatar" alt="" v-if="item.avatar">
+                       <img class="img_tx" src="../../images/img_head.png" alt="" v-else> -->
                         <div class="weix_img">
                           <img class="img" v-if="item.externalType == 2" src="../../assets/images/weix_icon.png" alt="">
                           <img class="img" v-if="item.externalType == 1" src="../../assets/images/qiye_icon.png" alt="">
@@ -359,9 +363,9 @@ export default {
      optionLeft () {  
         return {
             step: .4, //数值越大速度滚动越快
-            limitMoveNum: 5, //开始无缝滚动的数据量  //this.fourDatata.length
+            limitMoveNum: this.clientList.length, //开始无缝滚动的数据量  //this.fourDatata.length
             hoverStop: true, //是否开启鼠标悬停stop
-            direction: 1, // 0向下 1向上 2向左 3向右
+            direction: 0, // 0向下 1向上 2向左 3向右
             openWatch: true, //开启数据实时监控刷新dom
             singleHeight: 0, //单步运动停止的高度(默认值0是无缝不停止的滚动) direction => 0/1
             singleWidth: 0, //单步运动停止的宽度(默认值0是无缝不停止的滚动) direction => 2/3
@@ -380,7 +384,8 @@ export default {
         custometMassSum: '0',
         forReply: '0',
         forReplyCustomer: '0',
-        clueSum:'0'
+        clueSum:'0',
+        newFollowCount:'0'
       },
       userObj: {
         name: '',
@@ -508,38 +513,38 @@ export default {
       })
     },
     getAllChartList() {
-      getAllCharts().then((res) => {
-        //饼图
-        this.getMaterialPie(res.data.materialMap)
-        // 商机报告
-        this.setLineChart(res.data)
-        //优质内容top10
-        let arr1 = [],
-          arr = []
-        res.data.materialMap.materialTOP.data.forEach((el) => {
-          let obj = {
-            name: Object.keys(el)[0],
-            value: this.percentageFun(el[Object.keys(el)[0]]),
-          }
-          arr1.push(obj)
-        })
-        this.topSortData = arr1
-        // 商机漏斗
-        res.data.sales.forEach((el) => {
-          let list = el.split('_')
-          let obj = {
-            name: list[0],
-            id: Number(list[0].split('stage')[1]),
-            num: Number(list[1]),
-          }
-          arr.push(obj)
-        })
-        arr.sort((a, b) => {
-          return a.id - b.id
-        })
-        this.scaleData = arr
-        this.scroll = false
-      })
+      // getAllCharts().then((res) => {
+      //   //饼图
+      //   this.getMaterialPie(res.data.materialMap)
+      //   // 商机报告
+      //   this.setLineChart(res.data)
+      //   //优质内容top10
+      //   let arr1 = [],
+      //     arr = []
+      //   res.data.materialMap.materialTOP.data.forEach((el) => {
+      //     let obj = {
+      //       name: Object.keys(el)[0],
+      //       value: this.percentageFun(el[Object.keys(el)[0]]),
+      //     }
+      //     arr1.push(obj)
+      //   })
+      //   this.topSortData = arr1
+      //   // 商机漏斗
+      //   res.data.sales.forEach((el) => {
+      //     let list = el.split('_')
+      //     let obj = {
+      //       name: list[0],
+      //       id: Number(list[0].split('stage')[1]),
+      //       num: Number(list[1]),
+      //     }
+      //     arr.push(obj)
+      //   })
+      //   arr.sort((a, b) => {
+      //     return a.id - b.id
+      //   })
+      //   this.scaleData = arr
+      //   this.scroll = false
+      // })
     },
     getData() {
       this.$toast.loading({
@@ -562,7 +567,11 @@ export default {
       })
     },
     client(){
-       getMBTop10FollowMsgList().then((res)=>{
+          let params = {
+            queryFlag:4
+          }
+
+       getMBTop10FollowMsgList(params).then((res)=>{
               console.log(res.data,"------客户动态")
               this.clientList = res.data
              
@@ -629,15 +638,15 @@ export default {
                     str = '删除了商机'
                     break;
                 case 18:
-                    if(obj.optUserName){
-                        if(obj.createBy){
-                            str = '新增协作人'
-                        }else{
-                            str = obj.context
-                        }
-                    }else{
+                    // if(obj.optUserName){
+                    //     if(obj.createBy){
+                    //         str = '新增协作人'
+                    //     }else{
+                    //         str = obj.context
+                    //     }
+                    // }else{
                         str = obj.context
-                    }
+                    // }
                     break;
                 case 20:
                     str = '删除了协作人'
@@ -658,8 +667,16 @@ export default {
                 case 36:
                     str = obj.context
                     break;
+                case 39:
+                    str = "更新协助人信息"
+                    break;
                 case 40:
-                    str = `${obj.customerCalled}预览了 《${obj.ossObjectname}》`
+                     if(obj.ossObjectname){
+                       str = `${obj.customerCalled}预览了 《${obj.ossObjectname}》`
+                     }else{
+                        str = `${obj.customerCalled}预览了`
+                     }
+                   
                     break;
                 case 41:
                     str =`添加 ${obj.customerCalled} 为企业微信好友`
@@ -679,6 +696,9 @@ export default {
                 case 47:
                     break;
                 case 48:
+                    break;
+                case 50:
+                    str = obj.context
                     break;
                 case 60:
                    str = `删除了${obj.customerCalled}的企微好友`

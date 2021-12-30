@@ -352,3 +352,10 @@ export function cluecustomer_elasticSearch(data, loading = false) {
         data,
     })
 }
+// 是否微信好友
+export function cluecustomer_isWcCus(data) {
+    return request({
+        url: BASE_CUSTOMER_SERVICE + `/cluecustomer/${data.userNo}/${data.customerNo}/${data.corpId}/wechat-contact`,
+        method: 'get',
+    })
+}

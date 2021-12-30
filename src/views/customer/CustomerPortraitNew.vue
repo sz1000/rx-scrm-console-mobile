@@ -3,23 +3,14 @@
         <template v-if="!showFollowUpBox">
             <img class="bg" :style="{'transform':`translateY(-${bgY})`}" src="@/assets/svg/customer_bg.svg" alt="">
             <TopCard :fromType="fromType" :customerInfo="customerInfo" :userList="userList" :tagList="tagList" isPortrait @jump="toFun"></TopCard>
-            <div class="nav_box">
-                <div class="nav" @click="navClickFun(item.code)" :class="{'cur':item.code == navActive}" v-for="item in navList" :key="item.code">{{item.name}}<span v-if="item.num">({{item.num}})</span></div>
-            </div>
-            <div class="content" :class="{'pd0':navActive == 'group' || navActive == 'enclosure'}">
-                <!-- 客户动态 -->
-                <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @openDialog="openDialog" @load="listLoadFun"></dynamics>
+            
+            <div class="content">
+                <dynamics ref="dynamic" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @openDialog="openDialog" @load="listLoadFun"></dynamics>
                 <!-- <dynamics ref="dynamic" v-if="navActive == 'dynamics'" :fromType="fromType" :id="customerInfo.clueCustomerNo" :did="customerInfo.userNo" @fillMessage="getPeople" @openDialog="openDialog" @load="listLoadFun"></dynamics> -->
-                <!-- 商机 -->
-                <opportunities v-if="navActive == 'niche'" :customerNo="customerInfo && customerInfo.clueCustomerNo" fromType="3" @sure="getCustomerDetail" isPortrait></opportunities>
-                <!-- 群聊 -->
-                <group :data="groupList" v-if="navActive == 'group'" @sure="getGroupUserList"></group>
-                <!-- 附件 -->
-                <enclosure :id="customerInfo.clueCustomerNo" :detailType="fromType" v-if="navActive == 'enclosure'" @sure="getCustomerDetail"></enclosure>
             </div>
             <!-- 打开操作按钮弹窗面板 -->
-            <div v-if="isInCharge || isHelperOne" class="operation-box">
-                <div class="follow_up pointer" v-if="navActive == 'dynamics'" @click="showOperationBtnBox()">
+            <div v-if="((fromType == 1 || fromType == 3) && (isInCharge || isHelperOne)) || (fromType == 2 || fromType == 4)" class="operation-box">
+                <div class="follow_up pointer" @click="showOperationBtnBox()">
                     <img class="icon" src="@/assets/svg/icon_add.svg" alt="">
                 </div>
             </div>
@@ -77,7 +68,10 @@
             <give-up-or-receive ref="giveUpOrReceive" :title="popContent.title" :btnList="popContent.btnList" :desList="popContent.desList" @doNextOption="doNextOption"></give-up-or-receive>
             <!-- 变更负责人 -->
             <change-director ref="changeDirector" :fromType="fromType"></change-director>
+            <!-- 新建/编辑商机 -->
+            <edit-opportunity ref="editOpportunity" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" @sure="callbackFun"></edit-opportunity>
         </template>
+
         <!-- 写跟进 -->
         <follow-up-box v-else ref="followUpBox" :fromType="fromType" :customerNo="customerInfo && customerInfo.clueCustomerNo" :sendUserInfo="sendUserInfo" @doHideFollowUpBox="doHideFollowUpBox"></follow-up-box>
     </div>
@@ -85,25 +79,37 @@
 
 <script>
 import MyMixin from '@/mixins/permissionsList'
-import { Dynamics,Group,Enclosure,DialogComment,OpportunityDialog,ApplyHelp,TopCard,BusinessCard } from './components'
+import opportunityMixin from '@/mixins/opportunity'
+import { Dynamics, DialogComment, OpportunityDialog, ApplyHelp, TopCard, BusinessCard } from './components'
 import { user_getUserName } from '@/api/home'
 import {
     cluecustomer_getClueCustomerByid,
-    group_getMobileCustomerGroupPage,
     group_getMobileGroupUserlist,
     clueCustomerFollowUser_addCommentInfo,  //添加评论回复
+    cluecustomer_giveUpType, // 放弃
+    cluecustomer_getclue, // 领取
+    cluecustomer_delClueCustomer, // 删除
 } from '@/api/customer'
-import Opportunities from '@/components/BusinessOpportunities/opportunities'
 import GiveUpOrReceive from '@/components/CustomerManage/dialog/giveupOrReceive'
 import ChangeDirector from '@/components/CustomerManage/dialog/changeDirector'
 import OperationBtnBox from '@/components/CustomerManage/operationBtnBox'
 import FollowUpBox from '@/components/CustomerManage/followUpBox'
+import EditOpportunity from '@/components/BusinessOpportunities/dialog/editOpportunity'
 
 export default {
-    mixins: [MyMixin],
+    mixins: [MyMixin, opportunityMixin],
     components: {
-        Dynamics, Group, Enclosure, DialogComment, OpportunityDialog, ApplyHelp, TopCard, BusinessCard,
-        Opportunities, GiveUpOrReceive, ChangeDirector, OperationBtnBox, FollowUpBox
+        Dynamics, 
+        DialogComment, 
+        OpportunityDialog, 
+        ApplyHelp, 
+        TopCard, 
+        BusinessCard,
+        GiveUpOrReceive, 
+        ChangeDirector, 
+        OperationBtnBox, 
+        FollowUpBox,
+        EditOpportunity
     },
     data(){
         return {
@@ -112,7 +118,7 @@ export default {
             id: this.$route.query.id,
             code: this.$route.query.userNo,
             num: this.$route.query.num,
-            showPortraitType: 0,
+
             dialog_group: false,
             dialog_xx: false,
             dialog_sj: false,
@@ -128,14 +134,6 @@ export default {
             },
 
             applyData: {},
-
-            navList: [
-                { name: '动态',code: 'dynamics'},
-                { name: '商机',code: 'niche',num: 0},
-                { name: '客户群',code: 'group',num: 0},
-                { name: '附件',code: 'enclosure',num: 0},
-            ],
-            navActive: 'dynamics',
 
             customerInfo: {},
             userList: [],
@@ -155,7 +153,7 @@ export default {
 
             showSecret: false,
             sendUserInfo: {},
-            
+
             showFollowUpBox: false, // 是否显示写跟进页面
         }
     },
@@ -226,7 +224,8 @@ export default {
                 changeDirector: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'change'),
                 opportunityOperation: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'business'),
                 giveUp: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'giveup'),
-                distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                // distribution: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'allot'),
+                distribution: false,
                 receive: this.jurisdictionList && this.jurisdictionList.length && this.jurisdictionList.some(item => item.enName == 'get'),
             }
         },
@@ -248,6 +247,13 @@ export default {
         console.log('asd',this.$route.query.name)
         this.getCustomerDetail()
     },
+    provide() {
+        return {
+            getGroupUserList: this.getGroupUserList,
+            opportunitiesList: this.opportunitiesList,
+            opportunitiesStageList: this.opportunitiesStageList,
+        }
+    },
     methods: {
         isDirectorFun(data){    //是否是相关负责人协助人 及相关数据   (permFlag: 0: 无权限 1: 读写 2: 只读)
             this.dialog_xzr = Number(data.permFlag) ? false : true
@@ -256,8 +262,7 @@ export default {
             let depName = directorList && directorList.length && directorList[0].depId ? `-${directorList[0].depId}` : ''
             this.applyData = {
                 customerName: data.clueCustomerVO.name,
-                cropFullName: "aaa",
-                // cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
+                cropFullName: data.clueCustomerVO.cropFullName ? data.clueCustomerVO.cropFullName : data.clueCustomerVO.customerName,
                 customerAvatar: data.clueCustomerVO.avatar,
                 createTime: data.clueCustomerVO.createTime,
                 directorName: directorList && directorList.length ? directorList[0].name + depName : '',
@@ -276,30 +281,24 @@ export default {
             let id = this.userId
             // || 'woyPDZEQAArynDzUMWHKQZTy_XMj7rPg'  //协助人、商机、附件
             let { comeFrom, name } = this.$route.query
-            if(comeFrom == 'messageCard'){
+
+            if(comeFrom == 'messageCard') {
                 id = name
-            }else{
-                if(this.code){
+            } else {
+                if(this.code) {
                     id = this.code
                 }
             }
-            // 'woyPDZEQAAiC1soXYe2zmSfXJTFmgVqQ'
-            // 'wmyPDZEQAAathBnqj2G6xYkqbLTZBu9w'
-            // 'woyPDZEQAAKN_BGnwemNjnTqtjllE71g'
-            // 'woyPDZEQAANKdNIy7tiPKdWh4HGqhrZw'
-            // 'woyPDZEQAAsU15Y6_nJ6uNYQzGf6sbcA'  //更新客户信息
-            // 'woyPDZEQAAdsUF6NtjIrKh6_NqD-mwnQ'  //协助人
-            // 'woY-gRDAAAd9kSNXH541UDExp7IHHZjw'  //协助人、附件
-            // 'woyPDZEQAA5NKt4Bw12Ri3N02Tz2cNmQ'  //更新协助人，客户信息、附件
-            // 'woyPDZEQAA2IR5xonK_JD04coOUHVyzg'  //添加协助人
-            // 'woyPDZEQAAWRYc71z2QntxYx_vCx96zg'  //跟进记录
-            // 'woyPDZEQAA_MAhjlSBaGyeqbpxB2rkxA'  //拜访客户
-            // 'woyPDZEQAAW1UxaUrQ1LIgmDZ_5YfNjw'  //商机
             cluecustomer_getClueCustomerByid(id, '').then(res => {
-                if(res.result){
+                if (res.result) {
                     let data = res.data
-                    this.isDirectorFun(data)
+
                     this.customerInfo = data.clueCustomerVO
+
+                    // 我的客户和我的线索有无权限弹窗
+                    if (this.fromType == 1 || this.fromType == 3) {
+                        this.isDirectorFun(data)
+                    }
 
                     this.getUserName()
 
@@ -307,18 +306,15 @@ export default {
                     this.tagList = data.tagList.filter((el,index) => {
                         return index < 3
                     })
-                    this.navList.forEach(el => {
-                        if(el.code == 'niche'){
-                            el.num = data.mobileDataCount.busCount
-                        }else if(el.code == 'group'){
-                            el.num = data.mobileDataCount.groupCount
-                        }else if(el.code == 'enclosure'){
-                            el.num = data.mobileDataCount.encCount
-                        }
-                    })
-
-                    this.getCustomerGroupList()
                     // this.isDirector()
+
+                    let { comeFrom } = this.$route.query
+
+                    if(comeFrom == 'messageCard'){
+                        this.$refs.dynamic.navClickFun(3)
+                    }
+                } else {
+                    this.$toast(res.msg)
                 }
             })
         },
@@ -352,27 +348,18 @@ export default {
             
             this.jurisdictionList = jurisdictionObj[type]
         },
-        getCustomerGroupList(){     //获取客户群列表
-            this.searchGroup.customerNo = this.customerInfo.clueCustomerNo
-            group_getMobileCustomerGroupPage(this.searchGroup).then(res => {
-                if(res.result){
-                    let data = res.data
-                    this.groupList = data.records
-                    this.groupTotal = data.total
-
-                    let { comeFrom } = this.$route.query
-                    if(comeFrom == 'messageCard'){
-                        this.$refs.dynamic.navClickFun(3)
-                    }
-                }
-            })
-        },
         getGroupUserList(id){   //获取群群员列表
             this.groupChatId = id
             group_getMobileGroupUserlist(id).then(res => {
                 if(res.result){
                     this.groupUserData = res.data.dataCount
                     this.groupUserList = res.data.allList
+
+                    if (this.groupUserData.total > 20) {
+                        this.toGroupDetail()
+                        return
+                    }
+
                     this.dialog_group = true
                 }
             })
@@ -399,10 +386,9 @@ export default {
                     break;
                 case 'transferCustomer':    // 转客户（我的线索）
                     this.$router.push({
-                        path: 'turnCustomer',
+                        path: '/customerManage/turnCustomer',
                         query: {
                             fromType: this.fromType,
-                            isWcCus: this.customerInfo.isWcCus,
                             clueCustomerNo: this.customerInfo.clueCustomerNo,
                             customerCalled: this.customerInfo.customerCalled
                         },
@@ -429,6 +415,8 @@ export default {
                     this.popContent.desList = [ '是否确认删除并返回？']
                     this.$refs.giveUpOrReceive.show()
                     break;
+                case 'opportunityOperation':   // 新增商机（我的客户）
+                    this.$refs.editOpportunity.show(data)
                 default:
                     break;
             }
@@ -467,6 +455,10 @@ export default {
                     this.$toast(msg)
                 }
             })
+        },
+        // 关闭新建商机
+        callbackFun() {
+            this.$refs.editOpportunity.hide()
         },
         openDialog(id,type){  //打开回复弹窗
             this.rowId = id
@@ -508,25 +500,6 @@ export default {
                 }
             })
         },
-        navClickFun(code){
-            this.navActive = code
-            switch (code) {
-                case 'dynamics':    //客户动态
-                    // this.getSelectFollowMsgList()
-                    break;
-                case 'niche':   //商机
-                    
-                    break;
-                case 'group':   //客户群
-                    this.getCustomerGroupList()
-                    break;
-                case 'enclosure':   //附件
-                    
-                    break;
-                default:
-                    break;
-            }
-        },
         toFun(val){
             let name = '', query = { fromType: this.fromType }
 
@@ -540,20 +513,12 @@ export default {
             this.$router.push({ name, query })
         },
         toGroupDetail(){    //群画像
-                    if(this.groupUserData.total>20){
-                        this.$router.push({
-                            path: '/customerManage/groupListDetails',
-                            query: {
-                                id: this.groupChatId
-                            }
-                        })
-                    }
-            // this.$router.push({
-            //     path: '/customerManage/groupListDetails',
-            //     query: {
-            //         id: this.groupChatId
-            //     }
-            // })
+            this.$router.push({
+                path: '/customerManage/groupListDetails',
+                query: {
+                    id: this.groupChatId
+                }
+            })
         },
     },
     filters: {

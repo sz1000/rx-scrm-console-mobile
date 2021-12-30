@@ -5,13 +5,13 @@
         <van-icon name="arrow-left" />
         返回
       </div>
-      <span class="textTitle">客户活码</span>
+      <span class="textTitle">企微活码</span>
     </div>
     <div class="tabMenu">
       <!-- <div class="tabBtn">全部活码</div> -->
       <div class="tabBtn">
         <span :class="{ active: type == 1 }" class="mycule" @click="tabClick(1)"
-          >我的活码</span
+          >企微活码</span
         >
         <span
           :class="{ active: type == 2 }"

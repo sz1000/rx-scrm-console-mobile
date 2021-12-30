@@ -22,7 +22,7 @@ export default {
       unionId: '',
       openId: '',
       materialId: '',
-      materialType: '', // 1: 文章, 2: 文件
+      materialType: '', // 1: 文章, 2: 文件,3:海报
       userNo: null,
       corpId: null,
       initiate: true,
@@ -56,8 +56,8 @@ export default {
     wechatLoad() {
       let { code } = this.$route.query
 
-      this.sessionOpenId = sessionStorage.getItem("MATERIALTEMPLATE_OPENID")
-      this.sessionUnionId = sessionStorage.getItem("MATERIALTEMPLATE_UNIONId")
+      this.sessionOpenId = sessionStorage.getItem('MATERIALTEMPLATE_OPENID')
+      this.sessionUnionId = sessionStorage.getItem('MATERIALTEMPLATE_UNIONId')
 
       if (!code && !this.sessionOpenId) {
         getCode(encodeURIComponent(window.location.href))
@@ -90,8 +90,8 @@ export default {
 
           this.unionId = unionid
           this.openId = openid
-          sessionStorage.setItem("MATERIALTEMPLATE_OPENID", openid)
-          sessionStorage.setItem("MATERIALTEMPLATE_UNIONId", unionid)
+          sessionStorage.setItem('MATERIALTEMPLATE_OPENID', openid)
+          sessionStorage.setItem('MATERIALTEMPLATE_UNIONId', unionid)
           this.materialOperation()
         }
       })

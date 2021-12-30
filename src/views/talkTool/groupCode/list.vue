@@ -1,7 +1,7 @@
 <template>
   <div class="list_wrap">
     <div class="top_box">
-      <TopTitle title="群活码"></TopTitle>
+      <TopTitle title="拉群活码"></TopTitle>
       <div class="nav_box">
         <div class="nav" :class="{ cur: item.code == search.type }" v-for="(item, index) in navList" :key="index" @click="navClickFun(item.code)">
           {{ item.name }}
@@ -151,7 +151,7 @@ export default {
   data() {
     return {
       navList: [
-        { name: '全部活码', code: '' },
+        { name: '拉群活码', code: '' },
         { name: '我的活码', code: '1' },
       ],
       showAlt: false,
