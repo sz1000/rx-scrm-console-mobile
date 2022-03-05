@@ -195,6 +195,7 @@ import { TitleBack } from "@/components";
 import { TagDialog } from "../customer/components";
 import GroupAll from "../../components/GroupDetails/groupAll"; //群动态
 import GroupMembers from "../../components/GroupDetails/groupMembers"; //群成员
+import {  api  } from './groupListDetailsApi';
 
 import {
   grouptag_list,
@@ -324,9 +325,9 @@ export default {
       this.tabClick = v;
     },
     getData() {
-      this.getTagList();
-      this.groupList();
-      this.getGroupDetailtop();
+      // this.getTagList();
+      // this.groupList();
+      // this.getGroupDetailtop();
       this.getGroupDetail();
       // this.getList();
     },
@@ -430,6 +431,7 @@ export default {
             console.log(item.avatar);
             imgArr.push(item.avatar);
           });
+          imgArr = []
           this.avatarList.push({
             imgList: imgArr,
           });
@@ -440,8 +442,9 @@ export default {
       let id = this.$route.query.id
         ? this.$route.query.id
         : this.$store.getters.chatId;
-      group_getGroupDetail(id).then((res) => {
-        console.log(res);
+      group_getGroupDetail(id).then(() => {
+        // console.log(res);
+        let res= api
         console.log("获取头部信息接口 getGroupDetail " + res);
         if (res.result) {
           sessionStorage.setItem("userId", res.data.userId);

@@ -166,6 +166,7 @@
 
 <script>
 import { formatDate } from "../../utils/tool.js";
+import { detailsApi } from "../../views/customerManage/groupListDetailsApi";
 
 import { _throttle } from "@/utils/tool";
 import {
@@ -267,8 +268,11 @@ export default {
         console.log(999999999999999);
         console.log(res.data.groupUserEntityList);
         if (res.result) {
-          this.groupName = res.data.group;
-          this.list = res.data.groupUserEntityList;
+          // this.groupName = res.data.group;
+          // this.list = res.data.groupUserEntityList;
+          
+          this.groupName = detailsApi.data.group;
+          this.list = detailsApi.data.groupUserEntityList;
         }
       });
     },

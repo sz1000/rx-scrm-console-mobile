@@ -1,6 +1,6 @@
 <template>
   <div class="detail_wrap">
-    <TopTitle :title="`${id ? '编辑' : '新增'}群活码`"></TopTitle>
+    <TopTitle :title="`${id ? '编辑' : '新增'}群活码123`"></TopTitle>
     <div class="detail_content">
       <div class="item">
         <div class="label"><i>*</i>活码名称：</div>
@@ -236,6 +236,7 @@
 
 <script>
 import TopTitle from "./components/topTitle.vue";
+import { codeApi,groupInfoList } from './addCodeApi'
 import {
   livecodegroup_getselect,
   group_getGroupInfoList,
@@ -309,7 +310,7 @@ export default {
   },
   mounted() {
     if (this.id) {
-      this.getDetail();
+      // this.getDetail();
       this.disabled = true;
     } else {
       this.getGroupList();
@@ -319,6 +320,7 @@ export default {
   methods: {
     getDetail() {
       livecodegroup_getByNo(this.id).then((res) => {
+        
         if (res.result) {
           let data = res.data;
           // this.addCodeData = Object.assign(this.addCodeData,data.grouplist)
@@ -528,8 +530,9 @@ export default {
       });
     },
     getGroupList() {
-      //获取可选择群列表
-      group_getGroupInfoList().then((res) => {
+      //获取可选择群列表 res
+      group_getGroupInfoList().then(() => {
+        let res = groupInfoList;
         if (res.result) {
           this.groupList = res.data;
         }
@@ -537,7 +540,8 @@ export default {
     },
     getSelectList() {
       //获取可选择渠道列表和使用员工列表
-      livecodegroup_getselect().then((res) => {
+      livecodegroup_getselect().then(() => {
+        let res = codeApi;
         if (res.result) {
           res.data.userlist.forEach((el) => {
             el.checked = false;

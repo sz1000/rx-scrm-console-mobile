@@ -139,6 +139,7 @@
 </template>
 <script>
 import { formatDate } from "../../utils/tool.js";
+import { groupList } from "./groupListApi";
 export default {
   data() {
     return {
@@ -239,8 +240,8 @@ export default {
           createTimeEnd: "",
           flag: "2",
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          let res = groupList
           let tempList = res.data.groupEntityPage.records;
           this.loading = false;
 

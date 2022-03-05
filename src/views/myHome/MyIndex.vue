@@ -98,7 +98,7 @@
         <div class="text_wait">
           <div class="dynamic-tite">
             <img src="../../assets/images/dynamic.png" alt="">
-             <span>全部动态</span>
+             <span>全部动态123</span>
           </div>
           <div @click="dynamicFn" class="cilck_area">
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
@@ -198,7 +198,7 @@
         <div class="text_wait">
           <div class="dynamic-tite">
             <img src="../../assets/images/kehu.png" alt="">
-             <span>我的客户</span>
+             <span>我的客户222</span>
           </div>
           <div  @click="FnToRouter('/customerManage/myCustomer')" class="cilck_area">
           <img src="../../images/arrow_right.png" alt="" class="arrow_right" />
@@ -331,6 +331,7 @@
   </div>
 </template>
 <script>
+
 import {
   CustomAddChart,
   LookPieCharts,
@@ -343,6 +344,8 @@ import router from '../../router/index.js'
 import { getCustomerMassSend } from '../../api/myHome'
 import vueSeamlessScroll from 'vue-seamless-scroll'
 import { getcluecustomerlist } from '@/api/customer'
+import { userApi,clientList,myClient } from './api'
+
 export default {
   components: {
     CustomAddChart,
@@ -455,8 +458,10 @@ export default {
       getcluecustomerlist(params).then(res => {
         let { result, data, msg } = res
         if (result) {
-            this.cluesLists = data.iPage.records
-            console.log(data.iPage.records,"-------==")
+            // this.cluesLists = data.iPage.records ? data.iPage.records : myClient.data.iPage.records
+            this.cluesLists = myClient.data.iPage.records
+            // console.log(myClient.data.iPage.records)
+            console.log(data.iPage.records,"----我的客户---==")
         }
       })
    },
@@ -552,6 +557,9 @@ export default {
         duration: 0,
       })
       getMyInfo().then((res) => {
+        // console.log("123 "+userApi)
+        // let res = userApi
+        console.log(res)
         this.dataObj = res.data.my
         this.userObj = res.data.my.user
         this.activeObj = res.data.customerFind
@@ -572,9 +580,10 @@ export default {
           }
 
        getMBTop10FollowMsgList(params).then((res)=>{
-              console.log(res.data,"------客户动态")
+              console.log(res.data,"------客户动态",clientList)
               this.clientList = res.data
-             
+              // this.clientList = res.data ? res.data : clientList.data
+            //  this.clientList = clientList.data
        })
     },
           getTextFun(obj){

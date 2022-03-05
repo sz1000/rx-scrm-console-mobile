@@ -39,6 +39,7 @@
 <script>
 import { getcluecustomerlist } from '@/api/customer'
 import { throttle, formatDate } from '@/utils/tool'
+import { list } from './api/api'
 
 export default {
   name: 'customerListBox',
@@ -101,7 +102,9 @@ export default {
           if (this.page == 1) {
             this.list = []
           }
-          this.list = this.list.concat(data.iPage.records)
+          this.list = this.list.concat(list.data.iPage.records)
+          console.log(list)
+          // this.list = this.list.concat(data.iPage.records ? data.iPage.records : list.data.iPage.records)
           this.page += 1
           this.finished = this.list.length >= data.iPage.total
         } else {

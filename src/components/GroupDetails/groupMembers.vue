@@ -79,6 +79,7 @@
 <script>
 import { _throttle } from "@/utils/tool";
 import { formatDate } from "../../utils/tool.js";
+import { groupList } from "../../views/customerManage/groupListDetailsApi";
 import {
   grouptag_list,
   groupUserTag_list,
@@ -358,8 +359,9 @@ export default {
       };
       // group_getMobileGroupUserlist
       // group_getGroupUserPage
-      group_getMobileGroupUserlist2(obj).then((res) => {
-        console.log(res);
+      group_getMobileGroupUserlist2(obj).then(() => {
+        // console.log(res);
+        let res = groupList
         console.log("获取接口 getList + " + res);
 
         if (res.result) {

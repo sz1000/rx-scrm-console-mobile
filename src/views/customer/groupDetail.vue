@@ -205,6 +205,7 @@
 import { formatDate, _throttle } from "../../utils/tool";
 import { TitleBack } from "@/components";
 import { sop_groupSopList } from "@/api/sop";
+import { tags } from "./tags";
 import {
   grouptag_list,
   groupUserTag_list,
@@ -376,7 +377,8 @@ export default {
       let id = this.$route.query.id
         ? this.$route.query.id
         : this.$store.getters.chatId;
-      groupUserTag_list(id).then((res) => {
+      groupUserTag_list(id).then(() => {
+        let res = tags
         console.log(res);
         console.log("获取 群标签接口+ " + res);
         if (res.result) {
